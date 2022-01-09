@@ -7,14 +7,14 @@ export default class AltrpAccessors extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
         table.string('name')
         table.string('title')
         table.text('calculation')
         table.text('calculation_logic')
         table.text('description')
-        table.integer('model_id').unsigned()
-        table.integer('user_id').unsigned()
+        table.bigInteger('model_id').unsigned()
+        table.bigInteger('user_id').unsigned()
         table.boolean('status')
         table.text('test', 'longtext')
 

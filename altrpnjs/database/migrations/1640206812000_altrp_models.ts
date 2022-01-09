@@ -7,7 +7,7 @@ export default class AltrpModels extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
         table.string('name').unique()
         table.string('title').nullable()
         table.string('namespace').nullable()
@@ -21,8 +21,8 @@ export default class AltrpModels extends BaseSchema {
         table.boolean('soft_deletes')
         table.boolean('preset')
         table.boolean('time_stamps')
-        table.integer('parent_model_id').unsigned().nullable()
-        table.integer('user_id').unsigned().nullable()
+        table.bigInteger('parent_model_id').unsigned().nullable()
+        table.bigInteger('user_id').unsigned().nullable()
 
         /**
          * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

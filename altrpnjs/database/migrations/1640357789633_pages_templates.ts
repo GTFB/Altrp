@@ -7,10 +7,10 @@ export default class PagesTemplates extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
 
-        table.integer("page_id").index()
-        table.integer("template_id").index()
+        table.bigInteger("page_id").index()
+        table.bigInteger("template_id").index()
 
         table.string("template_type").index()
         table.string("condition_type", 50)

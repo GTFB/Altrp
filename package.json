@@ -33,7 +33,7 @@
         "reports:move": "mv -f resources/modules/altrp-reports/build public/modules/reports",
         "server:start": "node server-dist/index.js",
         "build-pack-js-server": "npm run only-build && node ./altrpnjs/ace build --production && gulp packJS",
-        "pack-js-server": "gulp packJS",
+        "pack-js-server": "node ./altrpnjs/ace build --production && gulp packJS",
         "docs": "jsdoc resources/modules -r"
     },
     "dependencies": {

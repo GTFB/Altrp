@@ -7,8 +7,8 @@ export default class AltrpControllers extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
-        table.integer('model_id').unsigned().nullable()
+        table.bigIncrements('id')
+        table.bigInteger('model_id').unsigned().nullable()
         table.string('namespace').nullable()
         table.string('prefix').nullable()
         table.string('relations').nullable()

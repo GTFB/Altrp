@@ -7,7 +7,7 @@ export default class AltrpCategoryObjects extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
         table.string('category_guid', 36)
         table.string('object_guid', 36).index()
         table.string('object_type')

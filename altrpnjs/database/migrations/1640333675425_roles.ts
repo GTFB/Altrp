@@ -7,7 +7,7 @@ export default class Roles extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
 
         table.string("name")
         table.string("display_name")

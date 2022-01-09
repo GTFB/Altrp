@@ -7,7 +7,7 @@ export default class AltrpCategories extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
         table.string('guid', 36).unique()
         table.string('name')
         table.string('title')

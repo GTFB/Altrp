@@ -7,12 +7,12 @@ export default class AltrpColumns extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
         table.string('name').unique()
         table.string('title').nullable()
         table.text('description').nullable()
         table.string('type')
-        table.integer('size', 11)
+        table.bigInteger('size', 11)
         table.boolean('null').nullable()
         table.string('default').nullable()
         table.boolean('primary').nullable()
@@ -29,10 +29,9 @@ export default class AltrpColumns extends BaseSchema {
         table.text('options', 'longtext').nullable()
         table.text('calculation_logic').nullable()
         table.text('calculation').nullable()
-        table.integer('table_id').unsigned()
-        table.integer('user_id').unsigned().nullable()
-        table.integer('model_id').unsigned().nullable()
-        table.integer('altrp_migration_id').nullable()
+        table.bigInteger('table_id').unsigned()
+        table.bigInteger('user_id').unsigned().nullable()
+        table.bigInteger('model_id').unsigned().nullable()
 
         /**
          * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

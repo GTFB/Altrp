@@ -7,7 +7,7 @@ export default class AltrpCustomizers extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)) {
 
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
         table.string('name').unique()
         table.string('title')
         table.string('type', 50).nullable()
@@ -15,7 +15,7 @@ export default class AltrpCustomizers extends BaseSchema {
         table.string('model_guid', 36).index()
         table.text('data', 'longtext').nullable()
         table.text('settings', 'longtext').nullable()
-        table.integer('model_id').unsigned().nullable()
+        table.bigInteger('model_id').unsigned().nullable()
 
         /**
          * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

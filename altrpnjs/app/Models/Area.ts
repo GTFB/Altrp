@@ -9,6 +9,9 @@ export default class Area extends BaseModel {
   public name: string
 
   @column()
+  public guid: string
+
+  @column()
   public settings: string
 
   @column()

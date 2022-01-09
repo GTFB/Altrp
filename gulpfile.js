@@ -87,17 +87,18 @@ function altrpZip(filename = 'altrp.zip') {
       }));
 }
 
-function altrpJSZip(){
+async  function altrpJSZip(){
   let filename = 'altrp-js.zip'
-  gulp.src([
+  await gulp.src([
     './public/**/*',
     '!./public/storage/**',
     '!./public/altrp-plugins/**',
     '!./public/.htaccess',
-    '!./public/**.php',
+    '!./public/*.php',
     '!./public/web.config',
     '!./public/mix-manifest.json',
-  ]).pipe(gulpCopy('./altrpnjs/build/public', {}))
+  ]).pipe(gulpCopy('./altrpnjs/build/', {}))
+    .pipe(gulp.dest('./'))
   return gulp.src([
     './altrpnjs/build/**/*'
   ]).pipe(zip(filename))
@@ -108,8 +109,14 @@ function altrpJSZip(){
       title: 'Altrp JS'
     }))
 }
-
+async function  clearJSBuild(){
+  const _p = __dirname + `${path.sep}altrpnjs${path.sep}build`
+  if(fs.existsSync(_p)){
+    return fs.unlinkSync(_p)
+  }
+  return 0
+}
 exports.pack = ()=>{return altrpZip()};
 exports.packJS = ()=>{return altrpJSZip()};
 exports.packTest = ()=>{return altrpZip('altrp-test.zip')};
-exports.clearJSBuild = ()=>{return fs.unlinkSync(__dirname + '/altrpnjs/build')}
+// exports.clearJSBuild = clearJSBuild

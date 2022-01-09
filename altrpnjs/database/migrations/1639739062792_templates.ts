@@ -7,18 +7,18 @@ export default class Templates extends BaseSchema {
   public async up () {
     if(! await this.schema.hasTable(this.tableName)) {
       this.schema.createTable(this.tableName, (table) => {
-        table.increments('id')
+        table.bigIncrements('id')
 
         table.string("name").nullable()
         table.string("title").nullable()
         table.text("data", "longtext").nullable()
         table.string("type").nullable()
-        table.integer("parent_template").nullable().index()
-        table.integer("user_id")
+        table.bigInteger("parent_template").nullable().index()
+        table.bigInteger("user_id")
           .unsigned()
           .nullable()
           .references("users.id")
-        table.integer("area")
+        table.bigInteger("area")
           .defaultTo(1)
           .unsigned()
           .nullable()
