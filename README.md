@@ -3,6 +3,11 @@
 
 ## Changelog
 
+### 0.20.22
+* Bug fixed for Crop Widget, Dropbar Widget, Select Input Widget & Select Tree Input Widget
+* Some Customizer Fixes
+* Some Admin Fixes
+
 ### 0.20.21
 * Bug fixed
 + Add Changelog for Updates Page

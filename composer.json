@@ -10,7 +10,6 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "altrpaid/oauth2-module": "dev-main",
         "beyondcode/laravel-websockets": "^1.9",
         "chrisjean/php-ico": "^1.0",
         "doctrine/dbal": "^2.10",

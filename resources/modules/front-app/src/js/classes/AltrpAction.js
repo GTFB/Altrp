@@ -1221,7 +1221,7 @@ class AltrpAction extends AltrpModel {
     const compare = this.getProperty('compare');
     let conditionLeft = this.getProperty('condition_left');
     let conditionRight = this.getProperty('condition_right');
-    conditionLeft = getDataByPath(conditionLeft);
+    conditionLeft = getDataByPath(conditionLeft, null , this.getCurrentModel().getData());
     conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return {success: res};

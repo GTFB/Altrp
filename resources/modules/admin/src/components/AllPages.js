@@ -201,7 +201,7 @@ class AllPages extends Component {
   }
 
   render() {
-    const {treePages} = this.state;
+    const {treePages, currentPage} = this.state;
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
