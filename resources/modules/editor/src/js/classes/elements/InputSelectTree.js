@@ -483,6 +483,11 @@ class InputSelectTree extends BaseElement {
       min: 0,
       step: 0.01
     });
+    
+    this.addControl('tree_menu_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Drop Menu Background',
+    });
 
     this.endControlSection();
 
@@ -680,6 +685,25 @@ class InputSelectTree extends BaseElement {
     });
 
     this.endControlSection();
+
+    this.startControlSection('padding_section', {
+      label: 'Padding',
+      tab: TAB_STYLE
+    })
+
+    this.addControl("tree_item_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Tree Item Padding",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("tree_menu_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Menu Padding",
+      units: ["px", "%", "vh"]
+    });
+
+    this.endControlSection()
 
     this.startControlSection("required_style_section", {
       tab: TAB_STYLE,

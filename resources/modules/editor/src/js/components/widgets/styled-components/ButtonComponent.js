@@ -168,7 +168,7 @@ export function btnStyles(settings) {
     "}",
 
     "& path",
-    ["fill", "icon_color", "color"],
+    ["fill", "icon_color", "cbackground_positionolor"],
     ["stroke", "icon_color_stroke", "color"],
     "}",
     "}",
@@ -176,7 +176,7 @@ export function btnStyles(settings) {
     "}",
 
     "altrp-background-image",
-    ["background-position", "background_position"],
+    ["background-position", ""],
     ["background-attachment", "background_attachment"],
     ["background-repeat", "background_repeat"],
     ["background-size", "background_image_width", "slider"],
