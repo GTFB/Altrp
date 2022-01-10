@@ -78,6 +78,7 @@ export default class Sidebar extends React.Component {
           categories: [...state.robot.categories, item]
         }
       }));
+      this.props.btnChange("btn_active")
     }
   }
 
@@ -90,6 +91,7 @@ export default class Sidebar extends React.Component {
         categories: [...state.robot.categories].filter((i) => i.label !== item)
       }
     }));
+    this.props.btnChange("btn_active")
   }
 
   render() {

@@ -4,13 +4,14 @@ import PluginSvg from "../../svgs/plugins.svg";
 import VectorSvg from '../../svgs/vector.svg';
 import UserSvg from '../../svgs/user.svg';
 import SearchUser from "./../../svgs/search.svg"
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Pagination from "../Pagination";
 import {filterUsers, sortUsers} from "../../js/helpers";
 import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
 import {Select} from "@blueprintjs/select";
 import UserTopPanel from "../UserTopPanel";
+import {compose} from "redux";
 
 
 const BulkActions = ['Bulk Actions']
@@ -61,13 +62,25 @@ class Users extends Component {
 
   getData = (e) => {
     e.preventDefault();
-    this.getUsersEmail();
+    let url = new URL(location.href);
+    if (this.state.search) {
+      url.searchParams.set('s', this.state.search);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
+    this.getUsers();
   }
 
   getUsers = async () => {
-    let users_result = await this.resource.getQueried({s: this.state.search});
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
+    let users_result = await this.resource.getQueried({
+      s:  urlS === null ? this.state.search : urlS
+    });
     this.setState(state => {
-      return {...state, data: users_result};
+      return {...state, data: users_result, search: urlS === null ? this.state.search : urlS };
     });
   }
 
@@ -328,4 +341,9 @@ const mapStateToProps = state => {
   }
 };
 
-export default connect(mapStateToProps)(Users);
+Users = compose(
+  connect(mapStateToProps),
+  withRouter
+)(Users)
+
+export default Users;

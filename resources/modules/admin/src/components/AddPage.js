@@ -97,6 +97,12 @@ class AddPage extends Component {
       return {...state, templates: res};
     });
 
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
+
     let models_res = await this.model_resource.getAll();
     if (this.props.modelsState) {
       this.setState(state => {
@@ -452,6 +458,7 @@ class AddPage extends Component {
   render() {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
+    let id = this.props.match.params.id
 
     console.log(this.state)
 

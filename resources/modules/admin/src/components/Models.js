@@ -1,13 +1,14 @@
 import React, {Component} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
 import UserTopPanel from "./UserTopPanel";
 import {connect} from "react-redux";
 import {filterCategories} from "../js/helpers";
+import {compose} from "redux";
 
 const columnsModel = [
   {
@@ -107,21 +108,56 @@ class Models extends Component {
     });
   };
 
+  updateModels = async () => {
+    let res = await this.modelsResource.getAll();
+
+    if (this.props.modelsState) {
+      this.setState(state => {
+        return {
+          ...state,
+          modelsDidMount: res.models,
+        }
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          modelsDidMount: res.models.filter(item => item.id >= 5),
+        }
+      });
+    }
+    await this.getModels()
+  }
+
   /**
    * Обновить список моделей
    */
   getModels = async () => {
-    let res = await this.modelsResource.getQueried({
-      s: this.state.modelsSearch,
-      ...this.state.modelsSorting
-    });
+    let url = new URL(location.href);
+    let urlCategories = url.searchParams.get('categories')
+    let urlS = url.searchParams.get('s')
+    let res = null
+    if (urlCategories) {
+      res = await this.modelsResource.getQueried({
+        categories: urlCategories,
+        s: urlS === null ? this.state.modelsSearch : urlS,
+        ...this.state.modelsSorting
+      });
+    } else {
+        res = await this.modelsResource.getQueried({
+        s: urlS === null ? this.state.modelsSearch : urlS,
+        ...this.state.modelsSorting
+      });
+    }
     this.props.updateModels()
     if (this.props.modelsState) {
       this.setState(state => {
         return {
           ...state,
           models: res.models,
-          modelsPageCount: res.pageCount
+          modelsSearch: urlS === null ? this.state.modelsSearch : urlS,
+          modelsPageCount: res.pageCount,
+          activeCategory: urlCategories === null ? 'All' : urlCategories
         }
       });
     } else {
@@ -129,16 +165,31 @@ class Models extends Component {
         return {
           ...state,
           models: res.models.filter(item => item.id >= 5),
-          modelsPageCount: res.pageCount
+          modelsSearch: urlS === null ? this.state.modelsSearch : urlS,
+          modelsPageCount: res.pageCount,
+          activeCategory: urlCategories === null ? 'All' : urlCategories
         }
       });
     }
   };
 
   getCategory = async (guid, all) => {
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
+    // if (urlS) {
+    //   url.searchParams.delete('s');
+    //   this.props.history.push(`${url.pathname + url.search}`)
+    //   this.setState(state => ({
+    //     ...state,
+    //     modelsSearch: ""
+    //   }))
+    // }
     if (guid) {
+      url.searchParams.set('categories', guid);
+      this.props.history.push(`${url.pathname + url.search}`)
       let {models} = await this.modelsResource.getQueried({
-        categories: guid
+        categories: guid,
+        s: urlS === null ? this.state.modelsSearch : urlS
       });
 
       if (this.props.modelsState) {
@@ -155,7 +206,11 @@ class Models extends Component {
         }))
       }
     } else {
-      let {models} = await this.modelsResource.getAll()
+      url.searchParams.delete('categories');
+      this.props.history.push(`${url.pathname + url.search}`)
+      let {models} = await this.modelsResource.getQueried({
+        s: urlS === null ? this.state.modelsSearch : urlS
+      });
       if (this.props.modelsState) {
         this.setState(state => ({
           ...state,
@@ -177,40 +232,10 @@ class Models extends Component {
   // }
 
   async componentDidMount() {
-    // get: /admin/ajax/models .then(models => {
-    //   this.setState({models});
-    // });
-    // let models = await this.modelsResource.getAll();
-    // this.setState(state => ({
-    //   ...state,
-    //   modelsCount: models.models.length
-    // }));
 
-    // let data_sources = await this.dataSourcesResource.getAll();
-    // this.setState(state => ({
-    //   ...state,
-    //   dataSourcesCount: data_sources.data_sources.length
-    // }));
-
-    this.getModels();
+    this.updateModels();
     this.getDataSources();
-    let res = await this.modelsResource.getAll();
 
-    if (this.props.modelsState) {
-      this.setState(state => {
-        return {
-          ...state,
-          modelsDidMount: res.models,
-        }
-      });
-    } else {
-      this.setState(state => {
-        return {
-          ...state,
-          modelsDidMount: res.models.filter(item => item.id >= 5),
-        }
-      });
-    }
 
     let {data} = await this.categoryOptions.getAll();
     this.setState(state => ({
@@ -247,6 +272,15 @@ class Models extends Component {
 
   searchModel = e => {
     e.preventDefault();
+
+    let url = new URL(location.href);
+    if (this.state.modelsSearch) {
+      url.searchParams.set('s', this.state.modelsSearch);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.getModels();
   }
 
@@ -311,7 +345,7 @@ class Models extends Component {
           <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
           <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({ activeTab === 0 ? this.state.modelsDidMount.length : this.state.dataSources.length || "0"})
+              All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})
             </span>
           </div>
         </div>
@@ -342,7 +376,7 @@ class Models extends Component {
                   method: 'delete',
                   confirm: 'Are You Sure?',
                   after: () => {
-                    this.getModels()
+                    this.updateModels()
                   },
                   className: 'quick-action-menu__item_danger',
                   title: 'Delete'
@@ -436,6 +470,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-Models = connect(mapStateToProps)(Models)
+Models = compose(
+  connect(mapStateToProps),
+  withRouter
+)(Models)
 
 export default Models;

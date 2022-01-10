@@ -24,9 +24,10 @@ class MenusList extends Component {
 
   async componentDidMount() {
     try {
+      this.updateMenus()
       let {data} = await this.categoryOptions.getAll();
       let menus = await this.resource.getAll();
-      this.setState(state => ({...state, menus, menusDidMount: menus, categoryOptions: data }));
+      this.setState(state => ({...state, menusDidMount: menus, categoryOptions: data }));
     } catch (e) {
       console.error(e);
     }
@@ -52,6 +53,15 @@ class MenusList extends Component {
 
   searchMenus = (e) => {
     e.preventDefault();
+
+    let url = new URL(location.href);
+    if (this.state.menusSearch) {
+      url.searchParams.set('s', this.state.menusSearch);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.updateMenus();
   }
 
@@ -77,15 +87,45 @@ class MenusList extends Component {
     }
   }
 
+  deleteMenus = async () => {
+    let menus = await this.resource.getAll();
+    this.setState(state => ({...state, menusDidMount: menus }));
+    await this.updateMenus();
+  }
+
   updateMenus = async () => {
-    let menus = await  this.resource.getQueried({ s: this.state.menusSearch });
-    this.setState(state => ({...state, menus, menusDidMount: menus}))
+    let url = new URL(location.href);
+    let urlCategories = url.searchParams.get('categories')
+    let urlS = url.searchParams.get('s')
+    let menus = []
+    if (urlCategories) {
+      menus = await this.resource.getQueried({
+        categories: urlCategories,
+        s: urlS === null ? this.state.menusSearch : urlS
+      });
+    } else {
+      menus = await this.resource.getQueried({
+        s: urlS === null ? this.state.menusSearch : urlS
+      });
+    }
+
+    this.setState(state => ({
+      ...state,
+      menus,
+      menusSearch: urlS === null ? this.state.menusSearch : urlS,
+      activeCategory: urlCategories === null ? 'All' : urlCategories
+    }))
   }
 
   getCategory = async (guid, all) => {
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
     if (guid) {
+      url.searchParams.set('categories', guid);
+      this.props.history.push(`${url.pathname + url.search}`)
       let menus = await this.resource.getQueried({
-        categories: guid
+        categories: guid,
+        s: urlS === null ? this.state.menusSearch : urlS
       });
       this.setState(state => ({
         ...state,
@@ -93,7 +133,11 @@ class MenusList extends Component {
         activeCategory: guid
       }))
     } else {
-      let menus = await this.resource.getAll();
+      url.searchParams.delete('categories');
+      this.props.history.push(`${url.pathname + url.search}`)
+      let menus = await this.resource.getQueried({
+        s: urlS === null ? this.state.menusSearch : urlS
+      });
       this.setState(state => ({
         ...state,
         menus,
@@ -139,6 +183,7 @@ class MenusList extends Component {
               title: 'Name',
               url: true,
               editUrl: true,
+              default: '(no Name)',
               tag: 'Link'
             },
             {
@@ -158,7 +203,7 @@ class MenusList extends Component {
               method: "delete",
               confirm: "Are You Sure?",
               after: () => {
-                this.updateMenus()
+                this.deleteMenus()
               },
               className: "quick-action-menu__item_danger",
               title: "Delete"

@@ -96,9 +96,38 @@ class CustomizerController extends Controller
   /**
    * @return \Illuminate\Http\JsonResponse
    */
-  public function index(): \Illuminate\Http\JsonResponse
+  public function index(Request $request): \Illuminate\Http\JsonResponse
   {
-    $customizers = Customizer::orderBy('altrp_customizers.title', 'Asc')->get()->toArray();
+
+    $search = $request->get('s');
+    $categories = $request->get('categories');
+    $page = $request->get('page', 1);
+    $orderColumn = $request->get('order_by') ?? 'title';
+    $orderColumn = 'altrp_customizers.' . $orderColumn;
+    $limit = $request->get('pageSize', 10);
+    $offset = $limit * ($page - 1);
+    $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+    $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
+
+    $customizers = Customizer::select('altrp_customizers.*')->with('categories.category')
+      ->when($categories, function ($query, $categories) {
+          if (is_string($categories)) {
+              $categories = explode(",", $categories);
+              $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_customizers.guid')
+                    ->whereIn('altrp_category_objects.category_guid', $categories);
+          }
+      })
+      ->when($search, function ($query, $search) {
+          $query->where(function ($query) use ($search) {
+              $query->where('altrp_customizers.title','like', '%'.$search.'%')
+                    ->orWhere('altrp_customizers.id','like', '%'.$search.'%');
+          });
+      })
+      ->when(($offset == 0 || $offset > 0) && $limit, function ($query) use ($offset, $limit) {
+          $query->skip($offset)->take($limit);
+      })
+      ->$sortType($orderColumn)
+      ->get()->toArray();
 
     return response()->json( [
       'success' => true,

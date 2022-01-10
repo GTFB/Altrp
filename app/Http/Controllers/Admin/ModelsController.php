@@ -241,9 +241,9 @@ class ModelsController extends HttpController
             $pageCount = 0;
             //$sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
             $models = $search
-                ? Model::getBySearch($search, $orderColumn, $orderType)
+                ? Model::getBySearch($search, $orderColumn, $orderType, $categories)
                 //: Model::all()->$sortType( $orderColumn )->values();
-                : Model::with('categories.category')
+                : Model::select('altrp_models.*')->with('categories.category')
                     ->when($categories, function ($query, $categories) {
                         if (is_string($categories)) {
                             $categories = explode(",", $categories);
@@ -251,13 +251,12 @@ class ModelsController extends HttpController
                                   ->whereIn('altrp_category_objects.category_guid', $categories);
                         }
                     })
-
                     //->$sortType( $orderColumn )->values();
                     ->orderBy($orderColumn, $orderType)
                     ->get();
 
         } else {
-            $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
+            $modelsCount = $search || $categories ? Model::getCountWithSearch($search, $categories) : Model::getCount();
             $limit = $request->get('pageSize', 10);
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);

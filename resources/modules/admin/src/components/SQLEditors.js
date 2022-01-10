@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import 'react-tabs/style/react-tabs.scss';
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
@@ -58,7 +58,7 @@ const initPaginationProps = {
 };
 
 
-export default class SQLEditors extends Component {
+class SQLEditors extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -85,10 +85,15 @@ export default class SQLEditors extends Component {
   }
 
   async componentDidMount() {
-    let sql_editors = await this.sql_editorsResource.getAll();
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
+    let sql_editors = await this.sql_editorsResource.getQueried({
+      s: urlS === null ? this.state.sqlEditorSearch : urlS
+    });
     sql_editors = sql_editors.sql_editors;
     this.setState(state => ({
       ...state,
+      sqlEditorSearch: urlS === null ? this.state.sqlEditorSearch : urlS,
       sql_editors
     }))
 
@@ -126,6 +131,14 @@ export default class SQLEditors extends Component {
 
   searchSqlEditors = (e) => {
     e.preventDefault();
+    let url = new URL(location.href);
+    if (this.state.sqlEditorSearch) {
+      url.searchParams.set('s', this.state.sqlEditorSearch);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.getSqlEditors();
   }
 
@@ -203,3 +216,5 @@ export default class SQLEditors extends Component {
     </div>
   }
 }
+
+export default withRouter(SQLEditors)

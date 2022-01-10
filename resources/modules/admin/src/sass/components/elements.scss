@@ -1068,6 +1068,26 @@ input[type="text"].form__input {
   margin-right: 20px;
 }
 
+.category__block-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #F3F6F8;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+.admin-filters-flex {
+  display: flex;
+  align-items: center
+}
+
 @media screen and (max-width: 1101px) {
   .upload__marginBottom {
     margin-bottom: 20px;

@@ -7,7 +7,7 @@ class AdminModelsDropList extends React.Component {
 
     render() {
         const {pathname} = this.props.location
-        const pathmanHaveAsssets = pathname.indexOf('models') !== -1 || pathname.indexOf('model') !== -1
+        const pathmanHaveAsssets = pathname.indexOf('databases') !== -1 || pathname.indexOf('database') !== -1
         const {modelsState} = this.props;
 
         return (
@@ -29,7 +29,7 @@ class AdminModelsDropList extends React.Component {
                                         <li key={id}>
                                             <Link
                                                 to={{
-                                                    pathname: `/admin/model/${id}`,
+                                                    pathname: `/admin/database/${id}`,
                                                     propsSearch: label,
                                                 }}
                                                 className="admin-nav-list__link admin-nav-list__link--models"
@@ -57,7 +57,7 @@ class AdminModelsDropList extends React.Component {
                                             <li key={id}>
                                                 <Link
                                                     to={{
-                                                        pathname: `/admin/model/${id}`,
+                                                        pathname: `/admin/database/${id}`,
                                                         propsSearch: label,
                                                     }}
                                                     className="admin-nav-list__link admin-nav-list__link--models"
@@ -86,7 +86,7 @@ class AdminModelsDropList extends React.Component {
                                         <li key={id}>
                                             <Link
                                                 to={{
-                                                    pathname: `/admin/model/${id}`,
+                                                    pathname: `/admin/database/${id}`,
                                                     propsSearch: label,
                                                 }}
                                                 className="admin-nav-list__link admin-nav-list__link--models"
@@ -114,7 +114,7 @@ class AdminModelsDropList extends React.Component {
                                             <li key={id}>
                                                 <Link
                                                     to={{
-                                                        pathname: `/admin/model/${id}`,
+                                                        pathname: `/admin/database/${id}`,
                                                         propsSearch: label,
                                                     }}
                                                     className="admin-nav-list__link admin-nav-list__link--models"

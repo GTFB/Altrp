@@ -29,7 +29,7 @@ class MediaController extends Controller
     $categories = $request->get('categories');
     if( $request->get( 'type' ) ){
       if( $request->get( 'type' ) === 'other' ) {
-        $media = Media::with('categories.category')
+        $media = Media::select('altrp_media.*')->with('categories.category')
           ->when($categories, function ($query, $categories) {
               if (is_string($categories)) {
                   $categories = explode(",", $categories);
@@ -43,7 +43,7 @@ class MediaController extends Controller
           })
           ->get();
       } else {
-        $media = Media::with('categories.category')
+        $media = Media::select('altrp_media.*')->with('categories.category')
           ->where( 'type', $request->get( 'type' ) )
           ->when($categories, function ($query, $categories) {
               if (is_string($categories)) {
@@ -58,7 +58,7 @@ class MediaController extends Controller
       return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    $media = Media::with('categories.category')
+    $media = Media::select('altrp_media.*')->with('categories.category')
           ->when($categories, function ($query, $categories) {
               if (is_string($categories)) {
                   $categories = explode(",", $categories);
@@ -66,7 +66,7 @@ class MediaController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
-          ->get()->sortBy( 'title' )->values()->toArray();
+          ->get()->sortBy( 'altrp_media.title' )->values()->toArray();
 
     return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
   }
