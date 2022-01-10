@@ -10,6 +10,7 @@ import _ from "lodash";
 import IconsManager from "../../editor/src/js/classes/modules/IconsManager";
 import "./sass/styles.scss";
 import {Provider} from 'react-redux';
+import AltrpCustomizer from "./js/classes/AltrpCustomizer";
 
 
 window.React = React;
@@ -18,6 +19,7 @@ window.Component = Component;
 
 window._ = _;
 window.iconsManager = new IconsManager();
+window.altrpCustomizer = new AltrpCustomizer();
 
 window.customizerStore = store;
 

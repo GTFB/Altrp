@@ -102,9 +102,12 @@ class PropertyComponent extends Component {
       key={item.value}/>
   }
   onQueryChange = (query, value) => {
+    let querySplit = query.split(' ')
     return (
-      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0 || `${String(value.objectInstance).toLowerCase()}`.indexOf(query.toLowerCase()) >= 0 ||
-      ((`${value.label.toLowerCase()}` + ' ' + `${String(value.objectInstance).toLowerCase()}`).indexOf(query.toLowerCase()) >= 0)
+      querySplit.length === 1 ?
+      value.label.toLowerCase().indexOf(query.toLowerCase()) >= 0 || String(value.objectInstance).toLowerCase().indexOf(query.toLowerCase()) >= 0
+        :
+        value.label.toLowerCase().indexOf(querySplit[0].toLowerCase()) >= 0 && String(value.objectInstance).toLowerCase().indexOf(querySplit[1].toLowerCase()) >= 0
     );
   }
 

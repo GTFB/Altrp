@@ -1,14 +1,15 @@
 import * as React from "react";
 import { Handle } from 'react-flow-renderer';
+import {connect} from "react-redux";
 
-export default class Start extends React.Component {
+class Start extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
     let nodeClasses = "flow-node-begend";
-    if (this.props.selected) nodeClasses += " selected";
+    if (this.props.selectedNode === 'start' && this.props.id === this.props.selectedNodeId) nodeClasses += " selected";
 
     return (
       <div className={nodeClasses}>
@@ -19,3 +20,14 @@ export default class Start extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    selectedNode: state.copyNodeData.selectedNode,
+    selectedNodeId: state.copyNodeData.selectedNodeId
+  }
+}
+
+Start = connect(mapStateToProps)(Start)
+
+export default Start
