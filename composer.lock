@@ -7,64 +7,6 @@
     "content-hash": "7259f8211bbd8c7e42577bfad506f971",
     "packages": [
         {
-            "name": "altrpaid/oauth2-module",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/AkimovIgor/oauth2-module.git",
-                "reference": "e75fd44fe9f1a2c92bbadf4f7fb3005fd4b6db72"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/AkimovIgor/oauth2-module/zipball/e75fd44fe9f1a2c92bbadf4f7fb3005fd4b6db72",
-                "reference": "e75fd44fe9f1a2c92bbadf4f7fb3005fd4b6db72",
-                "shasum": ""
-            },
-            "require": {
-                "coderello/laravel-passport-social-grant": "^3.0",
-                "doctrine/dbal": "^2.10",
-                "laravel/socialite": "^5.0",
-                "lcobucci/jwt": "3.4",
-                "socialiteproviders/discord": "^4.0",
-                "socialiteproviders/instagram": "^4.0",
-                "socialiteproviders/laravelpassport": "^4.0",
-                "socialiteproviders/odnoklassniki": "^4.1",
-                "socialiteproviders/vkontakte": "^4.2",
-                "socialiteproviders/yandex": "^4.0"
-            },
-            "default-branch": true,
-            "type": "laravel-module",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Modules\\Oauth2\\Providers\\Oauth2ServiceProvider"
-                    ],
-                    "aliases": []
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Modules\\Oauth2\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "AkimovIgor",
-                    "email": "akimovigor5417@gmail.com"
-                }
-            ],
-            "description": "Plugin for oauth2 authentication",
-            "support": {
-                "issues": "https://github.com/AkimovIgor/oauth2-module/issues",
-                "source": "https://github.com/AkimovIgor/oauth2-module/tree/main"
-            },
-            "time": "2021-05-31T17:37:17+00:00"
-        },
-        {
             "name": "beyondcode/laravel-websockets",
             "version": "1.12.0",
             "source": {
@@ -12375,7 +12317,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "altrpaid/oauth2-module": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

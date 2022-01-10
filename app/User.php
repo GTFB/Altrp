@@ -11,7 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 
 use Laravel\Passport\HasApiTokens;
-use Modules\Oauth2\Entities\SocialAccount;
 
 use Illuminate\Support\Facades\DB;
 
@@ -60,7 +59,7 @@ class User extends Authenticatable
      * Always with relations
      * @var string[]
      */
-    protected $with = ['notice_settings', 'social_accounts',];
+    protected $with = ['notice_settings',];
 
 
     protected $appends = ['full_name'];
@@ -122,10 +121,6 @@ class User extends Authenticatable
         return $this->morphMany(Notification::class, 'notifiable')->orderBy('created_at', 'desc');
     }
 
-    public function social_accounts()
-    {
-        return $this->hasMany(SocialAccount::class, 'user_id');
-    }
 
     public function social_interactions()
     {
@@ -134,7 +129,7 @@ class User extends Authenticatable
 
 
     public function getUserRoles(){
-      
+
       $roles_ = DB::table( 'role_user' )->where( 'user_id', $this->id )
         ->select('role_id')->get();
 
