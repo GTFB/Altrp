@@ -1,7 +1,8 @@
 import * as React from "react";
 import {Handle} from "react-flow-renderer";
+import {connect} from "react-redux";
 
-export default class Switch extends React.Component {
+class Switch extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -14,7 +15,7 @@ export default class Switch extends React.Component {
 
   render() {
     let nodeClasses = "flow-node-condition";
-    if (this.props.selected) nodeClasses += " selected";
+    if (this.props.selectedNode === 'switch' && this.props.id === this.props.selectedNodeId) nodeClasses += " selected";
     const handleMap = this.getPosition();
     const topStyle = handleMap === 'vertical' ? '0%' : '100%';
     const left = handleMap === 'vertical' ? '100%' : '0%';
@@ -64,3 +65,14 @@ export default class Switch extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    selectedNode: state.copyNodeData.selectedNode,
+    selectedNodeId: state.copyNodeData.selectedNodeId
+  }
+}
+
+Switch = connect(mapStateToProps)(Switch)
+
+export default Switch

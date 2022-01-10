@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
-import AdminTable from "./AdminTable";
 import UserTopPanel from "./UserTopPanel";
-import {Icon, InputGroup, Tree} from "@blueprintjs/core";
-import PagesSvg from "../svgs/pages-v2.svg";
+import {InputGroup, Tree} from "@blueprintjs/core";
 import Search from "../svgs/search.svg";
 import {filterCategories} from "../js/helpers";
+import Pagination from "./Pagination";
 
 export default class AllPages extends Component {
   constructor(props) {
@@ -24,15 +23,19 @@ export default class AllPages extends Component {
     };
     this.resource = new Resource({ route: "/admin/ajax/pages" });
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
-    this.itemsPerPage = 10;
+    this.itemsPerPage = 20;
   }
 
   getPages = async () => {
-    let res = await this.resource.getQueried({ s: this.state.pagesSearch });
+    let res = await this.resource.getQueried({
+      s: this.state.pagesSearch,
+      order: 'ASC',
+      order_by: 'title'
+    });
     this.setState(state => {
       return { ...state, pages: res };
     });
-    let treePagesNew = res.map(page => {
+    let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
       return this.treePagesMap(page)
     })
     this.setState(state => {
@@ -164,7 +167,8 @@ export default class AllPages extends Component {
   }
 
   render() {
-    const {  treePages  } = this.state;
+    const {  treePages, currentPage  } = this.state;
+
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -181,7 +185,7 @@ export default class AllPages extends Component {
            </Link>
            <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({this.state.pages.length || "0"})
+              All ({treePages.length || "0"})
             </span>
            </div>
          </div>
@@ -224,10 +228,23 @@ export default class AllPages extends Component {
                 </div>
               )}
               <Tree
-                contents={treePages}
+                contents={treePages.slice(
+                  currentPage * this.itemsPerPage - this.itemsPerPage,
+                  currentPage * this.itemsPerPage
+                )}
                 className="altrp-tree__pages"
                 onNodeCollapse={this.handleNodeCollapse}
                 onNodeExpand={this.handleNodeExpand}
+              />
+              <Pagination
+                pageCount={Math.ceil(treePages.length / this.itemsPerPage) || 1}
+                currentPage={currentPage}
+                changePage={page => {
+                  if (currentPage !== page) {
+                    this.setState({ currentPage: page });
+                  }
+                }}
+                itemsCount={treePages.length}
               />
             </div>
           </div>

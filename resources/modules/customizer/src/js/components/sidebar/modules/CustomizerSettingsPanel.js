@@ -10,6 +10,7 @@ import {InputGroup} from "@blueprintjs/core";
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {AutoCopyText} from "../../../../../../admin/src/js/helpers";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 class CustomizerSettingsPanel extends React.Component {
@@ -96,16 +97,15 @@ class CustomizerSettingsPanel extends React.Component {
   }
 
   UrlCopy = () => {
-    let sourceUrl = ''
-    if (this.props.customizer.source !== null) {
-      const { model, url } = this.state.customizer.source
-      sourceUrl = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
-    }
-    const Copy = AutoCopyText(sourceUrl)
+    // let sourceUrl = ''
+    // if (this.props.customizer.source !== null) {
+    //   const { model, url } = this.state.customizer.source
+    //   sourceUrl = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
+    // }
+    // const Copy = AutoCopyText(sourceUrl)
     this.setState(state => ({
       ...state,
       copy: true,
-      copyText: Copy
     }))
     setTimeout(() => {
       this.setState(state => ({
@@ -216,12 +216,10 @@ class CustomizerSettingsPanel extends React.Component {
                     <div className="Customizer-url">
                       <div className="controller-container__label control-select__label controller-label">Url:</div>
                       <div className="Customizer-url__block">
-                        <button onClick={this.UrlCopy} className="btn btn_success">Copy url</button>
-                        {this.state.copyText ? (
-                          <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
-                        ) : (
-                          <div className={this.state.copy ? "error-copy__url on" : "error-copy__url"}>Copying is impossible without https!</div>
-                        )}
+                        <CopyToClipboard onCopy={this.UrlCopy} text={Url}>
+                          <button className="btn btn_success">Copy url</button>
+                        </CopyToClipboard>
+                        <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
                       </div>
                       <input value={Url} readOnly={true} className="url-text"/>
                     </div>

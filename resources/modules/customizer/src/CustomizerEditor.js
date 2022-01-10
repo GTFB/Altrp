@@ -30,6 +30,8 @@ import CustomEdge from "./js/components/sidebar/modules/widgets/CustomEdge";
 import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLine';
 import ContextMenuCustomizer from "./js/components/sidebar/modules/data/ContextMenuCustomizer";
 import {contextMenu} from "react-contexify";
+import {setCopyNode, setSelectNode} from "./js/store/copy-node/action";
+import {storage} from "./js/storage";
 
 const mapStateToProps = state => {
   return {
@@ -76,7 +78,22 @@ class CustomizerEditor extends Component {
     store.dispatch(setCurrentCustomizer(customizer));
   }
 
+  checkingLocalStorageRelevance = () => {
+    let localObj = storage.getItem('node')
+    if (localObj) {
+      let date = new Date().getTime();
+      if (date - localObj.startTime > localObj.expires) {
+        storage.deleteItem('node')
+        store.dispatch(setCopyNode(false))
+      } else {
+        store.dispatch(setCopyNode(true))
+      }
+    }
+  }
+
+
   async componentDidMount() {
+    this.checkingLocalStorageRelevance()
     store.subscribe(this.updateCustomizerState.bind(this));
 
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
@@ -278,6 +295,7 @@ class CustomizerEditor extends Component {
 
     if(isNode(elementStore)) this.setState(s => ({ ...s, selectNode: elementStore, selectEdge: false }));
     if(isEdge(elementStore)) this.setState(s => ({ ...s, selectEdge: elementStore, selectNode: false }));
+    store.dispatch(setSelectNode(element.type, element.id))
     this.setState(s => ({ ...s, activePanel: "selected" }));
   }
 
@@ -337,6 +355,7 @@ class CustomizerEditor extends Component {
     if (this.state.activePanel !== 'widgets') {
       this.setState(state => ({ ...state, activePanel: "widgets" }));
     }
+    store.dispatch(setSelectNode(false, false))
   }
 
   showMenu(e){
@@ -344,6 +363,11 @@ class CustomizerEditor extends Component {
       event: e,
       id: "context"
     });
+  }
+
+  rightClick = (e, node) => {
+    this.onElementClick(e, node)
+    this.showMenu(e)
   }
 
 
@@ -372,7 +396,7 @@ class CustomizerEditor extends Component {
               onElementsRemove={ this.onElementsRemove }
               deleteKeyCode={'Delete'}
               onElementClick={ this.onElementClick }
-              onNodeContextMenu={(e) => this.showMenu(e)}
+              onNodeContextMenu={this.rightClick}
               onPaneContextMenu={(e) => this.showMenu(e)}
               onPaneClick={(e) => this.PaneClick(e)}
               onLoad={ this.onLoad }

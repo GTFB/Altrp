@@ -1,8 +1,10 @@
-import {SET_COPY_NODE} from "./action";
+import {SET_COPY_NODE, SET_SELECT_NODE} from "./action";
 
 
 const initialState = {
-  copyNodeState: null
+  copyNodeState: false,
+  selectedNode: false,
+  selectedNodeId: false,
 }
 
 export const copyNodeReducer = (state = initialState, action) => {
@@ -11,6 +13,12 @@ export const copyNodeReducer = (state = initialState, action) => {
       return {
         ...state,
         copyNodeState: action.payload
+      }
+    case SET_SELECT_NODE:
+      return {
+        ...state,
+        selectedNode: action.payload,
+        selectedNodeId: action.payload_id
       }
     default:
       return state;

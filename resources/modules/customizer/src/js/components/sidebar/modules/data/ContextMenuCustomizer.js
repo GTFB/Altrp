@@ -6,6 +6,7 @@ import {setCustomizerSettingsData} from "../../../../store/customizer-settings/a
 import {setCopyNode} from "../../../../store/copy-node/action";
 import {connect} from "react-redux";
 import("react-contexify/scss/main.scss");
+import {storage} from "../../../../storage"
 
 
 class ContextMenuCustomizer extends Component {
@@ -45,11 +46,17 @@ class ContextMenuCustomizer extends Component {
   }
 
   onCopy = () => {
-    const clipboard = {
+    const obj = {
       type: this.props.node.type,
       data: this.props.node.data
     };
-    store.dispatch(setCopyNode(clipboard))
+    const clipboard = {
+      node: obj,
+      startTime: new Date().getTime(),
+      expires: 3600000
+    }
+    storage.setItem('node', clipboard)
+    store.dispatch(setCopyNode(true))
   }
 
   onPaste = (e) => {
@@ -58,8 +65,9 @@ class ContextMenuCustomizer extends Component {
       x: e.event.clientX - reactFlowBounds.left - 50,
       y: e.event.clientY - reactFlowBounds.top - 50
     });
+    let localObj = storage.getItem('node')
     const pasteObj = {
-      ...this.props.copyNode,
+      ...localObj.node,
       id: `${this.getId()}`,
       position
     }
@@ -75,7 +83,7 @@ class ContextMenuCustomizer extends Component {
     return (
       ReactDOM.createPortal(
         <Menu animation={animation.scale} id="context">
-          <Item onClick={this.onCopy} disabled={this.props.disabled === 'widgets'} >
+          <Item onClick={this.onCopy} disabled={this.props.disabled === 'widgets' || this.props.disabled === 'settings'} >
             Copy
           </Item>
           <Separator/>
@@ -83,11 +91,11 @@ class ContextMenuCustomizer extends Component {
             Paste
           </Item>
           <Separator/>
-          <Item disabled={this.props.disabled === 'widgets'} onClick={this.onDuplicate}>
+          <Item disabled={this.props.disabled === 'widgets' || this.props.disabled === 'settings'} onClick={this.onDuplicate}>
             Duplicate
           </Item>
           <Separator/>
-          <Item disabled={this.props.disabled === 'widgets'} onClick={this.onRemove}>
+          <Item disabled={this.props.disabled === 'widgets' || this.props.disabled === 'settings'} onClick={this.onRemove}>
             Delete
           </Item>
         </Menu>,
