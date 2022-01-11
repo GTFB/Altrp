@@ -50,24 +50,27 @@ class ContextMenuCustomizer extends Component {
       type: this.props.node.type,
       data: this.props.node.data
     };
-    const clipboard = {
-      node: obj,
-      startTime: new Date().getTime(),
-      expires: 3600000
-    }
-    storage.setItem('node', clipboard)
+    navigator.clipboard?.writeText(JSON.stringify(obj))
+    // const clipboard = {
+    //   node: obj,
+    //   startTime: new Date().getTime(),
+    //   expires: 3600000
+    // }
+    // storage.setItem('node', clipboard)
     store.dispatch(setCopyNode(true))
   }
 
-  onPaste = (e) => {
+  onPaste = async (e) => {
     const reactFlowBounds = this.props.reactFlowRef.getBoundingClientRect();
     const position = this.props.reactFlowInstance.project({
       x: e.event.clientX - reactFlowBounds.left - 50,
       y: e.event.clientY - reactFlowBounds.top - 50
     });
-    let localObj = storage.getItem('node')
+    // let localObj = storage.getItem('node')
+    let text = await navigator.clipboard?.readText()
+    let localObj = JSON.parse(text)
     const pasteObj = {
-      ...localObj.node,
+      ...localObj,
       id: `${this.getId()}`,
       position
     }

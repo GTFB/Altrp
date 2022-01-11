@@ -78,22 +78,18 @@ class CustomizerEditor extends Component {
     store.dispatch(setCurrentCustomizer(customizer));
   }
 
-  checkingLocalStorageRelevance = () => {
-    let localObj = storage.getItem('node')
+  checkingLocalStorageRelevance = async () => {
+    let localObj = await navigator.clipboard?.readText()
     if (localObj) {
-      let date = new Date().getTime();
-      if (date - localObj.startTime > localObj.expires) {
-        storage.deleteItem('node')
-        store.dispatch(setCopyNode(false))
-      } else {
-        store.dispatch(setCopyNode(true))
-      }
+      store.dispatch(setCopyNode(true))
+    } else {
+      store.dispatch(setCopyNode(false))
     }
   }
 
 
   async componentDidMount() {
-    this.checkingLocalStorageRelevance()
+   await this.checkingLocalStorageRelevance()
     store.subscribe(this.updateCustomizerState.bind(this));
 
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
@@ -365,11 +361,27 @@ class CustomizerEditor extends Component {
     });
   }
 
-  rightClick = (e, node) => {
+  rightClickNode = async (e, node) => {
     this.onElementClick(e, node)
+    let localObj = await navigator.clipboard?.readText()
+    if (localObj) {
+      store.dispatch(setCopyNode(true))
+    } else {
+      store.dispatch(setCopyNode(false))
+    }
     this.showMenu(e)
   }
 
+  rightClickPanel = async (e) => {
+    this.PaneClick()
+    let localObj = await navigator.clipboard?.readText()
+    if (localObj) {
+      store.dispatch(setCopyNode(true))
+    } else {
+      store.dispatch(setCopyNode(false))
+    }
+    this.showMenu(e)
+  }
 
   render() {
     return (
@@ -396,8 +408,8 @@ class CustomizerEditor extends Component {
               onElementsRemove={ this.onElementsRemove }
               deleteKeyCode={'Delete'}
               onElementClick={ this.onElementClick }
-              onNodeContextMenu={this.rightClick}
-              onPaneContextMenu={(e) => this.showMenu(e)}
+              onNodeContextMenu={this.rightClickNode}
+              onPaneContextMenu={this.rightClickPanel}
               onPaneClick={(e) => this.PaneClick(e)}
               onLoad={ this.onLoad }
               onDrop={ this.onDrop }
