@@ -758,7 +758,7 @@ class ElementWrapper extends Component {
     let emptyColumn = "";
     if (
       this.props.element.getType() === "column" &&
-      !this.state.children.length
+      !this.props.element.getChildren().length
     ) {
       emptyColumn = (
         <div className="column-empty-plus" onClick={this.showWidgetsPanel}>

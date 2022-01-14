@@ -33,7 +33,7 @@ class SaveImportModule extends BaseModule {
    */
   load() {
     this.template_id = getTemplateId();
-    // console.log(this.template_id);
+
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
     if (this.template_id) {
       let res = this.resource
