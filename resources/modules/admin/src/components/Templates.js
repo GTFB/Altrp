@@ -20,6 +20,7 @@ class Templates extends Component {
       activeHeader: 0,
       allTemplates: [],
       templateAreas: [],
+      templateAreasModal: [],
       activeTemplateArea: {},
       pageCount: 1,
       currentPage: 1,
@@ -246,10 +247,8 @@ class Templates extends Component {
     }
 
     this.setState(state => {
-      return {...state, templateAreas: templateAreasNew}
+      return {...state, templateAreas: templateAreasNew, templateAreasModal: templateAreas}
     });
-    this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
-    await this.DidMountTemplates(this.state.activeTemplateArea)
     const { data } = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
@@ -603,7 +602,7 @@ class Templates extends Component {
       </div>
       {this.state.modal && (
         <SmallModal toggleModal={this.toggleModal} activeMode={this.state.modal}>
-          <TemplateChildrenModal toggleModal={this.toggleModal} categoryOptions={this.state.categoryOptions} templateAreas={this.state.templateAreas} />
+          <TemplateChildrenModal toggleModal={this.toggleModal} categoryOptions={this.state.categoryOptions} templateAreas={this.state.templateAreasModal} />
         </SmallModal>
       )}
     </div>;

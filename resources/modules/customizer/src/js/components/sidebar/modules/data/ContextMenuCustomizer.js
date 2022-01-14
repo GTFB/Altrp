@@ -7,6 +7,7 @@ import {setCopyNode} from "../../../../store/copy-node/action";
 import {connect} from "react-redux";
 import("react-contexify/scss/main.scss");
 import {storage} from "../../../../storage"
+import {isJSON} from "../../../../../../../front-app/src/js/helpers";
 
 
 class ContextMenuCustomizer extends Component {
@@ -68,16 +69,21 @@ class ContextMenuCustomizer extends Component {
     });
     // let localObj = storage.getItem('node')
     let text = await navigator.clipboard?.readText()
-    let localObj = JSON.parse(text)
-    const pasteObj = {
-      ...localObj,
-      id: `${this.getId()}`,
-      position
+    if (isJSON(text)) {
+      let localObj = JSON.parse(text)
+      const pasteObj = {
+        ...localObj,
+        id: `${this.getId()}`,
+        position
+      }
+
+      const customizerStore = store.getState()?.customizerSettingsData;
+      const newStore = customizerStore.concat(pasteObj);
+      store.dispatch(setCustomizerSettingsData(newStore));
+    } else {
+      console.log('Формат не json')
     }
 
-    const customizerStore = store.getState()?.customizerSettingsData;
-    const newStore = customizerStore.concat(pasteObj);
-    store.dispatch(setCustomizerSettingsData(newStore));
   }
 
 

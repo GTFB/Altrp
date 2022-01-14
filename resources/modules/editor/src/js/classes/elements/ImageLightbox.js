@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import ImageIcon from '../../../svgs/image.svg';
+import ImageIcon from '../../../svgs/lightbox.svg';
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_MEDIA,
@@ -32,6 +32,9 @@ class ImageLightbox extends BaseElement {
   }
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

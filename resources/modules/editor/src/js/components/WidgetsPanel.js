@@ -2,16 +2,62 @@ import React, { Component } from "react";
 import WidgetIcon from "./WidgetIcon";
 import Scrollbars from "react-custom-scrollbars";
 import {connect} from "react-redux";
+import Arrow from '../../svgs/arrow.svg';
+import Search from '../../svgs/search-editor.svg'
 
 class WidgetsPanel extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      activeGroupBasic: true,
+      activeGroupForm: true,
+      activeGroupAdvanced: true,
+      activeGroupDiagrams: true,
+      searchWidgets: ''
+    }
+  }
+
+  toggleGroups = (e) => {
+    switch (e.currentTarget.dataset.group) {
+      case 'Basic':
+        this.setState(state => ({
+          ...state,
+          activeGroupBasic: !this.state.activeGroupBasic
+        }))
+        break
+      case 'Form':
+        this.setState(state => ({
+          ...state,
+          activeGroupForm: !this.state.activeGroupForm
+        }))
+        break
+      case 'Advanced':
+        this.setState(state => ({
+          ...state,
+          activeGroupAdvanced: !this.state.activeGroupAdvanced
+        }))
+        break
+      case 'Diagrams':
+        this.setState(state => ({
+          ...state,
+          activeGroupDiagrams: !this.state.activeGroupDiagrams
+        }))
+        break
+    }
+  }
+
+  changeSearch = (e) => {
+    this.setState(state => ({
+      ...state,
+      searchWidgets: e.target.value
+    }))
   }
 
   render() {
     const {elements} = this.props
     let widgets = []
-    
+
     for (let elementName in elements) {
       if (
         elements.hasOwnProperty(elementName) &&
@@ -21,13 +67,91 @@ class WidgetsPanel extends Component {
       }
     }
 
+    let widgetsFilter = widgets.filter(item => item.getTitle().toLowerCase().includes(this.state.searchWidgets.toLowerCase()))
+
     return (
       <div className="widget-panel-wrapper">
         <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
-          <div className="widget-panel">
-            {widgets.map(widget => {
-              return <WidgetIcon element={widget} key={widget.getName()} />;
-            })}
+          <div className="widget-panel__sidebar">
+            <div className="widget-panel__search">
+              <input onChange={this.changeSearch} value={this.state.searchWidgets} type="text" placeholder="Search Widget..." className="input-search__widgets"/>
+              <Search className='search-icon'/>
+            </div>
+            {this.state.searchWidgets === '' ? (
+               <>
+                 <div className="widget-panel__block">
+                   <div onClick={this.toggleGroups} data-group='Basic' className="widget__group">
+                     <h2 className="title-group__widgets">Basic</h2>
+                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupBasic ? '' : ' arrow-group__widgets-close'}`}/>
+                   </div>
+                   <div className={`widgets__block${this.state.activeGroupBasic ? '' : ' widgets__block-none'}`}>
+                     <div className="widgets">
+                       {widgets.filter(item => item.getGroup() === 'Basic').map(widget => {
+                         return <WidgetIcon element={widget} key={widget.getName()} />;
+                       })}
+                     </div>
+                   </div>
+                 </div>
+
+                 <div className="widget-panel__block">
+                   <div onClick={this.toggleGroups} data-group='Form' className="widget__group">
+                     <h2 className="title-group__widgets">Form</h2>
+                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupForm ? '' : ' arrow-group__widgets-close'}`}/>
+                   </div>
+                   <div className={`widgets__block${this.state.activeGroupForm ? '' : ' widgets__block-none'}`}>
+                     <div className="widgets">
+                       {widgets.filter(item => item.getGroup() === 'Form').map(widget => {
+                         return <WidgetIcon element={widget} key={widget.getName()} />;
+                       })}
+                     </div>
+                   </div>
+                 </div>
+
+                 <div className="widget-panel__block">
+                   <div onClick={this.toggleGroups} data-group='Advanced' className="widget__group">
+                     <h2 className="title-group__widgets">Advanced</h2>
+                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupAdvanced ? '' : ' arrow-group__widgets-close'}`}/>
+                   </div>
+                   <div className={`widgets__block${this.state.activeGroupAdvanced ? '' : ' widgets__block-none'}`}>
+                     <div className="widgets">
+                       {widgets.filter(item => item.getGroup() === 'Advanced').map(widget => {
+                         return <WidgetIcon element={widget} key={widget.getName()} />;
+                       })}
+                     </div>
+                   </div>
+                 </div>
+
+                 <div className="widget-panel__block">
+                   <div onClick={this.toggleGroups} data-group='Diagrams' className="widget__group">
+                     <h2 className="title-group__widgets">Diagrams</h2>
+                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupDiagrams ? '' : ' arrow-group__widgets-close'}`}/>
+                   </div>
+                   <div className={`widgets__block${this.state.activeGroupDiagrams ? '' : ' widgets__block-none'}`}>
+                     <div className="widgets">
+                       {widgets.filter(item => item.getGroup() === 'Diagrams').map(widget => {
+                         return <WidgetIcon element={widget} key={widget.getName()} />;
+                       })}
+                     </div>
+                   </div>
+                 </div>
+               </>
+            ) : (
+              <>
+                  {
+                    widgetsFilter.length === 0 ? (
+                      <div className="nothing__found">Nothing found</div>
+                    ) : (
+                      <div className="widgets">
+                        {
+                          widgetsFilter.map(widget => {
+                            return <WidgetIcon element={widget} key={widget.getName()} />;
+                          })
+                        }
+                      </div>
+                    )
+                  }
+              </>
+            )}
           </div>
         </Scrollbars>
       </div>

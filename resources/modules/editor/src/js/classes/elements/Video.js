@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import VideoIcon from "../../../svgs/widescreen.svg";
+import VideoIcon from "../../../svgs/video.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXT,
@@ -26,6 +26,9 @@ class Video extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

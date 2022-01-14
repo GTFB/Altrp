@@ -1,6 +1,6 @@
 import Schemes from "../../../components/altrp-dashboards/settings/NivoColorSchemes.js";
 import BaseElement from ".././BaseElement";
-import PieIcon from "../../../../svgs/skill-bar.svg";
+import PieIcon from "../../../../svgs/funnel.svg";
 import { advancedTabControllers } from "../../../decorators/register-controllers";
 import {
   CONTROLLER_DIMENSIONS,
@@ -37,6 +37,9 @@ class FunnelDiagram extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Diagrams";
   }
   _registerControls() {
     if (this.controllersRegistered) {

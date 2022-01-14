@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import FromIcon from "../../../svgs/form-horizontal.svg";
+import FromIcon from "../../../svgs/select.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -33,6 +33,9 @@ class InputSelect extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     if (this.controllersRegistered) {
@@ -518,7 +521,7 @@ class InputSelect extends BaseElement {
       label: "Padding",
       units: ["px", "%", "vh"]
     });
-    
+
     this.endControlSection();
 
     this.startControlSection("font_style_section", {

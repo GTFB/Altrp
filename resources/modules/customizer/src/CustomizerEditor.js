@@ -31,7 +31,7 @@ import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLi
 import ContextMenuCustomizer from "./js/components/sidebar/modules/data/ContextMenuCustomizer";
 import {contextMenu} from "react-contexify";
 import {setCopyNode, setSelectNode} from "./js/store/copy-node/action";
-import {storage} from "./js/storage";
+import {isJSON} from "../../front-app/src/js/helpers";
 
 const mapStateToProps = state => {
   return {
@@ -80,7 +80,7 @@ class CustomizerEditor extends Component {
 
   checkingLocalStorageRelevance = async () => {
     let localObj = await navigator.clipboard?.readText()
-    if (localObj) {
+    if (localObj && isJSON(localObj)) {
       store.dispatch(setCopyNode(true))
     } else {
       store.dispatch(setCopyNode(false))
@@ -362,9 +362,10 @@ class CustomizerEditor extends Component {
   }
 
   rightClickNode = async (e, node) => {
+    e.preventDefault();
     this.onElementClick(e, node)
     let localObj = await navigator.clipboard?.readText()
-    if (localObj) {
+    if (localObj && isJSON(localObj)) {
       store.dispatch(setCopyNode(true))
     } else {
       store.dispatch(setCopyNode(false))
@@ -373,9 +374,10 @@ class CustomizerEditor extends Component {
   }
 
   rightClickPanel = async (e) => {
+    e.preventDefault();
     this.PaneClick()
     let localObj = await navigator.clipboard?.readText()
-    if (localObj) {
+    if (localObj && isJSON(localObj)) {
       store.dispatch(setCopyNode(true))
     } else {
       store.dispatch(setCopyNode(false))

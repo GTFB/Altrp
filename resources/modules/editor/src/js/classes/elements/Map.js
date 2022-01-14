@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import MapIcon from "../../../svgs/google-maps.svg";
+import MapIcon from "../../../svgs/map.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXT,
@@ -25,6 +25,9 @@ class Map extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

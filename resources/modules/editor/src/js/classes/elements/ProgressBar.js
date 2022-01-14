@@ -16,7 +16,7 @@ import {
   CONTROLLER_GRADIENT,
   CONTROLLER_MEDIA, CONTROLLER_CHOOSE
 } from "../modules/ControllersManager";
-import RowIcon from "../../../svgs/row.svg";
+import RowIcon from "../../../svgs/progress.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class ProgressBar extends BaseElement {
@@ -33,6 +33,10 @@ class ProgressBar extends BaseElement {
 
   static getType() {
     return "widget";
+  }
+
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

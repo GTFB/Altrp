@@ -460,8 +460,6 @@ class AddPage extends Component {
     let {dataSources} = this.state;
     let id = this.props.match.params.id
 
-    console.log(this.state)
-
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
       <div className="admin-pages admin-page">

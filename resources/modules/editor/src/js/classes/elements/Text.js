@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TextIcon from "../../../svgs/text.svg";
+import TextIcon from "../../../svgs/editor.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -25,13 +25,17 @@ class Text extends BaseElement {
     return "text";
   }
   static getTitle() {
-    return "Text";
+    return "Content";
   }
   static getIconComponent() {
     return TextIcon;
   }
   static getType() {
     return "widget";
+  }
+
+  static getGroup() {
+    return "Basic";
   }
   _registerControls() {
     if (this.controllersRegistered) {

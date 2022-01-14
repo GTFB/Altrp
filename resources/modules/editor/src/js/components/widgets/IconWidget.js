@@ -1,4 +1,4 @@
-import DefaultIcon from '../../../svgs/favorite.svg'
+import DefaultIcon from '../../../svgs/icon.svg'
 const {
   renderAsset,
 } = window.altrpHelpers;
