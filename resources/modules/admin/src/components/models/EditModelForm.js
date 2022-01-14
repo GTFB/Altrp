@@ -107,9 +107,7 @@ class EditModelForm extends Component {
   }
 
   isItemSelectedCategory = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.value._categories);
-    return selectedString.includes(itemString);
+    return this.state.value._categories.find(c=>c.value === item.value);
   }
 
   handleItemSelectCategory = (item) => {

@@ -17,15 +17,14 @@
 | import './routes/customer'
 |
 */
+import './admin'
 
 import Route from '@ioc:Adonis/Core/Route'
 // import {UserFactory} from "Database/factories";
 
-Route.get("/login", "IndicesController.loginView")
-Route.post("/login", "IndicesController.login")
-
-Route.get("/altrp-install", "InstallationController.altrpInstall").name = "altrp-install"
-Route.post("/altrp-install", "InstallationController.altrpInstallPost").name = "altrp-install.post"
+Route.get("/altrp-login", "IndicesController.loginView")
+Route.post("/login", "IndicesController.login").name = 'post.login'
+Route.post("/logout", "IndicesController.logout").name = 'logout'
 
 
 Route.group(() => {
@@ -48,3 +47,5 @@ Route.group(() => {
   })
 })
 .prefix("/ajax")
+
+

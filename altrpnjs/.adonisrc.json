@@ -16,7 +16,19 @@
   "preloads": [
     "./start/routes/routes",
     "./start/routes/admin",
-    "./start/kernel"
+    "./start/kernel",
+    {
+      "file": "./start/repl",
+      "environment": [
+        "repl"
+      ]
+    },
+    {
+      "file": "./start/events",
+      "environment": [
+        "web"
+      ]
+    }
   ],
   "providers": [
     "./providers/AppProvider",

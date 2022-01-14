@@ -57,6 +57,38 @@ Route.group(() => {
         }
       })
     }).prefix("/settings")
+    /**
+     * Модели
+     */
+    Route.get('/models', 'admin/ModelsController.index')
+    Route.post('/models', 'admin/ModelsController.storeModel')
+    Route.get('/models/:id', 'admin/ModelsController.getModel')
+    Route.put('/models/:id', 'admin/ModelsController.updateModel')
+    Route.delete('/models/:id', 'admin/ModelsController.deleteModel')
+    Route.get('/models/:id/fields', 'admin/ModelsController.getModelFields')
+    Route.get('/models/:id/relations', 'admin/ModelsController.getModelRelations')
+    Route.get('/models/:id/data_source_options', 'admin/ModelsController.getDataSourcesOptionsByModel')
+    Route.get('/models/:id/queries', 'admin/ModelsController.getQueries')
+    Route.get('/models/:id/accessors', 'admin/ModelsController.getAccessors')
+
+    /**
+     * Категории
+     */
+    Route.get('/category/options', 'admin/CategoriesController.options')
+    /**
+     * Assets
+     */
+    Route.get('/media', 'admin/MediaController.index')
+    /**
+     * Settings
+     */
+    Route.get('/settings/:setting_name', 'admin/AdminController.getSettings')
+    Route.put('/settings/:setting_name', 'admin/AdminController.setSettings')
+    /**
+     * Altrp Meta
+     */
+    Route.get('/altrp_meta/:meta_name', 'admin/AltrpMetaController.getMetaByName')
+    Route.put('/altrp_meta/:meta_name', 'admin/AltrpMetaController.saveMeta')
 
   }).prefix("/ajax")
 
@@ -64,7 +96,7 @@ Route.group(() => {
   Route.get("/editor", "IndicesController.editor")
 
   Route.get('/', "IndicesController.admin")
-  Route.get('/*', "IndicesController.admin")
+  Route.get('*', "IndicesController.admin")
 })
   .prefix("/admin")
   .middleware('admin')

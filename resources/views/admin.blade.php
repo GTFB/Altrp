@@ -49,9 +49,9 @@
 </body>
 
 @php
-  echo print_statics('style', 'HEAD_BOTTOM_STYLE' );
+  echo print_statics('style', 'ADMIN_BOTTOM_STYLE' );
 @endphp
 @php
-  echo print_statics('script', 'HEAD_BOTTOM_SCRIPTS' );
+  echo print_statics('script', 'ADMIN_BOTTOM_SCRIPTS' );
 @endphp
 </html>

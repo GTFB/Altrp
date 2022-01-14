@@ -96,12 +96,6 @@ class InputSelect extends BaseElement {
       label: 'Remove button',
     });
 
-    this.addControl('remove_label', {
-      type: CONTROLLER_TEXT,
-      label: 'Remove label',
-    });
-
-
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
       label: "Choose Icon"
@@ -518,7 +512,7 @@ class InputSelect extends BaseElement {
       label: "Padding",
       units: ["px", "%", "vh"]
     });
-    
+
     this.endControlSection();
 
     this.startControlSection("font_style_section", {

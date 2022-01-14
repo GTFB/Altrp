@@ -1,46 +1,39 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ getLocale() }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{!!  getFavicons() !!}
+{{{  getFavicons() }}}
 <!-- CSRF Token -->
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="{{ csrfToken }}">
 
   <title>Builder</title>
 
   <!-- Scripts -->
 
   <script>
-    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
-    window.altrpMenus = [];
-    let _token = '{{ csrf_token() }}';
+    window.ALTRP_DEBUG = {{{ stringify( ! ! get_altrp_setting( 'altrp_debug', false ) ) }}};
+    let _token = '{{ csrfToken }}';
   </script>
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
     <script>
-      window.admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
-      window.altrpMenus = [];
+      window.admin_logo = {{{ env( 'ALTRP_SETTING_ADMIN_LOGO' ) }}};
     </script>
   @endif
   <script>
-    let altrp_version = '{!! config( 'app.altrp_version' ) !!}';
+    let altrp_version = '{{{ config( 'app.altrp_version', '0.0.1' ) }}}';
 
     window.altrpMenus = [];
 
   </script>
 
-  <script src="{{ altrp_asset( '/modules/admin/admin.js', 'http://localhost:3002/' ) }}" defer></script>
+  <script src="{{ url }}" defer></script>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
-
-  @php
-    echo print_statics('style', 'ADMIN_HEAD_STYLE' );
-  @endphp
-  @php
-    echo print_statics('script', 'ADMIN_HEAD_SCRIPTS' );
-  @endphp
+ {{{print_statics('style', 'ADMIN_HEAD_STYLE' )}}}
+ {{{print_statics('script', 'ADMIN_HEAD_SCRIPTS' )}}}
 </head>
 <body>
 <div id="admin">
@@ -48,10 +41,6 @@
 </div>
 </body>
 
-@php
-  echo print_statics('style', 'HEAD_BOTTOM_STYLE' );
-@endphp
-@php
-  echo print_statics('script', 'HEAD_BOTTOM_SCRIPTS' );
-@endphp
+{{{ print_statics('style', 'ADMIN_BOTTOM_STYLE' ) }}}
+{{{ print_statics('script', 'ADMIN_BOTTOM_SCRIPTS' ) }}}
 </html>

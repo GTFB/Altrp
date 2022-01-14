@@ -5,11 +5,6 @@ namespace App;
 use Carbon\Traits\Timestamp;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-(new \GuzzleHttp\Client())->post('/', [
-  'curl.options' => array(
-    CURLOPT_SSLVERSION => CURL_SSLVERSION_SSLv3
-  )
-]);
 class AltrpMeta extends Model
 {
 
