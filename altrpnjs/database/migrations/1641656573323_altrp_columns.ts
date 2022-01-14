@@ -12,7 +12,7 @@ export default class AltrpColumns extends BaseSchema {
         table.string('title').nullable()
         table.text('description').nullable()
         table.string('type')
-        table.bigInteger('size', 11)
+        table.bigInteger('size')
         table.boolean('null').nullable()
         table.string('default').nullable()
         table.boolean('primary').nullable()

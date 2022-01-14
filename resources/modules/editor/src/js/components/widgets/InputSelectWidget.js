@@ -848,7 +848,7 @@ class InputSelectWidget extends Component {
   }
 
   async onItemSelect(value) {
-    if (value.value !== undefined && ! isNaN(value.value)){
+    if (value.value !== undefined){
       value = value.value;
     }
 
@@ -893,6 +893,7 @@ class InputSelectWidget extends Component {
           options,
         }))
     }
+    console.log(value);
     this.setState(state => ({
         ...state,
         value
@@ -944,13 +945,6 @@ class InputSelectWidget extends Component {
         label: this.props.element.getResponsiveSetting('nulled_option_title') || '',
         value: '',
       })
-    }
-
-    if(this.props.element.getResponsiveSetting("remove") && this.state.value) {
-      options = [{
-        value: -1,
-        label: this.props.element.getResponsiveSetting("remove_label", "", "remove"),
-      }, ...options]
     }
 
     return options;

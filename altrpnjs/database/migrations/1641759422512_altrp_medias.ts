@@ -1,4 +1,6 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import Media from 'App/Models/Media'
+import { v4 as uuid } from 'uuid'
 
 export default class AltrpMedias extends BaseSchema {
   protected tableName = 'altrp_media'
@@ -6,6 +8,11 @@ export default class AltrpMedias extends BaseSchema {
   public async up () {
 
     if (await this.schema.hasTable(this.tableName)) {
+      let media = await Media.query().whereNull('guid').select('*')
+      await Promise.all(media.map(async m=>{
+        m.guid = uuid()
+        await m.save()
+      }))
       return
     }
     this.schema.createTable(this.tableName, (table) => {

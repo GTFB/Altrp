@@ -8,12 +8,26 @@ import appInstallFilesExist from "../../helpers/appInstallFilesExist";
 export default class AltrpRouting {
   public async handle({request, response, view}: HttpContextContract, next: () => Promise<void>) {
     const url = request.url();
-    if(url === '/altrp-install'){
+    /**
+     * Игнорим все запросы кроме get
+     */
+    if(request.method() !== 'GET') {
       await next()
       return
     }
-    if(! this.altrpInstalled()){
-      return response.redirect('/altrp-install', true)
+    /**
+     * Игнорим логинизацию
+     */
+    if(url === '/altrp-login' || url === '/login'){
+      await next()
+      return
+    }
+    /**
+     * Игнорим админку
+     */
+    if(url.split('/')[1] === 'admin'){
+      await next()
+      return
     }
 
     const page = await Page.query().where("path", url).preload("templates").first();

@@ -99,12 +99,6 @@ class InputSelect extends BaseElement {
       label: 'Remove button',
     });
 
-    this.addControl('remove_label', {
-      type: CONTROLLER_TEXT,
-      label: 'Remove label',
-    });
-
-
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
       label: "Choose Icon"

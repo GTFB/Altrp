@@ -11,6 +11,7 @@
 
 import Server from '@ioc:Adonis/Core/Server'
 import Route from "@ioc:Adonis/Core/Route";
+import './view'
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,7 @@ import Route from "@ioc:Adonis/Core/Route";
 |
 */
 Server.middleware.register([
+  () => import('App/Middleware/SilentAuth'),
   () => import('App/Middleware/AltrpRouting'),
   () => import('@ioc:Adonis/Core/BodyParser'),
   () => import('@ioc:Adonis/Addons/Shield'),

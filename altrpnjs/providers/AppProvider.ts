@@ -10,6 +10,15 @@ export default class AppProvider {
 
   public async boot () {
     // IoC container is ready
+
+    const  AltrpHashDriver  = (await import('App/Providers/AltrpHashDriver')).default
+
+    const Hash = this.app.container.use('Adonis/Core/Hash')
+    Hash.extend('altrpHasher', () => {
+      return new AltrpHashDriver()
+    })
+
+
   }
 
   public async ready () {

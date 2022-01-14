@@ -1,3 +1,5 @@
+import AltrpHashDriver from "App/Providers/AltrpHashDriver";
+
 /**
  * Contract source: https://git.io/Jfefs
  *
@@ -14,6 +16,12 @@ declare module '@ioc:Adonis/Core/Hash' {
     argon: {
       config: ArgonConfig,
       implementation: ArgonContract,
+    },
+    altrpHasher: {
+      config: {
+        driver: 'altrpHasher',
+      },
+      implementation: AltrpHashDriver,
     },
   }
 }
