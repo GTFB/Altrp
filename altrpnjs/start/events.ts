@@ -9,7 +9,6 @@
 */
 import Event from '@ioc:Adonis/Core/Event'
 
-
 Event.on('model:updating', 'Model.updating');
 Event.on('model:updated', 'Model.updated');
 Event.on('model:deleting', 'Model.deleting');

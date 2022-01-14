@@ -100,7 +100,9 @@ async  function altrpJSZip(){
   ]).pipe(gulpCopy('./altrpnjs/build/', {}))
     .pipe(gulp.dest('./'))
   return gulp.src([
-    './altrpnjs/build/**/*'
+    './altrpnjs/build/**/*',
+    '!./altrpnjs/app/Models/AltrpModels/**/*',
+    '!./altrpnjs/app/Controllers/AltrpControllers/**/*',
   ]).pipe(zip(filename))
     .pipe(gulp.dest('../'))
     .pipe(notify({

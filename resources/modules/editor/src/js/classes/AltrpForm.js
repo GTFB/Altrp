@@ -164,7 +164,6 @@ class AltrpForm {
             }
             break;
           case "GET": {
-            // return await alert(JSON.stringify(this.getData()));
             let res;
             res = await this.resource.getQueried(
               _.assign(this.getData(), data),

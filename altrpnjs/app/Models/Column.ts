@@ -111,4 +111,48 @@ export default class Column extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public last_upgrade: DateTime
 
+  renderForModel():string {
+    if(this.type === 'calculated'){
+      return `
+  @Orm.computed()
+  public get ${this.name}(): any{
+    return ''
+  }
+
+`
+    }
+    return `
+  @Orm.column()
+  public ${this.name}: ${this.getColumnTypeForModel()}
+
+`;
+  }
+
+  getColumnTypeForModel():string {
+    if(['bigInteger', 'id', 'integer', 'float', ].indexOf(this.type) !== -1){
+      return 'number'
+    }
+    if(
+      [
+      'json',
+      'binary',
+      'text',
+      'geometry',
+      'longText',
+      'string'
+    ].indexOf(this.type) !== -1){
+      return 'string'
+    }
+    if(
+      [
+      'date',
+      'time',
+      'year',
+      'dateTime',
+    ].indexOf(this.type) !== -1){
+      return 'luxon.DateTime'
+    }
+
+    return 'any'
+  }
 }

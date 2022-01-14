@@ -12,6 +12,7 @@
 import Server from '@ioc:Adonis/Core/Server'
 import Route from "@ioc:Adonis/Core/Route";
 import './view'
+import './events'
 
 /*
 |--------------------------------------------------------------------------
