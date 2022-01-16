@@ -89,7 +89,22 @@ function altrpZip(filename = 'altrp.zip') {
 
 async  function altrpJSZip(){
   let filename = 'altrp-js.zip'
-  await gulp.src([
+  return gulp.src([
+    './altrpnjs/build/**/*',
+    '!./altrpnjs/app/Models/AltrpModels/**/*',
+    '!./altrpnjs/app/Controllers/AltrpControllers/**/*',
+    '!./altrpnjs/public/altrp-plugins',
+  ]).pipe(zip(filename))
+    .pipe(gulp.dest('../'))
+    .pipe(notify({
+      message:'Архив готов',
+      sound: true,
+      title: 'Altrp JS'
+    }))
+}
+
+function copyPublicToAdonis(){
+  return  gulp.src([
     './public/**/*',
     '!./public/storage/**',
     '!./public/altrp-plugins/**',
@@ -99,18 +114,8 @@ async  function altrpJSZip(){
     '!./public/mix-manifest.json',
   ]).pipe(gulpCopy('./altrpnjs/build/', {}))
     .pipe(gulp.dest('./'))
-  return gulp.src([
-    './altrpnjs/build/**/*',
-    '!./altrpnjs/app/Models/AltrpModels/**/*',
-    '!./altrpnjs/app/Controllers/AltrpControllers/**/*',
-  ]).pipe(zip(filename))
-    .pipe(gulp.dest('../'))
-    .pipe(notify({
-      message:'Архив готов',
-      sound: true,
-      title: 'Altrp JS'
-    }))
 }
+
 async function  clearJSBuild(){
   const _p = __dirname + `${path.sep}altrpnjs${path.sep}build`
   if(fs.existsSync(_p)){
@@ -119,6 +124,8 @@ async function  clearJSBuild(){
   return 0
 }
 exports.pack = ()=>{return altrpZip()};
-exports.packJS = ()=>{return altrpJSZip()};
 exports.packTest = ()=>{return altrpZip('altrp-test.zip')};
 // exports.clearJSBuild = clearJSBuild
+
+// exports.packJS = ()=>{return altrpJSZip()};
+exports.packJS = gulp.series(copyPublicToAdonis, altrpJSZip);

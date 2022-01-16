@@ -44,10 +44,11 @@ export default class Relationship extends BaseModel {
   public altrp_model: BelongsTo<typeof Model>
 
   @column()
-  public target_model_i: number
+  public target_model_id: number
 
   @belongsTo(() => Model, {
-    foreignKey: 'target_model_id'
+    localKey: 'id',
+    foreignKey: 'target_model_id',
   })
   public altrp_target_model: BelongsTo<typeof Model>
 
@@ -60,10 +61,14 @@ export default class Relationship extends BaseModel {
   @column()
   public editable: boolean
 
-  @column()
+  @column({
+    columnName: 'onDelete'
+  })
   public  	onDelete: string
 
-  @column()
+  @column({
+    columnName: 'onUpdate'
+  })
   public  	onUpdate: string
 
   @column()
@@ -75,26 +80,14 @@ export default class Relationship extends BaseModel {
   public user: BelongsTo<typeof User>
 
 
-
-
   @hasMany(() => Source, {
     foreignKey: 'id'
   })
   public altrp_table: HasMany<typeof Source>
 
-
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public last_upgrade: DateTime
-
   renderForModel():string {
     return `
-  @${this.renderDecorator()}(() => ${this.renderRelatedModel()}, ${this.renderOptions()})
+  ${this.renderDecorator()}(() => ${this.renderRelatedModel()}, ${this.renderOptions()})
   public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>
     `
   }
@@ -135,16 +128,16 @@ export default class Relationship extends BaseModel {
   private renderType() {
     switch (this.type){
       case 'hasOne':{
-        return '@Orm.HasOne()'
+        return 'Orm.HasOne'
       }
       case 'belongsTo':{
-        return '@Orm.BelongsTo()'
+        return 'Orm.BelongsTo'
       }
       case 'hasMany':{
-        return '@Orm.HasMany()'
+        return 'Orm.HasMany'
       }
       default:{
-        return '@Orm.HasOne()'
+        return 'Orm.HasOne'
       }
     }
 

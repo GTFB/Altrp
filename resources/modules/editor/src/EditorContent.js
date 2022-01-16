@@ -43,7 +43,7 @@ class EditorContent extends Component {
       const { widgetsManager} = store.getState()
       this.widgetsManager = widgetsManager
       const { saveImportModule} = getEditor().modules
-        if(needLoad){
+      if(needLoad){
         saveImportModule.load()
       }
     }
