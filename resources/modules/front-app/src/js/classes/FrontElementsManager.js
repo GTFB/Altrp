@@ -634,12 +634,7 @@ class FrontElementsManager {
    * }} element
    */
   addElement(element){
-
-    if(! this.ELEMENTS.filter(el => {
-      return el.name === element.name
-    })){
-      this.ELEMENTS.push(element)
-    }
+    this.ELEMENTS.push(element)
   }
 }
 window.frontElementsManager = new FrontElementsManager();
