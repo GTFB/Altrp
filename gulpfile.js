@@ -78,16 +78,17 @@ const excludes = [
  * @returns {*}
  */
 function altrpZip(filename = 'altrp.zip') {
-  return gulp.src(excludes).pipe(zip(filename))
-      .pipe(gulp.dest('../'))
-      .pipe(notify({
-        message:'Архив готов',
-        sound: true,
-        title: 'Altrp'
-      }));
+  return gulp.src(excludes)
+    .pipe(zip(filename))
+    .pipe(gulp.dest('../'))
+    .pipe(notify({
+      message:'Архив готов',
+      sound: true,
+      title: 'Altrp'
+    }));
 }
 
-async  function altrpJSZip(){
+function altrpJSZip(){
   let filename = 'altrp-js.zip'
   return gulp.src([
     './altrpnjs/build/**/*',
@@ -101,6 +102,7 @@ async  function altrpJSZip(){
       sound: true,
       title: 'Altrp JS'
     }))
+
 }
 
 function copyPublicToAdonis(){
@@ -129,3 +131,4 @@ exports.packTest = ()=>{return altrpZip('altrp-test.zip')};
 
 // exports.packJS = ()=>{return altrpJSZip()};
 exports.packJS = gulp.series(copyPublicToAdonis, altrpJSZip);
+exports.altrpJSZip = ()=>{return altrpJSZip()};

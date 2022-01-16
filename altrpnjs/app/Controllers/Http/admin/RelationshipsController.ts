@@ -1,9 +1,6 @@
-import Env from '@ioc:Adonis/Core/Env'
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Model from "App/Models/Model";
 import Event from '@ioc:Adonis/Core/Event'
-import Column from "App/Models/Column";
-import Database from "@ioc:Adonis/Lucid/Database";
 import Relationship from "App/Models/Relationship";
 
 export default class RelationshipsController {

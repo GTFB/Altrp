@@ -17,8 +17,6 @@ import Relationship from "App/Models/Relationship";
 import Category from "App/Models/Category";
 import Table from './Table';
 import Column from "App/Models/Column";
-import fs from 'fs'
-import ModelGenerator from "App/Generators/ModelGenerator";
 
 
 export default class Model extends BaseModel {
