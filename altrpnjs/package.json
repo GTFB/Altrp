@@ -31,6 +31,7 @@
     "dotenv": "^10.0.0",
     "lodash": "^4.17.21",
     "luxon": "^2.2.0",
+    "mustache": "^4.2.0",
     "mysql": "^2.18.1",
     "phc-argon2": "^1.1.2",
     "phc-bcrypt": "^1.0.7",

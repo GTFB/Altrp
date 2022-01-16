@@ -4,6 +4,7 @@ import {column, beforeSave, BaseModel, ManyToMany, manyToMany, computed, hasOne,
 import Role from "App/Models/Role";
 import UserMeta from "App/Models/UserMeta";
 import Permission from "App/Models/Permission";
+import empty from "../../helpers/empty";
 
 export default class User extends BaseModel {
 
@@ -80,7 +81,10 @@ export default class User extends BaseModel {
    * @param roles
    * @private
    */
-  private async hasRole(roles: string|number|Array<string|number>):Promise<boolean> {
+  async hasRole(roles: string|number|Array<string|number>):Promise<boolean> {
+    if(empty(roles)){
+      return  true
+    }
     if(typeof roles === 'string' || typeof roles === 'number'){
       roles = [roles]
     }
@@ -94,6 +98,25 @@ export default class User extends BaseModel {
         }
         return role.id
       }).indexOf(roleName) !== -1;
+    })
+  }
+  async hasPermission(permissions: string|number|Array<string|number>):Promise<boolean> {
+    if(empty(permissions)){
+      return  true
+    }
+    if(typeof permissions === 'string' || typeof permissions === 'number'){
+      permissions = [permissions]
+    }
+    // @ts-ignore
+    await this.preload('permissions')
+
+    return ! ! permissions.filter((permissionName)=>{
+      return this.permissions.map((permission:Permission)=>{
+        if(typeof permissionName === 'string'){
+          return permission.name
+        }
+        return permission.id
+      }).indexOf(permissionName) !== -1;
     })
   }
 }

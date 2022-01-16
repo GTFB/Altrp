@@ -1,4 +1,3 @@
-import {BaseCommand} from '@adonisjs/core/build/standalone'
 import Model from "App/Models/Model";
 import app_path from "../../helpers/app_path";
 import base_path from "../../helpers/base_path";
@@ -6,19 +5,37 @@ import Column from "App/Models/Column";
 import Table from "App/Models/Table";
 import Relationship from "App/Models/Relationship";
 import fs from 'fs'
+import {BaseGenerator} from "App/Generators/BaseGenerator";
+import * as _ from "lodash";
+import ControllerGenerator from "App/Generators/ControllerGenerator";
 
-export default class ModelGenerator extends BaseCommand {
+export default class ModelGenerator extends BaseGenerator {
 
-  private static directory = app_path('/Models/AltrpModels/')
-  private static template = base_path('/altrp-templates/AltrpModel')
+  public static directory = app_path('/AltrpModels/')
+  public static template = base_path('/altrp-templates/AltrpModel')
+  public static ext = '.ts'
   private model: Model
   private table: Table
   private altrp_relationships: Relationship[] = []
   private columns: Column[] = []
 
-  public async run(model: Model) {
 
-    model.save()
+  public async deleteFiles(model: Model): Promise<void> {
+    let fileName = this.getFilename(model)
+    if (fs.existsSync(ModelGenerator.directory + fileName)) {
+      fs.unlinkSync(ModelGenerator.directory + fileName);
+    }
+    fileName =`${model.name}Controller.${ModelGenerator.ext}`
+    if (fs.existsSync(ControllerGenerator.directory + fileName)) {
+      fs.unlinkSync(ControllerGenerator.directory + fileName);
+    }
+    return
+  }
+  getFilename(model):string{
+    let fileName = model.name + ModelGenerator.ext
+    return fileName
+  }
+  public async run(model: Model) {
 
     await model.load((loader) => {
       loader.load('table', (table) => {
@@ -36,23 +53,20 @@ export default class ModelGenerator extends BaseCommand {
     this.table = model.table
     this.altrp_relationships = model.altrp_relationships
     this.columns = this.table.columns
-    let fileName = model.name
-    if (!fileName) {
+    let fileName = this.getFilename(model)
+    if (!model.name) {
       return
     }
     if (fs.existsSync(ModelGenerator.directory + fileName)) {
       let oldContent:string = fs.readFileSync(ModelGenerator.directory + fileName,  {encoding: 'utf8'})
       if(oldContent){
-        custom = oldContent.match(/\/\/ CUSTOM_START(.*)\/\/ CUSTOM_START/)?.pop() || ''
+        custom = oldContent.match(/\/\/ CUSTOM_START([\s\S]+?)\/\/ CUSTOM_START/)?.pop() || ''
         custom = custom.trim()
       }
 
     }
-    this.generator
-      .addFile(fileName)
-      .appRoot(this.application.appRoot)
+    return await this.addFile(fileName)
       .destinationDir(ModelGenerator.directory)
-      .useMustache()
       .stub(ModelGenerator.template)
       .apply({
         imports: this.getImportsContent(),
@@ -70,6 +84,14 @@ export default class ModelGenerator extends BaseCommand {
   private getImportsContent(): string {
     return `import * as luxon from 'luxon'
 import * as Orm from '@ioc:Adonis/Lucid/Orm'
+${_.uniqBy(
+  this.altrp_relationships
+      .filter(relationship => relationship?.altrp_target_model?.name),
+      relationship => relationship.altrp_target_model.name
+    ).map(relationship =>
+        `import ${relationship?.altrp_target_model?.name} from './${relationship?.altrp_target_model?.name}'`)
+      .join('\n')
+    }
 `
   }
 
@@ -78,13 +100,15 @@ import * as Orm from '@ioc:Adonis/Lucid/Orm'
   }
 
   private getPropertiesContent(): string {
-    return ``
+    return `
+  public static table = '${this.table.name}'
+    `
   }
 
   private getColumnsContent(): string {
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
-${columns.map(column => column.renderForModel())}
+${columns.map(column => column.renderForModel()).join('')}
 `
   }
 
@@ -95,13 +119,13 @@ ${columns.map(column => column.renderForModel())}
   private getComputedContent(): string {
     let columns = this.columns.filter(column => column.type === 'calculated')
     return `
-${columns.map(column => column.renderForModel())}
+${columns.map(column => column.renderForModel()).join('')}
     `
   }
 
   private getRelationsContent(): string {
     return `
-${this.altrp_relationships.map(relationship => relationship.renderForModel())}
+${this.altrp_relationships.map(relationship => relationship.renderForModel()).join('')}
     `
   }
 

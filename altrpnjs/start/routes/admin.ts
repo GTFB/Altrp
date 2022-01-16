@@ -34,13 +34,6 @@ Route.group(() => {
     Route.get("/pages_options", () => {
       return []
     })
-
-    Route.get("/model_options", () => {
-      return {
-        options: [],
-        pageCount: 0
-      }
-    })
     Route.get("/models_options", () => {
       return []
     })
@@ -60,13 +53,26 @@ Route.group(() => {
     /**
      * Модели
      */
+
+    Route.get("/model_options", 'admin/ModelsController.options')
     Route.get('/models', 'admin/ModelsController.index')
     Route.post('/models', 'admin/ModelsController.storeModel')
     Route.get('/models/:id', 'admin/ModelsController.getModel')
+    Route.get('/models/:id/relation_name_is_free', 'admin/ModelsController.checkRelationName')
+    Route.get('/model_name_is_free', 'admin/ModelsController.modelNameIsFree')
     Route.put('/models/:id', 'admin/ModelsController.updateModel')
     Route.delete('/models/:id', 'admin/ModelsController.deleteModel')
     Route.get('/models/:id/fields', 'admin/ModelsController.getModelFields')
+    Route.get('/models/:id/field_options', 'admin/ModelsController.getModelFieldOptions')
+    Route.post('/models/:id/fields', 'admin/ColumnsController.addColumn')
+    Route.get('/models/:id/fields/:field_id', 'admin/ColumnsController.getColumn')
+    Route.delete('/models/:id/fields/:field_id', 'admin/ColumnsController.deleteColumn')
+    Route.put('/models/:id/fields/:field_id', 'admin/ColumnsController.updateColumn')
     Route.get('/models/:id/relations', 'admin/ModelsController.getModelRelations')
+    Route.post('/models/:id/relations', 'admin/RelationshipsController.addRelationship')
+    Route.get('/models/:id/relations/:relationship_id', 'admin/RelationshipsController.getRelationship')
+    Route.put('/models/:id/relations/:relationship_id', 'admin/RelationshipsController.updateRelationship')
+    Route.delete('/models/:id/relations/:relationship_id', 'admin/RelationshipsController.deleteRelationship')
     Route.get('/models/:id/data_source_options', 'admin/ModelsController.getDataSourcesOptionsByModel')
     Route.get('/models/:id/queries', 'admin/ModelsController.getQueries')
     Route.get('/models/:id/accessors', 'admin/ModelsController.getAccessors')

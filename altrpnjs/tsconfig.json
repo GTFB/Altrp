@@ -6,6 +6,8 @@
   "exclude": [
     "node_modules",
     "resources/modules",
+    "app/AltrpModels",
+    "app/AltrpControllers",
     "build"
   ],
   "compilerOptions": {
