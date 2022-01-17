@@ -39,15 +39,6 @@ Route.group(() => {
 
     Route.get("/pages_options", "OptionsController.pages")
 
-    Route.get("/model_options", () => {
-      return {
-        options: [],
-        pageCount: 0
-      }
-    })
-    Route.get("/models_options", () => {
-      return []
-    })
 
     Route.group(() => {
       Route.get("/altrp_models_disabled", () => {

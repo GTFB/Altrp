@@ -5,7 +5,6 @@ import { isString } from "lodash";
 import PageRole from "App/Models/PageRole";
 import Role from "App/Models/Role";
 import Template from "App/Models/Template";
-import PagesTemplate from "App/Models/PagesTemplate";
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
