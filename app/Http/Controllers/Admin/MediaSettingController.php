@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\MediaSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MediaSettingController extends Controller
 {
@@ -13,11 +14,10 @@ class MediaSettingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if( $request->get( 's' ) ){
-          $mediaSettings = MediaSetting::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )->get();
-          $mediaSettings = $mediaSettings->sortByDesc( 'title' )->values()->toArray();
+          $mediaSettings = MediaSetting::where( 'name', 'like', '%' . $request->get( 's' ) . '%' )->get()->sortByDesc( 'name' )->values()->toArray();
           return response()->json( $mediaSettings, 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json( MediaSetting::all()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
@@ -121,7 +121,7 @@ class MediaSettingController extends Controller
     {
         try {
             $mediaSetting->delete();
-            return response()->json( ['success' => true, 'message' => 'success', 'data' => $mediaSetting->toArray()], 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json( ['success' => true, 'message' => 'success', 'data' => []], 200, [], JSON_UNESCAPED_UNICODE);
         } catch (\Throwable $t) {
             if(isset($t->errorInfo)) {
                 return response()->json(['success' => false, 'message' => $t->errorInfo, 'data' => []], 500, [], JSON_UNESCAPED_UNICODE);

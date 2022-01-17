@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MediaSetting extends Model
 {
     
-    protected $table = 'altrp_media';
+    protected $table = 'altrp_media_settings';
 
     public $timestamps = false;
 
