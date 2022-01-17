@@ -104,10 +104,9 @@ class MediaController extends Controller
 
     }
 
+    $mediaSettings = MediaSetting::all();
+
     foreach ( $files as $file ) {
-
-      //$settings = MediaSetting::all();
-
 
       $media = new Media();
       $media->title = $file->getClientOriginalName();
@@ -139,6 +138,15 @@ class MediaController extends Controller
         $media->width = data_get( $size, '0', 0 );
         $media->height = data_get( $size, '1', 0 );
       }
+      
+      $media_variation = [];
+      if (count($mediaSettings) > 0) {
+        foreach ($mediaSettings as $setting) {
+          $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+        }
+      }
+      $media->media_variation = json_encode($media_variation);
 
       $media->main_color = getMainColor( $path );
       $media->url =  Storage::url( $media->filename );
@@ -164,6 +172,35 @@ class MediaController extends Controller
     return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
 
   }
+
+  /**
+   * Resizing and store image file
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public static function storeResizedImage( $path, $width, $height, $quality=100 ){
+
+    $media_filename = "";
+    $source_properties = getimagesize($path);
+    $mime = $source_properties['mime'];
+    if ($mime == 'image/jpeg' || $mime == 'image/png' || $mime == 'image/gif') {
+        $type = explode('/', $mime);
+        $createFunction = 'imagecreatefrom' . $type[1];
+        $image_resource_id = $createFunction($path);
+        $target_layer=imagecreatetruecolor($width, $height);
+        imagecopyresampled($target_layer, $image_resource_id, 0, 0, 0, 0, $width, $height, $source_properties[0], $source_properties[1]);
+        $storeFunction = 'image'.$type[1];
+        $store_directory = storage_path('app/public/media') . '/' .  date("Y") . '/' .  date("m") . '/';
+        $filename = Str::random(40) . "." . $type[1];
+        $storeFunction($target_layer, $store_directory . $filename, $quality);
+        $media_filename = 'media/' .  date("Y") . '/' .  date("m") . '/' . $filename;
+        imagedestroy($image_resource_id);
+        return $media_filename;
+    }
+    return $media_filename;
+    
+  }
+
   /**
    * Store a newly created resource in storage. From front-app
    *
