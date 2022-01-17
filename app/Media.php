@@ -35,6 +35,7 @@ class Media extends Model
     'width',
     'height',
     'guid',
+    'media_variation',
   ];
 
   /**

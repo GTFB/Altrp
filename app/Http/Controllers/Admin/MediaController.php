@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\CategoryObject;
 use App\Http\Controllers\Controller;
 use App\Media;
+use App\MediaSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +105,10 @@ class MediaController extends Controller
     }
 
     foreach ( $files as $file ) {
+
+      //$settings = MediaSetting::all();
+
+
       $media = new Media();
       $media->title = $file->getClientOriginalName();
       $media->media_type = $file->getClientMimeType();

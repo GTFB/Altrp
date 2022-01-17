@@ -233,6 +233,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('reports', 'ReportsController');
 
     Route::resource('media', 'Admin\MediaController');
+    Route::resource('media_settings', 'Admin\MediaSettingController');
     Route::resource('settings', 'Admin\SettingsController');
     Route::resource('diagrams', 'Admin\AltrpDiagramController');
     Route::get('sql_editors/list', 'Admin\SQLEditorController@listByName');
