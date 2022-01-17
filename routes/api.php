@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::resource('media_settings', 'Admin\MediaSettingController');
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
