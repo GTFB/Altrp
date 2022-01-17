@@ -106,4 +106,3 @@ Route.group(() => {
 })
   .prefix("/admin")
   .middleware('admin')
-  .middleware('installChecker')

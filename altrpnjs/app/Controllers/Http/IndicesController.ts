@@ -32,7 +32,6 @@ export default class IndicesController {
 
   public async loginView({view, auth,response}: HttpContextContract,) {
     await auth.use('web').check()
-
     if (auth.user) {
       if (await auth?.user?.isAdmin()) {
         return response.redirect( '/admin')

@@ -53,6 +53,6 @@ Server.middleware.registerNamed({
   auth: () => import("App/Middleware/Auth"),
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
-  installChecker:   () => import('App/Middleware/InstallChecker'),
+  // installChecker:   () => import('App/Middleware/InstallChecker'),
 })
 

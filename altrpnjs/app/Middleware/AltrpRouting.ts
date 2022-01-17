@@ -18,6 +18,7 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
+
     if(url === '/altrp-login' || url === '/login'){
       await next()
       return

@@ -1,6 +1,5 @@
 import Model from "App/Models/Model";
 import app_path from "../../helpers/app_path";
-import base_path from "../../helpers/base_path";
 import Column from "App/Models/Column";
 import Table from "App/Models/Table";
 import Relationship from "App/Models/Relationship";
@@ -12,7 +11,7 @@ import ControllerGenerator from "App/Generators/ControllerGenerator";
 export default class ModelGenerator extends BaseGenerator {
 
   public static directory = app_path('/AltrpModels/')
-  public static template = base_path('/altrp-templates/AltrpModel')
+  public static template = app_path('/altrp-templates/AltrpModel.stub')
   public static ext = '.ts'
   private model: Model
   private table: Table
@@ -25,7 +24,7 @@ export default class ModelGenerator extends BaseGenerator {
     if (fs.existsSync(ModelGenerator.directory + fileName)) {
       fs.unlinkSync(ModelGenerator.directory + fileName);
     }
-    fileName =`${model.name}Controller.${ModelGenerator.ext}`
+    fileName =`${model.name}Controller${ModelGenerator.ext}`
     if (fs.existsSync(ControllerGenerator.directory + fileName)) {
       fs.unlinkSync(ControllerGenerator.directory + fileName);
     }

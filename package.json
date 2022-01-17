@@ -32,9 +32,9 @@
         "reports:build": "rm -rf public/modules/altrp-reports && cd resources/modules/altrp-reports && PUBLIC_URL=/modules/reports/ react-scripts build",
         "reports:move": "mv -f resources/modules/altrp-reports/build public/modules/reports",
         "server:start": "node server-dist/index.js",
-        "build-pack-js-server": "npm run only-build && node ./altrpnjs/ace build --production && npm run install-altrp-js-build  && gulp packJS",
-        "pack-js-server": "node ./altrpnjs/ace build --production && npm run install-altrp-js-build && gulp packJS",
-        "install-altrp-js-build": "npm ci --production --prefix ./altrpnjs/build",
+        "build-pack-js-server": "npm run only-build && node ./altrpnjs/ace build --production && gulp packJS",
+        "pack-js-server": "node ./altrpnjs/ace build --production && gulp packJS",
+        "install-packages-altrp-js-build": "npm ci --production --prefix ./altrpnjs/build",
         "docs": "jsdoc resources/modules -r"
     },
     "dependencies": {
