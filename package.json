@@ -37,7 +37,7 @@
         "install-packages-altrp-js-build": "npm ci --production --prefix ./altrpnjs/build",
         "docs": "jsdoc resources/modules -r"
     },
-    "dependencies": {
+  "dependencies": {
         "@babel/helper-builder-react-jsx": "^7.14.5",
         "@babel/helper-builder-react-jsx-experimental": "^7.12.11",
         "@babel/helper-define-map": "^7.14.5",

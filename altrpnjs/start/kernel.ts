@@ -31,7 +31,7 @@ Server.middleware.register([
 ])
 
 Route.get('*', async () => {
-})
+}).middleware("routing")
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +53,6 @@ Server.middleware.registerNamed({
   auth: () => import("App/Middleware/Auth"),
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
-  // installChecker:   () => import('App/Middleware/InstallChecker'),
+  routing: () => import('App/Middleware/AltrpRouting'),
 })
 

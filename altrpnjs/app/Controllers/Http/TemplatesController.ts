@@ -2,6 +2,9 @@
 
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
+import TemplateSetting from "App/Models/TemplateSetting";
+import Page from "App/Models/Page";
+import PagesTemplate from "App/Models/PagesTemplate";
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -17,6 +20,7 @@ export default class TemplatesController {
     const templates = await Template.query()
       .preload("user")
       .preload("currentArea")
+      .where("type", "template")
       .whereHas("currentArea", (builder => {
         builder.where("name", params.area)
       }))
@@ -48,6 +52,7 @@ export default class TemplatesController {
       data: JSON.stringify(request.input("data")),
       name: request.input("name"),
       title: request.input("title"),
+      type: "template",
       guid,
       user_id: auth.user.id,
     }
@@ -84,9 +89,20 @@ export default class TemplatesController {
 
     if(template) {
       const prevVersions = await Template.query().where("guid", template.getGuid())
+      const data = template.serialize();
+
+      delete data.created_at
+      delete data.updated_at
+      delete data.id
+
+      const prevTemplates = await Template.query().where("guid", data.guid).andWhere("type", "review").orderBy("created_at", "desc")
+
+      if(prevTemplates.length === 5) {
+        await prevTemplates[4].delete()
+      }
 
       const prevVersion = await Template.create({
-        ...template,
+        ...data,
         type: "review",
       })
 
@@ -102,6 +118,130 @@ export default class TemplatesController {
         prevVersion: prevVersion,
         clearData: request.input("data")
       }
+    }
+  }
+
+  /**
+   * Получение условий текущего шаблона
+   * @param $template_id
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public async conditions({params}) {
+    const id = parseInt(params.id);
+    let res = {
+      data: [],
+      success: true
+    }
+    const setting = await TemplateSetting.query().where("template_id", id).andWhere("setting_name", "conditions").first();
+
+    if(setting) {
+      res.data = JSON.parse(setting.data)
+    }
+
+    return res
+  }
+
+  /**
+   * Сохранение условий текущего шаблона
+   * @param $template_id
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public async conditionsSet({params, response, request}) {
+
+    const id = parseInt(params.id);
+    const data = JSON.stringify(request.input("data"));
+
+    const template = await Template.find(id);
+
+    if(!template) {
+      response.status(404)
+      return {
+        message: "Template not Found"
+      }
+    }
+
+    let setting = await TemplateSetting.query().where("template_id", id).first()
+
+    if(!setting) {
+      setting = await TemplateSetting.create({
+        template_id: id,
+        setting_name: "conditions",
+        template_guid: template.getGuid(),
+        data
+      })
+    } else {
+      setting.data = data
+
+      if(!setting.save()) {
+        response.status(500);
+
+        return {
+          message: "Conditions not Saved"
+        }
+      }
+    }
+
+    if(template) {
+      template.all_site = false
+
+      if(!template.save()) {
+        response.status(500)
+        return {
+          message: "Conditions all_site not Saved"
+        }
+      }
+
+      await template.related("pages").detach()
+
+      request.input("data").forEach(condition => {
+        switch (condition.object_type) {
+          case "all_site":
+            template.all_site = condition.condition_type === "include";
+
+            if(!template.save()) {
+              response.status(500)
+              return {
+                message: "Conditions all_site not Saved"
+              }
+            }
+            break
+          case "report":
+          case "page":
+            condition.object_ids.forEach(async objectId => {
+              const page = await Page.find(objectId)
+
+              if(!page) {
+                response.status(500)
+                return {
+                  message: "Page not found and pages template not saved"
+                }
+              }
+
+              const pages_template = await PagesTemplate.create({
+                page_id: objectId,
+                page_guid: page.getGuid(),
+                template_id: template.id,
+                template_guid: template.getGuid(),
+                condition_type: condition.condition_type,
+                template_type: template.type
+              })
+
+              if(!pages_template) {
+                response.status(500)
+                return {
+                  message: "Conditions page not Saved"
+                }
+              }
+            })
+            break
+        }
+      })
+    }
+
+    return {
+      success: true
     }
   }
 
