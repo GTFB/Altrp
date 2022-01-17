@@ -12,6 +12,8 @@ Route.group(() => {
     Route.get("/templates/options", "TemplatesController.options")
     Route.get("/templates/:id", "TemplatesController.get")
     Route.put("/templates/:id", "TemplatesController.update")
+    Route.get("/templates/:id/conditions", "TemplatesController.conditions")
+    Route.put("/templates/:id/conditions", "TemplatesController.conditionsSet")
 
     Route.post("/pages", "admin/PagesController.create")
     Route.get("/pages", "admin/PagesController.index")
@@ -26,13 +28,15 @@ Route.group(() => {
       return []
     })
 
+    Route.get("/reports_options", () => {
+      return []
+    })
+
     Route.get("/role_options", () => {
     return []
     })
 
-    Route.get("/pages_options", () => {
-      return []
-    })
+    Route.get("/pages_options", "OptionsController.pages")
 
     Route.get("/model_options", () => {
       return {

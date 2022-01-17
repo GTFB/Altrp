@@ -12,7 +12,7 @@ export default class IndicesController {
 
   public editor({ view }) {
     return view.render('editor', Edge({
-      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://localhost:3002/src/bundle.js",
+      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://localhost:3000/src/bundle.js",
       css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
     }))
   }

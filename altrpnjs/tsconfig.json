@@ -9,8 +9,9 @@
     "build"
   ],
   "compilerOptions": {
+    "allowJs": true,
     "outDir": "build",
-    "rootDir": "./",
+    "rootDir": "../",
     "sourceMap": true,
     "paths": {
       "App/*": [
@@ -33,6 +34,10 @@
       "@adonisjs/lucid",
       "@adonisjs/auth",
       "@adonisjs/session"
+    ],
+    "jsx": "react",
+    "lib": [
+      "dom"
     ]
   }
 }

@@ -22,12 +22,11 @@ import Route from "@ioc:Adonis/Core/Route";
 |
 */
 Server.middleware.register([
-  () => import('App/Middleware/AltrpRouting'),
   () => import('@ioc:Adonis/Core/BodyParser'),
 ])
 
 Route.get('*', async () => {
-})
+}).middleware("routing")
 
 /*
 |--------------------------------------------------------------------------
@@ -49,4 +48,5 @@ Server.middleware.registerNamed({
   auth: () => import("App/Middleware/Auth"),
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
+  routing: () => import('App/Middleware/AltrpRouting'),
 })

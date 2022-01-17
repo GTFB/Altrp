@@ -5,6 +5,7 @@ import { isString } from "lodash";
 import PageRole from "App/Models/PageRole";
 import Role from "App/Models/Role";
 import Template from "App/Models/Template";
+import PagesTemplate from "App/Models/PagesTemplate";
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
@@ -75,7 +76,6 @@ export default class Page extends BaseModel {
   @column()
   public model_id: number
 
-
   @belongsTo(() => User, {
     foreignKey: "author"
   })
@@ -98,6 +98,118 @@ export default class Page extends BaseModel {
   })
   public templates: ManyToMany<typeof Template>
 
+  public getGuid() {
+    return this.guid
+  }
+
+  public async getAreas() {
+    // const all_site_templates = Template.query().where("all_site", true).preload("currentArea")
+
+    const data: {
+      area_name: string,
+      id: string,
+      settings: []
+      template?: any
+      templates?: Template[]
+    }[] = []
+
+    let headerTemplate = await this.related("templates").query().whereHas("currentArea", (query) => {
+      query.where("name", "header")
+    }).first()
+
+    if(!headerTemplate) {
+      headerTemplate = await Template.query().where("all_site", true).whereHas("currentArea", (query) => {
+        query.where("name", "header")
+      }).first()
+    }
+    if(headerTemplate) {
+      const header = headerTemplate.serialize()
+
+      delete header.html_content
+      delete header.styles
+
+      data.push({
+        area_name: "header",
+        id: "header",
+        settings: [],
+        template: header
+      })
+    }
+
+    let contentTemplate = await this.related("templates").query().whereHas("currentArea", (query) => {
+      query.where("name", "content")
+    }).first()
+
+    if(!contentTemplate) {
+      contentTemplate = await Template.query().where("all_site", true).whereHas("currentArea", (query) => {
+        query.where("name", "content")
+      }).first()
+    }
+    if(contentTemplate) {
+      const content = contentTemplate.serialize()
+
+      delete content.html_content
+      delete content.styles
+
+      data.push({
+        area_name: "content",
+        id: "content",
+        settings: [],
+        template: content
+      })
+    }
+
+    let footerTemplate = await this.related("templates").query().whereHas("currentArea", (query) => {
+      query.where("name", "footer")
+    }).first()
+
+    if(!footerTemplate) {
+      footerTemplate = await Template.query().where("all_site", true).whereHas("currentArea", (query) => {
+        query.where("name", "footer")
+      }).first()
+    }
+    if(footerTemplate) {
+      const footer = footerTemplate.serialize()
+
+      delete footer.html_content
+      delete footer.styles
+
+      data.push({
+        area_name: "footer",
+        id: "footer",
+        settings: [],
+        template: footer
+      })
+    }
+
+    let popups: Template[] = []
+
+    let relatedPopups = await this.related("templates").query().whereHas("currentArea", (query) => {
+      query.where("name", "popup")
+    })
+
+    if(relatedPopups) {
+      popups = [...popups, ...relatedPopups]
+    }
+
+    const globalPopups = await Template.query().where("all_site", true).whereHas("currentArea", (query) => {
+      query.where("name", "popup")
+    })
+
+    if(globalPopups) {
+      popups = [...popups, ...globalPopups]
+    }
+
+    data.push({
+      area_name: "popups",
+      id: "popups",
+      settings: [],
+      templates: popups
+    })
+
+    return data
+  }
+
   /**
    * Перебирает массив от фронтенда и привязвает/удаляет роли;отмечает for_guest
    * @param {string | array} roles
@@ -115,6 +227,23 @@ export default class Page extends BaseModel {
     })
     this.attachRoles( rolesValues );
     this.for_guest = for_guest;
+  }
+
+  public getForFront() {
+    return {
+      allowed: true,
+      areas: [],
+      data_sources: [],
+      icon: this.icon,
+      id: this.id,
+      lazy: true,
+      model: undefined,
+      models: [],
+      parent_page_id: this.parent_page_id,
+      path: this.path,
+      redirect: this.redirect,
+      title: this.title
+    }
   }
 
   /**
