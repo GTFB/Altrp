@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic;
+use Illuminate\Support\Facades\Validator;
 
 class MediaController extends Controller
 {
@@ -198,6 +199,89 @@ class MediaController extends Controller
         return $media_filename;
     }
     return $media_filename;
+
+  }
+
+  /**
+   * Resizing image
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public function resizeImage( Request $request ){
+
+    $validator = Validator::make($request->all(),[
+        'guid' => 'required'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json(['status' => false, 'message' => $validator->messages()], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    $mediaSettings = MediaSetting::all();
+
+    if (count($mediaSettings) == 0) {
+      return response()->json( [ 'success' => false, 'message' => 'Media settings not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $media = Media::where('guid', $request->guid)->first();
+
+    if (!$media) {
+      return response()->json( [ 'success' => false, 'message' => 'Media not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $path = Storage::path( 'public/' . $media->filename );
+    
+    $media_variation = [];      
+    foreach ($mediaSettings as $setting) {
+      $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+      $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+    }
+    
+    $media->media_variation = json_encode($media_variation);
+    $media->save();
+
+    return response()->json( $media->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+    
+  }
+
+  /**
+   * Resizing All images
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public function resizeAllImages(){
+
+    $mediaSettings = MediaSetting::all();
+
+    if (count($mediaSettings) == 0) {
+      return response()->json( [ 'success' => false, 'message' => 'Media settings not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $media_records = Media::all();
+
+    if (count($media_records) == 0) {
+      return response()->json( [ 'success' => false, 'message' => 'Media not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    foreach ($media_records as $media) {
+
+      $path = Storage::path( 'public/' . $media->filename );
+
+      $media_variation = [];
+      if (count($mediaSettings) > 0) {
+        foreach ($mediaSettings as $setting) {
+          $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+        }
+      }
+      $media->media_variation = json_encode($media_variation);
+      $media->save();
+
+      $res[] = $media;
+    }
+
+    $res = array_reverse( $res );
+    return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
     
   }
 
@@ -220,6 +304,8 @@ class MediaController extends Controller
     foreach ( $_files as $file ) {
       $files[] = $file;
     }
+
+    $mediaSettings = MediaSetting::all();
 
     foreach ( $files as $file ) {
       $media = new Media();
@@ -256,6 +342,15 @@ class MediaController extends Controller
         $media->width = data_get( $size, '0', 0 );
         $media->height = data_get( $size, '1', 0 );
       }
+
+      $media_variation = [];
+      if (count($mediaSettings) > 0) {
+        foreach ($mediaSettings as $setting) {
+          $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+        }
+      }
+      $media->media_variation = json_encode($media_variation);
 
       $media->main_color = getMainColor( $path );
       $media->url =  Storage::url( $media->filename );
