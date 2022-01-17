@@ -92,10 +92,10 @@ function altrpJSZip(){
   let filename = 'altrp-js.zip'
   return gulp.src([
     './altrpnjs/build/**/*',
-    '!./altrpnjs/app/Models/AltrpModels/**/*',
-    '!./altrpnjs/app/Controllers/AltrpControllers/**/*',
-    '!./altrpnjs/public/altrp-plugins',
-  ]).pipe(zip(filename))
+    '!./altrpnjs/build/app/AltrpModels/**/*',
+    '!./altrpnjs/build/app/AltrpControllers/**/*',
+    '!./altrpnjs/build/public/altrp-plugins/**/*',
+  ],{ dot: true,}).pipe(zip(filename))
     .pipe(gulp.dest('../'))
     .pipe(notify({
       message:'Архив готов',
@@ -114,8 +114,7 @@ function copyPublicToAdonis(){
     '!./public/*.php',
     '!./public/web.config',
     '!./public/mix-manifest.json',
-  ]).pipe(gulpCopy('./altrpnjs/build/', {}))
-    .pipe(gulp.dest('./'))
+  ]).pipe(gulp.dest('./altrpnjs/build/public'))
 }
 
 async function  clearJSBuild(){

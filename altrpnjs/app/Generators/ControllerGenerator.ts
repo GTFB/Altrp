@@ -1,5 +1,4 @@
 import app_path from "../../helpers/app_path"
-import base_path from "../../helpers/base_path"
 import fs from 'fs'
 import {BaseGenerator} from "App/Generators/BaseGenerator"
 import Controller from "App/Models/Controller"
@@ -10,7 +9,7 @@ import ModelGenerator from "App/Generators/ModelGenerator";
 export default class ControllerGenerator extends BaseGenerator {
 
   public static directory = app_path('/AltrpControllers/')
-  private static template = base_path('/altrp-templates/AltrpController')
+  private static template = app_path('/altrp-templates/AltrpController.stub')
   private controller: Controller
   private model: Model
   private sources: Source[] = []
@@ -36,7 +35,7 @@ export default class ControllerGenerator extends BaseGenerator {
     this.controller = controller
     this.model = this.controller.altrp_model
     this.sources = this.controller.sources
-    let fileName =`${this.model.name}Controller.${ModelGenerator.ext}`
+    let fileName =`${this.model.name}Controller${ModelGenerator.ext}`
     if (!this.getClassnameContent()) {
       return
     }

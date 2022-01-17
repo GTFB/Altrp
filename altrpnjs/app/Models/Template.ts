@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import {BaseModel, column, HasOne, hasOne} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, column, HasOne, hasOne, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import User from "App/Models/User";
 import Area from "App/Models/Area";
+import Page from "App/Models/Page";
 
 export default class Template extends BaseModel {
   @column({ isPrimary: true })
@@ -26,6 +27,9 @@ export default class Template extends BaseModel {
   public styles: string
 
   @column()
+  public all_site: boolean
+
+  @column()
   public html_content: string
 
   @hasOne(() => User, {
@@ -33,6 +37,12 @@ export default class Template extends BaseModel {
     foreignKey: "id"
   })
   public user: HasOne<typeof User>
+
+  @manyToMany(() => Page, {
+    pivotTable: "pages_templates",
+    pivotForeignKey: "template_id",
+  })
+  public pages: ManyToMany<typeof Page>
 
   @hasOne(() => Area, {
     localKey: "area",

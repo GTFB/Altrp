@@ -46,6 +46,10 @@
     {
       "pattern": "resources/views/**/*.edge",
       "reloadServer": false
+    },
+    {
+      "pattern": "app/altrp-templates/**/*.stub",
+      "reloadServer": false
     }
   ]
 }
