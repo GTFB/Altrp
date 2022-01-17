@@ -3,16 +3,21 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import styled from 'styled-components';
 import {ReactSortable} from "react-sortablejs";
 import {generateId} from "../../js/helpers";
-import MenuItem from "./MenuItem";
+import MenuItem2 from "./MenuItem";
 import mutate from "dot-prop-immutable";
 import {mbParseJSON} from "../../../../front-app/src/js/helpers";
 import IconSelect from "../icon-select/IconSelect";
 import {withRouter} from "react-router-dom";
+import {MenuItem} from "@blueprintjs/core";
+import {MultiSelect} from "@blueprintjs/select";
 
 
 const defaultValue = {
   name: '',
   children: [],
+  categoryOptions: [],
+  categories: [],
+  _categories: [],
   settings: {
     toggle_icon: ''
   },
@@ -66,7 +71,7 @@ const Wrapper = styled.div`
     padding-left: 20px;
   }
 
-  & .altrp-menu-item-content .form-control:not(:first-child) ,
+  & .altrp-menu-item-content .form-control:not(:first-child),
   & .altrp-menu-item-content .altrp-menu-item__select:not(:first-child) {
     margin-bottom: 13px;
   }
@@ -107,24 +112,33 @@ class MenuBuilder extends Component {
       }
     };
     this.resource = new Resource({route: '/admin/ajax/menus'})
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
   }
 
   async componentDidMount() {
+    let {data} = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        categoryOptions: data
+      }
+    }))
     if (!this.props.menuId) {
       return;
     }
     try {
       let menu = await this.resource.get(this.props.menuId);
       menu.children = mbParseJSON(menu.children, []);
-      if(! menu.name){
+      if (!menu.name) {
         menu.name = '';
       }
-      if(! menu.settings){
+      if (!menu.settings) {
         menu.settings = {toggle_icon: ''};
       } else {
         menu.settings = mbParseJSON(menu.settings, {toggle_icon: ''});
       }
-      this.setState(state => ({...state, value: menu}));
+      this.setState(state => ({...state, value: {...state.value, ...menu, categoryOptions: data}}));
     } catch (e) {
       // console.error(e);
       this.props.fetchError && this.props.fetchError();
@@ -195,8 +209,48 @@ class MenuBuilder extends Component {
     }
   }
 
+  onQueryChangeMulti = (query, value) => {
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
+  }
+
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  isItemSelectedCategory = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.categories);
+    return selectedString.includes(itemString);
+  }
+
+  handleItemSelectCategory = (item) => {
+    if (!this.isItemSelectedCategory(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          _categories: [...state.value._categories, item],
+          categories: [...state.value.categories, item]
+        }
+      }));
+    }
+  }
+
+  handleTagRemoveCategory = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        _categories: [...state.value._categories].filter((i) => i.label !== item),
+        categories: [...state.value.categories].filter((i) => i.label !== item)
+      }
+    }));
+  }
+
   render() {
-    if(! this.state.show){
+    if (!this.state.show) {
       return null;
     }
     const {value} = this.state;
@@ -207,12 +261,42 @@ class MenuBuilder extends Component {
           type="text"
           id="menu-name"
           value={value.name}
-          onChange={(e)=>{
+          onChange={(e) => {
             let inputValue = e.target.value;
             let value = mutate.set(this.state.value, 'name', inputValue);
-            this.setState(state=>({...state, value}));
+            this.setState(state => ({...state, value}));
           }}
-          className="form-control"/>
+          className="form-control"
+        />
+        <div className="form-group-menu form-group__multiSelectBlueprint form-group__multiSelectBlueprint-category">
+          <label htmlFor="categories-menu" className="label__RobotoFont">Categories</label>
+          <MultiSelect tagRenderer={this.tagRenderer} id="categories"
+                       items={this.state.value.categoryOptions}
+                       itemPredicate={this.onQueryChangeMulti}
+                       noResults={<MenuItem disabled={true} text="No results."/>}
+                       fill={true}
+                       placeholder="Categories..."
+                       selectedItems={this.state.value.categories}
+                       onItemSelect={this.handleItemSelectCategory}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemoveCategory,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
+          />
+        </div>
         <label htmlFor="toggle-icon" className="mb-0 mr-3 ml-3">Toggle Icon</label>
         <IconSelect
           id="toggle-icon"
@@ -222,8 +306,9 @@ class MenuBuilder extends Component {
           maxHeight="50px"
           onChange={(icon) => {
             let value = mutate.set(this.state.value, 'settings.toggle_icon', icon);
-            this.setState(state=>({...state, value}));
-          }}/>
+            this.setState(state => ({...state, value}));
+          }}
+        />
       </div>
 
       <div className="d-flex altrp-menu-builder-add align-items-center align-content-start p-3 flex-wrap">
@@ -254,7 +339,7 @@ class MenuBuilder extends Component {
         list={value.children}
         setList={(newList) => this.setState(state => ({...state, value: {...state.value, children: newList}}))}>
         {value.children.map((item, idx) => {
-          return <MenuItem
+          return <MenuItem2
             item={item}
             key={item.id}
             indexes={[idx]}

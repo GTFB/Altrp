@@ -61,7 +61,7 @@ class AltrpLightbox extends Component {
     const settings = this.props.settings;
     let nextSrc = null;
     let prevSrc = null;
-    const current = this.state.current;
+    const current = this.state.current || 0;
 
     if(images.length === 0 || images[0] === "") {
       images = ["/img/nullImage.png"]

@@ -11,7 +11,9 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .image-to-crop-container {
-    cursor: pointer;
+    label{
+      cursor: pointer;
+    }
     position: relative;
   }
 
@@ -31,14 +33,6 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-
-  .ReactCrop__image {
-    height: 100%;
-  }
-
-  .ReactCrop > * {
-    height: 100%;
   }
 `)
 
@@ -69,10 +63,10 @@ const getCroppedImg = (image, crop, fileName) => {
     crop.width,
     crop.height
   );
- 
+
   // As Base64 string
   // const base64Image = canvas.toDataURL('image/jpeg');
- 
+
   // As a blob
   return new Promise((resolve, reject) => {
     canvas.toBlob(file => {
@@ -81,8 +75,49 @@ const getCroppedImg = (image, crop, fileName) => {
   });
 }
 
-class InputCropImageWidget extends Component {
+const ImageCropContainer = styled.div`
+& > div {
+  ${({imageHeight, cropHeight}) => {
+    if (imageHeight > cropHeight) {
+      return `
+        height: 100%;
+      `
+    }
+    return `
+      width: 100%;
+      height: fit-content;
+    `
+  }}
+}
 
+& > div > div {
+  ${({cropHeight, imageHeight}) => {
+    if (imageHeight > cropHeight) {
+      return `
+        height: 100%;
+      `
+    }
+    return `
+      width: 100%;
+    `
+  }}
+}
+
+& > div > div > img {
+  ${({cropHeight, imageHeight}) => {
+    if (imageHeight > cropHeight) {
+      return `
+        height: 100%;
+      `
+    }
+    return `
+      width: 100%;
+    `
+  }}
+}
+`
+
+class InputCropImageWidget extends Component {
   constructor(props) {
     super(props);
     props.element.component = this;
@@ -233,7 +268,6 @@ class InputCropImageWidget extends Component {
    * @param {{}} prevProps
    */
   updateValue(prevProps) {
-
     if (isEditor()) {
       return;
     }
@@ -374,7 +408,11 @@ class InputCropImageWidget extends Component {
    * @param e
    */
   onChange = async (e) => {
-    this.setState(state => ({...state, notActive: true}))
+    this.setState(state => ({
+      ...state,
+      notActive: true,
+    }))
+
     const {filesStorage} = this.state;
     try {
       if (_.isArray(filesStorage))
@@ -475,7 +513,7 @@ class InputCropImageWidget extends Component {
   /**
    * Clear image
    */
-  clear() {
+  clear = async ()=> {
     this.onChange(null);
     this.dispatchFieldValueToStore(null, true);
   }
@@ -490,18 +528,18 @@ class InputCropImageWidget extends Component {
     } catch (e) {
       console.error(e);
     }
-    
+
     this.selectOtherInput.current.click();
   }
 
   /**
    * Upload choosen image
    */
-  upload = async (crop) => {
-    const img = await getCroppedImg(this.imageToCrop.current, crop, 'img.jpg')
+  upload = async () => {
+    const img = await getCroppedImg(this.imageToCrop.current, this.state.crop, this.state.filesStorage[0].data.file.name)
 
     let value = new AltrpFile(img)
-    
+
     try {
       const storedFile = await value.storeFile()
 
@@ -548,31 +586,30 @@ class InputCropImageWidget extends Component {
 
     const renderComponent = <img src={this.state.imageUrl} ref={this.imageToCrop} className="ReactCrop__image" />
 
-    return (
-      <div style={{display: 'flex', justifyContent: 'center'}}>
-        {!this.state.imageUrl 
-          ?
+    if (!this.state.imageUrl) {
+      return (
+        <div style={{display: 'flex', justifyContent: 'center'}}>
           <div className="image-to-crop-container">
-            <input type="file" accept="image/*" className="hidden" id={this.getName()} onChange={this.onChange} required={required} />
+            {!isEditor() && <input type="file" accept="image/png, image/jpeg, image/jpg" className="hidden" id={this.getName()} onChange={this.onChange} required={required} />}
             <label htmlFor={this.getName()}>
               <div className="crop-image-text">{text}</div>
               <div className="crop-image-background" />
             </label>
           </div>
-          :
-          <div className="image-crop-container">
-            <input type="file" accept="image/*" className="hidden" onChange={this.onChange} ref={this.selectOtherInput} />
-            <ImageCrop
-              crop={this.state.crop}
-              onChange={newCrop => this.setState(state => ({...state, crop: newCrop}))}
-              onComplete={this.upload}
-              renderComponent={renderComponent}
-            />
-          </div>
-        }
-      </div>
-    );
+        </div>
+      )
+    }
 
+    return (
+      <ImageCropContainer className="image-crop-container" cropHeight={this.state.settings.crop_size?.size || 300} imageHeight={this.state.filesStorage[0].data.media.height}>
+        <input type="file" accept="image/png, image/jpeg, image/jpg" className="hidden" onChange={this.onChange} ref={this.selectOtherInput} />
+        <ImageCrop
+          crop={this.state.crop}
+          onChange={newCrop => this.setState(state => ({...state, crop: newCrop}))}
+          renderComponent={renderComponent}
+        />
+      </ImageCropContainer>
+    )
   }
 
 }

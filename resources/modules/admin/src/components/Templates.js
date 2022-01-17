@@ -6,6 +6,8 @@ import {setModalSettings} from "../js/store/modal-settings/actions";
 import {generateId, redirect, objectDeepCleaning} from "../js/helpers";
 import Pagination from "./Pagination";
 import UserTopPanel from "./UserTopPanel";
+import SmallModal from "./SmallModal";
+import TemplateChildrenModal from "./templateChildrenModal";
 
 
 export default class Templates extends Component {
@@ -13,6 +15,7 @@ export default class Templates extends Component {
     super(props);
     this.state = {
       templates: [],
+      templatesDidMount: [],
       activeHeader: 0,
       allTemplates: [],
       templateAreas: [],
@@ -20,7 +23,10 @@ export default class Templates extends Component {
       pageCount: 1,
       currentPage: 1,
       templateSearch: '',
-      sorting: {}
+      sorting: {},
+      categoryOptions: [],
+      activeCategory: 'All',
+      modal: false
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -33,6 +39,8 @@ export default class Templates extends Component {
     this.changeActiveArea = this.changeActiveArea.bind(this);
     this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
     this.itemsPerPage = 10;
+
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
   }
 
   changeActiveArea(e) {
@@ -60,6 +68,7 @@ export default class Templates extends Component {
    */
   setActiveArea(activeTemplateArea) {
     this.updateTemplates(1, activeTemplateArea);
+    this.DidMountTemplates(activeTemplateArea)
     this.setState(state => {
       return {...state, activeTemplateArea};
     })
@@ -71,21 +80,59 @@ export default class Templates extends Component {
    * @param activeTemplateArea
    */
   updateTemplates = (currentPage = this.state.currentPage, activeTemplateArea = this.state.activeTemplateArea) => {
-    this.resource.getQueried({
-      area: activeTemplateArea.name,
-      page: currentPage,
-      pageSize: 10,
-      s: this.state.templateSearch,
-      ...this.state.sorting
-    }).then(res => {
-      this.setState(state => {
-        return {
-          ...state,
-          pageCount: res.pageCount,
-          templates: res.templates
-        }
+    if (activeTemplateArea.name === "all") {
+      this.resource.getQueried({
+        s: this.state.templateSearch,
+        ...this.state.sorting
+      }).then(res => {
+        this.setState(state => {
+          return {
+            ...state,
+            pageCount: res.pageCount,
+            templates: res.templates
+          }
+        });
       });
-    });
+    } else {
+      this.resource.getQueried({
+        area: activeTemplateArea.name,
+
+        s: this.state.templateSearch,
+        ...this.state.sorting
+      }).then(res => {
+        this.setState(state => {
+          return {
+            ...state,
+            pageCount: res.pageCount,
+            templates: res.templates
+          }
+        });
+      });
+    }
+  }
+
+  DidMountTemplates = async (activeTemplateArea = this.state.activeTemplateArea) => {
+    if (activeTemplateArea.name === 'all') {
+      let { templates } = await this.resource.getQueried({
+        s: this.state.templateSearch,
+        ...this.state.sorting
+      })
+      this.setState(state => ({
+        ...state,
+        templatesDidMount: templates
+      }))
+    } else {
+      let { templates } = await this.resource.getQueried({
+        area: activeTemplateArea.name,
+
+        s: this.state.templateSearch,
+        ...this.state.sorting
+      })
+      this.setState(state => ({
+        ...state,
+        templatesDidMount: templates
+      }))
+    }
   }
 
   /** @function generateTemplateJSON
@@ -122,11 +169,26 @@ export default class Templates extends Component {
    */
   async componentDidMount() {
     let templateAreas = await this.templateTypesResource.getAll();
-    this.setActiveArea(templateAreas[0]);
+    let templateAreasNew = [
+      {
+        id: 0,
+        name: 'all',
+        settings: '[]',
+        title: 'All'
+      },
+      ...templateAreas
+    ]
+    this.setActiveArea(templateAreasNew[0]);
     this.setState(state => {
-      return {...state, templateAreas}
+      return {...state, templateAreas: templateAreasNew}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
+    await this.DidMountTemplates(this.state.activeTemplateArea)
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
 
@@ -270,8 +332,75 @@ export default class Templates extends Component {
     this.setState({templateSearch: e.target.value})
   }
 
+  toggleModal = () => {
+    this.setState(state => ({
+      ...state,
+      modal: !state.modal
+    }))
+  }
+
+  getCategory = async (guid, all) => {
+    if (guid) {
+     if (this.state.activeTemplateArea.name === "all") {
+       let { templates } = await this.resource.getQueried({
+         categories: guid,
+       });
+
+       this.setState(state => ({
+         ...state,
+         templates,
+         activeCategory: guid
+       }))
+     } else {
+       let { templates } = await this.resource.getQueried({
+         categories: guid,
+         area: this.state.activeTemplateArea.name,
+       });
+
+       this.setState(state => ({
+         ...state,
+         templates,
+         activeCategory: guid
+       }))
+     }
+    } else {
+      if (this.state.activeTemplateArea.name === "all") {
+        let { templates } = await this.resource.getQueried({
+
+        });
+        this.setState(state => ({
+          ...state,
+          templates,
+          activeCategory: all
+        }))
+      } else {
+        let { templates } = await this.resource.getQueried({
+          area: this.state.activeTemplateArea.name,
+        });
+        this.setState(state => ({
+          ...state,
+          templates,
+          activeCategory: all
+        }))
+      }
+    }
+  }
+
   render() {
-    const {templateSearch, sorting, templates} = this.state
+    const {templateSearch, categoryOptions, templatesDidMount, sorting, templates} = this.state
+
+    let templatesMap = templates.map(template => {
+      let categories = template.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...template,
+        categories
+      }
+    })
+
+
     return <div className="admin-templates admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
        <div className="admin-heading-left">
@@ -280,10 +409,10 @@ export default class Templates extends Component {
            <span className="admin-breadcrumbs__separator">/</span>
            <span className="admin-breadcrumbs__current">All Templates</span>
          </div>
-         <button onClick={this.onClick} className="btn">Add New</button>
+         <button onClick={this.toggleModal} className="btn">Add New</button>
          <button onClick={this.toggleImportForm} className="btn ml-3">Import Template</button>
          <div className="admin-filters">
-           <span className="admin-filters__current">All ({this.state.templates.length || ''})</span>
+           <span className="admin-filters__current">All ({this.state.templates.length || '0'})</span>
          </div>
        </div>
         <UserTopPanel />
@@ -330,7 +459,16 @@ export default class Templates extends Component {
               title: 'Categories'
             }
           ]}
-          rows={this.state.templates}
+          filterPropsCategories={{
+            DidMountArray: templatesDidMount,
+            categoryOptions: categoryOptions,
+            getCategories: this.getCategory,
+            activeCategory: this.state.activeCategory
+          }}
+          rows={templatesMap.slice(
+            this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+            this.state.currentPage * this.itemsPerPage
+          )}
           quickActions={[{
             tag: 'a', props: {
               href: '/admin/editor?template_id=:id',
@@ -368,14 +506,23 @@ export default class Templates extends Component {
             change: (e) => this.changeTemplates(e)
           }}
 
-          pageCount={this.state.pageCount || 1}
+          pageCount={Math.ceil(templates.length / this.itemsPerPage) || 1}
           currentPage={this.state.currentPage}
-          changePage={this.changePage}
-          itemsCount={this.state.templates.length}
+          changePage={page => {
+            if (this.state.currentPage !== page) {
+              this.setState({currentPage: page});
+            }
+          }}
+          itemsCount={templates.length}
 
           openPagination={true}
         />
       </div>
+      {this.state.modal && (
+        <SmallModal toggleModal={this.toggleModal} activeMode={this.state.modal}>
+          <TemplateChildrenModal toggleModal={this.toggleModal} categoryOptions={this.state.categoryOptions} templateAreas={this.state.templateAreas} />
+        </SmallModal>
+      )}
     </div>;
   }
 

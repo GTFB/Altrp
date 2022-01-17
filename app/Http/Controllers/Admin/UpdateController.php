@@ -7,10 +7,20 @@ use App\Http\Controllers\Controller;
 use App\Services\AltrpUpdateService;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateController extends Controller
 {
+
+  public function changelog(  ){
+    $changelog = File::get( base_path('README.md') );
+
+    return response()->json([
+      'success' => true,
+      'data' => $changelog,
+    ], 200, [], JSON_UNESCAPED_UNICODE);
+  }
   /**
    * Обработка запроса проверки нужно ли обнолвение
    * @param AltrpUpdateService $updateService

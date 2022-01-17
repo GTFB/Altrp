@@ -2,7 +2,6 @@ import { getResponsiveSetting } from '../../helpers';
 import { colorPropertyStyled, dimensionsControllerToStyles, typographicControllerToStyles, sliderStyled, opacityStyled, simplePropertyStyled } from '../../helpers/styles';
 
 const getIconStyles = (settings, id) => {
-    const parentClass = `.altrp-element${id}`
 
     let styles = ``
 
@@ -60,16 +59,14 @@ const getIconStyles = (settings, id) => {
     styles += `.icon-widget__icon {
         width: auto;
         display: flex;`
-    
+
     switch (getResponsiveSetting(settings, 'icon_position', '', 'column')) {
         case 'column':
         case 'column-reverse':
-            console.log('brrrr');
             styles += simplePropertyStyled( getResponsiveSetting(settings, 'icon_horizontal_alignment', '', 'center') , 'justify-content')
             break;
         case 'row':
         case 'row-reverse':
-            console.log('brrrr2');
             styles += simplePropertyStyled( getResponsiveSetting(settings, 'icon_vertical_alignment', '', 'center') , 'align-items')
             break;
     }
@@ -83,7 +80,7 @@ const getIconStyles = (settings, id) => {
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', ':hover') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_margin', ':hover') , "margin")}
         ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity', ':hover') )}
-    }`
+    }}`
 
     return styles
 }

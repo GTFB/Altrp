@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
 
 use App\Constructor\Template;
-use App\Constructor\TemplateHistory;
 use Illuminate\Support\Str;
 
 class Templates extends ApiController

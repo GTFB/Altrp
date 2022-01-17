@@ -10,17 +10,29 @@ class Areas extends Component {
     super(props);
     this.state = {
       areas: [],
+      areasDidMount: [],
+      categoryOptions: [],
+      activeCategory: 'All',
       activeHeader: 0,
       currentPage: 1,
       areasSearch: ""
     }
 
     this.resource = new Resource({route: '/admin/ajax/areas'});
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
     this.itemsPerPage = 10;
   }
 
   async componentDidMount() {
     this.updateAreas();
+    const { data } = await this.categoryOptions.getAll();
+    let areas = await this.resource.getAll();
+    areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
+    this.setState(state => ({
+      ...state,
+      areasDidMount: areas,
+      categoryOptions: data,
+    }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
 
@@ -56,9 +68,44 @@ class Areas extends Component {
     this.setState( { areasSearch: e.target.value})
   }
 
+  getCategory = async (guid, all) => {
+    if (guid) {
+      let areas = await this.resource.getQueried({
+        categories: guid
+      });
+      areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
+      this.setState(state => ({
+        ...state,
+        areas: areas,
+        activeCategory: guid
+      }))
+    } else {
+      let areas = await this.resource.getAll();
+      areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
+      this.setState(state => ({
+        ...state,
+        areas: areas,
+        activeCategory: all
+      }))
+    }
+  }
+
   render() {
 
-    const { areas, currentPage, areasSearch } = this.state;
+    const { areas, currentPage, areasDidMount, categoryOptions, areasSearch } = this.state;
+
+
+    let areasMap = areas.map(area => {
+      let categories = area.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...area,
+        editUrl: '/admin/areas/' + area.id,
+        categories
+      }
+    })
 
     return <div className="admin-pages admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -67,6 +114,11 @@ class Areas extends Component {
            <div className="admin-breadcrumbs__current">Custom Areas</div>
          </div>
          <Link className="btn" to={`/admin/areas/add`}>Add New</Link>
+         <div className="admin-filters">
+            <span className="admin-filters__current">
+              All ({ areasDidMount.length || "0" })
+            </span>
+         </div>
        </div>
         <UserTopPanel />
       </div>
@@ -80,6 +132,10 @@ class Areas extends Component {
               editUrl: true,
               tag: 'Link'
             },
+            {
+              name: 'categories',
+              title: 'Categories'
+            }
           ]}
           quickActions={[
             {
@@ -94,7 +150,13 @@ class Areas extends Component {
               title: "Delete"
             }
           ]}
-          rows={areas.slice(
+          filterPropsCategories={{
+            DidMountArray: areasDidMount,
+            categoryOptions: categoryOptions,
+            getCategories: this.getCategory,
+            activeCategory: this.state.activeCategory
+          }}
+          rows={areasMap.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,
             currentPage * this.itemsPerPage
           )}

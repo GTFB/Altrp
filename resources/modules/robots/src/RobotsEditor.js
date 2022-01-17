@@ -47,7 +47,7 @@ class RobotsEditor extends Component {
     super(props);
     this.state = {
       elements: [],
-      robot: [],
+      robot: null,
       sources: [],
       reactFlowInstance: null,
       selectNode: false,
@@ -77,7 +77,11 @@ class RobotsEditor extends Component {
     store.subscribe(this.updateRobotState.bind(this));
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
-    const robot = await this.resource.get(robotId)
+    let robot = await this.resource.get(robotId)
+    robot = {
+      ...robot,
+      _categories: robot.categories,
+    }
     if (_.isString(robot.start_config)) robot.start_config = JSON.parse(robot.start_config);
     console.log(robot);
     store.dispatch(setCurrentRobot(robot));

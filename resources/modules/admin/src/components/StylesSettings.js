@@ -9,6 +9,7 @@ import IconUpload from "./../svgs/upload.svg"
 class StylesSettings extends Component {
   state = {
     iconFile: null,
+    image: null,
     uploaderClasses: "admin-assets__uploader uploader",
     itemDeleteClasses: "item__delete",
     imageLazyLoading: 'none',
@@ -94,6 +95,18 @@ class StylesSettings extends Component {
     await new Resource({route: '/admin/ajax/settings'}).put('altrp_skeleton_color', {value:skeletonColor});
     this.setState(state =>({...state, skeletonColor}));
   };
+
+  inputFileImage = (e) => {
+    this.setState({iconFile: e.target.files[0]})
+    let reader = new FileReader()
+    reader.readAsDataURL(e.target.files[0])
+    reader.onload = () => {
+      this.setState((state) => ({
+        ...state,
+        image: reader.result
+      }));
+    }
+  }
 
   render() {
     let UploadIcon = iconsManager().getIconComponent("upload");
@@ -201,11 +214,15 @@ class StylesSettings extends Component {
                 onDragOver={this.onDragOver}
             >
               <label className="uploader__label d-flex flex-column align-items-center">
-                <IconUpload width={100} height={100} className="icon"/>
+                {this.state.iconFile ? (
+                  <img src={this.state.image} width={100} height={100} className="icon-img" alt="Предварительное изображение"/>
+                ) : (
+                  <IconUpload width={100} height={100} className="icon"/>
+                )}
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={e => this.setState({iconFile: e.target.files[0]})}
+                    onChange={this.inputFileImage}
                     className="uploader__input"
                 />
                 <span className="uploader__text">
@@ -216,7 +233,7 @@ class StylesSettings extends Component {
             {iconFile && (
                 <div className="centred mt-2">
                   <button
-                      className="admin-settings-button btn btn-sm"
+                      className="admin-styles-button"
                       type="submit"
                   >
                     Upload icon

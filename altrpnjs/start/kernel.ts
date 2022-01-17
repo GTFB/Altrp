@@ -50,3 +50,4 @@ Server.middleware.registerNamed({
   cors: () => import("App/Middleware/Cors"),
   routing: () => import('App/Middleware/AltrpRouting'),
 })
+

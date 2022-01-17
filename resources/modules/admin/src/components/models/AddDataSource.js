@@ -46,7 +46,7 @@ class AddDataSource extends Component {
         <UserTopPanel />
       </div>
       <div className="admin-content">
-        <AddDataSourceForm />
+        <AddDataSourceForm paramsId={id} />
       </div>
     </div>;
   }

@@ -9,6 +9,7 @@ use App\GlobalTemplateStyle;
 use App\Page;
 use App\PagesTemplate;
 use App\User;
+use App\CategoryObject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,21 +30,61 @@ class TemplateController extends Controller
   {
     $page_count = 1;
     $search = $request->get( 's' );
-    $orderColumn = $request->get( 'order_by' ) ?? 'id';
+    $categories = $request->get( 'categories' );
+    //$area_name = $request->get( 'area', 'content' );
+    $area_name = $request->get( 'area' );
+
+    $orderColumn = $request->get( 'order_by' ) ?? 'title';
+    $orderColumn = 'templates.'.$orderColumn;
     $orderType = $request->get( 'order' ) ? ucfirst( strtolower( $request->get( 'order' ) ) ) : 'Desc';
     $sortType = 'sortBy' . ( $orderType == 'Asc' ? '' : $orderType );
     if ( ! $request->get( 'page' ) ) {
-      $_templates = $search
-        ? Template::getBySearchWhere( [ [ 'type', '!=', 'review' ] ], $search, $orderColumn, $orderType )
-        : Template::where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
+
+      // $_templates = $search
+      //   ? Template::getBySearchWhere( [ [ 'type', '!=', 'review' ] ], $search, $orderColumn, $orderType )
+      //   : Template::with('categories.category')->where( 'type', '!=', 'review' );
+
+      $_templates = Template::with('categories.category')->where( 'type', '!=', 'review' );
+      $_templates = $_templates->join( 'areas', 'areas.id', '=', 'templates.area' )
+        ->when($search, function ($query, $search) {
+          return $query->where(function ($query) use ($search) {
+            return $query->where('templates.title','like', "%{$search}%")
+                         ->orWhere('templates.id', 'like', "%{$search}%");
+          });
+        })
+        ->when($categories, function ($query, $categories) {
+          if (is_string($categories)) {
+            $categories = explode(",", $categories);
+            $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
+                  ->whereIn('altrp_category_objects.category_guid', $categories);
+          }
+        })
+        ->when($area_name, function ($query, $area_name) {
+          return $query->where( 'areas.name', $area_name );
+        })
+        ;
+      $page_count = $_templates->toBase()->getCountForPagination();
+      $_templates = $_templates->get( 'templates.*' )->$sortType( $orderColumn )->values();
+
+
     } else {
       $page_size = $request->get( 'pageSize', 10 );
-      $area_name = $request->get( 'area', 'content' );
+
       $_templates = $search
-        ? Template::getBySearchAsObject( $search, 'templates' )->where( 'type', '!=', 'review' )
-        : Template::where( 'type', '!=', 'review' );
+        ? Template::getBySearchAsObject( $search, 'templates', 'title', ['categories.category'] )->where( 'type', '!=', 'review' )
+        : Template::with('categories.category')->where( 'type', '!=', 'review' );
+
       $_templates = $_templates->join( 'areas', 'areas.id', '=', 'templates.area' )
-        ->where( 'areas.name', $area_name )
+        ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+        ->when($area_name, function ($query, $area_name) {
+            return $query->where( 'areas.name', $area_name );
+        })
         ->offset( $page_size * ( $request->get( 'page' ) - 1 ) )
         ->limit( $page_size );
       $page_count = $_templates->toBase()->getCountForPagination();
@@ -51,6 +92,7 @@ class TemplateController extends Controller
 
       $page_count = ceil( $page_count / $page_size );
     }
+
     $templates = [];
     foreach ( $_templates as $template ) {
       /**
@@ -65,6 +107,7 @@ class TemplateController extends Controller
         'author' => data_get( $user, 'name' ),
         'url' => '/admin/editor?template_id=' . $template->id,
         'area' => data_get( $template->area(), 'name', 'content' ),
+        'categories' => $template->categories,
       ];
 
     }
@@ -190,6 +233,19 @@ class TemplateController extends Controller
     }
     if ( $template->save() ) {
 
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $template->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $template->guid,
+            "object_type" => "Template"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       return \response()->json(
         [
           'message' => 'Success',
@@ -219,6 +275,8 @@ class TemplateController extends Controller
     if( ! $template ){
       return  response()->json( [ 'message' => 'Template not Found', 'success' => false], 404, [], JSON_UNESCAPED_UNICODE);
     }
+
+    $template->categories = $template->categoryOptions();
     $res = $template->toArray();
     $res['template_type'] = $template->template_type;
     return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
@@ -315,6 +373,21 @@ class TemplateController extends Controller
           }
         }
       }
+
+      CategoryObject::where("object_guid", $old_template->guid)->delete();
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $old_template->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $old_template->guid,
+            "object_type" => "Template"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       return response()->json( $old_template, 200, [], JSON_UNESCAPED_UNICODE );
 
     }
@@ -334,6 +407,7 @@ class TemplateController extends Controller
     //
 
     if ( $template->delete() ) {
+      CategoryObject::where("object_guid", $template->guid)->delete();
       return \response()->json( [ 'success' => true ] );
     }
     return \response()->json( [ 'success' => false ], 500 );

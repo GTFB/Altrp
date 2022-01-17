@@ -16,8 +16,8 @@ export default function getActionsElement(element,
   let _element = element;
   let actions = null;
   if(element.dataset.elementUuid && _.get(ACTIONS_CACHE, `clickActions.${element.dataset.elementUuid}`)){
-    actions = _.get(ACTIONS_CACHE, `${actionPrefix}.${e.target.dataset.elementUuid}.actions`);
-    _element = _.get(ACTIONS_CACHE, `${actionPrefix}.${e.target.dataset.elementUuid}.element`);
+    actions = _.get(ACTIONS_CACHE, `${actionPrefix}.${element.dataset.elementUuid}.actions`);
+    _element = _.get(ACTIONS_CACHE, `${actionPrefix}.${element.dataset.elementUuid}.element`);
   } else {
     while ((_element = _element?.closest(`[${attribute}]`))){
       const _el = elementSearchForAction(_element?.getAttribute(attribute))

@@ -5,6 +5,7 @@ namespace App\Altrp;
 
 use App\Http\Requests\ApiRequest;
 use App\SQLEditor;
+use App\CategoryObject;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Arr;
@@ -37,6 +38,7 @@ class Model extends EloquentModel
         'pk',
         'last_upgrade',
         'preset',
+        'guid',
     ];
 
     protected $hidden = [
@@ -51,6 +53,17 @@ class Model extends EloquentModel
     public function altrp_robots()
     {
         return $this->hasMany(Robot::class);
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(CategoryObject::class, 'object_guid', 'guid');
+    }
+
+    public function categoryOptions()
+    {
+        return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.title as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
+            ->where('altrp_category_objects.object_guid', $this->guid)->get();
     }
 
   /**
@@ -331,10 +344,11 @@ class Model extends EloquentModel
     public static function getBySearch($search, $orderColumn = 'title', $orderType = 'Desc')
     {
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
-         return self::where('title','like', "%{$search}%")
-             ->orWhere('id', 'like', "%{$search}%")
-           ->$sortType($orderColumn)
-           ->get();
+         return self::with('categories.category')
+            ->where('title','like', "%{$search}%")
+            ->orWhere('id', 'like', "%{$search}%")
+            ->$sortType($orderColumn)
+            ->get();
 
 
     }
@@ -346,20 +360,36 @@ class Model extends EloquentModel
    * @param ApiRequest $request
    * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
    */
-  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request, $orderColumn = 'id', $orderType = 'Desc')
+  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request, $orderColumn = 'altrp_models.id', $orderType = 'Desc', $categories=null)
     {
       $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
-        return self::where('title','like', "%{$search}%")
+        return self::with('categories.category')
+          ->where('title','like', "%{$search}%")
           ->where( 'preset', $request->get( 'preset' ) )
           ->orWhere('id', "%$search%")
+          ->orWhere('id', "%$category%")
+          ->when($categories, function ($query, $categories) {
+            if (is_string($category)) {
+                $categories = explode(",", $categories);
+                $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
+                      ->whereIn('altrp_category_objects.object_guid', $categories);
+            }
+          })
           ->skip($offset)
           ->$sortType($orderColumn)
           ->take($limit);
       } else {
-        return self::where('title','like', "%{$search}%")
+        return self::with('categories.category')
+          ->where('title','like', "%{$search}%")
           ->orWhere('id', "%$search%")
-
+          ->when($categories, function ($query, $categories) {
+            if (is_string($category)) {
+                $categories = explode(",", $categories);
+                $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
+                      ->whereIn('altrp_category_objects.object_guid', $categories);
+            }
+          })
           ->skip($offset)
           ->$sortType($orderColumn)
           ->take($limit);
@@ -374,18 +404,32 @@ class Model extends EloquentModel
      * @param string $orderType
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
      */
-  public static function getWithPaginate( $offset, $limit , ApiRequest $request, $orderColumn = 'id', $orderType = 'Desc')
+  public static function getWithPaginate( $offset, $limit , ApiRequest $request, $orderColumn = 'id', $orderType = 'Desc', $categories=null)
     {
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
-        return self::where('preset', $request->get( 'preset' ) )
-
+        return self::with('categories.category')
+          ->where('preset', $request->get( 'preset' ) )
+          ->when($categories, function ($query, $categories) {
+            if (is_string($category)) {
+                $categories = explode(",", $categories);
+                $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
+                      ->whereIn('altrp_category_objects.object_guid', $categories);
+            }
+          })
           ->skip($offset)
           ->take($limit)
           ->$sortType($orderColumn);
       } else {
-
-        return self::skip($offset)
+        return self::with('categories.category')
+          ->when($categories, function ($query, $categories) {
+            if (is_string($category)) {
+                $categories = explode(",", $categories);
+                $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
+                      ->whereIn('altrp_category_objects.object_guid', $categories);
+            }
+          })
+          ->skip($offset)
           ->take($limit)
           ->$sortType($orderColumn);
       }

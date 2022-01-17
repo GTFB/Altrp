@@ -4,6 +4,7 @@
 namespace App\Altrp;
 
 use App\User;
+use App\CategoryObject;
 use Illuminate\Database\Eloquent\Model;
 
 class Robot extends Model
@@ -17,7 +18,8 @@ class Robot extends Model
         'start_condition',
         'start_config',
         'enabled',
-        'chart'
+        'chart',
+        'guid',
     ];
 
     protected $with = ['sources'];
@@ -35,5 +37,16 @@ class Robot extends Model
     public function sources()
     {
         return $this->belongsToMany(Source::class, 'altrp_robot_source')->withPivot(['parameters']);
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(CategoryObject::class, 'object_guid', 'guid');
+    }
+  
+    public function categoryOptions()
+    {
+        return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.title as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
+            ->where('altrp_category_objects.object_guid', $this->guid)->get();
     }
 }

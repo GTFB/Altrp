@@ -83,7 +83,7 @@ export default class AdminTableRow extends Component {
                                 {
                                   let href = quickAction.props.href.replace(
                                     ":id",
-                                    row.id
+                                     row.id
                                   );
 
                                   item = (
@@ -104,7 +104,7 @@ export default class AdminTableRow extends Component {
                                 {
                                   let href = quickAction.props.href.replace(
                                     ":id",
-                                    row.id
+                                     row.id
                                   );
 
                                   item = (
@@ -124,7 +124,7 @@ export default class AdminTableRow extends Component {
                                 case "button":
                                   let route = quickAction.route.replace(
                                     ":id",
-                                    row.id
+                                     row.id
                                   );
                                   item = (
                                     <button

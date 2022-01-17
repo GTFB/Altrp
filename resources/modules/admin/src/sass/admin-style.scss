@@ -57,7 +57,7 @@
     // overflow-y: auto;
     height: 100vh;
     background-color: $dark-purple;
-    width: 271px;
+    width: 250px;
     flex-shrink: 0;
     &-main {
       height: 100%;
@@ -77,11 +77,16 @@
         align-items: center;
         padding: 10px 15px 10px 18px;
         color: #fff;
+        line-height: 1.28581;
         font-size: 17px;
         font-weight: 400;
         font-family: Roboto, sans-serif;
         &.admin-nav-list__link--models {
           padding: 10px 10px 10px 54px;
+        }
+
+        & span {
+          flex-grow: 1;
         }
         &:hover {
           color: $green;
@@ -147,6 +152,10 @@
           padding: 10.5px 10px 10.5px 54px;
           text-decoration: none;
 
+          & span {
+            flex-grow: 1;
+          }
+
           &:hover::before {
             height: 40px;
           }
@@ -207,7 +216,7 @@
     width: 100%;
     background-color: #f7f7f7;
     flex-grow: 1;
-    padding: 120px 60px 30px 60px;
+    padding: 90px 60px 30px 60px;
     //padding: 30px 60px;
   }
   &-caption {
@@ -270,17 +279,11 @@
 
 .icon__droplet {
   position: absolute !important;
-  top: 11.1px !important;
-  right: -4px;
-  width: 16px;
-  height: 18px;
+  top: 50% !important;
+  transform: translateY(-50%);
+  right: 0;
   fill: white;
   display: none;
-
-  & path {
-    width: 16px;
-    height: 20px;
-  }
 }
 
 
@@ -313,6 +316,10 @@ a {
   position: relative;
   display: flex;
   flex-direction: column;
+
+  & .nav-pills .react-tabs__tab {
+    margin-bottom: 15px;
+  }
 }
 
 .ace_editor {
@@ -489,17 +496,31 @@ a {
   margin-bottom: 10px;
 }
 
+.icon-img {
+  min-width: 0;
+  max-width: 100px;
+  min-height: 0;
+  max-height: 100px;
+  margin-bottom: 10px;
+}
+
 body {
   font-size: 14px !important;
   line-height: 1.28581 !important;
 }
 
 :root {
-  --menu-admin-true: 271px;
+  --menu-admin-true: 250px;
   --menu-admin-false: 60px;
   --menu-admin-default: var(--menu-admin-true);
 
-  --menu-droplet-true: 255px;
+  --menu-droplet-true: 235px;
   --menu-droplet-false: 45px;
   --menu-droplet-default: var(--menu-droplet-true);
+}
+
+.admin-changelog{
+  padding: 25px;
+  font-size: 14px;
+  background-color: $light-gray;
 }

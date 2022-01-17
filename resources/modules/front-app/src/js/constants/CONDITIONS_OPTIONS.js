@@ -58,6 +58,10 @@ const CONDITIONS_OPTIONS = [
   {
     value: "not_contain",
     label: "Not Contain"
+  },
+  {
+    value: "else",
+    label: "Else"
   }
 ];
 export default CONDITIONS_OPTIONS

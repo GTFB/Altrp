@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CategoryObject;
 use App\Http\Controllers\Controller;
 use App\Media;
 use Illuminate\Http\Request;
@@ -25,16 +26,49 @@ class MediaController extends Controller
   public function index( Request $request )
   {
     //
+    $categories = $request->get('categories');
     if( $request->get( 'type' ) ){
       if( $request->get( 'type' ) === 'other' ) {
-        $media = Media::where( 'type', 'other' )->orWhere( 'type', null )->get();
+        $media = Media::with('categories.category')
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->where(function ($query) {
+              $query->where( 'type', 'other' )
+                    ->orWhere( 'type', null );
+          })
+          ->get();
       } else {
-        $media = Media::where( 'type', $request->get( 'type' ) )->get();
+        $media = Media::with('categories.category')
+          ->where( 'type', $request->get( 'type' ) )
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->get();
       }
-      $media = $media->sortByDesc( 'id' )->values()->toArray();
+      $media = $media->sortBy( 'title' )->values()->toArray();
       return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
     }
-    return response()->json( Media::all()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+
+    $media = Media::with('categories.category')
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->get()->sortBy( 'title' )->values()->toArray();
+
+    return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
@@ -51,7 +85,7 @@ class MediaController extends Controller
    * Store a newly created resource in storage.
    *
    * @param  \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
   public function store( Request $request )
   {
@@ -103,7 +137,22 @@ class MediaController extends Controller
 
       $media->main_color = getMainColor( $path );
       $media->url =  Storage::url( $media->filename );
+      $media->guid = (string)Str::uuid();
       $media->save();
+
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $media->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $media->guid,
+            "object_type" => "Media"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       $res[] = $media;
     }
     $res = array_reverse( $res );
@@ -186,6 +235,7 @@ class MediaController extends Controller
   {
     //
     $media = $media->find( $id );
+    $media->categories = $media->categoryOptions();
     return response()->json( $media->toArray() );
 
   }
@@ -225,6 +275,21 @@ class MediaController extends Controller
     }
     $media->fill( $request->all() );
     $media->save();
+
+    CategoryObject::where("object_guid", $media->guid)->delete();
+    $categories = $request->get( '_categories' );
+    if( is_array($categories) && count($categories) > 0 && $media->guid){
+      $insert = [];
+      foreach($categories as $key => $category){
+        $insert[$key] = [
+          "category_guid" => $category['value'],
+          "object_guid" => $media->guid,
+          "object_type" => "Media"
+        ];
+      }
+      CategoryObject::insert($insert);
+    }
+
     return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE);
   }
 
@@ -244,7 +309,8 @@ class MediaController extends Controller
     if( ! $media ){
       return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
     }
-    if( $media->delete() ) {
+    if( $media->forceDelete() ) {
+      CategoryObject::where("object_guid", $media->guid)->forceDelete();
       return response()->json( [ 'success' => true ] );
     }
 
@@ -276,7 +342,7 @@ class MediaController extends Controller
       return response()->json( ['success' => false, 'message'=> 'Not Access to deleting media' ], 403 );
     }
     if( Storage::delete( 'public/' . $media->filename ) ){
-      if( $media->delete() ){
+      if( $media->forceDelete() ){
         return response()->json( ['success' => true] );
       }
       return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );

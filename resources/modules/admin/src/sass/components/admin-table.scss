@@ -137,6 +137,55 @@
   width: 50%;
 }
 
+.admin-table-top__flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-table-top__form {
+  flex-basis: 50%;
+
+  & .bp3-input-group .bp3-input {
+    width: calc(100% - (20px + 94.06px));
+  }
+}
+
+.admin-table__filterCategories {
+  background-color: white;
+  padding: 0 20px 10px;
+}
+
+.heading__categories {
+  display: inline-block;
+  font-size: 15px;
+  font-family: Roboto, sans-serif;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.category__block-span {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.showFilter {
+  color: #007bff;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.active-category {
+  color: #007bff;
+
+  &:hover {
+    color: #007bff;
+    text-decoration: none;
+  }
+}
 
 .form-tables .bp3-input {
   height: 40px;

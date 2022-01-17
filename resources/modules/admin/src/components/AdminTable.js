@@ -4,7 +4,15 @@ import AdminTableRow from "./AdminTableRow";
 import Pagination from "./Pagination";
 import Search from "./../svgs/search.svg"
 import {InputGroup} from "@blueprintjs/core";
+import {filterCategories} from "../js/helpers";
 class AdminTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filter: false
+    }
+  }
   /**
    * Фильтр по введенной строке
    * @param {{}} e
@@ -16,21 +24,61 @@ class AdminTable extends Component {
     }
   };
 
+  toggleFilterCategories = () => {
+    this.setState(state => ({
+      ...state,
+      filter: !state.filter
+    }))
+  }
+
   render() {
     const {
       searchTables,
       sortingHandler,
-      radiusTable, sortingField, tableHalf } = this.props;
+      radiusTable, sortingField, filterPropsCategories, tableHalf } = this.props;
+    const { filter } = this.state
+
+
     return (
       /*Search всех компонент*/
       <div className={"admin-table" + (radiusTable ? " admin-table-noRadius" : "")}>
 
         {searchTables && (
-          <form className="admin-table-top" onSubmit={searchTables.submit}>
-            <InputGroup className="form-tables" value={searchTables.value} onChange={searchTables.change} />
-            <Search />
-            <button className="btn btn_bare admin-users-button btn__tables">Search</button>
-          </form>
+          <div className={filterPropsCategories ? "admin-table-top admin-table-top__flex" : "admin-table-top"}>
+            <form className={filterPropsCategories ? "admin-table-top__form" : "admin-table-top__form-off"} onSubmit={searchTables.submit}>
+              <InputGroup className="form-tables" value={searchTables.value} onChange={searchTables.change} />
+              <Search />
+              <button className="btn btn_bare admin-users-button btn__tables">Search</button>
+            </form>
+            {filterPropsCategories && (
+              <span onClick={this.toggleFilterCategories} className="showFilter">{filter ? "Close filter categories" : "Open filter categories"}</span>
+            )}
+          </div>
+        )}
+
+        {filter && (
+          <div className="admin-table__filterCategories">
+            <span className="heading__categories">Categories:</span>
+            <span onClick={() => filterPropsCategories.getCategories(null, "All")} className="admin-filters__current">
+              <a className={filterPropsCategories.activeCategory === "All" ? "admin-filters__link active-category" : "admin-filters__link"}>
+                All ({filterPropsCategories.DidMountArray.length || "0"})
+              </a>
+            </span>
+            {filterPropsCategories.categoryOptions.map(item => {
+              const itemsCount = filterCategories(filterPropsCategories.DidMountArray, item.value).length
+
+              return (
+                <span className="category__block-span" key={item.value}>
+                   <span className="admin-filters__separator">|</span>
+                   <a
+                     className={item.value === filterPropsCategories.activeCategory ? "admin-filters__link active-category" : "admin-filters__link" }
+                     onClick={() => filterPropsCategories.getCategories(item.value)}
+                   >
+                     {item.label} ({itemsCount})
+                   </a>
+                </span>)
+            })}
+          </div>
         )}
 
         <table>

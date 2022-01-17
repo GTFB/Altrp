@@ -92,17 +92,14 @@ class LineDiagram extends BaseElement {
       label: "X scale type",
       options: [
         {
-          id: 0,
-          label: "Linear",
-          value: "linear"
-        },
-        {
-          id: 1,
           label: "Point",
           value: "point"
         },
         {
-          id: 2,
+          label: "Linear",
+          value: "linear"
+        },
+        {
           label: "Time",
           value: "time"
         }

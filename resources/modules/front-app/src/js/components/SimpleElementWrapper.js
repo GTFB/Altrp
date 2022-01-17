@@ -392,6 +392,8 @@ class SimpleElementWrapper extends Component {
       case "menu":
       case "input-file":
       case "section":
+      case "input-crop-image":
+      case "icon":
         WrapperComponent = React.Fragment;
         break;
     }

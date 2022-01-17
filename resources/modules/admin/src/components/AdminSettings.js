@@ -10,6 +10,8 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AutoUpdateCheckbox from "./AutoUpdateCheckbox";
 import UserTopPanel from "./UserTopPanel";
 import React from "react";
+import CategoryModal from "./CategoryModal";
+import CategoryTable from "./CategoryTable";
 const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
@@ -22,7 +24,9 @@ export default class AdminSettings extends Component {
       SSRPort: "",
       SSRAlias: "",
       SSRConf: false,
-      activeTab: parseInt(window.location.hash[1]) || 0
+      activeTab: parseInt(window.location.hash[1]) || 0,
+      modal: false,
+      idModal: null
     };
   }
 
@@ -97,6 +101,21 @@ export default class AdminSettings extends Component {
     );
   };
 
+  toggleModalCategory = () => {
+    if (this.state.idModal) {
+      this.setState(state => ({
+        ...state,
+        modal: !state.modal,
+        idModal: null
+      }))
+    } else {
+      this.setState(state => ({
+        ...state,
+        modal: !state.modal
+      }))
+    }
+  }
+
   async componentDidMount() {
     let SSREnabled = !!(
       await new Resource({ route: "/admin/ajax/settings" }).get(
@@ -112,7 +131,7 @@ export default class AdminSettings extends Component {
       )
     ).ssr_settings_alias;
     let SSRConf = (
-      await new Resource({ route: "/admin/ajax/ssr/check" }).get("")
+      await new Resource({ route: "/admin/ajax/ssr/check" }).getAll()
     ).file;
 
     this.setState(state => ({
@@ -130,8 +149,17 @@ export default class AdminSettings extends Component {
     });
   }
 
+  editCategory = (guid) => {
+    this.setState(state => ({
+      ...state,
+      modal: true,
+      idModal: guid
+    }))
+  }
+
   render() {
-    const { SSRPort, SSRAlias, SSRConf } = this.state;
+    const { SSRPort, SSRAlias, SSRConf, idModal  } = this.state;
+
     return (
       <div className="admin-settings admin-page">
         <div className="admin-heading">
@@ -143,6 +171,9 @@ export default class AdminSettings extends Component {
               <span className="admin-breadcrumbs__separator">/</span>
               <span className="admin-breadcrumbs__current">Builder</span>
             </div>
+            {this.state.activeTab === 8 && (
+              <button className="btn" onClick={this.toggleModalCategory}>Add Category</button>
+            )}
           </div>
           <UserTopPanel />
         </div>
@@ -157,6 +188,7 @@ export default class AdminSettings extends Component {
               <Tab>Export</Tab>
               <Tab>Import</Tab>
               <Tab>Mail</Tab>
+              <Tab>Categories</Tab>
             </TabList>
             <TabPanel>
               <table>
@@ -201,36 +233,36 @@ export default class AdminSettings extends Component {
                   {/*    />*/}
                   {/*  </td>*/}
                   {/*</tr>*/}
-                  {SSRAlias?.length > 0 && (
-                    <tr className="admin-settings-table-row">
-                      <td className="admin-settings-table__td row-text">
-                        Make SSR conf
-                      </td>
-                      <td className="admin-settings-table__td ">
-                        <button
-                          className="btn btn_success"
-                          onClick={this.generateConfig}
-                        >
-                          Generate
-                        </button>
-                      </td>
-                    </tr>
-                  )}
-                  {SSRConf && (
-                    <tr className="admin-settings-table-row">
-                      <td className="admin-settings-table__td row-text">
-                        Restart SSR
-                      </td>
-                      <td className="admin-settings-table__td ">
-                        <button
-                          className="btn btn_success"
-                          onClick={this.restartSSR}
-                        >
-                          Restart
-                        </button>
-                      </td>
-                    </tr>
-                  )}
+                  {/*{SSRAlias?.length > 0 && (*/}
+                  {/*  <tr className="admin-settings-table-row">*/}
+                  {/*    <td className="admin-settings-table__td row-text">*/}
+                  {/*      Make SSR conf*/}
+                  {/*    </td>*/}
+                  {/*    <td className="admin-settings-table__td ">*/}
+                  {/*      <button*/}
+                  {/*        className="btn btn_success"*/}
+                  {/*        onClick={this.generateConfig}*/}
+                  {/*      >*/}
+                  {/*        Generate*/}
+                  {/*      </button>*/}
+                  {/*    </td>*/}
+                  {/*  </tr>*/}
+                  {/*)}*/}
+                  {/*{SSRConf && (*/}
+                  {/*  <tr className="admin-settings-table-row">*/}
+                  {/*    <td className="admin-settings-table__td row-text">*/}
+                  {/*      Restart SSR*/}
+                  {/*    </td>*/}
+                  {/*    <td className="admin-settings-table__td ">*/}
+                  {/*      <button*/}
+                  {/*        className="btn btn_success"*/}
+                  {/*        onClick={this.restartSSR}*/}
+                  {/*      >*/}
+                  {/*        Restart*/}
+                  {/*      </button>*/}
+                  {/*    </td>*/}
+                  {/*  </tr>*/}
+                  {/*)}*/}
 
                   <tr className="admin-settings-table-row">
                     <td className="admin-settings-table__td row-text">
@@ -318,6 +350,14 @@ export default class AdminSettings extends Component {
               <React.Suspense fallback={"Loading"}>
                 <MailForm />
               </React.Suspense>
+            </TabPanel>
+            <TabPanel className="Category">
+              <CategoryTable
+                edit={this.editCategory}
+                activeMode={this.state.modal}
+                guid={this.state.idModal}
+                onToggle={this.toggleModalCategory}
+              />
             </TabPanel>
           </Tabs>
         </div>

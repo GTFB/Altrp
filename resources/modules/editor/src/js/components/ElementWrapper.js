@@ -314,7 +314,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       }
       break;
     case "input-crop-image":
-      styles += InputCropImageComponent(settings)
+      styles += `.${prefix}${elementId} {${InputCropImageComponent(settings)}}`
       break
     case "map":
       styles += `.${prefix}${elementId} {${MapComponent(settings)}}`;
@@ -327,18 +327,14 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "icon":
       styles += `.${prefix}${elementId} {${getIconStyles(settings, elementId)}}`
+      break;
     case "pie-diagram":
-      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "bar-diagram":
-      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "line-diagram":
-      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
-    case "point-diagram":
-      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "funnel-diagram":
-      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "radar-diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+      break;
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";

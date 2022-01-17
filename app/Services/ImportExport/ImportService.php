@@ -7,6 +7,7 @@ namespace App\Services\ImportExport;
 use App\Reports;
 use App\Services\ImportExport\Files\AccessorsFile;
 use App\Services\ImportExport\Files\ColumnsFile;
+use App\Services\ImportExport\Files\CustomizerFile;
 use App\Services\ImportExport\Files\DashboardsFile;
 use App\Services\ImportExport\Files\DiagramsFile;
 use App\Services\ImportExport\Files\MediaFile;
@@ -111,7 +112,8 @@ class ImportService
             ->importPageTemplates()
             ->importTemplateSettings()
             ->importValidationFields()
-            ->importValidationRules();
+            ->importValidationRules()
+            ->importCustomizers();
 
         $this->deleteTmpFiles();
 
@@ -133,11 +135,11 @@ class ImportService
      */
     public function importValidationRules() {
         $rules = new ValidationRulesFile();
-        $rules->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $rules->getArchivePath() . "/" . $rules->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $rules->getArchivePath() . "/" . $rules->getFileName());
+
+        if(is_file($file)){
+          $rules->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -147,25 +149,25 @@ class ImportService
      */
     public function importValidationFields() {
         $fields = new ValidationFieldsFile();
-        $fields->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $fields->getArchivePath() . "/" . $fields->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $fields->getArchivePath() . "/" . $fields->getFileName());
+
+        if(is_file($file)){
+          $fields->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
     /**
-     * Импорт данных о удаленных справочниках
+     * Импорт данных об удаленных справочниках
      * @return $this
      */
     public function importRemoteData() {
         $remote_data = new RemoteDataFile();
-        $remote_data->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $remote_data->getArchivePath() . "/" . $remote_data->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $remote_data->getArchivePath() . "/" . $remote_data->getFileName());
+
+        if(is_file($file)){
+          $remote_data->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -175,11 +177,11 @@ class ImportService
      */
     public function importRemoteDataSources() {
       $remote_datasource = new RemoteDataSourcesFile();
-      $remote_datasource->import(
-        $this->reader,
-        storage_path(self::EXTRACT_PATH . "/" . $remote_datasource->getArchivePath() . "/" . $remote_datasource->getFileName()),
-        $this->with_delete
-      );
+      $file = storage_path(self::EXTRACT_PATH . "/" . $remote_datasource->getArchivePath() . "/" . $remote_datasource->getFileName());
+
+      if(is_file($file)){
+        $remote_datasource->import($this->reader, $file, $this->with_delete);
+      }  
       return $this;
     }
 
@@ -187,13 +189,13 @@ class ImportService
        * Импорт данных о ролях для удаленных источников данных
        * @return $this
        */
-      public function importRemoteDataSourcesRules() {
+      public function importRemoteDataSourcesRules() {    
         $remote_datasource_role = new DataSourcesRolesFile();
-        $remote_datasource_role->import(
-          $this->reader,
-          storage_path(self::EXTRACT_PATH . "/" . $remote_datasource_role->getArchivePath() . "/" . $remote_datasource_role->getFileName()),
-          $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $remote_datasource_role->getArchivePath() . "/" . $remote_datasource_role->getFileName());
+
+        if(is_file($file)){
+          $remote_datasource_role->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
       }
 
@@ -203,11 +205,11 @@ class ImportService
        */
       public function importRemoteDataSourcesPermissions() {
         $remote_datasource_permission = new DataSourcesPermissionsFile();
-        $remote_datasource_permission->import(
-          $this->reader,
-          storage_path(self::EXTRACT_PATH . "/" . $remote_datasource_permission->getArchivePath() . "/" . $remote_datasource_permission->getFileName()),
-          $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $remote_datasource_permission->getArchivePath() . "/" . $remote_datasource_permission->getFileName());
+
+        if(is_file($file)){
+          $remote_datasource_permission->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
       }
 
@@ -217,11 +219,11 @@ class ImportService
      */
     public function importPermissionRoles() {
         $permission_roles = new PermissionRolesFile();
-        $permission_roles->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $permission_roles->getArchivePath() . "/" . $permission_roles->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $permission_roles->getArchivePath() . "/" . $permission_roles->getFileName());
+
+        if(is_file($file)){
+          $permission_roles->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -231,11 +233,11 @@ class ImportService
      */
     public function importPageRoles() {
         $page_roles = new PageRolesFile();
-        $page_roles->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $page_roles->getArchivePath() . "/" . $page_roles->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $page_roles->getArchivePath() . "/" . $page_roles->getFileName());
+
+        if(is_file($file)){
+          $page_roles->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -245,11 +247,11 @@ class ImportService
      */
     public function importRoles() {
         $roles = new RolesFile();
-        $roles->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $roles->getArchivePath() . "/" . $roles->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $roles->getArchivePath() . "/" . $roles->getFileName());
+
+        if(is_file($file)){
+          $roles->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -259,11 +261,11 @@ class ImportService
      */
     public function importQueries() {
         $queries = new QueriesFile();
-        $queries->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $queries->getArchivePath() . "/" . $queries->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $queries->getArchivePath() . "/" . $queries->getFileName());
+
+        if(is_file($file)){
+          $queries->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -273,11 +275,11 @@ class ImportService
      */
     public function importRelationships() {
         $relationships = new RelationshipsFile();
-        $relationships->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $relationships->getArchivePath() . "/" . $relationships->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $relationships->getArchivePath() . "/" . $relationships->getFileName());
+
+        if(is_file($file)){
+            $relationships->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -287,11 +289,11 @@ class ImportService
      */
     public function importSQLEditors() {
         $sql_editors = new SQLEditorsFile();
-        $sql_editors->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $sql_editors->getArchivePath() . "/" . $sql_editors->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $sql_editors->getArchivePath() . "/" . $sql_editors->getFileName());
+
+        if(is_file($file)){
+            $sql_editors->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -301,25 +303,25 @@ class ImportService
      */
     public function importPageDatasources() {
         $page_datasources = new PageDatasourcesFile();
-        $page_datasources->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $page_datasources->getArchivePath() . "/" . $page_datasources->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $page_datasources->getArchivePath() . "/" . $page_datasources->getFileName());
+
+        if(is_file($file)){
+          $page_datasources->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
     /**
-     * Импорт данных о аксессорах
+     * Импорт данных об аксессорах
      * @return $this
      */
     public function importAccessors() {
         $accessors = new AccessorsFile();
-        $accessors->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $accessors->getArchivePath() . "/" . $accessors->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $accessors->getArchivePath() . "/" . $accessors->getFileName());
+
+        if(is_file($file)){
+          $accessors->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -329,11 +331,25 @@ class ImportService
      */
     public function importColumns() {
         $columns = new ColumnsFile();
-        $columns->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $columns->getArchivePath() . "/" . $columns->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $columns->getArchivePath() . "/" . $columns->getFileName());
+
+        if(is_file($file)){
+            $columns->import($this->reader, $file, $this->with_delete);
+        }
+        return $this;
+    }
+
+    /**
+     * Импорт данных о кастомайзере
+     * @return $this
+     */ 
+    public function importCustomizers() {
+        $customizers = new CustomizerFile();
+        $file = storage_path(self::EXTRACT_PATH . "/" . $customizers->getArchivePath() . "/" . $customizers->getFileName());
+
+        if (is_file($file)) {
+          $customizers->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -343,11 +359,11 @@ class ImportService
      */
     public function importModels() {
         $models = new ModelsFile();
-        $models->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $models->getArchivePath() . "/" . $models->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $models->getArchivePath() . "/" . $models->getFileName());
+
+        if (is_file($file)) {
+          $models->import($this->reader, $file, $this->with_delete);
+        }    
         return $this;
     }
 
@@ -357,11 +373,11 @@ class ImportService
      */
     public function importTables() {
         $tables = new TablesFile();
-        $tables->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $tables->getArchivePath() . "/" . $tables->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $tables->getArchivePath() . "/" . $tables->getFileName());
+
+        if (is_file($file)) {
+          $tables->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -371,11 +387,11 @@ class ImportService
      */
     public function importReports() {
         $reports = new ReportsFile();
-        $reports->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $reports->getArchivePath() . "/" . $reports->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $reports->getArchivePath() . "/" . $reports->getFileName());
+
+        if (is_file($file)) {
+          $reports->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -385,11 +401,11 @@ class ImportService
      */
     public function importDashboards() {
         $dashboards = new DashboardsFile();
-        $dashboards->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $dashboards->getArchivePath() . "/" . $dashboards->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $dashboards->getArchivePath() . "/" . $dashboards->getFileName());
+
+        if (is_file($file)) {
+          $dashboards->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -399,11 +415,11 @@ class ImportService
      */
     public function importDiagrams() {
         $diagrams = new DiagramsFile();
-        $diagrams->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $diagrams->getArchivePath() . "/" . $diagrams->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $diagrams->getArchivePath() . "/" . $diagrams->getFileName());
+
+        if (is_file($file)) {
+          $diagrams->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -414,11 +430,11 @@ class ImportService
      */
     public function importSettings() {
         $settings = new SettingsFile();
-        $settings->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $settings->getArchivePath() . "/" . $settings->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $settings->getArchivePath() . "/" . $settings->getFileName());
+
+        if (is_file($file)) {
+          $settings->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -428,11 +444,11 @@ class ImportService
      */
     public function importTemplateSettings() {
         $settings = new TemplateSettingsFile();
-        $settings->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $settings->getArchivePath() . "/" . $settings->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $settings->getArchivePath() . "/" . $settings->getFileName());
+
+        if (is_file($file)) {
+          $settings->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -442,11 +458,11 @@ class ImportService
      */
     public function importPageTemplates() {
         $page_templates = new PageTemplatesFile();
-        $page_templates->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $page_templates->getArchivePath() . "/" . $page_templates->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $page_templates->getArchivePath() . "/" . $page_templates->getFileName());
+        
+        if (is_file($file)) {
+          $page_templates->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -456,11 +472,11 @@ class ImportService
      */
     public function importPages() {
         $pages = new PagesFile();
-        $pages->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $pages->getArchivePath() . "/" . $pages->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $pages->getArchivePath() . "/" . $pages->getFileName());
+
+        if (is_file($file)) {
+          $pages->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -470,11 +486,11 @@ class ImportService
      */
     public function importTemplates() {
         $templates = new TemplatesFile();
-        $templates->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $templates->getArchivePath() . "/" . $templates->getFileName()),
-            $this->with_delete
-        );
+        $file = storage_path(self::EXTRACT_PATH . "/" . $templates->getArchivePath() . "/" . $templates->getFileName());
+
+        if (is_file($file)) {
+          $templates->import($this->reader, $file, $this->with_delete);
+        }
         return $this;
     }
 
@@ -484,12 +500,13 @@ class ImportService
      */
     public function importMedia() {
         $media = new MediaFile();
-        $media->import(
-            $this->reader,
-            storage_path(self::EXTRACT_PATH . "/" . $media->getArchivePath() . "/" . $media->getFileName()),
-            $this->with_delete
-        );
-        File::copyDirectory(storage_path(self::EXTRACT_PATH . "/media"), storage_path(self::MEDIA_DESTINATION_PATH));
+        $file = storage_path(self::EXTRACT_PATH . "/" . $media->getArchivePath() . "/" . $media->getFileName());
+
+        if(is_file($file)) {
+          $media->import($this->reader, $file, $this->with_delete);
+          
+          File::copyDirectory(storage_path(self::EXTRACT_PATH . "/media"), storage_path(self::MEDIA_DESTINATION_PATH));
+        }
         return $this;
     }
 

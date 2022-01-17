@@ -6,6 +6,7 @@ use App\Constructor\Template;
 use App\Http\Controllers\Controller;
 use App\Page;
 use App\PagesTemplate;
+use App\CategoryObject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -21,12 +22,25 @@ class PagesController extends Controller
   public function index(Request $request)
   {
     $search = $request->get('s');
-    $orderColumn = $request->get('order_by') ?? 'id';
+    $categories = $request->get('categories');
+    $table_name = "pages";
+    $orderColumn = $request->get('order_by') ?? 'title';
+    $orderColumn = 'pages.'.$orderColumn;
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
-        ? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
-        : Page::where('type',null)->get()->$sortType( $orderColumn )->values();
+        //? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
+        ? Page::search($search, 'title', ['categories.category'], $orderColumn, $orderType, $categories)
+        : Page::select('pages.*')->with('categories.category')
+            ->when($categories, function ($query, $categories) {
+                if (is_string($categories)) {
+                    $categories = explode(",", $categories);
+                    $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'pages.guid')
+                          ->whereIn('altrp_category_objects.category_guid', $categories);
+                }
+            })
+            ->where('type',null)->get()->$sortType( $orderColumn )
+            ->values();
     $pages = [];
     foreach ( $_pages as $page ) {
 
@@ -43,6 +57,7 @@ class PagesController extends Controller
         'url' => \url( $page->path ),
         'editUrl' => '/admin/pages/edit/' . $page->id,
         'path' => $page->path,
+        'categories' => $page->categories,
       ];
     }
     return response()->json( $pages );
@@ -75,6 +90,20 @@ class PagesController extends Controller
     $page->is_cached = $request->is_cached;
     $page->sections_count = $request->sections_count;
     if ( $page->save() ) {
+
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $page->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $page->guid,
+            "object_type" => "Page"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       if ( $request->template_id ) {
         $template = Template::find( $request->template_id );
         $pages_templates = new PagesTemplate( [
@@ -91,6 +120,7 @@ class PagesController extends Controller
       $res['page'] = $page->toArray();
       $page->parseRoles( (array)$request->get( 'roles' ) );
       return response()->json( $res );
+
     }
     $res['message'] = 'Page not Saved';
     return response()->json( $res, 500 );
@@ -106,7 +136,9 @@ class PagesController extends Controller
   {
     //
     $page = Page::find( $id );
+
     if ( $page ) {
+      $page->categories = $page->categoryOptions();
       $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
       $page->roles = $page->getRoles();
     }
@@ -182,6 +214,21 @@ class PagesController extends Controller
     }
     $page->parseRoles( (array)$request->get( 'roles' ) );
     if ( $page->save() ) {
+
+      CategoryObject::where("object_guid", $page->guid)->delete();
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $page->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $page->guid,
+            "object_type" => "Page"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       $res['success'] = true;
     }
 
@@ -206,6 +253,7 @@ class PagesController extends Controller
     if( $page->delete() ){
       try{
         Page::where( 'parent_page_id', $page->id )->update( ['parent_page_id'=> null] );
+        CategoryObject::where("object_guid", $page->guid)->delete();
       }catch( \Exception $e){
         logger()->error( $e->getMessage());
       }

@@ -1,4 +1,4 @@
-const AltrpFunnelDiagram = React.lazy(() => import(/* webpackChunkName: 'AltrpFunnelDiagram' */"../../altrp-diagram/AltrpFunnelDiagram"));
+import AltrpFunnelDiagram from "../../altrp-diagram/AltrpFunnelDiagram"
 class FunnelDiagramWidget extends Component {
   constructor(props) {
     super(props);

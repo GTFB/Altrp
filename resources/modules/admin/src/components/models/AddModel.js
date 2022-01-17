@@ -12,13 +12,27 @@ class AddModel extends Component {
         name: '',
         title: '',
         description: '',
-        categories: '',
+        _categories: [],
+        categories: [],
+        categoryOptions: [],
         bounded_model: '',
         soft_deletes: false,
         time_stamps: false
       }
     };
     this.modelsResource = new Resource({route: '/admin/ajax/models'});
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
+  }
+
+  async componentDidMount() {
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      model: {
+        ...state.model,
+        categoryOptions: data
+      }
+    }))
   }
 
 

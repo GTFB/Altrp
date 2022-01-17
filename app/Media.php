@@ -34,6 +34,7 @@ class Media extends Model
     'alternate_text',
     'width',
     'height',
+    'guid',
   ];
 
   /**
@@ -44,7 +45,7 @@ class Media extends Model
   public static function import( $imported_media = [] )
   {
     foreach ( $imported_media as $_media ) {
-      if ( self::where( 'url', $_media['url'] )->first() ) {
+      if ( self::withTrashed()->where( 'url', $_media['url'] )->first() ) {
         continue;
       }
       $new_media = new self( $_media );
@@ -89,5 +90,16 @@ class Media extends Model
 
     }
     return $result;
+  }
+
+  public function categories()
+  {
+      return $this->hasMany(CategoryObject::class, 'object_guid', 'guid');
+  }
+
+  public function categoryOptions()
+  {
+      return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.title as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
+          ->where('altrp_category_objects.object_guid', $this->guid)->get();
   }
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import WidgetsPanel from "./modules/WidgetsPanel";
-import CustomizerSettingsPanel from "./modules/CustomizerSettingsPanel";
+import { CustomizerSettingsPanelCompose } from "./modules/CustomizerSettingsPanel";
 import SelectedPanel from "./modules/SelectedPanel";
 import store from "../../store/store";
 import Resource from "../../../../../editor/src/js/classes/Resource";
@@ -10,6 +10,8 @@ import HamburgerIcon from "../../../../../editor/src/svgs/hamburger.svg";
 import SettingsIcon from "../../../../../editor/src/svgs/settings.svg";
 import {renderAsset} from "../../../../../front-app/src/js/helpers";
 import {connect} from "react-redux";
+import {BrowserRouter as Router} from "react-router-dom";
+import {setCurrentCustomizer} from "../../store/current-customizer/actions";
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -27,10 +29,12 @@ class Sidebar extends React.Component {
     const {customizerSettingsData} = this.props
     console.log(customizerData);
     console.log(customizerSettingsData);
-    this.resource.put(customizerId, {
+    let {data} = await this.resource.put(customizerId, {
       ...customizerData,
       data: customizerSettingsData
     });
+    // let customizer = mutate.set(customizerData, 'source', data.source)
+    store.dispatch(setCurrentCustomizer(data));
     this.props.btnChange("");
   }
 
@@ -59,20 +63,23 @@ class Sidebar extends React.Component {
           </button>
         </div>
 
-        <div className="left-panel-main">
-          {activePanel === "widgets" && <WidgetsPanel />}
-          {activePanel === "settings" && <CustomizerSettingsPanel
-                                            sources={ this.props.sources }
-                                            setSources={ this.props.setSources }
-                                            onLayout={ this.props.onLayout }
-                                          />}
-          {activePanel === "selected" && <SelectedPanel
-                                            customizer={ this.props.customizer }
-                                            selectNode={this.props.selectNode}
-                                            selectEdge={ this.props.selectEdge }
-                                            onLoad={this.props.onLoad}
-                                          />}
-        </div>
+        <Router>
+          <div className="left-panel-main">
+            {activePanel === "widgets" && <WidgetsPanel />}
+            {activePanel === "settings" && <CustomizerSettingsPanelCompose
+              sources={ this.props.sources }
+              setSources={ this.props.setSources }
+              onLayout={ this.props.onLayout }
+              updateCustomizer={ this.props.updateCustomizer }
+            />}
+            {activePanel === "selected" && <SelectedPanel
+              customizer={ this.props.customizer }
+              selectNode={this.props.selectNode}
+              selectEdge={ this.props.selectEdge }
+              onLoad={this.props.onLoad}
+            />}
+          </div>
+        </Router>
 
         <div className="editor-bottom-panel d-flex align-content-center justify-between">
           <button className={"btn btn_settings" + settingsActive} onClick={() => this.props.changeTab("settings")} >
