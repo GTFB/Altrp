@@ -34,5 +34,6 @@ const WIDGETS_DEPENDS = {
   'scheduler': ['fullcalendar', 'blueprint'],
   'progress-bar': ['blueprint'],
   'input-crop-image': ['image-crop'],
+  'tournament': ['reacket'],
 }
 export default WIDGETS_DEPENDS;

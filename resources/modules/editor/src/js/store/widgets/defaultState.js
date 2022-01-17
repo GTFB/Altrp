@@ -124,6 +124,8 @@ import StarsWidget from "../../components/widgets/StarsWidget";
 import ProgressBar from "../../classes/elements/ProgressBar";
 import ProgressBarWidget from "../../components/widgets/ProgressBarWidget";
 import ActionTriggerWidget from "../../components/widgets/ActionTriggerWidget";
+import Tournament from "../../classes/elements/Tournament";
+import TournamentWidget from "../../components/widgets/TournamentWidget";
 
 const elements = {}
 const components = {}
@@ -195,6 +197,7 @@ elements[Icon.getName()] = Icon;
 elements[InputSelectTree.getName()] = InputSelectTree;
 elements[Stars.getName()] = Stars;
 elements[ProgressBar.getName()] = ProgressBar;
+elements[Tournament.getName()] = Tournament
 
 // Websocket Notifications
 // elements[Notifications.getName()] = Notifications;
@@ -264,6 +267,7 @@ components[Tree.getName()] = TreeWidget;
 components[Icon.getName()] = IconWidget;
 components[Stars.getName()] = StarsWidget;
 components[ProgressBar.getName()] = ProgressBarWidget;
+components[Tournament.getName()] = TournamentWidget
 
 export default {
     elements: {

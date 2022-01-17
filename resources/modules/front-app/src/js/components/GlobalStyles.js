@@ -49,6 +49,7 @@ import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
+import getTournamentStyles from "./helpers/getTournamentStyles";
 import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteStyles";
 import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
 import InputDateRangeComponent
@@ -308,6 +309,8 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "tree":
           styles += `.${prefix}${id} {${TreeComponent(item.settings)}}`;
           break;
+        case 'tournament':
+          styles += `.${prefix}${id} {${getTournamentStyles(item.settings)}}`
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings

@@ -523,6 +523,14 @@ class FrontElementsManager {
             );
         }
       },
+      {
+        name: "tournament",
+        import: async () => {
+          return await import(
+              /* webpackChunkName: 'TournamentWidget' */ "../../../../editor/src/js/components/widgets/TournamentWidget"
+            );
+        }
+      },
     ];
   }
 
