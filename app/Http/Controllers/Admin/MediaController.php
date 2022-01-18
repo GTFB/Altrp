@@ -183,6 +183,16 @@ class MediaController extends Controller
 
     $media_filename = "";
     $source_properties = getimagesize($path);
+
+    $origin_width = $source_properties[0];
+    $origin_height = $source_properties[1];
+    if ($origin_width > $origin_height) {
+      $height = round($origin_height/$origin_width*$width);
+    }
+    if ($origin_width < $origin_height) {
+      $width = round($origin_width/$origin_height*$height);
+    }
+
     $mime = $source_properties['mime'];
     if ($mime == 'image/jpeg' || $mime == 'image/png' || $mime == 'image/gif') {
         $type = explode('/', $mime);
@@ -236,6 +246,11 @@ class MediaController extends Controller
       $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
       $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
     }
+
+    if ($media->media_variation) {
+      $media_variations = json_decode( $media->media_variation, true);
+      $this->deleteMediaVariations($media_variations);
+    }
     
     $media->media_variation = json_encode($media_variation);
     $media->save();
@@ -274,6 +289,12 @@ class MediaController extends Controller
           $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
         }
       }
+
+      if ($media->media_variation) {
+        $media_variations = json_decode( $media->media_variation, true);
+        $this->deleteMediaVariations($media_variations);
+      }
+
       $media->media_variation = json_encode($media_variation);
       $media->save();
 
@@ -442,11 +463,14 @@ class MediaController extends Controller
   {
     //
     $media = $media->find($id);
-
     if( ! $media ){
       return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
     }
     if( $media->forceDelete() ) {
+      if ($media->media_variation) {
+        $media_variations = json_decode( $media->media_variation, true);
+        $this->deleteMediaVariations($media_variations);
+      }
       CategoryObject::where("object_guid", $media->guid)->forceDelete();
       return response()->json( [ 'success' => true ] );
     }
@@ -480,11 +504,27 @@ class MediaController extends Controller
     }
     if( Storage::delete( 'public/' . $media->filename ) ){
       if( $media->forceDelete() ){
+        if ($media->media_variation) {
+          $media_variations = json_decode( $media->media_variation, true);
+          $this->deleteMediaVariations($media_variations);
+        }
         return response()->json( ['success' => true] );
       }
       return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
     }
     return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
+  }
+
+  private function deleteMediaVariations( $media_variations )
+  {
+    if (is_array($media_variations) && count($media_variations) > 0) {
+      $variation_files = [];
+      foreach ($media_variations as $variation) {
+        $variation_files[] = Storage::path( 'public/' . str_replace_once('/storage/', '', array_shift($variation)) );
+      }
+      File::delete($variation_files);
+    }
+    return true;
   }
 
   /**
