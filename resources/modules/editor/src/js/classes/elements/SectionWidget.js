@@ -24,7 +24,7 @@ class SectionWidget extends BaseElement {
     return "section_widget";
   }
   static getTitle() {
-    return "SectionWidget";
+    return "Section";
   }
 
   static getIconComponent() {

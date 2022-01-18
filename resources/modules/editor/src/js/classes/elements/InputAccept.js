@@ -25,7 +25,7 @@ class InputAccept extends BaseElement {
     return "input-accept";
   }
   static getTitle() {
-    return "Input Accept";
+    return "Accept";
   }
   static getIconComponent() {
     return FromIcon;

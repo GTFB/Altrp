@@ -47,6 +47,8 @@ import {
 } from "./js/store/altrp-global-colors/actions";
 import {setGlobalStylesPresets} from "./js/store/altrp-global-styles/actions";
 import { addWidget, filterWidgets } from "./js/store/widgets/actions";
+import EditorWindowPopup from "./js/components/EditorWindowPopup";
+import ConditionsPopup from "./js/components/ConditionsPopup";
 
 /**
  * Главный класс редактора.<br/>
@@ -382,10 +384,16 @@ class Editor extends Component {
           </div>
           <div className="right-panel">
             {this.state.showDialogWindow && (
-              <DialogWindow
-                state={this.state.showDialogWindow}
+              // <DialogWindow
+              //   state={this.state.showDialogWindow}
+              //   toggleModalWindow={() => this.toggleModalWindow()}
+              // />
+              <EditorWindowPopup
+                activeMode={this.state.showDialogWindow}
                 toggleModalWindow={() => this.toggleModalWindow()}
-              />
+              >
+                <ConditionsPopup/>
+              </EditorWindowPopup>
             )}
             <EditorWindow />
           </div>

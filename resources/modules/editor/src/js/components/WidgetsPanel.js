@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import WidgetIcon from "./WidgetIcon";
 import Scrollbars from "react-custom-scrollbars";
 import {connect} from "react-redux";
-import Arrow from '../../svgs/arrow.svg';
 import Search from '../../svgs/search-editor.svg'
+import WidgetsGroupItem from "./WidgetsGroupItem";
 
 class WidgetsPanel extends Component {
   constructor(props) {
@@ -79,61 +79,34 @@ class WidgetsPanel extends Component {
             </div>
             {this.state.searchWidgets === '' ? (
                <>
-                 <div className="widget-panel__block">
-                   <div onClick={this.toggleGroups} data-group='Basic' className="widget__group">
-                     <h2 className="title-group__widgets">Basic</h2>
-                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupBasic ? '' : ' arrow-group__widgets-close'}`}/>
-                   </div>
-                   <div className={`widgets__block${this.state.activeGroupBasic ? '' : ' widgets__block-none'}`}>
-                     <div className="widgets">
-                       {widgets.filter(item => item.getGroup() === 'Basic').map(widget => {
-                         return <WidgetIcon element={widget} key={widget.getName()} />;
-                       })}
-                     </div>
-                   </div>
-                 </div>
+                 <WidgetsGroupItem
+                   widgets={widgets}
+                   activeGroup={this.state.activeGroupBasic}
+                   toggleGroups={this.toggleGroups}
+                   name={'Basic'}
+                 />
 
-                 <div className="widget-panel__block">
-                   <div onClick={this.toggleGroups} data-group='Form' className="widget__group">
-                     <h2 className="title-group__widgets">Form</h2>
-                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupForm ? '' : ' arrow-group__widgets-close'}`}/>
-                   </div>
-                   <div className={`widgets__block${this.state.activeGroupForm ? '' : ' widgets__block-none'}`}>
-                     <div className="widgets">
-                       {widgets.filter(item => item.getGroup() === 'Form').map(widget => {
-                         return <WidgetIcon element={widget} key={widget.getName()} />;
-                       })}
-                     </div>
-                   </div>
-                 </div>
+                 <WidgetsGroupItem
+                   widgets={widgets}
+                   activeGroup={this.state.activeGroupForm}
+                   toggleGroups={this.toggleGroups}
+                   name={'Form'}
+                 />
 
-                 <div className="widget-panel__block">
-                   <div onClick={this.toggleGroups} data-group='Advanced' className="widget__group">
-                     <h2 className="title-group__widgets">Advanced</h2>
-                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupAdvanced ? '' : ' arrow-group__widgets-close'}`}/>
-                   </div>
-                   <div className={`widgets__block${this.state.activeGroupAdvanced ? '' : ' widgets__block-none'}`}>
-                     <div className="widgets">
-                       {widgets.filter(item => item.getGroup() === 'Advanced').map(widget => {
-                         return <WidgetIcon element={widget} key={widget.getName()} />;
-                       })}
-                     </div>
-                   </div>
-                 </div>
+                 <WidgetsGroupItem
+                   widgets={widgets}
+                   activeGroup={this.state.activeGroupAdvanced}
+                   toggleGroups={this.toggleGroups}
+                   name={'Advanced'}
+                 />
 
-                 <div className="widget-panel__block">
-                   <div onClick={this.toggleGroups} data-group='Diagrams' className="widget__group">
-                     <h2 className="title-group__widgets">Diagrams</h2>
-                     <Arrow width={20} height={14} className={`arrow-group__widgets${this.state.activeGroupDiagrams ? '' : ' arrow-group__widgets-close'}`}/>
-                   </div>
-                   <div className={`widgets__block${this.state.activeGroupDiagrams ? '' : ' widgets__block-none'}`}>
-                     <div className="widgets">
-                       {widgets.filter(item => item.getGroup() === 'Diagrams').map(widget => {
-                         return <WidgetIcon element={widget} key={widget.getName()} />;
-                       })}
-                     </div>
-                   </div>
-                 </div>
+                 <WidgetsGroupItem
+                   widgets={widgets}
+                   activeGroup={this.state.activeGroupDiagrams}
+                   toggleGroups={this.toggleGroups}
+                   name={'Diagrams'}
+                 />
+
                </>
             ) : (
               <>

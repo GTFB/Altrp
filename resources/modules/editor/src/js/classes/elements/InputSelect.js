@@ -26,7 +26,7 @@ class InputSelect extends BaseElement {
     return "input-select";
   }
   static getTitle() {
-    return "Input Select";
+    return "Select";
   }
   static getIconComponent() {
     return FromIcon;

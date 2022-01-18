@@ -24,7 +24,7 @@ class ImageLightbox extends BaseElement {
     return 'image-lightbox';
   }
   static getTitle() {
-    return 'Image lightbox';
+    return 'Image Lightbox';
   }
 
   static getIconComponent() {

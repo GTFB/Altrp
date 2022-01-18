@@ -26,7 +26,7 @@ class InputRadio extends BaseElement {
     return "input-radio";
   }
   static getTitle() {
-    return "Input Radio";
+    return "Radio";
   }
   static getIconComponent() {
     return FromIcon;

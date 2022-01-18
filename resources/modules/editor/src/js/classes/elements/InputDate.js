@@ -25,7 +25,7 @@ class InputDate extends BaseElement {
     return "input-date";
   }
   static getTitle() {
-    return "Input Date";
+    return "Date";
   }
   static getIconComponent() {
     return FromIcon;

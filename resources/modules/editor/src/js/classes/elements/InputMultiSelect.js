@@ -25,7 +25,7 @@ class InputMultiSelect extends BaseElement {
     return "input-multi-select";
   }
   static getTitle() {
-    return "Input Multi Select";
+    return "Multi Select";
   }
   static getIconComponent() {
     return FromIcon;

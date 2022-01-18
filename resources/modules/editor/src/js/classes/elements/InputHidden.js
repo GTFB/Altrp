@@ -25,7 +25,7 @@ class InputHidden extends BaseElement {
     return "input-hidden";
   }
   static getTitle() {
-    return "Input Hidden";
+    return "Hidden";
   }
   static getIconComponent() {
     return FromIcon;

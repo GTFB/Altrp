@@ -14,7 +14,7 @@ class InputDateRange extends BaseElement {
     return "input-date-range";
   }
   static getTitle() {
-    return "Input Date Range";
+    return "Date Range";
   }
   static getIconComponent() {
     return FromIcon;

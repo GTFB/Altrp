@@ -25,7 +25,7 @@ class InputFile extends BaseElement {
     return 'input-file';
   }
   static getTitle() {
-    return 'Input File';
+    return 'File';
   }
   static getIconComponent() {
     return FromIcon;

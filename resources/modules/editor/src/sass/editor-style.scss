@@ -207,6 +207,7 @@ button {
 
 .widgets__block {
   overflow: hidden;
+  transition: 0.4s ease-in-out;
 }
 
 .widgets__block-none {
@@ -214,7 +215,7 @@ button {
 }
 
 .transform-widgets {
-  transform: translateY(-100%);
+  transform: translateX(-100%);
 }
 
 .widget-icon {
@@ -265,7 +266,7 @@ button {
 
 .arrow-group__widgets {
   transform: rotate(-90deg);
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.4s ease-in-out;
   & svg {
     fill: #343B4C;
   }

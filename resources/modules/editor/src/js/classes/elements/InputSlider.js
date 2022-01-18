@@ -28,7 +28,7 @@ class InputSlider extends BaseElement{
     return'input-slider';
   }
   static getTitle(){
-    return'Input slider';
+    return 'Slider';
   }
 
   static getIconComponent(){

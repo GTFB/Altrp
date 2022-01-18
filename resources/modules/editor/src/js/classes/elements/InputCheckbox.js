@@ -26,7 +26,7 @@ class InputCheckbox extends BaseElement {
     return "input-checkbox";
   }
   static getTitle() {
-    return "Input Checkbox";
+    return "Checkbox";
   }
   static getIconComponent() {
     return FromIcon;

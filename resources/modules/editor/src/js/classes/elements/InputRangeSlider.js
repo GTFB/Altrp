@@ -28,7 +28,7 @@ class InputRangeSlider extends BaseElement{
     return'input-range-slider';
   }
   static getTitle(){
-    return'Input Range Slider';
+    return'Range Slider';
   }
 
   static getIconComponent(){

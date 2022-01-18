@@ -28,7 +28,7 @@ class InputTextCommon extends BaseElement {
     return "input-text-autocomplete";
   }
   static getTitle() {
-    return "Input Text Autocomplete";
+    return "Text Autocomplete";
   }
   static getIconComponent() {
     return FromIcon;

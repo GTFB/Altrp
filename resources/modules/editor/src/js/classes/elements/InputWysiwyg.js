@@ -25,7 +25,7 @@ class InputWysiwyg extends BaseElement {
     return "input-wysiwyg";
   }
   static getTitle() {
-    return "Input Wysiwyg";
+    return "Wysiwyg";
   }
   static getIconComponent() {
     return FromIcon;

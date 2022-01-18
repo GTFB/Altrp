@@ -347,7 +347,7 @@ input[type="text"].form__input {
   }
 
   & .bp3-tag-input {
-    height: 38px;
+    min-height: 38px;
   }
 }
 
@@ -373,7 +373,7 @@ input[type="text"].form__input {
   }
 
   & .bp3-tag-input {
-    height: 38px;
+    min-height: 38px;
   }
 }
 
@@ -773,7 +773,7 @@ input[type="text"].form__input {
   }
 
   & .bp3-tag-input .bp3-tag-input-values > * {
-    margin-bottom: 0;
+    margin-top: 5px;
   }
 }
 

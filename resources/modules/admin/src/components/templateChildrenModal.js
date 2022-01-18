@@ -90,9 +90,7 @@ class TemplateChildrenModal extends Component {
   };
 
   isItemSelectedCategory = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.template.categories);
-    return selectedString.includes(itemString);
+    return this.state.template.categories.some(c=>c.value === item.value);
   }
 
   handleItemSelectCategory = (item) => {

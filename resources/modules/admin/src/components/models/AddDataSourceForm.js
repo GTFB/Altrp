@@ -56,47 +56,25 @@ class AddDataSourceForm extends Component {
         value: {...value, headers: Object.entries(value.headers || {}), bodies: Object.entries(value.bodies || {})},
         typeIsDisabled: value.type === 'remote'
       })})
+    } else {
+      this.setState(state => ({
+        ...state,
+        rolesOptions,
+        permissionsOptions,
+      }))
     }
   }
 
+  ItemPredicateType = (query, value) => {
+    return (
+      `${value.toLowerCase()}`.indexOf(query?.toLowerCase()) >= 0
+    );
+  }
+
   ItemPredicate = (query, value) => {
-
-    if(!query) {
-      return true
-    }
-    if (value.label) {
-      const index = _.findIndex(_.split(value.label, ""), char => {
-        let similar = false;
-        _.split(query, "").forEach(queryChar => {
-          if(queryChar === char) {
-            similar = true
-          }
-        });
-        return similar
-      });
-
-      if(index !== -1) {
-        return true
-      } else {
-        return false
-      }
-    } else {
-      const index = _.findIndex(_.split(value, ""), char => {
-        let similar = false;
-        _.split(query, "").forEach(queryChar => {
-          if(queryChar === char) {
-            similar = true
-          }
-        });
-        return similar
-      });
-
-      if(index !== -1) {
-        return true
-      } else {
-        return false
-      }
-    }
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
   }
 
   changeValue = (value, field) => {
@@ -222,9 +200,7 @@ class AddDataSourceForm extends Component {
   };
 
   isItemSelectedRoles = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.value.access.roles);
-    return selectedString.includes(itemString);
+    return this.state.value.access.roles.some(c=>c.value === item.value);
   };
 
   handleItemSelectRoles = (item) => {
@@ -256,9 +232,7 @@ class AddDataSourceForm extends Component {
   };
 
   isItemSelectedPermissions = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.value.access.permissions);
-    return selectedString.includes(itemString);
+    return this.state.value.access.permissions.some(c=>c.value === item.value);
   };
 
   handleItemSelectPermissions = (item) => {
@@ -395,7 +369,7 @@ class AddDataSourceForm extends Component {
 
               <Select items={DataSourceType}
                       matchTargetWidth
-                      itemPredicate={this.ItemPredicate}
+                      itemPredicate={this.ItemPredicateType}
                       disabled={!this.props.match.params.id || this.state.typeIsDisabled}
                       noResults={<MenuItem disabled={true} text="No results." />}
                       itemRenderer={(item, {handleClick, modifiers, query}) => {
@@ -441,7 +415,7 @@ class AddDataSourceForm extends Component {
 
               <Select items={requestType}
                       matchTargetWidth
-                      itemPredicate={this.ItemPredicate}
+                      itemPredicate={this.ItemPredicateType}
                       noResults={<MenuItem disabled={true} text="No results." />}
                       itemRenderer={(item, {handleClick, modifiers, query}) => {
                         return <MenuItem
@@ -633,7 +607,7 @@ class AddDataSourceForm extends Component {
             </div>
           </div> : null}
 
-          {this.state.value.auth && roles.length > 1 ? <div className="form-group__inline-wrapper">          
+          {this.state.value.auth && roles.length > 1 ? <div className="form-group__inline-wrapper">
             <div className="form-group form-group_width47 data_sources_checkbox">
              <input type="checkbox" id="field-all-roles"
                     checked={this.state.value.need_all_roles} value={this.state.value.need_all_roles}

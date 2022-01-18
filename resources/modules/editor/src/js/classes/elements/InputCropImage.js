@@ -26,7 +26,7 @@ class InputCropImage extends BaseElement {
   }
 
   static getTitle() {
-    return 'Input Crop Image';
+    return 'Crop Image';
   }
 
   static getIconComponent() {

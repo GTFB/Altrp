@@ -25,7 +25,7 @@ class InputTextarea extends BaseElement {
     return "input-textarea";
   }
   static getTitle() {
-    return "Input Textarea";
+    return "Textarea";
   }
   static getIconComponent() {
     return FromIcon;

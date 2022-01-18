@@ -24,7 +24,7 @@ class ProgressBar extends BaseElement {
     return "progress-bar";
   }
   static getTitle() {
-    return "Progress bar";
+    return "Progress Bar";
   }
 
   static getIconComponent() {

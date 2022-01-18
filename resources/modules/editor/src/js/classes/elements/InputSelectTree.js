@@ -26,7 +26,7 @@ class InputSelectTree extends BaseElement {
     return "input-select-tree";
   }
   static getTitle() {
-    return "Input Select tree";
+    return "Select tree";
   }
   static getIconComponent() {
     return FromIcon;
