@@ -56,7 +56,7 @@ class Pagination extends Component {
         {/*  </p>*/}
         {/*</div>*/}
         <div className="pagination__buttons">
-          <p className="pagination__text">{this.props.itemsCount} Items</p>
+          <p className="pagination__text">{this.props.itemsCount || '0'} Items</p>
           <div
             className={
               this.state.currentPage <= 1
