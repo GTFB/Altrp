@@ -70,9 +70,6 @@ class ElementWrapper extends Component {
   componentWillUnmount() {
 
     const {element} = this.props
-    // if(element.getId() === '_giafvu4nk'){
-    //   console.error(this);
-    // }
     const unmountElementEvent = new Event(`altrp-unmount-element:${element.getId()}` );
     const unmountElementTypeEvent = new Event(`altrp-unmount-element:${element.getName()}` );
     document.dispatchEvent(unmountElementEvent)

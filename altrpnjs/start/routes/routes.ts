@@ -20,12 +20,26 @@
 import './admin'
 
 import Route from '@ioc:Adonis/Core/Route'
-// import {UserFactory} from "Database/factories";
+import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
 Route.post("/logout", "IndicesController.logout").name = 'logout'
 
+
+
+Route.get('/data/current-user', async ({response, auth}: HttpContextContract)=>{
+  response.header('Content-Type','application/javascript')
+  let user = auth.user
+  if( !user){
+    user = {}
+  }
+  await user.load('roles')
+  await user.load('permissions')
+  return response.send(`
+window.current_user = ${JSON.stringify(user.serialize())}
+  `);
+})
 
 Route.group(() => {
 
@@ -33,10 +47,10 @@ Route.group(() => {
 
   Route.get("/current-user", "users/UsersController.getCurrentUser")
 
-  Route.get("/_token", () => {
+  Route.get("/_token", ({request}) => {
     return {
       success: true,
-      _token: "token"
+      _token: request.csrfToken
     }
   })
 
@@ -47,5 +61,4 @@ Route.group(() => {
   })
 })
 .prefix("/ajax")
-
 

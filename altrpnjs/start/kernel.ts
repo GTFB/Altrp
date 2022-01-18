@@ -24,10 +24,10 @@ import './events'
 |
 */
 Server.middleware.register([
-  () => import('App/Middleware/SilentAuth'),
-  () => import('App/Middleware/AltrpRouting'),
   () => import('@ioc:Adonis/Core/BodyParser'),
+  () => import('App/Middleware/SilentAuth'),
   () => import('@ioc:Adonis/Addons/Shield'),
+  () => import('App/Middleware/AltrpRouting'),
 ])
 
 Route.get('*', async () => {

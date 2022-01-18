@@ -10,11 +10,14 @@
     "app/AltrpControllers",
     "build"
   ],
+
   "compilerOptions": {
     "allowJs": true,
     "outDir": "build",
+    "module": "commonjs",
     "rootDir": "../",
     "sourceMap": true,
+    "esModuleInterop": true,
     "paths": {
       "App/*": [
         "./app/*"

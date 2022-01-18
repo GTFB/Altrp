@@ -1,23 +1,24 @@
 import Env from "@ioc:Adonis/Core/Env";
-import Encryption from '@ioc:Adonis/Core/Encryption'
 import {get_setting_key} from "./get_altrp_setting";
+import encrypt from "./encrypt";
+import updateDotenv from "update-dotenv";
 
-export default function set_altrp_setting( setting_name = '', $default = '', decrypt = false){
+export default async function  set_altrp_setting( setting_name = '', value = '', _encrypt = false){
 
-  let value = $default;
   if( ! setting_name ){
     return value;
   }
-  let settings_key = get_setting_key( setting_name );
+  let setting_key = get_setting_key( setting_name );
 
-    value = Env.get(settings_key, $default);
 
-  if( decrypt ){
+  if( _encrypt ){
     try {
-      value = Encryption.decrypt( value ) || '';
+      value = encrypt( value ) || '';
     } catch( e){
       value = '';
     }
   }
-  return value ? value : $default;
+  await updateDotenv({[setting_key]: value})
+  Env.set(setting_key, value)
+  return
 }

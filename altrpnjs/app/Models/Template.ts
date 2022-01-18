@@ -1,11 +1,14 @@
-import { DateTime } from 'luxon'
-import {BaseModel, column, HasOne, hasOne, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {DateTime} from 'luxon'
+import {BaseModel, column, HasMany, hasMany, HasOne, hasOne, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import User from "App/Models/User";
 import Area from "App/Models/Area";
 import Page from "App/Models/Page";
+import TemplateSetting from "App/Models/TemplateSetting";
+import empty from "../../helpers/empty";
+import PagesTemplate from "App/Models/PagesTemplate";
 
 export default class Template extends BaseModel {
-  @column({ isPrimary: true })
+  @column({isPrimary: true})
   public id: number
 
   @column()
@@ -24,13 +27,7 @@ export default class Template extends BaseModel {
   public guid: string
 
   @column()
-  public styles: string
-
-  @column()
   public all_site: boolean
-
-  @column()
-  public html_content: string
 
   @hasOne(() => User, {
     localKey: "user_id",
@@ -50,6 +47,13 @@ export default class Template extends BaseModel {
   })
   public currentArea: HasOne<typeof Area>
 
+  @hasMany(() => TemplateSetting, {
+    localKey: 'guid',
+    foreignKey: 'template_guid'
+  })
+  public templateSettings: HasMany<typeof TemplateSetting>
+
+
   @column()
   public area: number
 
@@ -68,18 +72,125 @@ export default class Template extends BaseModel {
     return this.currentArea.name
   }
 
-  public static getDefaultData() {
-    return {
-      name: "root-element",
-      type: "root-element",
-      children: [],
-      settings: []
-    }
-  }
-
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({autoCreate: true})
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime
+
+  static getDefaultData() {
+
+    return {
+      name: 'root-element',
+      type: 'root-element',
+      children: [],
+      settings: [],
+    };
+  }
+
+  /**
+   * Получить объект шаблона по параметрам
+   */
+  static async getTemplate(pageId, templateType = 'content',): Promise<Template | object> {
+    let page = await Page.find(pageId)
+    if (!page) {
+      return {data: Template.getDefaultData()}
+    }
+
+    /**
+     * Сначала проверим есть ли конкретный шаблон для страницы
+     */
+
+    let template = await Template.query()
+      .join('pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
+      .where('pages_templates.condition_type', 'include')
+      .where('templates.type', 'template')
+      .where('pages_templates.page_guid', page.guid)
+      .where('pages_templates.template_type', templateType).select('templates.*').first()
+    if (template) {
+      let _template = template.serialize()
+      _template.data = JSON.parse(template.data)
+      if (!_template.data) {
+        _template.data = Template.getDefaultData()
+      }
+      return template
+    }
+
+
+    /**
+     * Потом ищем шаблон, который отмечен 'all_site'
+     */
+    template = await Template.query().join('areas', 'templates.area', '=', 'areas.id')
+      .where('areas.name', templateType)
+      .where('templates.type', 'template')
+      .where('templates.all_site', 1).select('templates.*').first();
+
+    /**
+     * И проверяем, есть ли шаблон в исключениях
+     */
+    if (template && !await Template.query().join('pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
+      .where('pages_templates.condition_type', 'exclude')
+      .where('pages_templates.page_guid', page.guid)
+      .where('templates.guid', template.guid)
+      .where('pages_templates.template_type', templateType).first()) {
+      //_template.check_elements_conditions();
+      let _template = template.serialize();
+      _template['data'] = JSON.parse(_template['data'],);
+      if (empty(_template['data'])) {
+        _template['data'] = Template.getDefaultData();
+      }
+      return _template;
+    }
+    return {data: Template.getDefaultData()}
+
+  }
+
+  public static async getTemplates(pageId, templateType = 'content') {
+
+
+    /**
+     * Сначала проверим есть ли конкретный шаблон для стрницы
+     */
+
+    let templates = await Template.query().join('pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+      .where('pages_templates.condition_type', 'include')
+      .where('pages_templates.page_id', pageId)
+      .where('templates.type', 'template')
+      .where('pages_templates.template_type', templateType).select('templates.*');
+
+
+    /**
+     * Потом ищем шаблон, который отмечен 'all_site'
+     */
+    let _templates = await Template.query().join('areas', 'templates.area', '=', 'areas.id')
+      .where('areas.name', templateType)
+      .where('templates.type', 'template')
+      .where('templates.all_site', 1).select('templates.*');
+
+    /**
+     * И проверяем, есть ли шаблон в исключениях
+     */
+
+    _templates = _templates.filter(function (_template) {
+        let pages_template = PagesTemplate.query().where('template_id', _template.id)
+          .where('page_id', pageId)
+          .where('condition_type', '=', 'exclude').first();
+
+        return !pages_template;
+      }
+    )
+    ;
+
+    templates = templates.concat(_templates);
+
+
+    templates.forEach((template)=>{
+      template.data = JSON.parse(template.data);
+    }
+  )
+    ;
+
+    return templates;
+  }
+
 }

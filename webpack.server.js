@@ -5,6 +5,10 @@ const path = require("path");
 module.exports = {
   entry: {
     express: "./server/express.js",
+    renderResult: {
+      import: "./server/renderResult.js",
+      filename: "helpers/renderResult.js",
+    },
   },
 
   mode: "production",

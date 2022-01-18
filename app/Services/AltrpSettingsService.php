@@ -22,17 +22,18 @@ class AltrpSettingsService{
    * @return string
    * @throws \Jackiedo\DotenvEditor\Exceptions\KeyNotFoundException
    */
-  public function get_setting_value( $setting_name = '', $default = '', $decrypt = false )
+  public function get_setting_value( $setting_name = '', $default = '',  $decrypt= false )
   {
     $value = $default;
     if( ! $setting_name ){
       return $value;
     }
     $settings_key = $this->get_setting_key( $setting_name );
-  
+
     if( DotenvEditor::keyExists( $settings_key ) ){
       $value = DotenvEditor::getValue( $settings_key );
     }
+
     if( $decrypt ){
       try {
         $value = decrypt( $value );

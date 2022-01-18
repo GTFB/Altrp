@@ -9,6 +9,9 @@ import findIndex from "lodash/findIndex"
 
 function recurseMapElements( element, callback ){
   callback(element);
+  if( element.name ==='menu'){
+
+  }
   if( element.children && is_array(element.children) ){
     element.children.forEach((child) => {
       recurseMapElements( child, callback );
@@ -154,11 +157,10 @@ function _extractElementsNames( element, elementNames, only_react_elements ) {
  */
 function extractElementsNames(areas: any[] = [], _only_react_elements = false){
   let elementNames = [];
-
   areas.forEach(area => {
     if(area.template?.data) {
       const data = area.template.data
-      _extractElementsNames( JSON.parse(data), elementNames, _only_react_elements );
+      _extractElementsNames( data, elementNames, _only_react_elements );
     }
   })
 
