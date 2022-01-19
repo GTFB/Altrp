@@ -12,7 +12,7 @@ import empty from "../../helpers/empty";
 import * as _ from 'lodash'
 import getLatestVersion from "../../helpers/getLatestVersion";
 import User from "App/Models/User";
-import get_altrp_setting from "../../helpers/get_altrp_setting";
+import get_altrp_setting from "../../helpers/get_altrp_setting"
 
 export default class AltrpRouting {
 
@@ -131,8 +131,6 @@ export default class AltrpRouting {
           return response.send('Not Found')
         }
       }
-
-
       let title = replaceContentWithData(page.title, model_data)
 
       const context = prepareContext({

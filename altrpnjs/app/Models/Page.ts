@@ -14,8 +14,8 @@ import ACTIONS_NAMES from '../../helpers/const/ACTIONS_NAMES'
 import * as _ from 'lodash'
 import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
 import Database from "@ioc:Adonis/Lucid/Database"
-import Logger from "@ioc:Adonis/Core/Logger";
-import AltrpRouting from "App/Middleware/AltrpRouting";
+import Logger from "@ioc:Adonis/Core/Logger"
+import AltrpRouting from "App/Middleware/AltrpRouting"
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -152,7 +152,6 @@ export default class Page extends BaseModel {
       settings: [],
       template: footerTemplate
     })
-
 
     let popups = await Template.getTemplates(this.id, 'popup')
 

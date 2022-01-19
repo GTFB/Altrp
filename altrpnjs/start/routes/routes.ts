@@ -18,15 +18,22 @@
 |
 */
 import './admin'
-
 import Route from '@ioc:Adonis/Core/Route'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
+import Permission from "App/Models/Permission";
+import User from "App/Models/User";
+// import {UserFactory} from "Database/factories";
 
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
 Route.post("/logout", "IndicesController.logout").name = 'logout'
 
 
+Route.get("/userr", async () => {
+  const user = await User.query().where("id", 1).firstOrFail();
+  const permission = await Permission.query().where("id", 1).firstOrFail();
+  return user.can(permission);
+})
 
 Route.get('/data/current-user', async ({response, auth}: HttpContextContract)=>{
   response.header('Content-Type','application/javascript')

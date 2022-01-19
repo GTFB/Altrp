@@ -99,7 +99,7 @@ export default class PagesController {
     }
   }
 
-  public async getAreas({  }) {
+  public async getAreas() {
 
     return {
       "areas": [
@@ -159,7 +159,6 @@ export default class PagesController {
       const body = request.body();
 
       Object.keys(body).forEach(input => {
-        console.log(body[input])
         if(body[input] && input !== "rolesOptions" && input !== "roles") {
           page[input] = body[input]
         }
