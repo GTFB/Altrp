@@ -37,14 +37,14 @@
   @!component('front-app-css')
 </head>
 <body class="front-app-body">
-    <div id="front-app" class="front-app">{{{ssr}}}</div>
+    <div id="front-app" class="front-app"></div>
     <div id="front-app-server" style="display: none;" class="front-app" style="overflow:auto;">
     {{--  <script src="{{ hAltrp }}"></script>  --}}
     @!component('front-app-test', {
       token,
       page,
     })
-    <script defer src="{{ hAltrp }}"></script>
+    <script defer src="{{ url }}"></script>
     <link rel="stylesheet" href="http://altrp.nz/modules/front-app/front-app.css?0.0.0">
 </body>
 </html>

@@ -5,7 +5,6 @@ import { isString } from "lodash";
 import PageRole from "App/Models/PageRole";
 import Role from "App/Models/Role";
 import Template from "App/Models/Template";
-import PagesTemplate from "App/Models/PagesTemplate";
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
@@ -113,7 +112,9 @@ export default class Page extends BaseModel {
       templates?: Template[]
     }[] = []
 
+    // @ts-ignore
     let headerTemplate = await this.related("templates").query().whereHas("currentArea", (query) => {
+      // @ts-ignore
       query.where("name", "header")
     }).first()
 
@@ -136,7 +137,9 @@ export default class Page extends BaseModel {
       })
     }
 
+    // @ts-ignore
     let contentTemplate = await this.related("templates").query().whereHas("currentArea", (query) => {
+      // @ts-ignore
       query.where("name", "content")
     }).first()
 
@@ -159,7 +162,9 @@ export default class Page extends BaseModel {
       })
     }
 
+    // @ts-ignore
     let footerTemplate = await this.related("templates").query().whereHas("currentArea", (query) => {
+      // @ts-ignore
       query.where("name", "footer")
     }).first()
 
@@ -182,9 +187,11 @@ export default class Page extends BaseModel {
       })
     }
 
-    let popups: Template[] = []
+    let popups: any[] = []
 
+    // @ts-ignore
     let relatedPopups = await this.related("templates").query().whereHas("currentArea", (query) => {
+      // @ts-ignore
       query.where("name", "popup")
     })
 

@@ -19,12 +19,19 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import Permission from "App/Models/Permission";
+import User from "App/Models/User";
 // import {UserFactory} from "Database/factories";
 
 Route.get("/login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login")
 
 
+Route.get("/userr", async () => {
+  const user = await User.query().where("id", 1).firstOrFail();
+  const permission = await Permission.query().where("id", 1).firstOrFail();
+  return user.can(permission);
+})
 
 Route.group(() => {
 
