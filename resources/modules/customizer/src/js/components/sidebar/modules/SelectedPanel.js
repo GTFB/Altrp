@@ -111,38 +111,49 @@ import mutate from "dot-prop-immutable";
                                                 />}
                       </div>
                     </div>
-                      {(this.props.selectNode?.type === "switch") && <SwitchNode
-                                                                          activeSection={this.state.activeSection}
-                                                                          toggleChevron={this.toggleChevron}
-                                                                          customizer={ this.props.customizer }
-                                                                          selectNode={this.props.selectNode || []}
-                                                                        />}
-                      {(this.props.selectNode?.type === "return") && <ReturnNode
-                                                                          activeSection={this.state.activeSection}
-                                                                          toggleChevron={this.toggleChevron}
-                                                                          customizer={ this.props.customizer }
-                                                                          selectNode={this.props.selectNode || []}
-                                                                        />}
-                      {(this.props.selectNode?.type === "change") && <ChangeNode
-                                                                          activeSection={this.state.activeSection}
-                                                                          toggleChevron={this.toggleChevron}
-                                                                          customizer={ this.props.customizer }
-                                                                          selectNode={this.props.selectNode || []}
-                                                                        />}
-                      {(this.props.selectNode?.type === "customizer") && <CustomizerNode
-                                                                      activeSection={this.state.activeSection}
-                                                                      toggleChevron={this.toggleChevron}
-                                                                      customizer={ this.props.customizer }
-                                                                      selectNode={this.props.selectNode || []}
-                                                                    />}
-                      {(this.props.selectNode?.type === "start") && <StartNode
-                                                                      activeSection={this.state.activeSection}
-                                                                      toggleChevron={this.toggleChevron}
-                                                                      customizer={ this.props.customizer }
-                                                                      selectNode={this.props.selectNode || []}
-                                                                    />}
-
-                  </div> ) : (<div className="controllers-wrapper">
+                      {/*{(this.props.selectNode?.type === "switch") && <SwitchNode*/}
+                      {/*                                                    activeSection={this.state.activeSection}*/}
+                      {/*                                                    toggleChevron={this.toggleChevron}*/}
+                      {/*                                                    customizer={ this.props.customizer }*/}
+                      {/*                                                    selectNode={this.props.selectNode || []}*/}
+                      {/*                                                  />}*/}
+                      {/*{(this.props.selectNode?.type === "return") && <ReturnNode*/}
+                      {/*                                                    activeSection={this.state.activeSection}*/}
+                      {/*                                                    toggleChevron={this.toggleChevron}*/}
+                      {/*                                                    customizer={ this.props.customizer }*/}
+                      {/*                                                    selectNode={this.props.selectNode || []}*/}
+                      {/*                                                  />}*/}
+                      {/*{(this.props.selectNode?.type === "change") && <ChangeNode*/}
+                      {/*                                                    activeSection={this.state.activeSection}*/}
+                      {/*                                                    toggleChevron={this.toggleChevron}*/}
+                      {/*                                                    customizer={ this.props.customizer }*/}
+                      {/*                                                    selectNode={this.props.selectNode || []}*/}
+                      {/*                                                  />}*/}
+                      {/*{(this.props.selectNode?.type === "customizer") && <CustomizerNode*/}
+                      {/*                                                activeSection={this.state.activeSection}*/}
+                      {/*                                                toggleChevron={this.toggleChevron}*/}
+                      {/*                                                customizer={ this.props.customizer }*/}
+                      {/*                                                selectNode={this.props.selectNode || []}*/}
+                      {/*                                              />}*/}
+                      {/*{(this.props.selectNode?.type === "start") && <StartNode*/}
+                      {/*                                                activeSection={this.state.activeSection}*/}
+                      {/*                                                toggleChevron={this.toggleChevron}*/}
+                      {/*                                                customizer={ this.props.customizer }*/}
+                      {/*                                                selectNode={this.props.selectNode || []}*/}
+                      {/*                                              />}*/}
+                    {this.props.nodeState.filter(item => this.props.selectNode?.type === item.name).map(obj => {
+                      return (
+                        <obj.selectedNode
+                          key={obj.name}
+                          activeSection={this.state.activeSection}
+                          toggleChevron={this.toggleChevron}
+                          customizer={ this.props.customizer }
+                          selectNode={this.props.selectNode || []}
+                        />
+                      )
+                    })}
+                  </div> )
+                  : (<div className="controllers-wrapper">
                     Select a node or edge to edit
                   </div>)}
               </div>
@@ -154,6 +165,9 @@ import mutate from "dot-prop-immutable";
 }
 
 function mapStateToProps(state){
-  return {customizerSettingsData:state.customizerSettingsData}
+  return {
+    customizerSettingsData: state.customizerSettingsData,
+    nodeState: state.nodeStoreData.nodes
+  }
 }
 export default connect(mapStateToProps)(SelectedPanel)

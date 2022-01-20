@@ -38,6 +38,7 @@ const mapStateToProps = state => {
     elements: _.cloneDeep(state.customizerSettingsData),
     customizer: _.cloneDeep(state.currentCustomizer),
     other: _.cloneDeep(state.otherData),
+    nodeState: state.nodeStoreData.nodes
   };
 };
 
@@ -386,6 +387,10 @@ class CustomizerEditor extends Component {
   }
 
   render() {
+    let nodesTypesObj = {}
+    this.props.nodeState.forEach(el => {
+      nodesTypesObj[el.name] = el.node
+    })
     return (
       <div className="page__content">
         <ReactFlowProvider>
@@ -418,12 +423,7 @@ class CustomizerEditor extends Component {
               onNodeDragStart={ this.onNodeDragStart }
               onNodeDragStop={ this.onNodeDragStop }
               onDragOver={ this.onDragOver }
-              nodeTypes={{
-                start: Start,
-                switch: Switch,
-                change: Change,
-                return: Return,
-              }}
+              nodeTypes={nodesTypesObj}
               onEdgeUpdate={this.onEdgeUpdate}
               edgeTypes={{
                 custom: CustomEdge,
