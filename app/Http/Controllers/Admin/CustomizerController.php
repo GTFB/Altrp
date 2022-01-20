@@ -104,7 +104,7 @@ class CustomizerController extends Controller
     $page = $request->get('page', 1);
     $orderColumn = $request->get('order_by') ?? 'title';
     $orderColumn = 'altrp_customizers.' . $orderColumn;
-    $limit = $request->get('pageSize', 10);
+    $limit = $request->get('pageSize');
     $offset = $limit * ($page - 1);
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);

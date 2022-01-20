@@ -37,6 +37,9 @@ class Table extends BaseElement {
   static getType() {
     return 'widget';
   }
+  static getGroup() {
+    return "Advanced";
+  }
   _registerControls() {
     if (this.controllersRegistered) {
       return;

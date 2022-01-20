@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import widgetIcon from '../../../svgs/nav-menu.svg';
+import widgetIcon from '../../../svgs/menu.svg';
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -27,6 +27,10 @@ class Nav extends BaseElement {
   }
   static getTitle() {
     return 'Nav';
+  }
+
+  static getGroup() {
+    return "Basic";
   }
 
   static getIconComponent() {

@@ -40,8 +40,13 @@ export default class Sidebar extends React.Component {
 
   async update() {
     const robotId = new URL(window.location).searchParams.get("robot_id");
-    // const robotData = store.getState()?.currentRobot;
-    const robotData = this.state.robot
+    const robot = store.getState()?.currentRobot;
+    const { categories, _categories } = this.state.robot
+    const robotData = {
+      ...robot,
+      categories,
+      _categories
+    }
     const robotChart = store.getState()?.robotSettingsData;
     robotData.chart = JSON.stringify(robotChart);
     console.log(this.props.sources);
@@ -63,9 +68,7 @@ export default class Sidebar extends React.Component {
   };
 
   isItemSelectedCategory = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.robot.categories || []);
-    return selectedString.includes(itemString);
+    return this.state.robot.categories.some(c=>c.value === item.value);
   };
 
   handleItemSelectCategory = (item) => {

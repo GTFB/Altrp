@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import widgetIcon from '../../../svgs/tabs.svg';
+import widgetIcon from '../../../svgs/tabs_switcher.svg';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -28,7 +28,7 @@ class TabsSwitcher extends BaseElement{
     return'tabs-switcher';
   }
   static getTitle(){
-    return'Tabs switcher';
+    return'Tabs Switcher';
   }
 
   static getIconComponent(){
@@ -36,6 +36,10 @@ class TabsSwitcher extends BaseElement{
   }
   static getType(){
     return 'widget';
+  }
+
+  static getGroup() {
+    return "Basic";
   }
   _registerControls() {
     if (this.controllersRegistered) {

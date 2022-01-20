@@ -16,7 +16,7 @@ import {
   CONTROLLER_GRADIENT,
   CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
-import RowIcon from "../../../svgs/row.svg";
+import RowIcon from "../../../svgs/section.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class SectionWidget extends BaseElement {
@@ -24,7 +24,7 @@ class SectionWidget extends BaseElement {
     return "section_widget";
   }
   static getTitle() {
-    return "SectionWidget";
+    return "Section";
   }
 
   static getIconComponent() {
@@ -33,6 +33,9 @@ class SectionWidget extends BaseElement {
 
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Basic";
   }
   _registerControls() {
     if (this.controllersRegistered) {

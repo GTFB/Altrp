@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import CodeIcon from "../../../svgs/code.svg";
+import CodeIcon from "../../../svgs/template.svg";
 import {
   TAB_CONTENT,
   CONTROLLER_SELECT2, TAB_STYLE
@@ -21,6 +21,9 @@ class Template extends BaseElement {
 
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Basic";
   }
 
   _registerControls() {

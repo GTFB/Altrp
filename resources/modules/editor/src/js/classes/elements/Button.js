@@ -42,6 +42,9 @@ class Button extends BaseElement {
   static getType() {
     return 'widget';
   }
+  static getGroup() {
+    return "Basic";
+  }
   _registerControls() {
     if (this.controllersRegistered) {
       return

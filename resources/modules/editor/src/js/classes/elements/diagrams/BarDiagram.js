@@ -1,6 +1,6 @@
 import Schemes from "../../../components/altrp-dashboards/settings/NivoColorSchemes.js";
 import BaseElement from ".././BaseElement";
-import PieIcon from "../../../../svgs/skill-bar.svg";
+import PieIcon from "../../../../svgs/bar.svg";
 import { advancedTabControllers } from "../../../decorators/register-controllers";
 import legendControllers from '../../../decorators/diagrams/diagram-legend'
 import {
@@ -35,6 +35,9 @@ class BarDiagram extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Diagrams";
   }
   _registerControls() {
     if (this.controllersRegistered) {
@@ -109,7 +112,7 @@ class BarDiagram extends BaseElement {
       label: 'Color',
       type: CONTROLLER_COLOR,
     })
-    
+
     this.addControl("markersRepeater", {
       type: CONTROLLER_REPEATER,
       fields: repeaterMarker.getControls()
@@ -208,7 +211,7 @@ class BarDiagram extends BaseElement {
         enableMinValue: true
       }
     })
-    
+
     this.addControl('enableMaxValue', {
       type: CONTROLLER_SWITCHER,
       label: 'Enable max value'
@@ -223,7 +226,7 @@ class BarDiagram extends BaseElement {
     })
 
     this.endControlSection();
-    
+
     this.startControlSection("size", {
       tab: TAB_STYLE,
       label: "Size"

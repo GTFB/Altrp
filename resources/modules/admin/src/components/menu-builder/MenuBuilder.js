@@ -220,9 +220,7 @@ class MenuBuilder extends Component {
   };
 
   isItemSelectedCategory = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.value.categories);
-    return selectedString.includes(itemString);
+    return this.state.value.categories.some(c=>c.value === item.value);
   }
 
   handleItemSelectCategory = (item) => {

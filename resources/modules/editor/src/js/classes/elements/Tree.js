@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import Preview from "../../../svgs/sidebar.svg";
+import Preview from "../../../svgs/tree.svg";
 import {
   CONTROLLER_SWITCHER,
   TAB_CONTENT,
@@ -28,6 +28,9 @@ class Tree extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Advanced";
   }
 
   _registerControls() {

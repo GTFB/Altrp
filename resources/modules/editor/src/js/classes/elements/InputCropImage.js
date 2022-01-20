@@ -1,5 +1,5 @@
 import BaseElement from './BaseElement';
-import FromIcon from '../../../svgs/form-horizontal.svg';
+import FromIcon from '../../../svgs/image_crop.svg';
 import { advancedTabControllers } from '../../decorators/register-controllers';
 import {
   CONTROLLER_TEXTAREA,
@@ -26,7 +26,7 @@ class InputCropImage extends BaseElement {
   }
 
   static getTitle() {
-    return 'Input Crop Image';
+    return 'Crop Image';
   }
 
   static getIconComponent() {
@@ -35,6 +35,9 @@ class InputCropImage extends BaseElement {
 
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Form";
   }
 
   _registerControls() {

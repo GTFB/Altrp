@@ -1,6 +1,6 @@
 import Schemes from "../../../components/altrp-dashboards/settings/NivoColorSchemes.js";
 import BaseElement from ".././BaseElement";
-import PieIcon from "../../../../svgs/skill-bar.svg";
+import PieIcon from "../../../../svgs/line.svg";
 import { advancedTabControllers } from "../../../decorators/register-controllers";
 import {
   CONTROLLER_DIMENSIONS,
@@ -38,6 +38,9 @@ class LineDiagram extends BaseElement {
   static getType() {
     return "widget";
   }
+  static getGroup() {
+    return "Diagrams";
+  }
   _registerControls() {
     if (this.controllersRegistered) {
       return;
@@ -58,7 +61,7 @@ class LineDiagram extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
     });
-    
+
     this.endControlSection();
 
     this.startControlSection("style", {
@@ -143,7 +146,7 @@ class LineDiagram extends BaseElement {
         { id: 9, value: "stepBefore", label: "Step Before" }
       ]
     });
-    
+
     this.addControl('enableSlices', {
       type: CONTROLLER_SELECT,
       label: 'Enable slices',
@@ -162,7 +165,7 @@ class LineDiagram extends BaseElement {
         },
       ]
     })
-    
+
     this.endControlSection();
 
     this.startControlSection('axis', {
@@ -287,7 +290,7 @@ class LineDiagram extends BaseElement {
         axisTop: true
       }
     })
-    
+
     this.addControl("axisLeft", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Left Axis",
@@ -341,7 +344,7 @@ class LineDiagram extends BaseElement {
         axisLeft: true
       }
     })
-    
+
     this.addControl("axisRight", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Right Axis",
@@ -437,7 +440,7 @@ class LineDiagram extends BaseElement {
       tab: TAB_STYLE,
       label: 'Area Settings'
     })
-    
+
     this.addControl("enableArea", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Area?",
@@ -452,7 +455,7 @@ class LineDiagram extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Opacity',
       min: 0,
-      max: 1, 
+      max: 1,
       step: 0.05
     })
 
