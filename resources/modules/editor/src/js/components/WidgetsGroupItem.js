@@ -23,7 +23,13 @@ function WidgetsGroupItem(props) {
       </div>
       <div ref={block} style={{maxHeight: `${widgetsHeight}`}} className="widgets__block">
         <div className="widgets">
-          {props.widgets.filter(item => item.getGroup() === props.name).map(widget => {
+          {props.widgets.filter(item => {
+            if(!item.getGroup){
+              console.log(item);
+              return false
+            }
+            return item.getGroup() === props.name
+          }).map(widget => {
             return <WidgetIcon element={widget} key={widget.getName()} />;
           })}
         </div>
