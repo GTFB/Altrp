@@ -1,14 +1,19 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
-import Media from "App/Models/Media";
-import empty from "../../../../helpers/empty";
-import base_path from "../../../../helpers/base_path";
-import fs from 'fs'
-import path from 'path'
+import Media from 'App/Models/Media';
+import empty from '../../../../helpers/empty';
+import base_path from '../../../../helpers/base_path';
+import fs, {rmSync} from 'fs'
 import { string } from '@ioc:Adonis/Core/Helpers'
-import User from "App/Models/User";
-import is_array from "../../../../helpers/is_array";
-import CategoryObject from "App/Models/CategoryObject";
-import storage_path from "../../../../helpers/storage_path";
+import User from 'App/Models/User';
+import is_array from '../../../../helpers/is_array';
+import CategoryObject from 'App/Models/CategoryObject';
+import storage_path from '../../../../helpers/storage_path';
+import imageSize from 'image-size'
+import convert from 'heic-convert'
+import {parseString} from'xml2js'
+import data_get from '../../../../helpers/data_get';
+import guid from '../../../../helpers/guid';
+import public_path from "../../../../helpers/public_path";
 
 export default class MediaController {
   private static fileTypes: any;
@@ -38,7 +43,7 @@ export default class MediaController {
         .whereIn('altrp_category_objects.category_guid', categories)
     }
 
-    let media:any[] = await (query.orderBy('id').select('altrp_media.*').preload('categories'))
+    let media:any[] = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories'))
 
 
     media = media.map(model => {
@@ -73,51 +78,68 @@ export default class MediaController {
     return type;
   }
 
-  store({response, request, auth}: HttpContextContract){
+  async store({response, request, auth}: HttpContextContract){
+    // @ts-ignore
     const user: User|null = auth.user
     if(! user){
-      return response.status(403).json({success: false, 'not allwed'})
+      return response.status(403).json({success: false, message:'not allowed'})
     }
     const files = request.files('files')
-    const ext = file.extname.split('.').pop()
     let res:Media[] = []
     for(let file of files){
+      if(! file){
+        continue
+      }
+      // @ts-ignore
+      const ext = file.extname.split('.').pop()
       let media = new Media();
       media.title = file.clientName;
       media.media_type = file.type || '';
       media.author = user.id;
       media.type = MediaController.getTypeForFile( file );
+      media.guid = guid();
       const date = new Date
-      let filename = string.generateRandom(40) + '.' + ext
-      media.filename = storage_path('public/media/' +
+      let filename = media.guid + '.' + ext
+      let urlBase = '/media/' +
         date.getFullYear() + '/' +
-        (date.getMonth() + 1)  +'/'+ filename)
-        await file.moveToDisk( 'media/' +  date.getFullYear() + '/' + (date.getMonth() + 1) +,
-        {name : filename}, 'local' );
+        (date.getMonth() + 1)  +'/'
+      let dirname = public_path('/storage'+urlBase)
+      if(! fs.existsSync(dirname)){
+        fs.mkdirSync(dirname, {recursive:true})
+      }
+      media.filename = urlBase + filename
+      // @ts-ignore
+      await file.moveToDisk( dirname,{name : filename}, 'local' );
+      let content = fs.readFileSync(dirname+filename)
 
-      if (ext == "heic") {
-        media.title = file.clientName.split('.')[0] . '.jpg';
-        media.media_type = "image/jpeg";
-        media.type = "image";
-        media.filename = self::storeHeicToJpeg( file );
+      if (ext == 'heic') {
+        media.title = file.clientName.split('.')[0] + '.jpg';
+        media.media_type = 'image/jpeg';
+        media.type = 'image';
+        content = convert({
+          buffer: content,
+          format: 'JPEG',
+          quality: 1 })
+        fs.writeFileSync(dirname+filename, content)
       }
 
-      _path = Storage::path( 'public/' . media.filename );
-      ext = pathinfo( _path, PATHINFO_EXTENSION );
       if( ext === 'svg' ){
-        $svg = file_get_contents( _path );
-        $svg = simplexml_load_string( $svg );
-        media.width = ( string ) data_get( $svg.attributes(), 'width', 150 );
-        media.height = ( string ) data_get( $svg.attributes(), 'height', 150 );
+        let svg = content
+        svg = parseString( svg );
+        media.width = data_get( svg, '$.width', 150 );
+        media.height =  data_get( svg, '$.height', 150 );
       } else {
-        $size = getimagesize( _path );
-        media.width = data_get( $size, '0', 0 );
-        media.height = data_get( $size, '1', 0 );
-      }
+        let dimensions ;
+        try{
+          dimensions = imageSize( content );
+        }catch (e) {
 
-      media.main_color = getMainColor( _path );
-      media.url =  Storage::url( media.filename );
-      media.guid = (string)Str::uuid();
+        }
+        media.width = data_get( dimensions, 'width', 0 );
+        media.height = data_get( dimensions, 'height', 0 );
+      }
+      media.main_color = ''
+      media.url =  '/storage'+urlBase+ filename;
       media.save();
 
       const categories = request.input( '_categories' );
@@ -127,7 +149,7 @@ export default class MediaController {
           insert.push( {
             category_guid: category['value'],
             object_guid: media.guid,
-            object_type: "Media"
+            object_type: 'Media'
           });
         }
         await CategoryObject.createMany(insert);
@@ -136,5 +158,18 @@ export default class MediaController {
     }
     res = res.reverse()
     return response.json( res );
+  }
+
+  async destroy({params, response}: HttpContextContract){
+    const media = await Media.find(params.id)
+    if(! media){
+      return response.status(404).json({success: false, message:'Media not found'})
+    }
+    let filename = public_path('/storage'+media.filename)
+    if(fs.existsSync(filename)){
+      fs.rmSync(filename)
+    }
+    await media?.delete()
+    return response.json({success: true, })
   }
 }

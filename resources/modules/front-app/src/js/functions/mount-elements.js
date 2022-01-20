@@ -4,6 +4,7 @@ export default function mountElements(){
   loadGlobalStyles();
   const elementContainers = document.querySelectorAll('[data-react-element]');
   _.each(elementContainers, container =>{
+
     if(! container?.dataset?.reactElement){
       return;
     }

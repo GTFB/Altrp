@@ -94,6 +94,8 @@ Route.group(() => {
      * Assets
      */
     Route.get('/media', 'admin/MediaController.index')
+    Route.post('/media', 'admin/MediaController.store')
+    Route.delete('/media/:id', 'admin/MediaController.destroy')
     /**
      * Settings
      */

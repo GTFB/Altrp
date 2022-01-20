@@ -4,7 +4,6 @@ import Source from "App/Models/Source";
 import Accessors from "App/Models/Accessor";
 import empty from "../../../../helpers/empty";
 import CategoryObject from "App/Models/CategoryObject";
-import uuid from "../../../../helpers/uuid";
 import {schema} from "@ioc:Adonis/Core/Validator";
 import Event from '@ioc:Adonis/Core/Event'
 import Column from "App/Models/Column";
@@ -17,6 +16,7 @@ import Controller from "App/Models/Controller";
 import ModelGenerator from "App/Generators/ModelGenerator";
 import Role from "App/Models/Role";
 import SourceRole from "App/Models/SourceRole";
+import guid from "../../../../helpers/guid";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -250,7 +250,7 @@ export default class ModelsController {
       title: modelData.title || '',
       name: modelData.name || '',
       soft_deletes: modelData.soft_deletes,
-      guid: uuid(),
+      guid: guid(),
       time_stamps: modelData.time_stamps,
       parent_model_id: modelData.parent_model_id || null,
       table_id: table.id,

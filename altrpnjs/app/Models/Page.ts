@@ -283,7 +283,7 @@ export default class Page extends BaseModel {
                 return
               }
 
-              let actions = []
+              let actions:any = []
               for (let actionName of ACTIONS_NAMES) {
                 {
                   actions = _.concat(actions, data_get(element, 'settings.' + actionName, []))
