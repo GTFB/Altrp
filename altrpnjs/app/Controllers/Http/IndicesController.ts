@@ -5,7 +5,7 @@ import Env from "@ioc:Adonis/Core/Env";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 
 export default class IndicesController {
-  public admin({view}) {
+  async admin({view}) {
     return view.render('admin', Edge({
       url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/bundle.js"
     }))
@@ -32,7 +32,6 @@ export default class IndicesController {
 
   public async loginView({view, auth,response}: HttpContextContract,) {
     await auth.use('web').check()
-
     if (auth.user) {
       if (await auth?.user?.isAdmin()) {
         return response.redirect( '/admin')

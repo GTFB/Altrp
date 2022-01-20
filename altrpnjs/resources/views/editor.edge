@@ -2,8 +2,9 @@
 
 
 @section('head')
-    <script src="{{ url }}"></script>
 
+    <script src="{{ url }}" defer></script>
+    
     @if(css)
         <link href="{{css}}" rel="stylesheet"/>
     @end

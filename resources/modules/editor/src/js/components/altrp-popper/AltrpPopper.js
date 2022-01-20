@@ -75,7 +75,6 @@ export default function AltrpPopper(props) {
     }
 
     if(!getTargetRef && props.target.current) {
-      console.log('aann')
       setGetTargetRef(true)
     }
 

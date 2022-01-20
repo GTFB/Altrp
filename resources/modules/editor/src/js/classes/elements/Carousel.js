@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import WidgetIcon from '../../../svgs/slider-push.svg';
+import WidgetIcon from '../../../svgs/carousel.svg';
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_DIMENSIONS,
@@ -34,6 +34,9 @@ class Carousel extends BaseElement {
   }
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

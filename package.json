@@ -17,6 +17,7 @@
         "front-build": "webpack --config webpack.front.prod.js",
         "editor-build": "webpack --config webpack.editor.prod.js",
         "server-build": "webpack --config webpack.server.js",
+        "adonis-ssr-build": "webpack --config webpack.server-adonis.js",
         "admin-build": "webpack --config webpack.admin.prod.js",
         "reports-build": "webpack --config webpack.reports.prod.js",
         "robots-build": "webpack --config webpack.robots.prod.js",
@@ -34,6 +35,7 @@
         "server:start": "node server-dist/index.js",
         "build-pack-js-server": "npm run only-build && node ./altrpnjs/ace build --production && gulp packJS",
         "pack-js-server": "node ./altrpnjs/ace build --production && gulp packJS",
+        "install-packages-altrp-js-build": "npm ci --production --prefix ./altrpnjs/build",
         "docs": "jsdoc resources/modules -r"
     },
     "dependencies": {
@@ -144,6 +146,7 @@
         "query-string": "^6.13.1",
         "rc-drawer": "^4.1.0",
         "rc-slider": "^9.7.1",
+        "reacket": "^1.0.2",
         "react": "^17.0.1",
         "react-ace": "^8.1.0",
         "react-bootstrap": "^1.1.1",

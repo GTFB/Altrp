@@ -3,6 +3,14 @@
 
 ## Changelog
 
+### 0.20.24
++ Add Widget Groups
+* Fix Visual Codes Pagination Issue
+* Restyle Template Condition Popup 
+
+### 0.20.23
++ Add Tournament Widget
+
 ### 0.20.22
 * Bug fixed for Crop Widget, Dropbar Widget, Select Input Widget & Select Tree Input Widget
 * Some Customizer Fixes

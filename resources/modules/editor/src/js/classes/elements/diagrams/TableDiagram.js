@@ -44,6 +44,9 @@ class TableDiagram extends BaseElement {
   static getType() {
     return "widget";
   }
+  static getGroup() {
+    return "Diagrams";
+  }
   _registerControls() {
     if (this.controllersRegistered) {
       return;

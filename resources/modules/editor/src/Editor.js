@@ -47,6 +47,12 @@ import {
 } from "./js/store/altrp-global-colors/actions";
 import {setGlobalStylesPresets} from "./js/store/altrp-global-styles/actions";
 import { addWidget, filterWidgets } from "./js/store/widgets/actions";
+import BaseElement from './js/classes/elements/BaseElement'
+import * as ControllersManager from './js/classes/modules/ControllersManager'
+import { advancedTabControllers } from './js/decorators/register-controllers'
+import Repeater from './js/classes/Repeater'
+import EditorWindowPopup from "./js/components/EditorWindowPopup";
+import ConditionsPopup from "./js/components/ConditionsPopup";
 
 /**
  * Главный класс редактора.<br/>
@@ -61,6 +67,12 @@ class Editor extends Component {
   constructor(props) {
     super(props);
     window.altrpEditor = this;
+
+    this.BaseElement = BaseElement
+    this.ControllersManager = ControllersManager
+    this.advancedTabControllers = advancedTabControllers
+    this.Repeater = Repeater
+
     this.state = {
       // activePanel: 'widgets',
       activePanel: "settings",
@@ -382,10 +394,16 @@ class Editor extends Component {
           </div>
           <div className="right-panel">
             {this.state.showDialogWindow && (
-              <DialogWindow
-                state={this.state.showDialogWindow}
+              // <DialogWindow
+              //   state={this.state.showDialogWindow}
+              //   toggleModalWindow={() => this.toggleModalWindow()}
+              // />
+              <EditorWindowPopup
+                activeMode={this.state.showDialogWindow}
                 toggleModalWindow={() => this.toggleModalWindow()}
-              />
+              >
+                <ConditionsPopup/>
+              </EditorWindowPopup>
             )}
             <EditorWindow />
           </div>

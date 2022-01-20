@@ -322,7 +322,6 @@ class Resource {
     }
     let options = {
       method: "put",
-      // body: JSON.stringify(data),
       body: hasFile ? formData : JSON.stringify(data),
       headers: headers
     };

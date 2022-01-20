@@ -31,9 +31,24 @@ class SaveImportModule extends BaseModule {
   /**
    * Загружаем шаблон
    */
-  load() {
+  load(getDataIfExits) {
+    if (getDataIfExits && this.data) {
+      setTitle(this.data.title);
+      let data = JSON.parse(this.data.data);
+      store.dispatch(setTemplateData(this.data));
+      let templateDataStorage = getEditor().modules.templateDataStorage;
+      templateDataStorage.setType(this.data.template_type);
+      let parsedData = this.modules.elementsFactory.parseData(data);
+      templateDataStorage.setTitle(this.data.title);
+      templateDataStorage.replaceAll(parsedData);
+      templateDataStorage.setName(this.data.name);
+      getEditor().endLoading();
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+      return
+    }
+
     this.template_id = getTemplateId();
-    // console.log(this.template_id);
+
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
     if (this.template_id) {
       let res = this.resource
@@ -41,6 +56,7 @@ class SaveImportModule extends BaseModule {
         .then(templateData => {
           setTitle(templateData.title);
           let data = JSON.parse(templateData.data);
+          this.data = templateData
           store.dispatch(setTemplateData(templateData));
           let templateDataStorage = getEditor().modules.templateDataStorage;
           templateDataStorage.setType(templateData.template_type);
@@ -55,7 +71,6 @@ class SaveImportModule extends BaseModule {
           console.error(err);
           store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
         });
-    } else {
     }
   }
 

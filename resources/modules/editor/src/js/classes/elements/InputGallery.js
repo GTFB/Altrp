@@ -1,5 +1,5 @@
 import BaseElement from './BaseElement';
-import FromIcon from '../../../svgs/form-horizontal.svg';
+import FromIcon from '../../../svgs/gallery_add.svg';
 import { advancedTabControllers } from '../../decorators/register-controllers';
 import {
   CONTROLLER_TEXTAREA,
@@ -23,13 +23,16 @@ class InputGallery extends BaseElement {
     return 'input-gallery';
   }
   static getTitle() {
-    return 'Input Gallery';
+    return 'Gallery Add';
   }
   static getIconComponent() {
     return FromIcon;
   }
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     if (this.controllersRegistered) {

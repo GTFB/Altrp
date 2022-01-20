@@ -1,8 +1,7 @@
-import { DateTime } from 'luxon'
 import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany,} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
 import Source from 'App/Models/Source';
-import Model from "App/Models/Model";
+import Model from 'App/Models/Model';
 
 
 export default class Relationship extends BaseModel {
@@ -44,10 +43,11 @@ export default class Relationship extends BaseModel {
   public altrp_model: BelongsTo<typeof Model>
 
   @column()
-  public target_model_i: number
+  public target_model_id: number
 
   @belongsTo(() => Model, {
-    foreignKey: 'target_model_i'
+    localKey: 'id',
+    foreignKey: 'target_model_id',
   })
   public altrp_target_model: BelongsTo<typeof Model>
 
@@ -60,23 +60,23 @@ export default class Relationship extends BaseModel {
   @column()
   public editable: boolean
 
-  @column()
+  @column({
+    columnName: 'onDelete'
+  })
   public  	onDelete: string
 
-  @column()
+  @column({
+    columnName: 'onUpdate'
+  })
   public  	onUpdate: string
 
   @column()
   public user_id: number
 
   @belongsTo(() => User, {
-    foreignKey: "author"
+    foreignKey: 'author'
   })
   public user: BelongsTo<typeof User>
-
-  @column()
-  public parent_model_id: number
-
 
 
   @hasMany(() => Source, {
@@ -84,14 +84,65 @@ export default class Relationship extends BaseModel {
   })
   public altrp_table: HasMany<typeof Source>
 
+  renderForModel():string {
+    return `
+  ${this.renderDecorator()}(() => ${this.renderRelatedModel()}, ${this.renderOptions()})
+  public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>
+    `
+  }
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  private renderOptions():string {
+    let options:{
+      localKey?: string;
+      foreignKey?: string;
+    } = {
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+    }
+    if(this.foreign_key){
+      options.foreignKey = this.foreign_key
+    }
+    if(this.local_key){
+      options.localKey = this.local_key
+    }
+    return JSON.stringify(options)
+  }
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public last_upgrade: DateTime
+  private renderDecorator() {
+    switch (this.type){
+      case 'hasOne':{
+        return '@Orm.hasOne()'
+      }
+      case 'belongsTo':{
+        return '@Orm.belongsTo()'
+      }
+      case 'hasMany':{
+        return '@Orm.hasMany()'
+      }
+      default:{
+        return '@Orm.hasOne()'
+      }
+    }
+  }
 
+  private renderType() {
+    switch (this.type){
+      case 'hasOne':{
+        return 'Orm.HasOne'
+      }
+      case 'belongsTo':{
+        return 'Orm.BelongsTo'
+      }
+      case 'hasMany':{
+        return 'Orm.HasMany'
+      }
+      default:{
+        return 'Orm.HasOne'
+      }
+    }
+
+  }
+
+  private renderRelatedModel():string {
+    return this?.altrp_target_model?.name || ''
+  }
 }

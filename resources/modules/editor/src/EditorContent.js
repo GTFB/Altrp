@@ -22,6 +22,7 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import { DndProvider, } from 'react-dnd'
 import frontElementsManager from '../../front-app/src/js/classes/FrontElementsManager.js'
 import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
+import '../../front-app/src/js/libs/reacket'
 
 window.Link = 'a';
 frontElementsManager.loadAllComponents();
@@ -33,8 +34,21 @@ class EditorContent extends Component {
     store.subscribe(this.currentElementListener.bind(this));
     store.subscribe(this.templateStatus.bind(this));
     window.altrpEditorContent = this;
+    store.subscribe(this.onStoreUpdate)
   }
 
+  onStoreUpdate = ()=>{
+    if(this.widgetsManager !== store.getState().widgetsManager){
+
+      const needLoad = ! ! this.widgetsManager
+      const { widgetsManager} = store.getState()
+      this.widgetsManager = widgetsManager
+      const { saveImportModule} = getEditor().modules
+      if(needLoad){
+        saveImportModule.load()
+      }
+    }
+  }
   /**
    * Метод-подписчик на изменение состояния Редактора из Редакс хранилища
    * */

@@ -1,5 +1,5 @@
 import BaseElement from './BaseElement';
-import FromIcon from '../../../svgs/form-horizontal.svg';
+import FromIcon from '../../../svgs/file_add.svg';
 import { advancedTabControllers } from '../../decorators/register-controllers';
 import {
   CONTROLLER_TEXTAREA,
@@ -25,13 +25,16 @@ class InputFile extends BaseElement {
     return 'input-file';
   }
   static getTitle() {
-    return 'Input File';
+    return 'File';
   }
   static getIconComponent() {
     return FromIcon;
   }
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     if (this.controllersRegistered) {

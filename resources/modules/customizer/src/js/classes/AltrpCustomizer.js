@@ -1,14 +1,16 @@
+import store from "../store/store";
+import {addNode, filterNode} from "../store/node-store/action";
 
 
 class AltrpCustomizer {
 
 
-  addNode = (newNode) => {
-
+  addNode = (nodeObj) => {
+    store.dispatch(addNode(nodeObj))
   }
 
-  filterNodes = () => {
-
+  filterNodes = (func) => {
+    store.dispatch(filterNode(func))
   }
 }
 

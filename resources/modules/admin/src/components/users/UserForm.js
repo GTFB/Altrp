@@ -200,9 +200,7 @@ class UserForm extends Component {
   };
 
   isItemSelectedRoles = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.user._roles || []);
-    return selectedString.includes(itemString);
+    return this.state.user._roles.some(c=>c.value === item.value);
   };
 
   handleItemSelectRoles = (item) => {
@@ -264,9 +262,7 @@ class UserForm extends Component {
   };
 
   isItemSelectedPermissions = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.user._permissions || []);
-    return selectedString.includes(itemString);
+    return this.state.user._permissions.some(c=>c.value === item.value);
   };
 
   handleItemSelectPermissions = (item) => {

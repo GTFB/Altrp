@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon'
 import {BaseModel, BelongsTo, belongsTo, column,} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
 import Model from "App/Models/Model";
@@ -100,15 +99,72 @@ export default class Column extends BaseModel {
   })
   public altrp_table: BelongsTo<typeof Table>
 
+  renderForModel():string {
+    if(this.type === 'calculated'){
+      return `
+  @Orm.computed()
+  public get ${this.name}(): any{
+    return ''
+  }
 
+`
+    }
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+    if(
+      [
+        'date',
+        'time',
+        'year',
+        'dateTime',
+        'timestamp',
+      ].indexOf(this.type) !== -1){
+      return `
+  @Orm.column.dateTime(${this.name === 'updated_at' ?
+        '{autoCreate: true, autoUpdate: true}' : ''}${
+        this.name === 'created_at' ?
+        '{autoCreate: true}' : ''})
+  public ${this.name}: ${this.getColumnTypeForModel()}
+`
+    }
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+    return `
+  @Orm.column(${this.name == 'id' ? '{isPrimary: true}' : ''})
+  public ${this.name}: ${this.getColumnTypeForModel()}
+`;
+  }
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public last_upgrade: DateTime
-
+  getColumnTypeForModel():string {
+    if(['bigInteger', 'id', 'integer', 'float', ].indexOf(this.type) !== -1){
+      return 'number'
+    }
+    if(
+      [
+      'json',
+      'binary',
+      'text',
+      'geometry',
+      'longText',
+      'string'
+    ].indexOf(this.type) !== -1){
+      return 'string'
+    }
+    if(
+      [
+      'date',
+      'time',
+      'year',
+      'dateTime',
+      'timestamp',
+    ].indexOf(this.type) !== -1){
+      return 'luxon.DateTime'
+    }
+    if(
+      [
+      'boolean',
+      'tinyint',
+    ].indexOf(this.type) !== -1){
+      return 'boolean'
+    }
+    return 'any'
+  }
 }

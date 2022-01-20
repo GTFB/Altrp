@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import FromIcon from "../../../svgs/form-horizontal.svg";
+import FromIcon from "../../../svgs/tree_select.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -26,13 +26,16 @@ class InputSelectTree extends BaseElement {
     return "input-select-tree";
   }
   static getTitle() {
-    return "Input Select tree";
+    return "Select tree";
   }
   static getIconComponent() {
     return FromIcon;
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     this.startControlSection("content_section", {
@@ -483,7 +486,7 @@ class InputSelectTree extends BaseElement {
       min: 0,
       step: 0.01
     });
-    
+
     this.addControl('tree_menu_background', {
       type: CONTROLLER_COLOR,
       label: 'Drop Menu Background',

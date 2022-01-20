@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import IconIcon from '../../../svgs/favorite.svg';
+import IconIcon from '../../../svgs/icon.svg';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -39,6 +39,9 @@ class Icon extends BaseElement {
   }
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Basic";
   }
   _registerControls() {
     if (this.controllersRegistered) {
@@ -209,7 +212,7 @@ class Icon extends BaseElement {
       label: 'Padding',
       type: CONTROLLER_DIMENSIONS
     })
-    
+
     this.addControl('title_margin', {
       label: 'Margin',
       type: CONTROLLER_DIMENSIONS
@@ -236,7 +239,7 @@ class Icon extends BaseElement {
       label: 'Padding',
       type: CONTROLLER_DIMENSIONS
     })
-    
+
     this.addControl('description_margin', {
       label: 'Margin',
       type: CONTROLLER_DIMENSIONS
@@ -274,7 +277,7 @@ class Icon extends BaseElement {
     //   label: 'Padding',
     //   type: CONTROLLER_DIMENSIONS
     // })
-    
+
     // this.addControl('icon_opacity', {
     //   type: CONTROLLER_SLIDER,
     //   label: 'Opacity',

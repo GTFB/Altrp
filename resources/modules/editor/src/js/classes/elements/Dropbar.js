@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import ButtonIcon from '../../../svgs/button.svg';
+import ButtonIcon from '../../../svgs/dropbar.svg';
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -42,6 +42,9 @@ class Dropbar extends BaseElement {
   }
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

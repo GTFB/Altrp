@@ -12,6 +12,11 @@
 import Server from '@ioc:Adonis/Core/Server'
 import Route from "@ioc:Adonis/Core/Route";
 import './view'
+import './events'
+import fs from "fs";
+import storage_path from "../helpers/storage_path";
+import base_path from "../helpers/base_path";
+import public_path from "../helpers/public_path";
 
 /*
 |--------------------------------------------------------------------------
@@ -23,14 +28,14 @@ import './view'
 |
 */
 Server.middleware.register([
-  () => import('App/Middleware/SilentAuth'),
-  () => import('App/Middleware/AltrpRouting'),
   () => import('@ioc:Adonis/Core/BodyParser'),
+  () => import('App/Middleware/SilentAuth'),
   () => import('@ioc:Adonis/Addons/Shield'),
+  () => import('App/Middleware/AltrpRouting'),
 ])
 
 Route.get('*', async () => {
-})
+}).middleware("routing")
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +57,6 @@ Server.middleware.registerNamed({
   auth: () => import("App/Middleware/Auth"),
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
-  installChecker:   () => import('App/Middleware/InstallChecker'),
+  routing: () => import('App/Middleware/AltrpRouting'),
 })
 

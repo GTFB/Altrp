@@ -9,6 +9,7 @@ import '../../front-app/src/js/libs/moment'
 import '../../front-app/src/js/libs/template-loader'
 import '../../front-app/src/js/libs/fullcalendar'
 import '../../front-app/src/js/libs/image-crop'
+import '../../front-app/src/js/libs/reacket'
 import { Provider } from "react-redux";
 import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";
@@ -107,6 +108,7 @@ import(/* webpackChunkName: 'Editor' */"./Editor.js")
     Editor = Editor.default;
 
     let editorTarget = document.getElementById("editor");
+
     if (editorTarget) {
       window.ReactDOM.render(
         <Provider store={store}>

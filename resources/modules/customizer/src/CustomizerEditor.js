@@ -31,13 +31,14 @@ import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLi
 import ContextMenuCustomizer from "./js/components/sidebar/modules/data/ContextMenuCustomizer";
 import {contextMenu} from "react-contexify";
 import {setCopyNode, setSelectNode} from "./js/store/copy-node/action";
-import {storage} from "./js/storage";
+import {isJSON} from "../../front-app/src/js/helpers";
 
 const mapStateToProps = state => {
   return {
     elements: _.cloneDeep(state.customizerSettingsData),
     customizer: _.cloneDeep(state.currentCustomizer),
     other: _.cloneDeep(state.otherData),
+    nodeState: state.nodeStoreData.nodes
   };
 };
 
@@ -78,22 +79,18 @@ class CustomizerEditor extends Component {
     store.dispatch(setCurrentCustomizer(customizer));
   }
 
-  checkingLocalStorageRelevance = () => {
-    let localObj = storage.getItem('node')
-    if (localObj) {
-      let date = new Date().getTime();
-      if (date - localObj.startTime > localObj.expires) {
-        storage.deleteItem('node')
-        store.dispatch(setCopyNode(false))
-      } else {
-        store.dispatch(setCopyNode(true))
-      }
+  checkingLocalStorageRelevance = async () => {
+    let localObj = await navigator.clipboard?.readText()
+    if (localObj && isJSON(localObj)) {
+      store.dispatch(setCopyNode(true))
+    } else {
+      store.dispatch(setCopyNode(false))
     }
   }
 
 
   async componentDidMount() {
-    this.checkingLocalStorageRelevance()
+   await this.checkingLocalStorageRelevance()
     store.subscribe(this.updateCustomizerState.bind(this));
 
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
@@ -365,13 +362,35 @@ class CustomizerEditor extends Component {
     });
   }
 
-  rightClick = (e, node) => {
+  rightClickNode = async (e, node) => {
+    e.preventDefault();
     this.onElementClick(e, node)
+    let localObj = await navigator.clipboard?.readText()
+    if (localObj && isJSON(localObj)) {
+      store.dispatch(setCopyNode(true))
+    } else {
+      store.dispatch(setCopyNode(false))
+    }
     this.showMenu(e)
   }
 
+  rightClickPanel = async (e) => {
+    e.preventDefault();
+    this.PaneClick()
+    let localObj = await navigator.clipboard?.readText()
+    if (localObj && isJSON(localObj)) {
+      store.dispatch(setCopyNode(true))
+    } else {
+      store.dispatch(setCopyNode(false))
+    }
+    this.showMenu(e)
+  }
 
   render() {
+    let nodesTypesObj = {}
+    this.props.nodeState.forEach(el => {
+      nodesTypesObj[el.name] = el.node
+    })
     return (
       <div className="page__content">
         <ReactFlowProvider>
@@ -396,20 +415,15 @@ class CustomizerEditor extends Component {
               onElementsRemove={ this.onElementsRemove }
               deleteKeyCode={'Delete'}
               onElementClick={ this.onElementClick }
-              onNodeContextMenu={this.rightClick}
-              onPaneContextMenu={(e) => this.showMenu(e)}
+              onNodeContextMenu={this.rightClickNode}
+              onPaneContextMenu={this.rightClickPanel}
               onPaneClick={(e) => this.PaneClick(e)}
               onLoad={ this.onLoad }
               onDrop={ this.onDrop }
               onNodeDragStart={ this.onNodeDragStart }
               onNodeDragStop={ this.onNodeDragStop }
               onDragOver={ this.onDragOver }
-              nodeTypes={{
-                start: Start,
-                switch: Switch,
-                change: Change,
-                return: Return,
-              }}
+              nodeTypes={nodesTypesObj}
               onEdgeUpdate={this.onEdgeUpdate}
               edgeTypes={{
                 custom: CustomEdge,

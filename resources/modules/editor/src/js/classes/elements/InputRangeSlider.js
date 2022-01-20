@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import widgetIcon from '../../../svgs/bullet-list.svg';
+import widgetIcon from '../../../svgs/slider_range.svg';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -28,7 +28,7 @@ class InputRangeSlider extends BaseElement{
     return'input-range-slider';
   }
   static getTitle(){
-    return'Input Range Slider';
+    return'Range Slider';
   }
 
   static getIconComponent(){
@@ -36,6 +36,9 @@ class InputRangeSlider extends BaseElement{
   }
   static getType(){
     return 'widget';
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     if (this.controllersRegistered) {

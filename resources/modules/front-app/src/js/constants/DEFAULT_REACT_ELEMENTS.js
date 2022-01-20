@@ -52,5 +52,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'tree',
   'stars',
   'progress-bar',
+  'tournament',//todo: move to plugin
 ]
 export default DEFAULT_REACT_ELEMENTS

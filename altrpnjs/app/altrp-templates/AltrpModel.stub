@@ -1,0 +1,12 @@
+{{{imports}}}
+
+export default class {{{classname}}} extends Orm.BaseModel {
+  {{{properties}}}
+  {{{columns}}}
+  {{{computed}}}
+  {{{relations}}}
+  {{{methods}}}
+  // CUSTOM_START
+  {{{custom}}}
+  // CUSTOM_START
+}

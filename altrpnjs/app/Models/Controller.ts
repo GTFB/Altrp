@@ -12,19 +12,7 @@ export default class Controller extends BaseModel {
   public id: number
 
   @column()
-  public soft_deletes: boolean
-
-  @column()
-  public time_stamps: boolean
-
-  @column()
   public namespace: string
-
-  @column()
-  public fillable_cols: string
-
-  @column()
-  public user_cols: string
 
   @column()
   public prefix: string
@@ -40,31 +28,17 @@ export default class Controller extends BaseModel {
   @column()
   public description: string
 
-  @column()
-  public bounded_model: string
-
-  @column()
-  public preset: boolean
-
-  @column()
-  public guid: string
-
-  @column()
-  public user_id: number
 
   @belongsTo(() => User, {
     foreignKey: "author"
   })
   public user: BelongsTo<typeof User>
 
-  @column()
-  public parent_model_id: number
-
 
   @hasMany(() => Source, {
-    foreignKey: 'id'
+    foreignKey: 'controller_id'
   })
-  public altrp_table: HasMany<typeof Source>
+  public sources: HasMany<typeof Source>
 
 
   @column.dateTime({ autoCreate: true })
@@ -73,7 +47,5 @@ export default class Controller extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public last_upgrade: DateTime
 
 }

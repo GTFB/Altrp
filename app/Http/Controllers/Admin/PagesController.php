@@ -24,10 +24,11 @@ class PagesController extends Controller
     $search = $request->get('s');
     $categories = $request->get('categories');
     $table_name = "pages";
-    $orderColumn = $request->get('order_by') ?? 'title';
+    $orderColumn = $request->get('order_by') ? $request->get('order_by') : 'title';
     $orderColumn = 'pages.'.$orderColumn;
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
+
     $_pages = $search
         //? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
         ? Page::search($search, 'pages.title', ['categories.category'], $orderColumn, $orderType, $categories)
@@ -39,7 +40,9 @@ class PagesController extends Controller
                           ->whereIn('altrp_category_objects.category_guid', $categories);
                 }
             })
-            ->where('type',null)->get()->$sortType( $orderColumn )
+            ->where('type',null)
+            ->orderBy( $orderColumn, $orderType )
+            ->get()
             ->values();
     $pages = [];
     foreach ( $_pages as $page ) {

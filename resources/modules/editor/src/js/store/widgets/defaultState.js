@@ -124,6 +124,8 @@ import StarsWidget from "../../components/widgets/StarsWidget";
 import ProgressBar from "../../classes/elements/ProgressBar";
 import ProgressBarWidget from "../../components/widgets/ProgressBarWidget";
 import ActionTriggerWidget from "../../components/widgets/ActionTriggerWidget";
+import Tournament from "../../classes/elements/Tournament";
+import TournamentWidget from "../../components/widgets/TournamentWidget";
 
 const elements = {}
 const components = {}
@@ -131,70 +133,73 @@ const components = {}
 // elements[Input.getName()] = Input;
 //список элементов
 elements[RootElement.getName()] = RootElement;
+elements[SectionWidget.getName()] = SectionWidget;
 elements[HeadingTypeHeading.getName()] = HeadingTypeHeading;
-elements[HeadingTypeAnimating.getName()] = HeadingTypeAnimating;
 elements[Image.getName()] = Image;
-elements[Breadcrumbs.getName()] = Breadcrumbs;
+elements[Icon.getName()] = Icon;
 elements[Button.getName()] = Button;
-elements[Text.getName()] = Text;
 elements[Divider.getName()] = Divider;
-elements[Column.getName()] = Column;
-elements[Section.getName()] = Section;
-// elements[List.getName()] = List;
-elements[Nav.getName()] = Nav;
-elements[TabsSwitcher.getName()] = TabsSwitcher
-// elements[Input.getName()] = Input;
+elements[Menu.getName()] = Menu;
+elements[Template.getName()] = Template;
+elements[Tabs.getName()] = Tabs;
+elements[TabsSwitcher.getName()] = TabsSwitcher;
+elements[Accordion.getName()] = Accordion;
+elements[Text.getName()] = Text;
+elements[Breadcrumbs.getName()] = Breadcrumbs;
+
+elements[InputTextCommon.getName()] = InputTextCommon;
+elements[InputTextarea.getName()] = InputTextarea;
 elements[InputCheckbox.getName()] = InputCheckbox;
-elements[InputGallery.getName()] = InputGallery;
 elements[InputRadio.getName()] = InputRadio;
-elements[InputRangeSlider.getName()] = InputRangeSlider;
 elements[InputSelect.getName()] = InputSelect;
 elements[InputMultiSelect.getName()] = InputMultiSelect;
-elements[InputSelect2.getName()] = InputSelect2;
 elements[InputSlider.getName()] = InputSlider;
-elements[InputTextCommon.getName()] = InputTextCommon;
+elements[InputRangeSlider.getName()] = InputRangeSlider;
 elements[InputTextAutocomplete.getName()] = InputTextAutocomplete;
-elements[InputTextarea.getName()] = InputTextarea;
 elements[InputWysiwyg.getName()] = InputWysiwyg;
+elements[InputSelectTree.getName()] = InputSelectTree;
 elements[InputImageSelect.getName()] = InputImageSelect;
-elements[InputAccept.getName()] = InputAccept;
 elements[InputDate.getName()] = InputDate;
 elements[InputDateRange.getName()] = InputDateRange;
+elements[InputGallery.getName()] = InputGallery;
+elements[InputCropImage.getName()] = InputCropImage;
+elements[InputAccept.getName()] = InputAccept;
 elements[InputHidden.getName()] = InputHidden;
 elements[InputFile.getName()] = InputFile;
-elements[InputCropImage.getName()] = InputCropImage;
+
 elements[Table.getName()] = Table;
 elements[Posts.getName()] = Posts;
-elements[Tabs.getName()] = Tabs;
-elements[Accordion.getName()] = Accordion;
+elements[Gallery.getName()] = Gallery;
+elements[Carousel.getName()] = Carousel;
 elements[Map.getName()] = Map;
-elements[MapConstructor.getName()] = MapConstructor;
-elements[Menu.getName()] = Menu;
+elements[ImageLightbox.getName()] = ImageLightbox;
+elements[Dropbar.getName()] = Dropbar;
+elements[Scheduler.getName()] = Scheduler;
+elements[Tree.getName()] = Tree;
+elements[Video.getName()] = Video;
+elements[Html.getName()] = Html;
+elements[ActionTrigger.getName()] = ActionTrigger;
+elements[HeadingTypeAnimating.getName()] = HeadingTypeAnimating;
+elements[Stars.getName()] = Stars;
+elements[ProgressBar.getName()] = ProgressBar;
 
 elements[PieDiagram.getName()] = PieDiagram;
 elements[BarDiagram.getName()] = BarDiagram;
 elements[LineDiagram.getName()] = LineDiagram;
-elements[ActionTrigger.getName()] = ActionTrigger;
 elements[FunnelDiagram.getName()] = FunnelDiagram;
 elements[RadarDiagram.getName()] = RadarDiagram;
 
-elements[Dashboards.getName()] = Dashboards;
-elements[Carousel.getName()] = Carousel;
-elements[Tour.getName()] = Tour;
-elements[Template.getName()] = Template;
-elements[ExportPanel.getName()] = ExportPanel;
-elements[Html.getName()] = Html;
-elements[Gallery.getName()] = Gallery;
-elements[Video.getName()] = Video;
-elements[SectionWidget.getName()] = SectionWidget;
-elements[Dropbar.getName()] = Dropbar;
-elements[ImageLightbox.getName()] = ImageLightbox;
-elements[Scheduler.getName()] = Scheduler;
-elements[Tree.getName()] = Tree;
-elements[Icon.getName()] = Icon;
-elements[InputSelectTree.getName()] = InputSelectTree;
-elements[Stars.getName()] = Stars;
-elements[ProgressBar.getName()] = ProgressBar;
+elements[Tournament.getName()] = Tournament
+elements[Column.getName()] = Column;
+elements[Section.getName()] = Section;
+// elements[List.getName()] = List;
+// elements[Nav.getName()] = Nav;
+// elements[Input.getName()] = Input;
+// elements[InputSelect2.getName()] = InputSelect2;
+// elements[MapConstructor.getName()] = MapConstructor;
+// elements[Dashboards.getName()] = Dashboards;
+// elements[Tour.getName()] = Tour;
+// elements[ExportPanel.getName()] = ExportPanel;
 
 // Websocket Notifications
 // elements[Notifications.getName()] = Notifications;
@@ -264,6 +269,7 @@ components[Tree.getName()] = TreeWidget;
 components[Icon.getName()] = IconWidget;
 components[Stars.getName()] = StarsWidget;
 components[ProgressBar.getName()] = ProgressBarWidget;
+components[Tournament.getName()] = TournamentWidget
 
 export default {
     elements: {

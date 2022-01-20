@@ -20,7 +20,6 @@ class ElementsFactory extends BaseModule {
         updateId = other.updateId;
       }
     }
-
     let children = [];
     const elementsManager = window.elementsManager;
     /**

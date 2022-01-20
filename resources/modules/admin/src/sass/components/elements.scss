@@ -347,7 +347,7 @@ input[type="text"].form__input {
   }
 
   & .bp3-tag-input {
-    height: 38px;
+    min-height: 38px;
   }
 }
 
@@ -373,7 +373,7 @@ input[type="text"].form__input {
   }
 
   & .bp3-tag-input {
-    height: 38px;
+    min-height: 38px;
   }
 }
 
@@ -764,6 +764,7 @@ input[type="text"].form__input {
   & .bp3-menu {
     max-height: 200px;
     overflow: auto;
+    overscroll-behavior: contain;
 
     & .bp3-menu-item {
       display: flex;
@@ -772,7 +773,7 @@ input[type="text"].form__input {
   }
 
   & .bp3-tag-input .bp3-tag-input-values > * {
-    margin-bottom: 0;
+    margin-top: 5px;
   }
 }
 

@@ -21,6 +21,10 @@ class Scheduler extends BaseElement {
     return TestIcon;
   }
 
+  static getGroup() {
+    return "Advanced";
+  }
+
   _registerControls() {
     if (this.controllersRegistered) {
       return;

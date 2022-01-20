@@ -1,10 +1,20 @@
 import { DateTime } from 'luxon'
-import {BaseModel, BelongsTo, belongsTo, column, computed,} from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  computed,
+  manyToMany,
+  ManyToMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import Model from 'App/Models/Model';
 import Controller from 'App/Models/Controller';
 import config from "../../helpers/config";
 import { string } from '@ioc:Adonis/Core/Helpers'
 import data_get from "../../helpers/data_get";
+import Role from "App/Models/Role";
+import Permission from "App/Models/Permission";
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -61,7 +71,25 @@ export default class Source extends BaseModel {
   @belongsTo(() => Model, {
     foreignKey: 'model_id'
   })
-  public model: BelongsTo<typeof Model>
+  public altrp_model: BelongsTo<typeof Model>
+
+  @manyToMany(() => Role, {
+    pivotTable: 'altrp_sources_roles',
+    localKey: 'id',
+    relatedKey: 'id',
+    pivotForeignKey: 'source_id',
+    pivotRelatedForeignKey: 'role_id',
+  })
+  public roles: ManyToMany<typeof Role>
+
+  @manyToMany(() => Permission, {
+    pivotTable: 'altrp_sources_permissions',
+    localKey: 'id',
+    relatedKey: 'id',
+    pivotForeignKey: 'permission_id',
+    pivotRelatedForeignKey: 'source_id',
+  })
+  public permissions: ManyToMany<typeof Permission>
 
   @computed()
   public get web_url(){
@@ -71,11 +99,11 @@ export default class Source extends BaseModel {
       case 'App\\Altrp\\Query':
         return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
-        return config('app.url') + '/ajax/models/' + string.pluralize(this.model.name) + '/customizers' + data_get( this, 'url' );
+        return config('app.url') + '/ajax/models/' + string.pluralize(this.altrp_model.name) + '/customizers' + data_get( this, 'url' );
       default:
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
-      : config('app.url') + '/ajax/models/data_sources/' + this.model.table.name + '/' + data_get( this, 'name' );
+      : config('app.url') + '/ajax/models/data_sources/' + this.altrp_model.table.name + '/' + data_get( this, 'name' );
     }
   }
 
@@ -90,7 +118,192 @@ export default class Source extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public last_upgrade: DateTime
 
+  renderForController(modelClassName:string):string {
+    return `
+  public async ${this.getMethodName()}(httpContext){
+    ${this.renderRolesCheck()}
+    ${this.renderPermissionsCheck()}
+    ${this.renderMethodBody(modelClassName)}
+  }
+    `;
+  }
+  private renderRolesCheck():string{
+    if(! this.roles.length){
+      return ''
+    }
+    return `
+    await httpContext.auth.check();
+    if(! await httpContext.auth.user.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
+      httpContext.response.status(403);
+      return httpContext.response.json({success: false,  message: 'Permission denied'});
+    }
+    `
+  }
+
+  private renderPermissionsCheck():string {
+    if(! this.permissions.length){
+      return ''
+    }
+    return `
+    await httpContext.auth.check();
+    if(! await httpContext.auth.user.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
+      httpContext.response.status(403);
+      return httpContext.response.json({success: false, message: 'Permission denied'});
+    }
+    `
+  }
+  private getMethodName():string{
+    if(!this.sourceable_type){
+      switch ( this.type) {
+        case 'get':{
+          return 'index'
+        }
+        case 'delete':{
+          return 'destroy'
+        }
+        default: {
+          return   this.type
+        }
+      }
+    }
+    return `_${string.generateRandom(12)}`
+  }
+
+  private renderMethodBody(modelClassName:string):string {
+
+    if(!this.sourceable_type){
+
+      switch (this.type) {
+        case 'show': {
+          return `
+    return httpContext.response.json((await ${modelClassName}.find(httpContext.params.id))?.serialize());
+        `
+        }
+        case 'add': {
+          return `
+    let newModel = new ${modelClassName}();
+    newModel.fill(httpContext.request.all());
+    await newModel.save();
+    return httpContext.response.json({success: true, data: newModel.serialize()});
+        `
+        }
+        case 'options': {
+          return this.renderOptionsBody(modelClassName)
+        }
+        case 'update': {
+          return `
+    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    if(!oldModel){
+      httpContext.response.status(404);
+      return httpContext.response.json({success:false, message: 'not found'})
+    }
+    oldModel.merge(httpContext.request.all());
+    await oldModel.save();
+    return httpContext.response.json({success:true, data: oldModel.serialize()});
+          `
+        }
+        case 'delete': {
+          return `
+    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    if(!oldModel){
+      httpContext.response.status(404);
+      return httpContext.response.json({success:false, message: 'not found'})
+    }
+    await oldModel.delete();
+    return httpContext.response.json({success:true,});
+          `
+        }
+        case 'update_column': {
+          return `
+    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    if(!oldModel){
+      httpContext.response.status(404);
+      return httpContext.response.json({success:false, message: 'not found'})
+    }
+    oldModel[httpContext.params.column] = httpContext.request.input('column_value');
+    await oldModel.save();
+    return httpContext.response.json({success:true,});
+          `
+        }
+        case 'get': {
+          return this.renderIndexMethodBody(modelClassName)
+        }
+      }
+    }
+    return ''
+  }
+
+  private renderOptionsBody(modelClassName:string):string{
+    return   `
+    let query = ${modelClassName}.query();
+
+    let filters = {};
+
+    if(httpContext.request.qs().filters){
+      try {
+        filters = JSON.parse(httpContext.request.qs().filters);
+      } catch (e) {
+
+      }
+    }
+
+    for(let filter in filters){
+      if(filters.hasOwnProperty(filter)){
+        query.orWhere(filter, 'like', \`%\${filters[filter]}%\`);
+      }
+    }
+
+    if(httpContext.request.qs().s){
+      query.where(query=>{
+        query.orWhere('${this.altrp_model.getTitleColumnName()}', 'like',
+          \`%\${httpContext.request.qs().s}%\`);
+        query.orWhere('${this.altrp_model.getLabelColumnName()}', 'like',
+          \`%\${httpContext.request.qs().s}%\`);
+      })
+    }
+
+    let result = (await query.select(
+      { 'label':'${this.altrp_model.getLabelColumnName()}',  'value': 'id' }
+    )).map(result => result.$extras);
+
+    return httpContext.response.json(result);
+        `
+  }
+
+  private renderIndexMethodBody(modelClassName: string):string {
+    return `
+    const query = ${modelClassName}.query();
+
+    let search = httpContext.request.qs().s;
+    let page = httpContext.request.qs().page;
+    let limit = httpContext.request.qs().pageSize;
+    let filters = {};
+
+    if(httpContext.request.qs().filters){
+      try {
+        filters = JSON.parse(httpContext.request.qs().filters);
+      } catch (e) {
+
+      }
+    }
+
+    for(let filter in filters){
+      if(filters.hasOwnProperty(filter)){
+        query.orWhere(filter, 'like', \`%\${filters[filter]}%\`);
+      }
+    }
+
+    if(search){
+      ${this.altrp_model.getIndexedColumns().map(column => `
+      query.orWhere('${column.name}', 'like', \`%\${search}%\`);
+      `)}
+    }
+
+
+    const order = httpContext.request.qs()?.order === 'asc' ? 'asc' : 'desc';
+    query.orderBy(httpContext.request.qs()?.order_by || 'id', order);
+
+    `;
+  }
 }

@@ -65,6 +65,7 @@ import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 import AltrpTooltip2 from "./altrp-tooltip/AltrpTooltip2";
 import React from "react";
 import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
+import getTournamentStyles from "../../../../front-app/src/js/components/helpers/getTournamentStyles";
 import getIconStyles from "../../../../front-app/src/js/components/helpers/getIconStyles";
 import getInputTextAutocompleteStyles
   from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
@@ -335,6 +336,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "radar-diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
       break;
+    case 'tournament':
+      styles += `.${prefix}${elementId} {${getTournamentStyles(settings, elementId)}}`
+      break
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
@@ -758,7 +762,7 @@ class ElementWrapper extends Component {
     let emptyColumn = "";
     if (
       this.props.element.getType() === "column" &&
-      !this.state.children.length
+      !this.props.element.getChildren().length
     ) {
       emptyColumn = (
         <div className="column-empty-plus" onClick={this.showWidgetsPanel}>

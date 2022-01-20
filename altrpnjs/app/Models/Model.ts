@@ -16,6 +16,7 @@ import Controller from "App/Models/Controller";
 import Relationship from "App/Models/Relationship";
 import Category from "App/Models/Category";
 import Table from './Table';
+import Column from "App/Models/Column";
 
 
 export default class Model extends BaseModel {
@@ -91,7 +92,9 @@ export default class Model extends BaseModel {
   @hasMany(() => Source,)
   public altrp_source: HasMany<typeof Source>
 
-  @hasOne(() => Controller,)
+  @hasOne(() => Controller,{
+    foreignKey: 'model_id'
+  })
   public altrp_controller: HasOne<typeof Controller>
 
   @hasMany(() => Relationship,{
@@ -122,4 +125,25 @@ export default class Model extends BaseModel {
   static getModelsForEditor() {
 
   }
+
+  getLabelColumnName(){
+    let label = this?.table?.columns.find(c => c.is_label)?.name
+    if(! label){
+      label = this?.table?.columns.find(c => c.is_title)?.name
+    }
+    return label || 'id'
+  }
+
+  getTitleColumnName(){
+    let title = this?.table?.columns.find(c => c.is_title)?.name
+    if(! title){
+      title = this?.table?.columns.find(c => c.is_label)?.name
+    }
+    return title || 'id'
+  }
+
+  getIndexedColumns():Column[]{
+    return this?.table?.columns.filter(c => c.indexed)|| []
+  }
+
 }

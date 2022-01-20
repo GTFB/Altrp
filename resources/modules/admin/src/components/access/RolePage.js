@@ -9,7 +9,7 @@ class RolePage extends Component {
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/access">Access / All Roles</Link>
+          <Link className="admin-breadcrumbs__link" to="/admin/access/roles">Access / All Roles</Link>
           <span className="admin-breadcrumbs__separator">/</span>
           <span className="admin-breadcrumbs__current">
             {isEditing ? 'Edit Role' : 'Add New Role'}

@@ -7,7 +7,7 @@
 
 import Env from '@ioc:Adonis/Core/Env'
 import { DriveConfig } from '@ioc:Adonis/Core/Drive'
-import Application from '@ioc:Adonis/Core/Application'
+import public_path from "../helpers/public_path";
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +53,7 @@ const driveConfig: DriveConfig = {
       | files.
       |
       */
-      root: Application.tmpPath('uploads'),
+      root: public_path('/'),
 
       /*
       |--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ const driveConfig: DriveConfig = {
       | you are not registering routes with this prefix.
       |
       */
-      basePath: '/uploads',
+      basePath: '/public',
     },
 
     /*
