@@ -17,7 +17,7 @@
         "front-build": "webpack --config webpack.front.prod.js",
         "editor-build": "webpack --config webpack.editor.prod.js",
         "server-build": "webpack --config webpack.server.js",
-        "adonis-ssr-build-build": "webpack --config webpack.server-adonis.js",
+        "adonis-ssr-build": "webpack --config webpack.server-adonis.js",
         "admin-build": "webpack --config webpack.admin.prod.js",
         "reports-build": "webpack --config webpack.reports.prod.js",
         "robots-build": "webpack --config webpack.robots.prod.js",
@@ -38,7 +38,7 @@
         "install-packages-altrp-js-build": "npm ci --production --prefix ./altrpnjs/build",
         "docs": "jsdoc resources/modules -r"
     },
-  "dependencies": {
+    "dependencies": {
         "@babel/helper-builder-react-jsx": "^7.14.5",
         "@babel/helper-builder-react-jsx-experimental": "^7.12.11",
         "@babel/helper-define-map": "^7.14.5",

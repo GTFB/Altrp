@@ -22,6 +22,7 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import { DndProvider, } from 'react-dnd'
 import frontElementsManager from '../../front-app/src/js/classes/FrontElementsManager.js'
 import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
+import '../../front-app/src/js/libs/reacket'
 
 window.Link = 'a';
 frontElementsManager.loadAllComponents();
