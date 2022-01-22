@@ -10,6 +10,11 @@ export default class IndicesController {
       url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/bundle.js"
     }))
   }
+  async customizer({view}) {
+    return view.render('customizer', Edge({
+      url: Env.get("PATH_ENV") === "production" ? "/modules/customizer/customizer.js" : "http://localhost:3007/src/bundle.js"
+    }))
+  }
 
   public editor({view}) {
     return view.render('editor', Edge({

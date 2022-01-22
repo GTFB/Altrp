@@ -337,7 +337,6 @@ body {
 
 .element-index {
   display: flex;
-
   &_top {
     margin-bottom: 10px;
 
@@ -411,6 +410,12 @@ body {
     width: auto;
     display: flex;
     flex-direction: row;
+
+  .bp3-checkbox{
+    margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
+  }
 }
 .control-select__label {
     margin-right: auto;

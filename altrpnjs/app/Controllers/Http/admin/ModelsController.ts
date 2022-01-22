@@ -1,22 +1,23 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
-import Model from "App/Models/Model";
-import Source from "App/Models/Source";
-import Accessors from "App/Models/Accessor";
-import empty from "../../../../helpers/empty";
-import CategoryObject from "App/Models/CategoryObject";
-import {schema} from "@ioc:Adonis/Core/Validator";
+import Model from "App/Models/Model"
+import Source from "App/Models/Source"
+import Accessors from "App/Models/Accessor"
+import empty from "../../../../helpers/empty"
+import CategoryObject from "App/Models/CategoryObject"
+import {schema} from "@ioc:Adonis/Core/Validator"
 import Event from '@ioc:Adonis/Core/Event'
-import Column from "App/Models/Column";
-import Relationship from "App/Models/Relationship";
-import Database from "@ioc:Adonis/Lucid/Database";
-import Env from "@ioc:Adonis/Core/Env";
-import { string } from '@ioc:Adonis/Core/Helpers'
-import Table from "App/Models/Table";
-import Controller from "App/Models/Controller";
-import ModelGenerator from "App/Generators/ModelGenerator";
-import Role from "App/Models/Role";
-import SourceRole from "App/Models/SourceRole";
-import guid from "../../../../helpers/guid";
+import Column from "App/Models/Column"
+import Relationship from "App/Models/Relationship"
+import Database from "@ioc:Adonis/Lucid/Database"
+import Env from "@ioc:Adonis/Core/Env"
+import {string} from '@ioc:Adonis/Core/Helpers'
+import Table from "App/Models/Table"
+import Controller from "App/Models/Controller"
+import ModelGenerator from "App/Generators/ModelGenerator"
+import Role from "App/Models/Role"
+import SourceRole from "App/Models/SourceRole"
+import guid from "../../../../helpers/guid"
+import SQLEditor from "App/Models/SQLEditor";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -186,18 +187,18 @@ export default class ModelsController {
     }
     return response.json(
       {
-        taken: ! await Relationship.query().where({
+        taken: !await Relationship.query().where({
           model_id: model.id,
           name: request.qs().name || ''
         }).first()
       })
   }
 
-  async modelNameIsFree({response, request}: HttpContextContract){
+  async modelNameIsFree({response, request}: HttpContextContract) {
 
     return response.json(
       {
-        taken: ! await Model.query().where({
+        taken: !await Model.query().where({
           name: request.qs().name || ''
         }).first()
       })
@@ -256,14 +257,15 @@ export default class ModelsController {
       table_id: table.id,
     })
     await model.save()
-    if(modelData.time_stamps){
+    if (modelData.time_stamps) {
       const created_at_column = new Column()
       created_at_column.fill({
         name: 'created_at',
         title: 'created_at',
         description: 'created_at',
-        type : 'timestamp',
-        table_id : table.id,
+        type: 'timestamp',
+        table_id: table.id,
+        // @ts-ignore
         user_id: auth?.user?.id,
       })
       await created_at_column.save()
@@ -272,28 +274,29 @@ export default class ModelsController {
         name: 'updated_at',
         title: 'updated_at',
         description: 'updated_at',
-        type : 'timestamp',
-        table_id : table.id,
+        type: 'timestamp',
+        table_id: table.id,
+        // @ts-ignore
         user_id: auth?.user?.id,
       })
       await updated_at_column.save()
     }
-    if(modelData.soft_deletes){
+    if (modelData.soft_deletes) {
       const deleted_at_column = new Column()
       deleted_at_column.fill({
         name: 'deleted_at',
         title: 'deleted_at',
         description: 'deleted_at',
-        type : 'timestamp',
-        table_id : table.id,
+        type: 'timestamp',
+        table_id: table.id,
         user_id: auth?.user?.id,
       })
       await deleted_at_column.save()
     }
     const controller = new Controller()
     controller.fill({
-      model_id:model.id,
-      description:model.description,
+      model_id: model.id,
+      description: model.description,
     })
 
     await controller.save()
@@ -395,14 +398,14 @@ export default class ModelsController {
         controller_id: controller.id,
         model_id: model.id,
       }),
-    ];
+    ]
 
-    await Promise.all(sources.map(s=>s.save()))
+    await Promise.all(sources.map(s => s.save()))
 
     const adminRole = await Role.query().where('name', 'admin').first()
 
-    if(adminRole){
-      await Promise.all(sources.map(s=> {
+    if (adminRole) {
+      await Promise.all(sources.map(s => {
         return (new SourceRole()).fill({
           role_id: adminRole.id,
           source_id: s.id,
@@ -414,26 +417,26 @@ export default class ModelsController {
     const client = Database.connection(Env.get('DB_CONNECTION'))
     try {
 
-      await client.schema.createTableIfNotExists(table.name, table=>{
+      await client.schema.createTableIfNotExists(table.name, table => {
         table.bigIncrements('id')
-        if(modelData.soft_deletes) {
+        if (modelData.soft_deletes) {
           table.timestamp('deleted_at')
         }
-        if(modelData.time_stamps) {
+        if (modelData.time_stamps) {
           table.timestamp('updated_at')
           table.timestamp('created_at')
         }
       })
-    }catch (e){
+    } catch (e) {
       await (new ModelGenerator).deleteFiles(model)
       await model.delete()
-      await Promise.all(sources.map(s=>s.delete()))
+      await Promise.all(sources.map(s => s.delete()))
       await controller.delete()
       await Column.query().where('table_id', table.id).delete()
       await table.delete()
       await client.schema.dropTableIfExists(table.name)
       response.status(500)
-      return response.json({success:false, trace: e?.stack.split('\n')})
+      return response.json({success: false, trace: e?.stack.split('\n')})
     }
 
     if (!empty(modelData.categories)) {
@@ -469,20 +472,20 @@ export default class ModelsController {
     }
     const table = await Table.find(model.table_id)
     const controller = await Controller.query().where('model_id', model.id).first()
-    if(controller){
+    if (controller) {
       const sources = await Source.query().where('controller_id', controller?.id).select('*')
-      if(
-        sources[0]      ){
-        await sources[0].load('roles');
+      if (
+        sources[0]) {
+        await sources[0].load('roles')
 
       }
-      await Promise.all(sources.map(s=>{
+      await Promise.all(sources.map(s => {
         return s.related('roles').detach()
       }))
-      await Promise.all(sources.map(s=>{
+      await Promise.all(sources.map(s => {
         return s.related('permissions').detach()
       }))
-      await Promise.all(sources.map(s=>{
+      await Promise.all(sources.map(s => {
         return s.delete()
       }))
 
@@ -491,7 +494,7 @@ export default class ModelsController {
     await (new ModelGenerator).deleteFiles(model)
 
 
-    if(table){
+    if (table) {
       await Column.query().where('table_id', table.id).delete()
       await model.delete()
       await table.delete()
@@ -517,5 +520,77 @@ export default class ModelsController {
       table.preload('columns')
     })
     return response.json({options: model?.table.columns.map(c => ({value: c.id, label: c.title})) || []})
+  }
+
+  public async models_options({request, response}: HttpContextContract) {
+    let search_text = request.qs().s || ''
+    let data_sources: any[] = []
+    if (request.qs().with_sql_queries == 0) {
+      return response.json(
+        await Model.getModelsOptions(
+          request.qs().with_names!=0,
+          request.qs().not_plural,
+          search_text
+        ))
+    } else {
+      let model_data_sources: any[] = []
+      for (let modelsOption of await Model.getModelsOptions(
+        request.qs().with_names !=0,
+        request.qs().not_plural,
+        search_text
+      )) {
+        if (modelsOption['value'] === 'user') {
+          continue
+        }
+        model_data_sources.push({
+          'label':
+            modelsOption['label'],
+          'value':
+            modelsOption['value'],
+          'type':
+            'model_query'
+        })
+      }
+
+      if (model_data_sources.length) {
+        data_sources.push({
+          'label':
+            'Models',
+          'options':
+          model_data_sources,
+          'type':
+            'models query'
+        })
+      }
+      /**
+       * Добавляем варианты с SQL-editors
+       */
+      let sql_editors_data_sources: any[] = []
+
+      let _sqls:any = SQLEditor.query().where('title', 'LIKE', '%' + search_text + '%')
+
+      await  _sqls.preload('model', query=>{
+        query.preload('altrp_table')
+      })
+      _sqls = await _sqls.select('*')
+      for (let sql of _sqls) {
+        sql_editors_data_sources.push({
+          'label': sql.model.title + ': ' + sql.title,
+          'value': '/ajax/models/queries/' + sql.model.altrp_table.name + '/' + sql.name,
+          'sql_name': sql.name,
+          'type': 'sql_datasource'
+        })
+
+      }
+
+      if (sql_editors_data_sources.length)
+        data_sources.push({
+          'label':
+            'Data from SQLEditors',
+          'options':
+          sql_editors_data_sources,
+        })
+    }
+    return response.json(data_sources)
   }
 }

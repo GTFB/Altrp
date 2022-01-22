@@ -4,9 +4,9 @@ import Column from "App/Models/Column";
 import Table from "App/Models/Table";
 import Relationship from "App/Models/Relationship";
 import fs from 'fs'
-import {BaseGenerator} from "App/Generators/BaseGenerator";
+import {BaseGenerator} from "./BaseGenerator";
 import * as _ from "lodash";
-import ControllerGenerator from "App/Generators/ControllerGenerator";
+import ControllerGenerator from "./ControllerGenerator";
 
 export default class ModelGenerator extends BaseGenerator {
 

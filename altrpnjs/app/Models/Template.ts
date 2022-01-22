@@ -21,6 +21,12 @@ export default class Template extends BaseModel {
   public data: string
 
   @column()
+  public styles: string
+
+  @column()
+  public html_content: string
+
+  @column()
   public type: string
 
   @column()

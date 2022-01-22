@@ -5,6 +5,7 @@ import Controller from "App/Models/Controller"
 import Source from "App/Models/Source"
 import Model from "App/Models/Model"
 import ModelGenerator from "App/Generators/ModelGenerator";
+import Customizer from "App/Models/Customizer";
 
 export default class ControllerGenerator extends BaseGenerator {
 
@@ -20,6 +21,7 @@ export default class ControllerGenerator extends BaseGenerator {
       loader.load('sources', loader=>{
         loader.preload('roles')
         loader.preload('altrp_model')
+        loader.preload('model')
         loader.preload('permissions')
       })
       loader.load('altrp_model', loader=>{
@@ -29,12 +31,22 @@ export default class ControllerGenerator extends BaseGenerator {
       })
     })
 
+
     let custom = ''
 
 
     this.controller = controller
     this.model = this.controller.altrp_model
     this.sources = this.controller.sources
+    this.sources = await Promise.all(this.sources.map(async (s:Source) => {
+      let customizer = null
+      if(s.sourceable_type === Customizer.sourceable_type && s.sourceable_id){
+        customizer = await Customizer.find( s.sourceable_id)
+        await customizer.load('source')
+      }
+      s.customizer = customizer
+      return s
+    }))
     let fileName =`${this.model.name}Controller${ModelGenerator.ext}`
     if (!this.getClassnameContent()) {
       return
@@ -65,6 +77,7 @@ export default class ControllerGenerator extends BaseGenerator {
     return `
 
 import ${this.model.name} from "../AltrpModels/${this.model.name}";
+import AltrpBaseController from "../Controllers/AltrpBaseController";
 `
   }
 

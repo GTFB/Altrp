@@ -4,7 +4,7 @@ import {
   BelongsTo,
   belongsTo,
   column,
-  computed,
+  computed, HasOne, hasOne,
   manyToMany,
   ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
@@ -15,6 +15,7 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import data_get from "../../helpers/data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
+import Customizer from "App/Models/Customizer";
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -73,6 +74,11 @@ export default class Source extends BaseModel {
   })
   public altrp_model: BelongsTo<typeof Model>
 
+  @belongsTo(() => Model, {
+    foreignKey: 'model_id'
+  })
+  public model: BelongsTo<typeof Model>
+
   @manyToMany(() => Role, {
     pivotTable: 'altrp_sources_roles',
     localKey: 'id',
@@ -91,19 +97,22 @@ export default class Source extends BaseModel {
   })
   public permissions: ManyToMany<typeof Permission>
 
+  public customizer: Customizer| null
+  private methodBody: string = ''
+
   @computed()
   public get web_url(){
-    // console.log(data_get( this, 'url' ), this.url);
+
     switch ( this.sourceable_type ){
       case 'App\\SQLEditor':
       case 'App\\Altrp\\Query':
         return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
-        return config('app.url') + '/ajax/models/' + string.pluralize(this.altrp_model.name) + '/customizers' + data_get( this, 'url' );
+        return config('app.url') + '/ajax/models/' + string.pluralize(this?.model?.name || '') + '/customizers' + data_get( this, 'url' );
       default:
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
-      : config('app.url') + '/ajax/models/data_sources/' + this.altrp_model.table.name + '/' + data_get( this, 'name' );
+      : config('app.url') + '/ajax/models/data_sources/' + this.model.table.name + '/' + data_get( this, 'name' );
     }
   }
 
@@ -120,6 +129,7 @@ export default class Source extends BaseModel {
 
 
   renderForController(modelClassName:string):string {
+    this.prepareContent()
     return `
   public async ${this.getMethodName()}(httpContext){
     ${this.renderRolesCheck()}
@@ -162,12 +172,19 @@ export default class Source extends BaseModel {
         case 'delete':{
           return 'destroy'
         }
+
         default: {
           return   this.type
         }
       }
+    } else {
+      switch ( this.sourceable_type) {
+        case Customizer.sourceable_type:{
+          return this.customizer.name
+        }
+      }
+      return `_${string.generateRandom(12)}`
     }
-    return `_${string.generateRandom(12)}`
   }
 
   private renderMethodBody(modelClassName:string):string {
@@ -228,6 +245,12 @@ export default class Source extends BaseModel {
         }
         case 'get': {
           return this.renderIndexMethodBody(modelClassName)
+        }
+      }
+    } else {
+      switch (this.type) {
+        case 'customizer': {
+          return this.renderCustomizerMethodBody()
         }
       }
     }
@@ -305,5 +328,30 @@ export default class Source extends BaseModel {
     query.orderBy(httpContext.request.qs()?.order_by || 'id', order);
 
     `;
+  }
+
+  private renderCustomizerMethodBody() {
+    return this.methodBody;
+  }
+
+  private prepareContent() {
+
+    switch (this.type) {
+      case 'customizer': {
+        this.methodBody = `
+    this.setCustomizerData('context.CurrentModel', ${this.model.name} )
+    this.setCustomizerData('context.request', httpContext.request)
+    this.setCustomizerData('httpContext', httpContext)
+    this.setCustomizerData('request', httpContext.request)
+    this.setCustomizerData('context.response', httpContext.response)
+    this.setCustomizerData('response', httpContext.response)
+    this.setCustomizerData('session', httpContext.session)
+    this.setCustomizerData('this', this)
+    this.setCustomizerData('current_user', httpContext.auth.user)
+    ${this?.customizer?.getMethodContent() || ''}
+    `}
+      break;
+      default : return
+    }
   }
 }

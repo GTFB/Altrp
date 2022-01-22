@@ -5,7 +5,6 @@ import * as _ from "lodash"
 
 export default class DefaultNode extends BaseNode implements NodeInterface
 {
-  public data = null
 
 
 
@@ -37,16 +36,16 @@ export default class DefaultNode extends BaseNode implements NodeInterface
    * @return string
    */
   public parseArray(data = []){
-    let js_content = ''
+    let JSContent = ''
     for (let item of data){
-      let _js_content = data_get( item, 'js_content' )
-      if( ! _.isString(js_content) || ! js_content ) {
+      let _JSContent = data_get( item, 'JSContent' )
+      if( ! _.isString(JSContent) || ! JSContent ) {
         continue
       }
 
-      preg_match_all('/{{([\s\S]+?)(?=}})/', _js_content, matches)
+      preg_match_all('/{{([\s\S]+?)(?=}})/', _JSContent, matches)
       if( ! isset( matches ) || ! isset( matches[1] )){
-        js_content += _js_content
+        JSContent += _JSContent
         continue
       }
       matches = matches[1]
@@ -58,12 +57,12 @@ export default class DefaultNode extends BaseNode implements NodeInterface
         } elseif ( is_array( item ) ) {
           item = this.parseObject(item)
         }
-        _js_content = str_replace('{{{path}}}', item, _js_content)
+        _JSContent = str_replace(`{{${path}}}`, item, _JSContent)
 
       }
-      js_content += _js_content
+      JSContent += _JSContent
     }
-    return js_content
+    return JSContent
   }
 
   /**
@@ -71,13 +70,13 @@ export default class DefaultNode extends BaseNode implements NodeInterface
    * @return string
    */
   public parseObject( item ){
-    js_content = data_get( item, 'js_content' )
-    if( ! _.isString(js_content) || ! js_content ) {
+    let JSContent = data_get( item, 'JSContent' )
+    if( ! _.isString(JSContent) || ! JSContent ) {
       return ''
     }
-    preg_match_all('/{{([\s\S]+?)(?=}})/', js_content, matches)
+    preg_match_all('/{{([\s\S]+?)(?=}})/', JSContent, matches)
     if( ! isset( matches ) || ! isset( matches[1] )){
-      return js_content
+      return JSContent
     }
     matches = matches[1]
 
@@ -89,13 +88,13 @@ export default class DefaultNode extends BaseNode implements NodeInterface
       } elseif ( is_array( item ) ){
         item = this.parseObject(item)
       }
-      js_content = str_replace('{{{path}}}', item, js_content)
+      JSContent = str_replace(`{{${path}}}`, item, JSContent)
     }
-    return js_content
+    return JSContent
   }
 
   /**
-   * Если тип ноды отсутствует на бэкенде, то в нем должно быть свойство js_content,
+   * Если тип ноды отсутствует на бэкенде, то в нем должно быть свойство JSContent,
    * которое является шаблоном js-кода
    * @return string
    */
