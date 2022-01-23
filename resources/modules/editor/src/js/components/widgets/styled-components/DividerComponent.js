@@ -8,63 +8,66 @@ import {defaultStyled, sliderStyled, styledString} from "../../../../../../front
 export default function DividerComponent(settings) {
   const styles = [
     "altrp-divider-separator",
-
-    ["width", "divider_width", "slider"],
-
+      ["width", "divider_width", "slider"],
     "}",
 
     "&",
-
-    ["align-items", "divider_alignment"],
-
+      ["align-items", "divider_alignment"],
     "}",
 
     "altrp-divider",
+      ["margin", "position_margin", "dimensions"],
+      ["z-index", "position_z_index"],
+      () => {
+        const value = getResponsiveSetting(settings, "divider_style_gap");
+        const slider = sliderStyled(value);
 
-    ["margin", "position_margin", "dimensions"],
-    ["z-index", "position_z_index"],
-    () => {
-      const value = getResponsiveSetting(settings, "divider_style_gap");
-      const slider = sliderStyled(value);
-
-      if(slider) {
-        return ` padding-top: ${slider}; padding-bottom: ${slider}; `
-      }
-    },
-
+        if(slider) {
+          return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+        }
+      },
     "}",
 
     "altrp-divider-label",
-
-    ["color", "text_style_color", "color"],
-    ["", "text_style_typographic", "typographic"],
-
+      ["color", "text_style_color", "color"],
+      ["", "text_style_typographic", "typographic"],
+    "}",
+    
+    "altrp-divider:hover",
+      "altrp-divider-label",
+        ["color", "text_style_color", "color", ':hover'],
+        ["", "text_style_typographic", "typographic", ':hover'],
+      "}",
     "}",
 
     "altrp-divider .altrp-divider-separator",
-    ["border-color", "divider_style_color", "color"],
+      ["border-color", "divider_style_color", "color"],
     "}",
+
+    "altrp-divider:hover",
+      'altrp-divider-separator',
+        ["border-color", "divider_style_color", "color", ':hover'],
+      '}',
+    "}",
+
     "altrp-divider.active",
+      ["margin", "position_margin", "dimensions", ".active"],
+      () => {
+        const value = getResponsiveSetting(settings, "divider_style_gap", ".active");
+        const slider = sliderStyled(value);
 
-    ["margin", "position_margin", "dimensions", ".active"],
-    () => {
-      const value = getResponsiveSetting(settings, "divider_style_gap", ".active");
-      const slider = sliderStyled(value);
+        if(slider) {
+          return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+        }
+      },
 
-      if(slider) {
-        return ` padding-top: ${slider}; padding-bottom: ${slider}; `
-      }
-    },
-
-    "& .altrp-divider-label",
-
-    ["color", "text_style_color", "color", ".active"],
-
+      "& .altrp-divider-label",
+        ["color", "text_style_color", "color", ".active"],
+      "}",
     "}",
 
-    "}",
     "altrp-divider.active .altrp-divider-separator",
-    ["border-color", "divider_style_color", "color", ".active"],
+      ["border-color", "divider_style_color", "color", ".active"],
     "}",
 
   ];
