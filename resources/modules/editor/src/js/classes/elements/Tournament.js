@@ -21,6 +21,10 @@ class Tournament extends BaseElement {
         return TestIcon;
     }
 
+    static getGroup() {
+      return "Basic";
+    }
+
     _registerControls() {
         if (this.controllersRegistered) {
             return;

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Alignment, Button, ControlGroup, HTMLSelect, InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
+import {Alignment, Button, Checkbox, ControlGroup, HTMLSelect, InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import PROPERTY_OPTIONS from "../../const/PROPERTY_OPTIONS";
 import VALUES_OPTIONS from "../../const/VALUES_OPTIONS";
 import {Select} from "@blueprintjs/select";
@@ -9,6 +9,8 @@ import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/alt
 import SESSION_OPTIONS from "../../const/methods-options/SESSION_OPTIONS";
 import USER_OPTIONS from "../../const/methods-options/USER_OPTIONS";
 import mutate from "dot-prop-immutable";
+import isAltrpJS from "../../helpers/isAltrpJS";
+import NODE_JS_METHODS_OPTIONS from "../../const/node-js/NODE_JS_METHODS_OPTIONS";
 
 class PropertyComponent extends Component {
   constructor(props) {
@@ -26,7 +28,8 @@ class PropertyComponent extends Component {
   }
   onTextareaChange = (e) => {
     if (this.props.changeByPath && this.props.path) {
-      this.props.changeByPath(e.target.value, `${this.props.path}.expression`)
+      let path = isAltrpJS()?`${this.props.path}.JSExpression`:  `${this.props.path}.expression`
+      this.props.changeByPath(e.target.value,path)
     } else if (this.props.onChange) {
       this.props.onChange(e)
     }
@@ -71,6 +74,17 @@ class PropertyComponent extends Component {
     }
   }
 
+  /**
+   *
+   */
+  awaitOnToggle = (e) =>{
+    let value =  e.target.checked
+    if (this.props.changeByPath && this.props.path) {
+      this.props.changeByPath(value, `${this.props.path}.awaitOn`)
+    } else if (this.props.onItemSelect) {
+      this.props.onItemSelect(v.value)
+    }
+  }
   textAreaSize = () => {
     if (this.textareaRef.current) {
       let sizeHeight = String(this.textareaRef.current.offsetHeight) + 'px'
@@ -114,7 +128,10 @@ class PropertyComponent extends Component {
   render() {
     let options = [];
 
-    const {namespace, path, method, expression} = this.props.property;
+    const {namespace, path, method, expression, awaitOn, JSExpression} = this.props.property;
+    let _expression = isAltrpJS() ? (JSExpression || '') : (expression || '')
+    let placeholder = isAltrpJS() ? 'Javascript expression' : 'php expression'
+
     const {type, withoutMethods} = this.props;
     switch (type) {
       case 'value': {
@@ -126,7 +143,7 @@ class PropertyComponent extends Component {
       }
     }
     let showMethod = false;
-    let methodOptions = METHODS_OPTIONS
+    let methodOptions = isAltrpJS() ? NODE_JS_METHODS_OPTIONS : METHODS_OPTIONS
     let {showMethodEdit} = this.state;
     if (namespace === 'context'
       || namespace === 'this'
@@ -144,7 +161,7 @@ class PropertyComponent extends Component {
       methodOptions = [ {value: '', label: 'None'}, ...USER_OPTIONS];
     }
     let buttonText = 'None'
-    const currentMethod = METHODS_OPTIONS.find(o => o.value == method);
+    const currentMethod = (isAltrpJS() ? NODE_JS_METHODS_OPTIONS : METHODS_OPTIONS).find(o => o.value == method);
     if (currentMethod?.objectInstance) {
       buttonText = `${currentMethod?.objectInstance}::${currentMethod?.label || ''} (${namespace || ''}${path ? '.' + path : ''})${expression ? ', expression' : ''}`
     }
@@ -164,41 +181,50 @@ class PropertyComponent extends Component {
         //           onChange={this.onTextareaChange}
         //           growVertically={true}
         //           value={expression || ''}/>
-        <textarea value={expression || ''}
+        <textarea value={_expression}
                   onChange={this.onTextareaChange}
-                  placeholder="php expression"
+                  placeholder={placeholder}
                   ref={this.textareaRef}
                   className="textarea-custom"
         />
         }
       </div>
-      {!withoutMethods && showMethod && <div className="element-index element-index_bottom">
-        <Select items={methodOptions}
-                onItemSelect={this.onItemSelect}
-                noResults={<MenuItem disabled={true} text="No results."/>}
-                itemPredicate={this.onQueryChange}
-                matchTargetWidth={true}
+      {!withoutMethods && showMethod &&
+        <React.Fragment>
+          {isAltrpJS() && method &&
+          <Checkbox
+            checked={!!awaitOn}
+            onChange={this.awaitOnToggle}
+            className="mr-2"
+            label="Await"/>}
+          <div className="element-index element-index_bottom">
+            <Select items={methodOptions}
+                    onItemSelect={this.onItemSelect}
+                    noResults={<MenuItem disabled={true} text="No results."/>}
+                    itemPredicate={this.onQueryChange}
+                    matchTargetWidth={true}
+                    fill={true}
+                    popoverProps={{
+                      minimal: true,
+                      fill: true,
+                    }}
+                    itemRenderer={this.itemRenderer}
+            >
+              <Button
                 fill={true}
-                popoverProps={{
-                  minimal: true,
-                  fill: true,
-                }}
-                itemRenderer={this.itemRenderer}
-        >
-          <Button
-            fill={true}
-            alignText={Alignment.LEFT}
-            text={buttonText}
-            className="button-one"
-          />
-        </Select>
-        <Button
-          disabled={!method}
-          text={'Edit'}
-          className="button-two"
-          onClick={this.methodEditToggle}
-        />
-      </div>}
+                alignText={Alignment.LEFT}
+                text={buttonText}
+                className="button-one"
+              />
+            </Select>
+            <Button
+              disabled={!method}
+              text={'Edit'}
+              className="button-two"
+              onClick={this.methodEditToggle}
+            />
+          </div>
+        </React.Fragment>}
       {!withoutMethods && method && currentMethod && <MethodEditComponent
         methodSettings={this.props.property?.methodSettings || {}}
         show={showMethod && showMethodEdit}

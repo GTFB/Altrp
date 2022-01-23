@@ -1,5 +1,5 @@
 import Frame3 from "../../../svgs/Frame 3.svg";
-import Code from "../../../svgs/code.svg";
+import Code from "../../../svgs/export.svg";
 import Resource from "../../classes/Resource";
 import beautify from "js-beautify";
 import { getRoutes } from "../../../../../front-app/src/js/helpers";

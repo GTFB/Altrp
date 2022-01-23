@@ -1,3 +1,5 @@
+import * as _ from 'lodash'
+import {string} from '@ioc:Adonis/Core/Helpers'
 import {DateTime} from 'luxon'
 import {
   BaseModel,
@@ -10,13 +12,13 @@ import {
   hasOne, manyToMany,
   ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
-import User from 'App/Models/User';
-import Source from 'App/Models/Source';
-import Controller from "App/Models/Controller";
-import Relationship from "App/Models/Relationship";
-import Category from "App/Models/Category";
-import Table from './Table';
-import Column from "App/Models/Column";
+import User from 'App/Models/User'
+import Source from 'App/Models/Source'
+import Controller from "App/Models/Controller"
+import Relationship from "App/Models/Relationship"
+import Category from "App/Models/Category"
+import Table from './Table'
+import Column from "App/Models/Column"
 
 
 export default class Model extends BaseModel {
@@ -57,6 +59,11 @@ export default class Model extends BaseModel {
   })
   public table: BelongsTo<typeof Table>
 
+  @belongsTo(() => Table, {
+    foreignKey: "table_id"
+  })
+  public altrp_table: BelongsTo<typeof Table>
+
   @column()
   public pk: string
 
@@ -92,12 +99,13 @@ export default class Model extends BaseModel {
   @hasMany(() => Source,)
   public altrp_source: HasMany<typeof Source>
 
-  @hasOne(() => Controller,{
-    foreignKey: 'model_id'
+  @hasOne(() => Controller, {
+    foreignKey: 'model_id',
+
   })
   public altrp_controller: HasOne<typeof Controller>
 
-  @hasMany(() => Relationship,{
+  @hasMany(() => Relationship, {
     foreignKey: 'model_id',
     localKey: 'id',
   })
@@ -126,24 +134,66 @@ export default class Model extends BaseModel {
 
   }
 
-  getLabelColumnName(){
+  getLabelColumnName() {
     let label = this?.table?.columns.find(c => c.is_label)?.name
-    if(! label){
+    if (!label) {
       label = this?.table?.columns.find(c => c.is_title)?.name
     }
     return label || 'id'
   }
 
-  getTitleColumnName(){
+  getTitleColumnName() {
     let title = this?.table?.columns.find(c => c.is_title)?.name
-    if(! title){
+    if (!title) {
       title = this?.table?.columns.find(c => c.is_label)?.name
     }
     return title || 'id'
   }
 
-  getIndexedColumns():Column[]{
-    return this?.table?.columns.filter(c => c.indexed)|| []
+  getIndexedColumns(): Column[] {
+    return this?.table?.columns.filter(c => c.indexed) || []
   }
 
+  public static async getModelsOptions(with_names = false, not_plural = false, search = false) {
+    let models: any[] = []
+    let _models = search ? await Model.getBySearch(search) : await Model.all()
+    for (let model of _models) {
+      /**
+       * @var {Model} model
+       */
+      if (with_names) {
+        models.push({
+          'label': model.title,
+          'value': not_plural ? model.name : string.pluralize(model.name),
+        })
+      } else {
+        models.push({
+          'label': model.title,
+          'value': model.id,
+        })
+      }
+    }
+    return models
+  }
+
+  public static async getBySearch(search, orderColumn = 'title', orderType = 'desc', categories = null) {
+    // @ts-ignore
+    let sortType:'asc' | 'desc' = 'orderBy' + (orderType == 'asc' ? '' : orderType)
+    let models = Model.query()
+    if (categories && _.isString(categories)) {
+      // @ts-ignore
+      categories = categories.split(',')
+      models.leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
+      // @ts-ignore
+      models.whereIn('altrp_category_objects.category_guid', categories)
+    }
+
+    models.where(function (query) {
+      query.where('altrp_models.title', 'like', `%${search}%`)
+        .orWhere('altrp_models.id', 'like', `%${search}%`)
+    }).orderBy(orderColumn, sortType)
+
+    await models.preload('categories').select('altrp_models.*')
+    return models
+  }
 }

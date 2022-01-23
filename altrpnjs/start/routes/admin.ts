@@ -85,6 +85,16 @@ Route.group(() => {
     Route.get('/models/:id/data_source_options', 'admin/ModelsController.getDataSourcesOptionsByModel')
     Route.get('/models/:id/queries', 'admin/ModelsController.getQueries')
     Route.get('/models/:id/accessors', 'admin/ModelsController.getAccessors')
+    Route.get('/models_options', 'admin/ModelsController.models_options').name = 'admin.models_options'
+
+    /**
+     * Customizers
+     */
+    Route.get('/customizers', 'admin/CustomizersController.index')
+    Route.post('/customizers', 'admin/CustomizersController.store')
+    Route.get('/customizers/:id', 'admin/CustomizersController.show')
+    Route.put('/customizers/:id', 'admin/CustomizersController.update')
+    Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
 
     /**
      * Категории
@@ -113,6 +123,8 @@ Route.group(() => {
 
   Route.get('/editor-content', 'IndicesController.editorContent')
   Route.get('/editor', 'IndicesController.editor')
+
+  Route.get('/customizers-editor', 'IndicesController.customizer')
 
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')

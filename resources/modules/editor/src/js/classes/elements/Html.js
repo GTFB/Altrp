@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import CodeIcon from "../../../svgs/code.svg";
+import CodeIcon from "../../../svgs/html.svg";
 
 import {
   TAB_CONTENT,
@@ -19,6 +19,9 @@ class Html extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

@@ -3,6 +3,11 @@
 
 ## Changelog
 
+### 0.20.24
++ Add Widget Groups
+* Fix Visual Codes Pagination Issue
+* Restyle Template Condition Popup 
+
 ### 0.20.23
 + Add Tournament Widget
 

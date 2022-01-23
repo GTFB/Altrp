@@ -1,6 +1,6 @@
 import Schemes from "../../../components/altrp-dashboards/settings/NivoColorSchemes.js";
 import BaseElement from ".././BaseElement";
-import PieIcon from "../../../../svgs/skill-bar.svg";
+import PieIcon from "../../../../svgs/pie.svg";
 import { advancedTabControllers } from "../../../decorators/register-controllers";
 import {
   CONTROLLER_DIMENSIONS,
@@ -41,6 +41,9 @@ class PieDiagram extends BaseElement {
   static getType() {
     return "widget";
   }
+  static getGroup() {
+    return "Diagrams";
+  }
   _registerControls() {
     if (this.controllersRegistered) {
       return;
@@ -66,12 +69,12 @@ class PieDiagram extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Use Centered Metric?",
     });
-    
+
     this.addControl("useProcent", {
       type: CONTROLLER_SWITCHER,
       label: "Add Procent?",
     });
-    
+
     this.addControl("useLinkArcLabels", {
       type: CONTROLLER_SWITCHER,
       label: "Use Link Arc Labels?",
@@ -87,12 +90,12 @@ class PieDiagram extends BaseElement {
     const colors = Schemes.map(object => {
       return { label: object.label, value: object.value };
     });
-    
+
     this.addControl("activeOuterRadiusOffset", {
       type: CONTROLLER_NUMBER,
       label: "Active Outer Radius Offset"
     });
-    
+
     this.addControl("activeInnerRadiusOffset", {
       type: CONTROLLER_NUMBER,
       label: "Active Inner Radius Offset"
@@ -134,7 +137,7 @@ class PieDiagram extends BaseElement {
     });
 
     this.endControlSection();
-    
+
     legendControllers(this)
 
     valueFormatControllers(this)
@@ -192,7 +195,7 @@ class PieDiagram extends BaseElement {
     });
 
     this.endControlSection()
-    
+
     this.startControlSection("centered_metric", {
       tab: TAB_STYLE,
       label: "Center Metric"

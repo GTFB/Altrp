@@ -1,6 +1,6 @@
 import '../../front-app/src/js/libs/react-lodash'
 import '../../front-app/src/js/libs/ckeditor'
-import '../../front-app/src/js/libs/altrp'
+// import '../../front-app/src/js/libs/altrp'
 import '../../front-app/src/js/libs/moment'
 import React, { Component } from "react";
 import ReactDOM from "react-dom";

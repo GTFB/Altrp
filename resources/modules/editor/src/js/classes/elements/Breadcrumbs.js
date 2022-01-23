@@ -1,5 +1,5 @@
 import BaseElement from './BaseElement';
-import NavIcon from '../../../svgs/nav-menu.svg';
+import NavIcon from '../../../svgs/Breadcrumbs.svg';
 import {advancedTabControllers} from '../../decorators/register-controllers';
 import {
   CONTROLLER_DIMENSIONS,
@@ -27,6 +27,10 @@ class Breadcrumbs extends BaseElement {
 
   static getType() {
     return 'widget';
+  }
+
+  static getGroup() {
+    return "Basic";
   }
 
   _registerControls() {

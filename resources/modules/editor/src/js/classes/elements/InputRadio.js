@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import FromIcon from "../../../svgs/form-horizontal.svg";
+import FromIcon from "../../../svgs/radio.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -26,13 +26,16 @@ class InputRadio extends BaseElement {
     return "input-radio";
   }
   static getTitle() {
-    return "Input Radio";
+    return "Radio";
   }
   static getIconComponent() {
     return FromIcon;
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     if (this.controllersRegistered) {

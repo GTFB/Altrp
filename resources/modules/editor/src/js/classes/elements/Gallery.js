@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import GalleryIcon from "../../../svgs/widget_gallery.svg";
+import GalleryIcon from "../../../svgs/gallery.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -36,6 +36,9 @@ class Gallery extends BaseElement {
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Advanced";
   }
   _registerControls() {
     if (this.controllersRegistered) {

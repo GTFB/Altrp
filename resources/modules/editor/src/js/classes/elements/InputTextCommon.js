@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import FromIcon from "../../../svgs/form-horizontal.svg";
+import FromIcon from "../../../svgs/input.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -28,13 +28,16 @@ class InputTextCommon extends BaseElement {
     return "input-text-common";
   }
   static getTitle() {
-    return "Input Text";
+    return "Text";
   }
   static getIconComponent() {
     return FromIcon;
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     if (this.controllersRegistered) {

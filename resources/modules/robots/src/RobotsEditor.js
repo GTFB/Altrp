@@ -83,7 +83,6 @@ class RobotsEditor extends Component {
       _categories: robot.categories,
     }
     if (_.isString(robot.start_config)) robot.start_config = JSON.parse(robot.start_config);
-    console.log(robot);
     store.dispatch(setCurrentRobot(robot));
     if (robot.sources) {
       let sources = this.changeSources(robot.sources);

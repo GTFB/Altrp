@@ -25,7 +25,7 @@ class AllPages extends Component {
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
-    this.itemsPerPage = 10;
+    this.itemsPerPage = 20;
   }
 
   getPages = async () => {
@@ -36,26 +36,34 @@ class AllPages extends Component {
     if (urlCategories) {
       res = await this.resource.getQueried({
         categories: urlCategories,
-        s: urlS === null ? this.state.pagesSearch : urlS
+        s: urlS === null ? this.state.pagesSearch : urlS,
+        order: 'ASC',
+        order_by: 'title'
       });
     } else {
       res = await this.resource.getQueried({
-        s: urlS === null ? this.state.pagesSearch : urlS
+        s: urlS === null ? this.state.pagesSearch : urlS,
+        order: 'ASC',
+        order_by: 'title'
       });
     }
+
+    let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
+      return this.treePagesMap(page)
+    })
+    let treePagesSlice = treePagesNew.slice(
+      this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+      this.state.currentPage * this.itemsPerPage
+    )
     this.setState(state => {
       return {
         ...state,
         pages: res,
         activeCategory: urlCategories === null ? 'All' : urlCategories,
-        pagesSearch: urlS === null ? this.state.pagesSearch : urlS
+        pagesSearch: urlS === null ? this.state.pagesSearch : urlS,
+        treePages: treePagesNew,
+        treePagesSlice
       };
-    });
-    let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
-      return this.treePagesMap(page)
-    })
-    this.setState(state => {
-      return {...state, treePages: treePagesNew};
     });
   };
 
@@ -114,17 +122,17 @@ class AllPages extends Component {
   };
 
   handleNodeExpand = (nodeData, nodePath) => {
-    let currentTree = _.cloneDeep(this.state.treePages);
+    let currentTree = _.cloneDeep(this.state.treePagesSlice);
     let currentNode = Tree.nodeFromPath(nodePath, currentTree);
     currentNode.isExpanded = true;
-    this.setState(s => ({...s, treePages: currentTree}));
+    this.setState(s => ({...s, treePagesSlice: currentTree}));
   }
 
   handleNodeCollapse = (nodeData, nodePath) => {
-    let currentTree = _.cloneDeep(this.state.treePages);
+    let currentTree = _.cloneDeep(this.state.treePagesSlice);
     let currentNode = Tree.nodeFromPath(nodePath, currentTree);
     currentNode.isExpanded = false;
-    this.setState(s => ({...s, treePages: currentTree}));
+    this.setState(s => ({...s, treePagesSlice: currentTree}));
   }
 
   toggleFilterCategories = () => {
@@ -142,33 +150,54 @@ class AllPages extends Component {
       this.props.history.push(`${url.pathname + url.search}`)
       let pages = await this.resource.getQueried({
         categories: guid,
-        s: urlS === null ? this.state.pagesSearch : urlS
+        s: urlS === null ? this.state.pagesSearch : urlS,
+        order: 'ASC',
+        order_by: 'title'
       });
-      let treePagesNew = pages.map(page => {
+      let treePagesNew = pages.filter(item => item.parent_page_id === null).map(page => {
         return this.treePagesMap(page)
       })
+      let treePagesSlice = treePagesNew.slice(
+        this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+        this.state.currentPage * this.itemsPerPage
+      )
       this.setState(state => ({
         ...state,
         pages: pages,
         treePages: treePagesNew,
+        treePagesSlice,
         activeCategory: guid
       }))
     } else {
       url.searchParams.delete('categories');
       this.props.history.push(`${url.pathname + url.search}`)
       let pages = await this.resource.getQueried({
-        s: urlS === null ? this.state.pagesSearch : urlS
+        s: urlS === null ? this.state.pagesSearch : urlS,
+        order: 'ASC',
+        order_by: 'title'
       });
-      let treePagesNew = pages.map(page => {
+      let treePagesNew = pages.filter(item => item.parent_page_id === null).map(page => {
         return this.treePagesMap(page)
       })
+      let treePagesSlice = treePagesNew.slice(
+        this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+        this.state.currentPage * this.itemsPerPage
+      )
       this.setState(state => ({
         ...state,
         pages: pages,
         treePages: treePagesNew,
+        treePagesSlice,
         activeCategory: all
       }))
     }
+  }
+
+  changePageSlice = (page) => {
+    if (this.state.currentPage !== page) {
+      this.setState({ currentPage: page });
+    }
+    this.getPages()
   }
 
   treePagesMap = (page) => {
@@ -188,6 +217,7 @@ class AllPages extends Component {
     treePage = {
       id: page.id,
       key: page.id,
+      isExpanded: true,
       label: (
         <Link to={page.editUrl}>{page.title}</Link>
       ),
@@ -201,7 +231,7 @@ class AllPages extends Component {
   }
 
   render() {
-    const {treePages, currentPage} = this.state;
+    const {treePages, treePagesSlice, currentPage} = this.state;
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -218,7 +248,7 @@ class AllPages extends Component {
             </Link>
             <div className="admin-filters admin-filters-flex">
               <span className="admin-filters__current">
-                All ({this.state.pages.length || "0"})
+                All ({treePages.length || "0"})
               </span>
               {/*<DraggableScroll>*/}
               {/*  <SwiperSlide className="category__block-slider">*/}
@@ -288,10 +318,7 @@ class AllPages extends Component {
                 </div>
               )}
               <Tree
-                contents={treePages.slice(
-                  currentPage * this.itemsPerPage - this.itemsPerPage,
-                  currentPage * this.itemsPerPage
-                )}
+                contents={treePagesSlice}
                 className="altrp-tree__pages"
                 onNodeCollapse={this.handleNodeCollapse}
                 onNodeExpand={this.handleNodeExpand}
@@ -299,71 +326,11 @@ class AllPages extends Component {
               <Pagination
                 pageCount={Math.ceil(treePages.length / this.itemsPerPage) || 1}
                 currentPage={currentPage}
-                changePage={page => {
-                  if (currentPage !== page) {
-                    this.setState({ currentPage: page });
-                  }
-                }}
+                changePage={page => this.changePageSlice(page)}
                 itemsCount={treePages.length}
               />
             </div>
           </div>
-          {/*<AdminTable*/}
-          {/*  columns={[*/}
-          {/*    {*/}
-          {/*      name: "title",*/}
-          {/*      title: "Title",*/}
-          {/*      editUrl: true,*/}
-          {/*      tag: "Link"*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "author",*/}
-          {/*      title: "Author"*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "path",*/}
-          {/*      title: "Path",*/}
-          {/*      url: true,*/}
-          {/*      target: "_blank"*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: 'categories',*/}
-          {/*      title: 'Categories'*/}
-          {/*    }*/}
-          {/*  ]}*/}
-          {/*  quickActions={[*/}
-          {/*    {*/}
-          {/*      tag: "button",*/}
-          {/*      route: `/admin/ajax/pages/:id`,*/}
-          {/*      method: "delete",*/}
-          {/*      confirm: "Are You Sure?",*/}
-          {/*      after: () => { this.getPages() },*/}
-          {/*      className: "quick-action-menu__item_danger",*/}
-          {/*      title: "Delete"*/}
-          {/*    }*/}
-          {/*  ]}*/}
-          {/*  rows={pages.slice(*/}
-          {/*    currentPage * this.itemsPerPage - this.itemsPerPage,*/}
-          {/*    currentPage * this.itemsPerPage*/}
-          {/*  )}*/}
-          {/*  searchTables={{*/}
-          {/*    value: pagesSearch || "",*/}
-          {/*    submit: this.submitSearchHandler,*/}
-          {/*    change: (e) => this.changeSearchHandler(e)*/}
-          {/*  }}*/}
-          {/*  getPages={this.getPages}*/}
-
-
-          {/*  pageCount={Math.ceil(pages.length / this.itemsPerPage) || 1}*/}
-          {/*  currentPage={currentPage}*/}
-          {/*  changePage={page => {*/}
-          {/*    if (currentPage !== page) {*/}
-          {/*      this.setState({ currentPage: page });*/}
-          {/*    }*/}
-          {/*  }}*/}
-          {/*  itemsCount={pages.length}*/}
-          {/*  openPagination={true}*/}
-          {/*/>*/}
         </div>
       </div>
     );

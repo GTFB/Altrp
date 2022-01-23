@@ -110,7 +110,7 @@ class EditModelForm extends Component {
     if(item?.value){
       return  false;
     }
-    return this.state.value._categories.find(c=>c.value === item.value);
+    return this.state.value._categories.some(c=>c.value === item.value);
   }
 
   handleItemSelectCategory = (item) => {

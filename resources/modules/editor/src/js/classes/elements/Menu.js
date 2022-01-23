@@ -1,5 +1,5 @@
 import BaseElement from './BaseElement';
-import NavIcon from '../../../svgs/nav-menu.svg';
+import NavIcon from '../../../svgs/menu.svg';
 import { advancedTabControllers } from '../../decorators/register-controllers';
 import {
   CONTROLLER_DIMENSIONS,
@@ -24,6 +24,9 @@ class Menu extends BaseElement {
   }
   static getType() {
     return 'widget';
+  }
+  static getGroup() {
+    return "Basic";
   }
 
   _registerControls() {

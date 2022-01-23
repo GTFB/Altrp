@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import WidgetIcon from "../../../svgs/accordion.svg";
+import WidgetIcon from "../../../svgs/trigger.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_COLOR,
@@ -31,6 +31,10 @@ class Accordion extends BaseElement {
 
   static getType() {
     return "widget";
+  }
+
+  static getGroup() {
+    return "Advanced";
   }
 
   _registerControls() {

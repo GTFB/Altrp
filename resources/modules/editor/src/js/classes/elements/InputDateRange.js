@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import FromIcon from "../../../svgs/form-horizontal.svg";
+import FromIcon from "../../../svgs/date_range.svg";
 import {
   CONTROLLER_COLOR, CONTROLLER_DIMENSIONS, CONTROLLER_SELECT,
   CONTROLLER_SHADOW, CONTROLLER_SLIDER, CONTROLLER_SWITCHER, CONTROLLER_TEXT, CONTROLLER_TEXTAREA,
@@ -14,13 +14,16 @@ class InputDateRange extends BaseElement {
     return "input-date-range";
   }
   static getTitle() {
-    return "Input Date Range";
+    return "Date Range";
   }
   static getIconComponent() {
     return FromIcon;
   }
   static getType() {
     return "widget";
+  }
+  static getGroup() {
+    return "Form";
   }
   _registerControls() {
     if (this.controllersRegistered) {

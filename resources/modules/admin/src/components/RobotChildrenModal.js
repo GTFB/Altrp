@@ -66,9 +66,7 @@ class RobotChildrenModal extends Component {
   };
 
   isItemSelectedCategory = (item) => {
-    let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.robot._categories);
-    return selectedString.includes(itemString);
+    return this.state.robot._categories.some(c=>c.value === item.value);
   }
 
   handleItemSelectCategory = (item) => {

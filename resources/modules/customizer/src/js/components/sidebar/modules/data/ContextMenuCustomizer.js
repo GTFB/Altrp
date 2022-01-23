@@ -7,6 +7,7 @@ import {setCopyNode} from "../../../../store/copy-node/action";
 import {connect} from "react-redux";
 import("react-contexify/scss/main.scss");
 import {storage} from "../../../../storage"
+import {isJSON} from "../../../../../../../front-app/src/js/helpers";
 
 
 class ContextMenuCustomizer extends Component {
@@ -50,31 +51,39 @@ class ContextMenuCustomizer extends Component {
       type: this.props.node.type,
       data: this.props.node.data
     };
-    const clipboard = {
-      node: obj,
-      startTime: new Date().getTime(),
-      expires: 3600000
-    }
-    storage.setItem('node', clipboard)
+    navigator.clipboard?.writeText(JSON.stringify(obj))
+    // const clipboard = {
+    //   node: obj,
+    //   startTime: new Date().getTime(),
+    //   expires: 3600000
+    // }
+    // storage.setItem('node', clipboard)
     store.dispatch(setCopyNode(true))
   }
 
-  onPaste = (e) => {
+  onPaste = async (e) => {
     const reactFlowBounds = this.props.reactFlowRef.getBoundingClientRect();
     const position = this.props.reactFlowInstance.project({
       x: e.event.clientX - reactFlowBounds.left - 50,
       y: e.event.clientY - reactFlowBounds.top - 50
     });
-    let localObj = storage.getItem('node')
-    const pasteObj = {
-      ...localObj.node,
-      id: `${this.getId()}`,
-      position
+    // let localObj = storage.getItem('node')
+    let text = await navigator.clipboard?.readText()
+    if (isJSON(text)) {
+      let localObj = JSON.parse(text)
+      const pasteObj = {
+        ...localObj,
+        id: `${this.getId()}`,
+        position
+      }
+
+      const customizerStore = store.getState()?.customizerSettingsData;
+      const newStore = customizerStore.concat(pasteObj);
+      store.dispatch(setCustomizerSettingsData(newStore));
+    } else {
+      console.log('Формат не json')
     }
 
-    const customizerStore = store.getState()?.customizerSettingsData;
-    const newStore = customizerStore.concat(pasteObj);
-    store.dispatch(setCustomizerSettingsData(newStore));
   }
 
 
