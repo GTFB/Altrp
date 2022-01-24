@@ -48,7 +48,7 @@ class Text extends BaseElement {
     });
 
     this.addControl('content', {
-      label: 'Path to Content',
+      label: 'Path To Content',
       type: CONTROLLER_TEXTAREA
     })
 
@@ -79,12 +79,12 @@ class Text extends BaseElement {
 
     this.addControl("text_style_column-count", {
       type: CONTROLLER_NUMBER,
-      label: "Column count",
+      label: "Column Count",
     });
 
     this.addControl("text_style_column-gap", {
       type: CONTROLLER_SLIDER,
-      label: "Column gap",
+      label: "Column Gap",
       default: {
         size: 0,
         unit: "px"
@@ -118,7 +118,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background color",
+      label: "Background Color",
       stateless: true,
     });
 
@@ -158,7 +158,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_border_type", {
       type: CONTROLLER_SELECT,
-      label: "Border type",
+      label: "Border Type",
       stateless: true,
       units: ["px", "%", "vh"],
       options: [
@@ -191,20 +191,20 @@ class Text extends BaseElement {
 
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border width",
+      label: "Border Width",
       units: ["px", "%", "vh"],
       stateless: true,
     });
 
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border color",
+      label: "Border Color",
       stateless: true,
     });
 
     this.addControl("text_style_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: "Border radius",
+      label: "Border Radius",
       stateless: true,
       units: ["px", "%", "vh"],
       max: 100,
@@ -220,7 +220,7 @@ class Text extends BaseElement {
 
     this.addControl("text_advanced_tooltip_active", {
       type: CONTROLLER_SWITCHER,
-      label: "Tooltip active",
+      label: "Tooltip Active",
     });
 
     this.addControl("text_advanced_tooltip_label", {
@@ -230,13 +230,13 @@ class Text extends BaseElement {
 
     this.addControl("text_advanced_tooltip_color", {
       type: CONTROLLER_COLOR,
-      label: "Background color",
+      label: "Background Color",
 
     });
 
     this.addControl("text_advanced_tooltip_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Font color",
+      label: "Font Color",
 
     });
 
@@ -286,7 +286,7 @@ class Text extends BaseElement {
 
     this.addControl("text_advanced_tooltip_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: "Border radius",
+      label: "Border Radius",
 
       units: ["px", "%", "vh"],
       max: 100,
@@ -328,7 +328,7 @@ class Text extends BaseElement {
 
     this.addControl("text_paragraph_indent", {
       type: CONTROLLER_SLIDER,
-      label: "Text indent",
+      label: "Text Indent",
       stateless: true,
       units: ["px", "%", "vh"],
       max: 100,
@@ -358,7 +358,7 @@ class Text extends BaseElement {
 
     this.addControl("text_blockquote_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background color",//
+      label: "Background Color",//
       stateless: true,
     });
 
@@ -373,7 +373,7 @@ class Text extends BaseElement {
 
     this.addControl("text_blockquote_border_type", {
       type: CONTROLLER_SELECT,
-      label: "Border type",
+      label: "Border Type",
       options: [
         {
           value: "none",
@@ -404,13 +404,13 @@ class Text extends BaseElement {
 
     this.addControl("text_blockquote_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border width",
+      label: "Border Width",
       units: ["px", "%", "vh"],
     });
 
     this.addControl("text_blockquote_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border color",
+      label: "Border Color",
     });
 
     this.addControl("text_blockquote_border_radius", {
@@ -432,13 +432,13 @@ class Text extends BaseElement {
 
     this.addControl('text_blockquote_box_shadow', {
       type: CONTROLLER_SHADOW,
-      label: 'Block shadow',
+      label: 'Block Shadow',
     }
   );
 
     this.addControl('text_blockquote_text_shadow', {
       type: CONTROLLER_SHADOW,
-      label: 'Text shadow',
+      label: 'Text Shadow',
     }
   );
     this.endControlSection();
@@ -457,19 +457,19 @@ class Text extends BaseElement {
 
     this.addControl("text_table_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background color",//
+      label: "Background Color",//
       stateless: true,
     });
 
     this.addControl("text_table_odd_rows_color", {
       type: CONTROLLER_COLOR,
-      label: "Odd rows color",
+      label: "Odd Rows Color",
       stateless: true,
     });
 
     this.addControl("text_table_border_type", {
       type: CONTROLLER_SELECT,
-      label: "Border type",
+      label: "Border Type",
       options: [
         {
           value: "none",
@@ -500,13 +500,13 @@ class Text extends BaseElement {
 
     this.addControl("text_table_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border width",
+      label: "Border Width",
       units: ["px", "%", "vh"],
     });
 
     this.addControl("text_table_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border color",
+      label: "Border Color",
     });
 
     // this.addControl("text_table_border_radius", {
@@ -539,7 +539,7 @@ class Text extends BaseElement {
 
     this.addControl("text_table_cells_border_type", {
       type: CONTROLLER_SELECT,
-      label: "Border type",
+      label: "Border Type",
       options: [
         {
           value: "none",
@@ -570,13 +570,13 @@ class Text extends BaseElement {
 
     this.addControl("text_table_cells_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border width",
+      label: "Border Width",
       units: ["px", "%", "vh"],
     });
 
     this.addControl("text_table_cells_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border color",
+      label: "Border Color",
 
     });
 
@@ -603,7 +603,7 @@ class Text extends BaseElement {
 
     this.addControl('text_table_cells_text_shadow', {
       type: CONTROLLER_SHADOW,
-      label: 'Text shadow',
+      label: 'Text Shadow',
 
     }
   );
@@ -622,7 +622,7 @@ class Text extends BaseElement {
 
     this.addControl('text_link_text_shadow', {
       type: CONTROLLER_SHADOW,
-      label: 'Text shadow',
+      label: 'Text Shadow',
 
     }
   );
@@ -631,12 +631,12 @@ class Text extends BaseElement {
 
   this.startControlSection("text_numbered_list_settings", {
     tab: TAB_STYLE,
-    label: "Numbered list"
+    label: "Numbered List"
   });
 
   this.addControl("text_numbered_list_margin", {
     type: CONTROLLER_DIMENSIONS,
-    label: "List margin",
+    label: "List Margin",
 
     units: ["px", "%", "vh"],
     stateless: true,
@@ -644,14 +644,14 @@ class Text extends BaseElement {
 
   this.addControl("text_numbered_list_item_margin", {
     type: CONTROLLER_DIMENSIONS,
-    label: "Element margin",
+    label: "Element Margin",
     units: ["px", "%", "vh"],
     stateless: true,
   });
 
   this.addControl("text_numbered_list_style_type", {
     type: CONTROLLER_SELECT,
-    label: "List style type",
+    label: "List Style Type",
     options: [
       {
         value: "none",
@@ -671,11 +671,11 @@ class Text extends BaseElement {
       },
       {
         value: "upper-roman",
-        label: "Upper roman"
+        label: "Upper Roman"
       },
       {
         value: "lower-roman",
-        label: "Lower roman"
+        label: "Lower Roman"
       }
     ],
 
@@ -686,12 +686,12 @@ class Text extends BaseElement {
 
   this.startControlSection("text_unordered_list_settings", {
     tab: TAB_STYLE,
-    label: "Unordered list"
+    label: "Unordered List"
   });
 
   this.addControl("text_unordered_list_margin", {
     type: CONTROLLER_DIMENSIONS,
-    label: "List margin",
+    label: "List Margin",
 
     units: ["px", "%", "vh"],
     stateless: true,
@@ -699,7 +699,7 @@ class Text extends BaseElement {
 
   this.addControl("text_unordered_list_item_margin", {
     type: CONTROLLER_DIMENSIONS,
-    label: "Element margin",
+    label: "Element Margin",
 
     units: ["px", "%", "vh"],
     stateless: true,
@@ -707,7 +707,7 @@ class Text extends BaseElement {
 
   this.addControl("text_unordered_list_style_type", {
     type: CONTROLLER_SELECT,
-    label: "List style type",
+    label: "List Style Type",
     options: [
       {
         value: "none",

@@ -51,24 +51,24 @@ class Divider extends BaseElement {
       options: [
         {
           value: 'solid',
-          label: 'solid'
+          label: 'Solid'
         },
         {
           value: 'none',
-          label: 'none'
+          label: 'None'
 
         },
         {
           value: 'double',
-          label: 'double'
+          label: 'Double'
         },
         {
           value: 'dotted',
-          label: 'dotted'
+          label: 'Dotted'
         },
         {
           value: 'dashed',
-          label: 'dashed'
+          label: 'Dashed'
         },
       ]
     });
@@ -90,7 +90,7 @@ class Divider extends BaseElement {
 
     this.addControl('divider_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'alignment',
+      label: 'Alignment',
       default: 'left',
       options: [
         {
@@ -122,7 +122,7 @@ class Divider extends BaseElement {
 
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
-      label: 'Z-index',
+      label: 'Z-Index',
     });
 
     this.endControlSection();
@@ -183,7 +183,7 @@ class Divider extends BaseElement {
 
     this.addControl('text_style_position', {
       type: CONTROLLER_CHOOSE,
-      label: 'position',
+      label: 'Position',
       default: 'center',
       options: [
         {
@@ -203,7 +203,7 @@ class Divider extends BaseElement {
 
     this.addControl('text_style_spacing', {
       type: CONTROLLER_SLIDER,
-      label: 'spacing',
+      label: 'Spacing',
       default: {
         size: 0,
         unit: "px"

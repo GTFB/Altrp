@@ -75,7 +75,7 @@ class TabsSwitcher extends BaseElement{
 
     this.addControl("one_wysiwyg", {
       type: CONTROLLER_WYSIWYG,
-      label: "Text editor",
+      label: "Text Editor",
       conditions: {
         'one_type': 'text',
       },
@@ -128,7 +128,7 @@ class TabsSwitcher extends BaseElement{
 
     this.addControl("two_wysiwyg", {
       type: CONTROLLER_WYSIWYG,
-      label: "Text editor",
+      label: "Text Editor",
       conditions: {
         'two_type': 'text',
       },
@@ -154,12 +154,12 @@ class TabsSwitcher extends BaseElement{
 
     this.startControlSection("switch_button", {
       tab: TAB_STYLE,
-      label: "Switch button"
+      label: "Switch Button"
     });
 
     this.addControl("box_around_color_one", {
       type: CONTROLLER_COLOR,
-      label: "Box around color 1",
+      label: "Box Around Color 1",
       default: {
         color: "",
         colorPickedHex: "",
@@ -168,7 +168,7 @@ class TabsSwitcher extends BaseElement{
 
     this.addControl("box_around_color_two", {
       type: CONTROLLER_COLOR,
-      label: "Box around color 2",
+      label: "Box Around Color 2",
       default: {
         color: "",
         colorPickedHex: "",
@@ -177,7 +177,7 @@ class TabsSwitcher extends BaseElement{
 
     this.addControl("switch_color", {
       type: CONTROLLER_COLOR,
-      label: "Switch color",
+      label: "Switch Color",
       default: {
         color: "",
         colorPickedHex: "",
@@ -200,14 +200,14 @@ class TabsSwitcher extends BaseElement{
 
     this.addControl('margin_bottom', {
       type: CONTROLLER_SLIDER,
-      label: 'Margin bottom',
+      label: 'Margin Bottom',
       min: 0,
       max: 100,
     });
 
     this.addControl("box_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: "Box around border radius",
+      label: "Box Around Border Radius",
       units: [
         'px',
         '%',
@@ -218,7 +218,7 @@ class TabsSwitcher extends BaseElement{
 
     this.addControl("switch_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: "Switch border radius",
+      label: "Switch Border Radius",
       units: [
         'px',
         '%',
