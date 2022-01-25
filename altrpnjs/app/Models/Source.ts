@@ -16,6 +16,7 @@ import data_get from "../../helpers/data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
 import Customizer from "App/Models/Customizer";
+import SQLEditor from "App/Models/SQLEditor";
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -97,14 +98,26 @@ export default class Source extends BaseModel {
   })
   public permissions: ManyToMany<typeof Permission>
 
+  @manyToMany(() => Permission, {
+    pivotTable: 'altrp_sources_permissions',
+    localKey: 'id',
+    relatedKey: 'id',
+    pivotForeignKey: 'permission_id',
+    pivotRelatedForeignKey: 'source_id',
+  })
+  public source_permissions: ManyToMany<typeof Permission>
+
   public customizer: Customizer| null
+
+  public sQLEditor: SQLEditor| null
+
   private methodBody: string = ''
 
   @computed()
   public get web_url(){
 
     switch ( this.sourceable_type ){
-      case 'App\\SQLEditor':
+      case SQLEditor.sourceable_type:
       case 'App\\Altrp\\Query':
         return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
@@ -180,7 +193,10 @@ export default class Source extends BaseModel {
     } else {
       switch ( this.sourceable_type) {
         case Customizer.sourceable_type:{
-          return this.customizer.name
+          return this.customizer?.name || `_${string.generateRandom(12)}`
+        }
+        case SQLEditor.sourceable_type:{
+          return this.sQLEditor?.name || `_${string.generateRandom(12)}`
         }
       }
       return `_${string.generateRandom(12)}`
@@ -248,9 +264,12 @@ export default class Source extends BaseModel {
         }
       }
     } else {
-      switch (this.type) {
-        case 'customizer': {
+      switch (this.sourceable_type) {
+        case Customizer.sourceable_type: {
           return this.renderCustomizerMethodBody()
+        }
+        case SQLEditor.sourceable_type: {
+          return this.renderSQLEditorMethodBody()
         }
       }
     }
@@ -353,5 +372,15 @@ export default class Source extends BaseModel {
       break;
       default : return
     }
+  }
+
+  private renderSQLEditorMethodBody() {
+    return `
+    const res = await selectForSQLEditor(
+    "${this.sQLEditor?.sql}",  [], [
+       'sql_name' => '${this.sQLEditor?.name}',
+       'table_name' => '${this.model?.table?.name}',
+     ], httpContext.request );
+    `;
   }
 }

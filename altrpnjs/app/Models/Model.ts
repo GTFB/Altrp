@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import {string} from '@ioc:Adonis/Core/Helpers'
 import {DateTime} from 'luxon'
 import {
+  afterFind,
   BaseModel,
   BelongsTo,
   belongsTo,
@@ -23,6 +24,19 @@ import Column from "App/Models/Column"
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
+
+  @afterFind()
+  public static async createController(model:Model) {
+    await model.load('altrp_controller')
+    if(! model.altrp_controller){
+      const controller = new Controller()
+      controller.fill({
+        model_id: model.id,
+        description: model.description,
+      })
+      await controller.save()
+    }
+  }
 
   @column({isPrimary: true})
   public id: number

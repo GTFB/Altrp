@@ -11,8 +11,8 @@ export default class Model {
     const controllerGenerator = new ControllerGenerator()
     await model.load('altrp_controller')
     const controller = model.altrp_controller
-    controllerGenerator.run(controller)
-    modelGenerator.run(model)
-    Promise.all([controllerGenerator.run(controller), modelGenerator.run(model)])
+    await modelGenerator.run(model)
+    await controllerGenerator.run(controller)
+    // Promise.all([controllerGenerator.run(controller), modelGenerator.run(model)])
   }
 }

@@ -95,6 +95,16 @@ Route.group(() => {
     Route.get('/customizers/:id', 'admin/CustomizersController.show')
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
+    /**
+     *
+     * sql_editors
+     */
+    Route.get('/sql_editors', 'admin/SQLEditorController.index')
+    Route.post('/sql_editors', 'admin/SQLEditorController.store')
+    Route.get('/sql_editors/:id', 'admin/SQLEditorController.show')
+    Route.put('/sql_editors/:id', 'admin/SQLEditorController.update')
+    Route.delete('/sql_editors/:id', 'admin/SQLEditorController.destroy')
+    Route.get('/sql_editors/list', 'admin/SQLEditorController.listByName');
 
     /**
      * Категории
@@ -118,6 +128,20 @@ Route.group(() => {
      */
     Route.get('/altrp_meta/:meta_name', 'admin/AltrpMetaController.getMetaByName')
     Route.put('/altrp_meta/:meta_name', 'admin/AltrpMetaController.saveMeta')
+
+    /**
+     * Плагины
+     */
+
+    Route.get('/plugins', "admin/PluginController.plugins");
+    Route.post('/plugins/switch', "admin/PluginController.switch");
+    Route.post('/plugins/install', "admin/PluginController.install");
+    Route.post('/plugins/update_plugin_files', "admin/PluginController.update_plugin_files");
+
+    /**
+     * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
+     */
+    Route.post('update-all-resources', 'admin/AdminController.upgradeAllResources').name = 'admin.update-all-resources'
 
   }).prefix('/ajax')
 
