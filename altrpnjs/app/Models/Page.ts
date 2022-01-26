@@ -1,10 +1,5 @@
 import {DateTime} from 'luxon'
 import {BaseModel, BelongsTo, belongsTo, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
-import User from 'App/Models/User'
-import {isString} from 'lodash'
-import PageRole from 'App/Models/PageRole'
-import Role from 'App/Models/Role'
-import Template from 'App/Models/Template'
 import Model from 'App/Models/Model'
 import data_get from '../../helpers/data_get'
 import empty from '../../helpers/empty'
@@ -16,6 +11,12 @@ import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
 import Database from "@ioc:Adonis/Lucid/Database"
 import Logger from "@ioc:Adonis/Core/Logger"
 import AltrpRouting from "App/Middleware/AltrpRouting"
+import User from "App/Models/User";
+import { isString } from "lodash";
+import PageRole from "App/Models/PageRole";
+import Role from "App/Models/Role";
+import Template from "App/Models/Template";
+import Category from "App/Models/Category";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -116,8 +117,17 @@ export default class Page extends BaseModel {
     return this.guid
   }
 
-  public async getAreas(): Promise<object[]> {
-    // const all_site_templates = Template.query().where('all_site', true).preload('currentArea')
+  @manyToMany(() => Category, {
+    pivotTable: "altrp_category_objects",
+    pivotForeignKey: "object_guid",
+    pivotRelatedForeignKey: "category_guid",
+    relatedKey: "guid",
+    localKey: "guid",
+  })
+  public categories: ManyToMany<typeof Category>
+
+  public async getAreas() {
+    // const all_site_templates = Template.query().where("all_site", true).preload("currentArea")
 
     const data: {
       area_name: string,
@@ -181,6 +191,7 @@ export default class Page extends BaseModel {
     })
     this.attachRoles(rolesValues)
     this.for_guest = for_guest
+    // this.for_guest = for_guest;
   }
 
   public getForFront() {
@@ -201,11 +212,10 @@ export default class Page extends BaseModel {
 
   /**
    * Привязывает набор ролей к сттанице, удаляя старые связи
-   * @param {string | array}$roles
    */
-  public attachRoles(roles) {
-    if (!this.id) {
-      return
+  public attachRoles( roles ) {
+    if ( !this.id ) {
+      return;
     }
 
     roles.forEach(async role_id => {
@@ -219,7 +229,7 @@ export default class Page extends BaseModel {
   @column.dateTime({autoCreate: true})
   public createdAt: DateTime
 
-  @column.dateTime({autoCreate: true, autoUpdate: true})
+  @column.dateTime({ autoCreate: true, autoUpdate:true })
   public updatedAt: DateTime
 
   @column.dateTime()

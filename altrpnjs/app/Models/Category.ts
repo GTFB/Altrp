@@ -1,8 +1,10 @@
-import {BaseModel, column, computed} from "@ioc:Adonis/Lucid/Orm";
+import {BaseModel, column, computed} from "@ioc:Adonis/Lucid/Orm"
+import { DateTime } from 'luxon'
 
-export default class Category extends BaseModel{
+import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-  public static  table = 'altrp_categories'
+export default class Category extends BaseModel {
+  public static table = 'altrp_categories'
 
   @column({ isPrimary: true })
   public id: number
@@ -11,10 +13,10 @@ export default class Category extends BaseModel{
   public guid: string
 
   @column()
-  public name: string
+  public title: string
 
   @column()
-  public title: string
+  public name: string
 
   @column()
   public description: string
@@ -28,4 +30,13 @@ export default class Category extends BaseModel{
       guid: this.guid,
     }
   }
+  public getGuid() {
+    return this.guid
+  }
+
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
 }

@@ -12,4 +12,5 @@ public/
 storage/
 app/AltrpModels/
 app/AltrpControllers/
+app/AltrpPlugins/
 start/altrp-routes/

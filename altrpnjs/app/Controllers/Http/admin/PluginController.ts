@@ -2,10 +2,10 @@ import AdmZip from "adm-zip"
 import fs from 'fs-extra'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext"
 import Plugin from "App/Plugin"
-import fetch from 'node-fetch';
 import data_get from "../../../../helpers/data_get";
 import version_compare from "../../../../helpers/version_compare";
 import storage_path from "../../../../helpers/storage_path";
+import httpsRequest from "../../../../helpers/httpsRequest";
 
 export default class PluginController {
   /**
@@ -29,7 +29,7 @@ export default class PluginController {
 
       const params = new URLSearchParams();
       params.append('plugin_name', plugin.name);
-      let apiResponse = await fetch(plugin.check_version_url, {
+      let apiResponse =  await httpsRequest(plugin.check_version_url, {
         body: params,
         headers:
           {
@@ -76,7 +76,7 @@ export default class PluginController {
       } else {
         plugin.clearMetadata()
         if (plugin.enabled) {
-          plugin.updatePluginSettings()
+          await  plugin.updatePluginSettings()
         }
       }
     }
@@ -97,13 +97,12 @@ export default class PluginController {
 
     let apiResponse
     try {
-
-      apiResponse = fetch(request.qs().update_url, {
-        'headers':
+      apiResponse = await httpsRequest(request.input('update_url'), {
+        headers:
           {
             // @ts-ignore
-            'altrp-domain-resource': request.host(),
-            'authorization': request.cookie('altrpMarketApiToken')
+            'altrp-domain-resource': request.hostname(),
+            'authorization': request.cookiesList().altrpMarketApiToken || ''
           }
       })
     } catch (e) {
@@ -117,18 +116,18 @@ export default class PluginController {
     }
 
     let temp_path = storage_path('temp')
-    let plugin = new Plugin({'name': request.qs().name,})
+    let plugin = new Plugin({'name': request.input('name'),})
     fs.ensureDirSync(temp_path)
 
     let filename = temp_path + '/' + plugin.name + '.zip'
     fs.writeFileSync(filename, apiResponse)
-
     let archive = new AdmZip(filename)
+    archive.readAsText(apiResponse)
     archive.extractAllTo(plugin.getPath(), true)
 
-    fs.rmdirSync(temp_path)
+    fs.rmdirSync(temp_path, { recursive: true, })
 
-    plugin.updatePluginSettings()
+    await plugin.updatePluginSettings()
     return response.json(res)
   }
 

@@ -15,6 +15,12 @@ Route.group(() => {
     Route.put('/templates/:id', 'TemplatesController.update')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
+    Route.get("/role_options", "OptionsController.roles")
+    Route.get("/permissions_options", "OptionsController.permissions")
+
+
+    Route.get("/menus/options", "optionsController.menus")
+
 
     Route.post('/pages', 'admin/PagesController.create')
     Route.get('/pages', 'admin/PagesController.index')
@@ -45,7 +51,24 @@ Route.group(() => {
     Route.put("/permissions/:id", "users/PermissionsController.update")
     Route.delete("/permissions/:id", "users/PermissionsController.delete")
 
-    Route.get('/page_data_sources/pages/:id', () => {
+    Route.get("/robots", "RobotsController.index")
+    Route.post("/robots", "RobotsController.create")
+    Route.delete("/robots/:id", "RobotsController.delete")
+    Route.put("/robots/:id", "RobotsController.update")
+
+    Route.get("/categories", "admin/CategoriesController.index")
+    Route.post("/categories", "admin/CategoriesController.create")
+    Route.delete("/categories/:id", "admin/CategoriesController.delete")
+    Route.get("/categories/:id", "admin/CategoriesController.show")
+    Route.put("/categories/:id", "admin/CategoriesController.update")
+
+    Route.get("/menus", "admin/MenusController.index")
+    Route.post("/menus", "admin/MenusController.create")
+    Route.delete("/menus/:id", "admin/MenusController.delete")
+    Route.put("/menus/:id", "admin/MenusController.update")
+    Route.get("/menus/:id", "admin/MenusController.show")
+
+    Route.get("/page_data_sources/pages/:id", () => {
       return []
     })
 
@@ -53,13 +76,10 @@ Route.group(() => {
       return []
     })
 
-    Route.get('/role_options', () => {
-    return []
-    })
 
     Route.get('/pages_options', 'OptionsController.pages')
 
-/**
+    /**
      * Модели
      */
 
@@ -120,8 +140,8 @@ Route.group(() => {
      * Settings
      */
 
-    Route.get('/settings/:setting_name','admin/SettingsController.getSettings').name = 'admin.settings.get'
-    Route.put('/settings/:setting_name','admin/SettingsController.saveSettings').name = 'admin.settings.save'
+    Route.get('/settings/:setting_name', 'admin/SettingsController.getSettings').name = 'admin.settings.get'
+    Route.put('/settings/:setting_name', 'admin/SettingsController.saveSettings').name = 'admin.settings.save'
 
     /**
      * Altrp Meta
@@ -144,14 +164,16 @@ Route.group(() => {
     Route.post('update-all-resources', 'admin/AdminController.upgradeAllResources').name = 'admin.update-all-resources'
 
   }).prefix('/ajax')
+  Route.get('/', 'IndicesController.admin')
+  Route.get('*', 'IndicesController.admin')
+
+  Route.get("/robots-editor", "IndicesController.robot")
 
   Route.get('/editor-content', 'IndicesController.editorContent')
   Route.get('/editor', 'IndicesController.editor')
 
   Route.get('/customizers-editor', 'IndicesController.customizer')
 
-  Route.get('/', 'IndicesController.admin')
-  Route.get('*', 'IndicesController.admin')
 })
   .prefix('/admin')
   .middleware('admin')

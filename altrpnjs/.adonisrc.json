@@ -50,6 +50,10 @@
     {
       "pattern": "app/altrp-templates/**/*.stub",
       "reloadServer": false
+    },
+    {
+      "pattern": "../public/modules/*",
+      "reloadServer": false
     }
   ]
 }

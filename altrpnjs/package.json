@@ -42,7 +42,6 @@
     "luxon": "^2.2.0",
     "mustache": "^4.2.0",
     "mysql": "^2.18.1",
-    "node-fetch": "^3.2.0",
     "phc-argon2": "^1.1.2",
     "phc-bcrypt": "^1.0.7",
     "pino-pretty": "^7.3.0",

@@ -1,7 +1,6 @@
 import path from 'path'
 import AdmZip from "adm-zip"
 import Logger from '@ioc:Adonis/Core/Logger'
-import fetch from 'node-fetch';
 import updateDotenv from 'update-dotenv'
 import env from '../helpers/env'
 import public_path from '../helpers/public_path'
@@ -17,6 +16,7 @@ import is_array from "../helpers/is_array";
 import isValidUrl from "../helpers/string/isValidUrl";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import storage_path from "../helpers/storage_path";
+import httpsRequest from "../helpers/httpsRequest";
 
 export default class Plugin {
 
@@ -90,7 +90,7 @@ export default class Plugin {
     }
     const plugin = new Plugin({name: pluginName})
     if (enable) {
-      plugin.updatePluginSettings()
+      await plugin.updatePluginSettings()
       if (enabledPlugins.indexOf(plugin.name) === -1) {
         enabledPlugins.push(plugin.name)
       }
@@ -259,9 +259,9 @@ export default class Plugin {
     return enabledPlugins.indexOf(pluginName) !== -1
   }
 
-  public updatePluginSettings() {
+  public async updatePluginSettings() {
     this.copyStaticFiles()
-    this.writeStaticsToAltrpMeta()
+    await this.writeStaticsToAltrpMeta()
   }
 
   public async removeStaticsFromAltrpMeta() {
@@ -352,12 +352,12 @@ export default class Plugin {
     }
     let res
     try {
-      res = await fetch(this.update_url, {
+      res =  await httpsRequest(this.update_url, {
         'headers':
           {
             'authorization': request.cookie('altrpMarketApiToken'),
             // @ts-ignore
-            'altrp-domain-resource': request.host(),
+            'altrp-domain-resource': request.hostname(),
           }
       })
     } catch (e) {
