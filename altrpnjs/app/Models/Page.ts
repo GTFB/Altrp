@@ -5,6 +5,7 @@ import { isString } from "lodash";
 import PageRole from "App/Models/PageRole";
 import Role from "App/Models/Role";
 import Template from "App/Models/Template";
+import Category from "App/Models/Category";
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
@@ -100,6 +101,15 @@ export default class Page extends BaseModel {
   public getGuid() {
     return this.guid
   }
+
+  @manyToMany(() => Category, {
+    pivotTable: "altrp_category_objects",
+    pivotForeignKey: "object_guid",
+    pivotRelatedForeignKey: "category_guid",
+    relatedKey: "guid",
+    localKey: "guid",
+  })
+  public categories: ManyToMany<typeof Category>
 
   public async getAreas() {
     // const all_site_templates = Template.query().where("all_site", true).preload("currentArea")
@@ -233,7 +243,7 @@ export default class Page extends BaseModel {
       }
     })
     this.attachRoles( rolesValues );
-    this.for_guest = for_guest;
+    // this.for_guest = for_guest;
   }
 
   public getForFront() {
@@ -257,9 +267,8 @@ export default class Page extends BaseModel {
    * Привязывает набор ролей к сттанице, удаляя старые связи
    * @param {string | array}$roles
    */
-  public attachRoles( roles )
-    {
-      if ( !this.id ) {
+  public attachRoles( roles ) {
+    if ( !this.id ) {
       return;
     }
 
@@ -274,7 +283,7 @@ export default class Page extends BaseModel {
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true })
   public updatedAt: DateTime
 
   @column.dateTime()

@@ -33,6 +33,10 @@
     {
       "pattern": "resources/views/**/*.edge",
       "reloadServer": false
+    },
+    {
+      "pattern": "../public/modules/*",
+      "reloadServer": false
     }
   ]
 }

@@ -3,6 +3,7 @@ import {BaseModel, column, HasOne, hasOne, ManyToMany, manyToMany} from '@ioc:Ad
 import User from "App/Models/User";
 import Area from "App/Models/Area";
 import Page from "App/Models/Page";
+import Category from "App/Models/Category";
 
 export default class Template extends BaseModel {
   @column({ isPrimary: true })
@@ -49,6 +50,15 @@ export default class Template extends BaseModel {
     foreignKey: "id"
   })
   public currentArea: HasOne<typeof Area>
+
+  @manyToMany(() => Category, {
+    pivotTable: "altrp_category_objects",
+    pivotForeignKey: "object_guid",
+    pivotRelatedForeignKey: "category_guid",
+    relatedKey: "guid",
+    localKey: "guid",
+  })
+  public categories: ManyToMany<typeof Category>
 
   @column()
   public area: number

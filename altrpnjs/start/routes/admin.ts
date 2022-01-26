@@ -7,6 +7,12 @@ Route.group(() => {
 
     Route.get("/global_template_styles", "TemplatesController.globalTemplateStyles")
 
+    Route.get("/role_options", "OptionsController.roles")
+    Route.get("/permissions_options", "OptionsController.permissions")
+    Route.get("/pages_options", "OptionsController.pages")
+    Route.get("/category/options", "optionsController.categories")
+    Route.get("/menus/options", "optionsController.menus")
+
     Route.post("/templates", "TemplatesController.create").middleware("auth")
     Route.get("/templates", "TemplatesController.index")
     Route.get("/templates/options", "TemplatesController.options")
@@ -44,6 +50,23 @@ Route.group(() => {
     Route.put("/permissions/:id", "users/PermissionsController.update")
     Route.delete("/permissions/:id", "users/PermissionsController.delete")
 
+    Route.get("/robots", "RobotsController.index")
+    Route.post("/robots", "RobotsController.create")
+    Route.delete("/robots/:id", "RobotsController.delete")
+    Route.put("/robots/:id", "RobotsController.update")
+
+    Route.get("/categories", "admin/CategoriesController.index")
+    Route.post("/categories", "admin/CategoriesController.create")
+    Route.delete("/categories/:id", "admin/CategoriesController.delete")
+    Route.get("/categories/:id", "admin/CategoriesController.show")
+    Route.put("/categories/:id", "admin/CategoriesController.update")
+
+    Route.get("/menus", "admin/MenusController.index")
+    Route.post("/menus", "admin/MenusController.create")
+    Route.delete("/menus/:id", "admin/MenusController.delete")
+    Route.put("/menus/:id", "admin/MenusController.update")
+    Route.get("/menus/:id", "admin/MenusController.show")
+
     Route.get("/page_data_sources/pages/:id", () => {
       return []
     })
@@ -51,10 +74,6 @@ Route.group(() => {
     Route.get("/reports_options", () => {
       return []
     })
-
-    Route.get("/role_options", "OptionsController.roles")
-    Route.get("/permissions_options", "OptionsController.permissions")
-    Route.get("/pages_options", "OptionsController.pages")
 
     Route.get("/model_options", () => {
       return {
@@ -83,6 +102,8 @@ Route.group(() => {
 
   Route.get("/editor-content", "IndicesController.editorContent")
   Route.get("/editor", "IndicesController.editor")
+
+  Route.get("/robots-editor", "IndicesController.robot")
 
   Route.get('/', "IndicesController.admin")
   Route.get('/*', "IndicesController.admin")

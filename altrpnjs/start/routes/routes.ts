@@ -19,21 +19,28 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import Permission from "App/Models/Permission";
-import User from "App/Models/User";
+import Drive from "@ioc:Adonis/Core/Drive"
+import path from "path"
 // import {UserFactory} from "Database/factories";
 
 Route.get("/login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login")
 
 
-Route.get("/userr", async () => {
-  const user = await User.query().where("id", 1).firstOrFail();
-  const permission = await Permission.query().where("id", 1).firstOrFail();
-  return user.can(permission);
+// Route.get("/userr", async () => {
+//   const user = await User.query().where("id", 1).firstOrFail();
+//   const permission = await Permission.query().where("id", 1).firstOrFail();
+//   return user.can([1, 2]);
+// })
+
+Route.get("/modules/editor/:file", async ({params}) => {
+  const file = await Drive.get(path.join(__dirname, `../../../public/modules/editor/${params.file}`))
+
+  return file
 })
 
 Route.group(() => {
+  Route.get("/menus/:id", "admin/MenusController.show")
 
   Route.get("/pages/:id", "admin/PagesController.getAreas")
 
