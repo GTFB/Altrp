@@ -24,7 +24,7 @@
   "dependencies": {
     "@loadable/component": "^5.12.0",
     "@tinymce/tinymce-react": "^3.6.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bootstrap": "^4.5.0",
     "bootstrap-switch-button-react": "^1.2.0",
     "classnames": "^2.2.6",
