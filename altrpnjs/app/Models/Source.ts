@@ -210,7 +210,7 @@ export default class Source extends BaseModel {
       switch (this.type) {
         case 'show': {
           return `
-    return httpContext.response.json((await ${modelClassName}.find(httpContext.params.id))?.serialize());
+    return httpContext.response.json((await ${modelClassName}.find(httpContext.params.${modelClassName}))?.serialize());
         `
         }
         case 'add': {
@@ -226,7 +226,7 @@ export default class Source extends BaseModel {
         }
         case 'update': {
           return `
-    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    let oldModel = await ${modelClassName}.find(httpContext.params.${modelClassName});
     if(!oldModel){
       httpContext.response.status(404);
       return httpContext.response.json({success:false, message: 'not found'})
@@ -238,7 +238,7 @@ export default class Source extends BaseModel {
         }
         case 'delete': {
           return `
-    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    let oldModel = await ${modelClassName}.find(httpContext.params.${modelClassName});
     if(!oldModel){
       httpContext.response.status(404);
       return httpContext.response.json({success:false, message: 'not found'})
@@ -249,7 +249,7 @@ export default class Source extends BaseModel {
         }
         case 'update_column': {
           return `
-    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    let oldModel = await ${modelClassName}.find(httpContext.params.${modelClassName});
     if(!oldModel){
       httpContext.response.status(404);
       return httpContext.response.json({success:false, message: 'not found'})

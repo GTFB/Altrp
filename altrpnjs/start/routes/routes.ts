@@ -22,6 +22,8 @@ import Route from '@ioc:Adonis/Core/Route'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Drive from "@ioc:Adonis/Core/Drive"
 import path from "path"
+import Table from "App/Models/Table";
+import isProd from "../../helpers/isProd";
 // import {UserFactory} from "Database/factories";
 
 Route.get("/altrp-login", "IndicesController.loginView")
@@ -41,11 +43,13 @@ Route.get("/modules/editor/:file", async ({params}) => {
   return file
 })
 
-Route.get('/data/current-user', async ({response, auth}: HttpContextContract)=>{
-  response.header('Content-Type','application/javascript')
+Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
+  response.header('Content-Type', 'application/javascript')
   let user = auth.user
-  if( !user){
-    user = {}
+  if (!user) {
+    return response.send(`
+window.current_user = ${JSON.stringify({is_guest: true})}
+  `);
   }
   await user.load('roles')
   await user.load('permissions')
@@ -73,6 +77,90 @@ Route.group(() => {
       data: []
     }
   })
+  Route.any('models/*', async (httpContext: HttpContextContract) => {
+    const segments = httpContext.request.url().split('/')
+    let tableName = segments[2]
+    if (['queries', 'data_sources', 'filters'].indexOf(tableName)) {
+      tableName = segments[3]
+    }
+    const table = await Table.query().preload('altrp_model').where('name', tableName).first()
+    if (!table) {
+      return httpContext.response.status(404).json({
+        success: false,
+        message: 'Table Not Found'
+      })
+    }
+    if (['users', 'media'].indexOf(tableName) !== -1) {
+
+      return httpContext.response.status(403).json({
+        success: false,
+        message: 'Access Denied'
+      })
+    }
+    const model = table.altrp_model
+    if (!model) {
+      return httpContext.response.status(404).json({
+        success: false,
+        message: 'Model Not Found'
+      })
+    }
+
+    const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
+    try {
+      const ControllerClass = isProd() ? (await require(controllerName)).default
+        : (await import(controllerName)).default
+      const controller = new ControllerClass()
+      let methodName
+      if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
+        methodName = segments[4]
+      }
+      if (segments[3] === undefined && httpContext.request.method() === 'GET') {
+        methodName = 'index'
+      }
+      if (segments[3] === undefined && httpContext.request.method() === 'POST') {
+        methodName = 'store'
+      }
+      if (segments[4] === undefined
+        && Number(segments[3])
+        && httpContext.request.method() === 'GET') {
+        methodName = 'show'
+        httpContext.params[model.name] = Number(segments[3])
+      }
+      if (segments[4] === undefined
+        && Number(segments[3])
+        && httpContext.request.method() === 'DELETE') {
+        methodName = 'destroy'
+        httpContext.params[model.name] = Number(segments[3])
+      }
+      if (segments[4] === undefined
+        && Number(segments[3])
+        && httpContext.request.method() === 'PUT') {
+        methodName = 'update'
+        httpContext.params[model.name] = Number(segments[3])
+      }
+      if (segments[5] === undefined
+        && Number(segments[3])
+        && segments[4]
+      ) {
+        methodName = 'updateColumn'
+        httpContext.params[model.name] = Number(segments[3])
+        httpContext.params.column = Number(segments[4])
+      }
+      if(! methodName){
+        return httpContext.response.status(404).json({
+          success: false,
+          message: 'Method Not Found'
+        })
+      }
+      return await controller[methodName](httpContext)
+    } catch (e) {
+      return httpContext.response.status(500).json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+  })
 })
-.prefix("/ajax")
+  .prefix("/ajax")
 
