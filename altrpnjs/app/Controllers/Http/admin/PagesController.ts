@@ -3,6 +3,8 @@ import { v4 as uuid } from "uuid";
 import Page from "App/Models/Page";
 import Template from "App/Models/Template";
 import PagesTemplate from "App/Models/PagesTemplate";
+import Category from "App/Models/Category";
+import CategoryObject from "App/Models/CategoryObject";
 
 export default class PagesController {
   public async create({auth, request, response}) {
@@ -33,10 +35,31 @@ export default class PagesController {
 
     delete data.roles;
     delete data.rolesOptions;
+    delete data.categories;
+    delete data._categories;
 
-    const page = await Page.create(data)
+    let page = await Page.create(data)
 
     if(page) {
+      page = await Page.query().where("id", page.id).firstOrFail()
+
+      for (const option of request.input("categories")) {
+        const category = await Category.find(option.value);
+
+        if (!category) {
+          response.status(404)
+          return {
+            message: "Category not Found"
+          }
+        } else {
+          await CategoryObject.create({
+            category_guid: category.guid,
+            object_type: "Page",
+            object_guid: page.guid
+          })
+        }
+      }
+
       const template_id = request.input("template_id")
       if(template_id) {
         const template = await Template.find(template_id);
@@ -53,10 +76,13 @@ export default class PagesController {
           res.pages_templates = pages_templates
         }
       }
+
       res.success = true
       res.page = page
       page.parseRoles(request.input('roles'));
+
       await page.save()
+
       return res
     }
 
@@ -70,15 +96,20 @@ export default class PagesController {
 
     const pages = await Page.query()
       .preload("user")
-      .paginate(page, 500)
+      .preload("categories")
 
-    const modPages = pages.all().map( page => {
+    const modPages = pages.map( page => {
       return {
         author: page.user.email,
         id: page.id,
         title: page.title,
         path: page.path,
         url: request.url,
+        categories: page.categories.map(category => {
+          return {
+            category: category
+          }
+        }),
         parent_page_id: page.parent_page_id,
         editUrl: `/admin/pages/edit/${page.id}`,
       }
@@ -152,7 +183,7 @@ export default class PagesController {
     }
   }
 
-  public async update({ params, request }) {
+  public async update({ params, request, response }) {
     const page = await Page.find(parseInt(params.id))
 
     if(page) {
@@ -165,6 +196,27 @@ export default class PagesController {
       })
 
       await page.save()
+
+      if(request.input("categories")) {
+        await page.related("categories").detach()
+
+        for (const option of request.input("categories")) {
+          const category = await Category.find(option.value);
+
+          if (!category) {
+            response.status(404)
+            return {
+              message: "Category not Found"
+            }
+          } else {
+            await CategoryObject.create({
+              category_guid: category.guid,
+              object_type: "Pages",
+              object_guid: page.guid
+            })
+          }
+        }
+      }
 
       return {
         success: true

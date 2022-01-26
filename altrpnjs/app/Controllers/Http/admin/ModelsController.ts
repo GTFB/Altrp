@@ -243,6 +243,7 @@ export default class ModelsController {
       name: string.pluralize(modelData.name),
       title: modelData.title,
       description: modelData.description,
+      // @ts-ignore
       user_id: auth?.user?.id,
     })
     await table.save()
@@ -289,6 +290,7 @@ export default class ModelsController {
         description: 'deleted_at',
         type: 'timestamp',
         table_id: table.id,
+        // @ts-ignore
         user_id: auth?.user?.id,
       })
       await deleted_at_column.save()

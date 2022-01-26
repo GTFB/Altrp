@@ -6,6 +6,7 @@ import Source from "App/Models/Source"
 import Model from "App/Models/Model"
 import ModelGenerator from "App/Generators/ModelGenerator";
 import Customizer from "App/Models/Customizer";
+import SQLEditor from "App/Models/SQLEditor";
 
 export default class ControllerGenerator extends BaseGenerator {
 
@@ -38,15 +39,34 @@ export default class ControllerGenerator extends BaseGenerator {
     this.controller = controller
     this.model = this.controller.altrp_model
     this.sources = this.controller.sources
+    /**
+     * Асинхронно подгружаем связи для ресурсов
+     */
     this.sources = await Promise.all(this.sources.map(async (s:Source) => {
-      let customizer = null
-      if(s.sourceable_type === Customizer.sourceable_type && s.sourceable_id){
-        customizer = await Customizer.find( s.sourceable_id)
-        await customizer.load('source')
+      await s.load('model', model=>{
+        model.preload('table')
+      })
+      if(s.sourceable_id){
+        switch (s.sourceable_type){
+          case Customizer.sourceable_type:{
+            s.customizer = await Customizer.find( s.sourceable_id)
+            if(s.customizer){
+              await s.customizer.load('source')
+            }
+          }
+            break
+          case SQLEditor.sourceable_type:{
+            s.sQLEditor = await SQLEditor.find( s.sourceable_id)
+            if(s.sQLEditor){
+              await s.sQLEditor.load('source')
+            }
+          }
+            break
+        }
       }
-      s.customizer = customizer
       return s
     }))
+
     let fileName =`${this.model.name}Controller${ModelGenerator.ext}`
     if (!this.getClassnameContent()) {
       return

@@ -12,6 +12,7 @@ import ChangeNode from "App/Customizer/Nodes/ChangeNode";
 import * as _ from "lodash";
 import str_replace from "../../helpers/str_replace";
 import Source from "App/Models/Source";
+import escapeRegExp from "../../helpers/escapeRegExp";
 
 export default class Customizer extends BaseModel {
 
@@ -117,6 +118,7 @@ export default class Customizer extends BaseModel {
     let namespace = data_get(property, 'namespace', 'context')
     let path = data_get(property, 'path')
     let JSExpression = data_get(property, 'JSExpression', 'null')
+    JSExpression = Customizer.replaceMustache(JSExpression)
     let method = data_get(property, 'method')
     let awaitOn = data_get(property, 'awaitOn')
     let method_settings = data_get(property, 'methodSettings', [])
@@ -331,4 +333,18 @@ export default class Customizer extends BaseModel {
     return startNode ? startNode.getJSContent() : ''
   }
 
+  static replaceMustache(expression:string):string{
+
+    let paths = _.isString(expression) ? expression.match(/{{([\s\S]+?)(?=}})/g) : null;
+    if (_.isArray(paths)) {
+      paths.forEach(path => {
+        path = path.replace("{{", "");
+        let replace = `this.getCustomizerData(\`${path}\`)`
+
+        path = escapeRegExp(path);
+        expression = expression.replace(new RegExp(`{{${path}}}`, "g"), replace || "");
+      });
+    }
+    return expression
+  }
 }

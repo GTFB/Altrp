@@ -1,5 +1,6 @@
-import {BaseModel, BelongsTo, belongsTo, column} from "@ioc:Adonis/Lucid/Orm";
+import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne} from "@ioc:Adonis/Lucid/Orm";
 import Model from "App/Models/Model";
+import Source from "App/Models/Source";
 
 export default class SQLEditor extends BaseModel{
   public static table = 's_q_l_editors'
@@ -29,4 +30,13 @@ export default class SQLEditor extends BaseModel{
     foreignKey: "model_id"
   })
   public model: BelongsTo<typeof Model>
+
+  @hasOne(() => Source, {
+    foreignKey: 'sourceable_id',
+    onQuery(query) {
+      query.where('sourceable_type', 'App\\Altrp\\Customizer')
+    }
+  })
+  public source: HasOne<typeof Source>
+  static sourceable_type: string = 'App\\SQLEditor'
 }
