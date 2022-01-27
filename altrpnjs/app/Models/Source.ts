@@ -4,7 +4,7 @@ import {
   BelongsTo,
   belongsTo,
   column,
-  computed, HasOne, hasOne,
+  computed,
   manyToMany,
   ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'

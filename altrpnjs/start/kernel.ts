@@ -13,10 +13,6 @@ import Server from '@ioc:Adonis/Core/Server'
 import Route from "@ioc:Adonis/Core/Route";
 import './view'
 import './events'
-import fs from "fs";
-import storage_path from "../helpers/storage_path";
-import base_path from "../helpers/base_path";
-import public_path from "../helpers/public_path";
 
 /*
 |--------------------------------------------------------------------------

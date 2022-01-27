@@ -18,9 +18,6 @@ export default class Area extends BaseModel {
   @column()
   public title: string
 
-  @column()
-  public guid: string
-
   public getGuid() {
     return this.guid
   }

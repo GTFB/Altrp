@@ -91,8 +91,6 @@ export default class PagesController {
   }
 
   public async index({ request }) {
-    const params = request.qs();
-    const page = parseInt(params.page) || 1
 
     const pages = await Page.query()
       .preload("user")

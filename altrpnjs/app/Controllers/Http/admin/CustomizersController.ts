@@ -41,7 +41,8 @@ export default class CustomizersController {
         })
         await source.save()
       }
-      Event.emit('model:updated', model)
+      //@ts-ignore
+      await Event.emit('model:updated', model)
     } catch (e) {
       return response.json({
           'success':
@@ -122,7 +123,8 @@ export default class CustomizersController {
 
       if(customizer.$dirty?.model_id && customizer.$original.model_id) {
         const oldModel = await Model.find(customizer.$original.model_id)
-        Event.emit('model:updated', oldModel)
+        //@ts-ignore
+        await Event.emit('model:updated', oldModel)
       }
       if (customizer.type === 'api' && model) {
         await model.load('altrp_controller')

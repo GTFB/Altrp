@@ -43,23 +43,23 @@ export default class DefaultNode extends BaseNode implements NodeInterface
         continue
       }
 
-      preg_match_all('/{{([\s\S]+?)(?=}})/', _JSContent, matches)
-      if( ! isset( matches ) || ! isset( matches[1] )){
-        JSContent += _JSContent
-        continue
-      }
-      matches = matches[1]
-
-      foreach (matches as path) {
-        item = data_get( item, path)
-        if(is_array( item ) && isset(item[0]) ){
-          item = this.parseArray(item)
-        } elseif ( is_array( item ) ) {
-          item = this.parseObject(item)
-        }
-        _JSContent = str_replace(`{{${path}}}`, item, _JSContent)
-
-      }
+      // preg_match_all('/{{([\s\S]+?)(?=}})/', _JSContent, matches)
+      // if( ! isset( matches ) || ! isset( matches[1] )){
+      //   JSContent += _JSContent
+      //   continue
+      // }
+      // matches = matches[1]
+      //
+      // foreach (matches as path) {
+      //   item = data_get( item, path)
+      //   if(is_array( item ) && isset(item[0]) ){
+      //     item = this.parseArray(item)
+      //   } elseif ( is_array( item ) ) {
+      //     item = this.parseObject(item)
+      //   }
+      //   _JSContent = str_replace(`{{${path}}}`, item, _JSContent)
+      //
+      // }
       JSContent += _JSContent
     }
     return JSContent
@@ -74,22 +74,22 @@ export default class DefaultNode extends BaseNode implements NodeInterface
     if( ! _.isString(JSContent) || ! JSContent ) {
       return ''
     }
-    preg_match_all('/{{([\s\S]+?)(?=}})/', JSContent, matches)
-    if( ! isset( matches ) || ! isset( matches[1] )){
-      return JSContent
-    }
-    matches = matches[1]
-
-    foreach (matches as path) {
-      item = data_get( item, path )
-      if(is_array( item ) && isset(item[0]) ){
-        item = this.parseArray(item)
-
-      } elseif ( is_array( item ) ){
-        item = this.parseObject(item)
-      }
-      JSContent = str_replace(`{{${path}}}`, item, JSContent)
-    }
+    // preg_match_all('/{{([\s\S]+?)(?=}})/', JSContent, matches)
+    // if( ! isset( matches ) || ! isset( matches[1] )){
+    //   return JSContent
+    // }
+    // matches = matches[1]
+    //
+    // foreach (matches as path) {
+    //   item = data_get( item, path )
+    //   if(is_array( item ) && isset(item[0]) ){
+    //     item = this.parseArray(item)
+    //
+    //   } elseif ( is_array( item ) ){
+    //     item = this.parseObject(item)
+    //   }
+    //   JSContent = str_replace(`{{${path}}}`, item, JSContent)
+    // }
     return JSContent
   }
 
