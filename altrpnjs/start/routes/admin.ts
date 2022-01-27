@@ -4,7 +4,11 @@ import Route from '@ioc:Adonis/Core/Route';
 Route.group(() => {
 
   Route.group(() => {
-    Route.get('/areas', 'admin/AreasController.index')
+    Route.get("/areas", "admin/AreasController.index")
+    Route.post("/areas", "admin/AreasController.create")
+    Route.get("/areas/:id", "admin/AreasController.show")
+    Route.put("/areas/:id", "admin/AreasController.update")
+    Route.delete("/areas/:id", "admin/AreasController.delete")
 
     Route.get('/global_template_styles', 'TemplatesController.globalTemplateStyles')
 
