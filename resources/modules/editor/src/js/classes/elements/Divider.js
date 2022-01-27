@@ -211,25 +211,6 @@ class Divider extends BaseElement {
       label: 'Typographic',
     });
 
-    this.addControl("text_alignment", {
-      type: CONTROLLER_CHOOSE,
-      label: "Alignment",
-      options: [
-        {
-          icon: "left",
-          value: "left"
-        },
-        {
-          icon: "center",
-          value: "center"
-        },
-        {
-          icon: "right",
-          value: "right"
-        }
-      ]
-    });
-
     this.endControlSection();
 
     this.startControlSection('image_styles', {

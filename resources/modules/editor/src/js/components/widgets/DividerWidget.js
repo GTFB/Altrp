@@ -24,6 +24,7 @@ import { renderAsset } from "../../../../../front-app/src/js/helpers";
   }
 
   .altrp-divider-label {
+    text-align: center;
     line-height: normal;
     font-size: medium;
   }

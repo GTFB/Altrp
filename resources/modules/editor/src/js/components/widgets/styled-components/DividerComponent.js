@@ -43,7 +43,6 @@ export default function DividerComponent(settings) {
     "altrp-divider-label",
       ["color", "text_style_color", "color"],
       ["", "text_style_typographic", "typographic"],
-      ['text-align', 'text_alignment'],
     "}",
     
     "altrp-divider:hover",
