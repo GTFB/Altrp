@@ -4,6 +4,9 @@ export default class Menus extends BaseSchema {
   protected tableName = 'menus'
 
   public async up () {
+    if (await this.schema.hasTable(this.tableName)) {
+      return
+    }
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
