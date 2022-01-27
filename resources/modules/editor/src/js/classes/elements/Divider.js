@@ -140,19 +140,7 @@ class Divider extends BaseElement {
     });
 
     this.endControlSection();
-
-    this.startControlSection('position_section', {
-      tab: TAB_STYLE,
-      label: 'Position',
-    });
-
-    this.addControl('position_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: 'Z-Index',
-    });
-
-    this.endControlSection();
-
+    
     this.startControlSection("divider_style", {
       tab: TAB_STYLE,
       label: "Divider",
@@ -262,6 +250,18 @@ class Divider extends BaseElement {
       label: "Fill",
     });
     
+    this.endControlSection();
+
+    this.startControlSection('position_section', {
+      tab: TAB_STYLE,
+      label: 'Position',
+    });
+
+    this.addControl('position_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: 'Z-Index',
+    });
+
     this.endControlSection();
 
     advancedTabControllers(this);
