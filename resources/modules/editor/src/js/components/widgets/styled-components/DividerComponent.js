@@ -9,7 +9,19 @@ export default function DividerComponent(settings) {
   const styles = [
     "altrp-divider-separator",
       ["width", "divider_width", "slider"],
+      ['border-style', 'divider_style_type'],
+      () => {
+        const borderWidth = (getResponsiveSetting(settings, "divider_style_weight", null)?.size || 1) + "px"
+        return `
+          border-width: 0;
+          border-top-width: ${borderWidth};
+        `
+      },
     "}",
+
+    'altrp-divider',
+      ['justify-content', 'divider_alignment'],
+    '}',
 
     "&",
       ["align-items", "divider_alignment"],
@@ -31,6 +43,7 @@ export default function DividerComponent(settings) {
     "altrp-divider-label",
       ["color", "text_style_color", "color"],
       ["", "text_style_typographic", "typographic"],
+      ['text-align', 'text_alignment'],
     "}",
     
     "altrp-divider:hover",
@@ -70,6 +83,82 @@ export default function DividerComponent(settings) {
       ["border-color", "divider_style_color", "color", ".active"],
     "}",
 
+    'altrp-divider-image',
+      () => {
+        const imageSize = getResponsiveSetting(settings, 'image_size')
+
+        if (imageSize?.size) {
+          return `height: ${imageSize?.size}${imageSize?.unit || 'px'}`
+        }
+        
+        return 'height: 20px;'
+      },
+    '}',
+  
+    'altrp-divider-container-label',
+      () => {
+        const textStylePosition = getResponsiveSetting(settings, 'label_position') || 'center'
+        const textStyleSpacing = getResponsiveSetting(settings, 'label_spacing')
+        
+        const spacing = (textStyleSpacing?.size ? textStyleSpacing?.size : 0) + (textStyleSpacing?.unit || 'px')
+        
+        switch (textStylePosition) {
+          case "left":
+            return `margin-right: ${spacing};`
+          case "center":
+            return `margin-right: ${spacing}; margin-left: ${spacing};`
+          case "right":
+            return `margin-left: ${spacing};`
+        }
+      },
+    '}',
+  
+    "altrp-divider:hover",
+      'altrp-divider-container-label',
+        () => {
+          const textStylePosition = getResponsiveSetting(settings, 'label_position') || 'center'
+          const textStyleSpacing = getResponsiveSetting(settings, 'label_spacing', ':hover')
+
+          if (!textStyleSpacing?.size) {
+            return
+          }
+          
+          const spacing = (textStyleSpacing?.size ? textStyleSpacing?.size : 0) + (textStyleSpacing?.unit || 'px')
+          
+          switch (textStylePosition) {
+            case "left":
+              return `margin-right: ${spacing};`
+            case "center":
+              return `margin-right: ${spacing}; margin-left: ${spacing};`
+            case "right":
+              return `margin-left: ${spacing};`
+          }
+        },
+      '}',
+    '}',
+
+    'altrp-divider-image *',
+      ['fill', 'image_fill', 'color'],
+    '}',
+
+    "altrp-divider:hover",
+      'altrp-divider-image *',
+        ['fill', 'image_fill', 'color', ':hover'],
+      '}',
+
+      'altrp-divider-separator',
+        ['border-style', 'divider_style_type', ':hover'],
+        () => {
+          const borderWidth = getResponsiveSetting(settings, "divider_style_weight", ':hover')
+
+          if (borderWidth?.size) {
+            return ''
+          }
+
+          return `border-top-width: ${borderWidth?.size}px;`
+        },
+      '}',
+    '}',
   ];
 
   return styledString(styles, settings)

@@ -15,6 +15,7 @@ import {
   CONTROLLER_LINK,
   CONTROLLER_TRANSFORM,
   CONTROLLER_CHOOSE,
+  CONTROLLER_MEDIA,
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -95,6 +96,36 @@ class Divider extends BaseElement {
       options: [
         {
           icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        }
+      ],
+    });
+    
+    this.addControl('divider_text', {
+      type: CONTROLLER_TEXT,
+      label: 'Text',
+    });
+
+    this.addControl('divider_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Image',
+    });
+    
+    this.addControl('label_position', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Label Position',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
           value: 'left',
         },
         {
@@ -106,11 +137,6 @@ class Divider extends BaseElement {
           value: 'right',
         }
       ],
-    });
-
-    this.addControl('divider_text', {
-      type: CONTROLLER_TEXT,
-      label: 'Text',
     });
 
     this.endControlSection();
@@ -147,9 +173,26 @@ class Divider extends BaseElement {
       default: {
         size: 3
       },
-      max: 10,
+      max: 15,
       min: 1,
-      step: 0.01,
+      step: 0.1,
+    });
+
+    this.addControl('label_spacing', {
+      type: CONTROLLER_SLIDER,
+      label: 'Label Spacing',
+      default: {
+        size: 0,
+        unit: "px"
+      },
+      max: 200,
+      min: 0,
+      units: [
+        'px',
+        '%',
+        'vh',
+        "vw"
+      ],
     });
 
     this.addControl("divider_style_gap", {
@@ -178,46 +221,47 @@ class Divider extends BaseElement {
     this.addControl('text_style_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-    }
-    );
+    });
 
-    this.addControl('text_style_position', {
+    this.addControl("text_alignment", {
       type: CONTROLLER_CHOOSE,
-      label: 'Position',
-      default: 'center',
+      label: "Alignment",
       options: [
         {
-          icon: 'left',
-          value: 'left',
+          icon: "left",
+          value: "left"
         },
         {
-          icon: 'center',
-          value: 'center',
+          icon: "center",
+          value: "center"
         },
         {
-          icon: 'right',
-          value: 'right',
+          icon: "right",
+          value: "right"
         }
-      ],
+      ]
     });
 
-    this.addControl('text_style_spacing', {
+    this.endControlSection();
+
+    this.startControlSection('image_styles', {
+      tab: TAB_STYLE,
+      label: 'Image',
+    })
+
+    this.addControl('image_size', {
       type: CONTROLLER_SLIDER,
-      label: 'Spacing',
-      default: {
-        size: 0,
-        unit: "px"
-      },
-      max: 100,
-      min: 0,
-      units: [
-        'px',
-        '%',
-        'vh',
-        "vw"
-      ],
-    });
+      label: 'Size',
+      min: 10,
+      max: 300,
+      step: 1
+    })
 
+    this.addControl("image_fill", {
+      type: CONTROLLER_COLOR,
+      label: "Fill",
+    });
+    
     this.endControlSection();
 
     advancedTabControllers(this);
