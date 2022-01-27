@@ -2,6 +2,7 @@ import {BaseModel, BelongsTo, belongsTo, column,} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
 import Model from "App/Models/Model";
 import Table from "App/Models/Table";
+import isProd from "../../helpers/isProd";
 
 
 export default class Column extends BaseModel {
@@ -99,6 +100,39 @@ export default class Column extends BaseModel {
   })
   public altrp_table: BelongsTo<typeof Table>
 
+  renderProdForModel():string{
+    if(this.type === 'calculated'){
+      return ``
+    }
+
+    if(
+      [
+        'date',
+        'time',
+        'year',
+        'dateTime',
+        'timestamp',
+      ].indexOf(this.type) !== -1){
+      return `
+decorate([
+  Orm.column.dateTime(${this.name === 'updated_at' ?
+        '{autoCreate: true, autoUpdate: true}' : ''}${
+        this.name === 'created_at' ?
+          '{autoCreate: true}' : ''}),
+  metadata("design:type", luxon.${this.getColumnTypeForModel()})
+], ${this.altrp_model.name}.prototype, "${this.name}", void 0);
+`
+    }
+
+    return `
+
+decorate([
+    (0, Orm_1.column)(${this.name == 'id' ? '{isPrimary: true}' : ''}),
+    metadata("design:type", ${this.getColumnTypeForModel()})
+], ${this.altrp_model.name}.prototype, "${this.name}", void 0);
+`
+  }
+
   renderForModel():string {
     if(this.type === 'calculated'){
       return `
@@ -135,7 +169,7 @@ export default class Column extends BaseModel {
 
   getColumnTypeForModel():string {
     if(['bigInteger', 'id', 'integer', 'float', ].indexOf(this.type) !== -1){
-      return 'number'
+      return isProd() ? 'Number' : 'number'
     }
     if(
       [
@@ -146,7 +180,7 @@ export default class Column extends BaseModel {
       'longText',
       'string'
     ].indexOf(this.type) !== -1){
-      return 'string'
+      return isProd() ? 'String' :'string'
     }
     if(
       [
@@ -163,7 +197,7 @@ export default class Column extends BaseModel {
       'boolean',
       'tinyint',
     ].indexOf(this.type) !== -1){
-      return 'boolean'
+      return isProd() ? 'Boolean' : 'boolean'
     }
     return 'any'
   }

@@ -7,11 +7,12 @@ import Model from "App/Models/Model"
 import ModelGenerator from "App/Generators/ModelGenerator";
 import Customizer from "App/Models/Customizer";
 import SQLEditor from "App/Models/SQLEditor";
+import isProd from "../../helpers/isProd";
 
 export default class ControllerGenerator extends BaseGenerator {
 
   public static directory = app_path('/AltrpControllers/')
-  private static template = app_path('/altrp-templates/AltrpController.stub')
+  private static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpController.stub`)
   private controller: Controller
   private model: Model
   private sources: Source[] = []
@@ -94,12 +95,10 @@ export default class ControllerGenerator extends BaseGenerator {
   }
 
   private getImportsContent(): string {
-    return `
+    return isProd() ? this._getProdImportsContent() : this._getDevImportsContent()
 
-import ${this.model.name} from "../AltrpModels/${this.model.name}";
-import AltrpBaseController from "../Controllers/AltrpBaseController";
-`
   }
+
 
   private getClassnameContent(): string {
     return ` ${this.model.name}Controller `
@@ -113,5 +112,19 @@ import AltrpBaseController from "../Controllers/AltrpBaseController";
     return `
   ${this.sources.map(source => source.renderForController(modelClassName)).join('')}
     `
+  }
+
+  private _getProdImportsContent() {
+    return `
+const ${this.model.name} = require('../AltrpModels/${this.model.name}')
+const AltrpBaseController = require('../Controllers/AltrpBaseController')
+    `;
+  }
+
+  private _getDevImportsContent():string {
+    return `
+import ${this.model.name} from "../AltrpModels/${this.model.name}";
+import AltrpBaseController from "../Controllers/AltrpBaseController";
+`;
   }
 }
