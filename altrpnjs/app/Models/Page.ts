@@ -6,6 +6,8 @@ import PageRole from "App/Models/PageRole";
 import Role from "App/Models/Role";
 import Template from "App/Models/Template";
 import Category from "App/Models/Category";
+import defaultAreas from "../../helpers/defaultAreas";
+import Area from "App/Models/Area";
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
@@ -243,7 +245,7 @@ export default class Page extends BaseModel {
       }
     })
     this.attachRoles( rolesValues );
-    // this.for_guest = for_guest;
+    this.for_guest = for_guest;
   }
 
   public getForFront() {
