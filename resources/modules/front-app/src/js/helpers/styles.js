@@ -42,7 +42,8 @@ export function verticalAlignToAlignItems(verticalAlignValue) {
  */
 export function dimensionsControllerToStyles(
   data = {},
-  styleProperty = "padding"
+  styleProperty = "padding",
+  declaration = ""
 ) {
   let styles = "";
 
@@ -54,48 +55,48 @@ export function dimensionsControllerToStyles(
     case "border-width":
       {
         if (left) {
-          styles += `border-left-width: ${left}${unit}; `;
+          styles += `border-left-width: ${left}${unit} ${declaration};`;
         }
         if (right) {
-          styles += `border-right-width: ${right}${unit}; `;
+          styles += `border-right-width: ${right}${unit} ${declaration};`;
         }
         if (top) {
-          styles += `border-top-width: ${top}${unit}; `;
+          styles += `border-top-width: ${top}${unit} ${declaration};`;
         }
         if (bottom) {
-          styles += `border-bottom-width: ${bottom}${unit}; `;
+          styles += `border-bottom-width: ${bottom}${unit} ${declaration};`;
         }
       }
       break;
     case "border-radius":
       {
         if (top) {
-          styles += `border-top-left-radius: ${top}${unit}; `;
+          styles += `border-top-left-radius: ${top}${unit} ${declaration};`;
         }
         if (right) {
-          styles += `border-top-right-radius: ${right}${unit}; `;
+          styles += `border-top-right-radius: ${right}${unit} ${declaration};`;
         }
         if (bottom) {
-          styles += `border-bottom-right-radius: ${bottom}${unit}; `;
+          styles += `border-bottom-right-radius: ${bottom}${unit} ${declaration};`;
         }
         if (left) {
-          styles += `border-bottom-left-radius: ${left}${unit}; `;
+          styles += `border-bottom-left-radius: ${left}${unit} ${declaration};`;
         }
       }
       break;
     default:
       {
         if (left) {
-          styles += `${styleProperty}-left: ${left}${unit}; `;
+          styles += `${styleProperty}-left: ${left}${unit} ${declaration};`;
         }
         if (right) {
-          styles += `${styleProperty}-right: ${right}${unit}; `;
+          styles += `${styleProperty}-right: ${right}${unit} ${declaration};`;
         }
         if (top) {
-          styles += `${styleProperty}-top: ${top}${unit}; `;
+          styles += `${styleProperty}-top: ${top}${unit} ${declaration};`;
         }
         if (bottom) {
-          styles += `${styleProperty}-bottom: ${bottom}${unit}; `;
+          styles += `${styleProperty}-bottom: ${bottom}${unit} ${declaration};`;
         }
       }
       break;
