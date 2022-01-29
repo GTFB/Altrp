@@ -1,5 +1,5 @@
 import {DateTime} from 'luxon'
-import {BaseModel, BelongsTo, belongsTo, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import Model from 'App/Models/Model'
 import data_get from '../../helpers/data_get'
 import empty from '../../helpers/empty'
@@ -17,8 +17,7 @@ import PageRole from "App/Models/PageRole";
 import Role from "App/Models/Role";
 import Template from "App/Models/Template";
 import Category from "App/Models/Category";
-import defaultAreas from "../../helpers/defaultAreas";
-import Area from "App/Models/Area";
+import PageDatasource from "App/Models/PageDatasource";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -96,7 +95,7 @@ export default class Page extends BaseModel {
   @manyToMany(() => Role, {
     pivotForeignKey: 'role_id',
     localKey: 'id',
-    pivotTable: 'page_roles'
+    pivotTable: 'page_role'
   })
   public roles: ManyToMany<typeof Role>
 
@@ -211,6 +210,10 @@ export default class Page extends BaseModel {
     }
   }
 
+  @hasMany(() => PageDatasource, {
+    foreignKey: "page_id"
+  })
+  public pageDatasources: HasMany<typeof PageDatasource>
   /**
    * Привязывает набор ролей к сттанице, удаляя старые связи
    */
