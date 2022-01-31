@@ -189,12 +189,6 @@ export function getTextStyles(settings, id) {
     styles += dimensionsControllerToStyles(tableMargin, 'margin');
   }
 
-  const tableBackgroundColor = getResponsiveSetting(settings, 'text_table_background_color');
-
-  if (tableBackgroundColor) {
-    styles += colorPropertyStyled(tableBackgroundColor, 'background-color');
-  }
-
   const tableBorderStyle = getResponsiveSetting(settings, 'text_table_border_type');
 
   if (tableBorderStyle) {
@@ -388,10 +382,9 @@ export function getTextStyles(settings, id) {
   
   styles += `${parentClass} .altrp-text table:hover {
     ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_table_margin', ':hover'), 'margin')};
-    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_table_background_color'), 'background-color')};
-    ${simplePropertyStyled(getResponsiveSetting(settings, 'text_table_border_type'), 'border-style',"!important")};
-    ${borderWidthStyled(getResponsiveSetting(settings, 'text_table_border_width'),"!important")};
-    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_table_border_color'), 'border-color',"!important")};
+    ${simplePropertyStyled(getResponsiveSetting(settings, 'text_table_border_type', ':hover'), 'border-style',"!important")};
+    ${borderWidthStyled(getResponsiveSetting(settings, 'text_table_border_width', ':hover'),"!important")};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_table_border_color', ':hover'), 'border-color',"!important")};
   }`
   
   styles += `${parentClass} .altrp-text table tr:hover {

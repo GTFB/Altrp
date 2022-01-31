@@ -355,7 +355,7 @@ class Text extends BaseElement {
 
     this.addControl("text_blockquote_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+      label: 'Radius',
       units:[
         'px',
         '%',
@@ -392,11 +392,6 @@ class Text extends BaseElement {
         type: CONTROLLER_DIMENSIONS,
         label: "Margin",
         units: ["px", "%", "vh"],
-      });
-
-      this.addControl("text_table_background_color", {
-        type: CONTROLLER_COLOR,
-        label: "Background Color",
       });
 
       this.addControl("text_table_rows_color", {
@@ -580,7 +575,7 @@ class Text extends BaseElement {
 
     this.addControl("text_numbered_list_color", {
       type: CONTROLLER_COLOR,
-      label: "List Color",
+      label: "Items Color",
     });
 
     this.addControl("text_numbered_list_margin", {
@@ -639,7 +634,7 @@ class Text extends BaseElement {
 
     this.addControl('text_unordered_list_color', {
       type: CONTROLLER_COLOR,
-      label: 'Color'
+      label: 'Items Color'
     })
 
     this.addControl("text_unordered_list_margin", {
