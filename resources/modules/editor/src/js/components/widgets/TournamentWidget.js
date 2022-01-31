@@ -31,6 +31,21 @@ const { isEditor, getDataByPath } = window.altrpHelpers;
   }
 `);
 
+const PlayerComponent = ({id, name, seed, score, winner, highlightedPlayer, setHighlightedPlayer}) => {
+  return (
+    <div 
+      onMouseEnter={() => setHighlightedPlayer(id)} 
+      onMouseLeave={() => setHighlightedPlayer(null)}
+      title={name + ' ' + (winner ? '(W)' : '(L)')}
+      className={'reacket-player \n        ' + (winner ? 'reacket-winner' : '') + ' \n        ' + (highlightedPlayer === id ? 'reacket-highlighted' : '')}
+    >
+      <div title='Seed' className='reacket-player-seed'>{seed}</div>
+      <div className='reacket-player-name'>{name}</div>
+      <div className='reacket-player-score'>{score}</div>
+    </div>
+  )
+}
+
 class TournamentWidget extends Component {
   constructor(props) {
     super(props)
@@ -65,7 +80,10 @@ class TournamentWidget extends Component {
       return ''
     }
     return (
-      <Reacket matches={data} />
+      <Reacket 
+        matches={data} 
+        playerComponent={PlayerComponent}
+      />
     )
   }
 }
