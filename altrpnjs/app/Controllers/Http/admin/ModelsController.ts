@@ -18,6 +18,8 @@ import Role from "App/Models/Role"
 import SourceRole from "App/Models/SourceRole"
 import guid from "../../../../helpers/guid"
 import SQLEditor from "App/Models/SQLEditor";
+import isProd from "../../../../helpers/isProd";
+import path from "path";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -167,10 +169,124 @@ export default class ModelsController {
     return response.json(model?.altrp_relationships || [])
   }
 
-  async options({response,}) {
+  public async deleteModelRow(httpContext: HttpContextContract) {
+    const id = parseInt(httpContext.params.id);
+
+    const rowId = parseInt(httpContext.params.row);
+
+    const model = await Model.query().where("id", id).firstOrFail();
+
+    httpContext.params[model.name] = rowId
+
+    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
+
+    try {
+      const ControllerClass = isProd() ? (await require(controllerName)).default
+        : (await import(controllerName)).default
+
+      const controller = new ControllerClass()
+
+      return {
+        data: await controller.destroy(httpContext),
+        success: true
+      }
+    } catch (e) {
+      return httpContext.response.status(500).json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+  }
+
+  public async addModelRow(httpContext: HttpContextContract) {
+    const id = parseInt(httpContext.params.id);
+
+    const model = await Model.query().where("id", id).firstOrFail();
+
+    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
+
+    try {
+      const ControllerClass = isProd() ? (await require(controllerName)).default
+        : (await import(controllerName)).default
+
+      const controller = new ControllerClass()
+
+      return {
+        data: await controller.add(httpContext),
+        success: true
+      }
+    } catch (e) {
+      return httpContext.response.status(500).json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+  }
+
+  public async updateModelRow(httpContext: HttpContextContract) {
+    const id = parseInt(httpContext.params.id);
+
+    const rowId = parseInt(httpContext.params.row);
+
+    const model = await Model.query().where("id", id).firstOrFail();
+
+
+    httpContext.params[model.name] = rowId
+
+    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
+
+    try {
+      const ControllerClass = isProd() ? (await require(controllerName)).default
+        : (await import(controllerName)).default
+
+      const controller = new ControllerClass()
+
+      return {
+        data: await controller.update(httpContext),
+        success: true
+      }
+    } catch (e) {
+      return httpContext.response.status(500).json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+  }
+
+  public async showModel(httpContext: HttpContextContract) {
+    const id = parseInt(httpContext.params.id);
+
+
+    const model = await Model.query().where("id", id).firstOrFail();
+
+    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
+
+    try {
+     const ControllerClass = isProd() ? (await require(controllerName)).default
+       : (await import(controllerName)).default
+
+      const controller = new ControllerClass()
+
+      return {
+        data: await controller.index(httpContext),
+        success: true
+      }
+    } catch (e) {
+      return httpContext.response.status(500).json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+  }
+
+  async options({response}) {
     let models = await Model.query().orderBy('title').select('*')
 
-    return response.json({options: models.map(model => ({label: model.title, value: model.id}))})
+    return response.json({options: models.map(model => ({label: model.title, value: model.id})), pageCount: 0})
   }
 
   async checkRelationName({response, request, params}: HttpContextContract) {

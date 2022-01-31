@@ -35,7 +35,10 @@ export default class Table extends BaseModel {
   })
   public user: BelongsTo<typeof User>
 
-  @hasOne(() => Model)
+  @hasOne(() => Model, {
+    foreignKey: 'table_id',
+    localKey: "id"
+  })
   public altrp_model: HasOne<typeof Model>
 
   @hasMany(() => Column, {

@@ -40,6 +40,7 @@ export default class AltrpRouting {
   }
 
   public async handle({request, response, view, auth}: HttpContextContract, next: () => Promise<void>) {
+
     /**
      * Игнорим все запросы кроме get
      */
@@ -54,7 +55,7 @@ export default class AltrpRouting {
 
     if (url === '/altrp-login'
       || url === '/login'
-      || url === '/data/current-user') {
+      || url === '/data/current-user' || "/modules/admin/admin.js") {
       await next()
       return
     }

@@ -37,6 +37,13 @@ Route.post("/logout", "IndicesController.logout").name = 'logout'
 //   return user.can([1, 2]);
 // })
 
+Route.get("/modules/admin/:file", async ({params}) => {
+  const file = await Drive.get(path.join(__dirname, `../../../public/modules/admin/${params.file}`))
+
+  return file
+})
+
+
 Route.get("/modules/editor/:file", async ({params}) => {
   const file = await Drive.get(path.join(__dirname, `../../../public/modules/editor/${params.file}`))
 
@@ -163,4 +170,3 @@ Route.group(() => {
   })
 })
   .prefix("/ajax")
-

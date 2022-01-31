@@ -17,6 +17,7 @@ import fs from "fs";
 import storage_path from "../helpers/storage_path";
 import base_path from "../helpers/base_path";
 import public_path from "../helpers/public_path";
+import User from "App/Models/User";
 
 /*
 |--------------------------------------------------------------------------
@@ -59,4 +60,5 @@ Server.middleware.registerNamed({
   cors: () => import("App/Middleware/Cors"),
   routing: () => import('App/Middleware/AltrpRouting'),
 })
+
 
