@@ -1,3 +1,4 @@
+import selectForSQLEditor from "../../helpers/selectForSQLEditor"
 {{{imports}}}
 
 export default class {{{classname}}} extends AltrpBaseController {

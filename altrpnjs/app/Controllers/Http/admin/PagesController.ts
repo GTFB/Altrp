@@ -117,7 +117,7 @@ export default class PagesController {
   }
 
   public async show({ params }) {
-    const page = await Page.query().preload("roles").where("id", parseInt(params.id)).firstOrFail();
+    const page = await Page.query().preload("roles").preload('categories').where("id", parseInt(params.id)).firstOrFail();
 
 
 

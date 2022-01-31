@@ -94,7 +94,7 @@ export default class Page extends BaseModel {
   @manyToMany(() => Role, {
     pivotForeignKey: 'role_id',
     localKey: 'id',
-    pivotTable: 'page_roles'
+    pivotTable: 'page_role'
   })
   public roles: ManyToMany<typeof Role>
 

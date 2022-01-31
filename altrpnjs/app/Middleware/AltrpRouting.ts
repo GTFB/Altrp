@@ -205,7 +205,7 @@ export default class AltrpRouting {
     if( ! template ){
       return;
     }
-    data_set(altrpSettings, 'templates_data.' + template_id,  template.toArray());
+    data_set(altrpSettings, 'templates_data.' + template_id,  template);
 
     let data = JSON.parse( template.data );
     this._extractElementsNames( data, elementNames, false );

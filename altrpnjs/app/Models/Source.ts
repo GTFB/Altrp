@@ -377,10 +377,10 @@ export default class Source extends BaseModel {
   private renderSQLEditorMethodBody() {
     return `
     const res = await selectForSQLEditor(
-    "${this.sQLEditor?.sql}",  [], [
-       'sql_name' => '${this.sQLEditor?.name}',
-       'table_name' => '${this.model?.table?.name}',
-     ], httpContext.request );
+    "${this.sQLEditor?.sql}", {
+       'sql_name' : '${this.sQLEditor?.name}',
+       'table_name' : '${this.model?.table?.name}',
+     }, httpContext.request );
     `;
   }
 }

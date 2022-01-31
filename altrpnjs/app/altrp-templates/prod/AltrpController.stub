@@ -1,3 +1,4 @@
+const selectForSQLEditor = require("../../helpers/selectForSQLEditor")
 {{{imports}}}
 
 export default class {{{classname}}} extends AltrpBaseController {

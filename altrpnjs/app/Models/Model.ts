@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import {string} from '@ioc:Adonis/Core/Helpers'
 import {DateTime} from 'luxon'
 import {
+
   afterFind,
   BaseModel,
   BelongsTo,

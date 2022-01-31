@@ -6,6 +6,7 @@ coverage
 .env
 tmp
 views/templates
+.env-prod
 
 #bundles
 public/

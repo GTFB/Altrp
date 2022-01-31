@@ -77,6 +77,9 @@ Route.group(() => {
       data: []
     }
   })
+  /**
+   * роут для обработка кастомных ajax запросов
+   */
   Route.any('models/*', async (httpContext: HttpContextContract) => {
     const segments = httpContext.request.url().split('/')
     let tableName = segments[2]

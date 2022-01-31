@@ -168,6 +168,8 @@ Route.group(() => {
     Route.post('update-all-resources', 'admin/AdminController.upgradeAllResources').name = 'admin.update-all-resources'
 
   }).prefix('/ajax')
+  Route.get('/customizers-editor', 'IndicesController.customizer')
+
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')
 
@@ -176,7 +178,6 @@ Route.group(() => {
   Route.get('/editor-content', 'IndicesController.editorContent')
   Route.get('/editor', 'IndicesController.editor')
 
-  Route.get('/customizers-editor', 'IndicesController.customizer')
 
 })
   .prefix('/admin')

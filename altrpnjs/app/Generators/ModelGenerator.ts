@@ -36,10 +36,14 @@ export default class ModelGenerator extends BaseGenerator {
     return fileName
   }
   public async run(model: Model) {
-
+    if(! model){
+      return
+    }
     await model.load((loader) => {
       loader.load('table', (table) => {
-        table.preload('columns')
+        table.preload('columns', column=>{
+          column.preload('altrp_model')
+        })
       })
       loader.load('altrp_relationships', relation => {
         relation.preload('altrp_target_model')
