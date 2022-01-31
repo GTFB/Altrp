@@ -54,48 +54,6 @@ class Text extends BaseElement {
 
     this.endControlSection()
 
-    this.startControlSection("text_settings", {
-      hideOnEmail: true,
-      tab: TAB_CONTENT,
-      label: "Text Settings"
-    });
-
-    this.addControl("text_link", {
-      type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false
-      },
-      label: "Link"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("text_style", {
-      tab: TAB_STYLE,
-      label: "Columns"
-    });
-
-    this.addControl("text_style_column-count", {
-      type: CONTROLLER_NUMBER,
-      label: "Column Count",
-    });
-
-    this.addControl("text_style_column-gap", {
-      type: CONTROLLER_SLIDER,
-      label: "Column Gap",
-      default: {
-        size: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-    });
-
-    this.endControlSection();
-
     this.startControlSection("text_style_position", {
       tab: TAB_STYLE,
       label: "Position"
@@ -119,34 +77,14 @@ class Text extends BaseElement {
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background Color",
-      stateless: true,
     });
 
     this.addControl("text_style_background_opacity", {
-      hideOnEmail: true,
       type: CONTROLLER_SLIDER,
       label: "Opacity",
       max: 1,
       min: 0,
       step: 0.01,
-      stateless: true,
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("text_style_font", {
-      tab: TAB_STYLE,
-      label: "Font"
-    });
-
-    this.addControl("text_style_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-    });
-
-    this.addControl("text_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Color",
     });
 
     this.endControlSection();
@@ -193,19 +131,16 @@ class Text extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       units: ["px", "%", "vh"],
-      stateless: true,
     });
 
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border Color",
-      stateless: true,
     });
 
     this.addControl("text_style_border_radius", {
       type: CONTROLLER_SLIDER,
       label: "Border Radius",
-      stateless: true,
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -323,13 +258,21 @@ class Text extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       units: ["px", "%", "vh"],
-      stateless: true,
+    });
+
+    this.addControl("text_paragraph_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+    });
+
+    this.addControl("text_paragraph_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
     });
 
     this.addControl("text_paragraph_indent", {
       type: CONTROLLER_SLIDER,
       label: "Text Indent",
-      stateless: true,
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -346,20 +289,17 @@ class Text extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       units: ["px", "%", "vh"],
-      stateless: true,
     });
 
     this.addControl("text_blockquote_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       units: ["px", "%", "vh"],
-      stateless: true,
     });
 
     this.addControl("text_blockquote_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background Color",//
-      stateless: true,
+      label: "Background Color",
     });
 
 
@@ -431,188 +371,194 @@ class Text extends BaseElement {
     });
 
     this.addControl('text_blockquote_box_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Block Shadow',
-    }
-  );
+        type: CONTROLLER_SHADOW,
+        label: 'Block Shadow',
+      }
+    );
 
-    this.addControl('text_blockquote_text_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Text Shadow',
-    }
-  );
-    this.endControlSection();
+      this.addControl('text_blockquote_text_shadow', {
+        type: CONTROLLER_SHADOW,
+        label: 'Text Shadow',
+      }
+    );
+      this.endControlSection();
 
-    this.startControlSection("text_table_settings", {
-      tab: TAB_STYLE,
-      label: "Table"
-    });
+      this.startControlSection("text_table_settings", {
+        tab: TAB_STYLE,
+        label: "Table"
+      });
 
-    this.addControl("text_table_margin", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Margin",
-      units: ["px", "%", "vh"],
-      stateless: true,
-    });
+      this.addControl("text_table_margin", {
+        type: CONTROLLER_DIMENSIONS,
+        label: "Margin",
+        units: ["px", "%", "vh"],
+      });
 
-    this.addControl("text_table_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color",//
-      stateless: true,
-    });
+      this.addControl("text_table_background_color", {
+        type: CONTROLLER_COLOR,
+        label: "Background Color",
+      });
 
-    this.addControl("text_table_odd_rows_color", {
-      type: CONTROLLER_COLOR,
-      label: "Odd Rows Color",
-      stateless: true,
-    });
+      this.addControl("text_table_rows_color", {
+        type: CONTROLLER_COLOR,
+        label: "Rows Color",
+      });
 
-    this.addControl("text_table_border_type", {
-      type: CONTROLLER_SELECT,
-      label: "Border Type",
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "solid",
-          label: "Solid"
-        },
-        {
-          value: "double",
-          label: "Double"
-        },
-        {
-          value: "dotted",
-          label: "Dotted"
-        },
-        {
-          value: "dashed",
-          label: "Dashed"
-        },
-        {
-          value: "groove",
-          label: "Groove"
-        }
-      ],
-    });
+      this.addControl("text_table_odd_rows_color", {
+        type: CONTROLLER_COLOR,
+        label: "Odd Rows Color",
+      });
 
-    this.addControl("text_table_border_width", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
-      units: ["px", "%", "vh"],
-    });
+      this.addControl("text_table_border_type", {
+        type: CONTROLLER_SELECT,
+        label: "Border Type",
+        options: [
+          {
+            value: "none",
+            label: "None"
+          },
+          {
+            value: "solid",
+            label: "Solid"
+          },
+          {
+            value: "double",
+            label: "Double"
+          },
+          {
+            value: "dotted",
+            label: "Dotted"
+          },
+          {
+            value: "dashed",
+            label: "Dashed"
+          },
+          {
+            value: "groove",
+            label: "Groove"
+          }
+        ],
+      });
 
-    this.addControl("text_table_border_color", {
-      type: CONTROLLER_COLOR,
-      label: "Border Color",
-    });
+      this.addControl("text_table_border_width", {
+        type: CONTROLLER_DIMENSIONS,
+        label: "Border Width",
+        units: ["px", "%", "vh"],
+      });
 
-    // this.addControl("text_table_border_radius", {
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Border radius',
-    //   default:{
-    //     size: 0,
-    //     unit: 'px',
-    //   },
-    //   units:[
-    //     'px',
-    //     '%',
-    //     'vh',
-    //   ],
-    //   max: 100,
-    //   min: 0,
-    // });
+      this.addControl("text_table_border_color", {
+        type: CONTROLLER_COLOR,
+        label: "Border Color",
+      });
 
-    this.addControl('text_table_cells_settings', {
-      type: CONTROLLER_HEADING,
-      label: 'Cells',
-    });
+      // this.addControl("text_table_border_radius", {
+      //   type: CONTROLLER_SLIDER,
+      //   label: 'Border radius',
+      //   default:{
+      //     size: 0,
+      //     unit: 'px',
+      //   },
+      //   units:[
+      //     'px',
+      //     '%',
+      //     'vh',
+      //   ],
+      //   max: 100,
+      //   min: 0,
+      // });
 
-    this.addControl("text_table_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      units: ["px", "%", "vh"],
-      stateless: true,
-    });
+      this.addControl('text_table_cells_settings', {
+        type: CONTROLLER_HEADING,
+        label: 'Cells',
+      });
 
-    this.addControl("text_table_cells_border_type", {
-      type: CONTROLLER_SELECT,
-      label: "Border Type",
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "solid",
-          label: "Solid"
-        },
-        {
-          value: "double",
-          label: "Double"
-        },
-        {
-          value: "dotted",
-          label: "Dotted"
-        },
-        {
-          value: "dashed",
-          label: "Dashed"
-        },
-        {
-          value: "groove",
-          label: "Groove"
-        }
-      ],
-    });
+      this.addControl("text_table_padding", {
+        type: CONTROLLER_DIMENSIONS,
+        label: "Padding",
+        units: ["px", "%", "vh"],
+      });
 
-    this.addControl("text_table_cells_border_width", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
-      units: ["px", "%", "vh"],
-    });
+      this.addControl("text_table_cells_border_type", {
+        type: CONTROLLER_SELECT,
+        label: "Border Type",
+        options: [
+          {
+            value: "none",
+            label: "None"
+          },
+          {
+            value: "solid",
+            label: "Solid"
+          },
+          {
+            value: "double",
+            label: "Double"
+          },
+          {
+            value: "dotted",
+            label: "Dotted"
+          },
+          {
+            value: "dashed",
+            label: "Dashed"
+          },
+          {
+            value: "groove",
+            label: "Groove"
+          }
+        ],
+      });
 
-    this.addControl("text_table_cells_border_color", {
-      type: CONTROLLER_COLOR,
-      label: "Border Color",
+      this.addControl("text_table_cells_border_width", {
+        type: CONTROLLER_DIMENSIONS,
+        label: "Border Width",
+        units: ["px", "%", "vh"],
+      });
 
-    });
+      this.addControl("text_table_cells_border_color", {
+        type: CONTROLLER_COLOR,
+        label: "Border Color",
 
-    // this.addControl("text_table_cells_border_radius", {
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Border radius',
-    //   default:{
-    //     size: 0,
-    //     unit: 'px',
-    //   },
-    //   units:[
-    //     'px',
-    //     '%',
-    //     'vh',
-    //   ],
-    //   max: 100,
-    //   min: 0,
-    // });
+      });
 
-    this.addControl("text_table_cells_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-    });
+      // this.addControl("text_table_cells_border_radius", {
+      //   type: CONTROLLER_SLIDER,
+      //   label: 'Border radius',
+      //   default:{
+      //     size: 0,
+      //     unit: 'px',
+      //   },
+      //   units:[
+      //     'px',
+      //     '%',
+      //     'vh',
+      //   ],
+      //   max: 100,
+      //   min: 0,
+      // });
 
-    this.addControl('text_table_cells_text_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Text Shadow',
+      this.addControl("text_table_cells_font_typographic", {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: "Typographic",
+      });
 
-    }
-  );
+      this.addControl('text_table_cells_text_shadow', {
+        type: CONTROLLER_SHADOW,
+        label: 'Text Shadow',
+
+      }
+    );
 
     this.endControlSection();
 
     this.startControlSection("text_link_settings", {
       tab: TAB_STYLE,
       label: "Link"
+    });
+
+    this.addControl("text_link_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
     });
 
     this.addControl("text_link_font_typographic", {
@@ -623,113 +569,119 @@ class Text extends BaseElement {
     this.addControl('text_link_text_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Text Shadow',
+    });
 
-    }
-  );
+    this.endControlSection();
 
-  this.endControlSection();
+    this.startControlSection("text_numbered_list_settings", {
+      tab: TAB_STYLE,
+      label: "Numbered List"
+    });
 
-  this.startControlSection("text_numbered_list_settings", {
-    tab: TAB_STYLE,
-    label: "Numbered List"
-  });
+    this.addControl("text_numbered_list_color", {
+      type: CONTROLLER_COLOR,
+      label: "List Color",
+    });
 
-  this.addControl("text_numbered_list_margin", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "List Margin",
+    this.addControl("text_numbered_list_margin", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "List Margin",
 
-    units: ["px", "%", "vh"],
-    stateless: true,
-  });
+      units: ["px", "%", "vh"],
+      stateless: true,
+    });
 
-  this.addControl("text_numbered_list_item_margin", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "Element Margin",
-    units: ["px", "%", "vh"],
-    stateless: true,
-  });
+    this.addControl("text_numbered_list_item_margin", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Element Margin",
+      units: ["px", "%", "vh"],
+    });
 
-  this.addControl("text_numbered_list_style_type", {
-    type: CONTROLLER_SELECT,
-    label: "List Style Type",
-    options: [
-      {
-        value: "none",
-        label: "None"
-      },
-      {
-        value: "decimal",
-        label: "Decimal"
-      },
-      {
-        value: "lower-alpha",
-        label: "Greek"
-      },
-      {
-        value: "upper-latin",
-        label: "Latin"
-      },
-      {
-        value: "upper-roman",
-        label: "Upper Roman"
-      },
-      {
-        value: "lower-roman",
-        label: "Lower Roman"
-      }
-    ],
+    this.addControl("text_numbered_list_style_type", {
+      type: CONTROLLER_SELECT,
+      label: "List Style Type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "decimal",
+          label: "Decimal"
+        },
+        {
+          value: "lower-alpha",
+          label: "Greek"
+        },
+        {
+          value: "upper-latin",
+          label: "Latin"
+        },
+        {
+          value: "upper-roman",
+          label: "Upper Roman"
+        },
+        {
+          value: "lower-roman",
+          label: "Lower Roman"
+        }
+      ],
 
-  });
-
-
-  this.endControlSection();
-
-  this.startControlSection("text_unordered_list_settings", {
-    tab: TAB_STYLE,
-    label: "Unordered List"
-  });
-
-  this.addControl("text_unordered_list_margin", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "List Margin",
-
-    units: ["px", "%", "vh"],
-    stateless: true,
-  });
-
-  this.addControl("text_unordered_list_item_margin", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "Element Margin",
-
-    units: ["px", "%", "vh"],
-    stateless: true,
-  });
-
-  this.addControl("text_unordered_list_style_type", {
-    type: CONTROLLER_SELECT,
-    label: "List Style Type",
-    options: [
-      {
-        value: "none",
-        label: "None"
-      },
-      {
-        value: "circle",
-        label: "Circle"
-      },
-      {
-        value: "disc",
-        label: "Disc"
-      },
-      {
-        value: "square",
-        label: "Square"
-      },
-    ],
-  });
+    });
 
 
-  this.endControlSection();
+    this.endControlSection();
+
+    this.startControlSection("text_unordered_list_settings", {
+      tab: TAB_STYLE,
+      label: "Unordered List"
+    });
+
+    this.addControl('text_unordered_list_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color'
+    })
+
+    this.addControl("text_unordered_list_margin", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "List Margin",
+
+      units: ["px", "%", "vh"],
+      stateless: true,
+    });
+
+    this.addControl("text_unordered_list_item_margin", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Element Margin",
+
+      units: ["px", "%", "vh"],
+    });
+
+    this.addControl("text_unordered_list_style_type", {
+      type: CONTROLLER_SELECT,
+      label: "List Style Type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "circle",
+          label: "Circle"
+        },
+        {
+          value: "disc",
+          label: "Disc"
+        },
+        {
+          value: "square",
+          label: "Square"
+        },
+      ],
+    });
+
+
+    this.endControlSection();
 
     advancedTabControllers(this);
   }
