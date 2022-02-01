@@ -19,6 +19,7 @@ import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import getCurrentDevice from "../../helpers/getCurrentDevice";
 
 export default class AltrpRouting {
 
@@ -110,6 +111,7 @@ export default class AltrpRouting {
         protocol: request.protocol(),
         host: request.host(),
         originalUrl: url,
+        current_device: getCurrentDevice(request),
         json: {
           altrp_settings,
           page: pageAreas,

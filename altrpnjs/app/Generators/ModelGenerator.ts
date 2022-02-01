@@ -140,7 +140,7 @@ ${_.uniqBy(
   private _getProdColumnsContent(): string {
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
-${columns.map(column => column.renderProdForModel()).join('')}
+${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').join('')}
 `
   }
 

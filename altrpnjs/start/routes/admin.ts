@@ -170,15 +170,13 @@ Route.group(() => {
   }).prefix('/ajax')
   Route.get('/customizers-editor', 'IndicesController.customizer')
 
-  Route.get('/', 'IndicesController.admin')
-  Route.get('*', 'IndicesController.admin')
-
   Route.get("/robots-editor", "IndicesController.robot")
 
   Route.get('/editor-content', 'IndicesController.editorContent')
   Route.get('/editor', 'IndicesController.editor')
 
-
+  Route.get('/', 'IndicesController.admin')
+  Route.get('*', 'IndicesController.admin')
 })
   .prefix('/admin')
   .middleware('admin')

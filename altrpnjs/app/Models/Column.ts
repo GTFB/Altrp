@@ -101,6 +101,9 @@ export default class Column extends BaseModel {
   public altrp_table: BelongsTo<typeof Table>
 
   renderProdForModel():string{
+    if(!this.altrp_model){
+      return ''
+    }
     if(this.type === 'calculated'){
       return ``
     }
