@@ -18,6 +18,9 @@ import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
+import Arrow from './svgs/arrow.svg';
+import DotsDraggable from './svgs/dots-draggable.svg';
+import CloseNavigator from './svgs/clear_black.svg';
 window.Link = "a";
 import store, {
   getCurrentElement,
@@ -53,6 +56,8 @@ import { advancedTabControllers } from './js/decorators/register-controllers'
 import Repeater from './js/classes/Repeater'
 import EditorWindowPopup from "./js/components/EditorWindowPopup";
 import ConditionsPopup from "./js/components/ConditionsPopup";
+import {Rnd} from "react-rnd";
+import { Resizable } from "re-resizable";
 
 /**
  * Главный класс редактора.<br/>
@@ -77,11 +82,13 @@ class Editor extends Component {
       // activePanel: 'widgets',
       activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
-      showDialogWindow: false
+      showDialogWindow: false,
+      hidePanel: false,
+      navigator: false,
+      resizeNavigator: false,
     };
     this.effectRef = React.createRef();
     this.openPageSettings = this.openPageSettings.bind(this);
-    this.openNavigratonPanel = this.openNavigratonPanel.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showNavigationPanel = this.showNavigationPanel.bind(this);
     this.showHistoryPanel = this.showHistoryPanel.bind(this);
@@ -277,9 +284,47 @@ class Editor extends Component {
     this.showSettingsPanel();
   }
 
-  openNavigratonPanel() {
-    this.modules.templateDataStorage.setCurrentRootElement();
-    this.showNavigationPanel();
+  navigatorPanel = (e) => {
+    switch(e.currentTarget.dataset.navigator) {
+      case 'open-sidebar':
+        this.modules.templateDataStorage.setCurrentRootElement();
+        if (!this.state.navigator) {
+          this.showNavigationPanel()
+          this.setState(state => ({
+            ...state,
+            resizeNavigator: true
+          }))
+        } else {
+          this.setState(state => ({
+            ...state,
+            resizeNavigator: true,
+            navigator: false
+          }));
+        }
+        break
+      case 'close-sidebar':
+        this.showSettingsPanel()
+        this.setState(state => ({
+          ...state,
+          resizeNavigator: false
+        }))
+        break
+      case 'open-draggable':
+        this.modules.templateDataStorage.setCurrentRootElement();
+        this.setState(state => ({
+          ...state,
+          resizeNavigator: false,
+          navigator: true
+        }));
+        break
+      case 'close-draggable':
+        this.showSettingsPanel()
+        this.setState(state => ({
+          ...state,
+          navigator: false
+        }));
+        break
+    }
   }
 
   addWidget(element, component) {
@@ -291,6 +336,28 @@ class Editor extends Component {
    */
   filterWidgets(fn) {
     window.appStore.dispatch(filterWidgets(fn))
+  }
+
+  toggleHidePanel = () => {
+    this.setState(state => ({
+      ...state,
+      hidePanel: !state.hidePanel
+    }))
+    const root = document.querySelector(':root')
+    let hide = !this.state.hidePanel ? 'hide' : 'noHide';
+
+    const components = [
+      'transform-panel',
+      'width-padding',
+      'width-editor',
+    ]
+
+    components.forEach(component => {
+      root.style.setProperty(
+        `--${component}-default`,
+        `var(--${component}-${hide})`
+      );
+    });
   }
 
   /**
@@ -352,7 +419,7 @@ class Editor extends Component {
               {this.state.activePanel === "widgets" && <WidgetsPanel />}
               {this.state.activePanel === "settings" && <SettingsPanel />}
               {this.state.activePanel === "history" && <HistoryPanel />}
-              {this.state.activePanel === "navigation" && <NavigationPanel />}
+              {this.state.activePanel === "navigation" &&  <SettingsPanel />}
               {this.state.activePanel === "common" && (
                 <CommonPanel
                   showGlobalColorsPanel={this.showGlobalColorsPanel}
@@ -372,8 +439,9 @@ class Editor extends Component {
                 <Settings className="icon" />
               </button>
               <button
+                data-navigator="open-sidebar"
                 className={"btn btn_settings" + navigationActive}
-                onClick={this.openNavigratonPanel}
+                onClick={this.navigatorPanel}
               >
                 <Navigation className="icon" />
               </button>
@@ -391,8 +459,11 @@ class Editor extends Component {
                 toggleModalWindow={() => this.toggleModalWindow()}
               />
             </div>
+            <div onClick={this.toggleHidePanel} className="panel-click">
+              <Arrow width={20} height={14} className={`panel-arrow${this.state.hidePanel ? ' panel-arrow-hide' : ''}`} />
+            </div>
           </div>
-          <div className="right-panel">
+          <div className="right-panel" >
             {this.state.showDialogWindow && (
               // <DialogWindow
               //   state={this.state.showDialogWindow}
@@ -406,6 +477,67 @@ class Editor extends Component {
               </EditorWindowPopup>
             )}
             <EditorWindow />
+            <Resizable
+              className={this.state.resizeNavigator ? 'right-panel-sidebar-open' : 'right-panel-sidebar-hide'}
+              defaultSize={{
+                width: 270,
+                height: '100vh',
+              }}
+              minWidth={270}
+              maxWidth={750}
+              enable={{top:false, right:false, bottom:false, left:true, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false}}
+            >
+              <div className="right-panel-sidebar">
+                <div className='right-panel-sidebar-top'>
+                  <h2 className="right-panel-sidebar-title">Navigator</h2>
+                  <CloseNavigator data-navigator="close-sidebar" onClick={this.navigatorPanel} width={20} height={20} className="exit-sidebar-navigator"/>
+                </div>
+                <div className='right-panel-sidebar-center'>
+                  {this.state.resizeNavigator && (
+                    <NavigationPanel  />
+                  )}
+                </div>
+                <div className='right-panel-sidebar-bottom'>
+                  <button
+                    onClick={this.navigatorPanel}
+                    data-navigator="open-draggable"
+                    className="open-draggable-navigator"
+                  >
+                    Open draggable navigator
+                  </button>
+                </div>
+              </div>
+            </Resizable>
+            <Rnd
+              className={this.state.navigator ? "draggable-navigator" : "draggable-navigator-hide"}
+              default={{
+                x: 400,
+                y: 100,
+                width: 350,
+                height: 600,
+              }}
+              minWidth={350}
+              minHeight={600}
+              maxWidth={1000}
+              maxHeight={800}
+              bounds="body"
+              resizeHandleStyles={{bottom: {height: '30px', bottom: '0'}}}
+            >
+              <div className="draggable-popup">
+                <div className="draggable-popup-top">
+                  <h2 className="title-navigator">Navigator</h2>
+                  <CloseNavigator onClick={this.navigatorPanel} data-navigator="close-draggable" width={16} height={16} className="exit-navigator"/>
+                </div>
+                <div className="draggable-popup-center">
+                  {this.state.navigator && (
+                    <NavigationPanel />
+                  )}
+                </div>
+                <div className="draggable-popup-bottom">
+                  <DotsDraggable width={16} height={16} className="dots-draggable"/>
+                </div>
+              </div>
+            </Rnd>
           </div>
         </div>
         <AssetsBrowser rawEnable={true}/>

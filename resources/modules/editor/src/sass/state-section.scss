@@ -59,3 +59,11 @@
   grid-template-columns: 1fr 46px;
   grid-gap: 10px;
 }
+
+.altrp-section--full-width {
+  right: calc((100vw - 1440px) / 2);
+
+  & .overlay-settings__button_edit {
+    position: relative;
+  }
+}
