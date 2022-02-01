@@ -16,79 +16,28 @@ import { isEditor, parseURLTemplate } from "../../../../../front-app/src/js/help
   background-repeat: repeat;
 }
 
-.altrp-heading-advanced-wrapper {
-  position: absolute;
-  left: 0;
-  margin: 0;
-  z-index: -1;
-  width: 100%;
-  top: 0;
-  box-sizing: border-box;
-}
-
-.altrp-heading-advanced {
-  display: inline-block;
-  margin: 0;
-}
-
-.altrp-heading-advanced-main-fill {
-  background-clip: unset;
-  text-fill-color: transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-transition-property: prop;
-  -moz-transition-property: prop;
-  -ms-transition-property: prop;
-  -o-transition-property: prop;
-  transition-property: prop;
-}
-
 .altrp-heading {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.altrp-heading a {
+  color: black;
+}
+
+.altrp-heading a:hover {
+  color: black;
+  text-decoration: none;
+}
+
 .altrp-heading-wrapper {
-  display: flex;
-}
-
-.altrp-heading-wrapper-sub-top {
-  flex-direction: column-reverse;
-}
-
-.altrp-heading-sub {
-  margin: 0;
-  display: flex;
-  padding: 0;
-}
-
-.altrp-heading-sub-link {
   display: flex;
 }
 
 .altrp-heading-sub-container-link {
   margin: 0;
 }
-
-.altrp-heading-wrapper-sub-left {
-  flex-direction: row-reverse;
-  align-items: center;
-}
-
-.altrp-heading-wrapper-sub-right {
-  flex-direction: row;
-  align-items: center;
-}
-
-.altrp-heading-animating-tag {
-  display: flex;
-}
-
-.altrp-animating-rotating {
-  display: flex;
-}
-
 `)
 
 class HeadingTypeHeadingWidget extends Component {
@@ -107,43 +56,13 @@ class HeadingTypeHeadingWidget extends Component {
   }
 
   render() {
-
-    let heading = <div>
-      Loading...
-    </div>;
+    let heading;
 
     let modelData = this.props.element.getCurrentModel().getData();
     const background_image = this.props.element.getSettings('background_image', {});
     let text = this.getContent('text');
     let link;
-    const className = "altrp-heading altrp-heading--link " +
-      + this.state.settings.position_css_classes + (background_image.url ? ' altrp-background-image' : '');
-    let wrapperClasses = "altrp-heading-wrapper";
-
-    //sub heading
-    const subTag = this.state.settings.sub_heading_settings_html_tag || "h2";
-    let subHeading = "";
-    if (this.state.settings.text_sub_switch) {
-      const subText = this.getContent('text_sub');
-
-      switch (this.getContent("sub_heading_settings_position")) {
-        case "top":
-          wrapperClasses += " altrp-heading-wrapper-sub-top";
-          break;
-        case "left":
-          wrapperClasses += " altrp-heading-wrapper-sub-left";
-          break;
-        case "right":
-          wrapperClasses += " altrp-heading-wrapper-sub-right";
-          break;
-        default:
-          wrapperClasses += " altrp-heading-wrapper-sub-bottom";
-      }
-      subHeading = React.createElement(subTag, {
-        dangerouslySetInnerHTML: { __html: subText },
-        className: "altrp-heading-sub"
-      })
-    }
+    const className = "altrp-heading altrp-heading--link " + (this.state.settings.position_css_classes || ' ') + (background_image.url ? ' altrp-background-image' : '');
 
     if (this.state.settings.link_link && this.state.settings.link_link.url) {
       let linkProps = {
@@ -169,6 +88,7 @@ class HeadingTypeHeadingWidget extends Component {
       if (isEditor()) {
         linkProps.onClick = e => { e.preventDefault() }
       }
+      
       link = (
         <AltrpLink {...linkProps}>
           {
@@ -176,117 +96,6 @@ class HeadingTypeHeadingWidget extends Component {
           }
         </AltrpLink>
       )
-    }
-
-    let advancedHeading = "";
-    if (this.state.settings.switch_advanced_heading_content) {
-      let styles = {};
-
-      let xOffset = this.getContent("horizontal_offset_advanced_heading_content");
-      let yOffset = this.getContent("vertical_offset_advanced_heading_content");
-      let rotate = this.getContent("rotate_offset_advanced_heading_content");
-      let transformOrigin = this.getContent("transform_origin_offset_advanced_heading_content");
-
-      if (xOffset.size === "") {
-        xOffset.size = "0";
-      }
-      if (yOffset.size === "") {
-        yOffset.size = "0";
-      }
-      if (rotate.size === "") {
-        rotate.size = "0"
-      }
-
-      let origin = "0 0";
-
-      switch (transformOrigin) {
-        case "topLeft":
-          origin = "0 0";
-          break;
-        case "topCenter":
-          origin = "50% 0";
-          break;
-        case "topRight":
-          origin = "100% 0";
-          break;
-        case "centerLeft":
-          origin = "0 50%";
-          break;
-        case "center":
-          origin = "50% 50%";
-          break;
-        case "centerRight":
-          origin = "100% 50%";
-          break;
-        case "bottomLeft":
-          origin = "0 100%";
-          break;
-        case "bottomCenter":
-          origin = "50% 100%";
-          break;
-        case "bottomRight":
-          origin = "100% 100%";
-          break;
-      }
-
-      let pos = {
-        transform: `translate(${xOffset.size + xOffset.unit}, ${yOffset.size + yOffset.unit}) rotate(${rotate.size}deg)`,
-        transformOrigin: origin
-      };
-
-      styles = { ...pos };
-
-      let classes = "altrp-heading-advanced";
-
-      if (this.props.element.getSettings("main_fill_advanced_heading_style")) {
-        classes += " altrp-heading-advanced-main-fill"
-      }
-      advancedHeading = (
-        <div className="altrp-heading-advanced-wrapper">
-          {
-            React.createElement(this.state.settings.heading_settings_html_tag || 'h2', {
-              className: classes,
-              style: styles,
-              dangerouslySetInnerHTML: { __html: this.getContent("text_advanced_heading_content") }
-            })
-          }
-        </div>
-      );
-
-      let currentBreakpoint = {};
-      switch (this.getContent("hide_at_offset_advanced_heading_content")) {
-        case "never":
-          currentBreakpoint = {
-            type: "never",
-            size: 0
-          };
-          break;
-        case "mobile":
-          currentBreakpoint = {
-            type: "mobile",
-            size: 768
-          };
-          break;
-        case "tablet":
-          currentBreakpoint = {
-            type: "tablet",
-            size: 1025
-          };
-          break;
-        default:
-      }
-
-      if (this.getContent("hide_at_offset_advanced_heading_content") !== "never") {
-        let bodyWidth = document.body.offsetWidth;
-
-        if (isEditor()) {
-          bodyWidth = document.getElementById("editorWindow").offsetWidth
-        }
-
-        if (bodyWidth <= currentBreakpoint.size) {
-          advancedHeading = ""
-        }
-      }
     }
 
     let headingContainer = link ?
@@ -299,18 +108,6 @@ class HeadingTypeHeadingWidget extends Component {
               id: this.state.settings.position_css_id || "",
             },
             link
-          )
-        }
-        {
-          this.state.settings.text_sub_switch && React.createElement(subTag, {
-            className: "altrp-heading-sub-container-link altrp-heading-sub"
-          }, (
-            React.createElement(AltrpLink, {
-              link: this.state.settings.link_link,
-              dangerouslySetInnerHTML: { __html: this.state.settings.text_sub },
-              className: "altrp-inherit altrp-inherit_wo-border"
-            })
-          )
           )
         }
       </React.Fragment>
@@ -326,18 +123,10 @@ class HeadingTypeHeadingWidget extends Component {
             },
           )
         }
-        {
-          subHeading
-        }
       </React.Fragment>;
     heading = (
-      <div className={wrapperClasses}>
-        {
-          advancedHeading
-        }
-        {
-          headingContainer
-        }
+      <div className="altrp-heading-wrapper">
+        {headingContainer}
       </div>
     );
 

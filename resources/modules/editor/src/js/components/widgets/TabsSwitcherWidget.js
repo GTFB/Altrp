@@ -28,7 +28,6 @@ const {TemplateLoader} = window.altrpHelpers;
     & span.bp3-control-indicator.bp3-control-indicator {
       width: 50px;
       height: 25px;
-      border-radius: 50px;
       margin: 0;
 
       &:before {
@@ -45,6 +44,7 @@ const {TemplateLoader} = window.altrpHelpers;
   }
 
   .altrp-tabs-switcher_label {
+    font-weight: 100;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -78,7 +78,6 @@ class TabsSwitcherWidget extends Component {
   }
 
   onChange() {
-
     this.setState((s) => ({
       ...s,
       switcher: !s.switcher
@@ -127,9 +126,7 @@ class TabsSwitcherWidget extends Component {
     return <div className="altrp-tabs-switcher">
       <div className="altrp-tabs-switcher_wrapper">
         <div className="altrp-tabs-switcher_label altrp-tabs-switcher_label-one">
-          {
-            oneTitle
-          }
+          {oneTitle}
         </div>
         <div className="altrp-tabs-switcher_switch-wrapper">
           <Switch
@@ -139,15 +136,11 @@ class TabsSwitcherWidget extends Component {
           />
         </div>
         <div  className="altrp-tabs-switcher_label altrp-tabs-switcher_label-two">
-          {
-            twoTitle
-          }
+          {twoTitle}
         </div>
       </div>
       <div className="altrp-tabs-switcher_content">
-        {
-          content
-        }
+        {content}
       </div>
     </div>
   }

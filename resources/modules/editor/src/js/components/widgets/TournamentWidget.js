@@ -29,7 +29,35 @@ const { isEditor, getDataByPath } = window.altrpHelpers;
     margin: 0 !important;
     width: auto !important;
   }
+
+  .reacket-player-image {
+    height: 100%;
+    width: auto;
+    margin-right: 15px;
+  }
+
+  .reacket-player {
+    height: 38px;
+  }
 `);
+
+const PlayerComponent = ({id, name, seed, score, winner, highlightedPlayer, setHighlightedPlayer, player}) => {
+  return (
+    <div 
+      onMouseEnter={() => setHighlightedPlayer(id)} 
+      onMouseLeave={() => setHighlightedPlayer(null)}
+      title={name + ' ' + (winner ? '(W)' : '(L)')}
+      className={'reacket-player ' + (winner ? 'reacket-winner' : '') + ' ' + (highlightedPlayer === id ? 'reacket-highlighted' : '')}
+    >
+      <div title='Seed' className='reacket-player-seed'>{seed}</div>
+      {player.image && (
+        <img className='reacket-player-image' src={player.image} />
+      )}
+      <div className='reacket-player-name'>{name}</div>
+      <div className='reacket-player-score'>{score}</div>
+    </div>
+  )
+}
 
 class TournamentWidget extends Component {
   constructor(props) {
@@ -46,26 +74,38 @@ class TournamentWidget extends Component {
     }
   }
 
-  componentDidMount() {
-    console.log('tournament did mount');
-  }
-
   _componentDidMount() {
-    console.log('tournament did mount');
+    if(isEditor()){
+      this.setState({
+        data: [
+          { "id": 1, "round": 1, "match": 1, "players": [{ "id": 1, "name": "Mr. Orange", "seed": 1 }, { "id": 2, "name": "Mr. White", "seed": 8 }], "score": [0, 1] }, 
+          { "id": 2, "round": 1, "match": 2, "players": [{ "id": 3, "name": "Mr. Pink", "seed": 5 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] }, 
+          { "id": 3, "round": 1, "match": 3, "players": [{ "id": 5, "name": "Mr. Brown", "seed": 3 }, { "id": 6, "name": "Mr. Black", "seed": 6 }], "score": [0, 1] }, 
+          { "id": 4, "round": 1, "match": 4, "players": [{ "id": 7, "name": "Mr. Red", "seed": 7 }, { "id": 8, "name": "Mr. Yellow", "seed": 2 }], "score": [1, 0] }, 
+          { "id": 5, "round": 2, "match": 1, "players": [{ "id": 2, "name": "Mr. White", "seed": 7 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] }, 
+          { "id": 6, "round": 2, "match": 2, "players": [{ "id": 6, "name": "Mr. Black", "seed": 6 }, { "id": 7, "name": "Mr. Red", "seed": 7 }], "score": [0, 1] }, 
+          { "id": 7, "round": 3, "match": 1, "players": [{ "id": 4, "name": "Mr. Blue", "seed": 4 }, { "id": 7, "name": "Mr. Red", "seed": 7 }], "score": [0, 1] }
+        ]
+      })
+    } else {
+      this.setState({
+        data: getDataByPath(this.props.element.getResponsiveSetting('path'))
+      })
+    }
   }
 
   render() {
-    let data
-    if(isEditor()){
-      data= [{ "id": 1, "round": 1, "match": 1, "players": [{ "id": 1, "name": "Mr. Orange", "seed": 1 }, { "id": 2, "name": "Mr. White", "seed": 8 }], "score": [0, 1] }, { "id": 2, "round": 1, "match": 2, "players": [{ "id": 3, "name": "Mr. Pink", "seed": 5 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] }, { "id": 3, "round": 1, "match": 3, "players": [{ "id": 5, "name": "Mr. Brown", "seed": 3 }, { "id": 6, "name": "Mr. Black", "seed": 6 }], "score": [0, 1] }, { "id": 4, "round": 1, "match": 4, "players": [{ "id": 7, "name": "Mr. Red", "seed": 7 }, { "id": 8, "name": "Mr. Yellow", "seed": 2 }], "score": [1, 0] }, { "id": 5, "round": 2, "match": 1, "players": [{ "id": 2, "name": "Mr. White", "seed": 7 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] }, { "id": 6, "round": 2, "match": 2, "players": [{ "id": 6, "name": "Mr. Black", "seed": 6 }, { "id": 7, "name": "Mr. Red", "seed": 7 }], "score": [0, 1] }, { "id": 7, "round": 3, "match": 1, "players": [{ "id": 4, "name": "Mr. Blue", "seed": 4 }, { "id": 7, "name": "Mr. Red", "seed": 7 }], "score": [0, 1] }]
-    } else {
-      data = getDataByPath(this.props.element.getResponsiveSetting('path'))
+    const {data} = this.state
+
+    if (!data){
+      return 'No data'
     }
-    if(!data){
-      return ''
-    }
+
     return (
-      <Reacket matches={data} />
+      <Reacket 
+        matches={data} 
+        playerComponent={PlayerComponent}
+      />
     )
   }
 }
