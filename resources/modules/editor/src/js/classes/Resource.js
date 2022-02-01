@@ -1,5 +1,6 @@
 import queryString from "query-string";
 import { replaceContentWithData } from "../../../../front-app/src/js/helpers";
+import getCookie from "../helpers/getCookie";
 window.queryString = queryString;
 /**
  * @class Resource
@@ -175,9 +176,10 @@ class Resource {
    * @return {Promise}
    * */
   post(data = {}, headers) {
+    let _token = getCookie('XSRF-TOKEN')
     headers = _.assign(
       {
-        "X-CSRF-TOKEN": _token
+        "X-XSRF-TOKEN": _token,
         // 'Content-Type': 'application/json',
         // 'Accept': 'application/json',
       },
@@ -227,8 +229,10 @@ class Resource {
    * */
   postFiles(files) {
     // fileTypes = fileTypes || "image";
+    let _token = getCookie('XSRF-TOKEN')
+
     let headers = {
-      "X-CSRF-TOKEN": _token
+      "X-XSRF-TOKEN": _token
     };
     let formData = new FormData();
     // fileTypes = fileTypes.split(",");
@@ -266,8 +270,10 @@ class Resource {
    * @return {Promise}
    * */
   postFile(file) {
+    let _token = getCookie('XSRF-TOKEN')
+
     let headers = {
-      "X-CSRF-TOKEN": _token
+      "X-XSRF-TOKEN": _token
     };
     let formData = new FormData();
     formData.append("favicon", file);
@@ -288,9 +294,11 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data, headers = null) {
+    let _token = getCookie('XSRF-TOKEN')
+
     headers = _.assign(
       {
-        "X-CSRF-TOKEN": _token
+        "X-XSRF-TOKEN": _token
         // 'Content-Type': 'application/json',
         // 'Accept': 'application/json',
       },
@@ -340,11 +348,13 @@ class Resource {
    * @return {Promise}
    * */
   delete(id = "", data = {}, customHeaders) {
+    let _token = getCookie('XSRF-TOKEN')
+
     let options = {
       method: "delete",
       headers: _.assign(
         {
-          "X-CSRF-TOKEN": _token,
+          "X-XSRF-TOKEN": _token,
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
@@ -423,3 +433,11 @@ class Resource {
 }
 
 export default Resource;
+
+
+if(!window.__token_interval){
+  window.__token_interval = setInterval(()=>{
+    const resource = new Resource({route: '/ajax/_token'}, )
+    resource.getAll()
+  }, 15000)
+}
