@@ -6,6 +6,7 @@ namespace App\Altrp\Generators\Controller;
 
 use App\Altrp\Builders\Traits\DynamicVariables;
 use App\Altrp\Customizer;
+use App\Altrp\Robot;
 use App\Altrp\Generators\Repository\RepositoryFile;
 use App\Altrp\Generators\Repository\RepositoryInterfaceFile;
 use App\Exceptions\Controller\ControllerFileException;
@@ -356,13 +357,19 @@ class ControllerFileWriter
     {
         foreach ($controllerContent as $line => $content) {
             if (Str::contains($content, $blockName)) {
+
+
                 if (! $methodContent) break;
                 array_splice($controllerContent, $line, 0, "");
+
+                //dd($controllerContent);
+
                 foreach ($methodContent as $l => $c) {
                     array_splice($controllerContent, $line + 1 + $l, 0, $c);
                 }
             }
         }
+        //dd($controllerContent);
         return file_put_contents(
             $this->controller->getFile(),
             implode(PHP_EOL,$controllerContent)
@@ -377,6 +384,26 @@ class ControllerFileWriter
     $methodContent = $customizer->getMethodContent();
     $methodContent = explode( PHP_EOL, $methodContent );
     $controllerContent = file($this->controller->getFile(), 2);
+    return $this->writeMethods($controllerContent, $methodContent, 'CUSTOMIZERS_METHODS_END');
+  }
+
+  /**
+   * @param Robot $robot
+   */
+  public function writeRobotMethod( Robot $robot )
+  {
+    $methodContent = $robot->getWebhookContent();
+    $methodContent = explode( PHP_EOL, $methodContent );
+    $controllerContent = file($this->controller->getFile(), 2);
+    $namespaces = [
+      "use App\\Altrp\\Robot;",
+      "use App\\Services\\TelegramService;"
+    ];
+    foreach ($namespaces as $key => $value) {
+      if (!$this->namespaceExists($controllerContent, $value)) {
+        $this->writeNamespaces($controllerContent, [$value]);
+      }
+    }  
     return $this->writeMethods($controllerContent, $methodContent, 'CUSTOMIZERS_METHODS_END');
   }
 

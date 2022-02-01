@@ -4,6 +4,7 @@ namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
 use App\Altrp\Customizer;
+use App\Altrp\Robot;
 use App\Altrp\Source;
 use App\Role;
 use Illuminate\Support\Str;
@@ -141,6 +142,19 @@ class RouteGenerator
                   }
                   $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
                   $routes[] = 'Route::' . $source->request_type . '(\'/' . $tableName .'/customizers/'
+                    . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
+                    . \Str::snake($source->name) . '\']);';
+                } break;
+                case 'robot':{
+                  /**
+                   * @var $robot Robot
+                   */
+                  $robot = Robot::find( $source->sourceable_id );
+                  if( ! $robot ){
+                    break;
+                  }
+                  $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
+                  $routes[] = 'Route::' . $source->request_type . '(\'/' . $tableName .'/robots/'
                     . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
                     . \Str::snake($source->name) . '\']);';
                 } break;

@@ -201,7 +201,7 @@ class AltrpSourceObserver
           throw new ControllerFileException( 'Failed to delete method to the controller file', 500 );
       }
     }
-    if ( $source->type == 'customizer' ) {
+    if ( $source->type == 'customizer' || $source->type == 'robot' ) {
       $repo = new RepositoryFile( $model );
       $repoInterface = new RepositoryInterfaceFile( $model );
       $controllerWriter = new ControllerFileWriter(
