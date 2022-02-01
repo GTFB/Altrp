@@ -23,6 +23,7 @@ import { DndProvider, } from 'react-dnd'
 import frontElementsManager from '../../front-app/src/js/classes/FrontElementsManager.js'
 import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
 import '../../front-app/src/js/libs/reacket'
+import Scrollbars from "react-custom-scrollbars";
 
 window.Link = 'a';
 frontElementsManager.loadAllComponents();
@@ -96,19 +97,21 @@ class EditorContent extends Component {
       )[0]}>
         <Router>
           <DndProvider backend={HTML5Backend}>
-            <div className="editor-content d-flex flex-column justify-center align-content-center"
-              onClick={this.onClick}
-                      ref={this.editorWindow}>
-            {
-              this.state.rootElement ? React.createElement(
-                  this.state.rootElement.componentClass,{
-                    children: this.state.rootElement.children,
-                    element:this.state.rootElement,
-                  }
-              ) : ''
-            }
-              <NewSection />
-            </div>
+            <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+              <div className="editor-content d-flex flex-column justify-center align-content-center"
+                   onClick={this.onClick}
+                   ref={this.editorWindow}>
+                {
+                  this.state.rootElement ? React.createElement(
+                    this.state.rootElement.componentClass,{
+                      children: this.state.rootElement.children,
+                      element:this.state.rootElement,
+                    }
+                  ) : ''
+                }
+                <NewSection />
+              </div>
+            </Scrollbars>
           </DndProvider>
           {store.getState().templateData.template_type !== 'email' && <Styles/>}
           <ElementContextMenu/>

@@ -25,10 +25,31 @@ const { isEditor, redirect } = window.altrpHelpers;
 
   .altrp-section {
     position: relative;
+    overflow: hidden;
     top: auto;
     right: auto;
     left: auto;
     bottom: auto;
+  }
+
+  .background_section {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .section-video {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .altrp-section_section-boxed.altrp-section_section-boxed {
@@ -102,11 +123,14 @@ class SectionComponent extends Component {
       "altrp-section",
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
+    let sectionBackground = [
+      'background_section',
+    ]
     if (this.sectionIsLink()) {
       sectionClasses.push("altrp-pointer");
     }
     if (background_image.url || background_image_hover /*  && !isScrollEffect */) {
-      sectionClasses.push("altrp-background-image");
+      sectionBackground.push("altrp-background-image");
     }
 
     if (widthType === "boxed" && !isFixed) {
@@ -141,6 +165,17 @@ class SectionComponent extends Component {
     const layout_html_tag =
       this.props.element.getSettings("layout_html_tag") || "div";
 
+    const position_style_css_classes = this.props.element.getSettings("position_style_css_classes") || "";
+    const position_style_css_id = this.props.element.getSettings("position_style_css_id") || "";
+    const background_video_url = this.props.element.getSettings("url_video") || "";
+    const background__video = background_video_url ? (
+      <video preload="metadata" muted loop autoPlay className="section-video section-video-controllers">
+        <source src={background_video_url} type="video/mp4" className="section-video-source" />
+      </video>
+    ) : (
+      <span className={sectionBackground.join(" ")}> </span>
+    )
+
 
     return React.createElement(
       layout_html_tag,
@@ -150,12 +185,13 @@ class SectionComponent extends Component {
           sectionClasses.join(" ") +
           " " +
           (this.isActive() ? 'active ' : '') +
-          this.state.settings.position_style_css_classes,
-        id: "",
+          position_style_css_classes,
+        id: position_style_css_id,
         onClick: this.onClick,
         columns: this.props.element.children || [],
         settings: this.props.element.getSettings()
       },
+      background__video,
      sectionWrapper
     );
 
