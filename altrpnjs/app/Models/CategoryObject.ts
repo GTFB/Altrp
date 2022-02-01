@@ -15,5 +15,4 @@ export default class CategoryObject extends BaseModel{
 
   @column()
   public object_type: string
-
 }

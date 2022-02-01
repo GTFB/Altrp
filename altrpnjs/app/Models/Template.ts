@@ -6,6 +6,7 @@ import Page from "App/Models/Page";
 import TemplateSetting from "App/Models/TemplateSetting";
 import empty from "../../helpers/empty";
 import PagesTemplate from "App/Models/PagesTemplate";
+import Category from "App/Models/Category";
 
 export default class Template extends BaseModel {
   @column({isPrimary: true})
@@ -19,6 +20,12 @@ export default class Template extends BaseModel {
 
   @column()
   public data: string
+
+  @column()
+  public styles: string
+
+  @column()
+  public html_content: string
 
   @column()
   public type: string
@@ -53,6 +60,14 @@ export default class Template extends BaseModel {
   })
   public templateSettings: HasMany<typeof TemplateSetting>
 
+  @manyToMany(() => Category, {
+    pivotTable: "altrp_category_objects",
+    pivotForeignKey: "object_guid",
+    pivotRelatedForeignKey: "category_guid",
+    relatedKey: "guid",
+    localKey: "guid",
+  })
+  public categories: ManyToMany<typeof Category>
 
   @column()
   public area: number

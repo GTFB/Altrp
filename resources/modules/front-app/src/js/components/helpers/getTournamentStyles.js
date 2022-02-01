@@ -9,6 +9,9 @@ export default function getTournamentStyles(settings, elementId) {
         ['padding', 'headers_padding', 'dimensions'],
     '}',
 
+    'reacket-player-image',
+        ['padding', 'image_padding', 'dimensions'],
+    '}',
     
     '.reacket-player',
         ['padding', 'players_padding', 'dimensions'],
@@ -17,6 +20,7 @@ export default function getTournamentStyles(settings, elementId) {
         ["border-width", "players_border_width", "dimensions"],
         ["border-color", "players_border_color", "color"],
         ["border-radius", "players_border_radius", "dimensions"],
+        ['height', 'player_height', 'slider'],
     '}',
     '.reacket-player .reacket-player-score',
         ['padding', 'players_score_padding', 'dimensions'],

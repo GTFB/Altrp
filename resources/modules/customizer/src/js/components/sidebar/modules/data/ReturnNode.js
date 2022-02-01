@@ -5,6 +5,7 @@ import {setUpdatedNode} from "../../../../store/customizer-settings/actions";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
 import PropertyComponent from "../../PropertyComponent";
+import isAltrpJS from "../../../../helpers/isAltrpJS";
 
 class ReturnNode extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class ReturnNode extends React.Component {
           </div>
         </div>
 
-        {this.props.customizer.type === 'api' && (
+        {this.props.customizer.type === 'api' && ! isAltrpJS() && (
           <div className="settings-section open">
             <div className="settings-section__title d-flex">
               <div className="settings-section__icon d-flex">

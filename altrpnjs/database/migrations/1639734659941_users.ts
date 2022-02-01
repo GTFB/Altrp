@@ -11,7 +11,6 @@ export default class UsersSchema extends BaseSchema {
         table.string('email', 255).notNullable().unique()
         table.string('password', 180).notNullable()
         table.timestamp("email_verified_at").nullable()
-        table.string('remember_token').nullable()
         table.string('remember_me_token').nullable()
         table.string('last_name').nullable()
         table.string('telegram_user_id').nullable()
@@ -26,7 +25,11 @@ export default class UsersSchema extends BaseSchema {
         table.timestamp('last_login_at', { useTz: true }).nullable()
       })
 
-    }
+    } else {
+      this.schema.table(this.tableName, (table) => {
+        table.string('remember_me_token').nullable()
+      })
+      }
   }
 
   public async down() {

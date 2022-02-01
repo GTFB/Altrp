@@ -42,6 +42,11 @@ class FormsManager {
     } else if (! _.isEmpty(options)){
       form.options = options
     }
+
+    if (form.resource.route != options.customRoute) {
+      form.resource = new Resource({ route: options.customRoute })
+    }
+
     return form;
   }
 

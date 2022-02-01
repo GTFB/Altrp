@@ -2,12 +2,10 @@ import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Media from 'App/Models/Media';
 import empty from '../../../../helpers/empty';
 import base_path from '../../../../helpers/base_path';
-import fs, {rmSync} from 'fs'
-import { string } from '@ioc:Adonis/Core/Helpers'
+import fs from 'fs'
 import User from 'App/Models/User';
 import is_array from '../../../../helpers/is_array';
 import CategoryObject from 'App/Models/CategoryObject';
-import storage_path from '../../../../helpers/storage_path';
 import imageSize from 'image-size'
 import convert from 'heic-convert'
 import {parseString} from'xml2js'

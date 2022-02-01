@@ -105,7 +105,8 @@ export default class AltrpRouting {
 
       const altrp_settings = await page.getPageSettings(this)
       const pageAreas = await page.getAreas();
-      const preload_content = renderResult({
+      // @ts-ignore
+      const preload_content:any = renderResult({
         protocol: request.protocol(),
         host: request.host(),
         originalUrl: url,
@@ -204,7 +205,7 @@ export default class AltrpRouting {
     if( ! template ){
       return;
     }
-    data_set(altrpSettings, 'templates_data.' + template_id,  template.toArray());
+    data_set(altrpSettings, 'templates_data.' + template_id,  template);
 
     let data = JSON.parse( template.data );
     this._extractElementsNames( data, elementNames, false );

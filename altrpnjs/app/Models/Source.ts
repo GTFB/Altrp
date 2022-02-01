@@ -15,6 +15,8 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import data_get from "../../helpers/data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
+import Customizer from "App/Models/Customizer";
+import SQLEditor from "App/Models/SQLEditor";
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -73,6 +75,11 @@ export default class Source extends BaseModel {
   })
   public altrp_model: BelongsTo<typeof Model>
 
+  @belongsTo(() => Model, {
+    foreignKey: 'model_id'
+  })
+  public model: BelongsTo<typeof Model>
+
   @manyToMany(() => Role, {
     pivotTable: 'altrp_sources_roles',
     localKey: 'id',
@@ -91,19 +98,34 @@ export default class Source extends BaseModel {
   })
   public permissions: ManyToMany<typeof Permission>
 
+  @manyToMany(() => Permission, {
+    pivotTable: 'altrp_sources_permissions',
+    localKey: 'id',
+    relatedKey: 'id',
+    pivotForeignKey: 'permission_id',
+    pivotRelatedForeignKey: 'source_id',
+  })
+  public source_permissions: ManyToMany<typeof Permission>
+
+  public customizer: Customizer| null
+
+  public sQLEditor: SQLEditor| null
+
+  private methodBody: string = ''
+
   @computed()
   public get web_url(){
-    // console.log(data_get( this, 'url' ), this.url);
+
     switch ( this.sourceable_type ){
-      case 'App\\SQLEditor':
+      case SQLEditor.sourceable_type:
       case 'App\\Altrp\\Query':
         return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
-        return config('app.url') + '/ajax/models/' + string.pluralize(this.altrp_model.name) + '/customizers' + data_get( this, 'url' );
+        return config('app.url') + '/ajax/models/' + string.pluralize(this?.model?.name || '') + '/customizers' + data_get( this, 'url' );
       default:
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
-      : config('app.url') + '/ajax/models/data_sources/' + this.altrp_model.table.name + '/' + data_get( this, 'name' );
+      : config('app.url') + '/ajax/models/data_sources/' + this.model.table.name + '/' + data_get( this, 'name' );
     }
   }
 
@@ -120,6 +142,7 @@ export default class Source extends BaseModel {
 
 
   renderForController(modelClassName:string):string {
+    this.prepareContent()
     return `
   public async ${this.getMethodName()}(httpContext){
     ${this.renderRolesCheck()}
@@ -162,12 +185,22 @@ export default class Source extends BaseModel {
         case 'delete':{
           return 'destroy'
         }
+
         default: {
           return   this.type
         }
       }
+    } else {
+      switch ( this.sourceable_type) {
+        case Customizer.sourceable_type:{
+          return this.customizer?.name || `_${string.generateRandom(12)}`
+        }
+        case SQLEditor.sourceable_type:{
+          return this.sQLEditor?.name || `_${string.generateRandom(12)}`
+        }
+      }
+      return `_${string.generateRandom(12)}`
     }
-    return `_${string.generateRandom(12)}`
   }
 
   private renderMethodBody(modelClassName:string):string {
@@ -177,7 +210,7 @@ export default class Source extends BaseModel {
       switch (this.type) {
         case 'show': {
           return `
-    return httpContext.response.json((await ${modelClassName}.find(httpContext.params.id))?.serialize());
+    return httpContext.response.json((await ${modelClassName}.find(httpContext.params.${modelClassName}))?.serialize());
         `
         }
         case 'add': {
@@ -193,7 +226,7 @@ export default class Source extends BaseModel {
         }
         case 'update': {
           return `
-    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    let oldModel = await ${modelClassName}.find(httpContext.params.${modelClassName});
     if(!oldModel){
       httpContext.response.status(404);
       return httpContext.response.json({success:false, message: 'not found'})
@@ -205,7 +238,7 @@ export default class Source extends BaseModel {
         }
         case 'delete': {
           return `
-    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    let oldModel = await ${modelClassName}.find(httpContext.params.${modelClassName});
     if(!oldModel){
       httpContext.response.status(404);
       return httpContext.response.json({success:false, message: 'not found'})
@@ -216,7 +249,7 @@ export default class Source extends BaseModel {
         }
         case 'update_column': {
           return `
-    let oldModel = await ${modelClassName}.find(httpContext.params.id);
+    let oldModel = await ${modelClassName}.find(httpContext.params.${modelClassName});
     if(!oldModel){
       httpContext.response.status(404);
       return httpContext.response.json({success:false, message: 'not found'})
@@ -228,6 +261,15 @@ export default class Source extends BaseModel {
         }
         case 'get': {
           return this.renderIndexMethodBody(modelClassName)
+        }
+      }
+    } else {
+      switch (this.sourceable_type) {
+        case Customizer.sourceable_type: {
+          return this.renderCustomizerMethodBody()
+        }
+        case SQLEditor.sourceable_type: {
+          return this.renderSQLEditorMethodBody()
         }
       }
     }
@@ -304,6 +346,41 @@ export default class Source extends BaseModel {
     const order = httpContext.request.qs()?.order === 'asc' ? 'asc' : 'desc';
     query.orderBy(httpContext.request.qs()?.order_by || 'id', order);
 
+    `;
+  }
+
+  private renderCustomizerMethodBody() {
+    return this.methodBody;
+  }
+
+  private prepareContent() {
+
+    switch (this.type) {
+      case 'customizer': {
+        this.methodBody = `
+    this.setCustomizerData('context.CurrentModel', ${this.model.name} )
+    this.setCustomizerData('context.request', httpContext.request)
+    this.setCustomizerData('httpContext', httpContext)
+    this.setCustomizerData('request', httpContext.request)
+    this.setCustomizerData('context.response', httpContext.response)
+    this.setCustomizerData('response', httpContext.response)
+    this.setCustomizerData('session', httpContext.session)
+    this.setCustomizerData('this', this)
+    this.setCustomizerData('current_user', httpContext.auth.user)
+    ${this?.customizer?.getMethodContent() || ''}
+    `}
+      break;
+      default : return
+    }
+  }
+
+  private renderSQLEditorMethodBody() {
+    return `
+    const res = await selectForSQLEditor(
+    "${this.sQLEditor?.sql}", {
+       'sql_name' : '${this.sQLEditor?.name}',
+       'table_name' : '${this.model?.table?.name}',
+     }, httpContext.request );
     `;
   }
 }

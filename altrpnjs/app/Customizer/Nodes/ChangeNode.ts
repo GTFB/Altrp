@@ -1,8 +1,6 @@
 import BaseNode from 'App/Customizer/Nodes/BaseNode'
-import NodeInterface from "App/Customizer/Nodes/NodeInterface";
-import data_get from "../../../helpers/data_get";
-import propertyToJS from "App/Customizer/helpers/propertyToJs";
-import changePropertyToJS from "App/Customizer/helpers/changePropertyToJS";
+import NodeInterface from "App/Customizer/Nodes/NodeInterface"
+import data_get from "../../../helpers/data_get"
 
 export default class ChangeNode extends BaseNode implements NodeInterface
 {
@@ -49,16 +47,16 @@ export default class ChangeNode extends BaseNode implements NodeInterface
       let action = data_get( item, 'action', 'set')
       let left = data_get( item, 'left')
       let right = data_get( item, 'right')
-      let rightJSProperty = propertyToJS( right )
+      let rightJSProperty = this.customizer.propertyToJS( right )
       let leftJSProperty
 
       switch (action) {
         case 'set':{
-          leftJSProperty = changePropertyToJS( left, rightJSProperty  )
+          leftJSProperty = this.customizer.changePropertyToJS( left, rightJSProperty  )
 
         }break
         case 'delete':{
-          leftJSProperty = changePropertyToJS( left, rightJSProperty, 'unset' )
+          leftJSProperty = this.customizer.changePropertyToJS( left, rightJSProperty, 'unset' )
         } break
       }
       if( leftJSProperty == 'null'){

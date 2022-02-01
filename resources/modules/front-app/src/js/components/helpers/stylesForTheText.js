@@ -29,20 +29,12 @@ export function getTextStyles(settings, id) {
   }
 
   const parentClass = `.altrp-element${id}`;
+  
+  styles += `${parentClass} .altrp-text table tr {
+    ${colorPropertyStyled(getResponsiveSetting(settings,"text_table_rows_color"),"background")};
+  }`
 
   styles += `${parentClass} .altrp-text {`;
-
-  const columnCount = getResponsiveSetting(settings, 'text_style_column-count');
-
-  if (columnCount) {
-    styles += simplePropertyStyled(columnCount, 'column-count');
-  }
-
-  const columnGap = getResponsiveSetting(settings, 'text_style_column-gap');
-
-  if (columnGap) {
-    styles += columnGapStyled(columnGap);
-  }
 
   const padding = getResponsiveSetting(settings, 'text_style_position_padding');
 
@@ -74,18 +66,6 @@ export function getTextStyles(settings, id) {
     styles += opacityStyled(opacity, 'opacity');
   }
 
-  const typographic = getResponsiveSetting(settings, 'text_style_font_typographic');
-
-  if (typographic) {
-    styles += typographicControllerToStyles(typographic);
-  }
-
-  const color = getResponsiveSetting(settings, 'text_style_font_color');
-
-  if (color) {
-    styles += colorPropertyStyled(color, 'color');
-  }
-
   const borderStyle = getResponsiveSetting(settings, 'text_style_border_type');
 
   if (borderStyle) {
@@ -98,11 +78,9 @@ export function getTextStyles(settings, id) {
     styles += borderWidthStyled(borderWidth);
   }
 
-  const borderColor = getResponsiveSetting(settings, 'text_style_border_color');
+  const borderColor = getResponsiveSetting(settings, 'text_style_border_color', '', {color: 'rgba(0,0,0,1)'});
 
-  if (borderColor) {
-    styles += colorPropertyStyled(borderColor, 'border-color');
-  }
+  styles += colorPropertyStyled(borderColor, 'border-color', ' !important')
 
   const borderRadius = getResponsiveSetting(settings, 'text_style_border_radius');
 
@@ -115,10 +93,13 @@ export function getTextStyles(settings, id) {
 
   styles+=`${parentClass} .altrp-text p {`
 
+  styles += colorPropertyStyled(getResponsiveSetting(settings, 'text_paragraph_color'), 'color')
+  styles += typographicControllerToStyles(getResponsiveSetting(settings, 'text_paragraph_typographic'))
+
   const paragraphMargin = getResponsiveSetting(settings, 'text_paragraph_margin');
 
   if (paragraphMargin) {
-    styles += dimensionsControllerToStyles(paragraphMargin, 'margin');
+    styles += dimensionsControllerToStyles(paragraphMargin, 'margin', ' !important');
   }
 
   const textIndent = getResponsiveSetting(settings,"text_paragraph_indent");
@@ -206,12 +187,6 @@ export function getTextStyles(settings, id) {
 
   if (tableMargin) {
     styles += dimensionsControllerToStyles(tableMargin, 'margin');
-  }
-
-  const tableBackgroundColor = getResponsiveSetting(settings, 'text_table_background_color');
-
-  if (tableBackgroundColor) {
-    styles += colorPropertyStyled(tableBackgroundColor, 'background-color');
   }
 
   const tableBorderStyle = getResponsiveSetting(settings, 'text_table_border_type');
@@ -304,15 +279,14 @@ export function getTextStyles(settings, id) {
     styles += typographicControllerToStyles(linkTypographic);
   }
 
-  const linkTextShadow = getResponsiveSetting(
-    settings,
-    "text_link_text_shadow"
-  );
+  const linkTextShadow = getResponsiveSetting(settings, "text_link_text_shadow");
 
   if (linkTextShadow) {
     styles += textShadowControllerToStyles(linkTextShadow);
   }
-  //
+  
+  styles += colorPropertyStyled(getResponsiveSetting(settings, 'text_link_color'), 'color')
+
   styles += `} `;
 
   styles += `${parentClass} .altrp-text ol {`;
@@ -326,7 +300,10 @@ export function getTextStyles(settings, id) {
   const numberedListItemMargin = getResponsiveSetting(settings, 'text_numbered_list_item_margin');
 
   if (numberedListItemMargin) {
-    styles += `li{ ${dimensionsControllerToStyles(numberedListItemMargin, 'margin')}}`;
+    styles += `li{ 
+      ${dimensionsControllerToStyles(numberedListItemMargin, 'margin')};
+      ${colorPropertyStyled(getResponsiveSetting(settings, 'text_numbered_list_color'), 'color')};
+    }`;
   }
 
   const numberedListStyle = getResponsiveSetting(settings, 'text_numbered_list_style_type');
@@ -348,7 +325,10 @@ export function getTextStyles(settings, id) {
   const unorderedListItemMargin = getResponsiveSetting(settings, 'text_unordered_list_item_margin');
 
   if (unorderedListItemMargin) {
-    styles += `li{ ${dimensionsControllerToStyles(unorderedListItemMargin, 'margin')}}`;
+    styles += `li{ 
+      ${dimensionsControllerToStyles(unorderedListItemMargin, 'margin')};
+      ${colorPropertyStyled(getResponsiveSetting(settings, 'text_unordered_list_color'), 'color')};
+    }`;
   }
 
   const unorderedListStyle = getResponsiveSetting(settings, 'text_unordered_list_style_type');
@@ -371,6 +351,82 @@ export function getTextStyles(settings, id) {
 
   styles += `} `;
 
+  styles += `${parentClass} .altrp-text:hover {
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_style_background_color', ':hover'), 'background-color')};
+    ${opacityStyled(getResponsiveSetting(settings, 'text_style_background_opacity', ':hover'), 'opacity')};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_style_border_color', ':hover', {color: 'rgba(0,0,0,1)'}), 'border-color', ' !important')};
+    ${borderRadiusStyled(getResponsiveSetting(settings, 'text_style_border_radius', ':hover'))};
+    ${borderWidthStyled(getResponsiveSetting(settings, 'text_style_border_width', ':hover'))};
+  }`
+
+  
+  styles+=`${parentClass} .altrp-text p:hover {
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_paragraph_color', ':hover'), 'color')};
+    ${typographicControllerToStyles(getResponsiveSetting(settings, 'text_paragraph_typographic', ':hover'))};
+  }`
+
+  
+  styles+=`${parentClass} .altrp-text blockquote:hover {
+    ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_blockquote_margin', ':hover'), 'margin')};
+    ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_blockquote_padding', ':hover'), 'padding')};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_blockquote_background_color', ':hover'), 'background-color')};
+    ${simplePropertyStyled(getResponsiveSetting(settings, 'text_blockquote_border_type', ':hover'), 'border-style')};
+    ${borderWidthStyled(getResponsiveSetting(settings, 'text_blockquote_border_width', ':hover'))};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_blockquote_border_color', ':hover'), 'border-color')};
+    ${borderRadiusStyled(getResponsiveSetting(settings, 'text_blockquote_border_radius', ':hover'))};
+    ${shadowControllerToStyles(getResponsiveSetting(settings, "text_blockquote_box_shadow", ':hover'))};
+    ${typographicControllerToStyles(getResponsiveSetting(settings, 'text_blockquote_font_typographic', ':hover'))};
+    ${textShadowControllerToStyles(getResponsiveSetting(settings, "text_blockquote_text_shadow", ':hover'))};
+  }`
+
+  
+  styles += `${parentClass} .altrp-text table:hover {
+    ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_table_margin', ':hover'), 'margin')};
+    ${simplePropertyStyled(getResponsiveSetting(settings, 'text_table_border_type', ':hover'), 'border-style',"!important")};
+    ${borderWidthStyled(getResponsiveSetting(settings, 'text_table_border_width', ':hover'),"!important")};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_table_border_color', ':hover'), 'border-color',"!important")};
+  }`
+  
+  styles += `${parentClass} .altrp-text table tr:hover {
+    ${colorPropertyStyled(getResponsiveSetting(settings,"text_table_rows_color", ':hover'),"background")};
+  }`
+
+  styles += `${parentClass} .altrp-text table tr:nth-child(odd):hover {
+    ${colorPropertyStyled(getResponsiveSetting(settings,"text_table_odd_rows_color", ':hover'),"background")};
+  }`
+
+  styles += `${parentClass} .altrp-text table th:hover,td:hover {
+    ${dimensionsStyled(getResponsiveSetting(settings, 'text_table_padding', ':hover'), 'padding',"!important")};
+    ${simplePropertyStyled(getResponsiveSetting(settings, 'text_table_cells_border_type', ':hover'), 'border-style',"!important")};
+    ${borderWidthStyled(getResponsiveSetting(settings, 'text_table_cells_border_width', ':hover'),"!important")};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_table_cells_border_color', ':hover'), 'border-color',"!important")};
+    ${typographicControllerToStyles(getResponsiveSetting(settings, 'text_table_cells_font_typographic', ':hover'))};
+    ${textShadowControllerToStyles(getResponsiveSetting(settings, "text_table_cells_text_shadow", ':hover'))};
+  }`
+
+  styles += `${parentClass} .altrp-text a:hover {
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_link_color', ':hover'), 'color')};
+    ${typographicControllerToStyles(getResponsiveSetting(settings, 'text_link_font_typographic', ':hover'))};
+    ${textShadowControllerToStyles(getResponsiveSetting(settings, "text_link_text_shadow", ':hover'))};
+  }`
+
+  styles += `${parentClass} .altrp-text ol:hover {
+    ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_numbered_list_margin', ':hover'), 'margin')};
+  }`
+
+  styles += `${parentClass} .altrp-text ol li:hover {
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_numbered_list_color', ':hover'), 'color')};
+    ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_numbered_list_item_margin', ':hover'), 'margin')};
+  }`
+
+  styles += `${parentClass} .altrp-text ul:hover {
+    ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_unordered_list_margin', ':hover'), 'margin')};
+  }`
+
+  styles += `${parentClass} .altrp-text ul li:hover {
+    ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_unordered_list_item_margin', ':hover'), 'margin')};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_unordered_list_color', ':hover'), 'color')};
+  }`
 
   return styles;
 }
