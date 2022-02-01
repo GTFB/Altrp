@@ -64,20 +64,22 @@ export default class TemplatesController {
 
     const template = await Template.create(data);
 
-    for (const option of request.input("categories")) {
-      const category = await Category.find(option.value);
+    if(request.input("categories")) {
+      for (const option of request.input("categories")) {
+        const category = await Category.find(option.value);
 
-      if (!category) {
-        response.status(404)
-        return {
-          message: "Category not Found"
+        if (!category) {
+          response.status(404)
+          return {
+            message: "Category not Found"
+          }
+        } else {
+          await CategoryObject.create({
+            category_guid: category.guid,
+            object_type: "Template",
+            object_guid: template.guid
+          })
         }
-      } else {
-        await CategoryObject.create({
-          category_guid: category.guid,
-          object_type: "Template",
-          object_guid: template.guid
-        })
       }
     }
 

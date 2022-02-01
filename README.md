@@ -3,6 +3,12 @@
 
 ## Changelog
 
+### 0.20.25
+* Some Fixes for Section 
++ Add Video Background for Sections
+* Add Elements Navigator in Editor
+* Fix widgets Tabs Switcher, Divider, Content, Heading
+
 ### 0.20.24
 + Add Widget Groups
 * Fix Visual Codes Pagination Issue
