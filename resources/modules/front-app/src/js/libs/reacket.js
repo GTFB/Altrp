@@ -351,12 +351,15 @@ var getRoundHeaderText = function getRoundHeaderText(round, totalRounds) {
 };
 var RoundHeader = function RoundHeader(_ref) {
   var round = _ref.round,
-      totalRounds = _ref.totalRounds;
+    totalRounds = _ref.totalRounds,
+    headers = _ref.headers;
+    
+  const headerText = headers?.length ? headers[round - 1] || ' ' : getRoundHeaderText(round, totalRounds)
   return React__default.createElement(
     'div',
     { className: 'reacket-round-header \n    ' + (round === totalRounds ? 'reacket-last-round' : '')
     },
-    getRoundHeaderText(round, totalRounds)
+    headerText
   );
 };
 
@@ -384,6 +387,7 @@ function convertMatchesToRounds(matches) {
 var Reacket = function Reacket(_ref) {
   var matches = _ref.matches;
   var playerComponent = _ref.playerComponent;
+  const headers = _ref.headers;
 
   var _useState = React.useState(null),
       _useState2 = slicedToArray(_useState, 2),
@@ -400,7 +404,7 @@ var Reacket = function Reacket(_ref) {
       { className: 'reacket-round-headers' },
       rounds.map(function (round) {
         var jsx$$1 = [];
-        jsx$$1.push(React__default.createElement(RoundHeader, { key: round + '-header', round: round.round, totalRounds: rounds.length }));
+        jsx$$1.push(React__default.createElement(RoundHeader, { key: round + '-header', round: round.round, totalRounds: rounds.length, headers }));
         return jsx$$1;
       })
     ),

@@ -88,14 +88,14 @@ class TournamentWidget extends Component {
         ]
       })
     } else {
-      this.setState({
-        data: getDataByPath(this.props.element.getResponsiveSetting('path'))
-      })
+      const {data, headers} = getDataByPath(this.props.element.getResponsiveSetting('path'))
+
+      this.setState({data, headers})
     }
   }
 
   render() {
-    const {data} = this.state
+    const {data, headers} = this.state
 
     if (!data){
       return 'No data'
@@ -105,6 +105,7 @@ class TournamentWidget extends Component {
       <Reacket 
         matches={data} 
         playerComponent={PlayerComponent}
+        headers={headers}
       />
     )
   }
