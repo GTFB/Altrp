@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Altrp\Accessor;
 use App\Altrp\Controller;
 use App\Altrp\Customizer;
+use App\Altrp\Robot;
 use App\Altrp\Model;
 use App\Altrp\Query;
 use App\Altrp\Source;
@@ -19,6 +20,7 @@ use App\Observers\AltrpSQLEditorObserver;
 use App\Observers\AltrpValidationFieldObserver;
 use App\Observers\AltrpValidationRuleObserver;
 use App\Observers\CustomizerObserver;
+use App\Observers\RobotObserver;
 use App\Observers\PageObserver;
 use App\Observers\UserObserver;
 use App\Page;
@@ -41,6 +43,9 @@ use App\Altrp\Column;
 use App\Observers\AltrpColumnObserver;
 use App\Altrp\Relationship;
 use App\Observers\AltrpRelationshipObserver;
+
+use GuzzleHttp\Client;
+use App\Services\TelegramService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -65,6 +70,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\AltrpImportExportService', function ($app) {
             return new AltrpImportExportService();
         });
+
     }
 
     /**
@@ -82,6 +88,7 @@ class AppServiceProvider extends ServiceProvider
         Relationship::observe(AltrpRelationshipObserver::class);
         Model::observe(AltrpModelObserver::class);
         Customizer::observe(CustomizerObserver::class);
+        Robot::observe(RobotObserver::class);
         Controller::observe(AltrpControllerObserver::class);
         Query::observe(AltrpQueryObserver::class);
         SQLEditor::observe(AltrpSQLEditorObserver::class);

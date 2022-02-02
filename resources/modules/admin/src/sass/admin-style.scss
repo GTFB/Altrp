@@ -504,6 +504,16 @@ a {
   margin-bottom: 10px;
 }
 
+.image-settings__block {
+  padding: 10px;
+
+  & .btn_success {
+    width: 100px;
+    height: 34px;
+    padding: 8px 12px;
+  }
+}
+
 body {
   font-size: 14px !important;
   line-height: 1.28581 !important;
