@@ -21,9 +21,11 @@ class BaseElement extends ControlStack {
     super();
     if(!element) {
       this.settings = {};
+      this.settingsLock = {};
       this.cssClassStorage = {};
     } else {
       this.settings = element.settings;
+      this.settingsLock = element.settingsLock;
       this.cssClassStorage = element.cssClassStorage;
     }
     this.controls = {};
@@ -125,6 +127,7 @@ class BaseElement extends ControlStack {
     data.id = this.getId();
     data.name = this.getName();
     data.settings = this.settings;
+    data.settingsLock = this.settingsLock
     data.type = this.getType();
     if (this.dynamicContentSettings && this.dynamicContentSettings.length) {
       data.dynamicContentSettings = [...this.dynamicContentSettings];
@@ -464,7 +467,7 @@ class BaseElement extends ControlStack {
     this.defaultSettingsIsApply = true;
   }
 
-  setSettingValue(settingName, value, dispatchToHistory = true) {
+  setSettingValue(settingName, value, dispatchToHistory = true, locked = false) {
     //check change value
     if (this.settings[settingName] !== value) {
       if (
@@ -477,11 +480,16 @@ class BaseElement extends ControlStack {
             element: this,
             oldValue: this.settings[settingName],
             newValue: value,
+            locked,
             settingName
           })
         );
       // this.settings = {...this.settings};
+
+      this.settingsLock[settingName] = value;
+
       this.settings[settingName] = value;
+      
       if (this.component) {
         (async () => {
           this.component?.changeSetting && this.component?.changeSetting(settingName, value);

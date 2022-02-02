@@ -16,6 +16,7 @@ class FrontElement {
   constructor(data = {}, withoutComponent = false){
     this.name = data.name;
     this.settings = data.settings;
+    this.settingsLock = data.settingsLock;
     this.lazySection = data.lazySection;
     this.children = data.children;
     this.cssClassStorage = data.cssClassStorage;
@@ -359,16 +360,18 @@ class FrontElement {
    * @param {*} _default
    * @return {*}
    */
-  getSettings(settingName, _default = ''){
+  getSettings(settingName, _default = '', locked = false){
+    const settings = locked ? this.settingsLock : this.settings;
     if(! settingName)
     {
-      return _.cloneDeep(this.settings);
+      return _.cloneDeep(settings);
     }
-    if(_.get(this.settings, settingName) === false || _.get(this.settings, settingName) === 0){
-      return _.get(this.settings, settingName);
+    if(_.get(settings, settingName) === false || _.get(settings, settingName) === 0){
+      return _.get(settings, settingName);
     }
-    return _.get(this.settings, settingName) || _default;
+    return _.get(settings, settingName) || _default;
   }
+  
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
       /**
@@ -803,6 +806,17 @@ class FrontElement {
   getResponsiveSetting(settingName, elementState = '', _default){
     return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
   }
+
+   /**
+   * значение locked настройки в зависимости от разрешения
+   * @param {string} settingName
+   * @param {string} elementState
+   * @param _default
+   * @return {*}
+   */
+    getResponsiveLockedSetting(settingName, elementState = '', _default){
+      return getResponsiveSetting(this.getSettingsLock(), settingName, elementState, _default)
+    }
 
   /**
    * Возвращает текущий тип шаблона
