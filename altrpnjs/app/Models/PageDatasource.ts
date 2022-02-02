@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import {BaseModel, column, HasMany, hasMany, HasOne, hasOne} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, column, HasOne, hasOne} from '@ioc:Adonis/Lucid/Orm'
 import Page from "App/Models/Page";
 
 export default class PageDatasource extends BaseModel {

@@ -1,4 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route';
+import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
+import env from "../../helpers/env";
 
 Route.group(() => {
 
@@ -171,6 +173,13 @@ Route.group(() => {
      * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
      */
     Route.post('update-all-resources', 'admin/AdminController.upgradeAllResources').name = 'admin.update-all-resources'
+
+    Route.post('check_update', async (httpContext: HttpContextContract)=>{
+      if(env('APP_ENV') !== 'production'){
+        return httpContext.response.json({result: false})
+      }
+      return httpContext.response.json({result: false})
+    }).name = 'admin.check_update'
 
   }).prefix('/ajax')
   Route.get('/customizers-editor', 'IndicesController.customizer')

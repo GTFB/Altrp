@@ -56,7 +56,7 @@ export default class AltrpRouting {
 
     if (url === '/altrp-login'
       || url === '/login'
-      || url === '/data/current-user' || "/modules/admin/admin.js") {
+      || url === '/data/current-user') {
       await next()
       return
     }
