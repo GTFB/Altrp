@@ -108,6 +108,7 @@ export default class Template extends BaseModel {
    */
   static async getTemplate(pageId, templateType = 'content',): Promise<Template | object> {
     let page = await Page.find(pageId)
+
     if (!page) {
       return {data: Template.getDefaultData()}
     }
@@ -122,6 +123,8 @@ export default class Template extends BaseModel {
       .where('templates.type', 'template')
       .where('pages_templates.page_guid', page.guid)
       .where('pages_templates.template_type', templateType).select('templates.*').first()
+
+    console.log(template)
     if (template) {
       let _template = template.serialize()
       _template.data = JSON.parse(template.data)

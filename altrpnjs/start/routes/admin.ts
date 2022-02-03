@@ -26,6 +26,7 @@ Route.group(() => {
     Route.get('/templates/options', 'TemplatesController.options')
     Route.get('/templates/:id', 'TemplatesController.get')
     Route.put('/templates/:id', 'TemplatesController.update')
+    Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
     Route.get("/role_options", "OptionsController.roles")
@@ -40,6 +41,7 @@ Route.group(() => {
     Route.get('/pages/routes', 'admin/PagesController.getRoutes')
     Route.get('/pages/routes/add', 'admin/PagesController.addRoute')
 
+    Route.delete('/pages/:id', 'admin/PagesController.delete')
     Route.get('/pages/:id', 'admin/PagesController.show')
     Route.put('/pages/:id', 'admin/PagesController.update')
 

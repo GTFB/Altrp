@@ -120,6 +120,15 @@ export default class TemplatesController {
     return template
   }
 
+  public async delete({ params }) {
+    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail();
+
+    template.delete()
+    return {
+      success: true
+    }
+  }
+
   public async update({ params, request }) {
     const template = await Template.find(parseInt(params.id));
 
@@ -189,7 +198,7 @@ export default class TemplatesController {
     const id = parseInt(params.id);
     const data = JSON.stringify(request.input("data"));
 
-    const template = await Template.find(id);
+    const template = await Template.query().where("id", id).preload("currentArea").first();
 
     if(!template) {
       response.status(404)
@@ -261,7 +270,7 @@ export default class TemplatesController {
                 template_id: template.id,
                 template_guid: template.getGuid(),
                 condition_type: condition.condition_type,
-                template_type: template.type
+                template_type: template.currentArea.name
               })
 
               if(!pages_template) {

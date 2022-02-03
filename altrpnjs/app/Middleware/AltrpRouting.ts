@@ -19,8 +19,8 @@ import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
-import getCurrentDevice from "../../helpers/getCurrentDevice";
-import Ws from "App/Services/Ws";
+// import getCurrentDevice from "../../helpers/getCurrentDevice";
+// import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
 
@@ -42,7 +42,6 @@ export default class AltrpRouting {
   }
 
   public async handle({request, response, view, auth}: HttpContextContract, next: () => Promise<void>) {
-
     /**
      * Игнорим все запросы кроме get
      */
@@ -57,10 +56,14 @@ export default class AltrpRouting {
 
     if (url === '/altrp-login'
       || url === '/login'
-      || url === '/data/current-user' || "/modules/admin/admin.js") {
+      || url === '/data/current-user' ||
+      url === "/modules/admin/admin.js" ||
+      url === "/modules/front-app/front-app.css"
+    ) {
       await next()
       return
     }
+
     /**
      * Игнорим админку и ajax
      */
@@ -97,8 +100,10 @@ export default class AltrpRouting {
       }
       return matchPath(url, page.path,)?.isExact
     });
+
     if (page) {
       const pages = await page.getPagesForFrontend();
+
       if (!await page.allowedForUser(this)) {
         return response.redirect(page.redirect || '/')
       }
