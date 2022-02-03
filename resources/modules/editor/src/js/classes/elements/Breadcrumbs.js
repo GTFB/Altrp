@@ -45,6 +45,7 @@ class Breadcrumbs extends BaseElement {
     this.addControl('collapse', {
       label: 'Collapse From',
       type: CONTROLLER_SELECT,
+      locked: true,
       options: [
         {
           label: 'Start',

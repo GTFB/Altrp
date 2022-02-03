@@ -11,9 +11,9 @@ export default class UsersController {
     if(auth.use("web").isLoggedIn) {
       let user = auth.user
       if(user){
-        await user.load('usermeta');
-        await user.load('roles');
-        await user.load('permissions');
+        await user.load('usermeta')
+        await user.load('roles')
+        await user.load('permissions')
       }
       return {
         data: user

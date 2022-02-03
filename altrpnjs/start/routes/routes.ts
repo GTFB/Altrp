@@ -20,8 +20,6 @@
 import './admin'
 import Route from '@ioc:Adonis/Core/Route'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import Drive from "@ioc:Adonis/Core/Drive"
-import path from "path"
 import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
 // import {UserFactory} from "Database/factories";
@@ -37,12 +35,6 @@ Route.post("/logout", "IndicesController.logout").name = 'logout'
 //   return user.can([1, 2]);
 // })
 
-Route.get("/modules/editor/:file", async ({params}) => {
-  const file = await Drive.get(path.join(__dirname, `../../../public/modules/editor/${params.file}`))
-
-  return file
-})
-
 Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
   response.header('Content-Type', 'application/javascript')
   let user = auth.user
@@ -54,7 +46,7 @@ window.current_user = ${JSON.stringify({is_guest: true})}
   await user.load('roles')
   await user.load('permissions')
   return response.send(`
-window.current_user = ${JSON.stringify(user.serialize())}
+window.current_user = ${JSON.stringify(user.toObject())}
   `);
 })
 
@@ -166,4 +158,3 @@ Route.group(() => {
   })
 })
   .prefix("/ajax")
-

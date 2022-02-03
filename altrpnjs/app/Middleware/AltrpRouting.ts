@@ -41,6 +41,7 @@ export default class AltrpRouting {
   }
 
   public async handle({request, response, view, auth}: HttpContextContract, next: () => Promise<void>) {
+
     /**
      * Игнорим все запросы кроме get
      */

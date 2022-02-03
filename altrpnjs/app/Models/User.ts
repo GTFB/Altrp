@@ -77,8 +77,8 @@ export default class User extends BaseModel {
     pivotTable: 'role_user',
     localKey: 'id',
     relatedKey: 'id',
-    pivotForeignKey: 'role_id',
-    pivotRelatedForeignKey: 'user_id',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'role_id',
   })
   public roles: ManyToMany<typeof Role>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\CategoryObject;
 use App\Http\Controllers\Controller;
 use App\Media;
+use App\MediaSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic;
+use Illuminate\Support\Facades\Validator;
 
 class MediaController extends Controller
 {
@@ -103,7 +105,10 @@ class MediaController extends Controller
 
     }
 
+    $mediaSettings = MediaSetting::all();
+
     foreach ( $files as $file ) {
+
       $media = new Media();
       $media->title = $file->getClientOriginalName();
       $media->media_type = $file->getClientMimeType();
@@ -134,6 +139,15 @@ class MediaController extends Controller
         $media->width = data_get( $size, '0', 0 );
         $media->height = data_get( $size, '1', 0 );
       }
+      
+      $media_variation = [];
+      if (count($mediaSettings) > 0) {
+        foreach ($mediaSettings as $setting) {
+          $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+        }
+      }
+      $media->media_variation = json_encode($media_variation);
 
       $media->main_color = getMainColor( $path );
       $media->url =  Storage::url( $media->filename );
@@ -159,6 +173,139 @@ class MediaController extends Controller
     return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
 
   }
+
+  /**
+   * Resizing and store image file
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public static function storeResizedImage( $path, $width, $height, $quality=100 ){
+
+    $media_filename = "";
+    $source_properties = getimagesize($path);
+
+    $origin_width = $source_properties[0];
+    $origin_height = $source_properties[1];
+    if ($origin_width > $origin_height) {
+      $height = round($origin_height/$origin_width*$width);
+    }
+    if ($origin_width < $origin_height) {
+      $width = round($origin_width/$origin_height*$height);
+    }
+
+    $mime = $source_properties['mime'];
+    if ($mime == 'image/jpeg' || $mime == 'image/png' || $mime == 'image/gif') {
+        $type = explode('/', $mime);
+        $createFunction = 'imagecreatefrom' . $type[1];
+        $image_resource_id = $createFunction($path);
+        $target_layer=imagecreatetruecolor($width, $height);
+        imagecopyresampled($target_layer, $image_resource_id, 0, 0, 0, 0, $width, $height, $source_properties[0], $source_properties[1]);
+        $storeFunction = 'image'.$type[1];
+        $store_directory = storage_path('app/public/media') . '/' .  date("Y") . '/' .  date("m") . '/';
+        $filename = Str::random(40) . "." . $type[1];
+        $storeFunction($target_layer, $store_directory . $filename, $quality);
+        $media_filename = 'media/' .  date("Y") . '/' .  date("m") . '/' . $filename;
+        imagedestroy($image_resource_id);
+        return $media_filename;
+    }
+    return $media_filename;
+
+  }
+
+  /**
+   * Resizing image
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public function resizeImage( Request $request ){
+
+    $validator = Validator::make($request->all(),[
+        'guid' => 'required'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json(['status' => false, 'message' => $validator->messages()], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    $mediaSettings = MediaSetting::all();
+
+    if (count($mediaSettings) == 0) {
+      return response()->json( [ 'success' => false, 'message' => 'Media settings not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $media = Media::where('guid', $request->guid)->first();
+
+    if (!$media) {
+      return response()->json( [ 'success' => false, 'message' => 'Media not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $path = Storage::path( 'public/' . $media->filename );
+    
+    $media_variation = [];      
+    foreach ($mediaSettings as $setting) {
+      $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+      $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+    }
+
+    if ($media->media_variation) {
+      $media_variations = json_decode( $media->media_variation, true);
+      $this->deleteMediaVariations($media_variations);
+    }
+    
+    $media->media_variation = json_encode($media_variation);
+    $media->save();
+
+    return response()->json( $media->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+    
+  }
+
+  /**
+   * Resizing All images
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public function resizeAllImages(){
+
+    $mediaSettings = MediaSetting::all();
+
+    if (count($mediaSettings) == 0) {
+      return response()->json( [ 'success' => false, 'message' => 'Media settings not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $media_records = Media::all();
+
+    if (count($media_records) == 0) {
+      return response()->json( [ 'success' => false, 'message' => 'Media not found' ], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    foreach ($media_records as $media) {
+
+      $path = Storage::path( 'public/' . $media->filename );
+
+      $media_variation = [];
+      if (count($mediaSettings) > 0) {
+        foreach ($mediaSettings as $setting) {
+          $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+        }
+      }
+
+      if ($media->media_variation) {
+        $media_variations = json_decode( $media->media_variation, true);
+        $this->deleteMediaVariations($media_variations);
+      }
+
+      $media->media_variation = json_encode($media_variation);
+      $media->save();
+
+      $res[] = $media;
+    }
+
+    $res = array_reverse( $res );
+    return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
+    
+  }
+
   /**
    * Store a newly created resource in storage. From front-app
    *
@@ -178,6 +325,8 @@ class MediaController extends Controller
     foreach ( $_files as $file ) {
       $files[] = $file;
     }
+
+    $mediaSettings = MediaSetting::all();
 
     foreach ( $files as $file ) {
       $media = new Media();
@@ -214,6 +363,15 @@ class MediaController extends Controller
         $media->width = data_get( $size, '0', 0 );
         $media->height = data_get( $size, '1', 0 );
       }
+
+      $media_variation = [];
+      if (count($mediaSettings) > 0) {
+        foreach ($mediaSettings as $setting) {
+          $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
+          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+        }
+      }
+      $media->media_variation = json_encode($media_variation);
 
       $media->main_color = getMainColor( $path );
       $media->url =  Storage::url( $media->filename );
@@ -305,11 +463,14 @@ class MediaController extends Controller
   {
     //
     $media = $media->find($id);
-
     if( ! $media ){
       return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
     }
     if( $media->forceDelete() ) {
+      if ($media->media_variation) {
+        $media_variations = json_decode( $media->media_variation, true);
+        $this->deleteMediaVariations($media_variations);
+      }
       CategoryObject::where("object_guid", $media->guid)->forceDelete();
       return response()->json( [ 'success' => true ] );
     }
@@ -343,11 +504,27 @@ class MediaController extends Controller
     }
     if( Storage::delete( 'public/' . $media->filename ) ){
       if( $media->forceDelete() ){
+        if ($media->media_variation) {
+          $media_variations = json_decode( $media->media_variation, true);
+          $this->deleteMediaVariations($media_variations);
+        }
         return response()->json( ['success' => true] );
       }
       return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
     }
     return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
+  }
+
+  private function deleteMediaVariations( $media_variations )
+  {
+    if (is_array($media_variations) && count($media_variations) > 0) {
+      $variation_files = [];
+      foreach ($media_variations as $variation) {
+        $variation_files[] = Storage::path( 'public/' . str_replace_once('/storage/', '', array_shift($variation)) );
+      }
+      File::delete($variation_files);
+    }
+    return true;
   }
 
   /**

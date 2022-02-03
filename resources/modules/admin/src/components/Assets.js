@@ -32,6 +32,7 @@ class Assets extends Component {
       haveNextImage: true,
       haveNextFont: true,
       havePreviousFont: true,
+      imageSettings: []
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
@@ -43,6 +44,8 @@ class Assets extends Component {
       others: ['']
     };
     this.resource = new Resource({ route: '/admin/ajax/media' });
+    this.imageResize = new Resource({route: "/admin/ajax/media-resize-all-images"} );
+    this.imagesSettings = new Resource({route: "/admin/ajax/media_settings"} );
   }
 
   deleteClick(e) {
@@ -103,7 +106,13 @@ class Assets extends Component {
       return { ...state, uploaderClasses: 'admin-assets__uploader uploader' }
     });
   }
-  componentDidMount() {
+  async componentDidMount() {
+    let settings = await this.imagesSettings.getAll()
+    this.setState(state => ({
+      ...state,
+      imageSettings: settings
+    }))
+
     const activeLink = this.changeUrlForTab();
     this.filterAssets(activeLink);
 
@@ -156,6 +165,11 @@ class Assets extends Component {
     return () => this.filterAssets(activeLink);
 
   }
+
+  resizeAllImages = async () => {
+    await this.imageResize.post()
+  }
+
   filterAssets(activeLink) {
     this.setState(state => {
       return { ...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
@@ -266,6 +280,9 @@ class Assets extends Component {
             <span className="admin-breadcrumbs__current">All Assets</span>
           </div>
           <button className="btn" onClick={this.toggleUploadLoader}>{this.state.uploadActive ? "Close file uploader" : "Open file uploader"}</button>
+          {this.state.imageSettings.length > 0 && (
+            <button onClick={this.resizeAllImages} style={{marginLeft: '10px'}} className="btn">Resize All Image</button>
+          )}
         </div>
         <UserTopPanel />
       </div>

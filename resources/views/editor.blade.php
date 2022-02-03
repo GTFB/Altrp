@@ -13,7 +13,7 @@
 
   <!-- Scripts -->
   <script>
-  let _token = '{{ csrf_token() }}';
+  window._token = '{{ csrf_token() }}';
   </script>
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
     <script>

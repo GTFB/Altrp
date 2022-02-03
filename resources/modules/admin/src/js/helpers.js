@@ -55,6 +55,11 @@ export function titleToName(str) {
 
 }
 
+export function numberExp(str) {
+  let app = str.replace(/^0/, '')
+  return app.replace(/[^0-9]/, '')
+}
+
 export function titleToNameTwo(str) {
   return str.replace(/^\d+/, '')
 }
