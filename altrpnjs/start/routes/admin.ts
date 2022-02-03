@@ -17,6 +17,8 @@ Route.group(() => {
     Route.put("/custom_models/:id/edit/:row", "admin/ModelsController.updateModelRow")
     Route.post("/custom_models/:id", "admin/ModelsController.addModelRow")
 
+    Route.post("/favicon", "admin/AdminController.updateFavicon")
+
     Route.get('/global_template_styles', 'TemplatesController.globalTemplateStyles')
 
     Route.post('/templates', 'TemplatesController.create').middleware('auth')

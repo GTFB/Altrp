@@ -7,6 +7,7 @@ import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
+import filtration from "../../../helpers/filtration";
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -19,11 +20,22 @@ export default class TemplatesController {
 
     const pageSize = params.pageSize
 
-    const templates = await Template.query()
+    const templatesQuery = Template.query()
+
+    filtration(templatesQuery, request, [
+      "title",
+    ])
+
+    const templates = await templatesQuery
       .preload("user")
       .preload("currentArea")
       .preload("categories")
       .where("type", "template")
+      .whereHas("currentArea", (query) => {
+        if(params.area) {
+          query.where("name", params.area)
+        }
+      })
       .paginate(page, pageSize)
 
     const modTemplates = templates.all().map( template => {

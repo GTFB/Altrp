@@ -20,6 +20,7 @@ import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import getCurrentDevice from "../../helpers/getCurrentDevice";
+import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
 
@@ -56,7 +57,7 @@ export default class AltrpRouting {
 
     if (url === '/altrp-login'
       || url === '/login'
-      || url === '/data/current-user') {
+      || url === '/data/current-user' || "/modules/admin/admin.js") {
       await next()
       return
     }
@@ -107,12 +108,10 @@ export default class AltrpRouting {
 
       const altrp_settings = await page.getPageSettings(this)
       const pageAreas = await page.getAreas();
-      // @ts-ignore
-      const preload_content:any = renderResult({
+      const preload_content = renderResult({
         protocol: request.protocol(),
         host: request.host(),
         originalUrl: url,
-        current_device: getCurrentDevice(request),
         json: {
           altrp_settings,
           page: pageAreas,
@@ -208,7 +207,7 @@ export default class AltrpRouting {
     if( ! template ){
       return;
     }
-    data_set(altrpSettings, 'templates_data.' + template_id,  template);
+    data_set(altrpSettings, 'templates_data.' + template_id,  template.toArray());
 
     let data = JSON.parse( template.data );
     this._extractElementsNames( data, elementNames, false );

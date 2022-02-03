@@ -57,6 +57,8 @@ Route.group(() => {
 
   Route.get("/current-user", "users/UsersController.getCurrentUser")
 
+  Route.get("favicon/:path", "IndicesController.favicons")
+
   Route.get("/_token", ({request}) => {
     return {
       success: true,
