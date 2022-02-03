@@ -184,6 +184,10 @@ export function actionsControllers(
         value: 'oauth',
         label: 'Oidc Client'
       },
+      {
+        value: 'metamask_connect',
+        label: 'MetaMask Connect'
+      },
     ]
   });
 
@@ -509,7 +513,7 @@ export function actionsControllers(
     dynamic: false,
     description: 'altrppagestate.alias',
     conditions: {
-      type: ['data_to_csv', 'set_data', 'form']
+      type: ['data_to_csv', 'set_data', 'form', 'metamask_connect']
     }
   });
 
