@@ -190,6 +190,7 @@ export default class TemplatesController {
   /**
    * Сохранение условий текущего шаблона
    * @param $template_id
+   * @param $template_id
    * @param Request $request
    * @return JsonResponse
    */

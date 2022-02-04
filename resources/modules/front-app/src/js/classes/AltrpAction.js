@@ -1235,9 +1235,8 @@ class AltrpAction extends AltrpModel {
     let currentValue = getDataByPath(path); // не получаю значение, приходит всегда null
 
     if (!window.ethereum) {
-      alert("Установите или включите расширение MetaMask");
       return {
-        success: true
+        success: false
       };
     }
 
@@ -1245,14 +1244,14 @@ class AltrpAction extends AltrpModel {
       method: "eth_accounts",
     });
     if (accounts.length > 0) {
-      alert("Вы уже вошли в MetaMask");
       return {
-        success: true
+        success: false
       };
     } else {
       const requestAccounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
+      console.log(requestAccounts);
       setDataByPath(path, requestAccounts[0])
       return {
         success: true
