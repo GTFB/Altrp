@@ -2,6 +2,8 @@ import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
 import {togglePopup} from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
 import {changeCurrentModel} from "../store/current-model/actions";
+import { io } from "socket.io-client";
+import axios from "axios";
 const {
   altrpLogin,
   altrpLogout,
@@ -314,6 +316,16 @@ class AltrpAction extends AltrpModel {
         result = await this.metaMaskConnect();
       }
         break;
+      case 'socket_emit': {
+        result = await this.doActionSocketEmit();
+
+      }
+        break;
+      case 'socket_receiver': {
+        result = this.doActionSocketReceiver();
+
+      }
+        break;
     }
     let alertText = '';
     if (result.success) {
@@ -327,6 +339,47 @@ class AltrpAction extends AltrpModel {
     }
     return result;
   }
+
+  /**
+   * заставляет сервер отправить сокет
+   * @return {object}
+   */
+  async doActionSocketEmit() {
+    // if(!window.io) {
+    //   window.io = io()
+    // }
+
+    const value = {
+      name: replaceContentWithData(this.getProperty("socket_name"), this.getCurrentModel().getData()),
+      type: replaceContentWithData(this.getProperty("socket_type"), this.getCurrentModel().getData()),
+      data: replaceContentWithData(this.getProperty("socket_value"), this.getCurrentModel().getData())
+    }
+
+    await axios.post("/sockets", value)
+    return {
+      success: true
+    }
+  }
+
+  /**
+   * слушает сокеты
+   * @return {object}
+   */
+  doActionSocketReceiver() {
+    if(!window.io) {
+      window.io = io()
+    }
+
+    window.io.on(replaceContentWithData(this.getProperty("socket_name"), this.getCurrentModel().getData()), (data) => {
+      console.log(data)
+    });
+
+    return {
+      success: true
+    }
+  }
+
+
 
   /**
    * Ассинхронно выполняет действие-формы

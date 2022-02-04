@@ -188,6 +188,14 @@ export function actionsControllers(
         value: 'metamask_connect',
         label: 'MetaMask Connect'
       },
+      {
+        value: 'socket_receiver',
+        label: 'Socket receiver'
+      },
+      {
+        value: "socket_emit",
+        label: "Socket emit"
+      }
     ]
   });
 
@@ -513,7 +521,7 @@ export function actionsControllers(
     dynamic: false,
     description: 'altrppagestate.alias',
     conditions: {
-      type: ['data_to_csv', 'set_data', 'form', 'metamask_connect']
+      type: ['data_to_csv', 'set_data', 'form']
     }
   });
 
