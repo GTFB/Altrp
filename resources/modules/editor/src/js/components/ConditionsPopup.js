@@ -30,16 +30,25 @@ function ConditionsPopup() {
   })
 
 
-  useEffect( async () => {
-    let conditions = await axios.get(`/admin/ajax/templates/${getTemplateId()}/conditions`);
-    let pageOptions = await axios.get("/admin/ajax/pages_options");
-    let reportsOptions = await axios.get("/admin/ajax/reports_options")
-    setState(state => ({
-      ...state,
-      value: conditions.data.data || [],
-      pageOptions: pageOptions.data,
-      reportsOptions: reportsOptions.data
-    }))
+  useEffect(() => {
+    let abortController = new AbortController();
+
+    const getConditions = async () => {
+      let conditions = await axios.get(`/admin/ajax/templates/${getTemplateId()}/conditions`, {signal: abortController.signal});
+      let pageOptions = await axios.get("/admin/ajax/pages_options", {signal: abortController.signal});
+      let reportsOptions = await axios.get("/admin/ajax/reports_options", {signal: abortController.signal});
+      setState(state => ({
+        ...state,
+        value: conditions.data.data || [],
+        pageOptions: pageOptions.data,
+        reportsOptions: reportsOptions.data
+      }))
+    }
+    getConditions()
+
+    return () => {
+      abortController.abort();
+    }
   }, [])
 
   const updateConditions = async () => {
