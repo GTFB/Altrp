@@ -148,7 +148,8 @@ export default class TemplatesController {
 
       const prevVersion = await Template.create({
         ...data,
-        type: "review",
+        guid: null,
+        type: "review"
       })
 
       template.data = JSON.stringify(request.input("data"));

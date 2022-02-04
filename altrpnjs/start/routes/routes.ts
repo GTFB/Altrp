@@ -30,6 +30,7 @@ Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
 Route.post("/logout", "IndicesController.logout").name = 'logout'
 
+Route.post("/sockets", "SocketsController.handle")
 
 // Route.get("/userr", async () => {
 //   const user = await User.query().where("id", 1).firstOrFail();
