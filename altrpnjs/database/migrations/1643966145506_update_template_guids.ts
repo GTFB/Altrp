@@ -22,7 +22,6 @@ export default class UpdateTemplateGuids extends BaseSchema {
 
   public async down () {
     this.schema.alterTable(this.tableName, (table) => {
-      //@ts-ignore
       table.dropUnique("guid")
     })
   }

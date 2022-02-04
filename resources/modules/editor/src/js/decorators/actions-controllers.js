@@ -222,30 +222,6 @@ export function actionsControllers(
     }
   });
 
-  actionsRepeater.addControl('socket_name', {
-    type: CONTROLLER_TEXTAREA,
-    label: 'Name',
-    conditions: {
-      type: ["socket_emit", "socket_receiver"]
-    }
-  });
-
-  actionsRepeater.addControl('socket_type', {
-    type: CONTROLLER_TEXT,
-    label: 'Type',
-    conditions: {
-      type: ["socket_emit"]
-    }
-  });
-
-  actionsRepeater.addControl('socket_value', {
-    type: CONTROLLER_TEXTAREA,
-    label: 'Value',
-    conditions: {
-      type: ["socket_emit"]
-    }
-  });
-
   actionsRepeater.addControl('aliases', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
