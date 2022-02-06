@@ -371,6 +371,10 @@ class FrontElement {
     }
     return _.get(settings, settingName) || _default;
   }
+
+  getLockedSettings(settingName, _default = '') {
+    return this.getSettings(settingName, _default, true)
+  }
   
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
@@ -653,6 +657,13 @@ class FrontElement {
     }
     return'';
   }
+  
+  getLockedContent(settingName){
+    if(this.component){
+      return this.component.getContent(settingName)
+    }
+    return'';
+  }
 
   /**
    * Сохраняет данные модели
@@ -815,7 +826,7 @@ class FrontElement {
    * @return {*}
    */
     getResponsiveLockedSetting(settingName, elementState = '', _default){
-      return getResponsiveSetting(this.getSettingsLock(), settingName, elementState, _default)
+      return getResponsiveSetting(this.getLockedSettings(), settingName, elementState, _default)
     }
 
   /**

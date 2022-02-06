@@ -51,7 +51,7 @@ class BaseElement extends ControlStack {
    */
   setSettings(settings) {
     this.settings = settings || this.settings;
-    this.settingsLock = settings || this.settings;
+    this.settingsLock = settings || this.settingsLock;
     if (this.component && settings) {
       this.component.setState(state => {
         return {

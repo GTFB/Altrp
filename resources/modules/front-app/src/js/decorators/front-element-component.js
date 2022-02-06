@@ -147,6 +147,12 @@ function getContent(settingName, returnRaw = false, locked = false) {
   }
   return content === 'null' ? '' : content;
 }
+
+
+function getLockedContent(settingName, returnRaw = false) {
+  return this.getContent(settingName, returnRaw, true)
+}
+
 /**
  * Компоненте загрузился в DOM
  */
@@ -387,6 +393,7 @@ export default function frontDecorate(component) {
   component.componentDidMount = componentDidMount.bind(component);
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component.getContent = getContent.bind(component);
+  component.getLockedContent = getLockedContent.bind(component);
   component.getModelId = getModelId.bind(component);
   component.updateModelData = updateModelData.bind(component);
   component.isActive = isActive.bind(component);
