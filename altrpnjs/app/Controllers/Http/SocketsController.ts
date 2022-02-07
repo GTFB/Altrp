@@ -6,10 +6,9 @@ export default class SocketsController {
   public handle({ request }) {
     const value = request.body();
 
-    if(value.name && value.type && value.data)
+    if(value.name && value.data)
 
     Ws.io.emit(request.input("name"), {
-      type: value.type,
       value: value.data
     })
   }
