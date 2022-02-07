@@ -149,6 +149,7 @@ export default class TemplatesController {
       const prevVersion = await Template.create({
         ...data,
         guid: null,
+        parent_template: template.id,
         type: "review"
       })
 
@@ -163,6 +164,78 @@ export default class TemplatesController {
         prevVersions: prevVersions,
         prevVersion: prevVersion,
         clearData: request.input("data")
+      }
+    }
+  }
+
+  public async deleteReviews({ params, response }) {
+    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
+
+    if(templates.length > 0) {
+      for (const template of templates) {
+        template.delete()
+      }
+
+      return {
+        success: true,
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false
+      }
+    }
+  }
+
+  public async deleteAllReviews({ response }) {
+    const templates = await Template.query().where("type", "review");
+
+    if(templates.length > 0) {
+      for (const template of templates) {
+        template.delete()
+      }
+
+      return {
+        success: true,
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false
+      }
+    }
+  }
+
+  public async getAllReviews({ response }) {
+    const templates = await Template.query().where("type", "review");
+
+    if(templates.length > 0) {
+      return {
+        success: true,
+        data: templates
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false,
+        data: templates
+      }
+    }
+  }
+
+  public async getReviews({ params, response }) {
+    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
+
+    if(templates.length > 0) {
+      return {
+        success: true,
+        data: templates
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false,
+        data: templates
       }
     }
   }
