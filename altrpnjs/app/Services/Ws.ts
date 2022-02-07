@@ -1,5 +1,6 @@
 import { Server } from 'socket.io'
 import AdonisServer from '@ioc:Adonis/Core/Server'
+import Env from "@ioc:Adonis/Core/Env";
 
 class Ws {
   public io: Server
@@ -11,11 +12,13 @@ class Ws {
     }
 
     this.booted = true
-    this.io = new Server(AdonisServer.instance!, {
+    this.io = new Server(3000, {
       cors: {
         origin: '*'
       }
     })
+    console.log(AdonisServer.instance!)
+    this.io.listen(Env.get('SOCKETS_KEY'))
   }
 }
 
