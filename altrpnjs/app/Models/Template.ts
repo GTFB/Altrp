@@ -25,6 +25,9 @@ export default class Template extends BaseModel {
   public styles: string
 
   @column()
+  public parent_template: number|null
+
+  @column()
   public html_content: string
 
   @column()
