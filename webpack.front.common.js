@@ -5,6 +5,8 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WebpackBuildNotifierPlugin = require("webpack-build-notifier");
 
+require('dotenv').config()
+
 module.exports = {
   // entry: [
   //     "./resources/modules/front-app/src/index.js",
@@ -113,7 +115,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
-      "process.env": "{}",
+      "process.env": JSON.stringify(process.env),
       global: {}
     }),
     new WebpackBuildNotifierPlugin({
