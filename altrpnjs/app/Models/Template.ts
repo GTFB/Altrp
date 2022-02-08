@@ -45,7 +45,7 @@ export default class Template extends BaseModel {
   public type: string
 
   @column()
-  public guid: string|null
+  public guid: string
 
   @column()
   public all_site: boolean
