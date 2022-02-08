@@ -25,8 +25,8 @@ import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
 // import {UserFactory} from "Database/factories";
-
-Route.get("/altrp-login", "IndicesController.loginView")
+// "IndicesController.loginView"
+Route.post("/altrp-login", "TemplatesController.settingsSet")
 Route.post("/login", "IndicesController.login").name = 'post.login'
 Route.post("/logout", "IndicesController.logout").name = 'logout'
 
