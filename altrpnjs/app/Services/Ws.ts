@@ -1,5 +1,4 @@
 import { Server } from 'socket.io'
-import AdonisServer from '@ioc:Adonis/Core/Server'
 import Env from "@ioc:Adonis/Core/Env";
 
 class Ws {
@@ -17,7 +16,7 @@ class Ws {
         origin: '*'
       }
     })
-    console.log(AdonisServer.instance!)
+
     this.io.listen(Env.get('SOCKETS_KEY'))
   }
 }

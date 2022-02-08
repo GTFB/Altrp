@@ -2,6 +2,7 @@ import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
 import {togglePopup} from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
 import {changeCurrentModel} from "../store/current-model/actions";
+import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
 const {
@@ -348,13 +349,14 @@ class AltrpAction extends AltrpModel {
     // if(!window.io) {
     //   window.io = io()
     // }
+    let name = replaceContentWithData(this.getProperty("socket_emit_name"), this.getCurrentModel().getData())
 
     const value = {
-      name: replaceContentWithData(this.getProperty("socket_name"), this.getCurrentModel().getData()),
-      type: replaceContentWithData(this.getProperty("socket_type"), this.getCurrentModel().getData()),
+      name,
       data: replaceContentWithData(this.getProperty("socket_value"), this.getCurrentModel().getData())
     }
 
+    console.log(value)
     await axios.post("/sockets", value)
     return {
       success: true
@@ -367,10 +369,33 @@ class AltrpAction extends AltrpModel {
    */
   doActionSocketReceiver() {
     if(!window.io) {
-      window.io = io()
+      window.io = io(`:${process.env.SOCKETS_KEY}`)
+      window
     }
 
-    window.io.on(replaceContentWithData(this.getProperty("socket_name"), this.getCurrentModel().getData()), (data) => {
+    let name = ""
+
+    if(this.getProperty("socket_type") === "custom") {
+      name = replaceContentWithData(this.getProperty("socket_name"), this.getCurrentModel().getData());
+    } else {
+      const user = window.current_user
+
+      if(!user.is_guest && user.guid) {
+        name = user.guid
+      } else {
+        let guid = localStorage.getItem("socket_guid");
+        if(!guid) {
+          localStorage.setItem("socket_guid", uuid())
+          guid = localStorage.getItem("socket_guid")
+        }
+
+        name = guid
+      }
+
+    }
+
+    console.log(name)
+    window.io.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
       console.log(data)
     });
 

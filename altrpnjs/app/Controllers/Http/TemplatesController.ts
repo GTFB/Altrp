@@ -60,6 +60,49 @@ export default class TemplatesController {
     }
   }
 
+  public async settingsGet({ request, params }) {
+    const setting = await TemplateSetting.query()
+      .where("template_id", parseInt(params.id))
+      .andWhere("setting_name", request.input("setting_name"))
+      .firstOrFail()
+    return setting
+  }
+
+  public async settingsSet({ params, request, response}) {
+    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail()
+
+    const settingName = request.input("setting_name");
+
+    let setting = await TemplateSetting.query()
+      .where("template_id", template.id)
+      .andWhere("setting_name", settingName)
+      .first()
+
+    if(!setting) {
+      setting = new TemplateSetting()
+
+      setting.fill({
+        template_id: template.id,
+        template_guid: template.guid,
+        setting_name: settingName,
+        data: request.input("data")
+      })
+    } else {
+      setting.data = request.input("data")
+    }
+
+    if(!await setting.save()) {
+      response.status(500)
+      return {
+        message: "Setting not saved"
+      }
+    }
+
+    return {
+      success: true
+    }
+  }
+
   public async create({ auth, request, response }) {
     await auth.use('web').authenticate()
 
