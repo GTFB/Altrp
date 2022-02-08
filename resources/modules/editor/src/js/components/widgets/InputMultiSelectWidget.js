@@ -1083,9 +1083,7 @@ class InputMultiSelectWidget extends Component {
    * @return {JSX.Element|null}
    */
 
-  createNewItemRenderer = (query,
-                           active,
-                           handleClick) => {
+  createNewItemRenderer = (query, active, handleClick) => {
     /**
      * @type {FrontElement}
      */

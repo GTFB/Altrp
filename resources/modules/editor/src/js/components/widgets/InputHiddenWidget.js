@@ -564,10 +564,12 @@ class InputHiddenWidget extends Component {
       return <FromIcon/>
     }
     let value = this.getValue()
-    return <input value={value}
-                  type="hidden"
-                  name={this.getName()}
-                  id={this.getName()}/>
+    return <input 
+      value={value}
+      type="hidden"
+      name={this.getName()}
+      id={this.getName()}
+    />
   }
 }
 

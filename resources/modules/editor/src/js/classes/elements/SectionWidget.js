@@ -67,7 +67,8 @@ class SectionWidget extends BaseElement {
         //   label: 'full fill'
         // }
       ],
-      prefixClass: "altrp-section_"
+      prefixClass: "altrp-section_",
+      locked: true,
     });
 
     this.addControl("layout_flex_wrap_content", {
@@ -258,7 +259,8 @@ class SectionWidget extends BaseElement {
           value: "min_height",
           label: "min height"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("label_style_min_height", {
@@ -324,7 +326,8 @@ class SectionWidget extends BaseElement {
           value: "nav",
           label: "nav"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.endControlSection();
@@ -341,7 +344,8 @@ class SectionWidget extends BaseElement {
         attributes: "",
         noFollow: false
       },
-      label: "Link"
+      label: "Link",
+      locked: true,
     });
 
     this.endControlSection();
@@ -396,6 +400,7 @@ class SectionWidget extends BaseElement {
       type: CONTROLLER_MEDIA,
       label: "Background Image",
       default: { url: "" },
+      locked: true,
     });
 
     this.addControl("background_position", {
@@ -638,12 +643,14 @@ class SectionWidget extends BaseElement {
 
     this.addControl("position_style_css_id", {
       type: CONTROLLER_TEXT,
-      label: "CSS ID"
+      label: "CSS ID",
+      locked: true,
     });
 
     this.addControl("position_style_css_classes", {
       type: CONTROLLER_TEXT,
-      label: "CSS Classes"
+      label: "CSS Classes",
+      locked: true,
     });
 
     this.endControlSection();

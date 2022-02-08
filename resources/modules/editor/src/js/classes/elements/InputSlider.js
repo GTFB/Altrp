@@ -71,49 +71,58 @@ class InputSlider extends BaseElement{
       type: CONTROLLER_NUMBER,
       label: 'Min',
       default: 0,
+      locked: true,
     });
 
     this.addControl('max', {
       type: CONTROLLER_NUMBER,
       label: 'Max',
       default: 100,
+      locked: true,
     });
 
     this.addControl('step', {
       type: CONTROLLER_NUMBER,
       label: 'Step Size',
+      locked: true,
     });
 
     this.addControl('label_step', {
       type: CONTROLLER_NUMBER,
       label: 'Label Step Size',
       default: 25,
+      locked: true,
     });
 
     this.addControl('thousands_separator', {
       type: CONTROLLER_SWITCHER,
       label: 'Thousands separator',
+      locked: true,
     });
 
     this.addControl('thousands_separator_value', {
       type: CONTROLLER_TEXT,
       label: 'Separator',
+      locked: true,
     });
 
     this.addControl('decimal_place', {
       type: CONTROLLER_NUMBER,
       label: 'Rounding Degree',
+      locked: true,
     });
 
     this.addControl('decimal_separator', {
       type: CONTROLLER_TEXT,
       label: 'Separator',
+      locked: true,
     });
 
     this.addControl('custom_label', {
       type: CONTROLLER_TEXT,
       label: 'Label Content',
-      default: "value: {n}"
+      default: "value: {n}",
+      locked: true,
     });
 
     this.addControl("content_default_value", {
@@ -150,6 +159,7 @@ class InputSlider extends BaseElement{
       conditions: {
         'vertical!': true,
       },
+      locked: true,
     });
 
     this.addControl('height', {
@@ -249,6 +259,7 @@ class InputSlider extends BaseElement{
       ],
       max: 50,
       min: 0,
+      locked: true,
     });
 
     this.addControl("tr_x", {

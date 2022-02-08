@@ -37,7 +37,8 @@ class Tournament extends BaseElement {
 
         this.addControl('path', {
             label: 'Path',
-            type: CONTROLLER_TEXTAREA
+            type: CONTROLLER_TEXTAREA,
+            locked: true,
         })
 
         this.endControlSection();

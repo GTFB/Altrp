@@ -109,7 +109,8 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon"
+      label: "Choose Icon",
+      locked: true,
     });
 
     this.addControl("label_icon_position", {
@@ -144,7 +145,8 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
-      label: "Required"
+      label: "Required",
+      locked: true,
     });
 
     this.addControl("content_readonly", {
@@ -188,8 +190,8 @@ class InputCheckbox extends BaseElement {
       label: "Choose Datasource for Select Options",
       default: "",
       nullable: true,
-      options_resource:
-        "/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1"
+      options_resource: "/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1",
+      locked: true,
     });
 
     this.addControl("params_for_update", {
@@ -198,8 +200,8 @@ class InputCheckbox extends BaseElement {
       conditions: {
         "model_for_options!": ""
       },
-      description:
-        'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
+      description: 'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+      locked: true,
     });
 
     this.addControl("params_as_filters", {
@@ -208,26 +210,28 @@ class InputCheckbox extends BaseElement {
       default: false,
       conditions: {
         "params_for_update!": ""
-      }
+      },
+      locked: true,
     });
 
     this.addControl("content_options", {
       type: CONTROLLER_TEXTAREA,
       label: "Or Type Select Options",
-      description:
-        'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: f_name | First Name'
+      description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: f_name | First Name',
+      locked: true,
     });
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
-      label: "Default Value"
+      label: "Default Value",
+      locked: true,
     });
 
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+      description: "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+      locked: true,
     });
 
     this.endControlSection();
@@ -237,12 +241,13 @@ class InputCheckbox extends BaseElement {
       label: "Create Options Settings",
       conditions: {
         content_type: ["select2"]
-      }
+      },
     });
 
     this.addControl("create_allowed", {
       type: CONTROLLER_SWITCHER,
-      label: "Allowed"
+      label: "Allowed",
+      locked: true,
     });
 
     this.addControl("create_url", {
@@ -252,7 +257,8 @@ class InputCheckbox extends BaseElement {
       description: "/ajax/models/tests",
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_label", {
@@ -261,7 +267,8 @@ class InputCheckbox extends BaseElement {
       responsive: false,
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_data", {
@@ -270,8 +277,8 @@ class InputCheckbox extends BaseElement {
       conditions: {
         create_allowed: true
       },
-      description:
-        'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
+      description: 'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+      locked: true,
     });
 
     this.endControlSection();
@@ -369,7 +376,7 @@ class InputCheckbox extends BaseElement {
       units: ["px", "%", "vh"],
       max: 60,
       min: 0,
-
+      locked: true,
     });
 
     this.addControl("label_background_color", {
@@ -416,7 +423,8 @@ class InputCheckbox extends BaseElement {
       },
       units: ["px", "%", "vh"],
       max: 100,
-      min: -100
+      min: -100,
+      locked: true,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "top: {{SIZE}}{{UNIT}};"

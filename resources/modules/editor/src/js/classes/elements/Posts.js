@@ -63,6 +63,7 @@ class Table extends BaseElement {
         },
       ],
       default: 'datasource',
+      locked: true,
     });
 
     this.addControl("posts_datasource", {
@@ -71,6 +72,7 @@ class Table extends BaseElement {
       conditions: {
         'choose_datasource': 'datasource',
       },
+      locked: true,
     });
 
     this.addControl("posts_query_heading", {

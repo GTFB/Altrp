@@ -54,7 +54,8 @@ class TabsSwitcher extends BaseElement{
     this.addControl("one_title", {
       type: CONTROLLER_TEXT,
       label: 'Title',
-      default: 'section 1'
+      default: 'section 1',
+      locked: true,
     });
 
     this.addControl("one_type", {
@@ -71,6 +72,7 @@ class TabsSwitcher extends BaseElement{
           label: "Template"
         },
       ],
+      locked: true,
     });
 
     this.addControl("one_wysiwyg", {
@@ -79,6 +81,7 @@ class TabsSwitcher extends BaseElement{
       conditions: {
         'one_type': 'text',
       },
+      locked: true,
     });
 
     this.addControl("one_template", {
@@ -95,6 +98,7 @@ class TabsSwitcher extends BaseElement{
         textTemplate: 'Go to Template',
       },
       nullable: true,
+      locked: true,
     });
 
     this.endControlSection();
@@ -107,7 +111,8 @@ class TabsSwitcher extends BaseElement{
     this.addControl("two_title", {
       type: CONTROLLER_TEXT,
       label: 'Title',
-      default: 'section 2'
+      default: 'section 2',
+      locked: true,
     });
 
     this.addControl("two_type", {
@@ -124,6 +129,7 @@ class TabsSwitcher extends BaseElement{
           label: "Template"
         },
       ],
+      locked: true,
     });
 
     this.addControl("two_wysiwyg", {
@@ -132,6 +138,7 @@ class TabsSwitcher extends BaseElement{
       conditions: {
         'two_type': 'text',
       },
+      locked: true,
     });
 
     this.addControl("two_template", {
@@ -148,6 +155,7 @@ class TabsSwitcher extends BaseElement{
         textTemplate: 'Go to Template',
       },
       nullable: true,
+      locked: true,
     });
 
     this.endControlSection();

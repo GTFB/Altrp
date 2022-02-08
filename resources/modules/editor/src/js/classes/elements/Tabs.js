@@ -138,11 +138,13 @@ class Tabs extends BaseElement {
     this.addControl('vertical', {
       type: CONTROLLER_SWITCHER,
       label: 'Vertical',
+      locked: true,
     });
 
     this.addControl('animate', {
       type: CONTROLLER_SWITCHER,
       label: 'Animate',
+      locked: true, 
     });
 
 
@@ -387,6 +389,7 @@ class Tabs extends BaseElement {
           value: 'right',
         },
       ],
+      locked: true,
     });
 
     this.addControl("spacing_icon_style", {
@@ -396,6 +399,7 @@ class Tabs extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
+      locked: true,
     });
 
     this.addControl("color_icon_style", {

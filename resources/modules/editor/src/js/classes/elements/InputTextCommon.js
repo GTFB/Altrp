@@ -75,7 +75,8 @@ class InputTextCommon extends BaseElement {
           value: "tel",
           label: "Tel"
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("form_id", {
@@ -304,7 +305,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
+      locked: true,
     });
 
     this.addControl("content_label_position_type", {
@@ -332,12 +334,14 @@ class InputTextCommon extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Label Icon"
+      label: "Label Icon",
+      locked: true,
     });
 
     this.addControl("label_icon_position", {
@@ -361,13 +365,15 @@ class InputTextCommon extends BaseElement {
           value: "column-reverse",
           label: "Top"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
-      default: "Placeholder"
+      default: "Placeholder",
+      locked: true,
     });
 
     this.addControl("content_mask", {
@@ -396,12 +402,14 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
-      label: "Required"
+      label: "Required",
+      locked: true,
     });
 
     this.addControl("content_readonly", {
       type: CONTROLLER_SWITCHER,
-      label: "Readonly"
+      label: "Readonly",
+      locked: true,
     });
 
     this.addControl("content_autocomplete", {
@@ -409,7 +417,8 @@ class InputTextCommon extends BaseElement {
       label: "Autocomplete",
       conditions: {
         content_type: ["text", "password", "email"]
-      }
+      },
+      locked: true,
     });
 
     this.addControl("content_timestamp", {
@@ -523,7 +532,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
-      label: "Default Value"
+      label: "Default Value",
+      locked: true,
     });
 
     this.addControl("content_calculation", {
@@ -548,7 +558,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("create_allowed", {
       type: CONTROLLER_SWITCHER,
-      label: "Allowed"
+      label: "Allowed",
+      locked: true,
     });
 
     this.addControl("create_url", {
@@ -588,7 +599,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl('left_icon', {
       type: CONTROLLER_MEDIA,
-      label: 'Left Icon'
+      label: 'Left Icon',
+      locked: true,
     })
 
     this.addControl('password_show_left_icon', {
@@ -596,12 +608,14 @@ class InputTextCommon extends BaseElement {
       conditions:{
         content_type: 'password'
       },
-      label: 'Password Show Left Icon'
+      label: 'Password Show Left Icon',
+      locked: true,
     })
 
     this.addControl('right_icon', {
       type: CONTROLLER_MEDIA,
-      label: 'Right Icon'
+      label: 'Right Icon',
+      locked: true,
     })
 
     this.addControl('password_show_right_icon', {
@@ -609,7 +623,8 @@ class InputTextCommon extends BaseElement {
       conditions:{
         content_type: 'password'
       },
-      label: 'Password Show Right Icon'
+      label: 'Password Show Right Icon',
+      locked: true,
     })
 
     this.addControl('icons_size', {
@@ -728,6 +743,7 @@ class InputTextCommon extends BaseElement {
       units: ["px", "%", "vh"],
       max: 60,
       min: 0,
+      locked: true,
     });
 
     this.addControl("label_padding", {
