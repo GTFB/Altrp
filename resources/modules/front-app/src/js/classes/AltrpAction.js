@@ -1268,9 +1268,6 @@ class AltrpAction extends AltrpModel {
       }
     } catch (e) {
       console.error(e);
-      return {
-        success: false
-      };
     }
   }
 

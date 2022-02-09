@@ -128,6 +128,15 @@ export default class PagesController {
     }
   }
 
+  public async delete({params}) {
+    const page = await Page.query().where("id", parseInt(params.id)).firstOrFail();
+
+    page.delete()
+    return {
+      success: true
+    }
+  }
+
   public async getAreas() {
 
     return {

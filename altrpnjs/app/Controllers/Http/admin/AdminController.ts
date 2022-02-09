@@ -3,7 +3,10 @@ import ModelGenerator from "App/Generators/ModelGenerator";
 import ControllerGenerator from "App/Generators/ControllerGenerator";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Controller from "App/Models/Controller";
-
+import Application from '@ioc:Adonis/Core/Application'
+import sharp from "sharp";
+import FAVICONS_SIZES from "../../../../helpers/const/FAVICONS_SIZES";
+import Drive from '@ioc:Adonis/Core/Drive'
 
 export default class AdminController {
 
@@ -38,5 +41,32 @@ export default class AdminController {
       }
     }))
     return response.json({success: true,})
+  }
+
+
+  public async updateFavicon({request}) {
+    const favicon = request.file("favicon", {
+      size: "2mb",
+      extnames: ['jpg', 'png'],
+    });
+
+    if(favicon) {
+      await favicon.move(Application.tmpPath("favicon"), {
+        name: `basic.${favicon.extname}`
+      })
+    }
+
+    for (const variant of FAVICONS_SIZES) {
+      await sharp(Application.tmpPath("favicon") + `/basic.${favicon.extname}`)
+        .png()
+        .resize(variant.size, variant.size)
+        .toFile(Application.tmpPath("favicon") + `/favicon_${variant.size}.png`)
+    }
+
+    await Drive.delete(Application.tmpPath("favicon") + `/basic.${favicon.extname}`)
+
+    return {
+      success: true
+    }
   }
 }

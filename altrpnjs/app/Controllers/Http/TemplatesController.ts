@@ -7,6 +7,7 @@ import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
+import filtration from "../../../helpers/filtration";
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -19,11 +20,22 @@ export default class TemplatesController {
 
     const pageSize = params.pageSize
 
-    const templates = await Template.query()
+    const templatesQuery = Template.query()
+
+    filtration(templatesQuery, request, [
+      "title",
+    ])
+
+    const templates = await templatesQuery
       .preload("user")
       .preload("currentArea")
       .preload("categories")
       .where("type", "template")
+      .whereHas("currentArea", (query) => {
+        if(params.area) {
+          query.where("name", params.area)
+        }
+      })
       .paginate(page, pageSize)
 
     const modTemplates = templates.all().map( template => {
@@ -108,6 +120,15 @@ export default class TemplatesController {
     return template
   }
 
+  public async delete({ params }) {
+    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail();
+
+    template.delete()
+    return {
+      success: true
+    }
+  }
+
   public async update({ params, request }) {
     const template = await Template.find(parseInt(params.id));
 
@@ -169,6 +190,7 @@ export default class TemplatesController {
   /**
    * Сохранение условий текущего шаблона
    * @param $template_id
+   * @param $template_id
    * @param Request $request
    * @return JsonResponse
    */
@@ -177,7 +199,7 @@ export default class TemplatesController {
     const id = parseInt(params.id);
     const data = JSON.stringify(request.input("data"));
 
-    const template = await Template.find(id);
+    const template = await Template.query().where("id", id).preload("currentArea").first();
 
     if(!template) {
       response.status(404)
@@ -249,7 +271,7 @@ export default class TemplatesController {
                 template_id: template.id,
                 template_guid: template.getGuid(),
                 condition_type: condition.condition_type,
-                template_type: template.type
+                template_type: template.currentArea.name
               })
 
               if(!pages_template) {
