@@ -29,8 +29,8 @@ export default class TemplatesController {
     const templates = await templatesQuery
       .preload("user")
       .preload("currentArea")
-      .preload("categories")
       .where("type", "template")
+      .preload("categories")
       .whereHas("currentArea", (query) => {
         if(params.area) {
           query.where("name", params.area)
@@ -121,7 +121,7 @@ export default class TemplatesController {
 
     if(request.input("categories")) {
       for (const option of request.input("categories")) {
-        const category = await Category.find(option.value);
+        const category = await Category.query().where("guid", option.value);
 
         if (!category) {
           response.status(404)
