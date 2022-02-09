@@ -185,6 +185,10 @@ export function actionsControllers(
         label: 'Oidc Client'
       },
       {
+        value: 'metamask_connect',
+        label: 'MetaMask Connect'
+      },
+      {
         value: 'socket_receiver',
         label: 'Socket receiver'
       },
@@ -215,49 +219,6 @@ export function actionsControllers(
     label: 'Code',
     conditions: {
       type: ['custom_code']
-    }
-  });
-
-  actionsRepeater.addControl('socket_type', {
-    type: CONTROLLER_SELECT,
-    label: 'Type',
-    options: [
-      {
-        value: "user",
-        label: "User"
-      },
-      {
-        value: "custom",
-        label: "Custom"
-      },
-    ],
-    conditions: {
-      type: ["socket_receiver"]
-    }
-  });
-
-  actionsRepeater.addControl('socket_emit_name', {
-    type: CONTROLLER_TEXTAREA,
-    label: 'Name',
-    conditions: {
-      type: ["socket_emit"],
-    }
-  });
-
-  actionsRepeater.addControl('socket_value', {
-    type: CONTROLLER_TEXTAREA,
-    label: 'Value',
-    conditions: {
-      type: ["socket_emit"],
-    }
-  });
-
-  actionsRepeater.addControl('socket_name', {
-    type: CONTROLLER_TEXTAREA,
-    label: 'Name',
-    conditions: {
-      type: ["socket_receiver"],
-      socket_type: "custom"
     }
   });
 

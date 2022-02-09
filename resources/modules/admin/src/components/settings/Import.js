@@ -1,5 +1,6 @@
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {FileInput} from "@blueprintjs/core";
+import getCookie from "../../../../editor/src/js/helpers/getCookie";
 
 class Import extends Component {
   constructor(props) {
@@ -61,6 +62,13 @@ class Import extends Component {
    * Отрисовываем вкладку импорта админки
    */
   render() {
+    let _token
+
+    if(window._token){
+      _token = window._token
+    } else {
+      _token = getCookie('XSRF-TOKEN')
+    }
     return <div><form
                  onSubmit={this.onSubmit}
                  method="post"
