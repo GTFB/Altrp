@@ -51,10 +51,10 @@ export function btnStyles(settings) {
     () => {
       const value = getResponsiveSetting(settings, "position_opacity");
 
-      if(value && value.size) {
-        return `opacity: ${value.size};`
-      } else {
+      if(value === null || value?.size === '0' || value?.size === '') {
         return ''
+      } else {
+        return `opacity: ${value.size};`
       }
     },
     ["background-color", "background_color", "color"],
@@ -72,10 +72,10 @@ export function btnStyles(settings) {
     () => {
       const value = getResponsiveSetting(settings, "position_opacity", ':hover');
 
-      if (value && value.size) {
-        return `opacity: ${value.size};`
-      } else {
+      if (value === undefined || value?.size === '0' || value?.size === '') {
         return ''
+      } else {
+        return `opacity: ${value.size};`
       }
     },
     ["background-color", "background_color", "color", ":hover"],
@@ -175,12 +175,38 @@ export function btnStyles(settings) {
 
     "}",
 
-    "altrp-background-image",
-    ["background-position", ""],
+    "altrp-background-image_btn",
+    ["background-position", "background_position", "simplePropertyStyled"],
     ["background-attachment", "background_attachment"],
     ["background-repeat", "background_repeat"],
-    ["background-size", "background_image_width", "slider"],
+    () => {
+      const backgroundSizeInUnit = getResponsiveSetting(settings, "background_image_width");
+
+      if (backgroundSizeInUnit === null || backgroundSizeInUnit?.size === '0' || backgroundSizeInUnit?.size === '' ) {
+        return '';
+      } else {
+        return sizeStyled(backgroundSizeInUnit, 'background-size');
+      }
+    },
+    // ["background-size", "background_image_width", "slider"],
     ["background-size", "background_size"],
+
+    "&:hover",
+    ["background-position", "background_position", "simplePropertyStyled", ":hover"],
+    ["background-attachment", "background_attachment", "", ":hover"],
+    ["background-repeat", "background_repeat", "", ":hover"],
+    () => {
+      const backgroundSizeInUnit = getResponsiveSetting(settings, "background_image_width", ":hover");
+
+      if (backgroundSizeInUnit === undefined || backgroundSizeInUnit?.size === '0' || backgroundSizeInUnit?.size === '' ) {
+        return '';
+      } else {
+        return sizeStyled(backgroundSizeInUnit, 'background-size');
+      }
+    },
+    // ["background-size", "background_image_width", "slider", ":hover"],
+    ["background-size", "background_size", "", ":hover"],
+
     "}",
   ]
 }
@@ -347,9 +373,17 @@ export default function ButtonComponent(settings) {
     stylesInString += dimensionsControllerToStyles(paddingIconRightBtn);
   }
 
+  const marginIconRightBtn = getResponsiveSetting(settings, 'icon_margin_right');
+
+  if (marginIconRightBtn) {
+    stylesInString += dimensionsControllerToStyles(marginIconRightBtn, 'margin');
+  }
+
   const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right');
 
-  if (iconRightSizeBtn) {
+  if (iconRightSizeBtn === null || iconRightSizeBtn?.size === '0' || iconRightSizeBtn?.size === '' ) {
+    stylesInString += '';
+  } else {
     stylesInString += iconSizeStyled(iconRightSizeBtn);
   }
 
@@ -363,9 +397,17 @@ export default function ButtonComponent(settings) {
     stylesInString += dimensionsControllerToStyles(paddingIconLeftBtn);
   }
 
+  const marginIconLeftBtn = getResponsiveSetting(settings, 'icon_margin_left');
+
+  if (marginIconLeftBtn) {
+    stylesInString += dimensionsControllerToStyles(marginIconLeftBtn, 'margin');
+  }
+
   const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left');
 
-  if (iconLeftSizeBtn) {
+  if (iconLeftSizeBtn === null || iconLeftSizeBtn?.size === '0' || iconLeftSizeBtn?.size === '' ) {
+    stylesInString += '';
+  } else {
     stylesInString += iconSizeStyled(iconLeftSizeBtn);
   }
 
@@ -379,9 +421,17 @@ export default function ButtonComponent(settings) {
     stylesInString += dimensionsControllerToStyles(paddingIconTopBtn);
   }
 
+  const marginIconTopBtn = getResponsiveSetting(settings, 'icon_margin_top');
+
+  if (marginIconTopBtn) {
+    stylesInString += dimensionsControllerToStyles(marginIconTopBtn, 'margin');
+  }
+
   const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top');
 
-  if (iconTopSizeBtn) {
+  if (iconTopSizeBtn === null || iconTopSizeBtn?.size === '0' || iconTopSizeBtn?.size === '' ) {
+    stylesInString += '';
+  } else {
     stylesInString += iconSizeStyled(iconTopSizeBtn);
   }
 
@@ -395,9 +445,17 @@ export default function ButtonComponent(settings) {
     stylesInString += dimensionsControllerToStyles(paddingIconBottomBtn);
   }
 
+  const marginIconBottomBtn = getResponsiveSetting(settings, 'icon_margin_bottom');
+
+  if (marginIconBottomBtn) {
+    stylesInString += dimensionsControllerToStyles(marginIconBottomBtn, 'margin');
+  }
+
   const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom');
 
-  if (iconBottomSizeBtn) {
+  if (iconBottomSizeBtn === null || iconBottomSizeBtn?.size === '0' || iconBottomSizeBtn?.size === '' ) {
+    stylesInString += '';
+  } else {
     stylesInString += iconSizeStyled(iconBottomSizeBtn);
   }
 

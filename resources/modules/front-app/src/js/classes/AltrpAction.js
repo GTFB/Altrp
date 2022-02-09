@@ -1235,27 +1235,41 @@ class AltrpAction extends AltrpModel {
     let currentValue = getDataByPath(path); // не получаю значение, приходит всегда null
 
     if (!window.ethereum) {
-      alert("Установите или включите расширение MetaMask");
+      alert("Install or enable the MetaMask extension");
       return {
-        success: true
+        success: false
       };
     }
 
-    const accounts = await window.ethereum.request({
-      method: "eth_accounts",
-    });
-    if (accounts.length > 0) {
-      alert("Вы уже вошли в MetaMask");
-      return {
-        success: true
-      };
-    } else {
-      const requestAccounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
+    try {
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
       });
-      setDataByPath(path, requestAccounts[0])
+      if (accounts.length > 0) {
+        alert("You are already logged into MetaMask");
+        return {
+          success: false
+        };
+      } else {
+        try {
+          const requestAccounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          setDataByPath(path, requestAccounts[0])
+          return {
+            success: true
+          };
+        } catch (e) {
+          console.error(e);
+          return {
+            success: false
+          };
+        }
+      }
+    } catch (e) {
+      console.error(e);
       return {
-        success: true
+        success: false
       };
     }
   }

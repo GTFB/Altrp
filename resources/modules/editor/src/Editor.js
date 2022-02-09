@@ -477,37 +477,6 @@ class Editor extends Component {
               </EditorWindowPopup>
             )}
             <EditorWindow />
-            <Resizable
-              className={this.state.resizeNavigator ? 'right-panel-sidebar-open' : 'right-panel-sidebar-hide'}
-              defaultSize={{
-                width: 270,
-                height: '100vh',
-              }}
-              minWidth={270}
-              maxWidth={750}
-              enable={{top:false, right:false, bottom:false, left:true, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false}}
-            >
-              <div className="right-panel-sidebar">
-                <div className='right-panel-sidebar-top'>
-                  <h2 className="right-panel-sidebar-title">Navigator</h2>
-                  <CloseNavigator data-navigator="close-sidebar" onClick={this.navigatorPanel} width={20} height={20} className="exit-sidebar-navigator"/>
-                </div>
-                <div className='right-panel-sidebar-center'>
-                  {this.state.resizeNavigator && (
-                    <NavigationPanel  />
-                  )}
-                </div>
-                <div className='right-panel-sidebar-bottom'>
-                  <button
-                    onClick={this.navigatorPanel}
-                    data-navigator="open-draggable"
-                    className="open-draggable-navigator"
-                  >
-                    Open draggable navigator
-                  </button>
-                </div>
-              </div>
-            </Resizable>
             <Rnd
               className={this.state.navigator ? "draggable-navigator" : "draggable-navigator-hide"}
               default={{
@@ -539,6 +508,37 @@ class Editor extends Component {
               </div>
             </Rnd>
           </div>
+          <Resizable
+            className={this.state.resizeNavigator ? 'right-panel-sidebar-open' : 'right-panel-sidebar-hide'}
+            defaultSize={{
+              width: 270,
+              height: '100vh',
+            }}
+            minWidth={270}
+            maxWidth={750}
+            enable={{top:false, right:false, bottom:false, left:true, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false}}
+          >
+            <div className="right-panel-sidebar">
+              <div className='right-panel-sidebar-top'>
+                <h2 className="right-panel-sidebar-title">Navigator</h2>
+                <CloseNavigator data-navigator="close-sidebar" onClick={this.navigatorPanel} width={20} height={20} className="exit-sidebar-navigator"/>
+              </div>
+              <div className='right-panel-sidebar-center'>
+                {this.state.resizeNavigator && (
+                  <NavigationPanel  />
+                )}
+              </div>
+              <div className='right-panel-sidebar-bottom'>
+                <button
+                  onClick={this.navigatorPanel}
+                  data-navigator="open-draggable"
+                  className="open-draggable-navigator"
+                >
+                  Open draggable navigator
+                </button>
+              </div>
+            </div>
+          </Resizable>
         </div>
         <AssetsBrowser rawEnable={true}/>
       </DndProvider>

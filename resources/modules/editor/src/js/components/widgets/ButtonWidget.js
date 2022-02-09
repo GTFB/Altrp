@@ -258,7 +258,7 @@ class ButtonWidget extends Component {
     let classes =
       this.getClasses() + (this.state.settings.position_css_classes || "");
     if (background_image.url) {
-      classes += " altrp-background-image";
+      classes += " altrp-background-image_btn";
     }
 
     let buttonText = this.getContent("button_text");
@@ -583,7 +583,7 @@ class ButtonWidget extends Component {
       id={this.state.settings.position_css_id}
       title={tooltip || null}
     >
-      {buttonInner}
+      <span>{buttonInner}</span>
     </button>;
     // let buttonTemplate = (
     //   <button
