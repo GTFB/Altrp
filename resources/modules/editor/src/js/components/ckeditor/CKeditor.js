@@ -32,6 +32,7 @@ class CKeditor extends Component {
   }
 
   render() {
+    const text = this.props.text == undefined ? "Type text here" : this.props.text
 
     const config = {
       extraPlugins: [UploadAdapterPlugin],
@@ -47,7 +48,7 @@ class CKeditor extends Component {
             body={this.body}
             editor={InlineEditor}
             disabled={!this.props.readOnly}
-            data={this.props.text || "Type text here"}
+            data={text}
             onReady={editor => {
               // You can store the "editor" and use when it is needed.
               editor.plugins.get( 'TextTransformation' ).isEnabled = false;
@@ -64,7 +65,7 @@ class CKeditor extends Component {
         config={config}
         body={this.body}
         editor={InlineEditor}
-        data={this.props.text || "Type text here"}
+        data={text}
         disabled={this.props.readOnly}
         onReady={editor => {
           editor.plugins.get( 'TextTransformation' ).isEnabled = false;

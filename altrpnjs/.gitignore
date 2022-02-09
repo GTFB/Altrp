@@ -6,10 +6,12 @@ coverage
 .env
 tmp
 views/templates
+.env-prod
 
 #bundles
 public/
 storage/
 app/AltrpModels/
 app/AltrpControllers/
+app/AltrpPlugins/
 start/altrp-routes/

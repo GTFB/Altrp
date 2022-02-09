@@ -2,27 +2,19 @@ const { getResponsiveSetting } = window.altrpHelpers;
 import {
   simplePropertyStyled,
   borderWidthStyled,
+  dimensionsStyled,
   colorPropertyStyled,
   dimensionsControllerToStyles,
   sizeStyled,
   shadowControllerToStyles,
   gradientStyled,
-  backgroundImageControllerToStyles, sliderStyled, styledString,
+  backgroundImageControllerToStyles, sliderStyled, styledString, filtersControllerToStyles,
 } from "../../../../../../front-app/src/js/helpers/styles";
 function altrpSection(settings) {
   let styles = '';
 
-  let backgroundColor, flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow;
+  let flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow;
 
-  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundColor = getResponsiveSetting(settings, 'section_style_background_color');
-  }
-
-  if (backgroundColor) {
-    styles += colorPropertyStyled(backgroundColor, 'background');
-  }
 
   //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles
 
@@ -121,7 +113,7 @@ function altrpSection(settings) {
   }
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -140,17 +132,7 @@ function altrpSection(settings) {
 function altrpSectionHover(settings,state=':hover') {
   let styles = '';
 
-  let backgroundColor, borderStyle, borderWidth, borderColor, borderRadius, boxShadow;
-
-  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundColor = getResponsiveSetting(settings, 'section_style_background_color', state);
-  }
-
-  if (backgroundColor) {
-    styles += colorPropertyStyled(backgroundColor, 'background');
-  }
+  let borderStyle, borderWidth, borderColor, boxShadow, borderRadius;
 
   //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
 
@@ -189,7 +171,7 @@ function altrpSectionHover(settings,state=':hover') {
   }
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -205,6 +187,157 @@ function altrpSectionHover(settings,state=':hover') {
   return styles;
 }
 
+function sectionBackground(settings) {
+  let styles = '';
+  let backgroundColor,
+      backgroundImage,
+      backgroundSize,
+      backgroundRepeat,
+      backgroundSizeInUnit, backgroundAttachment, backgroundPosition, gradient;
+
+  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'section_style_background_color');
+  }
+
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background');
+  }
+
+  if (settings !== undefined) {
+    backgroundImage = getResponsiveSetting(settings, 'background_image');
+  }
+
+  if (backgroundImage) {
+    styles += backgroundImageControllerToStyles(backgroundImage);
+  }
+
+  if (settings !== undefined) {
+    backgroundSize = getResponsiveSetting(settings, 'background_size');
+  }
+
+  if (backgroundSize) {
+    styles += simplePropertyStyled(backgroundSize, 'background-size');
+  }
+
+  if (settings !== undefined) {
+    backgroundRepeat = getResponsiveSetting(settings, 'background_repeat');
+  }
+
+  if (backgroundRepeat) {
+    styles += simplePropertyStyled(backgroundRepeat, 'background-repeat');
+  }
+
+  if (settings !== undefined) {
+    backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width');
+  }
+
+  if (backgroundSizeInUnit === undefined || backgroundSizeInUnit.size === '0' || backgroundSizeInUnit.size === '' ) {
+    styles += '';
+  } else {
+    styles += sizeStyled(backgroundSizeInUnit, 'background-size');
+  }
+
+  if (settings !== undefined) {
+    backgroundAttachment = getResponsiveSetting(settings, 'background_attachment');
+  }
+
+  if (backgroundAttachment) {
+    styles += simplePropertyStyled(backgroundAttachment, 'background-attachment');
+  }
+
+  if (settings !== undefined) {
+    backgroundPosition = getResponsiveSetting(settings, 'background_position');
+  }
+
+  if (backgroundPosition) {
+    styles += simplePropertyStyled(backgroundPosition, 'background-position');
+  }
+
+  if (settings !== undefined) {
+    gradient = getResponsiveSetting(settings, 'gradient');
+  }
+
+  if (gradient) {
+    styles += gradientStyled(gradient);
+  }
+
+  return styles;
+}
+
+function sectionBackgroundHover(settings, state=':hover') {
+  let styles = '';
+  let backgroundColor, backgroundImage, backgroundSize, backgroundRepeat, backgroundSizeInUnit, backgroundAttachment, backgroundPosition, gradient;
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'section_style_background_color', state);
+  }
+
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background');
+  }
+
+  if (settings !== undefined) {
+    backgroundImage = getResponsiveSetting(settings, 'background_image', state);
+  }
+
+  if (backgroundImage) {
+    styles += backgroundImageControllerToStyles(backgroundImage);
+  }
+
+  if (settings !== undefined) {
+    backgroundSize = getResponsiveSetting(settings, 'background_size', state);
+  }
+
+  if (backgroundSize) {
+    styles += simplePropertyStyled(backgroundSize, 'background-size');
+  }
+
+  if (settings !== undefined) {
+    backgroundRepeat = getResponsiveSetting(settings, 'background_repeat', state);
+  }
+
+  if (backgroundRepeat) {
+    styles += simplePropertyStyled(backgroundRepeat, 'background-repeat');
+  }
+
+  if (settings !== undefined) {
+    backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width', state);
+  }
+
+  if (backgroundSizeInUnit === undefined || backgroundSizeInUnit.size === '0' || backgroundSizeInUnit.size === '' ) {
+    styles += '';
+  } else {
+    styles += sizeStyled(backgroundSizeInUnit, 'background-size');
+  }
+
+  if (settings !== undefined) {
+    backgroundAttachment = getResponsiveSetting(settings, 'background_attachment', state);
+  }
+
+  if (backgroundAttachment) {
+    styles += simplePropertyStyled(backgroundAttachment, 'background-attachment');
+  }
+
+  if (settings !== undefined) {
+    backgroundPosition = getResponsiveSetting(settings, 'background_position', state);
+  }
+
+  if (backgroundPosition) {
+    styles += simplePropertyStyled(backgroundPosition, 'background-position');
+  }
+
+  if (settings !== undefined) {
+    gradient = getResponsiveSetting(settings, 'gradient', state);
+  }
+
+  if (gradient) {
+    styles += gradientStyled(gradient);
+  }
+
+  return styles;
+}
+
 function altrpSectionColumn(settings) {
   let styles = '';
 
@@ -213,11 +346,87 @@ function altrpSectionColumn(settings) {
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
   if (settings !== undefined) {
-    padding = getResponsiveSetting(settings, 'layout_columns_gap');
+    padding = getResponsiveSetting(settings, 'layout_columns_gap_padding');
   }
 
   if (padding && padding !== 'none') {
     styles += `padding: ${padding}px; `;
+  }
+
+  return styles;
+}
+
+function altrpSectionColumnGap(settings) {
+  let styles = '';
+
+  let margin;
+
+  //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    margin = getResponsiveSetting(settings, 'layout_columns_gap-margin');
+  }
+
+  if (margin && margin !== 'none') {
+    styles += dimensionsStyled(margin, 'margin');
+  }
+
+  return styles;
+}
+
+function altrpSectionColumnsHeight(settings) {
+  let styles = '';
+
+  let height;
+
+  if (settings !== undefined) {
+    height = getResponsiveSetting(settings, 'layout_columns_height');
+  }
+
+  if (Number(height)) {
+    styles += `height: ${height}%; `;
+  } else {
+    styles += `height: ${height}; `;
+  }
+
+  return styles;
+}
+
+function altrpSectionVideo(settings) {
+  let styles = '';
+
+  let object_fit, filters;
+
+  if (settings !== undefined) {
+    object_fit = getResponsiveSetting(settings, 'object_fit_select');
+  }
+
+  if (object_fit) {
+    styles += simplePropertyStyled(object_fit, 'object-fit');
+  }
+
+  if (settings !== undefined) {
+    filters = getResponsiveSetting(settings, 'background_video_filter');
+  }
+
+  if (filters) {
+    styles += filtersControllerToStyles(filters);
+  }
+
+  return styles;
+}
+
+function altrpSectionFilter(settings) {
+  let styles = '';
+
+  let  filters;
+
+  if (settings !== undefined) {
+    filters = getResponsiveSetting(settings, 'background_style_filter');
+  }
+
+  if (filters) {
+    styles += filtersControllerToStyles(filters);
   }
 
   return styles;
@@ -235,17 +444,7 @@ function altrpSectionColumnHover(settings) {
 function altrpSectionSecond(settings) {
   let styles = '';
 
-  let gradient, positionTop, positionRight, positionLeft, positionBottom, zIndex;
-
-  //Получаем значения gradient из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    gradient = getResponsiveSetting(settings, 'gradient');
-  }
-
-  if (gradient) {
-    styles += gradientStyled(gradient);
-  }
+  let positionTop, positionRight, positionLeft, positionBottom, zIndex;
 
   //Получаем значения position-top из контроллера, обрабатываем и добавляем в styles
 
@@ -303,17 +502,7 @@ function altrpSectionSecond(settings) {
 function altrpSectionSecondHover(settings) {
   let styles = '';
 
-  let gradient, positionTop, positionRight, positionLeft, positionBottom;
-
-  //Получаем значения gradient из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    gradient = getResponsiveSetting(settings, 'gradient', ':hover');
-  }
-
-  if (gradient) {
-    styles += gradientStyled(gradient);
-  }
+  let positionTop, positionRight, positionLeft, positionBottom;
 
   //Получаем значения position-top из контроллера, обрабатываем и добавляем в styles
 
@@ -358,143 +547,6 @@ function altrpSectionSecondHover(settings) {
   return styles;
 }
 
-function altrpBackgroundImage(settings) {
-  let styles = '';
-
-  let backgroundSize, backgroundRepeat, backgroundSizeInUnit, backgroundAttachment, backgroundPosition, backgroundImage;
-
-
-  //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundImage = getResponsiveSetting(settings, 'background_image');
-  }
-
-  if (backgroundImage) {
-    styles += backgroundImageControllerToStyles(backgroundImage);
-  }
-
-  //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundSize = getResponsiveSetting(settings, 'background_size');
-  }
-
-  if (backgroundSize) {
-    styles += simplePropertyStyled(backgroundSize, 'background-size');
-  }
-
-  //Получаем значения background-repeat из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundRepeat = getResponsiveSetting(settings, 'background_repeat');
-  }
-
-  if (backgroundRepeat) {
-    styles += simplePropertyStyled(backgroundRepeat, 'background-repeat');
-  }
-
-  //Получаем значения background-size в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width');
-  }
-
-  if (backgroundSizeInUnit) {
-    styles += sizeStyled(backgroundSizeInUnit, 'background-size');
-  }
-
-  //Получаем значения background-attachment из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundAttachment = getResponsiveSetting(settings, 'background_attachment');
-  }
-
-  if (backgroundAttachment) {
-    styles += simplePropertyStyled(backgroundAttachment, 'background-attachment');
-  }
-
-  //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundPosition = getResponsiveSetting(settings, 'background_position');
-  }
-
-  if (backgroundPosition) {
-    styles += simplePropertyStyled(backgroundPosition, 'background-position');
-  }
-
-  return styles;
-}
-
-function altrpBackgroundImageHover(settings) {
-  let styles = '';
-
-  let backgroundSize, backgroundRepeat, backgroundSizeInUnit, backgroundAttachment, backgroundPosition, backgroundImage;
-
-  //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundSize = getResponsiveSetting(settings, 'background_size', ':hover');
-  }
-
-  if (backgroundSize) {
-    styles += simplePropertyStyled(backgroundSize, 'background-size');
-  }
-
-  //Получаем значения background-repeat из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundRepeat = getResponsiveSetting(settings, 'background_repeat', ':hover');
-  }
-
-  if (backgroundRepeat) {
-    styles += simplePropertyStyled(backgroundRepeat, 'background-repeat');
-  }
-
-  //Получаем значения background-size в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width', ':hover');
-  }
-
-  if (backgroundSizeInUnit) {
-    styles += sizeStyled(backgroundSizeInUnit, 'background-size');
-  }
-
-  //Получаем значения background-attachment из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundAttachment = getResponsiveSetting(settings, 'background_attachment', ':hover');
-  }
-
-  if (backgroundAttachment) {
-    styles += simplePropertyStyled(backgroundAttachment, 'background-attachment');
-  }
-
-  //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundPosition = getResponsiveSetting(settings, 'background_position', ':hover');
-  }
-
-  if (backgroundPosition) {
-    styles += simplePropertyStyled(backgroundPosition, 'background-position');
-  }
-
-  //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundImage = getResponsiveSetting(settings, 'background_image', ':hover');
-  }
-
-  if (backgroundImage) {
-    styles += backgroundImageControllerToStyles(backgroundImage);
-  }
-
-  return styles;
-}
-
 function altrpSectionBoxed(settings) {
   let styles = '';
 
@@ -507,8 +559,11 @@ function altrpSectionBoxed(settings) {
   }
 
   if (width) {
-    width = sliderStyled(width);
-    styles += `width: ${width};`;
+    if (width.size === undefined || width.size === '0' || width.size === '') {
+      styles += '';
+    } else {
+      styles += `width: ${width.size}px;`;
+    }
   }
 
   return styles;
@@ -535,8 +590,10 @@ function altrpSectionSectionBoxed(settings) {
     width = '100%';
   }
   if (padding) {
-    if(padding.size) {
-      styles += `padding-left:calc((${width} - ${padding.size + padding.unit}) / 2);padding-right:calc((${width} - ${padding.size + padding.unit}) / 2);width:${width};`;
+    if(padding.size === undefined || padding.size === '0' || padding.size === '') {
+      styles += '';
+    } else {
+      styles += `padding-left:calc((${width} - ${padding.size + padding.unit}) / 2);padding-right:calc((${width} - ${padding.size + padding.unit}) / 2);width:${width};`
     }
   }
 
@@ -571,20 +628,30 @@ function altrpSectionFull(settings) {
   return styles;
 }
 
-function altrpSectionFullHover(settings) {
+function altrpSectionFullHover(settings, state=':hover') {
   let styles = '';
 
-  // let margin;
-  //
-  // //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
-  //
-  // if (settings !== undefined) {
-  //   margin = getResponsiveSetting(settings, 'position_style_position_margin', ':hover');
-  // }
-  //
-  // if (margin) {
-  //   styles += dimensionsControllerToStyles(margin, 'margin');
-  // }
+  let margin, padding;
+
+  //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    margin = getResponsiveSetting(settings, 'position_style_position_margin', state);
+  }
+
+  if (margin) {
+    styles += dimensionsControllerToStyles(margin, 'margin');
+  }
+
+  //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    padding = getResponsiveSetting(settings, 'position_style_position_padding', state);
+  }
+
+  if (padding) {
+    styles += ` > .altrp-section{${dimensionsControllerToStyles(padding, 'padding')}}`;
+  }
 
   return styles;
 }
@@ -599,17 +666,40 @@ export default function SectionWidgetComponent(settings, childrenLength) {
 
   & > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}
 
-  & > div.altrp-section,
-  & > div.altrp-section-full-fill {
+  & > .altrp-section,
+  & > .altrp-section-full-fill {
     ${altrpSection(settings)}
   }
 
-  & > div.altrp-section:hover,
-  & > div.altrp-section-full-fill:hover {
+  & > .altrp-section:hover,
+  & > .altrp-section-full-fill:hover {
     ${altrpSectionHover(settings)}
   }
-  & > div.altrp-section.active,
-  & > div.altrp-section-full-fill.active {
+
+  & > .altrp-section .background_section,
+  & > .altrp-section .altrp-background-image {
+    ${sectionBackground(settings)}
+  }
+
+  & > .altrp-section .background_section,
+  & > .altrp-section .altrp-background-image {
+    ${altrpSectionFilter(settings)}
+  }
+  & > .altrp-section:hover .background_section:hover,
+  & > .altrp-section:hover .altrp-background-image:hover{
+    ${sectionBackgroundHover(settings)}
+  }
+
+  & > .altrp-section .section-video-controllers {
+    ${altrpSectionVideo(settings)}
+  }
+
+  & > .altrp-section .section-video-controllers {
+    ${altrpSectionFilter(settings)}
+  }
+
+  & > .altrp-section.active,
+  & > .altrp-section-full-fill.active {
     ${altrpSectionHover(settings,'.active')}
     ${(()=>{
       const  styles = [
@@ -620,51 +710,51 @@ export default function SectionWidgetComponent(settings, childrenLength) {
     })()
   }
   }
-  & > div.altrp-section div.altrp-column {
+  & > .altrp-section .altrp-column {
     ${altrpSectionColumn(settings)}
   }
 
-  & > div.altrp-section:hover div.altrp-column:hover {
+  & > .altrp-section .altrp-element_column {
+    ${altrpSectionColumnGap(settings)}
+  }
+
+  & > .altrp-section .altrp-element_column {
+    ${altrpSectionColumnsHeight(settings)}
+  }
+
+  & > .altrp-section:hover .altrp-column:hover {
     ${altrpSectionColumnHover(settings)}
   }
 
-  & > div.altrp-section {
+  & > .altrp-section {
     ${altrpSectionSecond(settings)}
   }
 
-  & > div.altrp-section:hover {
+  & > .altrp-section:hover {
     ${altrpSectionSecondHover(settings)}
   }
 
-  & > div.altrp-section.altrp-background-image {
-    ${altrpBackgroundImage(settings)}
-  }
-
-  & > div.altrp-section.altrp-background-image:hover {
-    ${altrpBackgroundImageHover(settings)}
-  }
-
-  & > div.altrp-section_boxed,
-  & > div.altrp-section_section_boxed {
+  & > .altrp-section_boxed,
+  & > .altrp-section_section_boxed {
     ${altrpSectionBoxed(settings)}
   }
 
-  & > div.altrp-section_boxed:hover,
-  & > div.altrp-section_section_boxed:hover {
+  & > .altrp-section_boxed:hover,
+  & > .altrp-section_section_boxed:hover {
     ${altrpSectionBoxedHover(settings)}
   }
 
-  & > div.altrp-section_section-boxed {
+  & > .altrp-section_section-boxed {
     ${altrpSectionSectionBoxed(settings)}
   }
 
   &,
-  & > div.altrp-section-full-fill {
+  & > .altrp-section-full-fill {
     ${altrpSectionFull(settings)}
   }
 
   &:hover,
-  & > div.altrp-section-full-fill:hover {
+  & > .altrp-section-full-fill:hover {
     ${altrpSectionFullHover(settings)}
   }
 `

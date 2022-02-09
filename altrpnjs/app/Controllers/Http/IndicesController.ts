@@ -1,4 +1,3 @@
-// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import Edge from "../../../helpers/edge";
 import Env from "@ioc:Adonis/Core/Env";
@@ -10,6 +9,11 @@ export default class IndicesController {
       url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/bundle.js"
     }))
   }
+  async customizer({view}) {
+    return view.render('customizer', Edge({
+      url: Env.get("PATH_ENV") === "production" ? "/modules/customizer/customizer.js" : "http://localhost:3007/src/bundle.js"
+    }))
+  }
 
   public editor({view}) {
     return view.render('editor', Edge({
@@ -18,7 +22,14 @@ export default class IndicesController {
     }))
   }
 
-  public editorContent({view}) {
+  public robot({ view }) {
+    return view.render('robot', Edge({
+      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/robots.js" : "http://localhost:3006/src/bundle.js",
+      css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : "/modules/editor/editor.css"
+    }))
+  }
+
+  public editorContent({ view }) {
     return view.render('editor-content', Edge({
       css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
     }))

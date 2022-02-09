@@ -7,7 +7,7 @@ import {
   sizeStyled,
   gradientStyled,
   shadowStyled,
-  backgroundImageControllerToStyles,
+  backgroundImageControllerToStyles, dimensionsStyled,
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 const ColumnComponent = (settings) => {
@@ -18,7 +18,7 @@ const ColumnComponent = (settings) => {
   let marginBottom, marginBottomH, backgroundImage, backgroundPosition, backgroundAttachment, backgroundRepeat, backgroundSizeInUnits, backgroundSize;
   let backgroundImageH, backgroundPositionH, backgroundAttachmentH, backgroundRepeatH, backgroundSizeInUnitsH, backgroundSizeH, margin, marginH, padding, paddingH, width;
 
-  styles += "& > div.altrp-column.altrp-column-priority {";
+  styles += "& > .altrp-column.altrp-column-priority {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
@@ -159,7 +159,7 @@ const ColumnComponent = (settings) => {
   }
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -236,7 +236,7 @@ const ColumnComponent = (settings) => {
   }
 
   if (borderRadiusH) {
-    styles += sizeStyled(borderRadiusH, 'border-radius');
+    styles += dimensionsStyled(borderRadiusH, 'border-radius');
   }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -277,7 +277,7 @@ const ColumnComponent = (settings) => {
 
   styles += "} ";
 
-  styles += "& > .altrp-column.altrp-background-image {";
+  styles += "& > .altrp-column.altrp-background-image-columns {";
 
   //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
 
@@ -343,7 +343,7 @@ const ColumnComponent = (settings) => {
 
   //hover
 
-  styles += "& > div.altrp-column.altrp-background-image:hover {";
+  styles += "& > div.altrp-column.altrp-background-image-columns:hover {";
 
   //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
 

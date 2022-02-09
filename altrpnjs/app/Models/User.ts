@@ -77,8 +77,8 @@ export default class User extends BaseModel {
     pivotTable: 'role_user',
     localKey: 'id',
     relatedKey: 'id',
-    pivotForeignKey: 'role_id',
-    pivotRelatedForeignKey: 'user_id',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'role_id',
   })
   public roles: ManyToMany<typeof Role>
 
@@ -157,30 +157,59 @@ export default class User extends BaseModel {
 
   }
 
-  public async can(value: Permission|number): Promise<boolean> {
-    //@ts-ignore
+  public async can(value: Permission|number|number[]|Permission[]): Promise<boolean> {
 
-    if(typeof value === "object" || typeof value === "number") {
-      const userPermission = await this.hasPermission(value)
+    if(!(value instanceof Array)) {
+      if(typeof value === "object" || typeof value === "number") {
+        const userPermission = await this.hasPermission(value)
 
-      if(!userPermission) {
-        //@ts-ignore
-        const roles = await this.related("roles").query()
+        if(!userPermission) {
+          //@ts-ignore
+          const roles = await this.related("roles").query()
 
-        let out = false;
+          let out = false;
 
-        for (let key in roles) {
-          // @ts-ignore
-          if(await roles[key].hasPermission(value)) {
-            out = true
-            break;
+          for (let key in roles) {
+            // @ts-ignore
+            if(await roles[key].hasPermission(value)) {
+              out = true
+              break;
+            }
+          }
+          return out
+        }
+
+        return userPermission
+      }
+    } else {
+      let finalOut = true
+
+      for (let valueKey in value) {
+        const userPermission = await this.hasPermission(value[valueKey])
+
+        if(!userPermission) {
+          //@ts-ignore
+          const roles = await this.related("roles").query()
+
+          let out = false;
+
+          for (let key in roles) {
+            // @ts-ignore
+            if(await roles[key].hasPermission(value[valueKey])) {
+              out = true
+              break;
+            }
+          }
+
+          if(!out) {
+            finalOut = false
+            break
           }
         }
-        return out
+        return finalOut
       }
-
-      return userPermission
     }
+
 
     return false
   }

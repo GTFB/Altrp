@@ -1,12 +1,9 @@
 import BaseNode from 'App/Customizer/Nodes/BaseNode'
 import NodeInterface from 'App/Customizer/Nodes/NodeInterface'
-import data_get from "../../../helpers/data_get";
-import propertyToJS from "App/Customizer/helpers/propertyToJs";
-import customizerBuildCompare from "App/Customizer/helpers/customizerBuildCompare";
+import data_get from "../../../helpers/data_get"
 
 export default class SwitchNode extends BaseNode implements NodeInterface
 {
-  public data = null
 
   public getChildren(): []
   {
@@ -55,7 +52,7 @@ export default class SwitchNode extends BaseNode implements NodeInterface
     let JSContent = ''
     let items = this.getItems()
     let property = this.getProperty()
-    let leftJSProperty = propertyToJS( property )
+    let leftJSProperty = this.customizer.propertyToJS( property )
     for(let key in items){
       if( !items.hasOwnProperty(key)){
         continue
@@ -64,8 +61,8 @@ export default class SwitchNode extends BaseNode implements NodeInterface
       if( ! data_get( item,'operator')){
         continue
       }
-      let rightJSProperty = propertyToJS( item )
-      let compare = customizerBuildCompare(data_get( item,'operator'), leftJSProperty,  rightJSProperty)
+      let rightJSProperty = this.customizer.propertyToJS( item )
+      let compare = this.customizer.customizerBuildCompare(data_get( item,'operator'), leftJSProperty,  rightJSProperty)
       JSContent += `if( ${compare} ){`
       if(data_get( this.children, key)){
         JSContent+= data_get( this.children, key).getJSContent()

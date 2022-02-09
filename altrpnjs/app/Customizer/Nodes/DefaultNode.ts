@@ -5,7 +5,6 @@ import * as _ from "lodash"
 
 export default class DefaultNode extends BaseNode implements NodeInterface
 {
-  public data = null
 
 
 
@@ -37,33 +36,33 @@ export default class DefaultNode extends BaseNode implements NodeInterface
    * @return string
    */
   public parseArray(data = []){
-    let js_content = ''
+    let JSContent = ''
     for (let item of data){
-      let _js_content = data_get( item, 'js_content' )
-      if( ! _.isString(js_content) || ! js_content ) {
+      let _JSContent = data_get( item, 'JSContent' )
+      if( ! _.isString(JSContent) || ! JSContent ) {
         continue
       }
 
-      preg_match_all('/{{([\s\S]+?)(?=}})/', _js_content, matches)
-      if( ! isset( matches ) || ! isset( matches[1] )){
-        js_content += _js_content
-        continue
-      }
-      matches = matches[1]
-
-      foreach (matches as path) {
-        item = data_get( item, path)
-        if(is_array( item ) && isset(item[0]) ){
-          item = this.parseArray(item)
-        } elseif ( is_array( item ) ) {
-          item = this.parseObject(item)
-        }
-        _js_content = str_replace('{{{path}}}', item, _js_content)
-
-      }
-      js_content += _js_content
+      // preg_match_all('/{{([\s\S]+?)(?=}})/', _JSContent, matches)
+      // if( ! isset( matches ) || ! isset( matches[1] )){
+      //   JSContent += _JSContent
+      //   continue
+      // }
+      // matches = matches[1]
+      //
+      // foreach (matches as path) {
+      //   item = data_get( item, path)
+      //   if(is_array( item ) && isset(item[0]) ){
+      //     item = this.parseArray(item)
+      //   } elseif ( is_array( item ) ) {
+      //     item = this.parseObject(item)
+      //   }
+      //   _JSContent = str_replace(`{{${path}}}`, item, _JSContent)
+      //
+      // }
+      JSContent += _JSContent
     }
-    return js_content
+    return JSContent
   }
 
   /**
@@ -71,31 +70,31 @@ export default class DefaultNode extends BaseNode implements NodeInterface
    * @return string
    */
   public parseObject( item ){
-    js_content = data_get( item, 'js_content' )
-    if( ! _.isString(js_content) || ! js_content ) {
+    let JSContent = data_get( item, 'JSContent' )
+    if( ! _.isString(JSContent) || ! JSContent ) {
       return ''
     }
-    preg_match_all('/{{([\s\S]+?)(?=}})/', js_content, matches)
-    if( ! isset( matches ) || ! isset( matches[1] )){
-      return js_content
-    }
-    matches = matches[1]
-
-    foreach (matches as path) {
-      item = data_get( item, path )
-      if(is_array( item ) && isset(item[0]) ){
-        item = this.parseArray(item)
-
-      } elseif ( is_array( item ) ){
-        item = this.parseObject(item)
-      }
-      js_content = str_replace('{{{path}}}', item, js_content)
-    }
-    return js_content
+    // preg_match_all('/{{([\s\S]+?)(?=}})/', JSContent, matches)
+    // if( ! isset( matches ) || ! isset( matches[1] )){
+    //   return JSContent
+    // }
+    // matches = matches[1]
+    //
+    // foreach (matches as path) {
+    //   item = data_get( item, path )
+    //   if(is_array( item ) && isset(item[0]) ){
+    //     item = this.parseArray(item)
+    //
+    //   } elseif ( is_array( item ) ){
+    //     item = this.parseObject(item)
+    //   }
+    //   JSContent = str_replace(`{{${path}}}`, item, JSContent)
+    // }
+    return JSContent
   }
 
   /**
-   * Если тип ноды отсутствует на бэкенде, то в нем должно быть свойство js_content,
+   * Если тип ноды отсутствует на бэкенде, то в нем должно быть свойство JSContent,
    * которое является шаблоном js-кода
    * @return string
    */

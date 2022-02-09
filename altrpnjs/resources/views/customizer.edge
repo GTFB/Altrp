@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="{{ getLocale() }}">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrfToken }}">
+
+  <title>Customizer Editor</title>
+
+  <!-- Scripts -->
+  <script>
+  </script>
+  @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
+    <script>
+      window.admin_logo = {{{ env('ALTRP_SETTING_ADMIN_LOGO') }}};
+    </script>
+  @endif
+  <script>
+    let _altrpVersion = '{{{ config( 'app.altrp_version', '0.0.1' ) }}}';
+  </script>
+  <script src="{{ url }}" crossorigin defer></script>
+
+  <script>
+    window.container_width = {{ get_altrp_setting('container_width', '1440') }};
+    window.altrpJS = true
+  </script>
+  <link rel="stylesheet" href="{{  '/modules/editor/editor.css?'  + config( 'app.altrp_version', '0.0.1' ) }}">
+  {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
+
+
+  {{{print_statics('style', 'CUSTOMIZER_HEAD_STYLE' )}}}
+
+
+  {{{print_statics('script', 'CUSTOMIZER_HEAD_SCRIPTS' )}}}
+
+</head>
+
+<body>
+<div id="customizer-editor">
+
+</div>
+<div id="portal-target"></div>
+
+
+{{{print_statics('style', 'CUSTOMIZER_BOTTOM_STYLE' )}}}
+
+
+{{{print_statics('script', 'CUSTOMIZER_BOTTOM_SCRIPTS' )}}}
+
+</body>
+</html>

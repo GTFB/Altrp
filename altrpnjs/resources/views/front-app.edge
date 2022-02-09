@@ -9,7 +9,6 @@
     <meta property="og:title" content="{{title}}">
     <title>{{ title }}</title>
 
-    <meta property="og:title" content="altrp || FRONT APP">
     <title>altrp || FRONT APP</title>
     <script src="/data/current-user" defer></script>
 
@@ -30,14 +29,13 @@
         }
         // window.onerror = myErrHandler;
         /* ]]> */
-        document.currentScript = "http://altrp.nz/modules/front-app/";
+        document.currentScript = "/modules/front-app/";
     </script>
 
     <!-- Scripts -->
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
-  {{{fonts}}}
   <!-- Style -->
   @!component('front-app-css')
   {{{preload_content.important_styles}}}
@@ -48,7 +46,6 @@
 
       <script>
         /* <![CDATA[ */
-        window._token = '{{ csrfToken }}';
         window.altrpPages = {{{ JSON.stringify( pages) }}};
         window.altrp = {{{JSON.stringify(altrp)}}};
         window.altrpElementsLists = [{{{ elements_list.map(e=>`'${e}'`) }}}];
@@ -74,6 +71,7 @@
         /* ]]> */
       </script>
     <script defer src="{{ hAltrp }}"></script>
-    <link rel="stylesheet" href="http://altrp.nz/modules/front-app/front-app.css?0.0.0">
+    <link rel="stylesheet" href="/modules/front-app/front-app.css?0.0.0">
+    {{{fonts}}}
 </body>
 </html>

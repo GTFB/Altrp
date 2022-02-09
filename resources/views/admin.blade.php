@@ -15,7 +15,7 @@
   <script>
     window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
     window.altrpMenus = [];
-    let _token = '{{ csrf_token() }}';
+    window._token = '{{ csrf_token() }}';
   </script>
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
   <script>

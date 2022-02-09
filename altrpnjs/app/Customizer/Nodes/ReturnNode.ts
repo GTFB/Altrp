@@ -1,7 +1,6 @@
 import BaseNode from 'App/Customizer/Nodes/BaseNode'
 import NodeInterface from 'App/Customizer/Nodes/NodeInterface'
-import data_get from "../../../helpers/data_get";
-import propertyToJS from "App/Customizer/helpers/propertyToJs";
+import data_get from "../../../helpers/data_get"
 
 export default class ReturnNode extends BaseNode implements NodeInterface
 {
@@ -36,7 +35,7 @@ export default class ReturnNode extends BaseNode implements NodeInterface
   public getJSContent(): string
   {
     let property:object |null|string = this.getProperty()
-    property = propertyToJS( property )
+    property = this.customizer.propertyToJS( property )
     return 'return ' + property
   }
 }

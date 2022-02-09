@@ -5,21 +5,28 @@ import Controller from "App/Models/Controller"
 import Source from "App/Models/Source"
 import Model from "App/Models/Model"
 import ModelGenerator from "App/Generators/ModelGenerator";
+import Customizer from "App/Models/Customizer";
+import SQLEditor from "App/Models/SQLEditor";
+import isProd from "../../helpers/isProd";
 
 export default class ControllerGenerator extends BaseGenerator {
 
   public static directory = app_path('/AltrpControllers/')
-  private static template = app_path('/altrp-templates/AltrpController.stub')
+  private static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpController.stub`)
   private controller: Controller
   private model: Model
   private sources: Source[] = []
 
   public async run(controller: Controller): Promise<void> {
-
+    if(! controller){
+      console.log(controller);
+      return
+    }
     await controller.load((loader) => {
       loader.load('sources', loader=>{
         loader.preload('roles')
         loader.preload('altrp_model')
+        loader.preload('model')
         loader.preload('permissions')
       })
       loader.load('altrp_model', loader=>{
@@ -29,12 +36,41 @@ export default class ControllerGenerator extends BaseGenerator {
       })
     })
 
+
     let custom = ''
 
 
     this.controller = controller
     this.model = this.controller.altrp_model
     this.sources = this.controller.sources
+    /**
+     * Асинхронно подгружаем связи для ресурсов
+     */
+    this.sources = await Promise.all(this.sources.map(async (s:Source) => {
+      await s.load('model', model=>{
+        model.preload('table')
+      })
+      if(s.sourceable_id){
+        switch (s.sourceable_type){
+          case Customizer.sourceable_type:{
+            s.customizer = await Customizer.find( s.sourceable_id)
+            if(s.customizer){
+              await s.customizer.load('source')
+            }
+          }
+            break
+          case SQLEditor.sourceable_type:{
+            s.sQLEditor = await SQLEditor.find( s.sourceable_id)
+            if(s.sQLEditor){
+              await s.sQLEditor.load('source')
+            }
+          }
+            break
+        }
+      }
+      return s
+    }))
+
     let fileName =`${this.model.name}Controller${ModelGenerator.ext}`
     if (!this.getClassnameContent()) {
       return
@@ -62,11 +98,10 @@ export default class ControllerGenerator extends BaseGenerator {
   }
 
   private getImportsContent(): string {
-    return `
+    return isProd() ? this._getProdImportsContent() : this._getDevImportsContent()
 
-import ${this.model.name} from "../AltrpModels/${this.model.name}";
-`
   }
+
 
   private getClassnameContent(): string {
     return ` ${this.model.name}Controller `
@@ -80,5 +115,19 @@ import ${this.model.name} from "../AltrpModels/${this.model.name}";
     return `
   ${this.sources.map(source => source.renderForController(modelClassName)).join('')}
     `
+  }
+
+  private _getProdImportsContent() {
+    return `
+const ${this.model.name} = require('../AltrpModels/${this.model.name}')
+const AltrpBaseController = require('../Controllers/AltrpBaseController')
+    `;
+  }
+
+  private _getDevImportsContent():string {
+    return `
+import ${this.model.name} from "../AltrpModels/${this.model.name}";
+import AltrpBaseController from "../Controllers/AltrpBaseController";
+`;
   }
 }

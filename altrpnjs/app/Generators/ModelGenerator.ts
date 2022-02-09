@@ -4,14 +4,15 @@ import Column from "App/Models/Column";
 import Table from "App/Models/Table";
 import Relationship from "App/Models/Relationship";
 import fs from 'fs'
-import {BaseGenerator} from "App/Generators/BaseGenerator";
+import {BaseGenerator} from "./BaseGenerator";
 import * as _ from "lodash";
-import ControllerGenerator from "App/Generators/ControllerGenerator";
+import ControllerGenerator from "./ControllerGenerator";
+import isProd from "../../helpers/isProd";
 
 export default class ModelGenerator extends BaseGenerator {
 
   public static directory = app_path('/AltrpModels/')
-  public static template = app_path('/altrp-templates/AltrpModel.stub')
+  public static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpModel.stub`)
   public static ext = '.ts'
   private model: Model
   private table: Table
@@ -35,10 +36,14 @@ export default class ModelGenerator extends BaseGenerator {
     return fileName
   }
   public async run(model: Model) {
-
+    if(! model){
+      return
+    }
     await model.load((loader) => {
       loader.load('table', (table) => {
-        table.preload('columns')
+        table.preload('columns', column=>{
+          column.preload('altrp_model')
+        })
       })
       loader.load('altrp_relationships', relation => {
         relation.preload('altrp_target_model')
@@ -71,6 +76,7 @@ export default class ModelGenerator extends BaseGenerator {
         imports: this.getImportsContent(),
         classname: this.getClassnameContent(),
         properties: this.getPropertiesContent(),
+        staticProperties: isProd() ? this.getProdStaticPropertiesContent() : '',
         columns: this.getColumnsContent(),
         computed: this.getComputedContent(),
         relations: this.getRelationsContent(),
@@ -81,6 +87,21 @@ export default class ModelGenerator extends BaseGenerator {
   }
 
   private getImportsContent(): string {
+    return isProd() ? this._getProdImportsContent() : this._getDevImportsContent()
+  }
+  private _getProdImportsContent(): string {
+    return `
+${_.uniqBy(
+  this.altrp_relationships
+      .filter(relationship => relationship?.altrp_target_model?.name),
+      relationship => relationship.altrp_target_model.name
+    ).map(relationship =>
+        `const ${relationship?.altrp_target_model?.name} = require('./${relationship?.altrp_target_model?.name}');`)
+      .join('\n')
+    }
+`
+  }
+  private _getDevImportsContent(): string {
     return `import * as luxon from 'luxon'
 import * as Orm from '@ioc:Adonis/Lucid/Orm'
 ${_.uniqBy(
@@ -99,12 +120,31 @@ ${_.uniqBy(
   }
 
   private getPropertiesContent(): string {
+    return isProd() ?  this._getProdPropertiesContent() : this._getDevPropertiesContent()
+  }
+
+  private _getProdPropertiesContent(): string {
+    return ``
+  }
+
+  private _getDevPropertiesContent(): string {
     return `
   public static table = '${this.table.name}'
     `
   }
 
   private getColumnsContent(): string {
+    return isProd() ? this._getProdColumnsContent() : this._getDevColumnsContent()
+  }
+
+  private _getProdColumnsContent(): string {
+    let columns = this.columns.filter(column => column.type !== 'calculated')
+    return `
+${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').join('')}
+`
+  }
+
+  private _getDevColumnsContent(): string {
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
 ${columns.map(column => column.renderForModel()).join('')}
@@ -129,4 +169,9 @@ ${this.altrp_relationships.map(relationship => relationship.renderForModel()).jo
   }
 
 
+  private getProdStaticPropertiesContent() {
+    return `
+${this.model.name}.table = '${this.table.name}';
+`;
+  }
 }

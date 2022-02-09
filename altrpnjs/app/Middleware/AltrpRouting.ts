@@ -19,6 +19,7 @@ import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import getCurrentDevice from "../../helpers/getCurrentDevice";
 
 export default class AltrpRouting {
 
@@ -40,6 +41,7 @@ export default class AltrpRouting {
   }
 
   public async handle({request, response, view, auth}: HttpContextContract, next: () => Promise<void>) {
+
     /**
      * Игнорим все запросы кроме get
      */
@@ -105,10 +107,12 @@ export default class AltrpRouting {
 
       const altrp_settings = await page.getPageSettings(this)
       const pageAreas = await page.getAreas();
-      const preload_content = renderResult({
+      // @ts-ignore
+      const preload_content:any = renderResult({
         protocol: request.protocol(),
         host: request.host(),
         originalUrl: url,
+        current_device: getCurrentDevice(request),
         json: {
           altrp_settings,
           page: pageAreas,
@@ -204,7 +208,7 @@ export default class AltrpRouting {
     if( ! template ){
       return;
     }
-    data_set(altrpSettings, 'templates_data.' + template_id,  template.toArray());
+    data_set(altrpSettings, 'templates_data.' + template_id,  template);
 
     let data = JSON.parse( template.data );
     this._extractElementsNames( data, elementNames, false );

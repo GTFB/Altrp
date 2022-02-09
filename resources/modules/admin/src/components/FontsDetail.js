@@ -5,6 +5,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import CloseIcon from '@material-ui/icons/Close';
 import AutoSave from './AutoSaveDocumentDetail';
 import { createGlobalStyle } from "styled-components";
+import {CopyToClipboard} from "react-copy-to-clipboard";
 
 const GlobalStyle = createGlobalStyle`
   #admin {
@@ -92,6 +93,15 @@ export class  FontsDetail extends React.Component {
                                             type="text"
                                             className="document-detail__input"
                                         /></div>
+                                      <div className="document-detail__line-to-change_uploated-by">Uploated By<span className="document-detail__name-of-changes__uploated-by">{authorName}</span></div>
+                                      <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">File URL:</span><Field
+                                        name="url"
+                                        label="File URL"
+                                        component="input"
+                                        type="text"
+                                        className="document-detail__input"
+                                      /></div>
+                                      <div><CopyToClipboard text={props.values.url}><button className="document-detail__btn document-detail__btn-copy-url">Copy URL to clipboard</button></CopyToClipboard></div>
                                         <div className="document-detail__btn-delete-wrap"><button onClick={() => this.deleteAsset(props.values.id)} className="document-detail__btn-delete">Delete permanently</button></div>
                                     </form >
                                 )

@@ -54,7 +54,7 @@ class ColumnComponent extends Component {
       {},
     );
     let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
-    let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image?.url || background_image_hover?.url ? ' altrp-background-image' : '');
+    let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes_column || "") + (background_image?.url || background_image_hover?.url ? ' altrp-background-image-columns' : '');
     if(this.isActive()){
       className += ' active';
     }
@@ -68,7 +68,7 @@ class ColumnComponent extends Component {
     return React.createElement(layout_html_tag,
       {
         className,
-        id: this.state.settings.position_style_css_id || "",
+        id: this.state.settings.position_style_css_id_column || "",
         onClick: this.onClick,
         settings: this.props.element.getSettings()
       },

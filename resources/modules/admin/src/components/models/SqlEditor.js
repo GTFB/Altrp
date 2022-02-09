@@ -38,7 +38,6 @@ class SqlEditor extends Component {
       modelTitle: 'Model Title',
       activeHeader: 0,
       value: {
-        paged: false,
         is_object: false,
         auth: false,
         model_id: null,

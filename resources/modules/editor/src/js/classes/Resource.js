@@ -1,5 +1,6 @@
 import queryString from "query-string";
 import { replaceContentWithData } from "../../../../front-app/src/js/helpers";
+import getCookie from "../helpers/getCookie";
 window.queryString = queryString;
 /**
  * @class Resource
@@ -175,12 +176,15 @@ class Resource {
    * @return {Promise}
    * */
   post(data = {}, headers) {
+    let _token = getCookie('XSRF-TOKEN')
+    const defaultHeaders = {}
+    if(window._token){
+      defaultHeaders['X-CSRF-TOKEN'] = window._token
+    } else {
+      defaultHeaders['X-XSRF-TOKEN'] = _token
+    }
     headers = _.assign(
-      {
-        "X-CSRF-TOKEN": _token
-        // 'Content-Type': 'application/json',
-        // 'Accept': 'application/json',
-      },
+      defaultHeaders,
       headers
     );
     let formData = new FormData();
@@ -227,9 +231,14 @@ class Resource {
    * */
   postFiles(files) {
     // fileTypes = fileTypes || "image";
-    let headers = {
-      "X-CSRF-TOKEN": _token
-    };
+    let _token = getCookie('XSRF-TOKEN')
+
+    const headers = {}
+    if(window._token){
+      headers['X-CSRF-TOKEN'] = window._token
+    } else {
+      headers['X-XSRF-TOKEN'] = _token
+    }
     let formData = new FormData();
     // fileTypes = fileTypes.split(",");
     // fileTypes.forEach(fileType => {
@@ -266,9 +275,14 @@ class Resource {
    * @return {Promise}
    * */
   postFile(file) {
-    let headers = {
-      "X-CSRF-TOKEN": _token
-    };
+    let _token = getCookie('XSRF-TOKEN')
+
+    const headers = {}
+    if(window._token){
+      headers['X-CSRF-TOKEN'] = window._token
+    } else {
+      headers['X-XSRF-TOKEN'] = _token
+    }
     let formData = new FormData();
     formData.append("favicon", file);
     let options = {
@@ -288,12 +302,16 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data, headers = null) {
+    let _token = getCookie('XSRF-TOKEN')
+
+    const defaultHeaders = {}
+    if(window._token){
+      defaultHeaders['X-CSRF-TOKEN'] = window._token
+    } else {
+      defaultHeaders['X-XSRF-TOKEN'] = _token
+    }
     headers = _.assign(
-      {
-        "X-CSRF-TOKEN": _token
-        // 'Content-Type': 'application/json',
-        // 'Accept': 'application/json',
-      },
+      defaultHeaders,
       headers
     );
     let formData = new FormData();
@@ -340,14 +358,21 @@ class Resource {
    * @return {Promise}
    * */
   delete(id = "", data = {}, customHeaders) {
+    let _token = getCookie('XSRF-TOKEN')
+
+    const defaultHeaders = {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    }
+    if(window._token){
+      defaultHeaders['X-CSRF-TOKEN'] = window._token
+    } else {
+      defaultHeaders['X-XSRF-TOKEN'] = _token
+    }
     let options = {
       method: "delete",
       headers: _.assign(
-        {
-          "X-CSRF-TOKEN": _token,
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
+        defaultHeaders,
         customHeaders
       )
     };
@@ -423,3 +448,11 @@ class Resource {
 }
 
 export default Resource;
+
+
+if(!window.__token_interval && ! window.SSR){
+  window.__token_interval = setInterval(()=>{
+    const resource = new Resource({route: '/ajax/_token'}, )
+    resource.getAll()
+  }, 15000)
+}

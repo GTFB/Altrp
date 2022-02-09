@@ -110,6 +110,7 @@ export default class SendTelegram extends Component{
         {label:'text', value: 'content'},
         {label:'link', value: 'link'},
         {label:'button', value: 'button'},
+        {label:'photo', value: 'photo'},
         {label:'file', value: 'file'},
         {label:'document', value: 'document'},
         {label:'video', value: 'video'},

@@ -4,10 +4,13 @@ export default class TemplateSettings extends BaseSchema {
   protected tableName = 'template_settings'
 
   public async up () {
+    if (await this.schema.hasTable(this.tableName)) {
+      return
+    }
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.integer("template_id").unsigned().references("templates.id").notNullable()
+      table.bigInteger("template_id").unsigned().references("templates.id").notNullable()
       table.string("setting_name", 25).index().notNullable()
       table.json("data").notNullable()
       table.unique(["template_id", "setting_name"])

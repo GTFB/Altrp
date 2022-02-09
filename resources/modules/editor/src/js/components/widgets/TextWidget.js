@@ -92,7 +92,7 @@ class TextWidget extends Component {
     if (this.state.settings.text_advanced_tooltip_active) {
       tooltipActive = this.tooltipActive;
     }
-    let textContent = this.getContent("text");
+    let textContent = this.props.element.getResponsiveSetting('text');
     const content = this.props.element.getSettings('content')
     if (content
       && getDataByPath(content)

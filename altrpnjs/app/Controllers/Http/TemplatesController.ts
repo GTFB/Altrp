@@ -5,6 +5,8 @@ import Template from "App/Models/Template";
 import TemplateSetting from "App/Models/TemplateSetting";
 import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
+import Category from "App/Models/Category";
+import CategoryObject from "App/Models/CategoryObject";
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -20,14 +22,17 @@ export default class TemplatesController {
     const templates = await Template.query()
       .preload("user")
       .preload("currentArea")
+      .preload("categories")
       .where("type", "template")
-      .whereHas("currentArea", (builder => {
-        builder.where("name", params.area)
-      }))
       .paginate(page, pageSize)
 
     const modTemplates = templates.all().map( template => {
       return {
+        categories: template.categories.map(category => {
+          return {
+            category: category
+          }
+        }),
         author: template.getAuthor(),
         area: template.getArea(),
         id: template.id,
@@ -43,7 +48,7 @@ export default class TemplatesController {
     }
   }
 
-  public async create({ auth, request }) {
+  public async create({ auth, request, response }) {
     await auth.use('web').authenticate()
 
     const guid = uuid();
@@ -58,6 +63,25 @@ export default class TemplatesController {
     }
 
     const template = await Template.create(data);
+
+    if(request.input("categories")) {
+      for (const option of request.input("categories")) {
+        const category = await Category.find(option.value);
+
+        if (!category) {
+          response.status(404)
+          return {
+            message: "Category not Found"
+          }
+        } else {
+          await CategoryObject.create({
+            category_guid: category.guid,
+            object_type: "Template",
+            object_guid: template.guid
+          })
+        }
+      }
+    }
 
     // await TemplateFactory.createMany(100)
     return {

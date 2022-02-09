@@ -141,7 +141,7 @@ class MediaController extends Controller
       }
       
       $media_variation = [];
-      if (count($mediaSettings) > 0) {
+      if (count($mediaSettings) > 0 && $ext != 'svg') {
         foreach ($mediaSettings as $setting) {
           $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
           $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
@@ -281,9 +281,10 @@ class MediaController extends Controller
     foreach ($media_records as $media) {
 
       $path = Storage::path( 'public/' . $media->filename );
+      $ext = pathinfo( $path, PATHINFO_EXTENSION );
 
       $media_variation = [];
-      if (count($mediaSettings) > 0) {
+      if (count($mediaSettings) > 0 && $ext != 'svg') {
         foreach ($mediaSettings as $setting) {
           $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
           $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
@@ -365,7 +366,7 @@ class MediaController extends Controller
       }
 
       $media_variation = [];
-      if (count($mediaSettings) > 0) {
+      if (count($mediaSettings) > 0 && $ext != 'svg') {
         foreach ($mediaSettings as $setting) {
           $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
           $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;

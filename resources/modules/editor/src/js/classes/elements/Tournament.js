@@ -64,10 +64,17 @@ class Tournament extends BaseElement {
 
         this.endControlSection();
 
-
         this.startControlSection('players_section', {
             label: 'Players',
             tab: TAB_STYLE,
+        })
+
+        this.addControl('player_height', {
+            label: 'Height',
+            type: CONTROLLER_SLIDER,
+            min: 20,
+            max: 100,
+            step: 1
         })
 
         this.addControl('players_padding', {
@@ -475,6 +482,18 @@ class Tournament extends BaseElement {
         })
 
         this.endControlSection()
+        
+        this.startControlSection('image_section', {
+            label: 'Image',
+            tab: TAB_STYLE,
+        })
+
+        this.addControl('image_padding', {
+            label: 'Padding',
+            type: CONTROLLER_DIMENSIONS
+        })
+
+        this.endControlSection();
 
         advancedTabControllers(this);
     }
