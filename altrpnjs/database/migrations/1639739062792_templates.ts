@@ -26,7 +26,7 @@ export default class Templates extends BaseSchema {
         table.text("html_content", "longtext").nullable()
         table.text("styles", "longtext").nullable()
         table.boolean("all_site").defaultTo(false).index()
-        table.uuid("guid")
+        table.uuid("guid").nullable().unique()
 
 
         table.index("name", "template_name_index")

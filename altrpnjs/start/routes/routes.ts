@@ -22,6 +22,8 @@ import Route from '@ioc:Adonis/Core/Route'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
+import Drive from '@ioc:Adonis/Core/Drive'
+import path from "path";
 // import {UserFactory} from "Database/factories";
 
 Route.get("/altrp-login", "IndicesController.loginView")
@@ -34,6 +36,16 @@ Route.post("/logout", "IndicesController.logout").name = 'logout'
 //   const permission = await Permission.query().where("id", 1).firstOrFail();
 //   return user.can([1, 2]);
 // })
+
+Route.get("/modules/*", async ({request}) => {
+  const url = request.url()
+
+  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+
+  const file = await Drive.get(pathToModules + url)
+
+  return file
+})
 
 Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
   response.header('Content-Type', 'application/javascript')
@@ -56,6 +68,8 @@ Route.group(() => {
   Route.get("/pages/:id", "admin/PagesController.getAreas")
 
   Route.get("/current-user", "users/UsersController.getCurrentUser")
+
+  Route.get("favicon/:path", "IndicesController.favicons")
 
   Route.get("/_token", ({request}) => {
     return {
