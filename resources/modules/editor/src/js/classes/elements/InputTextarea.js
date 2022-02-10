@@ -76,7 +76,7 @@ class InputTextarea extends BaseElement {
           label: "Vertical",
           value: "vertical"
         }
-      ]
+      ],
     });
 
     const optionsRepeater = new Repeater();
@@ -512,7 +512,7 @@ class InputTextarea extends BaseElement {
 
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: "Input Position",
     });
 
     this.addControl("field_width", {
@@ -726,37 +726,6 @@ class InputTextarea extends BaseElement {
     this.startControlSection("transform_section", {
       tab: TAB_STYLE,
       label: "Transform"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("radio_checkbox_styles", {
-      tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
-    });
-
-    this.addControl("input_position", {
-      label: "Position",
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          label: "Left",
-          value: "row"
-        },
-        {
-          label: "Top",
-          value: "column"
-        },
-        {
-          label: "Right",
-          value: "row-reverse"
-        },
-        {
-          label: "Bottom",
-          value: "column-reverse"
-        }
-      ],
-      default: "left"
     });
 
     this.endControlSection();

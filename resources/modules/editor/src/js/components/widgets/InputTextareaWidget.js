@@ -17,10 +17,6 @@ import { TextArea } from "@blueprintjs/core";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
-.altrp-field {
-  border-style: solid;
-  width: 100%;
-}
 .altrp-field-file{
   display: flex;
   justify-content: center;
@@ -268,13 +264,6 @@ const { moment } = window.altrpHelpers;
 .altrp-field-subgroup {
   display: flex;
   flex-wrap: wrap;
-}
-.altrp-field-option {
-  display: flex;
-  padding: 10px;
-}
-.altrp-field-option__label {
-  cursor: pointer;
 }
 textarea.altrp-field {
   display: block;
@@ -996,7 +985,7 @@ class InputTextareaWidget extends Component {
     const {
       content_readonly,
       select2_multiple: isMultiple,
-      label_icon
+      label_icon,
     } = settings;
 
     let value = this.getValue();
