@@ -37,12 +37,21 @@ Route.post("/sockets", "SocketsController.handle")
 //   return user.can([1, 2]);
 // })
 
-Route.get("/modules/*", async ({request}) => {
+Route.get("/modules/*", async ({request, response}) => {
   const url = request.url()
 
   const pathToModules = path.join(__dirname, "../", "../", "../", "public");
 
   const file = await Drive.get(pathToModules + url)
+
+  switch (url.split(".")[1]) {
+    case "js":
+      response.header("Content-Type", "text/javascript")
+      break
+    case "css":
+      response.header("Content-Type", "text/css")
+      break
+  }
 
   return file
 })
