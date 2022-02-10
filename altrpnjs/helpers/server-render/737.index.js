@@ -101,6 +101,62 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, AltrpAction);
 
     _this = _super.call(this, data);
+    _this.metaMaskConnect = /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee() {
+      var path, currentValue, accounts, requestAccounts;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              path = _this.getProperty('path');
+              currentValue = getDataByPath(path); // не получаю значение, приходит всегда null
+
+              if (window.ethereum) {
+                _context.next = 4;
+                break;
+              }
+
+              return _context.abrupt("return", {
+                success: false
+              });
+
+            case 4:
+              _context.next = 6;
+              return window.ethereum.request({
+                method: "eth_accounts"
+              });
+
+            case 6:
+              accounts = _context.sent;
+
+              if (!(accounts.length > 0)) {
+                _context.next = 11;
+                break;
+              }
+
+              return _context.abrupt("return", {
+                success: false
+              });
+
+            case 11:
+              _context.next = 13;
+              return window.ethereum.request({
+                method: "eth_requestAccounts"
+              });
+
+            case 13:
+              requestAccounts = _context.sent;
+              setDataByPath(path, requestAccounts[0]);
+              return _context.abrupt("return", {
+                success: true
+              });
+
+            case 16:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
 
     _this.setProperty('_widgetId', widgetId);
 
@@ -218,27 +274,27 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "init",
     value: function () {
-      var _init = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee() {
+      var _init = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee2() {
         var form;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.t0 = this.getType();
-                _context.next = _context.t0 === 'form' ? 3 : _context.t0 === 'login' ? 7 : 9;
+                _context2.t0 = this.getType();
+                _context2.next = _context2.t0 === 'form' ? 3 : _context2.t0 === 'login' ? 7 : 9;
                 break;
 
               case 3:
                 if (this.getFormURL()) {
-                  _context.next = 6;
+                  _context2.next = 6;
                   break;
                 }
 
                 this.setProperty('_form', null);
-                return _context.abrupt("return");
+                return _context2.abrupt("return");
 
               case 6:
-                return _context.abrupt("return");
+                return _context2.abrupt("return");
 
               case 7:
                 form = formsManager.registerForm(this.getFormId(), 'login', 'POST');
@@ -246,10 +302,10 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 9:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, this);
+        }, _callee2, this);
       }));
 
       function init() {
@@ -286,11 +342,11 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doAction",
     value: function () {
-      var _doAction = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee2() {
+      var _doAction = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee3() {
         var result, confirmText, alertText;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee2$(_context2) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 result = {
                   success: false
@@ -299,253 +355,261 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 confirmText = replaceContentWithData(confirmText, this.getCurrentModel().getData());
 
                 if (!(confirmText && !confirm(confirmText))) {
-                  _context2.next = 5;
+                  _context3.next = 5;
                   break;
                 }
 
-                return _context2.abrupt("return", {
+                return _context3.abrupt("return", {
                   success: false,
                   message: 'User not Confirm'
                 });
 
               case 5:
-                _context2.t0 = this.getType();
-                _context2.next = _context2.t0 === 'form' ? 8 : _context2.t0 === 'delay' ? 12 : _context2.t0 === 'email' ? 16 : _context2.t0 === 'redirect' ? 20 : _context2.t0 === 'toggle_element' ? 24 : _context2.t0 === 'toggle_popup' ? 28 : _context2.t0 === 'print_page' ? 32 : _context2.t0 === 'print_elements' ? 36 : _context2.t0 === 'scroll_to_element' ? 40 : _context2.t0 === 'scroll_to_top' ? 44 : _context2.t0 === 'scroll_to_bottom' ? 48 : _context2.t0 === 'trigger' ? 52 : _context2.t0 === 'page_to_pdf' ? 56 : _context2.t0 === 'elements_to_pdf' ? 60 : _context2.t0 === 'data_to_csv' ? 64 : _context2.t0 === 'table_to_csv' ? 68 : _context2.t0 === 'table_to_xml' ? 72 : _context2.t0 === 'table_to_xls' ? 76 : _context2.t0 === 'login' ? 80 : _context2.t0 === 'logout' ? 84 : _context2.t0 === 'set_data' ? 88 : _context2.t0 === 'update_current_datasources' ? 92 : _context2.t0 === 'update_current_model' ? 96 : _context2.t0 === 'forms_manipulate' ? 100 : _context2.t0 === 'custom_code' ? 104 : _context2.t0 === 'play_sound' ? 108 : _context2.t0 === 'condition' ? 112 : _context2.t0 === 'vi_toggle' ? 116 : _context2.t0 === 'oauth' ? 120 : 124;
+                _context3.t0 = this.getType();
+                _context3.next = _context3.t0 === 'form' ? 8 : _context3.t0 === 'delay' ? 12 : _context3.t0 === 'email' ? 16 : _context3.t0 === 'redirect' ? 20 : _context3.t0 === 'toggle_element' ? 24 : _context3.t0 === 'toggle_popup' ? 28 : _context3.t0 === 'print_page' ? 32 : _context3.t0 === 'print_elements' ? 36 : _context3.t0 === 'scroll_to_element' ? 40 : _context3.t0 === 'scroll_to_top' ? 44 : _context3.t0 === 'scroll_to_bottom' ? 48 : _context3.t0 === 'trigger' ? 52 : _context3.t0 === 'page_to_pdf' ? 56 : _context3.t0 === 'elements_to_pdf' ? 60 : _context3.t0 === 'data_to_csv' ? 64 : _context3.t0 === 'table_to_csv' ? 68 : _context3.t0 === 'table_to_xml' ? 72 : _context3.t0 === 'table_to_xls' ? 76 : _context3.t0 === 'login' ? 80 : _context3.t0 === 'logout' ? 84 : _context3.t0 === 'set_data' ? 88 : _context3.t0 === 'update_current_datasources' ? 92 : _context3.t0 === 'update_current_model' ? 96 : _context3.t0 === 'forms_manipulate' ? 100 : _context3.t0 === 'custom_code' ? 104 : _context3.t0 === 'play_sound' ? 108 : _context3.t0 === 'condition' ? 112 : _context3.t0 === 'vi_toggle' ? 116 : _context3.t0 === 'oauth' ? 120 : _context3.t0 === 'metamask_connect' ? 124 : 128;
                 break;
 
               case 8:
-                _context2.next = 10;
+                _context3.next = 10;
                 return this.doActionForm();
 
               case 10:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 12:
-                _context2.next = 14;
+                _context3.next = 14;
                 return this.doActionDelay();
 
               case 14:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 16:
-                _context2.next = 18;
+                _context3.next = 18;
                 return this.doActionEmail();
 
               case 18:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 20:
-                _context2.next = 22;
+                _context3.next = 22;
                 return this.doActionRedirect();
 
               case 22:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 24:
-                _context2.next = 26;
+                _context3.next = 26;
                 return this.doActionToggleElements();
 
               case 26:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 28:
-                _context2.next = 30;
+                _context3.next = 30;
                 return this.doActionTogglePopup();
 
               case 30:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 32:
-                _context2.next = 34;
+                _context3.next = 34;
                 return this.doActionPrintPage();
 
               case 34:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 36:
-                _context2.next = 38;
+                _context3.next = 38;
                 return this.doActionPrintElements();
 
               case 38:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 40:
-                _context2.next = 42;
+                _context3.next = 42;
                 return this.doActionScrollToElement();
 
               case 42:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 44:
-                _context2.next = 46;
+                _context3.next = 46;
                 return this.doActionScrollToTop();
 
               case 46:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 48:
-                _context2.next = 50;
+                _context3.next = 50;
                 return this.doActionScrollToBottom();
 
               case 50:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 52:
-                _context2.next = 54;
+                _context3.next = 54;
                 return this.doActionTrigger();
 
               case 54:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 56:
-                _context2.next = 58;
+                _context3.next = 58;
                 return this.doActionPageToPDF();
 
               case 58:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 60:
-                _context2.next = 62;
+                _context3.next = 62;
                 return this.doActionElementsToPDF();
 
               case 62:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 64:
-                _context2.next = 66;
+                _context3.next = 66;
                 return this.doActionDataToCSV();
 
               case 66:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 68:
-                _context2.next = 70;
+                _context3.next = 70;
                 return this.doActionTableToCSV();
 
               case 70:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 72:
-                _context2.next = 74;
+                _context3.next = 74;
                 return this.doActionTableToXML();
 
               case 74:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 76:
-                _context2.next = 78;
+                _context3.next = 78;
                 return this.doActionTableToXLS();
 
               case 78:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 80:
-                _context2.next = 82;
+                _context3.next = 82;
                 return this.doActionLogin();
 
               case 82:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 84:
-                _context2.next = 86;
+                _context3.next = 86;
                 return this.doActionLogout();
 
               case 86:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 88:
-                _context2.next = 90;
+                _context3.next = 90;
                 return this.doActionSetData();
 
               case 90:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 92:
-                _context2.next = 94;
+                _context3.next = 94;
                 return this.doActionUpdateCurrentDatasources();
 
               case 94:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 96:
-                _context2.next = 98;
+                _context3.next = 98;
                 return this.doActionUpdateCurrentModel();
 
               case 98:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 100:
-                _context2.next = 102;
+                _context3.next = 102;
                 return this.doActionFormsManipulate();
 
               case 102:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 104:
-                _context2.next = 106;
+                _context3.next = 106;
                 return this.doActionCustomCode();
 
               case 106:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 108:
-                _context2.next = 110;
+                _context3.next = 110;
                 return this.doActionPlaySound();
 
               case 110:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 112:
-                _context2.next = 114;
+                _context3.next = 114;
                 return this.doActionCondition();
 
               case 114:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 116:
-                _context2.next = 118;
+                _context3.next = 118;
                 return this.doActionVIToggle();
 
               case 118:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 120:
-                _context2.next = 122;
+                _context3.next = 122;
                 return this.doActionOAuth();
 
               case 122:
-                result = _context2.sent;
-                return _context2.abrupt("break", 124);
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
 
               case 124:
+                _context3.next = 126;
+                return this.metaMaskConnect();
+
+              case 126:
+                result = _context3.sent;
+                return _context3.abrupt("break", 128);
+
+              case 128:
                 alertText = '';
 
                 if (result.success) {
@@ -559,14 +623,14 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   alert(alertText);
                 }
 
-                return _context2.abrupt("return", result);
+                return _context3.abrupt("return", result);
 
-              case 128:
+              case 132:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee3, this);
       }));
 
       function doAction() {
@@ -583,20 +647,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionForm",
     value: function () {
-      var _doActionForm = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee4() {
+      var _doActionForm = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee5() {
         var _this2 = this;
 
         var formsManager, data, customHeaders, bulk, _form, bulkRequests, res, _data, formOptions, form, result, response;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee4$(_context4) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context4.next = 2;
+                _context5.next = 2;
                 return Promise.resolve(/* import() */).then(__webpack_require__.bind(__webpack_require__, "./resources/modules/editor/src/js/classes/modules/FormsManager.js"));
 
               case 2:
-                formsManager = _context4.sent.default;
+                formsManager = _context5.sent.default;
                 data = null;
                 customHeaders = null;
 
@@ -612,12 +676,12 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 }
 
                 if (!this.getProperty('forms_bulk')) {
-                  _context4.next = 26;
+                  _context5.next = 26;
                   break;
                 }
 
                 if (!(_.isArray(getDataByPath(this.getProperty('bulk_path'))) && _.get(getDataByPath(this.getProperty('bulk_path')), 'length'))) {
-                  _context4.next = 25;
+                  _context5.next = 25;
                   break;
                 }
 
@@ -632,11 +696,11 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 });
                 data = _.assign(_form.getData(), data);
                 bulkRequests = bulk.map( /*#__PURE__*/function () {
-                  var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee3(item, idx) {
+                  var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee4(item, idx) {
                     var url, form;
-                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee3$(_context3) {
+                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee4$(_context4) {
                       while (1) {
-                        switch (_context3.prev = _context3.next) {
+                        switch (_context4.prev = _context4.next) {
                           case 0:
                             if (_this2.getProperty('data')) {
                               data = parseParamsFromString(_this2.getProperty('data'), getAppContext(item), true);
@@ -647,41 +711,41 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                             form = formsManager.registerForm(_this2.getFormId() + idx, '', _this2.getProperty('form_method'), {
                               customRoute: url
                             });
-                            _context3.next = 6;
+                            _context4.next = 6;
                             return form.submit('', '', data, customHeaders);
 
                           case 6:
-                            return _context3.abrupt("return", _context3.sent);
+                            return _context4.abrupt("return", _context4.sent);
 
                           case 7:
                           case "end":
-                            return _context3.stop();
+                            return _context4.stop();
                         }
                       }
-                    }, _callee3);
+                    }, _callee4);
                   }));
 
                   return function (_x, _x2) {
-                    return _ref.apply(this, arguments);
+                    return _ref2.apply(this, arguments);
                   };
                 }());
-                _context4.prev = 13;
-                _context4.next = 16;
+                _context5.prev = 13;
+                _context5.next = 16;
                 return Promise.all(bulkRequests);
 
               case 16:
-                res = _context4.sent;
-                _context4.next = 24;
+                res = _context5.sent;
+                _context5.next = 24;
                 break;
 
               case 19:
-                _context4.prev = 19;
-                _context4.t0 = _context4["catch"](13);
-                console.error(_context4.t0);
+                _context5.prev = 19;
+                _context5.t0 = _context5["catch"](13);
+                console.error(_context5.t0);
                 bulk.forEach(function (item, idx) {
                   formsManager.deleteFormById(_this2.getFormId() + idx);
                 });
-                return _context4.abrupt("return", {
+                return _context5.abrupt("return", {
                   success: false
                 });
 
@@ -691,7 +755,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 });
 
               case 25:
-                return _context4.abrupt("return", {
+                return _context5.abrupt("return", {
                   success: true
                 });
 
@@ -711,12 +775,12 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
 
                 if (this.getFormURL()) {
-                  _context4.next = 30;
+                  _context5.next = 30;
                   break;
                 }
 
                 this.setProperty('_form', null);
-                return _context4.abrupt("return", {
+                return _context5.abrupt("return", {
                   success: false
                 });
 
@@ -729,32 +793,32 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 result = {
                   success: true
                 };
-                _context4.prev = 33;
-                _context4.next = 36;
+                _context5.prev = 33;
+                _context5.next = 36;
                 return form.submit('', '', data, customHeaders);
 
               case 36:
-                response = _context4.sent;
+                response = _context5.sent;
                 result = _.assign(result, response);
-                _context4.next = 45;
+                _context5.next = 45;
                 break;
 
               case 40:
-                _context4.prev = 40;
-                _context4.t1 = _context4["catch"](33);
-                console.error(_context4.t1);
-                result.error = _context4.t1;
+                _context5.prev = 40;
+                _context5.t1 = _context5["catch"](33);
+                console.error(_context5.t1);
+                result.error = _context5.t1;
                 result.success = false;
 
               case 45:
-                return _context4.abrupt("return", result);
+                return _context5.abrupt("return", result);
 
               case 46:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this, [[13, 19], [33, 40]]);
+        }, _callee5, this, [[13, 19], [33, 40]]);
       }));
 
       function doActionForm() {
@@ -771,20 +835,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionRedirect",
     value: function () {
-      var _doActionRedirect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee5() {
+      var _doActionRedirect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee6() {
         var URL, innerRedirect;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee5$(_context5) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 URL = this.getFormURL();
 
                 if (URL) {
-                  _context5.next = 3;
+                  _context6.next = 3;
                   break;
                 }
 
-                return _context5.abrupt("return", {
+                return _context6.abrupt("return", {
                   success: true
                 });
 
@@ -809,16 +873,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   }
                 }
 
-                return _context5.abrupt("return", {
+                return _context6.abrupt("return", {
                   success: true
                 });
 
               case 5:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee6, this);
       }));
 
       function doActionRedirect() {
@@ -835,20 +899,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionToggleElements",
     value: function () {
-      var _doActionToggleElements = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee6() {
+      var _doActionToggleElements = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee7() {
         var IDs;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee6$(_context6) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 IDs = this.getProperty('elements_ids');
 
                 if (IDs) {
-                  _context6.next = 3;
+                  _context7.next = 3;
                   break;
                 }
 
-                return _context6.abrupt("return", {
+                return _context7.abrupt("return", {
                   success: true
                 });
 
@@ -863,16 +927,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
                   component.toggleElementDisplay();
                 });
-                return _context6.abrupt("return", {
+                return _context7.abrupt("return", {
                   success: true
                 });
 
               case 6:
               case "end":
-                return _context6.stop();
+                return _context7.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee7, this);
       }));
 
       function doActionToggleElements() {
@@ -889,49 +953,49 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionTogglePopup",
     value: function () {
-      var _doActionTogglePopup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee7() {
+      var _doActionTogglePopup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee8() {
         var id, loadPopups;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee7$(_context7) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
                 id = this.getProperty('popup_id');
 
                 if (id) {
-                  _context7.next = 3;
+                  _context8.next = 3;
                   break;
                 }
 
-                return _context7.abrupt("return", {
+                return _context8.abrupt("return", {
                   success: true
                 });
 
               case 3:
                 if (!window['h-altrp']) {
-                  _context7.next = 9;
+                  _context8.next = 9;
                   break;
                 }
 
-                _context7.next = 6;
+                _context8.next = 6;
                 return __webpack_require__.e(/* import() | load-popups */ 904).then(__webpack_require__.bind(__webpack_require__, "./resources/modules/front-app/src/js/functions/load-popups.js"));
 
               case 6:
-                loadPopups = _context7.sent.default;
-                _context7.next = 9;
+                loadPopups = _context8.sent.default;
+                _context8.next = 9;
                 return loadPopups();
 
               case 9:
                 appStore.dispatch((0,_store_popup_trigger_actions__WEBPACK_IMPORTED_MODULE_11__/* .togglePopup */ .z)(id));
-                return _context7.abrupt("return", {
+                return _context8.abrupt("return", {
                   success: true
                 });
 
               case 11:
               case "end":
-                return _context7.stop();
+                return _context8.stop();
             }
           }
-        }, _callee7, this);
+        }, _callee8, this);
       }));
 
       function doActionTogglePopup() {
@@ -948,22 +1012,22 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionPrintPage",
     value: function () {
-      var _doActionPrintPage = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee8() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee8$(_context8) {
+      var _doActionPrintPage = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee9() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee9$(_context9) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context9.prev = _context9.next) {
               case 0:
                 window.print();
-                return _context8.abrupt("return", {
+                return _context9.abrupt("return", {
                   success: true
                 });
 
               case 2:
               case "end":
-                return _context8.stop();
+                return _context9.stop();
             }
           }
-        }, _callee8);
+        }, _callee9);
       }));
 
       function doActionPrintPage() {
@@ -980,20 +1044,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionPrintElements",
     value: function () {
-      var _doActionPrintElements = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee9() {
+      var _doActionPrintElements = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee10() {
         var IDs, elementsToPrint;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee9$(_context9) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee10$(_context10) {
           while (1) {
-            switch (_context9.prev = _context9.next) {
+            switch (_context10.prev = _context10.next) {
               case 0:
                 IDs = this.getProperty('elements_ids');
 
                 if (IDs) {
-                  _context9.next = 3;
+                  _context10.next = 3;
                   break;
                 }
 
-                return _context9.abrupt("return", {
+                return _context10.abrupt("return", {
                   success: true
                 });
 
@@ -1024,16 +1088,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
                 elementsToPrint.push(document.head);
                 printElements(elementsToPrint);
-                return _context9.abrupt("return", {
+                return _context10.abrupt("return", {
                   success: true
                 });
 
               case 10:
               case "end":
-                return _context9.stop();
+                return _context10.stop();
             }
           }
-        }, _callee9, this);
+        }, _callee10, this);
       }));
 
       function doActionPrintElements() {
@@ -1050,20 +1114,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionScrollToElement",
     value: function () {
-      var _doActionScrollToElement = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee10() {
+      var _doActionScrollToElement = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee11() {
         var elementId, element, scroller;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee10$(_context10) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee11$(_context11) {
           while (1) {
-            switch (_context10.prev = _context10.next) {
+            switch (_context11.prev = _context11.next) {
               case 0:
                 elementId = this.getProperty('element_id');
 
                 if (elementId) {
-                  _context10.next = 3;
+                  _context11.next = 3;
                   break;
                 }
 
-                return _context10.abrupt("return", {
+                return _context11.abrupt("return", {
                   success: true
                 });
 
@@ -1084,16 +1148,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   scrollToElement(scroller, element);
                 }
 
-                return _context10.abrupt("return", {
+                return _context11.abrupt("return", {
                   success: true
                 });
 
               case 10:
               case "end":
-                return _context10.stop();
+                return _context11.stop();
             }
           }
-        }, _callee10, this);
+        }, _callee11, this);
       }));
 
       function doActionScrollToElement() {
@@ -1110,19 +1174,19 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionScrollToTop",
     value: function () {
-      var _doActionScrollToTop = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee11() {
+      var _doActionScrollToTop = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee12() {
         var scroller;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee11$(_context11) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee12$(_context12) {
           while (1) {
-            switch (_context11.prev = _context11.next) {
+            switch (_context12.prev = _context12.next) {
               case 0:
                 if (!window.mainScrollbars) {
-                  _context11.next = 3;
+                  _context12.next = 3;
                   break;
                 }
 
                 window.mainScrollbars.scrollTop(0);
-                return _context11.abrupt("return", {
+                return _context12.abrupt("return", {
                   success: true
                 });
 
@@ -1138,16 +1202,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   left: 0,
                   behavior: 'smooth'
                 });
-                return _context11.abrupt("return", {
+                return _context12.abrupt("return", {
                   success: true
                 });
 
               case 7:
               case "end":
-                return _context11.stop();
+                return _context12.stop();
             }
           }
-        }, _callee11);
+        }, _callee12);
       }));
 
       function doActionScrollToTop() {
@@ -1164,31 +1228,31 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionScrollToBottom",
     value: function () {
-      var _doActionScrollToBottom = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee12() {
+      var _doActionScrollToBottom = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee13() {
         var routeContent, scroller;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee12$(_context12) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee13$(_context13) {
           while (1) {
-            switch (_context12.prev = _context12.next) {
+            switch (_context13.prev = _context13.next) {
               case 0:
                 routeContent = document.getElementById('route-content');
 
                 if (routeContent) {
-                  _context12.next = 3;
+                  _context13.next = 3;
                   break;
                 }
 
-                return _context12.abrupt("return", {
+                return _context13.abrupt("return", {
                   success: true
                 });
 
               case 3:
                 if (!window.mainScrollbars) {
-                  _context12.next = 6;
+                  _context13.next = 6;
                   break;
                 }
 
                 window.mainScrollbars.scrollTop(routeContent.offsetHeight);
-                return _context12.abrupt("return", {
+                return _context13.abrupt("return", {
                   success: true
                 });
 
@@ -1204,16 +1268,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   top: document.querySelector('.route-content').offsetHeight,
                   behavior: 'smooth'
                 });
-                return _context12.abrupt("return", {
+                return _context13.abrupt("return", {
                   success: true
                 });
 
               case 10:
               case "end":
-                return _context12.stop();
+                return _context13.stop();
             }
           }
-        }, _callee12);
+        }, _callee13);
       }));
 
       function doActionScrollToBottom() {
@@ -1230,27 +1294,27 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionPageToPDF",
     value: function () {
-      var _doActionPageToPDF = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee13() {
+      var _doActionPageToPDF = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee14() {
         var filename, elements;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee13$(_context13) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee14$(_context14) {
           while (1) {
-            switch (_context13.prev = _context13.next) {
+            switch (_context14.prev = _context14.next) {
               case 0:
                 filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
                 elements = [];
                 elements.push(document.getElementById('route-content'));
-                _context13.next = 5;
+                _context14.next = 5;
                 return elementsToPdf(elements, filename);
 
               case 5:
-                return _context13.abrupt("return", _context13.sent);
+                return _context14.abrupt("return", _context14.sent);
 
               case 6:
               case "end":
-                return _context13.stop();
+                return _context14.stop();
             }
           }
-        }, _callee13, this);
+        }, _callee14, this);
       }));
 
       function doActionPageToPDF() {
@@ -1267,22 +1331,22 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionElementsToPDF",
     value: function () {
-      var _doActionElementsToPDF = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee14() {
+      var _doActionElementsToPDF = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee15() {
         var filename, elements, IDs;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee14$(_context14) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee15$(_context15) {
           while (1) {
-            switch (_context14.prev = _context14.next) {
+            switch (_context15.prev = _context15.next) {
               case 0:
                 filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
                 elements = [];
                 IDs = this.getProperty('elements_ids');
 
                 if (IDs) {
-                  _context14.next = 5;
+                  _context15.next = 5;
                   break;
                 }
 
-                return _context14.abrupt("return", {
+                return _context15.abrupt("return", {
                   success: true
                 });
 
@@ -1295,18 +1359,18 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
                   getHTMLElementById(elementId.trim()) && elements.push(getHTMLElementById(elementId));
                 });
-                _context14.next = 9;
+                _context15.next = 9;
                 return elementsToPdf(elements, filename);
 
               case 9:
-                return _context14.abrupt("return", _context14.sent);
+                return _context15.abrupt("return", _context15.sent);
 
               case 10:
               case "end":
-                return _context14.stop();
+                return _context15.stop();
             }
           }
-        }, _callee14, this);
+        }, _callee15, this);
       }));
 
       function doActionElementsToPDF() {
@@ -1323,35 +1387,35 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionDataToCSV",
     value: function () {
-      var _doActionDataToCSV = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee15() {
+      var _doActionDataToCSV = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee16() {
         var data, filename;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee15$(_context15) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee16$(_context16) {
           while (1) {
-            switch (_context15.prev = _context15.next) {
+            switch (_context16.prev = _context16.next) {
               case 0:
                 data = getDataByPath(this.getProperty('path'));
                 filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
-                _context15.prev = 2;
-                _context15.next = 5;
+                _context16.prev = 2;
+                _context16.next = 5;
                 return dataToCSV(data, filename);
 
               case 5:
-                return _context15.abrupt("return", _context15.sent);
+                return _context16.abrupt("return", _context16.sent);
 
               case 8:
-                _context15.prev = 8;
-                _context15.t0 = _context15["catch"](2);
-                console.error(_context15.t0);
-                return _context15.abrupt("return", {
+                _context16.prev = 8;
+                _context16.t0 = _context16["catch"](2);
+                console.error(_context16.t0);
+                return _context16.abrupt("return", {
                   success: false
                 });
 
               case 12:
               case "end":
-                return _context15.stop();
+                return _context16.stop();
             }
           }
-        }, _callee15, this, [[2, 8]]);
+        }, _callee16, this, [[2, 8]]);
       }));
 
       function doActionDataToCSV() {
@@ -1368,100 +1432,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionTableToCSV",
     value: function () {
-      var _doActionTableToCSV = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee16() {
-        var elementId, element, data, filename;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee16$(_context16) {
-          while (1) {
-            switch (_context16.prev = _context16.next) {
-              case 0:
-                elementId = this.getProperty('element_id');
-
-                if (elementId) {
-                  _context16.next = 3;
-                  break;
-                }
-
-                return _context16.abrupt("return", {
-                  success: true
-                });
-
-              case 3:
-                elementId = elementId.trim();
-                element = getHTMLElementById(elementId);
-
-                if (element) {
-                  _context16.next = 7;
-                  break;
-                }
-
-                return _context16.abrupt("return", {
-                  success: true
-                });
-
-              case 7:
-                _context16.prev = 7;
-                data = dataFromTable(element);
-                _context16.next = 15;
-                break;
-
-              case 11:
-                _context16.prev = 11;
-                _context16.t0 = _context16["catch"](7);
-                console.error(_context16.t0);
-                return _context16.abrupt("return", {
-                  success: false
-                });
-
-              case 15:
-                if (!_.isEmpty(data)) {
-                  _context16.next = 17;
-                  break;
-                }
-
-                return _context16.abrupt("return", {
-                  success: true
-                });
-
-              case 17:
-                filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
-                _context16.prev = 18;
-                _context16.next = 21;
-                return dataToCSV(data, filename);
-
-              case 21:
-                return _context16.abrupt("return", _context16.sent);
-
-              case 24:
-                _context16.prev = 24;
-                _context16.t1 = _context16["catch"](18);
-                console.error(_context16.t1);
-                return _context16.abrupt("return", {
-                  success: false
-                });
-
-              case 28:
-              case "end":
-                return _context16.stop();
-            }
-          }
-        }, _callee16, this, [[7, 11], [18, 24]]);
-      }));
-
-      function doActionTableToCSV() {
-        return _doActionTableToCSV.apply(this, arguments);
-      }
-
-      return doActionTableToCSV;
-    }()
-    /**
-     * HTML-Таблицу в XML-файл
-     * @return {Promise<{}>}
-     */
-
-  }, {
-    key: "doActionTableToXML",
-    value: function () {
-      var _doActionTableToXML = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee17() {
+      var _doActionTableToCSV = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee17() {
         var elementId, element, data, filename;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee17$(_context17) {
           while (1) {
@@ -1519,7 +1490,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
                 _context17.prev = 18;
                 _context17.next = 21;
-                return dataToXML(data, filename);
+                return dataToCSV(data, filename);
 
               case 21:
                 return _context17.abrupt("return", _context17.sent);
@@ -1540,6 +1511,99 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
         }, _callee17, this, [[7, 11], [18, 24]]);
       }));
 
+      function doActionTableToCSV() {
+        return _doActionTableToCSV.apply(this, arguments);
+      }
+
+      return doActionTableToCSV;
+    }()
+    /**
+     * HTML-Таблицу в XML-файл
+     * @return {Promise<{}>}
+     */
+
+  }, {
+    key: "doActionTableToXML",
+    value: function () {
+      var _doActionTableToXML = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee18() {
+        var elementId, element, data, filename;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee18$(_context18) {
+          while (1) {
+            switch (_context18.prev = _context18.next) {
+              case 0:
+                elementId = this.getProperty('element_id');
+
+                if (elementId) {
+                  _context18.next = 3;
+                  break;
+                }
+
+                return _context18.abrupt("return", {
+                  success: true
+                });
+
+              case 3:
+                elementId = elementId.trim();
+                element = getHTMLElementById(elementId);
+
+                if (element) {
+                  _context18.next = 7;
+                  break;
+                }
+
+                return _context18.abrupt("return", {
+                  success: true
+                });
+
+              case 7:
+                _context18.prev = 7;
+                data = dataFromTable(element);
+                _context18.next = 15;
+                break;
+
+              case 11:
+                _context18.prev = 11;
+                _context18.t0 = _context18["catch"](7);
+                console.error(_context18.t0);
+                return _context18.abrupt("return", {
+                  success: false
+                });
+
+              case 15:
+                if (!_.isEmpty(data)) {
+                  _context18.next = 17;
+                  break;
+                }
+
+                return _context18.abrupt("return", {
+                  success: true
+                });
+
+              case 17:
+                filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
+                _context18.prev = 18;
+                _context18.next = 21;
+                return dataToXML(data, filename);
+
+              case 21:
+                return _context18.abrupt("return", _context18.sent);
+
+              case 24:
+                _context18.prev = 24;
+                _context18.t1 = _context18["catch"](18);
+                console.error(_context18.t1);
+                return _context18.abrupt("return", {
+                  success: false
+                });
+
+              case 28:
+              case "end":
+                return _context18.stop();
+            }
+          }
+        }, _callee18, this, [[7, 11], [18, 24]]);
+      }));
+
       function doActionTableToXML() {
         return _doActionTableToXML.apply(this, arguments);
       }
@@ -1554,16 +1618,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionTableToXLS",
     value: function () {
-      var _doActionTableToXLS = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee18() {
+      var _doActionTableToXLS = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee19() {
         var data, all_sources_path, elementId, table, formattedData, rawTemplateData, parsedTemplateData, filename, templateName, blob, link;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee18$(_context18) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee19$(_context19) {
           while (1) {
-            switch (_context18.prev = _context18.next) {
+            switch (_context19.prev = _context19.next) {
               case 0:
                 data = [];
 
                 if (!this.getProperty('all_sources')) {
-                  _context18.next = 7;
+                  _context19.next = 7;
                   break;
                 }
 
@@ -1572,19 +1636,19 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 data = {
                   data: data
                 };
-                _context18.next = 20;
+                _context19.next = 20;
                 break;
 
               case 7:
                 elementId = this.getProperty('element_id').trim();
 
                 if (elementId) {
-                  _context18.next = 11;
+                  _context19.next = 11;
                   break;
                 }
 
                 console.error('Element ID is not set');
-                return _context18.abrupt("return", {
+                return _context19.abrupt("return", {
                   success: true
                 });
 
@@ -1592,12 +1656,12 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 table = getHTMLElementById(elementId);
 
                 if (table) {
-                  _context18.next = 15;
+                  _context19.next = 15;
                   break;
                 }
 
                 console.error('Table with provided ID is not found');
-                return _context18.abrupt("return", {
+                return _context19.abrupt("return", {
                   success: true
                 });
 
@@ -1629,36 +1693,36 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
               case 20:
                 filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
                 templateName = this.getProperty('template_name');
-                _context18.prev = 22;
-                _context18.next = 25;
+                _context19.prev = 22;
+                _context19.next = 25;
                 return dataToXLS(data, filename, templateName);
 
               case 25:
-                blob = _context18.sent;
+                blob = _context19.sent;
                 link = document.createElement('a');
                 link.setAttribute('href', window.URL.createObjectURL(blob));
                 link.setAttribute('download', filename + '.xlsx');
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                return _context18.abrupt("return", {
+                return _context19.abrupt("return", {
                   success: true
                 });
 
               case 35:
-                _context18.prev = 35;
-                _context18.t0 = _context18["catch"](22);
-                console.error(_context18.t0);
-                return _context18.abrupt("return", {
+                _context19.prev = 35;
+                _context19.t0 = _context19["catch"](22);
+                console.error(_context19.t0);
+                return _context19.abrupt("return", {
                   success: false
                 });
 
               case 39:
               case "end":
-                return _context18.stop();
+                return _context19.stop();
             }
           }
-        }, _callee18, this, [[22, 35]]);
+        }, _callee19, this, [[22, 35]]);
       }));
 
       function doActionTableToXLS() {
@@ -1675,11 +1739,11 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionLogin",
     value: function () {
-      var _doActionLogin = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee19() {
+      var _doActionLogin = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee20() {
         var form, success;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee19$(_context19) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee20$(_context20) {
           while (1) {
-            switch (_context19.prev = _context19.next) {
+            switch (_context20.prev = _context20.next) {
               case 0:
                 /**
                  *
@@ -1694,27 +1758,27 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 });
 
                 if (success) {
-                  _context19.next = 5;
+                  _context20.next = 5;
                   break;
                 }
 
-                return _context19.abrupt("return", {
+                return _context20.abrupt("return", {
                   success: false
                 });
 
               case 5:
-                _context19.next = 7;
+                _context20.next = 7;
                 return altrpLogin(form.getData(), this.getFormId());
 
               case 7:
-                return _context19.abrupt("return", _context19.sent);
+                return _context20.abrupt("return", _context20.sent);
 
               case 8:
               case "end":
-                return _context19.stop();
+                return _context20.stop();
             }
           }
-        }, _callee19, this);
+        }, _callee20, this);
       }));
 
       function doActionLogin() {
@@ -1731,23 +1795,23 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionLogout",
     value: function () {
-      var _doActionLogout = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee20() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee20$(_context20) {
+      var _doActionLogout = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee21() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee21$(_context21) {
           while (1) {
-            switch (_context20.prev = _context20.next) {
+            switch (_context21.prev = _context21.next) {
               case 0:
-                _context20.next = 2;
+                _context21.next = 2;
                 return altrpLogout();
 
               case 2:
-                return _context20.abrupt("return", _context20.sent);
+                return _context21.abrupt("return", _context21.sent);
 
               case 3:
               case "end":
-                return _context20.stop();
+                return _context21.stop();
             }
           }
-        }, _callee20);
+        }, _callee21);
       }));
 
       function doActionLogout() {
@@ -1764,14 +1828,14 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionSetData",
     value: function () {
-      var _doActionSetData = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee21() {
+      var _doActionSetData = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee22() {
         var _this3 = this;
 
         var paths, result, _iterator, _step, path, value, setType, count, currentValue, nextIndex, _currentValue, _currentValue2, _currentValue3, item, items;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee21$(_context21) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee22$(_context22) {
           while (1) {
-            switch (_context21.prev = _context21.next) {
+            switch (_context22.prev = _context22.next) {
               case 0:
                 paths = this.getProperty('path');
                 result = {
@@ -1779,11 +1843,11 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 };
 
                 if (paths) {
-                  _context21.next = 4;
+                  _context22.next = 4;
                   break;
                 }
 
-                return _context21.abrupt("return", result);
+                return _context22.abrupt("return", result);
 
               case 4:
                 if (paths.indexOf(',') !== -1) {
@@ -1795,13 +1859,13 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 }
 
                 _iterator = _createForOfIteratorHelper(paths);
-                _context21.prev = 6;
+                _context22.prev = 6;
 
                 _iterator.s();
 
               case 8:
                 if ((_step = _iterator.n()).done) {
-                  _context21.next = 60;
+                  _context22.next = 60;
                   break;
                 }
 
@@ -1811,14 +1875,14 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 value = value.trim();
                 setType = this.getProperty('set_type');
                 count = this.getProperty('count');
-                _context21.t0 = setType;
-                _context21.next = _context21.t0 === 'toggle' ? 18 : _context21.t0 === 'set' ? 21 : _context21.t0 === 'toggle_set' ? 24 : _context21.t0 === 'increment' ? 32 : _context21.t0 === 'decrement' ? 38 : _context21.t0 === 'push_items' ? 44 : _context21.t0 === 'remove_items' ? 54 : 58;
+                _context22.t0 = setType;
+                _context22.next = _context22.t0 === 'toggle' ? 18 : _context22.t0 === 'set' ? 21 : _context22.t0 === 'toggle_set' ? 24 : _context22.t0 === 'increment' ? 32 : _context22.t0 === 'decrement' ? 38 : _context22.t0 === 'push_items' ? 44 : _context22.t0 === 'remove_items' ? 54 : 58;
                 break;
 
               case 18:
                 value = !getDataByPath(path);
                 result.success = setDataByPath(path, value);
-                return _context21.abrupt("break", 58);
+                return _context22.abrupt("break", 58);
 
               case 21:
                 if (value.split(/\r?\n/).length === 1 && value.indexOf('{{') === 0 && value.indexOf('}}') === value.length - 2) {
@@ -1828,7 +1892,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 }
 
                 result.success = setDataByPath(path, value);
-                return _context21.abrupt("break", 58);
+                return _context22.abrupt("break", 58);
 
               case 24:
                 currentValue = getDataByPath(path);
@@ -1848,7 +1912,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
                 value = value[nextIndex] || '';
                 result.success = setDataByPath(path, value);
-                return _context21.abrupt("break", 58);
+                return _context22.abrupt("break", 58);
 
               case 32:
                 _currentValue = getDataByPath(path);
@@ -1856,7 +1920,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 count = Number(count) || 1;
                 _currentValue += count;
                 result.success = setDataByPath(path, _currentValue);
-                return _context21.abrupt("break", 58);
+                return _context22.abrupt("break", 58);
 
               case 38:
                 _currentValue2 = getDataByPath(path);
@@ -1864,7 +1928,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 count = Number(count) || 1;
                 _currentValue2 -= count;
                 result.success = setDataByPath(path, _currentValue2);
-                return _context21.abrupt("break", 58);
+                return _context22.abrupt("break", 58);
 
               case 44:
                 _currentValue3 = getDataByPath(path);
@@ -1892,7 +1956,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 }
 
                 result.success = setDataByPath(path, _currentValue3);
-                return _context21.abrupt("break", 58);
+                return _context22.abrupt("break", 58);
 
               case 54:
                 items = path.split(/\r?\n/);
@@ -1936,38 +2000,38 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   setDataByPath(listPath, list);
                 });
                 result.success = true;
-                return _context21.abrupt("break", 58);
+                return _context22.abrupt("break", 58);
 
               case 58:
-                _context21.next = 8;
+                _context22.next = 8;
                 break;
 
               case 60:
-                _context21.next = 65;
+                _context22.next = 65;
                 break;
 
               case 62:
-                _context21.prev = 62;
-                _context21.t1 = _context21["catch"](6);
+                _context22.prev = 62;
+                _context22.t1 = _context22["catch"](6);
 
-                _iterator.e(_context21.t1);
+                _iterator.e(_context22.t1);
 
               case 65:
-                _context21.prev = 65;
+                _context22.prev = 65;
 
                 _iterator.f();
 
-                return _context21.finish(65);
+                return _context22.finish(65);
 
               case 68:
-                return _context21.abrupt("return", result);
+                return _context22.abrupt("return", result);
 
               case 69:
               case "end":
-                return _context21.stop();
+                return _context22.stop();
             }
           }
-        }, _callee21, this, [[6, 62, 65, 68]]);
+        }, _callee22, this, [[6, 62, 65, 68]]);
       }));
 
       function doActionSetData() {
@@ -2027,34 +2091,34 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionCustomCode",
     value: function () {
-      var _doActionCustomCode = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee22() {
+      var _doActionCustomCode = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee23() {
         var code;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee22$(_context22) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee23$(_context23) {
           while (1) {
-            switch (_context22.prev = _context22.next) {
+            switch (_context23.prev = _context23.next) {
               case 0:
                 code = this.getProperty('code');
-                _context22.prev = 1;
+                _context23.prev = 1;
                 code = replaceContentWithData(code, this.getCurrentModel().getData());
                 eval(code);
-                return _context22.abrupt("return", {
+                return _context23.abrupt("return", {
                   success: true
                 });
 
               case 7:
-                _context22.prev = 7;
-                _context22.t0 = _context22["catch"](1);
-                console.error('Evaluate error in doActionCustomCode: "' + _context22.t0.message + '"');
-                return _context22.abrupt("return", {
+                _context23.prev = 7;
+                _context23.t0 = _context23["catch"](1);
+                console.error('Evaluate error in doActionCustomCode: "' + _context23.t0.message + '"');
+                return _context23.abrupt("return", {
                   success: false
                 });
 
               case 11:
               case "end":
-                return _context22.stop();
+                return _context23.stop();
             }
           }
-        }, _callee22, this, [[1, 7]]);
+        }, _callee23, this, [[1, 7]]);
       }));
 
       function doActionCustomCode() {
@@ -2072,22 +2136,22 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionUpdateCurrentModel",
     value: function () {
-      var _doActionUpdateCurrentModel = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee23() {
+      var _doActionUpdateCurrentModel = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee24() {
         var _window, _window$currentPage, _window2, _window2$model_data;
 
         var modelName, modelId, model, oldModel;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee23$(_context23) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee24$(_context24) {
           while (1) {
-            switch (_context23.prev = _context23.next) {
+            switch (_context24.prev = _context24.next) {
               case 0:
                 modelName = (_window = window) === null || _window === void 0 ? void 0 : (_window$currentPage = _window.currentPage) === null || _window$currentPage === void 0 ? void 0 : _window$currentPage.model_name;
 
                 if (modelName) {
-                  _context23.next = 3;
+                  _context24.next = 3;
                   break;
                 }
 
-                return _context23.abrupt("return", {
+                return _context24.abrupt("return", {
                   success: true
                 });
 
@@ -2095,23 +2159,23 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 modelId = (_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$model_data = _window2.model_data) === null || _window2$model_data === void 0 ? void 0 : _window2$model_data.id;
 
                 if (modelId) {
-                  _context23.next = 6;
+                  _context24.next = 6;
                   break;
                 }
 
-                return _context23.abrupt("return", {
+                return _context24.abrupt("return", {
                   success: true
                 });
 
               case 6:
-                _context23.prev = 6;
-                _context23.next = 9;
+                _context24.prev = 6;
+                _context24.next = 9;
                 return new Resource({
                   route: "/ajax/models/".concat(modelName)
                 }).get(modelId);
 
               case 9:
-                model = _context23.sent;
+                model = _context24.sent;
 
                 if (_.isObject(model.data)) {
                   model = model.data;
@@ -2127,21 +2191,21 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   appStore.dispatch((0,_store_current_model_actions__WEBPACK_IMPORTED_MODULE_12__/* .changeCurrentModel */ .D)(model));
                 }
 
-                return _context23.abrupt("return", {
+                return _context24.abrupt("return", {
                   success: true
                 });
 
               case 17:
-                _context23.prev = 17;
-                _context23.t0 = _context23["catch"](6);
-                console.error(_context23.t0);
+                _context24.prev = 17;
+                _context24.t0 = _context24["catch"](6);
+                console.error(_context24.t0);
 
               case 20:
               case "end":
-                return _context23.stop();
+                return _context24.stop();
             }
           }
-        }, _callee23, null, [[6, 17]]);
+        }, _callee24, null, [[6, 17]]);
       }));
 
       function doActionUpdateCurrentModel() {
@@ -2158,11 +2222,11 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionUpdateCurrentDatasources",
     value: function () {
-      var _doActionUpdateCurrentDatasources = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee24() {
+      var _doActionUpdateCurrentDatasources = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee25() {
         var aliases, allDataSources, dataSourcesToUpdate;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee24$(_context24) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee25$(_context25) {
           while (1) {
-            switch (_context24.prev = _context24.next) {
+            switch (_context25.prev = _context25.next) {
               case 0:
                 aliases = this.getProperty('aliases') || '';
                 aliases = aliases.split(',').map(function (alias) {
@@ -2178,20 +2242,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                  * @type {DataStorageUpdater}
                  */
 
-                _context24.next = 6;
+                _context25.next = 6;
                 return window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false);
 
               case 6:
-                return _context24.abrupt("return", {
+                return _context25.abrupt("return", {
                   success: true
                 });
 
               case 7:
               case "end":
-                return _context24.stop();
+                return _context25.stop();
             }
           }
-        }, _callee24, this);
+        }, _callee25, this);
       }));
 
       function doActionUpdateCurrentDatasources() {
@@ -2208,72 +2272,72 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionTrigger",
     value: function () {
-      var _doActionTrigger = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee25() {
+      var _doActionTrigger = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee26() {
         var elementId, element, action, result;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee25$(_context25) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee26$(_context26) {
           while (1) {
-            switch (_context25.prev = _context25.next) {
+            switch (_context26.prev = _context26.next) {
               case 0:
                 elementId = this.getProperty('element_id');
                 element = getComponentByElementId(elementId);
                 action = this.getProperty('action');
 
                 if (!_.isFunction(element[action])) {
-                  _context25.next = 6;
+                  _context26.next = 6;
                   break;
                 }
 
                 element[action]();
-                return _context25.abrupt("return", {
+                return _context26.abrupt("return", {
                   success: true
                 });
 
               case 6:
-                _context25.prev = 6;
+                _context26.prev = 6;
 
                 if (!_.isFunction(element.elementRef.current[action])) {
-                  _context25.next = 14;
+                  _context26.next = 14;
                   break;
                 }
 
-                _context25.next = 10;
+                _context26.next = 10;
                 return element.elementRef.current[action]();
 
               case 10:
-                result = _context25.sent;
+                result = _context26.sent;
 
                 if (!_.isObject(result)) {
-                  _context25.next = 13;
+                  _context26.next = 13;
                   break;
                 }
 
-                return _context25.abrupt("return", result);
+                return _context26.abrupt("return", result);
 
               case 13:
-                return _context25.abrupt("return", {
+                return _context26.abrupt("return", {
                   success: true
                 });
 
               case 14:
                 element.elementRef.current.fireAction(action);
-                return _context25.abrupt("return", {
+                return _context26.abrupt("return", {
                   success: true
                 });
 
               case 18:
-                _context25.prev = 18;
-                _context25.t0 = _context25["catch"](6);
-                console.error(_context25.t0);
-                return _context25.abrupt("return", {
+                _context26.prev = 18;
+                _context26.t0 = _context26["catch"](6);
+                console.error(_context26.t0);
+                return _context26.abrupt("return", {
                   success: false
                 });
 
               case 22:
               case "end":
-                return _context25.stop();
+                return _context26.stop();
             }
           }
-        }, _callee25, this, [[6, 18]]);
+        }, _callee26, this, [[6, 18]]);
       }));
 
       function doActionTrigger() {
@@ -2289,20 +2353,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionEmail",
     value: function () {
-      var _doActionEmail = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee26() {
+      var _doActionEmail = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee27() {
         var templateGUID, res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee26$(_context26) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee27$(_context27) {
           while (1) {
-            switch (_context26.prev = _context26.next) {
+            switch (_context27.prev = _context27.next) {
               case 0:
                 templateGUID = this.getProperty('email_template');
 
                 if (templateGUID) {
-                  _context26.next = 3;
+                  _context27.next = 3;
                   break;
                 }
 
-                return _context26.abrupt("return", {
+                return _context27.abrupt("return", {
                   success: true
                 });
 
@@ -2310,32 +2374,32 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 res = {
                   success: false
                 };
-                _context26.prev = 4;
-                _context26.next = 7;
+                _context27.prev = 4;
+                _context27.next = 7;
                 return (0,_helpers_sendEmail__WEBPACK_IMPORTED_MODULE_10__/* .sendEmail */ .C)(templateGUID, this.getReplacedProperty('subject'), this.getReplacedProperty('from'), this.getReplacedProperty('to'), this.getReplacedProperty('attachments'));
 
               case 7:
-                res = _context26.sent;
-                _context26.next = 14;
+                res = _context27.sent;
+                _context27.next = 14;
                 break;
 
               case 10:
-                _context26.prev = 10;
-                _context26.t0 = _context26["catch"](4);
-                console.error(_context26.t0);
-                return _context26.abrupt("return", {
+                _context27.prev = 10;
+                _context27.t0 = _context27["catch"](4);
+                console.error(_context27.t0);
+                return _context27.abrupt("return", {
                   success: false
                 });
 
               case 14:
-                return _context26.abrupt("return", res);
+                return _context27.abrupt("return", res);
 
               case 15:
               case "end":
-                return _context26.stop();
+                return _context27.stop();
             }
           }
-        }, _callee26, this, [[4, 10]]);
+        }, _callee27, this, [[4, 10]]);
       }));
 
       function doActionEmail() {
@@ -2351,25 +2415,25 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionDelay",
     value: function () {
-      var _doActionDelay = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee27() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee27$(_context27) {
+      var _doActionDelay = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee28() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee28$(_context28) {
           while (1) {
-            switch (_context27.prev = _context27.next) {
+            switch (_context28.prev = _context28.next) {
               case 0:
-                _context27.next = 2;
+                _context28.next = 2;
                 return delay(this.getProperty('milliseconds') || 0);
 
               case 2:
-                return _context27.abrupt("return", {
+                return _context28.abrupt("return", {
                   success: true
                 });
 
               case 3:
               case "end":
-                return _context27.stop();
+                return _context28.stop();
             }
           }
-        }, _callee27, this);
+        }, _callee28, this);
       }));
 
       function doActionDelay() {
@@ -2386,43 +2450,43 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionPlaySound",
     value: function () {
-      var _doActionPlaySound = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee28() {
+      var _doActionPlaySound = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee29() {
         var duration, url, loop, _yield$import, playSound;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee28$(_context28) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee29$(_context29) {
           while (1) {
-            switch (_context28.prev = _context28.next) {
+            switch (_context29.prev = _context29.next) {
               case 0:
                 duration = this.getProperty('milliseconds') || 0;
                 url = this.getProperty('media_url');
                 loop = this.getProperty('loop');
 
                 if (!url) {
-                  _context28.next = 11;
+                  _context29.next = 11;
                   break;
                 }
 
-                _context28.next = 6;
+                _context29.next = 6;
                 return __webpack_require__.e(/* import() | helpers-sounds */ 226).then(__webpack_require__.bind(__webpack_require__, "./resources/modules/front-app/src/js/helpers/sounds.js"));
 
               case 6:
-                _yield$import = _context28.sent;
+                _yield$import = _context29.sent;
                 playSound = _yield$import.playSound;
                 playSound(url, loop, duration);
-                _context28.next = 11;
+                _context29.next = 11;
                 return delay(20);
 
               case 11:
-                return _context28.abrupt("return", {
+                return _context29.abrupt("return", {
                   success: true
                 });
 
               case 12:
               case "end":
-                return _context28.stop();
+                return _context29.stop();
             }
           }
-        }, _callee28, this);
+        }, _callee29, this);
       }));
 
       function doActionPlaySound() {
@@ -2439,11 +2503,11 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionCondition",
     value: function () {
-      var _doActionCondition = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee29() {
+      var _doActionCondition = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee30() {
         var compare, conditionLeft, conditionRight, res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee29$(_context29) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee30$(_context30) {
           while (1) {
-            switch (_context29.prev = _context29.next) {
+            switch (_context30.prev = _context30.next) {
               case 0:
                 compare = this.getProperty('compare');
                 conditionLeft = this.getProperty('condition_left');
@@ -2451,16 +2515,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 conditionLeft = getDataByPath(conditionLeft, null, this.getCurrentModel().getData());
                 conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
                 res = altrpCompare(conditionLeft, conditionRight, compare);
-                return _context29.abrupt("return", {
+                return _context30.abrupt("return", {
                   success: res
                 });
 
               case 7:
               case "end":
-                return _context29.stop();
+                return _context30.stop();
             }
           }
-        }, _callee29, this);
+        }, _callee30, this);
       }));
 
       function doActionCondition() {
@@ -2469,39 +2533,39 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
       return doActionCondition;
     }()
+  }, {
+    key: "doActionVIToggle",
+    value:
     /**
      * Версия сайта для слабовидящих
      * @return {Promise<void>}
      */
-
-  }, {
-    key: "doActionVIToggle",
-    value: function () {
-      var _doActionVIToggle = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee30() {
+    function () {
+      var _doActionVIToggle = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee31() {
         var _yield$import2, loadVIPlugin, HTMLWrapper;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee30$(_context30) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee31$(_context31) {
           while (1) {
-            switch (_context30.prev = _context30.next) {
+            switch (_context31.prev = _context31.next) {
               case 0:
-                _context30.prev = 0;
-                _context30.next = 3;
+                _context31.prev = 0;
+                _context31.next = 3;
                 return __webpack_require__.e(/* import() */ 670).then(__webpack_require__.bind(__webpack_require__, "./resources/modules/front-app/src/js/helpers/plugins.js"));
 
               case 3:
-                _yield$import2 = _context30.sent;
+                _yield$import2 = _context31.sent;
                 loadVIPlugin = _yield$import2.loadVIPlugin;
-                _context30.next = 7;
+                _context31.next = 7;
                 return loadVIPlugin();
 
               case 7:
-                _context30.next = 12;
+                _context31.next = 12;
                 break;
 
               case 9:
-                _context30.prev = 9;
-                _context30.t0 = _context30["catch"](0);
-                return _context30.abrupt("return", {
+                _context31.prev = 9;
+                _context31.t0 = _context31["catch"](0);
+                return _context31.abrupt("return", {
                   success: false
                 });
 
@@ -2515,16 +2579,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 //
                 // });
 
-                return _context30.abrupt("return", {
+                return _context31.abrupt("return", {
                   success: true
                 });
 
               case 14:
               case "end":
-                return _context30.stop();
+                return _context31.stop();
             }
           }
-        }, _callee30, this, [[0, 9]]);
+        }, _callee31, this, [[0, 9]]);
       }));
 
       function doActionVIToggle() {
@@ -2541,28 +2605,28 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionOAuth",
     value: function () {
-      var _doActionOAuth = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee31() {
+      var _doActionOAuth = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee32() {
         var OIDC, WebStorageStateStore, UserManager, authority, OidcClient, method, settings, _manager, manager, result;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee31$(_context31) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee32$(_context32) {
           while (1) {
-            switch (_context31.prev = _context31.next) {
+            switch (_context32.prev = _context32.next) {
               case 0:
-                _context31.next = 2;
+                _context32.next = 2;
                 return __webpack_require__.e(/* import() | OIDC */ 29).then(__webpack_require__.t.bind(__webpack_require__, "./node_modules/oidc-client/lib/oidc-client.min.js", 23));
 
               case 2:
-                OIDC = _context31.sent;
+                OIDC = _context32.sent;
                 WebStorageStateStore = OIDC.WebStorageStateStore, UserManager = OIDC.UserManager, authority = OIDC.authority, OidcClient = OIDC.OidcClient;
                 (window.altrpLibs = window.altrpLibs || {}).OIDC = OIDC;
                 method = this.getProperty('method');
 
                 if (method) {
-                  _context31.next = 8;
+                  _context32.next = 8;
                   break;
                 }
 
-                return _context31.abrupt("return", {
+                return _context32.abrupt("return", {
                   success: true
                 });
 
@@ -2607,39 +2671,39 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 console.log(method);
 
                 if (!_.isFunction(manager[method])) {
-                  _context31.next = 24;
+                  _context32.next = 24;
                   break;
                 }
 
-                _context31.prev = 15;
-                _context31.next = 18;
+                _context32.prev = 15;
+                _context32.next = 18;
                 return manager[method]();
 
               case 18:
-                result = _context31.sent;
-                _context31.next = 24;
+                result = _context32.sent;
+                _context32.next = 24;
                 break;
 
               case 21:
-                _context31.prev = 21;
-                _context31.t0 = _context31["catch"](15);
-                return _context31.abrupt("return", {
+                _context32.prev = 21;
+                _context32.t0 = _context32["catch"](15);
+                return _context32.abrupt("return", {
                   success: false
                 });
 
               case 24:
                 console.log(result); // await manager.signoutRedirect();
 
-                return _context31.abrupt("return", {
+                return _context32.abrupt("return", {
                   success: true
                 });
 
               case 26:
               case "end":
-                return _context31.stop();
+                return _context32.stop();
             }
           }
-        }, _callee31, this, [[15, 21]]);
+        }, _callee32, this, [[15, 21]]);
       }));
 
       function doActionOAuth() {

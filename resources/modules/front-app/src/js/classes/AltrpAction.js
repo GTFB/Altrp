@@ -1251,7 +1251,6 @@ class AltrpAction extends AltrpModel {
       const requestAccounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      console.log(requestAccounts);
       setDataByPath(path, requestAccounts[0])
       return {
         success: true

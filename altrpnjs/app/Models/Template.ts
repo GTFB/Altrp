@@ -124,7 +124,6 @@ export default class Template extends BaseModel {
       .where('pages_templates.page_guid', page.guid)
       .where('pages_templates.template_type', templateType).select('templates.*').first()
 
-    console.log(template)
     if (template) {
       let _template = template.serialize()
       _template.data = JSON.parse(template.data)
