@@ -14,7 +14,7 @@ import AltrpInput from "../altrp-input/AltrpInput";
 }
 .bp3-icon_text-widget img{
   width: 16px;
-  height: 16px;
+  height: auto;
   object-fit: contain;
   pointer-events: none;
 }
@@ -34,14 +34,6 @@ import AltrpInput from "../altrp-input/AltrpInput";
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.altrp-label-icon svg,
-.altrp-label-icon img {
-  width: 20px;
-}
-.altrp-label-icon svg{
-  height: 20px;
 }
 .altrp-field-file__field{
   display: none;
@@ -82,7 +74,6 @@ import AltrpInput from "../altrp-input/AltrpInput";
   padding-left: 10px;
 }
 .altrp-field-label {
-  font-size: 16px;
   font-family: "Open Sans";
   line-height: 1.5;
   letter-spacing: 0;
@@ -816,7 +807,7 @@ class InputTextCommonWidget extends Component {
       return null
     }
     return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" {...leftIconProps} tabIndex="0">
-      {renderAsset(left_icon, )}
+      {renderAsset(left_icon)}
     </span>
   }
   renderRightIcon(){

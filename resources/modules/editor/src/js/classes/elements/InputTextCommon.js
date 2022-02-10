@@ -372,7 +372,6 @@ class InputTextCommon extends BaseElement {
     this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
-      default: "Placeholder",
       locked: true,
     });
 
@@ -381,7 +380,8 @@ class InputTextCommon extends BaseElement {
       label: "Mask",
       conditions: {
         content_type: ["text", "tel"]
-      }
+      },
+      locked: true,
     });
 
     this.addControl("mask_mismatch_message", {
@@ -389,7 +389,8 @@ class InputTextCommon extends BaseElement {
       label: "Validation Error Message",
       conditions: {
         content_type: ["text", "tel", "email"]
-      }
+      },
+      locked: true,
     });
 
     this.addControl("read_only", {
@@ -397,7 +398,8 @@ class InputTextCommon extends BaseElement {
       label: "Read only",
       conditions: {
         content_type: "wysiwyg"
-      }
+      },
+      locked: true,
     });
 
     this.addControl("content_required", {
@@ -627,11 +629,6 @@ class InputTextCommon extends BaseElement {
       locked: true,
     })
 
-    this.addControl('icons_size', {
-      label: 'Icons Size',
-      placeholder: '20px'
-    })
-
     this.endControlSection();
 
     actionsControllers(this, "Blur Actions");
@@ -846,7 +843,7 @@ class InputTextCommon extends BaseElement {
 
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: "Input Position"
     });
 
     this.addControl("field_width", {
@@ -935,7 +932,7 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color"
+      label: "Font Color"
     });
 
     this.endControlSection();
@@ -1040,7 +1037,7 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("box_shadow", {
       type: CONTROLLER_SHADOW,
-      label: "Box shadow",
+      label: "Box Shadow",
       default: {
         blur: 0,
         horizontal: 0,
