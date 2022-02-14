@@ -14,13 +14,22 @@ function ImageSettingsModal(props) {
     }
   })
 
-  useEffect(async () => {
-    if (props.id) {
-      let { data } = await axios.get('/admin/ajax/media_settings/' + props.id)
-      setState(state => ({
-        ...state,
-        value: data.data
-      }))
+  useEffect(() => {
+    let abortController = new AbortController();
+
+    const getImageSettings = async () => {
+      if (props.id) {
+        let { data } = await axios.get('/admin/ajax/media_settings/' + props.id, {signal: abortController.signal})
+        setState(state => ({
+          ...state,
+          value: data.data
+        }))
+      }
+    }
+    getImageSettings();
+
+    return () => {
+      abortController.abort();
     }
   }, [])
 

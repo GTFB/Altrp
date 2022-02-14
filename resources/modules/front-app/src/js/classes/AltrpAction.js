@@ -308,7 +308,10 @@ class AltrpAction extends AltrpModel {
         break;
       case 'oauth': {
         result = await this.doActionOAuth();
-
+      }
+        break;
+      case 'metamask_connect': {
+        result = await this.metaMaskConnect();
       }
         break;
     }
@@ -1225,6 +1228,50 @@ class AltrpAction extends AltrpModel {
     conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return {success: res};
+  }
+
+  metaMaskConnect = async () => {
+    let path = this.getProperty('path');
+    let currentValue = getDataByPath(path); // не получаю значение, приходит всегда null
+
+    if (!window.ethereum) {
+
+      return {
+        success: false
+      };
+    }
+
+    try {
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+      if (accounts.length > 0) {
+
+        return {
+          success: false
+        };
+      } else {
+        try {
+          const requestAccounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          setDataByPath(path, requestAccounts[0])
+          return {
+            success: true
+          };
+        } catch (e) {
+          console.error(e);
+          return {
+            success: false
+          };
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      return {
+        success: false
+      };
+    }
   }
 
   /**

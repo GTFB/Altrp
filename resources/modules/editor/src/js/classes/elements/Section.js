@@ -746,10 +746,19 @@ class Section extends BaseElement{
       label: "Background Video"
     });
 
+    this.addControl("url_video-poster", {
+      type: CONTROLLER_TEXT,
+      label: "Poster"
+    });
+
     this.addControl("url_video", {
       type: CONTROLLER_TEXT,
-      label: "Url Video",
-      locked: true,
+      label: "Url Video mp4"
+    });
+
+    this.addControl("url_video-webm", {
+      type: CONTROLLER_TEXT,
+      label: "Url Video webm"
     });
 
     this.addControl('object_fit_select', {
@@ -783,6 +792,26 @@ class Section extends BaseElement{
         }
       ],
     });
+
+    // this.addControl('preload_select', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'preload',
+    //   default: 'metadata',
+    //   options: [
+    //     {
+    //       value: 'metadata',
+    //       label: 'metadata'
+    //     },
+    //     {
+    //       value: 'none',
+    //       label: 'none'
+    //     },
+    //     {
+    //       value: 'auto',
+    //       label: 'auto'
+    //     }
+    //   ],
+    // });
 
     this.endControlSection();
 

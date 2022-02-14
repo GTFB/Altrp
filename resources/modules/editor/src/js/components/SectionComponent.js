@@ -167,13 +167,16 @@ class SectionComponent extends Component {
 
     const position_style_css_classes = this.props.element.getSettings("position_style_css_classes") || "";
     const position_style_css_id = this.props.element.getSettings("position_style_css_id") || "";
-    const background_video_url = this.props.element.getSettings("url_video") || "";
-    const background__video = background_video_url ? (
-      <video preload="metadata" muted loop autoPlay className="section-video section-video-controllers">
-        <source src={background_video_url} type="video/mp4" className="section-video-source" />
+    const background_video_poster = this.props.element.getResponsiveSetting("url_video-poster") || "";
+    const background_video_url = this.props.element.getResponsiveSetting("url_video") || "";
+    const background_video_url_webm = this.props.element.getResponsiveSetting("url_video-webm") || "";
+    const background__section = background_video_url || background_video_url_webm ? (
+      <video preload='metadata' poster={background_video_poster} muted loop autoPlay playsInline className="section-video section-video-controllers">
+        <source src={background_video_url_webm || 'none'} type="video/webm" className="section-video-source" />
+        <source src={background_video_url || 'none'} type="video/mp4" className="section-video-source" />
       </video>
     ) : (
-      <span className={sectionBackground.join(" ")}> </span>
+      <span className={sectionBackground.join(" ")} />
     )
 
 
@@ -191,7 +194,7 @@ class SectionComponent extends Component {
         columns: this.props.element.children || [],
         settings: this.props.element.getSettings()
       },
-      background__video,
+      background__section,
      sectionWrapper
     );
 

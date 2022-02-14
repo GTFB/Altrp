@@ -2464,5 +2464,15 @@ export function getTableStyles(settings, id) {
 
   styles += `} `;
 
+  styles += `${parentClass} .altrp_table-zIndex {`;
+
+  const zIndex = getResponsiveSetting(settings, 'table_position_style_z_index');
+
+  if (zIndex) {
+    styles += simplePropertyStyled(zIndex, 'z-index');
+  }
+
+  styles += `} `;
+
   return styles;
 }

@@ -174,6 +174,9 @@ import AltrpTableWithoutUpdate from'../altrp-table/altrp-table-without-update';
 .altrp-table-global-filter label {
   display: inline-block;
 }
+.altrp_table-zIndex {
+  z-index: 1;
+}
 `)
 
 class TableWidget extends Component {
@@ -256,7 +259,7 @@ class TableWidget extends Component {
     const TableComponent = this.props.element.getSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
     return <Scrollbars
         ref={this.scrollbar}
-        style={{zIndex: 99999}}
+        className="altrp_table-zIndex"
         autoHide
         autoHeightMax={30000}
         autoHeight={true}

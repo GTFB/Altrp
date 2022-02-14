@@ -26,7 +26,7 @@ class HeadingTypeHeading extends BaseElement {
     return "heading";
   }
   static getTitle() {
-    return "Heading";
+    return "Text";
   }
   static getIconComponent() {
     return HeadingIcon;

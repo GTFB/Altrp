@@ -61,7 +61,7 @@ class AdminTable extends Component {
             <span className="heading__categories">Categories:</span>
             <span onClick={() => filterPropsCategories.getCategories(null, "All")} className="admin-filters__current">
               <a className={filterPropsCategories.activeCategory === "All" ? "admin-filters__link active-category" : "admin-filters__link"}>
-                All ({filterPropsCategories.DidMountArray.length || "0"})
+                All
               </a>
             </span>
             {filterPropsCategories.categoryOptions.map(item => {

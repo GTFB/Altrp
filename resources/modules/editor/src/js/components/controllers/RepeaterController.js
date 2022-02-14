@@ -6,6 +6,7 @@ import {getTemplateType, iconsManager} from "../../helpers";
 import Controller from "../../classes/Controller";
 import update from "immutability-helper";
 import { useDrag, useDrop } from "react-dnd";
+import PlusIcon from './../../../svgs/plus.svg';
 
 /**
  * @method _changeValue
@@ -196,11 +197,9 @@ class RepeaterController extends Component {
       </div>
 
       <div className="d-flex justify-center repeater-bottom">
-        <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={this.addItem}>
-          {iconsManager().renderIcon('plus', {
-            className: 'altrp-btn__icon',
-          })}
-            Add Item
+        <button className="altrp-btn_action altrp-btn_gray d-flex align-items-center" onClick={this.addItem}>
+            <PlusIcon width={16} height={16} className='altrp-btn__icon'/>
+            <div className="altrp-btn_action-text">Add Item</div>
           </button>
       </div>
     </div>

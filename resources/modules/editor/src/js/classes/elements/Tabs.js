@@ -243,15 +243,13 @@ class Tabs extends BaseElement {
     });
 
     this.addControl("border_radius_tab_style", {
-      type: CONTROLLER_SLIDER,
+      type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      units: [
+      units:[
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
     });
 
     this.addControl('typographic_tab_style', {
@@ -342,15 +340,13 @@ class Tabs extends BaseElement {
     });
 
     this.addControl("border_radius_content_style", {
-      type: CONTROLLER_SLIDER,
+      type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      units: [
+      units:[
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
     });
 
     this.addControl('typographic_content_style', {

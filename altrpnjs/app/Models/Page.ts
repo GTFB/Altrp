@@ -1,5 +1,15 @@
 import {DateTime} from 'luxon'
-import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  beforeDelete,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasMany,
+  hasMany,
+  ManyToMany,
+  manyToMany
+} from '@ioc:Adonis/Lucid/Orm'
 import Model from 'App/Models/Model'
 import data_get from '../../helpers/data_get'
 import empty from '../../helpers/empty'
@@ -139,6 +149,7 @@ export default class Page extends BaseModel {
     }[] = []
 
     let headerTemplate = await Template.getTemplate(this.id, 'header')
+
 
     data.push({
       area_name: 'header',
@@ -364,6 +375,15 @@ export default class Page extends BaseModel {
       }
     }
     return allowed
+  }
+
+  @beforeDelete()
+  public static async deletePage(page: Page) {
+    const datasource = await PageDatasource.query().where("page_id", page.id);
+
+    datasource.forEach((source) => {
+      source.delete()
+    })
   }
 
   async getPagesForFrontend():Promise<Page[]> {

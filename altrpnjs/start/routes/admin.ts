@@ -17,6 +17,8 @@ Route.group(() => {
     Route.put("/custom_models/:id/edit/:row", "admin/ModelsController.updateModelRow")
     Route.post("/custom_models/:id", "admin/ModelsController.addModelRow")
 
+    Route.post("/favicon", "admin/AdminController.updateFavicon")
+
     Route.get('/global_template_styles', 'TemplatesController.globalTemplateStyles')
 
     Route.post('/templates', 'TemplatesController.create').middleware('auth')
@@ -24,6 +26,7 @@ Route.group(() => {
     Route.get('/templates/options', 'TemplatesController.options')
     Route.get('/templates/:id', 'TemplatesController.get')
     Route.put('/templates/:id', 'TemplatesController.update')
+    Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
     Route.get("/role_options", "OptionsController.roles")
@@ -38,6 +41,7 @@ Route.group(() => {
     Route.get('/pages/routes', 'admin/PagesController.getRoutes')
     Route.get('/pages/routes/add', 'admin/PagesController.addRoute')
 
+    Route.delete('/pages/:id', 'admin/PagesController.delete')
     Route.get('/pages/:id', 'admin/PagesController.show')
     Route.put('/pages/:id', 'admin/PagesController.update')
 

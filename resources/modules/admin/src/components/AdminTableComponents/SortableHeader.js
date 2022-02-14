@@ -23,6 +23,6 @@ class SortableHeader extends Component {
       <VectorSvg onClick={this.clickHandler} className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === column.name ? 'vector-svg--active' : ''}`} />
     </td>
   }
-};
+}
 
 export default SortableHeader;
