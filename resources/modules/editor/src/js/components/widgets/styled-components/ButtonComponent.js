@@ -51,10 +51,10 @@ export function btnStyles(settings) {
     () => {
       const value = getResponsiveSetting(settings, "position_opacity");
 
-      if(value === null || value?.size === '0' || value?.size === '') {
-        return ''
-      } else {
+      if (value && value?.size) {
         return `opacity: ${value.size};`
+      } else {
+        return ''
       }
     },
     ["background-color", "background_color", "color"],
@@ -72,12 +72,14 @@ export function btnStyles(settings) {
     () => {
       const value = getResponsiveSetting(settings, "position_opacity", ':hover');
 
-      if (value === undefined || value?.size === '0' || value?.size === '') {
-        return ''
-      } else {
+      if (value && value?.size) {
         return `opacity: ${value.size};`
+      } else {
+        return ''
       }
     },
+    ["margin", "position_margin", "dimensions", ":hover"],
+    ["padding", "position_padding", "dimensions", ":hover"],
     ["background-color", "background_color", "color", ":hover"],
     ["", "gradient", "gradient", ":hover"],
     ["border-style", "border_type", "", ":hover"],
@@ -113,7 +115,7 @@ export function btnStyles(settings) {
     () => {
       const value = getResponsiveSetting(settings, "position_opacity", '.state-disabled');
 
-      if (value && value.size) {
+      if (value && value?.size) {
         return `opacity: ${value.size};`
       } else {
         return ''
@@ -188,10 +190,11 @@ export function btnStyles(settings) {
         return sizeStyled(backgroundSizeInUnit, 'background-size');
       }
     },
-    // ["background-size", "background_image_width", "slider"],
     ["background-size", "background_size"],
 
-    "&:hover",
+    "}",
+
+    "altrp-background-image_btn:hover",
     ["background-position", "background_position", "simplePropertyStyled", ":hover"],
     ["background-attachment", "background_attachment", "", ":hover"],
     ["background-repeat", "background_repeat", "", ":hover"],
@@ -204,8 +207,111 @@ export function btnStyles(settings) {
         return sizeStyled(backgroundSizeInUnit, 'background-size');
       }
     },
-    // ["background-size", "background_image_width", "slider", ":hover"],
     ["background-size", "background_size", "", ":hover"],
+
+    "}",
+
+    "altrp-btn .altrp-btn-icon-right",
+    ['padding', 'icon_padding_right', 'dimensions'],
+    ['margin', 'icon_margin_right', 'dimensions'],
+    () => {
+      const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right');
+
+      if (iconRightSizeBtn) {
+        return iconSizeStyled(iconRightSizeBtn);
+      }
+    },
+
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-right",
+    ['padding', 'icon_padding_right', 'dimensions', ':hover'],
+    ['margin', 'icon_margin_right', 'dimensions', ':hover'],
+    () => {
+      const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right', ':hover');
+
+      if (iconRightSizeBtn) {
+        return  iconSizeStyled(iconRightSizeBtn);
+      }
+    },
+
+    "}",
+
+    "altrp-btn .altrp-btn-icon-left",
+    ['padding', 'icon_padding_left', 'dimensions'],
+    ['margin', 'icon_margin_left', 'dimensions'],
+    () => {
+      const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left');
+
+      if (iconLeftSizeBtn) {
+        return iconSizeStyled(iconLeftSizeBtn);
+      }
+    },
+
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-left",
+    ['padding', 'icon_padding_left', 'dimensions', ':hover'],
+    ['margin', 'icon_margin_left', 'dimensions', ':hover'],
+    () => {
+      const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left', ':hover');
+
+      if (iconLeftSizeBtn) {
+        return iconSizeStyled(iconLeftSizeBtn);
+      }
+    },
+
+    "}",
+
+    "altrp-btn .altrp-btn-icon-top",
+    ['padding', 'icon_padding_top', 'dimensions'],
+    ['margin', 'icon_margin_top', 'dimensions'],
+    () => {
+      const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top');
+
+      if (iconTopSizeBtn) {
+        return iconSizeStyled(iconTopSizeBtn);
+      }
+    },
+
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-top",
+    ['padding', 'icon_padding_top', 'dimensions', ':hover'],
+    ['margin', 'icon_margin_top', 'dimensions', ':hover'],
+    () => {
+      const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top', ':hover');
+
+      if (iconTopSizeBtn) {
+        return iconSizeStyled(iconTopSizeBtn);
+      }
+    },
+
+    "}",
+
+    "altrp-btn .altrp-btn-icon-bottom",
+    ['padding', 'icon_padding_bottom', 'dimensions'],
+    ['margin', 'icon_margin_bottom', 'dimensions'],
+    () => {
+      const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom');
+
+      if (iconBottomSizeBtn) {
+        return iconSizeStyled(iconBottomSizeBtn);
+      }
+    },
+
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-bottom",
+    ['padding', 'icon_padding_bottom', 'dimensions', ':hover'],
+    ['margin', 'icon_margin_bottom', 'dimensions', ':hover'],
+    () => {
+      const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom', ':hover');
+
+      if (iconBottomSizeBtn) {
+        return iconSizeStyled(iconBottomSizeBtn);
+      }
+    },
 
     "}",
   ]
@@ -361,102 +467,6 @@ export default function ButtonComponent(settings) {
 
   if (strokeColorSvgHover) {
     stylesInString += colorPropertyStyled(strokeColorSvgHover, 'stroke');
-  }
-
-  stylesInString += `} `;
-
-  stylesInString += `& .altrp-btn .altrp-btn-icon-right svg, & .altrp-btn .altrp-btn-icon-right img {`;
-
-  const paddingIconRightBtn = getResponsiveSetting(settings, 'icon_padding_right');
-
-  if (paddingIconRightBtn) {
-    stylesInString += dimensionsControllerToStyles(paddingIconRightBtn);
-  }
-
-  const marginIconRightBtn = getResponsiveSetting(settings, 'icon_margin_right');
-
-  if (marginIconRightBtn) {
-    stylesInString += dimensionsControllerToStyles(marginIconRightBtn, 'margin');
-  }
-
-  const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right');
-
-  if (iconRightSizeBtn === null || iconRightSizeBtn?.size === '0' || iconRightSizeBtn?.size === '' ) {
-    stylesInString += '';
-  } else {
-    stylesInString += iconSizeStyled(iconRightSizeBtn);
-  }
-
-  stylesInString += `} `;
-
-  stylesInString += `& .altrp-btn .altrp-btn-icon-left svg, & .altrp-btn .altrp-btn-icon-left img {`;
-
-  const paddingIconLeftBtn = getResponsiveSetting(settings, 'icon_padding_left');
-
-  if (paddingIconLeftBtn) {
-    stylesInString += dimensionsControllerToStyles(paddingIconLeftBtn);
-  }
-
-  const marginIconLeftBtn = getResponsiveSetting(settings, 'icon_margin_left');
-
-  if (marginIconLeftBtn) {
-    stylesInString += dimensionsControllerToStyles(marginIconLeftBtn, 'margin');
-  }
-
-  const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left');
-
-  if (iconLeftSizeBtn === null || iconLeftSizeBtn?.size === '0' || iconLeftSizeBtn?.size === '' ) {
-    stylesInString += '';
-  } else {
-    stylesInString += iconSizeStyled(iconLeftSizeBtn);
-  }
-
-  stylesInString += `} `;
-
-  stylesInString += `& .altrp-btn .altrp-btn-icon-top svg, & .altrp-btn .altrp-btn-icon-top img {`;
-
-  const paddingIconTopBtn = getResponsiveSetting(settings, 'icon_padding_top');
-
-  if (paddingIconTopBtn) {
-    stylesInString += dimensionsControllerToStyles(paddingIconTopBtn);
-  }
-
-  const marginIconTopBtn = getResponsiveSetting(settings, 'icon_margin_top');
-
-  if (marginIconTopBtn) {
-    stylesInString += dimensionsControllerToStyles(marginIconTopBtn, 'margin');
-  }
-
-  const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top');
-
-  if (iconTopSizeBtn === null || iconTopSizeBtn?.size === '0' || iconTopSizeBtn?.size === '' ) {
-    stylesInString += '';
-  } else {
-    stylesInString += iconSizeStyled(iconTopSizeBtn);
-  }
-
-  stylesInString += `} `;
-
-  stylesInString += `& .altrp-btn .altrp-btn-icon-bottom svg, & .altrp-btn .altrp-btn-icon-bottom img {`;
-
-  const paddingIconBottomBtn = getResponsiveSetting(settings, 'icon_padding_bottom');
-
-  if (paddingIconBottomBtn) {
-    stylesInString += dimensionsControllerToStyles(paddingIconBottomBtn);
-  }
-
-  const marginIconBottomBtn = getResponsiveSetting(settings, 'icon_margin_bottom');
-
-  if (marginIconBottomBtn) {
-    stylesInString += dimensionsControllerToStyles(marginIconBottomBtn, 'margin');
-  }
-
-  const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom');
-
-  if (iconBottomSizeBtn === null || iconBottomSizeBtn?.size === '0' || iconBottomSizeBtn?.size === '' ) {
-    stylesInString += '';
-  } else {
-    stylesInString += iconSizeStyled(iconBottomSizeBtn);
   }
 
   stylesInString += `} `;

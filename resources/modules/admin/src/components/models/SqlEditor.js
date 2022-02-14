@@ -109,10 +109,10 @@ class SqlEditor extends Component {
     this.setState({ modelsOptions: options });
 
     window.addEventListener("scroll", this.listenScrollHeader)
+  }
 
-    return () => {
-      window.removeEventListener("scroll", this.listenScrollHeader)
-    }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.listenScrollHeader)
   }
 
   listenScrollHeader = () => {
