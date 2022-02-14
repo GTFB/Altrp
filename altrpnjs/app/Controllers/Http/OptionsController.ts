@@ -6,6 +6,8 @@ import options from "../../../helpers/options";
 import Permission from "App/Models/Permission";
 import Category from "App/Models/Category";
 import Menu from "App/Models/Menu";
+import Template from "App/Models/Template";
+import filtration from "../../../helpers/filtration";
 
 export default class OptionsController {
   public async pages() {
@@ -59,5 +61,37 @@ export default class OptionsController {
       message: "success",
       success: true
     }
+  }
+
+  public async templates({ request}) {
+    const templatesQuery = Template.query().whereNot("type", "review")
+
+    filtration(templatesQuery, request, [
+      "title",
+    ])
+
+    const templates = await templatesQuery
+
+    return templates.map(template => ({
+      value: template.id,
+      label: template.title
+    }))
+  }
+
+  public async popups({ request}) {
+    const templatesQuery = Template.query().whereNot("type", "review").whereHas("currentArea", (query) => {
+      query.where("name", "popup")
+    })
+
+    filtration(templatesQuery, request, [
+      "title",
+    ])
+
+    const templates = await templatesQuery
+
+    return templates.map(template => ({
+      value: template.id,
+      label: template.title
+    }))
   }
 }

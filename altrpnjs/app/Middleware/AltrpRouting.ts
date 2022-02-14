@@ -53,7 +53,6 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
-
     if (url === '/altrp-login'
       || url === '/login'
       || url === '/data/current-user' ||

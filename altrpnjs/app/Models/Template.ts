@@ -1,5 +1,14 @@
 import {DateTime} from 'luxon'
-import {BaseModel, column, HasMany, hasMany, HasOne, hasOne, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  column,
+  HasMany,
+  hasMany,
+  HasOne,
+  hasOne,
+  ManyToMany,
+  manyToMany
+} from '@ioc:Adonis/Lucid/Orm'
 import User from "App/Models/User";
 import Area from "App/Models/Area";
 import Page from "App/Models/Page";
@@ -9,6 +18,7 @@ import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 
 export default class Template extends BaseModel {
+
   @column({isPrimary: true})
   public id: number
 
@@ -25,13 +35,16 @@ export default class Template extends BaseModel {
   public styles: string
 
   @column()
+  public parent_template: number|null
+
+  @column()
   public html_content: string
 
   @column()
   public type: string
 
   @column()
-  public guid: string
+  public guid: string|null
 
   @column()
   public all_site: boolean
@@ -148,6 +161,7 @@ export default class Template extends BaseModel {
     if (template && !await Template.query().join('pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       .where('pages_templates.condition_type', 'exclude')
       .where('pages_templates.page_guid', page.guid)
+      //@ts-ignore
       .where('templates.guid', template.guid)
       .where('pages_templates.template_type', templateType).first()) {
       //_template.check_elements_conditions();
