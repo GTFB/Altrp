@@ -6,8 +6,11 @@ import  queryString from 'query-string';
 import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
+import ServiceWorker from "./js/components/ServiceWorker";
+
 window.Link = 'a';
 
+ServiceWorker()
 
 function loadDatastorageUpdater(){
   import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
@@ -15,10 +18,10 @@ function loadDatastorageUpdater(){
     dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
   });
 }
-
 /**
  * Рендерим главный компонент после загрузки основных модулей
  */
+
 window.loadingCallback = function loadingCallback() {
   loadPageActions()
   if (window.React

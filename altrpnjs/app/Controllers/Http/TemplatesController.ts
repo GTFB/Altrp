@@ -264,16 +264,10 @@ export default class TemplatesController {
     const templates = await Template.query().where("type", "review");
 
     if(templates.length > 0) {
-      return {
-        success: true,
-        data: templates
-      }
+      return templates
     } else {
       response.status(404)
-      return {
-        success: false,
-        data: templates
-      }
+      return templates
     }
   }
 
@@ -281,16 +275,10 @@ export default class TemplatesController {
     const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
 
     if(templates.length > 0) {
-      return {
-        success: true,
-        data: templates
-      }
+      return templates
     } else {
       response.status(404)
-      return {
-        success: false,
-        data: templates
-      }
+      return templates
     }
   }
 
@@ -302,6 +290,7 @@ export default class TemplatesController {
    */
   public async conditions({params}) {
     const id = parseInt(params.id);
+    
     let res = {
       data: [],
       success: true

@@ -4,6 +4,7 @@ import Env from "@ioc:Adonis/Core/Env";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
+import path from "path";
 
 export default class IndicesController {
   async admin({view}) {
@@ -35,6 +36,16 @@ export default class IndicesController {
     return view.render('editor-content', Edge({
       css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
     }))
+  }
+
+  public async serviceWorker({response}) {
+    const pathToPublic = path.join(__dirname, "../", "../", "../", "../", "public", "sw.js");
+
+    response.header("Content-Type", "text/javascript")
+
+    const file = await Drive.get(pathToPublic)
+
+    return file
   }
 
   // public frontApp({ view }) {
