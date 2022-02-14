@@ -164,7 +164,6 @@ class InputTextarea extends BaseElement {
     this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
-      default: "Placeholder",
       locked: true,
     });
 
@@ -333,6 +332,18 @@ class InputTextarea extends BaseElement {
       label: "Label"
     });
 
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "%",
+        size: null
+      },
+      units: ["%", "px", "vw"],
+      max: 100,
+      min: 0
+    });
+
     this.addControl("label_style_spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
@@ -346,15 +357,6 @@ class InputTextarea extends BaseElement {
       locked: true,
     });
 
-    this.addControl("label_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
     this.addControl("label_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
@@ -362,6 +364,15 @@ class InputTextarea extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
+    });
+
+    this.addControl("label_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
     });
 
     this.addControl("label_style_font_color", {
@@ -416,14 +427,10 @@ class InputTextarea extends BaseElement {
       // }
     });
 
-    this.addControl("label_width", {
+    this.addControl("icon_size", {
       type: CONTROLLER_SLIDER,
-      label: "Label Width",
-      default: {
-        unit: "%",
-        size: null
-      },
-      units: ["%", "px", "vw"],
+      label: "Icon Size",
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 0
     });
@@ -436,7 +443,7 @@ class InputTextarea extends BaseElement {
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon color"
+      label: "Icon Color"
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -448,14 +455,6 @@ class InputTextarea extends BaseElement {
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
-    });
-
-    this.addControl("icon_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Icon Size",
-      units: ["px", "%", "vh", "vw"],
-      max: 100,
-      min: 0
     });
 
     this.addControl("cross_color", {
@@ -485,27 +484,6 @@ class InputTextarea extends BaseElement {
       // rules: {
       //   "{{ELEMENT}} .input-clear-btn{{STATE}}": "font-size: {{SIZE}}px;"
       // }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("font_style_section", {
-      tab: TAB_STYLE,
-      label: "Font"
-    });
-
-    this.addControl("field_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.addControl("field_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
     });
 
     this.endControlSection();
@@ -580,6 +558,27 @@ class InputTextarea extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("font_style_section", {
+      tab: TAB_STYLE,
+      label: "Font"
+    });
+
+    this.addControl("field_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic"
+    });
+
+    this.addControl("field_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
+    });
+
+    this.endControlSection();
+
     this.startControlSection("placeholder_style_section", {
       tab: TAB_STYLE,
       label: "Placeholder"
@@ -587,7 +586,7 @@ class InputTextarea extends BaseElement {
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color"
+      label: "Font Color"
     });
 
     this.addControl("placeholder_style_font_typographic", {
@@ -618,13 +617,6 @@ class InputTextarea extends BaseElement {
         family: "Open Sans",
         decoration: ""
       }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("overlay_section", {
-      tab: TAB_STYLE,
-      label: "Overlay"
     });
 
     this.endControlSection();
@@ -719,13 +711,6 @@ class InputTextarea extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("transform_section", {
-      tab: TAB_STYLE,
-      label: "Transform"
     });
 
     this.endControlSection();

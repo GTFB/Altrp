@@ -137,52 +137,10 @@ class InputCheckbox extends BaseElement {
       ]
     });
 
-    this.addControl("content_placeholder", {
-      type: CONTROLLER_TEXT,
-      label: "Placeholder",
-      default: "Placeholder"
-    });
-
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required",
       locked: true,
-    });
-
-    this.addControl("content_readonly", {
-      type: CONTROLLER_SWITCHER,
-      label: "Readonly"
-    });
-
-    this.addControl("content_timestamp", {
-      type: CONTROLLER_SWITCHER,
-      label: "Timestamp",
-      default: false
-    });
-
-    this.addControl("nulled_option_title", {
-      type: CONTROLLER_TEXT,
-      label: "Nulled Option Label"
-    });
-
-    this.addControl("options_sorting", {
-      type: CONTROLLER_SELECT,
-      label: "Options Sorting",
-      default: "",
-      options: [
-        {
-          value: "",
-          label: "None"
-        },
-        {
-          value: "asc",
-          label: "ASC"
-        },
-        {
-          value: "desc",
-          label: "DESC"
-        }
-      ]
     });
 
     this.addControl("model_for_options", {
@@ -196,7 +154,7 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("params_for_update", {
       type: CONTROLLER_TEXTAREA,
-      label: "Params for Update Options",
+      label: "Params For Update Options",
       conditions: {
         "model_for_options!": ""
       },
@@ -206,7 +164,7 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("params_as_filters", {
       type: CONTROLLER_SWITCHER,
-      label: "Use Params as Filters",
+      label: "Use Params As Filters",
       default: false,
       conditions: {
         "params_for_update!": ""
@@ -366,6 +324,18 @@ class InputCheckbox extends BaseElement {
       label: "Label"
     });
 
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "%",
+        size: null
+      },
+      units: ["%", "px", "vw"],
+      max: 100,
+      min: 0
+    });
+
     this.addControl("label_style_spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
@@ -379,15 +349,6 @@ class InputCheckbox extends BaseElement {
       locked: true,
     });
 
-    this.addControl("label_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
     this.addControl("label_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
@@ -395,6 +356,15 @@ class InputCheckbox extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
+    });
+
+    this.addControl("label_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
     });
 
     this.addControl("label_style_font_color", {
@@ -450,14 +420,10 @@ class InputCheckbox extends BaseElement {
       // }
     });
 
-    this.addControl("label_width", {
+    this.addControl("icon_size", {
       type: CONTROLLER_SLIDER,
-      label: "Label Width",
-      default: {
-        unit: "%",
-        size: null
-      },
-      units: ["%", "px", "vw"],
+      label: "Icon Size",
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 0
     });
@@ -470,7 +436,7 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon color"
+      label: "Icon Color"
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -482,14 +448,6 @@ class InputCheckbox extends BaseElement {
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
-    });
-
-    this.addControl("icon_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Icon Size",
-      units: ["px", "%", "vh", "vw"],
-      max: 100,
-      min: 0
     });
 
     this.addControl("cross_color", {
@@ -523,30 +481,9 @@ class InputCheckbox extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("font_style_section", {
-      tab: TAB_STYLE,
-      label: "Font"
-    });
-
-    this.addControl("field_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.addControl("field_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
-    this.endControlSection();
-
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: "Input Position"
     });
 
     this.addControl("field_size", {
@@ -608,6 +545,27 @@ class InputCheckbox extends BaseElement {
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
       label: "CSS Classes"
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("font_style_section", {
+      tab: TAB_STYLE,
+      label: "Font"
+    });
+
+    this.addControl("field_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic"
+    });
+
+    this.addControl("field_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
     });
 
     this.endControlSection();
@@ -750,7 +708,7 @@ class InputCheckbox extends BaseElement {
 
     this.startControlSection("radio_checkbox_styles", {
       tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
+      label: "Checkbox Position"
     });
 
     this.addControl("input_position", {

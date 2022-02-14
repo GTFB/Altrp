@@ -169,7 +169,6 @@ const fieldStyle = settings => {
   color && (styles += colorPropertyStyled(color, "color"));
 
   settings && (borderColor = getResponsiveSetting(settings, "border_color", ':hover'));
-  console.log({hovBorder: borderColor});
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
 
   settings && (borderWidth = getResponsiveSetting(settings, "border_width", ':hover'));
