@@ -8,7 +8,7 @@ import Application from '@ioc:Adonis/Core/Application'
 export default class IndicesController {
   async admin({view}) {
     return view.render('admin', Edge({
-      url: Env.get("PATH_ENV") === "production" ? "http://localhost:3002/src/bundle.js" : "http://localhost:3002/src/bundle.js"
+      url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/bundle.js"
     }))
   }
   async customizer({view}) {
@@ -19,7 +19,7 @@ export default class IndicesController {
 
   public editor({view}) {
     return view.render('editor', Edge({
-      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://localhost:3000/src/bundle.js",
+      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://127.0.0.1:3000/src/bundle.js",
       css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
     }))
   }

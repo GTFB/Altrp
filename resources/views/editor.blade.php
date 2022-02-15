@@ -24,7 +24,7 @@
   let _altrpVersion = '{{ getCurrentVersion() }}';
   </script>
   {{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
-  <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" crossorigin defer></script>
+  <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://127.0.0.1:3000/' ) }}" crossorigin defer></script>
 
   <script>
     window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};

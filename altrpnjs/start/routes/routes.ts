@@ -25,11 +25,12 @@ import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
 // import {UserFactory} from "Database/factories";
-
+// "IndicesController.loginView"
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
 Route.post("/logout", "IndicesController.logout").name = 'logout'
 
+Route.post("/sockets", "SocketsController.handle")
 
 // Route.get("/userr", async () => {
 //   const user = await User.query().where("id", 1).firstOrFail();
@@ -172,3 +173,4 @@ Route.group(() => {
   })
 })
   .prefix("/ajax")
+
