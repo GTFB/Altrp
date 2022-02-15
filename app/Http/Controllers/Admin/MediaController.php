@@ -394,6 +394,8 @@ class MediaController extends Controller
   {
     //
     $media = $media->find( $id );
+    $filesize = filesize(Storage::path( 'public/' . $media->filename ));
+    $media->filesize = $filesize > 1048576 ? round($filesize/1024/1024, 2)." MB" : round($filesize/1024, 2)." KB";
     $media->categories = $media->categoryOptions();
     return response()->json( $media->toArray() );
 

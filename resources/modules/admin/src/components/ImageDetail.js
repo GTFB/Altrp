@@ -52,7 +52,7 @@ export class ImageDetail extends React.Component {
     }
 
     render() {
-        const { authorName, url, created_at, filename, media_type, height, width } = this.state
+        const { authorName, url, created_at, filename, media_type, filesize, height, width } = this.state
 
         if (!this.props.imageId) return null;
 
@@ -85,7 +85,7 @@ export class ImageDetail extends React.Component {
                                     <div>Uploaded by: <span className="document-detail__data-result">{authorName}</span></div>
                                     <div>File name: <span className="document-detail__data-result">{filename}</span></div>
                                     <div>File type: <span className="document-detail__data-result">{media_type}</span></div>
-                                    <div>File size: <span className="document-detail__data-result">7 KB</span></div>
+                                    <div>File size: <span className="document-detail__data-result">{filesize}</span></div>
                                     <div>Dimensions: <span className="document-detail__data-result">{height} by {width} pixels</span></div>
                                 </div>
                             </div>
