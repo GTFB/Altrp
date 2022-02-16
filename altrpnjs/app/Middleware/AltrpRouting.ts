@@ -53,7 +53,6 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
-
     if (url === '/altrp-login'
       || url === '/login'
       || url === '/data/current-user' ||
@@ -113,7 +112,8 @@ export default class AltrpRouting {
 
       const altrp_settings = await page.getPageSettings(this)
       const pageAreas = await page.getAreas();
-      const preload_content = renderResult({
+      //@ts-ignore
+      const preload_content:any = renderResult({
         protocol: request.protocol(),
         host: request.host(),
         originalUrl: url,
@@ -321,7 +321,7 @@ export default class AltrpRouting {
     // elementNames = array_unique( elementNames );
     // elementNames = array_values( elementNames );
     elementNames = _.uniq(elementNames)
-    console.log('finish');
+
     return elementNames;
   }
 }

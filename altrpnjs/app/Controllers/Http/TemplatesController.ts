@@ -29,13 +29,15 @@ export default class TemplatesController {
     const templates = await templatesQuery
       .preload("user")
       .preload("currentArea")
-      .preload("categories")
+      .whereNotNull('guid')
       .where("type", "template")
+      .preload("categories")
       .whereHas("currentArea", (query) => {
         if(params.area) {
           query.where("name", params.area)
         }
       })
+      .orderBy('title')
       .paginate(page, pageSize)
 
     const modTemplates = templates.all().map( template => {
@@ -60,6 +62,50 @@ export default class TemplatesController {
     }
   }
 
+  public async settingsGet({ request, params }) {
+    const setting = await TemplateSetting.query()
+      .where("template_id", parseInt(params.id))
+      .andWhere("setting_name", request.input("setting_name"))
+      .firstOrFail()
+    return setting
+  }
+
+  public async settingsSet({ params, request, response}) {
+    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail()
+
+    const settingName = request.input("setting_name");
+
+    let setting = await TemplateSetting.query()
+      .where("template_id", template.id)
+      .andWhere("setting_name", settingName)
+      .first()
+
+    if(!setting) {
+      setting = new TemplateSetting()
+
+      setting.fill({
+        template_id: template.id,
+        //@ts-ignore
+        template_guid: template.guid,
+        setting_name: settingName,
+        data: request.input("data")
+      })
+    } else {
+      setting.data = request.input("data")
+    }
+
+    if(!await setting.save()) {
+      response.status(500)
+      return {
+        message: "Setting not saved"
+      }
+    }
+
+    return {
+      success: true
+    }
+  }
+
   public async create({ auth, request, response }) {
     await auth.use('web').authenticate()
 
@@ -78,7 +124,7 @@ export default class TemplatesController {
 
     if(request.input("categories")) {
       for (const option of request.input("categories")) {
-        const category = await Category.find(option.value);
+        const category = await Category.query().where("guid", option.value).first();
 
         if (!category) {
           response.status(404)
@@ -89,6 +135,7 @@ export default class TemplatesController {
           await CategoryObject.create({
             category_guid: category.guid,
             object_type: "Template",
+            //@ts-ignore
             object_guid: template.guid
           })
         }
@@ -133,6 +180,7 @@ export default class TemplatesController {
     const template = await Template.find(parseInt(params.id));
 
     if(template) {
+      //@ts-ignore
       const prevVersions = await Template.query().where("guid", template.getGuid())
       const data = template.serialize();
 
@@ -148,7 +196,9 @@ export default class TemplatesController {
 
       const prevVersion = await Template.create({
         ...data,
-        type: "review",
+        guid: null,
+        parent_template: template.id,
+        type: "review"
       })
 
       template.data = JSON.stringify(request.input("data"));
@@ -162,6 +212,78 @@ export default class TemplatesController {
         prevVersions: prevVersions,
         prevVersion: prevVersion,
         clearData: request.input("data")
+      }
+    }
+  }
+
+  public async deleteReviews({ params, response }) {
+    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
+
+    if(templates.length > 0) {
+      for (const template of templates) {
+        template.delete()
+      }
+
+      return {
+        success: true,
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false
+      }
+    }
+  }
+
+  public async deleteAllReviews({ response }) {
+    const templates = await Template.query().where("type", "review");
+
+    if(templates.length > 0) {
+      for (const template of templates) {
+        template.delete()
+      }
+
+      return {
+        success: true,
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false
+      }
+    }
+  }
+
+  public async getAllReviews({ response }) {
+    const templates = await Template.query().where("type", "review");
+
+    if(templates.length > 0) {
+      return {
+        success: true,
+        data: templates
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false,
+        data: templates
+      }
+    }
+  }
+
+  public async getReviews({ params, response }) {
+    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
+
+    if(templates.length > 0) {
+      return {
+        success: true,
+        data: templates
+      }
+    } else {
+      response.status(404)
+      return {
+        success: false,
+        data: templates
       }
     }
   }
@@ -214,6 +336,7 @@ export default class TemplatesController {
       setting = await TemplateSetting.create({
         template_id: id,
         setting_name: "conditions",
+        //@ts-ignore
         template_guid: template.getGuid(),
         data
       })
@@ -269,6 +392,7 @@ export default class TemplatesController {
                 page_id: objectId,
                 page_guid: page.getGuid(),
                 template_id: template.id,
+                //@ts-ignore
                 template_guid: template.getGuid(),
                 condition_type: condition.condition_type,
                 template_type: template.currentArea.name

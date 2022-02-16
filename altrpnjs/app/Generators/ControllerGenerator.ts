@@ -19,7 +19,6 @@ export default class ControllerGenerator extends BaseGenerator {
 
   public async run(controller: Controller): Promise<void> {
     if(! controller){
-      console.log(controller);
       return
     }
     await controller.load((loader) => {

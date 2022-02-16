@@ -69,6 +69,7 @@ export default class PagesController {
             page_id: page.id,
             page_guid: page.guid,
             template_id: template_id,
+            //@ts-ignore
             template_guid: template.guid,
             template_type: "content"
           })

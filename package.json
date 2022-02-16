@@ -91,6 +91,7 @@
         "devextreme-react": "21.1.5",
         "dom-to-image": "^2.6.0",
         "dot-prop-immutable": "^2.1.0",
+        "dotenv": "^16.0.0",
         "express-session": "^1.17.1",
         "final-form": "^4.20.2",
         "gsap": "^3.6.0",

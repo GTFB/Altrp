@@ -78,8 +78,8 @@ function loadEditorContent(EditorContent){
       "head"
     )[0];
     let script = iframe.contentWindow.document.createElement("script");
-    script.src = "http://localhost:3000/src/bundle.js";
-    script.defer = "http://localhost:3000/src/bundle.js";
+    script.src = "http://127.0.0.1:3000/src/bundle.js";
+    script.defer = "http://127.0.0.1:3000/src/bundle.js";
     head.appendChild(script);
   }
 
