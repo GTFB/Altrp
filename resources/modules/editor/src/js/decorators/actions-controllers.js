@@ -198,7 +198,8 @@ export function actionsControllers(
         value: "socket_emit",
         label: "Socket emit"
       }
-    ]
+    ],
+    locked: true,
   });
 
   actionsRepeater.addControl('email_template', {
@@ -575,7 +576,8 @@ export function actionsControllers(
     description: 'altrppagestate.alias',
     conditions: {
       type: ['data_to_csv', 'set_data', 'form']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('data', {
