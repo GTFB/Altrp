@@ -28,7 +28,7 @@ class FontsManager extends Component {
       return;
     }
     let fonts = new Set();
-    const fontsPairs = _.toPairs(this.props.altrpFonts.getData());
+      const fontsPairs = _.toPairs(this.props.altrpFonts.getData());
     fontsPairs.forEach(([key, value]) => {
       fonts.add(value);
     });

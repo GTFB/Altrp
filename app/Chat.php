@@ -13,10 +13,10 @@ Chat extends Model
     public $timestamps = false;
 
     protected $fillable = [
-      'telegram_chat_id',
+      'chat_id',
       'robot_id',
       'user_id',
-      'chart_id'
+      'node_id'
     ];
     public function setData($key, $value){
       return data_set( $this->data, $key, $value );

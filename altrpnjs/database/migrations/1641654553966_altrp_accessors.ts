@@ -16,7 +16,7 @@ export default class AltrpAccessors extends BaseSchema {
         table.bigInteger('model_id').unsigned()
         table.bigInteger('user_id').unsigned()
         table.boolean('status')
-        table.text('name', 'longtext')
+        table.text('test', 'longtext')
 
         /**
          * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

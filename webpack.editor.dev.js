@@ -12,7 +12,7 @@ module.exports = merge(common, {
     disableHostCheck: true,
     contentBase: path.join(__dirname, "resources/modules/editor/public/"),
     port: 3000,
-    publicPath: "http://localhost:3000/src/",
+    publicPath: "http://127.0.0.1:3000/src/",
     hotOnly: true,
     before: function(app, server, compiler) {
       //json data for template import export

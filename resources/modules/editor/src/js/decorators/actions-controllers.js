@@ -190,8 +190,15 @@ export function actionsControllers(
         value: 'metamask_connect',
         label: 'MetaMask Connect'
       },
-    ],
-    locked: true,
+      {
+        value: 'socket_receiver',
+        label: 'Socket receiver'
+      },
+      {
+        value: "socket_emit",
+        label: "Socket emit"
+      }
+    ]
   });
 
   actionsRepeater.addControl('email_template', {
@@ -217,6 +224,30 @@ export function actionsControllers(
       type: ['custom_code']
     },
     locked: true,
+  });
+
+  actionsRepeater.addControl('socket_name', {
+    type: CONTROLLER_TEXTAREA,
+    label: 'Name',
+    conditions: {
+      type: ["socket_emit", "socket_receiver"]
+    }
+  });
+
+  actionsRepeater.addControl('socket_type', {
+    type: CONTROLLER_TEXT,
+    label: 'Type',
+    conditions: {
+      type: ["socket_emit"]
+    }
+  });
+
+  actionsRepeater.addControl('socket_value', {
+    type: CONTROLLER_TEXTAREA,
+    label: 'Value',
+    conditions: {
+      type: ["socket_emit"]
+    }
   });
 
   actionsRepeater.addControl('aliases', {
@@ -543,9 +574,8 @@ export function actionsControllers(
     dynamic: false,
     description: 'altrppagestate.alias',
     conditions: {
-      type: ['data_to_csv', 'set_data', 'form', 'metamask_connect']
-    },
-    locked: true,
+      type: ['data_to_csv', 'set_data', 'form']
+    }
   });
 
   actionsRepeater.addControl('data', {
