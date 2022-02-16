@@ -826,7 +826,13 @@ class FrontElement {
    * @return {*}
    */
     getResponsiveLockedSetting(settingName, elementState = '', _default){
-      return getResponsiveSetting(this.getLockedSettings(), settingName, elementState, _default)
+      const setting = getResponsiveSetting(this.getLockedSettings(), settingName, elementState, _default)
+
+      if (setting === undefined) {
+        return this.getResponsiveSetting(settingName, elementState = '', _default)
+      }
+
+      return setting
     }
 
   /**
