@@ -56,7 +56,7 @@ class MediaController extends Controller
           })
           ->get();
       }
-      $media = $media->sortBy( 'title' )->values()->toArray();
+      $media = $media->sortByDesc( 'created_at' )->values()->toArray();
       return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -68,7 +68,7 @@ class MediaController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
-          ->get()->sortBy( 'altrp_media.title' )->values()->toArray();
+          ->get()->sortByDesc( 'altrp_media.created_at' )->values()->toArray();
 
     return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
   }
@@ -397,6 +397,7 @@ class MediaController extends Controller
     $filesize = filesize(Storage::path( 'public/' . $media->filename ));
     $media->filesize = $filesize > 1048576 ? round($filesize/1024/1024, 2)." MB" : round($filesize/1024, 2)." KB";
     $media->categories = $media->categoryOptions();
+    $media->media_variation = json_decode($media->media_variation, true);
     return response()->json( $media->toArray() );
 
   }
