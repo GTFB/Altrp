@@ -33,7 +33,7 @@ export default class AreasController {
     await area.related("categories").detach();
 
     for (const option of request.input("categories")) {
-      const category = await Category.find(option.value);
+      const category = await Category.query().where("guid", option.value).first();
 
       if (!category) {
         response.status(404)
@@ -71,7 +71,7 @@ export default class AreasController {
     })
 
     for (const option of request.input("categories")) {
-      const category = await Category.find(option.value);
+      const category = await Category.query().where("guid", option.value).first();
 
       if (!category) {
         response.status(404)

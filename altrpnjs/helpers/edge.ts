@@ -1,9 +1,9 @@
-import Env from "@ioc:Adonis/Core/Env";
+import getLatestVersion from "./getLatestVersion";
 
 export default function Edge(values) {
   return {
     ...values,
-    version: Env.get("ALTRP_VERSION"),
+    version: getLatestVersion(),
     token: "node"
   }
 }

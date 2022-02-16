@@ -60,6 +60,7 @@
           window.pageStorage[window.page_id] = {areas:page_areas};
         }
         window.swUrl = '{{sw}}';
+        window.__version__ = '{{version}}'
         window.altrpImageLazy = '{{ get_altrp_setting( 'altrp_image_lazy', 'none' ) }}';
         window.altrpSkeletonColor = '{{ get_altrp_setting( 'altrp_skeleton_color', '#ccc' ) }}';
         window.altrpSkeletonHighlightColor = '{{ get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) }}';

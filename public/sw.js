@@ -1,15 +1,21 @@
-importScripts('/sw/workbox-sw.js')
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.2.0/workbox-sw.js');
+
+workbox.setConfig({
+  debug: false
+});
 
 workbox.loadModule('workbox-strategies');
 
-
 const {registerRoute} = workbox.routing;
-const {CacheableResponsePlugin} = workbox.cacheableResponse;
 const {StaleWhileRevalidate} = workbox.strategies;
+const {CacheableResponsePlugin} = workbox.cacheableResponse;
 
 registerRoute(
   ({url, request}) => {
-    if(url.pathname.startsWith('/storage/media')) return true;
+
+    if(url.pathname.startsWith("/admin")) return false;
+
+    if(url.pathname.startsWith("/storage/media")) return true;
 
     switch (request.destination) {
       case "style":
@@ -21,18 +27,12 @@ registerRoute(
     return false;
   },
   new StaleWhileRevalidate({
-    cacheName: 'altrp-pages',
+    cacheName: 'altrp',
+    plugin: [
+      new CacheableResponsePlugin({statuses: [400]})
+    ]
   }),
 );
-
-
-// registerRoute(
-//   ({url}) => {
-//     console.log(url)
-//     url.pathname.startsWith('/storage/media/')
-//   },
-//   new StaleWhileRevalidate()
-// );
 
 //
 // self.addEventListener('install', function(event) {

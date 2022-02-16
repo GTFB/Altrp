@@ -22,13 +22,31 @@ export default class MenusController {
   }
 
   public async show({params}) {
-    const menu = await Menu.query().where("id", parseInt(params.id)).firstOrFail();
+
+    const menuQuery = Menu.query();
+
+    if(isNaN(params.id)) {
+      menuQuery.where("guid", params.id)
+    } else {
+      menuQuery.where("id", parseInt(params.id))
+    }
+
+    const menu = await menuQuery.firstOrFail()
 
     return menu
   }
 
   public async update({params, request, response}) {
-    const menu = await Menu.query().where("id", parseInt(params.id)).firstOrFail();
+
+    const menuQuery = Menu.query();
+
+    if(isNaN(params.id)) {
+      menuQuery.where("guid", params.id)
+    } else {
+      menuQuery.where("id", parseInt(params.id))
+    }
+
+    const menu = await menuQuery.firstOrFail()
 
     menu.children = request.input("children");
     menu.name = request.input("name");
@@ -39,7 +57,7 @@ export default class MenusController {
     await menu.related("categories").detach();
 
     for (const option of request.input("categories")) {
-      const category = await Category.find(option.value);
+      const category = await Category.query().where("guid", option.value).first();
 
       if (!category) {
         response.status(404)
@@ -61,7 +79,17 @@ export default class MenusController {
   }
 
   public async delete({params}) {
-    const menu = await Menu.query().where("id", parseInt(params.id)).firstOrFail();
+
+    const menuQuery = Menu.query();
+
+
+    if(isNaN(params.id)) {
+      menuQuery.where("guid", params.id)
+    } else {
+      menuQuery.where("id", parseInt(params.id))
+    }
+
+    const menu = await menuQuery.firstOrFail()
 
     menu.delete()
 
