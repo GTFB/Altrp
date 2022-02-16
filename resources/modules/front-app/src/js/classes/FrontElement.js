@@ -358,6 +358,7 @@ class FrontElement {
    * Получить настройку или все настройки
    * @param {string} settingName
    * @param {*} _default
+   * @param {boolean} locked
    * @return {*}
    */
   getSettings(settingName, _default = '', locked = false){
@@ -375,7 +376,7 @@ class FrontElement {
   getLockedSettings(settingName, _default = '') {
     return this.getSettings(settingName, _default, true)
   }
-  
+
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
       /**
@@ -657,7 +658,7 @@ class FrontElement {
     }
     return'';
   }
-  
+
   getLockedContent(settingName){
     if(this.component){
       return this.component.getContent(settingName)
