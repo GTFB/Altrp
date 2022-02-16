@@ -227,12 +227,6 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  styles += "&& .altrp-field-option{";
-
-  input_position && (styles += `flex-direction:${input_position};`);
-
-  styles += "}";
-
   styles += "&& .altrp-image-select{";
 
   justify_options && (styles += `justify-content:${justify_options};`);

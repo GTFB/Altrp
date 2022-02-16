@@ -133,7 +133,7 @@ class InputTextarea extends BaseElement {
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon",
+      label: "Label Icon",
       locked: true,
     });
 

@@ -921,10 +921,13 @@ class InputSelectWidget extends Component {
     );
     const content_options = this.props.element.getResponsiveSetting('content_options');
     const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
-    if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0
-      && ! model_for_options){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+    if(_.isString(content_options)) {
+      if (content_options.indexOf('{{') === 0 && ! model_for_options) {
+        options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      } else {
+        options = parseOptionsFromSettings(this.props.element.getSettings("content_options"));
+      }
+      
       if( ! _.isArray(options)){
         options = [];
       }
@@ -1163,12 +1166,11 @@ class InputSelectWidget extends Component {
       label_icon
     } = settings;
 
-    const fullWidth = element.getSettings("full_width") || false
+    const fullWidth = element.getSettings("full_width")
     this.popoverProps.onOpening = (e) => {
       if(fullWidth) {
         const inputWidth = this.inputRef.current.offsetWidth;
-
-        console.log(inputWidth, e)
+        
         e.style.width = `${inputWidth}px`
       } else if(e.style.width) {
         e.style.width = ""

@@ -837,7 +837,6 @@ function InputCheckboxComponent(settings, id) {
 
   styles += `.altrp-field-option {`;
   if (settings.input_position) {
-    console.log({position: settings.input_position, parentClass});
     styles += `flex-direction:${settings.input_position};`
   }
   styles += "}";

@@ -92,18 +92,13 @@ class InputSelect extends BaseElement {
 
     this.addControl('full_width', {
       type: CONTROLLER_SWITCHER,
-      label: 'Full width',
+      label: 'Full Width',
       locked: true,
-    });
-
-    this.addControl('remove', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Remove button',
     });
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon",
+      label: "Label Icon",
       locked: true,
     });
 
@@ -147,7 +142,8 @@ class InputSelect extends BaseElement {
     this.addControl("minimal", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
-      label: "Minimal"
+      label: "Minimal",
+      locked: true,
     });
 
     this.addControl("content_required", {
@@ -569,10 +565,32 @@ class InputSelect extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("required_style_section", {
+      tab: TAB_STYLE,
+      label: "Required"
+    });
+
+    this.addControl("required_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color"
+    });
+
+    this.addControl("required_style_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+    });
+
+    this.endControlSection();
+
     this.startControlSection("background_section", {
       tab: TAB_STYLE,
       label: "Background"
     });
+
+    this.addControl('button_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Button Background Color'
+    })
 
     this.addControl("button_gradient", {
       type: CONTROLLER_GRADIENT,
@@ -790,23 +808,6 @@ class InputSelect extends BaseElement {
     this.addControl("a_color", {
       type:   CONTROLLER_COLOR,
       label: "Icon Color"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("required_style_section", {
-      tab: TAB_STYLE,
-      label: "Required"
-    });
-
-    this.addControl("required_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
-    });
-
-    this.addControl("required_style_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
     });
 
     this.endControlSection();

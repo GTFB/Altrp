@@ -1005,8 +1005,9 @@ class InputCheckboxWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      select2_multiple: isMultiple,
-      label_icon
+      label_icon,
+      position_css_id: cssId,
+      position_css_classes: cssClasses
     } = settings;
 
     let value = this.state.value;
@@ -1101,10 +1102,13 @@ class InputCheckboxWidget extends Component {
 
     input = this.renderRepeatedInput();
 
+    console.log({settings});
+
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={`altrp-field-container ${cssClasses ? cssClasses : ''}`}
+        id={cssId ? cssId : ''}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1123,6 +1127,7 @@ class InputCheckboxWidget extends Component {
   renderRepeatedInput() {
     let { options = [] } = this.state;
     let { value = "" } = this.state;
+
     const fieldName =
       this.props.element.getFieldId() ||
       Math.random()

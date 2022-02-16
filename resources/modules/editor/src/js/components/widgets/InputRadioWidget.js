@@ -1013,8 +1013,6 @@ class InputRadioWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      options_sorting,
-      content_readonly,
       image_select_options,
       select2_multiple: isMultiple,
       label_icon
@@ -1113,10 +1111,14 @@ class InputRadioWidget extends Component {
 
     const input = this.renderRepeatedInput();
 
+    const cssId = this.props.element.getResponsiveSetting('position_css_id')
+    const cssClasses = this.props.element.getResponsiveSetting('position_css_classes')
+
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container altrp-field-radio-container "}
+        className={`altrp-field-container altrp-field-radio-container ${cssClasses ? cssClasses : ''}`}
+        id={cssId ? cssId : ''}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1133,6 +1135,7 @@ class InputRadioWidget extends Component {
    */
   renderRepeatedInput() {
     const inline = this.props.element.getResponsiveSetting("vertical_radio", "", false);
+    const radioPosition = this.props.element.getResponsiveSetting('radio_position')
 
     const { options = [] } = this.state;
     let { value = "" } = this.state;
@@ -1149,7 +1152,7 @@ class InputRadioWidget extends Component {
     return (
       <div className="altrp-field-subgroup">
         <RadioGroup
-          className="altrp-field-radio-group"
+          className={`altrp-field-radio-group`}
           name={`${formID}-${fieldName}`}
           inline={!inline}
           onChange={this.onChange}
@@ -1168,7 +1171,7 @@ class InputRadioWidget extends Component {
             }
             return (
               <Radio
-                className={`altrp-field-radio ${checked ? "active" : ""}`}
+                className={`altrp-field-radio ${checked ? "active" : ""} ${radioPosition == 'right' ? 'bp3-align-right' : ''}`}
                 label={option.label}
                 value={option.value}
                 key={`${fieldName}-${idx}`}

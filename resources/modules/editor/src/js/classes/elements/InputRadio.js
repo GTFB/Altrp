@@ -110,7 +110,7 @@ class InputRadio extends BaseElement {
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon",
+      label: "Label Icon",
       locked: true,
     });
 
@@ -138,21 +138,9 @@ class InputRadio extends BaseElement {
       ]
     });
 
-    this.addControl("content_placeholder", {
-      type: CONTROLLER_TEXT,
-      label: "Placeholder",
-      default: "Placeholder"
-    });
-
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required",
-      locked: true,
-    });
-
-    this.addControl("content_readonly", {
-      type: CONTROLLER_SWITCHER,
-      label: "Readonly",
       locked: true,
     });
 
@@ -160,32 +148,6 @@ class InputRadio extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Timestamp",
       default: false
-    });
-
-    this.addControl("nulled_option_title", {
-      type: CONTROLLER_TEXT,
-      label: "Nulled Option Label"
-    });
-
-    this.addControl("options_sorting", {
-      type: CONTROLLER_SELECT,
-      label: "Options Sorting",
-      default: "",
-      options: [
-        {
-          value: "",
-          label: "None"
-        },
-        {
-          value: "asc",
-          label: "ASC"
-        },
-        {
-          value: "desc",
-          label: "DESC"
-        }
-      ],
-      locked: true,
     });
 
     this.addControl("model_for_options", {
@@ -199,7 +161,7 @@ class InputRadio extends BaseElement {
 
     this.addControl("params_for_update", {
       type: CONTROLLER_TEXTAREA,
-      label: "Params for Update Options",
+      label: "Params For Update Options",
       conditions: {
         "model_for_options!": ""
       },
@@ -209,7 +171,7 @@ class InputRadio extends BaseElement {
 
     this.addControl("params_as_filters", {
       type: CONTROLLER_SWITCHER,
-      label: "Use Params as Filters",
+      label: "Use Params As Filters",
       default: false,
       conditions: {
         "params_for_update!": ""
@@ -369,6 +331,18 @@ class InputRadio extends BaseElement {
       label: "Label"
     });
 
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "%",
+        size: null
+      },
+      units: ["%", "px", "vw"],
+      max: 100,
+      min: 0
+    });
+
     this.addControl("label_style_spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
@@ -382,15 +356,6 @@ class InputRadio extends BaseElement {
       locked: true,
     });
 
-    this.addControl("label_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
     this.addControl("label_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
@@ -398,6 +363,15 @@ class InputRadio extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
+    });
+
+    this.addControl("label_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
     });
 
     this.addControl("label_style_font_color", {
@@ -453,14 +427,10 @@ class InputRadio extends BaseElement {
       // }
     });
 
-    this.addControl("label_width", {
+    this.addControl("icon_size", {
       type: CONTROLLER_SLIDER,
-      label: "Label Width",
-      default: {
-        unit: "%",
-        size: null
-      },
-      units: ["%", "px", "vw"],
+      label: "Icon Size",
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 0
     });
@@ -473,7 +443,7 @@ class InputRadio extends BaseElement {
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon color"
+      label: "Icon Color"
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -485,14 +455,6 @@ class InputRadio extends BaseElement {
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
-    });
-
-    this.addControl("icon_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Icon Size",
-      units: ["px", "%", "vh", "vw"],
-      max: 100,
-      min: 0
     });
 
     this.addControl("cross_color", {
@@ -526,30 +488,9 @@ class InputRadio extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("font_style_section", {
-      tab: TAB_STYLE,
-      label: "Font"
-    });
-
-    this.addControl("field_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.addControl("field_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
-    this.endControlSection();
-
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: "Radio Position"
     });
 
     this.addControl("field_size", {
@@ -599,7 +540,7 @@ class InputRadio extends BaseElement {
 
     this.addControl("position_z_index", {
       type: CONTROLLER_NUMBER,
-      label: "Z-index",
+      label: "Z-Index",
       default: 0
     });
 
@@ -611,6 +552,27 @@ class InputRadio extends BaseElement {
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
       label: "CSS Classes"
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("font_style_section", {
+      tab: TAB_STYLE,
+      label: "Font"
+    });
+
+    this.addControl("field_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic"
+    });
+
+    this.addControl("field_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
     });
 
     this.endControlSection();
@@ -659,12 +621,12 @@ class InputRadio extends BaseElement {
 
     this.addControl("background_style_dot", {
       type: CONTROLLER_COLOR,
-      label: "Active dot color"
+      label: "Active Dot Color"
     });
 
     this.addControl("size_style_dot", {
       type: CONTROLLER_SLIDER,
-      label: "Active dot size",
+      label: "Active Dot Size",
       default: {
         size: 28,
         unit: "%"
@@ -737,7 +699,7 @@ class InputRadio extends BaseElement {
 
     this.addControl("box_shadow", {
       type: CONTROLLER_SHADOW,
-      label: "Box shadow",
+      label: "Box Shadow",
       default: {
         blur: 0,
         horizontal: 0,
@@ -771,35 +733,26 @@ class InputRadio extends BaseElement {
 
     this.startControlSection("radio_checkbox_styles", {
       tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
+      label: "Radio Styles"
     });
 
-    this.addControl("input_position", {
-      label: "Position",
+    this.addControl('radio_position', {
       type: CONTROLLER_SELECT,
+      label: 'Radio Position',
       options: [
         {
-          label: "Left",
-          value: "row"
+          label: 'Left',
+          value: 'left',
         },
         {
-          label: "Top",
-          value: "column"
-        },
-        {
-          label: "Right",
-          value: "row-reverse"
-        },
-        {
-          label: "Bottom",
-          value: "column-reverse"
+          label: 'Right',
+          value: 'right'
         }
-      ],
-      default: "left"
-    });
+      ]
+    })
 
     this.addControl("vertical_radio", {
-      label: "vertical",
+      label: "Vertical",
       type: CONTROLLER_SWITCHER
     });
 
@@ -821,38 +774,6 @@ class InputRadio extends BaseElement {
         },
       ],
       locked: true,
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("mismatch_message_styles", {
-      tab: TAB_STYLE,
-      label: "Validation Error Message",
-      conditions: { "mask_mismatch_message!": [""] }
-    });
-
-    this.addControl("mismatch_message_margin", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Margin",
-      default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
-    });
-
-    this.addControl("mismatch_message_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
-    });
-
-    this.addControl("mismatch_message_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color"
-    });
-
-    this.addControl("mismatch_message_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
     });
 
     this.endControlSection();
