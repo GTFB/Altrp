@@ -14,11 +14,12 @@ const sessionConfig: SessionConfig = {
   driver: Env.get('SESSION_DRIVER', 'cookie'),
   cookieName: 'adonis-session',
   clearWithBrowser: false,
-  age: Env.get('SESSION_LIFETIME','2h'),
+  age: Env.get('SESSION_LIFETIME',7200),
   cookie: {
       domain: '',
       path: '/',
-      maxAge: '2h',
+    //@ts-ignore
+      maxAge: 7200,
       httpOnly: true,
       secure: false,
       sameSite: false,

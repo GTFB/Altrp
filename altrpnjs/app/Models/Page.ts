@@ -343,7 +343,6 @@ export default class Page extends BaseModel {
       (await Promise.all(altrpSettings.altrpMenus
         .map(async (menuGuid) =>  await Menu.query().where('guid', menuGuid).select('*').first()
       ))).filter(menu => menu)
-    console.log(fonts);
     altrpRouting.setGlobal('fonts', fonts)
 
     return altrpSettings
