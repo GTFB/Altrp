@@ -140,6 +140,10 @@ ${_.uniqBy(
   private _getProdColumnsContent(): string {
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
+decorate([
+  (0, Orm_1.column)({ isPrimary: true }),
+  metadata("design:type", Number)
+], Area.prototype, "id", void 0);
 ${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').join('')}
 `
   }
@@ -147,6 +151,8 @@ ${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').j
   private _getDevColumnsContent(): string {
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
+  @Orm.column({ isPrimary: true })
+  public id: number
 ${columns.map(column => column.renderForModel()).join('')}
 `
   }

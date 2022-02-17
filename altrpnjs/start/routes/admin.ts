@@ -153,6 +153,9 @@ Route.group(() => {
     Route.get('/media', 'admin/MediaController.index')
     Route.post('/media', 'admin/MediaController.store')
     Route.delete('/media/:id', 'admin/MediaController.destroy')
+    Route.get('media_settings', async({response})=>{
+      return response.json([])
+    });
     /**
      * Settings
      */

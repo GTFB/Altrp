@@ -318,8 +318,8 @@ export default class Source extends BaseModel {
     const query = ${modelClassName}.query();
 
     let search = httpContext.request.qs().s;
-    let page = httpContext.request.qs().page;
-    let limit = httpContext.request.qs().pageSize;
+    let page = parseInt(httpContext.request.qs().page);
+    let limit = parseInt(httpContext.request.qs().pageSize);
     let filters = {};
 
     if(httpContext.request.qs().filters){
@@ -342,10 +342,13 @@ export default class Source extends BaseModel {
       `)}
     }
 
+    if(page && limit){
+      query.offset((page - 1) * limit).limit(limit)
+    }
 
     const order = httpContext.request.qs()?.order === 'asc' ? 'asc' : 'desc';
     query.orderBy(httpContext.request.qs()?.order_by || 'id', order);
-
+    return await query.select('*')
     `;
   }
 

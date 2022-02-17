@@ -258,20 +258,9 @@ export default class ModelsController {
 
   public async showModel(httpContext: HttpContextContract) {
     const id = parseInt(httpContext.params.id);
-
-
-    const model = await Model.query().where("id", id).firstOrFail();
-
-    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
-
     try {
-     const ControllerClass = isProd() ? (await require(controllerName)).default
-       : (await import(controllerName)).default
-
-      const controller = new ControllerClass()
-
       return {
-        data: await controller.index(httpContext),
+        data: await Controller.callControllerMethod(id, 'index', httpContext),
         success: true
       }
     } catch (e) {
