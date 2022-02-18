@@ -13,7 +13,7 @@ export default class ModelGenerator extends BaseGenerator {
 
   public static directory = app_path('/AltrpModels/')
   public static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpModel.stub`)
-  public static ext = '.ts'
+  public static ext = isProd() ? '.js': '.ts'
   private model: Model
   private table: Table
   private altrp_relationships: Relationship[] = []
@@ -141,9 +141,9 @@ ${_.uniqBy(
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
 decorate([
-  (0, Orm_1.column)({ isPrimary: true }),
+  (0, Orm.column)({ isPrimary: true }),
   metadata("design:type", Number)
-], Area.prototype, "id", void 0);
+], ${this.model.name}.prototype, "id", void 0);
 ${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').join('')}
 `
   }

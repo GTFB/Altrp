@@ -144,7 +144,7 @@ export default class Source extends BaseModel {
   renderForController(modelClassName:string):string {
     this.prepareContent()
     return `
-  public async ${this.getMethodName()}(httpContext){
+  async ${this.getMethodName()}(httpContext){
     ${this.renderRolesCheck()}
     ${this.renderPermissionsCheck()}
     ${this.renderMethodBody(modelClassName)}

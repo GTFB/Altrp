@@ -64,10 +64,12 @@ export default class Controller extends BaseModel {
     if(! model){
       throw new NotFoundException('Model not Found', 404, NotFoundException.code);
     }
-    const controllerName = base_path(`/app/AltrpControllers/${model.name}controller`)
-    let controller = isProd() ?
-      (new (await import(controllerName)).default)
-      : new (require(controllerName).default)
+    const controllerName = base_path(`/app/AltrpControllers/${model.name}Controller`)
+    if(isProd()){
+      require.cache = {}
+    }
+    let controller = isProd() ? new (require(controllerName).default)
+      :  (new (await import(controllerName)).default)
     if( ! _.isFunction(controller[method])){
       throw new NotFoundException('Model not Found', 404, NotFoundException.code);
     }
