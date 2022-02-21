@@ -10,7 +10,6 @@
     <meta property="og:title" content="{{title}}">
     <title>{{ title }}</title>
 
-    <title>altrp || FRONT APP</title>
     <script src="/data/current-user" defer></script>
 
 {{{fonts}}}
@@ -49,7 +48,7 @@
       <script>
         /* <![CDATA[ */
         window.altrpPages = {{{ JSON.stringify( pages) }}};
-        window.altrp = {{{JSON.stringify(altrp)}}};
+        window.altrp = {{{JSON.stringify(_altrp)}}};
         window.altrpElementsLists = [{{{ elements_list.map(e=>`'${e}'`) }}}];
         window.pageStorage = {};
         window.ALTRP_DEBUG = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_debug', false ) ) }}};

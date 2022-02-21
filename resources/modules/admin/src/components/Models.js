@@ -122,7 +122,7 @@ class Models extends Component {
       this.setState(state => {
         return {
           ...state,
-          modelsDidMount: res.models.filter(item => item.id >= 5),
+          modelsDidMount: res.models,
         }
       });
     }
@@ -164,7 +164,7 @@ class Models extends Component {
       this.setState(state => {
         return {
           ...state,
-          models: res.models.filter(item => item.id >= 5),
+          models: res.models,
           modelsSearch: urlS === null ? this.state.modelsSearch : urlS,
           modelsPageCount: res.pageCount,
           activeCategory: urlCategories === null ? 'All' : urlCategories
@@ -201,7 +201,7 @@ class Models extends Component {
       } else {
         this.setState(state => ({
           ...state,
-          models: models.filter(item => item.id >= 5),
+          models: models,
           activeCategory: guid
         }))
       }
@@ -220,7 +220,7 @@ class Models extends Component {
       } else {
         this.setState(state => ({
           ...state,
-          models: models.filter(item => item.id >= 5),
+          models: models,
           activeCategory: all
         }))
       }

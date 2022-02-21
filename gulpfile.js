@@ -105,7 +105,8 @@ function altrpJSZip() {
     '!./altrpnjs/build/app/AltrpModels/**/*',
     '!./altrpnjs/build/app/AltrpControllers/**/*',
     '!./altrpnjs/build/public/altrp-plugins/**/*',
-  ], {dot: true,}).pipe(zip(filename, {compress: 9,}))
+    '!./altrpnjs/build/public/app/media/**/*',
+  ], {dot: true,}).pipe(zip(filename))
     .pipe(gulp.dest('../'))
     .pipe(notify({
       message: 'Архив готов',
@@ -175,6 +176,6 @@ exports.packTest = () => {
 
 // exports.packJS = ()=>{return altrpJSZip()};
 exports.packJS = gulp.series(copyPublicToAdonis, altrpJSZip);
-exports.altrpJSZip = () => {
+  exports.altrpJSZip = () => {
   return altrpJSZip()
 };

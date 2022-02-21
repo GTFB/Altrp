@@ -1470,8 +1470,8 @@ function getPageSettings( $page_id ): array
 
           if($element["name"] === "menu") {
             $guid = data_get($element, "settings.menu");
-            $menu = Menu::where("guid", $guid)->get()[0];
             try {
+              $menu = Menu::where("guid", $guid)->get()[0];
               if($menu) {
                 $settings["altrpMenus"][] = $menu;
               }
@@ -1889,8 +1889,8 @@ function print_statics( string $type, string $place, $attributes  = []): string
  * @param string $place
  * @return string
  */
-function str_replace_once($search, $replace, $text) 
-{ 
-   $pos = strpos($text, $search); 
-   return $pos!==false ? substr_replace($text, $replace, $pos, strlen($search)) : $text; 
-} 
+function str_replace_once($search, $replace, $text)
+{
+   $pos = strpos($text, $search);
+   return $pos!==false ? substr_replace($text, $replace, $pos, strlen($search)) : $text;
+}

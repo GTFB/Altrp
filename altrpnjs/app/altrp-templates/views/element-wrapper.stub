@@ -1,0 +1,5 @@
+
+@set('element{{id}}_settings', {{{settings}}})~
+@if(allowedForUser(element{{id}}_settings, user))~
+<div {{{wrapper_attributes}}}>{{{element_content}}}</div>
+@end~

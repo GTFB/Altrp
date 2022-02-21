@@ -43,7 +43,7 @@ class AdminModelsDropList extends React.Component {
                         ) : (
                             <ul
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist_active"
-                                    : (this.props.models.filter(item => item.value >= 5).length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
+                                    : (this.props.models.length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
                                 {
                                     this.props.models
                                         .sort((a, b) => {
@@ -52,7 +52,7 @@ class AdminModelsDropList extends React.Component {
                                             if (a.label.toUpperCase() > b.label.toUpperCase())
                                                 return 1;
                                             return 0;
-                                        }).filter(item => item.value >= 5)
+                                        })
                                         .map(({value: id, label}) => (
                                             <li key={id}>
                                                 <Link
@@ -100,7 +100,7 @@ class AdminModelsDropList extends React.Component {
                         ) : (
                             <ul
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist models-sublist__item"
-                                    : (this.props.models.filter(item => item.value >= 5).length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
+                                    : (this.props.models.length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
                                 {
                                     this.props.models
                                         .sort((a, b) => {
@@ -109,7 +109,7 @@ class AdminModelsDropList extends React.Component {
                                             if (a.label.toUpperCase() > b.label.toUpperCase())
                                                 return 1;
                                             return 0;
-                                        }).filter(item => item.value >= 5)
+                                        })
                                         .map(({value: id, label}) => (
                                             <li key={id}>
                                                 <Link

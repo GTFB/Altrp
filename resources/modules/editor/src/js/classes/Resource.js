@@ -454,5 +454,5 @@ if(!window.__token_interval && ! window.SSR){
   window.__token_interval = setInterval(()=>{
     const resource = new Resource({route: '/ajax/_token'}, )
     resource.getAll()
-  }, 10000)
+  }, 72000000)
 }
