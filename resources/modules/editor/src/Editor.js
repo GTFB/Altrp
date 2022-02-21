@@ -388,8 +388,19 @@ class Editor extends Component {
     ) {
       navigationActive = " active";
     }
+    let list = this.clients[guid]
+    if(! list){
+      return
+    }
+    let sockets = list.sockets
+    sockets = sockets.filter(_s => _s !== socket)
+    if(! sockets.length){
+      delete this.clients[guid]
+    }
+    this.clients[guid]['sockets'] = sockets
     return (
       <DndProvider backend={HTML5Backend}>
+
         <div
           className={templateClasses}
           onClick={this.onClick}

@@ -75,7 +75,6 @@ export default class IndicesController {
     }
 
     await auth.use('web').attempt(email, password, remember)
-    // session.regenerate()
     if (! auth.use('web').isAuthenticated && request.input('altrpLogin')) {
       await auth.use('web').authenticate()
 

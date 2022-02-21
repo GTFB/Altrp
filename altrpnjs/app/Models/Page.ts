@@ -28,6 +28,7 @@ import Role from "App/Models/Role";
 import Template from "App/Models/Template";
 import Category from "App/Models/Category";
 import PageDatasource from "App/Models/PageDatasource";
+import mbParseJSON from "../../helpers/mbParseJSON";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -276,7 +277,11 @@ export default class Page extends BaseModel {
       }
       for (let template of templates) {
         {
-          const root_element = data_get(template, 'data')
+          let root_element = data_get(template, 'data')
+
+          if(_.isString(root_element)) {
+            root_element = mbParseJSON(root_element)
+          }
           if (root_element) {
             recurseMapElements(root_element, function (element) {
 
@@ -338,7 +343,6 @@ export default class Page extends BaseModel {
       (await Promise.all(altrpSettings.altrpMenus
         .map(async (menuGuid) =>  await Menu.query().where('guid', menuGuid).select('*').first()
       ))).filter(menu => menu)
-
     altrpRouting.setGlobal('fonts', fonts)
 
     return altrpSettings

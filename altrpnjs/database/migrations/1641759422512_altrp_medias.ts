@@ -39,7 +39,7 @@ export default class AltrpMedias extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
-      table.timestamp('deleted_at', { useTz: true })
+      table.timestamp('deleted_at', { useTz: true }).nullable()
 
       table.foreign('author').references('users.id')
     })

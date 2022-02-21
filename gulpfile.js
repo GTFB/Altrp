@@ -105,6 +105,7 @@ function altrpJSZip() {
     '!./altrpnjs/build/app/AltrpModels/**/*',
     '!./altrpnjs/build/app/AltrpControllers/**/*',
     '!./altrpnjs/build/public/altrp-plugins/**/*',
+    '!./altrpnjs/build/public/app/media/**/*',
   ], {dot: true,}).pipe(zip(filename))
     .pipe(gulp.dest('../'))
     .pipe(notify({
@@ -115,8 +116,28 @@ function altrpJSZip() {
 
 }
 
-function copyPublicToAdonis() {
-  gulp.src([
+// function copyPublicToAdonis(cb) {
+//   console.log(cb);
+//   gulp.src([
+//       './public/**/*',
+//       '!./public/storage/**',
+//       '!./public/altrp-plugins/**',
+//       '!./public/.htaccess',
+//       '!./public/*.php',
+//       '!./public/web.config',
+//       '!./public/mix-manifest.json',
+//     ]).pipe(gulp.dest('./altrpnjs/build/public'))
+//
+//     gulp.src([
+//       './altrpnjs/config/file-types.json'
+//     ]).pipe(gulp.dest('./altrpnjs/build/config'))
+//   return gulp.src([
+//     './README.md'
+//   ]).pipe(gulp.dest('./altrpnjs/build/'))
+// }
+const copyPublicToAdonis = gulp.parallel(
+  cb=>{
+    return gulp.src([
       './public/**/*',
       '!./public/storage/**',
       '!./public/altrp-plugins/**',
@@ -125,13 +146,18 @@ function copyPublicToAdonis() {
       '!./public/web.config',
       '!./public/mix-manifest.json',
     ]).pipe(gulp.dest('./altrpnjs/build/public'))
-
+  },
+  cb=>{
     return gulp.src([
       './altrpnjs/config/file-types.json'
     ]).pipe(gulp.dest('./altrpnjs/build/config'))
-
-}
-
+  },
+  cb=>{
+    return gulp.src([
+    './README.md'
+  ]).pipe(gulp.dest('./altrpnjs/build/'))
+  }
+);
 async function clearJSBuild() {
   const _p = __dirname + `${path.sep}altrpnjs${path.sep}build`
   if (fs.existsSync(_p)) {
@@ -150,6 +176,6 @@ exports.packTest = () => {
 
 // exports.packJS = ()=>{return altrpJSZip()};
 exports.packJS = gulp.series(copyPublicToAdonis, altrpJSZip);
-exports.altrpJSZip = () => {
+  exports.altrpJSZip = () => {
   return altrpJSZip()
 };
