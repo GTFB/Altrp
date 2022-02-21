@@ -109,7 +109,7 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon",
+      label: "Label Icon",
       locked: true,
     });
 
@@ -533,7 +533,7 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("position_z_index", {
       type: CONTROLLER_NUMBER,
-      label: "Z-index",
+      label: "Z-Index",
       default: 0
     });
 

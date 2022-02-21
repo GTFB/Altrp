@@ -212,7 +212,7 @@ class SchedulerWidget extends Component {
   }
 
   render() {
-    const lang = this.props.element.getResponsiveSetting('lang', '', 'en-gb')
+    const lang = this.props.element.getResponsiveLockedSetting('lang', '', 'en-gb')
     const popupText = this.popupLocalization[lang]
     return (
       <div className="popup-wrapper">

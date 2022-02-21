@@ -1,4 +1,4 @@
-import {gradientStyled, styledString} from "../../helpers/styles";
+import {colorPropertyStyled, gradientStyled, styledString} from "../../helpers/styles";
 const {getResponsiveSetting} = window.altrpHelpers;
 
 /**
@@ -123,20 +123,34 @@ export default function getInputSelectStyles(settings) {
     ()=>{
       let styles = '.bp3-button.bp3-button{';
       let button_gradient = getResponsiveSetting(settings, 'button_gradient')
-      if(button_gradient){
+
+      if(button_gradient?.isWithGradient){
         styles += gradientStyled(button_gradient)
+      } else {
+        styles += colorPropertyStyled(getResponsiveSetting(settings, 'button_background_color'), 'background-color')
+        styles += 'background-blend-mode: color-burn;'
       }
+
       styles += '}'
       styles += '.bp3-button:hover{'
       button_gradient = getResponsiveSetting(settings, 'button_gradient', ':hover')
-      if(button_gradient){
+
+      if(button_gradient?.isWithGradient){
         styles += gradientStyled(button_gradient)
+      } else {
+        styles += colorPropertyStyled(getResponsiveSetting(settings, 'button_background_color', ':hover'), 'background-color')
+        styles += 'background-blend-mode: color-burn;'
       }
+      
       styles += '}'
       styles += '.bp3-button.bp3-button:active{'
       button_gradient = getResponsiveSetting(settings, 'button_gradient', '.active')
-      if(button_gradient){
+
+      if(button_gradient?.isWithGradient){
         styles += gradientStyled(button_gradient)
+      } else {
+        styles += colorPropertyStyled(getResponsiveSetting(settings, 'button_background_color', '.active'), 'background-color', '!important')
+        styles += 'background-blend-mode: color-burn;'
       }
       styles += '}'
       return styles;

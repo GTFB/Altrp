@@ -42,7 +42,7 @@ class ImageLightboxWidget extends Component {
       this.render = props.baseRender(this);
     }
 
-    this.lightboxID = props.element.getResponsiveSetting('l_id');
+    this.lightboxID = props.element.getResponsiveLockedSetting('l_id');
   }
 
   _componentDidMount() {
@@ -60,7 +60,7 @@ class ImageLightboxWidget extends Component {
     if(isEditor()){
       return;
     }
-    const lightBoxID = this.props.element.getResponsiveSetting('l_id')
+    const lightBoxID = this.props.element.getResponsiveLockedSetting('l_id')
     if(! lightBoxID){
       return
     }
@@ -73,7 +73,7 @@ class ImageLightboxWidget extends Component {
   }
 
   _componentWillUnmount() {
-    const lightBoxID = this.props.element.getResponsiveSetting('l_id')
+    const lightBoxID = this.props.element.getResponsiveLockedSetting('l_id')
     if(! lightBoxID){
       return
     }
@@ -85,7 +85,7 @@ class ImageLightboxWidget extends Component {
    */
   getMedia(){
     const {element} = this.props
-    let media = element.getResponsiveSetting('content_media');
+    let media = element.getResponsiveLockedSetting('content_media');
 
     /**
      * Для карточки модель может быть другой
@@ -98,10 +98,10 @@ class ImageLightboxWidget extends Component {
      * Возьмем данные из окружения
      */
     if (
-      element.getResponsiveSetting('content_path') &&
-      _.isObject(getDataByPath(element.getResponsiveSetting('content_path'), null, model))
+      element.getResponsiveLockedSetting('content_path') &&
+      _.isObject(getDataByPath(element.getResponsiveLockedSetting('content_path'), null, model))
     ) {
-      media = getDataByPath(element.getResponsiveSetting('content_path'), null, model);
+      media = getDataByPath(element.getResponsiveLockedSetting('content_path'), null, model);
       /**
        * Проверим массив ли с файлами content_path
        */
@@ -111,19 +111,19 @@ class ImageLightboxWidget extends Component {
         media.assetType = "media";
       }
     } else if (
-      element.getResponsiveSetting('content_path') &&
-      _.isString(getDataByPath(element.getResponsiveSetting('content_path'), null, model))
+      element.getResponsiveLockedSetting('content_path') &&
+      _.isString(getDataByPath(element.getResponsiveLockedSetting('content_path'), null, model))
     ) {
-      media = getDataByPath(element.getResponsiveSetting('content_path'), null, model);
+      media = getDataByPath(element.getResponsiveLockedSetting('content_path'), null, model);
       media = {
         assetType: "media",
         url: media,
         name: "null"
       };
-    } else if (this.props.element.getResponsiveSetting('default_url')) {
+    } else if (this.props.element.getResponsiveLockedSetting('default_url')) {
       media = {
         assetType: "media",
-        url: this.props.element.getResponsiveSetting('default_url'),
+        url: this.props.element.getResponsiveLockedSetting('default_url'),
         name: "default"
       };
     }
@@ -132,8 +132,8 @@ class ImageLightboxWidget extends Component {
 
   render() {
     const {element} = this.props;
-    const cursorPointer = element.getResponsiveSetting("cursor_pointer", false);
-    const background_image = element.getResponsiveSetting(
+    const cursorPointer = element.getResponsiveLockedSetting("cursor_pointer", false);
+    const background_image = element.getResponsiveLockedSetting(
       "background_image",
       {}
     );
@@ -143,12 +143,12 @@ class ImageLightboxWidget extends Component {
       classNames += " cursor-pointer"
     }
 
-    let width = this.props.element.getResponsiveSetting('width_size');
-    let height = this.props.element.getResponsiveSetting('height_size');
+    let width = this.props.element.getResponsiveLockedSetting('width_size');
+    let height = this.props.element.getResponsiveLockedSetting('height_size');
     width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
     height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
 
-    if (_.get(this.props.element.getResponsiveSetting('height_size'), 'size', '100') === "0") {
+    if (_.get(this.props.element.getResponsiveLockedSetting('height_size'), 'size', '100') === "0") {
       height = ""
     }
 
@@ -169,7 +169,7 @@ class ImageLightboxWidget extends Component {
       <AltrpLightbox
         images={[(media ? media.url : "")]}
         currentUrl={this.addedURL}
-        lightboxID={this.props.element.getResponsiveSetting('l_id')}
+        lightboxID={this.props.element.getResponsiveLockedSetting('l_id')}
         settings={{
           onCloseRequest: () => this.setState({lightbox: false})
         }}

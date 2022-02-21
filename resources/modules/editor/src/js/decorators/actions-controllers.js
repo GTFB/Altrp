@@ -39,7 +39,8 @@ export function actionsControllers(
       label: 'Make event when input end?',
       type: CONTROLLER_SWITCHER,
       responsive: false,
-      default: false
+      default: false,
+      locked: true,
     });
 
     element.addControl(idPrefix + 'change_end_delay', {
@@ -48,7 +49,8 @@ export function actionsControllers(
       responsive: false,
       conditions: {
         [`${idPrefix + 'change_end'}`]: true
-      }
+      },
+      locked: true,
     });
   }
 
@@ -196,7 +198,8 @@ export function actionsControllers(
         value: "socket_emit",
         label: "Socket emit"
       }
-    ]
+    ],
+    locked: true,
   });
 
   actionsRepeater.addControl('email_template', {
@@ -209,7 +212,8 @@ export function actionsControllers(
     nullable: true,
     conditions: {
       type: 'email'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('code', {
@@ -219,7 +223,8 @@ export function actionsControllers(
     label: 'Code',
     conditions: {
       type: ['custom_code']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('socket_name', {
@@ -253,7 +258,8 @@ export function actionsControllers(
     label: 'Aliases',
     conditions: {
       type: ['update_current_datasources']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('milliseconds', {
@@ -263,7 +269,8 @@ export function actionsControllers(
     label: 'Duration in Milliseconds',
     conditions: {
       type: ['delay', 'play_sound']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('loop', {
@@ -273,7 +280,8 @@ export function actionsControllers(
     label: 'Loop (Caution)',
     conditions: {
       type: ['play_sound']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('action', {
@@ -283,7 +291,8 @@ export function actionsControllers(
     label: 'Add Action Name',
     conditions: {
       type: ['trigger']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('forms_change', {
@@ -303,7 +312,8 @@ export function actionsControllers(
     ],
     conditions: {
       type: 'forms_manipulate'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('form_method', {
@@ -331,7 +341,8 @@ export function actionsControllers(
     ],
     conditions: {
       type: 'form'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('custom_headers', {
@@ -340,7 +351,8 @@ export function actionsControllers(
     responsive: false,
     conditions: {
       type: 'form'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('from', {
@@ -349,7 +361,8 @@ export function actionsControllers(
     responsive: false,
     conditions: {
       type: 'email'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('to', {
@@ -358,7 +371,8 @@ export function actionsControllers(
     responsive: false,
     conditions: {
       type: 'email'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('subject', {
@@ -367,7 +381,8 @@ export function actionsControllers(
     responsive: false,
     conditions: {
       type: 'email'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('attachments', {
@@ -376,7 +391,8 @@ export function actionsControllers(
     responsive: false,
     conditions: {
       type: 'email'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('form_id', {
@@ -385,7 +401,8 @@ export function actionsControllers(
     responsive: false,
     conditions: {
       type: ['form', 'login']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('name', {
@@ -401,7 +418,8 @@ export function actionsControllers(
         'table_to_xml',
         'table_to_xls'
       ]
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('form_url', {
@@ -411,7 +429,8 @@ export function actionsControllers(
     description: '/ajax/models/tests/{{id}}',
     conditions: {
       type: ['form', 'redirect']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('media_url', {
@@ -420,7 +439,8 @@ export function actionsControllers(
     dynamic: false,
     conditions: {
       type: ['play_sound']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('forms_bulk', {
@@ -430,7 +450,8 @@ export function actionsControllers(
     dynamic: false,
     conditions: {
       type: ['form']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('bulk_path', {
@@ -440,7 +461,8 @@ export function actionsControllers(
     conditions: {
       type: ['form'],
       forms_bulk: true
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('back', {
@@ -450,7 +472,8 @@ export function actionsControllers(
     dynamic: false,
     conditions: {
       type: ['redirect']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('outer', {
@@ -460,7 +483,8 @@ export function actionsControllers(
     dynamic: false,
     conditions: {
       type: ['redirect']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('elements_ids', {
@@ -475,7 +499,8 @@ export function actionsControllers(
         'elements_to_pdf',
         'forms_manipulate'
       ]
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('template_name', {
@@ -485,7 +510,8 @@ export function actionsControllers(
     description: 'template_name',
     conditions: {
       type: ['table_to_xls']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('all_sources', {
@@ -495,7 +521,8 @@ export function actionsControllers(
     dynamic: false,
     conditions: {
       type: ['table_to_xls']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('all_sources_path', {
@@ -506,6 +533,7 @@ export function actionsControllers(
     conditions: {
       'all_sources': true
     },
+    locked: true,
   });
 
   actionsRepeater.addControl('element_id', {
@@ -523,7 +551,8 @@ export function actionsControllers(
         'table_to_xls'
       ],
       // 'all_sources': false
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('template_data', {
@@ -535,7 +564,8 @@ export function actionsControllers(
     conditions: {
       type: ['table_to_xls'],
       'all_sources': false
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('path', {
@@ -546,7 +576,8 @@ export function actionsControllers(
     description: 'altrppagestate.alias',
     conditions: {
       type: ['data_to_csv', 'set_data', 'form']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('data', {
@@ -557,7 +588,8 @@ export function actionsControllers(
     description: 'param_1 | {{altrpdata.alias}}',
     conditions: {
       type: ['form']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('condition_left', {
@@ -568,7 +600,8 @@ export function actionsControllers(
     description: 'altrpdata.alias.props',
     conditions: {
       type: ['condition']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('compare', {
@@ -579,7 +612,8 @@ export function actionsControllers(
     options: CONDITIONS_OPTIONS,
     conditions: {
       type: 'condition'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('condition_right', {
@@ -590,7 +624,8 @@ export function actionsControllers(
     description: 'Data Template ({{altrpdata.alias.props}}) or Value',
     conditions: {
       type: ['condition']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('set_type', {
@@ -630,7 +665,8 @@ export function actionsControllers(
     ],
     conditions: {
       type: 'set_data'
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('count', {
@@ -641,7 +677,8 @@ export function actionsControllers(
     conditions: {
       type: ['set_data'],
       set_type: ['push_items', 'decrement', 'increment']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('value', {
@@ -653,7 +690,8 @@ export function actionsControllers(
     conditions: {
       type: ['set_data'],
       set_type: ['set', 'toggle_set', 'push_items']
-    }
+    },
+    locked: true,
   });
 
   actionsRepeater.addControl('popup_id', {
@@ -671,7 +709,8 @@ export function actionsControllers(
     responsive: false,
     conditions: {
       type: ['toggle_popup']
-    }
+    },
+    locked: true,
   });
 
   /**
@@ -741,7 +780,8 @@ export function actionsControllers(
     ],
     dynamic: false,
     responsive: false,
-    label: 'Method'
+    label: 'Method',
+    locked: true,
   });
 
   actionsRepeater.addControl('client_id', {
@@ -750,7 +790,8 @@ export function actionsControllers(
       type: 'oauth'
     },
     responsive: false,
-    label: 'Client Id'
+    label: 'Client Id',
+    locked: true,
   });
   actionsRepeater.addControl('redirect_uri', {
     dynamic: false,
@@ -758,7 +799,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Redirect Uri'
+    label: 'Redirect Uri',
+    locked: true,
   });
   actionsRepeater.addControl('post_logout_redirect_uri', {
     dynamic: false,
@@ -766,7 +808,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Post Logout Redirect Uri'
+    label: 'Post Logout Redirect Uri',
+    locked: true,
   });
   actionsRepeater.addControl('response_type', {
     dynamic: false,
@@ -774,7 +817,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Response Type'
+    label: 'Response Type',
+    locked: true,
   });
   actionsRepeater.addControl('scope', {
     dynamic: false,
@@ -782,7 +826,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Scope'
+    label: 'Scope',
+    locked: true,
   });
   actionsRepeater.addControl('authority', {
     dynamic: false,
@@ -790,7 +835,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Authority'
+    label: 'Authority',
+    locked: true,
   });
   actionsRepeater.addControl('automaticSilentRenew', {
     type: CONTROLLER_SWITCHER,
@@ -799,7 +845,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Automatic Silent Renew'
+    label: 'Automatic Silent Renew',
+    locked: true,
   });
   actionsRepeater.addControl('filterProtocolClaims', {
     type: CONTROLLER_SWITCHER,
@@ -808,7 +855,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Filter Protocol Claims'
+    label: 'Filter Protocol Claims',
+    locked: true,
   });
   actionsRepeater.addControl('loadUserInfo', {
     type: CONTROLLER_SWITCHER,
@@ -817,7 +865,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Load User Info'
+    label: 'Load User Info',
+    locked: true,
   });
   actionsRepeater.addControl('monitorSession', {
     type: CONTROLLER_SWITCHER,
@@ -826,7 +875,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Monitor Session'
+    label: 'Monitor Session',
+    locked: true,
   });
   actionsRepeater.addControl('checkSessionInterval', {
     dynamic: false,
@@ -834,7 +884,8 @@ export function actionsControllers(
     conditions: {
       type: 'oauth'
     },
-    label: 'Check Session Interval'
+    label: 'Check Session Interval',
+    locked: true,
   });
 
 
@@ -842,21 +893,24 @@ export function actionsControllers(
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
     responsive: false,
-    label: 'Confirm Text'
+    label: 'Confirm Text',
+    locked: true,
   });
 
   actionsRepeater.addControl('alert', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
     responsive: false,
-    label: 'Success'
+    label: 'Success',
+    locked: true,
   });
 
   actionsRepeater.addControl('reject', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
     responsive: false,
-    label: 'Reject'
+    label: 'Reject',
+    locked: true,
   });
 
   element.addControl(idPrefix + 'actions', {
@@ -864,7 +918,8 @@ export function actionsControllers(
     type: CONTROLLER_REPEATER,
     responsive: false,
     stateless: true,
-    fields: actionsRepeater.getControls()
+    fields: actionsRepeater.getControls(),
+    locked: true,
   });
 
   element.endControlSection();

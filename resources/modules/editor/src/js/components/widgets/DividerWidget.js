@@ -65,7 +65,7 @@ class DividerWidget extends Component {
     let style = {};
     let styleSeparator = {};
 
-    let dividerAlignment = this.props.element.getResponsiveSetting("divider_alignment", null, "center");;
+    let dividerAlignment = this.props.element.getResponsiveLockedSetting("divider_alignment", null, "center");;
     switch (dividerAlignment) {
       case "flex-start":
         styleSeparator = {
@@ -89,8 +89,8 @@ class DividerWidget extends Component {
       <span className="altrp-divider-separator" style={styleSeparator} />
     </div>
 
-    const dividerImage = this.props.element.getResponsiveSetting("divider_image")
-    const dividerText = this.props.element.getResponsiveSetting("divider_text")
+    const dividerImage = this.props.element.getResponsiveLockedSetting("divider_image")
+    const dividerText = this.props.element.getResponsiveLockedSetting("divider_text")
 
     if (dividerText || dividerImage?.id) {
       const dividerLabel = <>

@@ -182,15 +182,15 @@ class TabsWidget extends Component {
   render() {
     let buttonClasses = "";
 
-    const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
-    const animate = this.props.element.getResponsiveSetting("animate");
+    const vertical = this.props.element.getResponsiveLockedSetting("vertical", "", false);
+    const animate = this.props.element.getResponsiveLockedSetting("animate");
 
     let tabs = <div></div>;
-    const spacing_icon_style = this.props.element.getResponsiveSetting("spacing_icon_style") || {size: '10',unit:'px'};
+    const spacing_icon_style = this.props.element.getResponsiveLockedSetting("spacing_icon_style") || {size: '10',unit:'px'};
     if (this.state.settings.items_tabs) {
       tabs = this.state.settings.items_tabs?.map((tab, idx) => {
         let iconStyles = {};
-        const alignment_icon_style = this.props.element.getResponsiveSetting("alignment_icon_style") || 'left'
+        const alignment_icon_style = this.props.element.getResponsiveLockedSetting("alignment_icon_style") || 'left'
         if (alignment_icon_style === "left") {
           iconStyles = {
             marginRight:
@@ -251,8 +251,8 @@ class TabsWidget extends Component {
     return <Tabs
       onChange={this.blueprintShow}
       className={"altrp-tabs" +
-      (vertical ? " altrp-tabs-vertical" : " altrp-tabs-horizontal") +
-      (animate ? "" : " altrp-tabs-without-animation")
+        (vertical ? " altrp-tabs-vertical" : " altrp-tabs-horizontal") +
+        (animate ? "" : " altrp-tabs-without-animation")
       }
       animate={animate}
       renderActiveTabPanelOnly={true}

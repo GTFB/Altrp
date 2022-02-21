@@ -36,7 +36,7 @@ class MenuWidget extends Component {
   }
 
   getMenuData = async () => {
-    let menuGUID = this.props.element.getResponsiveSetting('menu')
+    let menuGUID = this.props.element.getResponsiveLockedSetting('menu')
     if ((this.state.menuData || !menuGUID) && this.menuGUID === menuGUID || this.loading) {
       return
     }
@@ -127,20 +127,20 @@ class MenuWidget extends Component {
       portalClassName: `altrp-portal altrp-portal${this.elementId}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
-    let renderButton = this.props.element.getResponsiveSetting('button');
+    let renderButton = this.props.element.getResponsiveLockedSetting('button');
 
-    // if (depth === 1 && element.getResponsiveSetting('type') === 'horizontal' && !renderButton) {
+    // if (depth === 1 && element.getResponsiveLockedSetting('type') === 'horizontal' && !renderButton) {
     //   popoverProps.position = Position.BOTTOM_LEFT;
     // }
 
     if(depth === 1) {
-      const positionSetting = this.props.element.getResponsiveSetting('popover_position', "", "auto");
+      const positionSetting = this.props.element.getResponsiveLockedSetting('popover_position', "", "auto");
 
       popoverProps.position = this.getPosition(positionSetting)
 
       popoverProps.portalClassName += " altrp-menu-first-portal"
     } else {
-      const positionSetting = this.props.element.getResponsiveSetting('sub_popover_position', "", "auto");
+      const positionSetting = this.props.element.getResponsiveLockedSetting('sub_popover_position', "", "auto");
 
       popoverProps.position = this.getPosition(positionSetting)
 
@@ -149,7 +149,7 @@ class MenuWidget extends Component {
 
     let caret = "";
 
-    // const caretMedia = this.props.element.getResponsiveSetting("caret");
+    // const caretMedia = this.props.element.getResponsiveLockedSetting("caret");
     //
     // if(caretMedia?.type) {
     //   caret = caretMedia
@@ -241,22 +241,27 @@ class MenuWidget extends Component {
       return null;
     }
     let toggle_icon = _.get(menuData, 'settings.toggle_icon', '')
-    const position = this.props.element.getResponsiveSetting("popover_position_toggle", "", "auto")
-    return <Popover2 content={this.renderVerticalMenu()}
-                     className="altrp-popover"
-                     position={position}
-                     portalContainer={window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
-                     portalClassName={`altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
-                     minimal={true}>
-      <Button className="altrp-menu-toggle" text={toggle_icon ?
-        <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''}/>
-    </Popover2>
+    const position = this.props.element.getResponsiveLockedSetting("popover_position_toggle", "", "auto")
+    return (
+      <Popover2 content={this.renderVerticalMenu()}
+        className="altrp-popover"
+        position={position}
+        portalContainer={window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
+        portalClassName={`altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
+        minimal={true}
+      >
+        <Button 
+          className="altrp-menu-toggle" 
+          text={toggle_icon ? <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''}
+        />
+      </Popover2>
+    )
   }
 
   render() {
     this.getMenuData();
-    let type = this.props.element.getResponsiveSetting('type');
-    let renderButton = this.props.element.getResponsiveSetting('button');
+    let type = this.props.element.getResponsiveLockedSetting('type');
+    let renderButton = this.props.element.getResponsiveLockedSetting('button');
     if (renderButton) {
       return <>
         {this.renderButton()}
