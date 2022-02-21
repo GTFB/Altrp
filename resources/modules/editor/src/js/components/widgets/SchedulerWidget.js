@@ -1,5 +1,5 @@
 import Resource from '../../classes/Resource';
-
+const {isEditor} = window.altrpHelpers
 const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction, locales} = window.altrpLibs.fullCalendar
 const {InputGroup, TextArea} = window.altrpLibs.Blueprint
 
