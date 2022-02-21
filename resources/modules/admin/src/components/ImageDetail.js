@@ -52,7 +52,7 @@ export class ImageDetail extends React.Component {
     }
 
     render() {
-        const { authorName, url, created_at, filename, media_type, filesize, height, width } = this.state
+        const { authorName, url, created_at, filename, media_type, filesize, height, width, mediaVariation } = this.state;
 
         if (!this.props.imageId) return null;
 
@@ -144,6 +144,24 @@ export class ImageDetail extends React.Component {
                                             className="document-detail__input"
                                         /></div>
                                         <div><CopyToClipboard text={props.values.url}><button className="document-detail__btn document-detail__btn-copy-url">Copy URL to clipboard</button></CopyToClipboard></div>
+                                        {typeof mediaVariation !== "undefined" ?
+                                          <div className="document-detail__line-to-change_uploated-by">Size variations</div>
+                                        : ""}
+                                        { typeof mediaVariation !== "undefined" ?                                       
+                                            mediaVariation.map((variation, key)=>{
+                                              //console.log(variation);
+                                              return <div key={key} className="document-detail__line-to-change"><span className="document-detail__name-of-changes">{variation.name}:</span>
+                                                <Field
+                                                    name={variation.name}
+                                                    label={variation.name}
+                                                    component="input"
+                                                    type="text"
+                                                    className="document-detail__input"
+                                                    value={variation.file}
+                                                /></div>                                               
+                                            })
+                                          : ""
+                                        }
                                         <div className="document-detail__btn-delete-wrap"><button onClick={() => this.deleteAsset(props.values.id)} className="document-detail__btn-delete">Delete permanently</button></div>
                                     </form >
                                 )
