@@ -74,12 +74,6 @@ class InputSliderWidget extends Component {
     this.label = this.label.bind(this);
   }
 
-  _componentDidUpdate(prevProps, prevState) {
-
-
-
-
-  }
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
@@ -128,42 +122,47 @@ class InputSliderWidget extends Component {
         value = value
         .toFixed(decimalPlace)
     }
-    console.log({value});
     if(isEditor()){
       this.setState((s) => ({...s, value}))
     } else {
+      this.setState((s) => ({...s, value}))
       this.dispatchFieldValueToStore(value)
     }
   }
 
-  label(value) {
+  label(decimalPlace, custom, thousandsSeparator, thousandsSeparatorValue, decimalSeparator) {
+    return value => {
+      value = Number(value)
+
+      if(!Number.isInteger(value) && decimalPlace) {
+        decimalPlace = Math.abs(decimalPlace);
+        value = value
+          .toFixed(decimalPlace)
+      }
+      if(!Number.isInteger(value) && decimalSeparator) {
+        value = value.toString().replace(".", decimalSeparator)
+      }
+
+      if(thousandsSeparator) {
+        if( ! thousandsSeparatorValue){
+          thousandsSeparatorValue = ' '
+        }
+        value = numberWithSpaces(value, thousandsSeparatorValue);
+      }
+
+
+      return custom.toString().replace(/{n}/, value)
+    }
+  }
+
+  getLabelFunction = () => {
     let decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
     const custom = this.props.element.getResponsiveLockedSetting("custom_label", "", "{n}");
     const thousandsSeparator = this.props.element.getResponsiveLockedSetting("thousands_separator", "", false);
     let thousandsSeparatorValue = this.props.element.getResponsiveLockedSetting("thousands_separator_value", "", " ");
     const decimalSeparator = this.props.element.getResponsiveLockedSetting("decimal_separator");
-    value = Number(value)
 
-    if(!Number.isInteger(value) && decimalPlace) {
-      decimalPlace = Math.abs(decimalPlace);
-      value = value
-        .toFixed(decimalPlace)
-    }
-    if(!Number.isInteger(value) && decimalSeparator) {
-      value = value.toString().replace(".", decimalSeparator)
-    }
-
-    if(thousandsSeparator) {
-      if( ! thousandsSeparatorValue){
-        thousandsSeparatorValue = ' '
-      }
-      value = numberWithSpaces(value, thousandsSeparatorValue);
-    }
-
-
-    return custom
-      .toString()
-      .replace(/{n}/, value)
+    return this.label(decimalPlace, custom, thousandsSeparator, thousandsSeparatorValue, decimalSeparator)
   }
 
   /**
@@ -179,6 +178,7 @@ class InputSliderWidget extends Component {
     } else {
       value = _.get(appStore.getState().formsStore, `${formId}`, '')
       value = _.get(value, fieldName, '')
+      value = value === '' ? this.state.value : value
     }
 
     return value || this.props.element.getResponsiveLockedSetting('min') || 0;
@@ -196,6 +196,9 @@ class InputSliderWidget extends Component {
     const vertical = this.props.element.getResponsiveLockedSetting("vertical", "", false);
     const handleSize = this.props.element.getResponsiveLockedSetting("handle_size", "", null);
     let step = this.props.element.getResponsiveLockedSetting("step", "", 1);
+
+    const label = this.getLabelFunction()
+
     if(step == '0'){
       step = 1;
     }
@@ -219,7 +222,7 @@ class InputSliderWidget extends Component {
           value={value}
           onChange={this.onChange}
           labelPrecision={decimalPlace}
-          labelRenderer={this.label}
+          labelRenderer={label}
           labelStepSize={labelStepSize}
           vertical={vertical}
           className="altrp-field-slider"

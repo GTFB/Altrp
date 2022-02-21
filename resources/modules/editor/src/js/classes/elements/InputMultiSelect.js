@@ -91,7 +91,7 @@ class InputMultiSelect extends BaseElement {
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon"
+      label: "Label Icon"
     });
 
     this.addControl("label_icon_position", {
@@ -626,6 +626,23 @@ class InputMultiSelect extends BaseElement {
     });
 
     this.endControlSection();
+    
+    this.startControlSection("required_style_section", {
+      tab: TAB_STYLE,
+      label: "Required"
+    });
+
+    this.addControl("required_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "font color"
+    });
+
+    this.addControl("required_style_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+    });
+
+    this.endControlSection();
 
     this.startControlSection("overlay_section", {
       tab: TAB_STYLE,
@@ -789,23 +806,6 @@ class InputMultiSelect extends BaseElement {
     this.addControl("a_color", {
       type:   CONTROLLER_COLOR,
       label: "Icon Color"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("required_style_section", {
-      tab: TAB_STYLE,
-      label: "Required"
-    });
-
-    this.addControl("required_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
-    });
-
-    this.addControl("required_style_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
     });
 
     this.endControlSection();

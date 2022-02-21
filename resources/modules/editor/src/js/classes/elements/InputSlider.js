@@ -96,14 +96,17 @@ class InputSlider extends BaseElement{
 
     this.addControl('thousands_separator', {
       type: CONTROLLER_SWITCHER,
-      label: 'Thousands separator',
+      label: 'Thousands Separator',
       locked: true,
     });
 
     this.addControl('thousands_separator_value', {
       type: CONTROLLER_TEXT,
-      label: 'Separator',
+      label: 'Thousands Separator Value',
       locked: true,
+      conditions: {
+        thousands_separator: true
+      }
     });
 
     this.addControl('decimal_place', {
@@ -126,7 +129,7 @@ class InputSlider extends BaseElement{
     });
 
     this.addControl("content_default_value", {
-      type: CONTROLLER_TEXTAREA,
+      type: CONTROLLER_NUMBER,
       responsive: false,
       label: "Default Value"
     });
@@ -145,6 +148,11 @@ class InputSlider extends BaseElement{
       tab: TAB_STYLE,
       label: 'Slider',
     });
+
+    this.addControl('slider_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding'
+    })
 
     this.addControl('width', {
       type: CONTROLLER_SLIDER,
@@ -264,10 +272,12 @@ class InputSlider extends BaseElement{
 
     this.addControl("tr_x", {
       label: 'Translate X',
+      type: CONTROLLER_NUMBER
     });
 
     this.addControl("tr_y", {
       label: 'Translate Y',
+      type: CONTROLLER_NUMBER
     });
 
     this.addControl('handle_radius', {
