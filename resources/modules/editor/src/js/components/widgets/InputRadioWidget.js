@@ -382,7 +382,7 @@ class InputRadioWidget extends Component {
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
-      this.getContent("content_default_value") ||
+      this.getLockedContent("content_default_value") ||
       (this.valueMustArray() ? [] : "");
     if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
       this.defaultValue = [];
@@ -390,12 +390,12 @@ class InputRadioWidget extends Component {
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
-      options: parseOptionsFromSettings(props.element.getSettings("content_options")),
+      options: parseOptionsFromSettings(props.element.getLockedSettings("content_options")),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    if (this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
 
@@ -430,7 +430,7 @@ class InputRadioWidget extends Component {
         create_allowed,
         create_label,
         create_url
-      } = this.props.element.getSettings();
+      } = this.props.element.getLockedSettings();
       if (create_allowed && create_label && create_url) {
         this.createItem(e);
       }
@@ -443,9 +443,9 @@ class InputRadioWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
+    if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.props.element.getLockedSettings("content_options")
       );
 
       this.setState(state => ({ ...state, options }));
@@ -454,14 +454,14 @@ class InputRadioWidget extends Component {
     let value = this.state.value;
     /**
      * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
+     * то используем this.getLockedContent для получение этого динамического значения
      * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
 
     /**
@@ -472,7 +472,7 @@ class InputRadioWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -486,7 +486,7 @@ class InputRadioWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -509,7 +509,7 @@ class InputRadioWidget extends Component {
    * Получить url для запросов
    */
   getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
+    let url = this.props.element.getLockedSettings("model_for_options");
 
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
@@ -529,9 +529,9 @@ class InputRadioWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        this.props.element.getLockedSettings("select2_multiple")
       );
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -549,7 +549,7 @@ class InputRadioWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
 
     /**
@@ -579,7 +579,7 @@ class InputRadioWidget extends Component {
     if (isEditor()) {
       return;
     }
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -705,7 +705,7 @@ class InputRadioWidget extends Component {
   async updateOptions() {
     {
       let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let paramsForUpdate = this.props.element.getLockedSettings("params_for_update");
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(
         paramsForUpdate,
@@ -717,7 +717,7 @@ class InputRadioWidget extends Component {
       let options = [...this.state.options];
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
+          if (this.props.element.getLockedSettings("params_as_filters", false)) {
             paramsForUpdate = JSON.stringify(paramsForUpdate);
             options = await new Resource({
               route: this.getRoute()
@@ -767,7 +767,7 @@ class InputRadioWidget extends Component {
       value = _.cloneDeep(e);
     }
     if (
-      this.props.element.getSettings("content_options_nullable") &&
+      this.props.element.getLockedSettings("content_options_nullable") &&
       e &&
       e.value === "<null>"
     ) {
@@ -784,11 +784,11 @@ class InputRadioWidget extends Component {
          * Обновляем хранилище только если не текстовое поле
          */
 
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
+        const change_actions = this.props.element.getLockedSettings("change_actions");
+        const change_change_end = this.props.element.getLockedSettings(
           "change_change_end"
         );
-        const change_change_end_delay = this.props.element.getSettings(
+        const change_change_end_delay = this.props.element.getLockedSettings(
           "change_change_end_delay"
         );
 
@@ -827,8 +827,8 @@ class InputRadioWidget extends Component {
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
-    const content_options = this.props.element.getResponsiveSetting('content_options');
-    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
+    const content_options = this.props.element.getResponsiveLockedSetting('content_options');
+    const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0
       && ! model_for_options){
@@ -840,7 +840,7 @@ class InputRadioWidget extends Component {
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
-    if (!this.props.element.getSettings("sort_default")) {
+    if (!this.props.element.getLockedSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     }
     return options;
@@ -853,7 +853,7 @@ class InputRadioWidget extends Component {
    */
 
   onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
+    const focus_actions = this.props.element.getLockedSettings("focus_actions");
 
     if (focus_actions && !isEditor()) {
       const actionsManager = (
@@ -879,7 +879,7 @@ class InputRadioWidget extends Component {
     if (_.get(editor, "getData")) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
@@ -889,7 +889,7 @@ class InputRadioWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         "blur",
-        this.props.element.getSettings("actions", []),
+        this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
     }
@@ -910,7 +910,7 @@ class InputRadioWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -945,7 +945,7 @@ class InputRadioWidget extends Component {
       create_label,
       create_data,
       select2_multiple
-    } = this.props.element.getSettings();
+    } = this.props.element.getLockedSettings();
     if (!create_label && !create_url) {
       return;
     }
@@ -1011,7 +1011,7 @@ class InputRadioWidget extends Component {
 
   render() {
     let label = null;
-    const settings = this.props.element.getSettings();
+    const settings = this.props.element.getLockedSettings();
     const {
       image_select_options,
       select2_multiple: isMultiple,
@@ -1024,7 +1024,7 @@ class InputRadioWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),
@@ -1035,7 +1035,7 @@ class InputRadioWidget extends Component {
     }
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
     switch (content_label_position_type) {
@@ -1111,8 +1111,8 @@ class InputRadioWidget extends Component {
 
     const input = this.renderRepeatedInput();
 
-    const cssId = this.props.element.getResponsiveSetting('position_css_id')
-    const cssClasses = this.props.element.getResponsiveSetting('position_css_classes')
+    const cssId = this.props.element.getResponsiveLockedSetting('position_css_id')
+    const cssClasses = this.props.element.getResponsiveLockedSetting('position_css_classes')
 
     return (
       <AltrpFieldContainer
@@ -1134,8 +1134,8 @@ class InputRadioWidget extends Component {
    * Выводит input type=checkbox|radio
    */
   renderRepeatedInput() {
-    const inline = this.props.element.getResponsiveSetting("vertical_radio", "", false);
-    const radioPosition = this.props.element.getResponsiveSetting('radio_position')
+    const inline = this.props.element.getResponsiveLockedSetting("vertical_radio", "", false);
+    const radioPosition = this.props.element.getResponsiveLockedSetting('radio_position')
 
     const { options = [] } = this.state;
     let { value = "" } = this.state;

@@ -33,11 +33,11 @@ export const normalizeValues = function(branch) {
 }
 
 export const getFromDatasource = function (settings = {}, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
-  settings.path = this.props.element.getSettings(settingNames[0], '');
+  settings.path = this.props.element.getLockedSettings(settingNames[0], '');
   settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
-  settings.dataSettings = parseOptionsFromSettings(this.props.element.getSettings(settingNames[1]))
-  settings.sortDefault = this.props.element.getSettings("sort_default");
-  settings.sortOption = this.props.element.getSettings("options_sorting");
+  settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
+  settings.sortDefault = this.props.element.getLockedSettings("sort_default");
+  settings.sortOption = this.props.element.getLockedSettings("options_sorting");
   const data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
 
   if(! _.isArray(data)){
@@ -259,7 +259,7 @@ class TreeWidget extends Component {
     }
 
     if(settings.type === "repeater") {
-      settings.repeater = this.props.element.getResponsiveSetting("tree_repeater", "", []);
+      settings.repeater = this.props.element.getResponsiveLockedSetting("tree_repeater", "", []);
 
       const filtrationRepeater = this.updateRepeater(settings.repeater)
 
@@ -286,7 +286,7 @@ class TreeWidget extends Component {
 
     if(isEditor()) {
       if(settings.type === "repeater") {
-        settings.repeater = this.props.element.getResponsiveSetting("tree_repeater", "", []);
+        settings.repeater = this.props.element.getResponsiveLockedSetting("tree_repeater", "", []);
         settings.prevRepeater = prevState.settings.tree_repeater || [];
 
         if(settings.type === "repeater") {

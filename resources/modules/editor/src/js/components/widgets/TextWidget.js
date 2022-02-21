@@ -92,8 +92,8 @@ class TextWidget extends Component {
     if (this.state.settings.text_advanced_tooltip_active) {
       tooltipActive = this.tooltipActive;
     }
-    let textContent = this.props.element.getResponsiveSetting('text');
-    const content = this.props.element.getSettings('content')
+    let textContent = this.props.element.getResponsiveLockedSetting('text');
+    const content = this.props.element.getLockedSettings('content')
     if (content
       && getDataByPath(content)
       && _.isString(getDataByPath(content))) {

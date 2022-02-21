@@ -27,7 +27,7 @@ class ActionTriggerWidget extends React.Component {
     if(isEditor() || isSSR()){
       return
     }
-    const type = this.element.getResponsiveSetting('type')
+    const type = this.element.getResponsiveLockedSetting('type')
     switch (type) {
       case 'interval': this.subscribeIntervalTriggers()
         break;
@@ -40,19 +40,19 @@ class ActionTriggerWidget extends React.Component {
    * Подписать таймаут действия
    */
   subscribeTimeoutTriggers() {
-    setTimeout(this.doActions, this.element.getResponsiveSetting('timeout') || 1000)
+    setTimeout(this.doActions, this.element.getResponsiveLockedSetting('timeout') || 1000)
   }
   /**
    * Подписать интервальные действия
    */
   subscribeIntervalTriggers() {
-    const timeout = this.element.getResponsiveSetting('timeout')
+    const timeout = this.element.getResponsiveLockedSetting('timeout')
     if(timeout){
       setTimeout(()=>{
-        this.intervalId = setInterval(this.doActions, this.element.getResponsiveSetting('interval') || 1000)
+        this.intervalId = setInterval(this.doActions, this.element.getResponsiveLockedSetting('interval') || 1000)
       }, timeout)
     } else {
-      this.intervalId = setInterval(this.doActions, this.element.getResponsiveSetting('interval') || 1000)
+      this.intervalId = setInterval(this.doActions, this.element.getResponsiveLockedSetting('interval') || 1000)
     }
   }
 
@@ -64,7 +64,7 @@ class ActionTriggerWidget extends React.Component {
   }
 
   doActions = async ()=>{
-    if(! this.element.getResponsiveSetting("trigger_actions", null, []).length){
+    if(! this.element.getResponsiveLockedSetting("trigger_actions", null, []).length){
       return
     }
     const actionsManager = (
@@ -74,7 +74,7 @@ class ActionTriggerWidget extends React.Component {
     ).default;
     await actionsManager.callAllWidgetActions(
       this.props.element.getIdForAction(),
-      'trigger_' + this.element.getResponsiveSetting('type'),
+      'trigger_' + this.element.getResponsiveLockedSetting('type'),
       this.props.element.getSettings("trigger_actions", []),
       this.props.element
     );

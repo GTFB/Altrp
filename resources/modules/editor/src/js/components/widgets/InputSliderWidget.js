@@ -48,9 +48,9 @@ class InputSliderWidget extends Component {
   constructor(props) {
     super(props);
 
-    let step = props.element.getResponsiveSetting("step", "", null);
-    const min = props.element.getResponsiveSetting("min", "", 0);
-    const max = props.element.getResponsiveSetting("max", "", 100);
+    let step = props.element.getResponsiveLockedSetting("step", "", null);
+    const min = props.element.getResponsiveLockedSetting("min", "", 0);
+    const max = props.element.getResponsiveLockedSetting("max", "", 100);
 
     if(step) {
       step = (max - min) / step;
@@ -96,7 +96,7 @@ class InputSliderWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -122,12 +122,13 @@ class InputSliderWidget extends Component {
     // if(!Number.isInteger(value)) {
     //   value = parseFloat(value.toFixed(String(step).split(".")[1].split("").length))
     // }
-    let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
+    let decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
     if(!Number.isInteger(value) && decimalPlace) {
       decimalPlace = Math.abs(decimalPlace);
         value = value
         .toFixed(decimalPlace)
     }
+    console.log({value});
     if(isEditor()){
       this.setState((s) => ({...s, value}))
     } else {
@@ -136,11 +137,11 @@ class InputSliderWidget extends Component {
   }
 
   label(value) {
-    let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
-    const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
-    const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
-    let thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
-    const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator");
+    let decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
+    const custom = this.props.element.getResponsiveLockedSetting("custom_label", "", "{n}");
+    const thousandsSeparator = this.props.element.getResponsiveLockedSetting("thousands_separator", "", false);
+    let thousandsSeparatorValue = this.props.element.getResponsiveLockedSetting("thousands_separator_value", "", " ");
+    const decimalSeparator = this.props.element.getResponsiveLockedSetting("decimal_separator");
     value = Number(value)
 
     if(!Number.isInteger(value) && decimalPlace) {
@@ -180,7 +181,7 @@ class InputSliderWidget extends Component {
       value = _.get(value, fieldName, '')
     }
 
-    return value || this.props.element.getResponsiveSetting('min') || 0;
+    return value || this.props.element.getResponsiveLockedSetting('min') || 0;
   }
 
   /**
@@ -188,13 +189,13 @@ class InputSliderWidget extends Component {
    * @returns {JSX.Element}
    */
   render() {
-    const min = this.props.element.getResponsiveSetting("min", "", 0);
-    const max = this.props.element.getResponsiveSetting("max", "", 100);
-    const labelStepSize = this.props.element.getResponsiveSetting("label_step", "", 25);
-    const decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
-    const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
-    const handleSize = this.props.element.getResponsiveSetting("handle_size", "", null);
-    let step = this.props.element.getResponsiveSetting("step", "", 1);
+    const min = this.props.element.getResponsiveLockedSetting("min", "", 0);
+    const max = this.props.element.getResponsiveLockedSetting("max", "", 100);
+    const labelStepSize = this.props.element.getResponsiveLockedSetting("label_step", "", 25);
+    const decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
+    const vertical = this.props.element.getResponsiveLockedSetting("vertical", "", false);
+    const handleSize = this.props.element.getResponsiveLockedSetting("handle_size", "", null);
+    let step = this.props.element.getResponsiveLockedSetting("step", "", 1);
     if(step == '0'){
       step = 1;
     }
@@ -203,6 +204,7 @@ class InputSliderWidget extends Component {
     if(Number.isNaN(value)){
       value = Number(min)
     }
+
     return (
       <SliderWrapper
         value={this.state.value}
