@@ -5,6 +5,10 @@ import print_statics from "../helpers/print_statics";
 import config from "../helpers/config";
 import get_altrp_setting from "../helpers/get_altrp_setting";
 import getFavicons from "../helpers/getFavicons";
+import getResponsiveSetting from "../helpers/getResponsiveSetting";
+import * as _ from "lodash";
+import getAddingClasses from "../helpers/getAddingClasses";
+import allowedForUser from "../helpers/allowedForUser";
 
 
 View.global('get_logo_url', get_logo_url)
@@ -13,6 +17,10 @@ View.global('config', config)
 View.global('print_statics', print_statics)
 View.global('get_altrp_setting', get_altrp_setting)
 View.global('getFavicons', getFavicons)
+View.global('getResponsiveSetting', getResponsiveSetting)
+View.global('getAddingClasses', getAddingClasses)
+View.global('allowedForUser', allowedForUser)
+View.global('isEmpty', _.isEmpty)
 
 
 // let data = [

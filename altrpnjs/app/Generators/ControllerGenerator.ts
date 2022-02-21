@@ -118,8 +118,8 @@ export default class ControllerGenerator extends BaseGenerator {
 
   private _getProdImportsContent() {
     return `
-const ${this.model.name} = require('../AltrpModels/${this.model.name}')
-const AltrpBaseController = require('../Controllers/AltrpBaseController')
+const ${this.model.name} = require('../AltrpModels/${this.model.name}').default
+const AltrpBaseController = require('../Controllers/AltrpBaseController').default
     `;
   }
 

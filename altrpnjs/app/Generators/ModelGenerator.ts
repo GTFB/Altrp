@@ -13,7 +13,7 @@ export default class ModelGenerator extends BaseGenerator {
 
   public static directory = app_path('/AltrpModels/')
   public static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpModel.stub`)
-  public static ext = '.ts'
+  public static ext = isProd() ? '.js': '.ts'
   private model: Model
   private table: Table
   private altrp_relationships: Relationship[] = []
@@ -23,11 +23,11 @@ export default class ModelGenerator extends BaseGenerator {
   public async deleteFiles(model: Model): Promise<void> {
     let fileName = this.getFilename(model)
     if (fs.existsSync(ModelGenerator.directory + fileName)) {
-      fs.unlinkSync(ModelGenerator.directory + fileName);
+      fs.rmSync(ModelGenerator.directory + fileName);
     }
     fileName =`${model.name}Controller${ModelGenerator.ext}`
     if (fs.existsSync(ControllerGenerator.directory + fileName)) {
-      fs.unlinkSync(ControllerGenerator.directory + fileName);
+      fs.rmSync(ControllerGenerator.directory + fileName);
     }
     return
   }
@@ -140,6 +140,10 @@ ${_.uniqBy(
   private _getProdColumnsContent(): string {
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
+decorate([
+  (0, Orm.column)({ isPrimary: true }),
+  metadata("design:type", Number)
+], ${this.model.name}.prototype, "id", void 0);
 ${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').join('')}
 `
   }
@@ -147,6 +151,8 @@ ${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').j
   private _getDevColumnsContent(): string {
     let columns = this.columns.filter(column => column.type !== 'calculated')
     return `
+  @Orm.column({ isPrimary: true })
+  public id: number
 ${columns.map(column => column.renderForModel()).join('')}
 `
   }

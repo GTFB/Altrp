@@ -93,7 +93,8 @@ export class ImageDetail extends React.Component {
                                 {props => (
                                     <form onSubmit={props.handleSubmit}>
                                         <AutoSave updateAsset={this.props.updateAsset} debounce={1000} save={this.save} />
-                                        <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">Alternative Text</span><Field
+                                        <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">Alternative Text</span>
+                                          <Field
                                             name="alternate_text"
                                             label="Alt"
                                             component="input"

@@ -11,10 +11,9 @@ export default class CategoriesController {
     }
     let categories = await query
       .orderBy('title', )
-    return response.json({
-      categories,
-      pageCount: 0,
-    })
+    return response.json(
+      categories
+    )
   }
 
   public async create({request, response}) {

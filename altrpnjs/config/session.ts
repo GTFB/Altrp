@@ -14,7 +14,7 @@ const sessionConfig: SessionConfig = {
   driver: Env.get('SESSION_DRIVER', 'cookie'),
   cookieName: 'adonis-session',
   clearWithBrowser: false,
-  age: Env.get('SESSION_LIFETIME',7200),
+  age: parseInt(Env.get('SESSION_LIFETIME',7200)),
   cookie: {
       domain: '',
       path: '/',

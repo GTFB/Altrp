@@ -126,6 +126,9 @@ Route.group(() => {
 
     const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
     try {
+      if(isProd()){
+        require.cache = {};
+      }
       const ControllerClass = isProd() ? (await require(controllerName)).default
         : (await import(controllerName)).default
       const controller = new ControllerClass()

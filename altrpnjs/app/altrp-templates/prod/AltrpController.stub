@@ -1,7 +1,7 @@
-const selectForSQLEditor = require("../../helpers/selectForSQLEditor")
+const selectForSQLEditor = require("../../helpers/selectForSQLEditor").default
 {{{imports}}}
 
-export default class {{{classname}}} extends AltrpBaseController {
+class {{{classname}}} extends AltrpBaseController {
 
   {{{properties}}}
 
@@ -11,3 +11,4 @@ export default class {{{classname}}} extends AltrpBaseController {
   {{{custom}}}
   // CUSTOM_START
 }
+exports.default = {{{classname}}};
