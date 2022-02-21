@@ -1,9 +1,11 @@
 import * as mustache from 'mustache'
 import fs from 'fs'
+import Application from "@ioc:Adonis/Core/Application";
+import path from "path";
 
 export abstract class BaseGenerator{
   private fileName: string;
-  private directory: string;
+  protected directory: string;
   private stubFilePath: string;
 
   protected addFile(fileName: string):this {
@@ -30,13 +32,25 @@ export abstract class BaseGenerator{
 
     content = mustache.render(content, vars)
     if(! fs.existsSync(this.directory)){
-      fs.mkdirSync(this.directory)
+      fs.mkdirSync(this.directory, {recursive:true})
     }
     fs.writeFileSync(this.getFullFileName(), content)
     return
   }
 
   private getFullFileName():string{
-    return `${this.directory}/${this.fileName}`
+    return path.join(this.directory,this.fileName)
+  }
+
+  static async generateCssFile(fileName:string, content:string):Promise<void >{
+    if(fileName.indexOf('.css') !== fileName.length - 4){
+      fileName += '.css'
+    }
+    fileName = Application.publicPath(`altrp/css/${fileName}`)
+    if(! fs.existsSync(Application.publicPath(`altrp/css/`))){
+      fs.mkdirSync(Application.publicPath(`altrp/css/`), {recursive:true})
+    }
+    fs.writeFileSync(fileName, content)
+    return
   }
 }

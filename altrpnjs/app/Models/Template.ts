@@ -16,6 +16,7 @@ import TemplateSetting from "App/Models/TemplateSetting";
 import empty from "../../helpers/empty";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
+import RootElementRenderer from "App/Renderers/RootElement";
 
 export default class Template extends BaseModel {
 
@@ -119,7 +120,7 @@ export default class Template extends BaseModel {
   /**
    * Получить объект шаблона по параметрам
    */
-  static async getTemplate(pageId, templateType = 'content',): Promise<Template | object> {
+  static async getTemplate(pageId, templateType = 'content',): Promise<Template | {}> {
     let page = await Page.find(pageId)
 
     if (!page) {
@@ -216,7 +217,7 @@ export default class Template extends BaseModel {
 
 
     templates.forEach((template)=>{
-      template.data = JSON.parse(template.data);
+      template.data = JSON.parse(template.data)
     }
   )
     ;
@@ -224,4 +225,9 @@ export default class Template extends BaseModel {
     return templates;
   }
 
+  async getChildrenContent() {
+    const data = JSON.parse(this.data)
+    const renderer = new RootElementRenderer(data)
+    return await renderer.render()
+  }
 }

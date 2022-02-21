@@ -23,11 +23,11 @@ export default class ModelGenerator extends BaseGenerator {
   public async deleteFiles(model: Model): Promise<void> {
     let fileName = this.getFilename(model)
     if (fs.existsSync(ModelGenerator.directory + fileName)) {
-      fs.unlinkSync(ModelGenerator.directory + fileName);
+      fs.rmSync(ModelGenerator.directory + fileName);
     }
     fileName =`${model.name}Controller${ModelGenerator.ext}`
     if (fs.existsSync(ControllerGenerator.directory + fileName)) {
-      fs.unlinkSync(ControllerGenerator.directory + fileName);
+      fs.rmSync(ControllerGenerator.directory + fileName);
     }
     return
   }
