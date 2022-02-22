@@ -1,6 +1,105 @@
 {{{imports}}}
 
 export default class {{{classname}}} extends Orm.BaseModel {
+  @Orm.beforeSave()
+    public beforeSave(model) {
+      Event.emit("altrp:models", {
+        type: "beforeSave",
+        model: model
+      })
+    }
+
+  @Orm.beforeCreate()
+    public beforeCreate(model) {
+      Event.emit("altrp:models", {
+        type: "beforeCreate",
+        model: model
+      })
+    }
+
+  @Orm.beforeUpdate()
+    public beforeUpdate(model) {
+        Event.emit("altrp:models", {
+          type: "beforeUpdate",
+          model: model
+        })
+      }
+
+  @Orm.beforeDelete()
+    public beforeDelete(model) {
+      Event.emit("altrp:models", {
+        type: "beforeDelete",
+        model: model
+      })
+    }
+
+  @Orm.beforeFind()
+    public beforeFind(model) {
+      Event.emit("altrp:models", {
+        type: "beforeFind",
+        model: model
+      })
+    }
+
+  @Orm.beforePaginate()
+    public beforeFind(model) {
+      Event.emit("altrp:models", {
+        type: "beforePaginate",
+        model: model
+      })
+    }
+
+  @Orm.afterSave()
+    public afterSave(model) {
+      Event.emit("altrp:models", {
+        type: "afterSave",
+        model: model
+      })
+    }
+
+  @Orm.afterCreate()
+    public afterCreate(model) {
+      Event.emit("altrp:models", {
+        type: "afterCreate",
+        model: model
+      })
+    }
+
+  @Orm.afterUpdate()
+    public afterUpdate(model) {
+        Event.emit("altrp:models", {
+          type: "afterUpdate",
+          model: model
+        })
+      }
+
+  @Orm.afterDelete()
+    public afterDelete(model) {
+      Event.emit("altrp:models", {
+        type: "afterDelete",
+        model: model
+      })
+    }
+
+  @Orm.afterFind()
+    public afterFind(model) {
+      Event.emit("altrp:models", {
+        type: "afterFind",
+        model: model
+      })
+    }
+
+  @Orm.afterPaginate()
+    public afterFind(model) {
+      Event.emit("altrp:models", {
+        type: "afterPaginate",
+        model: model
+      })
+    }
+
+  public delete = softDelete
+  public forceDelete = forceDelete
+
   {{{properties}}}
   {{{columns}}}
   {{{computed}}}

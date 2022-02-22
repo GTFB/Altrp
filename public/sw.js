@@ -21,6 +21,8 @@ registerRoute(
       case "style":
       case "script":
       case "image":
+      case "video":
+      case "audio":
         return true
     }
 

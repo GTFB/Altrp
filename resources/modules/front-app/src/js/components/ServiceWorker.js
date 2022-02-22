@@ -1,21 +1,21 @@
 const ServiceWorker = async () => {
 
-  if("serviceWorker" in navigator) {
+  if("serviceWorker" in navigator && window.isProd) {
+
 
     const storageName = "serviceWorkerID";
 
     const storage = localStorage.getItem(storageName);
 
+
     if(!storage) {
-      console.log("added")
-      localStorage.setItem(storageName, window.__version__)
-    } else if(storage !== window.__version__) {
-      console.log("need update")
+      localStorage.setItem(storageName, altrp.version)
+    } else if(storage !== altrp.version) {
       navigator.serviceWorker.getRegistration().then(r => {
         r.update()
       })
 
-      localStorage.setItem(storageName, window.__version__)
+      localStorage.setItem(storageName, altrp.version)
     }
 
     try {

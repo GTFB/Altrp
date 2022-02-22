@@ -24,5 +24,4 @@ class {{{classname}}} extends Orm.BaseModel {
 }
 {{{staticProperties}}}
 {{{columns}}}
-
 exports.default = {{{classname}}};

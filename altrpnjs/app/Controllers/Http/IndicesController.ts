@@ -5,6 +5,9 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
+import marked from "marked";
+import sanitizeHtml from "sanitize-html";
+
 
 export default class IndicesController {
   async admin({view}) {
@@ -117,6 +120,16 @@ export default class IndicesController {
     return {
       success: true
     }
+  }
+
+  public async changelog({ response }) {
+    const pathToPublic = path.join(__dirname, "../", "../", "../", "../", "README.md");
+
+    const file = await Drive.get(pathToPublic)
+
+    response.header('Content-type', 'text/plain');
+
+    return file.toString()
   }
 
   public async favicons({params, response}) {

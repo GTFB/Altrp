@@ -355,10 +355,6 @@ class AltrpAction extends AltrpModel {
    * @return {object}
    */
   doActionSocketReceiver() {
-    if(!window.io) {
-      window.io = io(`:${process.env.SOCKETS_KEY}`)
-      window
-    }
 
     let name = ""
 
@@ -380,6 +376,24 @@ class AltrpAction extends AltrpModel {
       }
 
     }
+
+
+    if(!window.io) {
+      window.io = io( {
+        auth: {
+          key: name,
+        },
+      })
+      window
+    }
+
+    window.io.on("message", (...data) => {
+      console.log(data)
+    })
+
+    window.io.on("connection", (socket) => {
+      socket.data.asdasdas = "asdasdasdass"
+    })
 
     console.log(name)
     window.io.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
