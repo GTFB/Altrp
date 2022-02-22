@@ -51,7 +51,22 @@ class BaseElement extends ControlStack {
    */
   setSettings(settings) {
     this.settings = settings || this.settings;
-    this.settingsLock = settings || this.settingsLock;
+
+    this.settingsLock =  this.settingsLock || {};
+
+    const controls = controllersManager.getControls(this.getName())
+
+    // Выбираем locked настройки
+    Object.keys(controls).map(key => {
+      controls[key].map(tab => {
+        tab.controls.map(control => {
+          if (control.locked) {
+            this.settingsLock[control.controlId] = settings[control.controlId] || this.settingsLock[control.controlId]
+          }
+        })
+      })
+    })
+
     if (this.component && settings) {
       this.component.setState(state => {
         return {
@@ -419,7 +434,7 @@ class BaseElement extends ControlStack {
     const settings = locked ? this.settingsLock : this.settings
 
     if (!settingName) {
-      return _.cloneDeep(this.settings);
+      return _.cloneDeep(settings);
     }
     if (settings[settingName] === undefined) {
       let control = window.controllersManager.getElementControl(

@@ -48,7 +48,13 @@ class SchedulerWidget extends Component {
   }
 
   getFormattedEvents = async () => {
-    const resource = new Resource({route: this.state.settings.get_url, dynamicURL: true});
+    const getUrl = this.props.element.getResponsiveLockedSetting('get_url')
+
+    if (!getUrl) {
+      return []
+    }
+
+    const resource = new Resource({route: getUrl, dynamicURL: true});
 
     const {data} = await resource.getAll();
 
