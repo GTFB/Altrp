@@ -197,7 +197,9 @@ class AltrpForm {
           error = await error.then();
           error = mbParseJSON(error, error);
           error.data && (error = error.data);
-          status && (error.data ? (error.data.__status = status) : (error.__status = status));
+
+          (typeof error === 'object') &7&status && ((typeof error.data === 'object') ? (error.data.__status = status) : (error.__status = status));
+
           this.updateResponseStorage(error);
         }
         return { success: false, error };

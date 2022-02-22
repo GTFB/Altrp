@@ -44,6 +44,7 @@ class AdminModelsDropList extends React.Component {
                             <ul
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist_active"
                                     : (this.props.models.filter(item => !this.props.standardModels.some(model => model.label === item.label)).length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
+
                                 {
                                     this.props.models
                                         .sort((a, b) => {

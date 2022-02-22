@@ -1,0 +1,1 @@
+<{{layout_html_tag}} class="altrp-column altrp-column-priority {{link_class}}">{{{children_content}}}</{{layout_html_tag}}>

@@ -18,8 +18,6 @@ import Role from "App/Models/Role"
 import SourceRole from "App/Models/SourceRole"
 import guid from "../../../../helpers/guid"
 import SQLEditor from "App/Models/SQLEditor";
-import isProd from "../../../../helpers/isProd";
-import path from "path";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -178,16 +176,10 @@ export default class ModelsController {
 
     httpContext.params[model.name] = rowId
 
-    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
 
     try {
-      const ControllerClass = isProd() ? (await require(controllerName)).default
-        : (await import(controllerName)).default
-
-      const controller = new ControllerClass()
-
       return {
-        data: await controller.destroy(httpContext),
+        data: await Controller.callControllerMethod(id, 'destroy', httpContext),
         success: true
       }
     } catch (e) {
@@ -202,18 +194,9 @@ export default class ModelsController {
   public async addModelRow(httpContext: HttpContextContract) {
     const id = parseInt(httpContext.params.id);
 
-    const model = await Model.query().where("id", id).firstOrFail();
-
-    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
-
     try {
-      const ControllerClass = isProd() ? (await require(controllerName)).default
-        : (await import(controllerName)).default
-
-      const controller = new ControllerClass()
-
       return {
-        data: await controller.add(httpContext),
+        data: await Controller.callControllerMethod(id, 'add', httpContext),
         success: true
       }
     } catch (e) {
@@ -235,16 +218,10 @@ export default class ModelsController {
 
     httpContext.params[model.name] = rowId
 
-    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
 
     try {
-      const ControllerClass = isProd() ? (await require(controllerName)).default
-        : (await import(controllerName)).default
-
-      const controller = new ControllerClass()
-
       return {
-        data: await controller.update(httpContext),
+        data: await Controller.callControllerMethod(id, 'update', httpContext),
         success: true
       }
     } catch (e) {
@@ -258,20 +235,9 @@ export default class ModelsController {
 
   public async showModel(httpContext: HttpContextContract) {
     const id = parseInt(httpContext.params.id);
-
-
-    const model = await Model.query().where("id", id).firstOrFail();
-
-    const controllerName = path.resolve( `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`)
-
     try {
-     const ControllerClass = isProd() ? (await require(controllerName)).default
-       : (await import(controllerName)).default
-
-      const controller = new ControllerClass()
-
       return {
-        data: await controller.index(httpContext),
+        data: await Controller.callControllerMethod(id, 'index', httpContext),
         success: true
       }
     } catch (e) {
@@ -380,8 +346,10 @@ export default class ModelsController {
         name: 'created_at',
         title: 'created_at',
         description: 'created_at',
+        null: true,
         type: 'timestamp',
         table_id: table.id,
+        model_id: model.id,
         // @ts-ignore
         user_id: auth?.user?.id,
       })
@@ -391,7 +359,9 @@ export default class ModelsController {
         name: 'updated_at',
         title: 'updated_at',
         description: 'updated_at',
+        null: true,
         type: 'timestamp',
+        model_id: model.id,
         table_id: table.id,
         // @ts-ignore
         user_id: auth?.user?.id,
@@ -405,6 +375,8 @@ export default class ModelsController {
         title: 'deleted_at',
         description: 'deleted_at',
         type: 'timestamp',
+        null: true,
+        model_id: model.id,
         table_id: table.id,
         // @ts-ignore
         user_id: auth?.user?.id,

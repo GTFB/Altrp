@@ -138,7 +138,7 @@ if ('serviceWorker' in navigator) {
 const frontAppContainer = document.getElementById('front-app');
 
 document.addEventListener('scroll', e=>{
-  appStore && appStore.dispatch(setScrollValue({top: document.documentElement.scrollTop}))
+  window.appStore && window.appStore.dispatch(setScrollValue({top: document.documentElement.scrollTop}))
   import(/* webpackChunkName: 'scroll-actions' */'./js/functions/actions/scroll-actions').then((module)=>{
     module?.default(e);
   })

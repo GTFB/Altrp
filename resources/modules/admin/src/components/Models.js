@@ -165,6 +165,7 @@ class Models extends Component {
         return {
           ...state,
           models: res.models.filter(item => !this.props.standardModels.some(model => model.name === item.name)),
+
           modelsSearch: urlS === null ? this.state.modelsSearch : urlS,
           modelsPageCount: res.pageCount,
           activeCategory: urlCategories === null ? 'All' : urlCategories

@@ -26,6 +26,8 @@ Route.group(() => {
     Route.get('/templates/options', 'TemplatesController.options')
     Route.get('/templates/:id', 'TemplatesController.get')
     Route.put('/templates/:id', 'TemplatesController.update')
+    Route.delete('/templates/:id/reviews', 'TemplatesController.deleteReviews')
+    Route.get('/templates/:id/reviews', 'TemplatesController.getReviews')
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
@@ -151,6 +153,9 @@ Route.group(() => {
     Route.get('/media', 'admin/MediaController.index')
     Route.post('/media', 'admin/MediaController.store')
     Route.delete('/media/:id', 'admin/MediaController.destroy')
+    Route.get('media_settings', async({response})=>{
+      return response.json([])
+    });
     /**
      * Settings
      */

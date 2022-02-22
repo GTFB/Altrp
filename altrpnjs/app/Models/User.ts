@@ -15,6 +15,7 @@ import {
   computed,
   afterCreate, beforeDelete
 } from '@ioc:Adonis/Lucid/Orm'
+import { v4 as uuid } from "uuid";
 
 export default class User extends BaseModel {
 
@@ -48,6 +49,9 @@ export default class User extends BaseModel {
   }
 
   @column()
+  public guid: string
+
+  @column()
   public rememberMeToken: string | null
 
   @column.dateTime()
@@ -63,6 +67,13 @@ export default class User extends BaseModel {
   public static async hashPassword (user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
+    }
+  }
+
+  @beforeSave()
+  public static async addGuid (user: User) {
+    if (!user.$dirty.guid) {
+      user.guid = uuid()
     }
   }
 

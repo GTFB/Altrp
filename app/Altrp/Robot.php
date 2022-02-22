@@ -57,7 +57,7 @@ class Robot extends Model
 
     public function getTelegramBotToken()
     {
-        return is_array($this->start_config) && isset($this->start_config['bot_token']) ? $this->start_config['bot_token'] : "";
+        return json_decode($this->start_config, true)['bot_token'];
     }
 
 
@@ -70,208 +70,107 @@ class Robot extends Model
     $content .= "\tpublic function " . $this->getMethodName() . "( ApiRequest \$request ){
 
 	      \$data = \$request->all();
-	  	  \$robot = Robot::find(".$this->id.");
-		    \$start_config = json_decode(\$robot->start_config, true);
-		    \$bot_token = \$start_config['bot_token'];
-		    \$chart = json_decode(\$robot->chart, true);
-		    \$edges = array_column(\$chart, 'source', 'target');
-		    \$chart_ids = array_column(\$chart, 'type', 'id');
+	      \$robot = Robot::find(".$this->id.");
+	  	  \$bot_token = \$robot->getTelegramBotToken();
+		    \$chart = \$robot->getChartAsArray();
 
-		    \$user_id = null;
-				\$telegram_chat_id = null;
-				\$target_node = null;
+		    \$chat_id = null;
+		    \$current_node_id = null;
 
-				//Bot Start
-				if ( isset(\$data['message']) && \$data['message']['text'] == '/start') {
-				  if (\$data['message']['chat']['type'] == 'private') {
+		    //Start Bot
+		    if ( isset(\$data['message']) && \$data['message']['text'] == '/start') {
+		      if (\$data['message']['chat']['type'] == 'private') {
 
-				    \$user = \$robot->getUserOnStartTelegramBot(\$data['message']['chat']['username'], \$data['message']['chat']['first_name']);
+		        \$user = \$robot->getUserOnStartTelegramBot(\$data['message']['chat']['username'], \$data['message']['chat']['first_name']);
+		        \$user_id = \$user->id;
+		        
+		      }
 
-				    \$user_id = \$user->id;
-				    
-				  }
+		      \$chat_id = \$data['message']['chat']['id'];
+		      \$current_node_id = (string)array_search('start', \$robot->getNodeIdTypes());
+		      \$chat = \$robot->getTelegramChat(\$chat_id, \$current_node_id, \$user_id);
 
-				  \$telegram_chat_id = \$data['message']['chat']['id'];
-				  \$chart_id = array_search('start', \$chart_ids);
-				  \$chat = \$robot->createTelegramChat(\$telegram_chat_id, \$chart_id, \$user_id);
+		    }
 
-				}
-
-			  //Search target node if buttons
+		    //Call node button
 		    if ( isset(\$data['callback_query']) && isset(\$data['callback_query']['from']['id'])) {
 
-		      \$telegram_chat_id = \$data['callback_query']['from']['id'];
-
+		      \$chat_id = \$data['callback_query']['from']['id'];
 		      \$button_value = \$data['callback_query']['data'];//node shortcode
 
-		      foreach (\$chart as \$key => \$value) {
+		      foreach (\$chart as \$node) {
+		        if (isset(\$node['data']) && isset(\$node['data']['props']['nodeData']['data']) && \$node['data']['props']['nodeData']['data']['shortcode'] == \$button_value) {
 
-		        if (isset(\$value['data']) && isset(\$value['data']['props']['nodeData']['data']) && \$value['data']['props']['nodeData']['data']['shortcode'] == \$button_value) {
-
-		          \$target_node = \$value;
+		          \$current_node_id = \$value['id'];
 		          break;
 		        }
 		      }
 
-		      \$chat = \$robot->getTelegramChat(\$telegram_chat_id);
+		      \$chat = \$robot->getTelegramChat(\$chat_id, \$current_node_id);
+		    } 
 
-		    } else {
+		    if (!\$chat_id || !\$current_node_id) {
+		      return;
+		    }
 
-		      //Search target node if start or not buttons
-		      \$current_chart_id = \$chat->chart_id;
-		      \$target_id = array_search(\$current_chart_id, \$edges);
-		      \$node_key = array_search(\$target_id, array_column(\$chart, 'id'));
-		      \$target_node = \$chart[\$node_key];
+		    \$following_nodes = \$robot->getFollowingNodes((string)\$current_node_id);
+
+		    //Sending messages
+		    foreach (\$following_nodes as \$node) {
+
+		      \$node_key = array_search(\$node, array_column(\$chart, 'id'));
+
+		      \$current_node = \$chart[\$node_key];
+
+		      if (!isset(\$current_node['data']['props']['nodeData']['data'])) {
+		        continue;
+		      }
+
+		      \$message = '';
+		      \$buttons = [];
+		      \$document = null;
+
+		      \$node_content = \$current_node['data']['props']['nodeData']['data']['content'];
+		      foreach (\$node_content as \$content) {
+
+		        if (\$content['type'] == 'content') {
+		          \$message .= \$content['data']['text'] . ' ';
+		        }
+		        if (\$value['type'] == 'link') {
+			        \$message .= '<a href=\"'.\$value['data']['url'].'\">'.\$value['data']['text'].'</a> ';
+			      }
+		        if (\$content['type'] == 'button' && \$content['data']['text'] && \$content['data']['shortcode'] ) {
+		          \$buttons[] = [
+		              'text' => \$content['data']['text'],
+		              'callback_data' => \$content['data']['shortcode'],
+		          ];
+		        }
+		        if (\$content['type'] == 'document') {
+		          \$document = \$content['data']['url'];
+		          \$filename = \$content['data']['text'];
+		        }
+
+		      }
+
+		      //Send message
+		      if (!empty(\$buttons)) {
+		        \$reply_markup['inline_keyboard'] = [\$buttons];
+		        \$res = \$this->telegram->sendButtons(\$bot_token, \$chat_id, \$message, \$reply_markup);
+		      } else if(\$document) {
+		        \$res = \$this->telegram->sendPhoto(\$bot_token, \$chat_id, \$document, \$filename);
+		      } else {
+		        \$res = \$this->telegram->sendMessage(\$bot_token, \$chat_id, \$message);
+		      }
 
 		    }
 
-		      //Prepare message
-			    if (!isset(\$target_node['data']['props']['nodeData']['data'])) {
-			      return;
-			    }
+		    //Update chat state
+		    \$chat->node_id = \$current_node['id'];
+		    \$chat->save();
 
-			    \$content = \$target_node['data']['props']['nodeData']['data']['content'];
-			    \$message = '';
-			    \$buttons = [];
-			    foreach (\$content as \$value) {
-
-			      if (\$value['type'] == 'content') {
-			        \$message .= \$value['data']['text'] . ' ';
-			      }
-			      if (\$value['type'] == 'link') {
-			        \$message .= '<a href=\"'.\$value['data']['url'].'\">'.\$value['data']['text'].'</a> ';
-			      }
-			      if (\$value['type'] == 'button' && \$value['data']['text'] && \$value['data']['shortcode'] ) {
-			        \$buttons[] = [
-			            'text' => \$value['data']['text'],
-			            'callback_data' => \$value['data']['shortcode'],
-			        ];
-			      }
-			      if (\$value['type'] == 'document') {
-			        \$document = \$value['data']['url'];
-			        \$filename = \$value['data']['text'];
-			      }
-
-			    }
-
-			    //Send message
-			    if (!empty(\$buttons)) {
-			      \$reply_markup['inline_keyboard'] = [\$buttons];
-			      \$content = \$this->telegram->sendButtons(\$bot_token, \$telegram_chat_id, \$message, \$reply_markup);
-			    } else if(\$document) {
-			      \$content = \$this->telegram->sendPhoto(\$bot_token, \$telegram_chat_id, \$document, \$filename);
-			    } else {
-			      \$content = \$this->telegram->sendMessage(\$bot_token, \$telegram_chat_id, \$message);
-			    }
-
-			    //Update chat state
-			    \$chat->chart_id = \$target_node['id'];
-			    \$chat->save();
-
-			    \$result = json_decode(\$content->getBody()->getContents(), true);
-			    return \$result;
+		    \$result = json_decode(\$res->getBody()->getContents(), true);
+		    return \$result;
     }";
-
-   //  $content .= "\tpublic function " . $this->getMethodName() . "( ApiRequest \$request ){
-
-	  //   \$data = \$request->all();
-	  //   \$robot = Robot::find(".$this->id.");
-	  //   \$start_config = json_decode(\$robot->start_config, true);
-	  //   \$bot_token = \$start_config['bot_token'];
-	  //   \$chart = json_decode(\$robot->chart, true);
-	  //   \$edges = array_column(\$chart, 'source', 'target');
-	  //   \$chart_ids = array_column(\$chart, 'type', 'id');
-
-	    // \$user_id = null;
-	    // \$telegram_chat_id = null;
-	    // \$target_node = null;
-
-	    // //Bot Start
-	    // if ( isset(\$data['message']) && \$data['message']['text'] == '/start') {
-	    //   if (\$data['message']['chat']['type'] == 'private') {
-
-	    //     \$user = \$robot->getUserOnStartTelegramBot(\$data['message']['chat']['username'], \$data['message']['chat']['first_name']);
-
-	    //     \$user_id = \$user->id;
-	        
-	    //   }
-
-	    //   \$telegram_chat_id = \$data['message']['chat']['id'];
-	    //   \$chart_id = array_search('start', \$chart_ids);
-	    //   \$chat = \$robot->createTelegramChat(\$telegram_chat_id, \$chart_id, \$user_id);
-	  
-	    // }
-
-	    //Search target node if buttons
-	    // if ( isset(\$data['callback_query']) && isset(\$data['callback_query']['from']['id'])) {
-
-	    //   \$telegram_chat_id = \$data['callback_query']['from']['id'];
-
-	    //   \$button_value = \$data['callback_query']['data'];//node shortcode
-
-	    //   foreach (\$chart as \$key => \$value) {
-
-	    //     if (isset(\$value['data']) && isset(\$value['data']['props']['nodeData']['data']) && \$value['data']['props']['nodeData']['data']['shortcode'] == \$button_value) {
-
-	    //       \$target_node = \$value;
-	    //       break;
-	    //     }
-	    //   }
-
-	    //   \$chat = \$robot->getTelegramChat(\$telegram_chat_id);
-
-	    // } else {
-
-	    //   //Search target node if start or not buttons
-	    //   \$current_chart_id = \$chat->chart_id;
-	    //   \$target_id = array_search(\$current_chart_id, \$edges);
-	    //   \$node_key = array_search(\$target_id, array_column(\$chart, 'id'));
-	    //   \$target_node = \$chart[\$node_key];
-
-	    // }
-
-	    //Prepare message
-	    // if (!isset(\$target_node['data']['props']['nodeData']['data'])) {
-	    //   return;
-	    // }
-
-	    // \$content = \$target_node['data']['props']['nodeData']['data']['content'];
-	    // \$message = '';
-	    // \$buttons = [];
-	    // foreach (\$content as \$value) {
-
-	    //   if (\$value['type'] == 'content') {
-	    //     \$message .= \$value['data']['text'] . ' ';
-	    //   }
-	    //   if (\$value['type'] == 'link') {
-	    //     \$message .= '<a href=\"'.\$value['data']['url'].'\">'.\$value['data']['text'].'</a> ';
-	    //   }
-	    //   if (\$value['type'] == 'button' && \$value['data']['text'] && \$value['data']['shortcode'] ) {
-	    //     \$buttons[] = [
-	    //         'text' => \$value['data']['text'],
-	    //         'callback_data' => \$value['data']['shortcode'],
-	    //     ];
-	    //   }
-
-	    // }
-
-	    //Send message
-	    // if (!empty(\$buttons)) {
-	    //   \$reply_markup['inline_keyboard'] = [\$buttons];
-	    //   \$content = \$this->telegram->sendButtons(\$bot_token, \$telegram_chat_id, \$message, \$reply_markup);
-	    // } else {
-	    //   \$content = \$this->telegram->sendMessage(\$bot_token, \$telegram_chat_id, \$message);
-	    // }
-
-	    // //Update chat state
-	    // \$chat->chart_id = \$target_node['id'];
-	    // \$chat->save();
-
-	    // \$result = json_decode(\$content->getBody()->getContents(), true);
-	    // return \$result;
-  	// }";
-
-
 
     return $content;
   }
@@ -296,52 +195,103 @@ class Robot extends Model
 
   }
 
-
   /**
    * @return Object
    */
-  public function createTelegramChat($telegram_chat_id, $chart_id, $user_id = null)
+  public function getTelegramChat($chat_id, $node_id = null, $user_id = null)
   {
     
-  	$chat = Chat::where('telegram_chat_id', $telegram_chat_id)
+  	$chat = Chat::where('chat_id', $chat_id)
             ->where('robot_id', $this->id)
             ->when($user_id, function ($query, $user_id) {
                 return $query->where('user_id', $user_id);
-            })
-            ->first();
+            })->first();
 
     if (!$chat) {
       $chat = new Chat([
-        'telegram_chat_id' => $telegram_chat_id,
+        'chat_id' => $chat_id,
         'robot_id' => $this->id,
         'user_id' => $user_id,
-        //'chart_id' => $chart_id
+        'node_id' => $node_id,
       ]);
+      $chat->save();
     }
-    $chat->chart_id = $chart_id;
-    $chat->save();
+    if ($chat && $node_id) {
+    	$chat->node_id = $node_id;
+    	$chat->save();
+    }
+    
     return $chat;
-
   }
 
+  public function getChartAsArray()
+  {
+    return json_decode($this->chart, true);
+  }
+
+  // public function getBotToken()
+  // {
+  //   return json_decode($this->start_config, true)['bot_token'];
+  // }
+
+  public function getTargetSourceEdges()
+  {
+	  	return array_column($this->getChartAsArray(), 'source', 'target');
+  }
+
+  public function getNodeIdTypes()
+  {
+	  return array_column($this->getChartAsArray(), 'type', 'id');
+  }
 
   /**
-   * @return Object
+   * @return Array
    */
-  public function getTelegramChat($telegram_chat_id, $user_id = null)
+  public function getFollowingNodes($current_node_id)
   {
+	  
+  	$target_source_edges = $this->getTargetSourceEdges();
+	  $following_nodes = [(string)$current_node_id];
+	  $chart = $this->getChartAsArray();
+
+    foreach ($target_source_edges as $target_node => $source_node) {
+
+        $last_node_id = $following_nodes[array_key_last($following_nodes)];
+
+        $target_node_id = array_search($last_node_id, $target_source_edges);
+        if ($target_node_id) {
+          $following_nodes[] = (string)$target_node_id;
+        }
+    }
+
+    $count_targets = array_count_values($target_source_edges);
     
-  	return Chat::where('telegram_chat_id', $telegram_chat_id)
-            ->where('robot_id', $this->id)
-            ->when($user_id, function ($query, $user_id) {
-                return $query->where('user_id', $user_id);
-            })
-            ->first();
+    $arr = [];
+    foreach ($following_nodes as $node_id) {
+ 
+      $arr[] = $node_id;
+
+      //button check
+      $node_key = array_search($node_id, array_column($chart, 'id'));
+
+      if (isset($chart[$node_key]['data']['props']['nodeData']['data'])) {
+        $node_content = array_column($chart[$node_key]['data']['props']['nodeData']['data']['content'], 'type');
+        $key_button = array_search("button", $node_content);
+        if (gettype($key_button) == "integer") {
+          break;
+        }
+      }
+
+      //branching check
+      if ($count_targets[(string)$node_id] > 1) {
+        break;
+      }
+
+    }
+
+    return $arr;
 
   }
-
-
-
 
   /**
    * @return string

@@ -127,6 +127,7 @@ class AddPage extends Component {
               label: 'None',
             },
             ...models_res.filter(item => !this.props.standardModels.some(model => model.label === item.label))]
+
         };
       });
     }

@@ -390,6 +390,7 @@ class Editor extends Component {
     }
     return (
       <DndProvider backend={HTML5Backend}>
+
         <div
           className={templateClasses}
           onClick={this.onClick}
