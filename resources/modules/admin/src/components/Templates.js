@@ -24,10 +24,7 @@ class Templates extends Component {
       pageCount: 1,
       currentPage: 1,
       templateSearch: '',
-      sorting: {
-        order_by: 'title',
-        order: 'ASC',
-      },
+      sorting: {},
       categoryOptions: [],
       activeCategory: 'All',
       modal: false

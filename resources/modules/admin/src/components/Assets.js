@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { NavLink, withRouter } from "react-router-dom";
-
+import AdminTable from "./AdminTable";
 import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
 import { FontsDetail } from "./FontsDetail";
 import IconUpload from "./../svgs/upload.svg"
 import UserTopPanel from "./UserTopPanel";
+import AnimatedLoader from './../svgs/animatedLoader.svg'
 
 class Assets extends Component {
   constructor(props) {
@@ -32,7 +33,12 @@ class Assets extends Component {
       haveNextImage: true,
       haveNextFont: true,
       havePreviousFont: true,
-      imageSettings: []
+      imageSettings: [],
+      changeTable: false,
+      tableSearch: '',
+      currentPage: 1,
+      loading: true,
+      lineTableCheckedIS: []
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
@@ -43,6 +49,7 @@ class Assets extends Component {
       medias: ['wav', 'mp3', 'mp4', 'avi', 'webm'],
       others: ['']
     };
+    this.itemsPerPage = 20;
     this.resource = new Resource({ route: '/admin/ajax/media' });
     this.imageResize = new Resource({route: "/admin/ajax/media-resize-all-images"} );
     this.imagesSettings = new Resource({route: "/admin/ajax/media_settings"} );
@@ -172,12 +179,12 @@ class Assets extends Component {
 
   filterAssets(activeLink) {
     this.setState(state => {
-      return { ...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
+      return { ...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}`, loading: true, lineTableCheckedIS: [] }
     });
     let filterResource = new Resource({ route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}` });
-    filterResource.getAll().then(res => {
+    filterResource.getQueried({s: this.state.tableSearch}).then(res => {
       this.setState(state => {
-        return { ...state, assets: res }
+        return { ...state, assets: res, loading: false }
       })
     });
     this.setState((state => {
@@ -267,10 +274,73 @@ class Assets extends Component {
     })
   }
 
+  changeToTable = () => {
+    this.setState(state => ({
+      ...state,
+      changeTable: !state.changeTable
+    }))
+  }
+
+  changeValueTable = (e) => {
+    this.setState(state =>({...state, tableSearch: e.target.value}))
+  }
+
+  searchValueTable = (e) => {
+    e.preventDefault()
+    const activeLink = this.changeUrlForTab();
+    this.filterAssets(activeLink);
+  }
+
+  checkedLineTableIS = (e, id) => {
+    if (e.target.checked) {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedIS: [...state.lineTableCheckedIS, id]
+      }))
+    } else {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedIS: [...state.lineTableCheckedIS].filter(item => item !== id)
+      }))
+    }
+  }
+
+  checkedAllIS = (e) => {
+    if (e.target.checked) {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedIS: this.state.assets.map(item => item.id)
+      }))
+    } else {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedIS: []
+      }))
+    }
+  }
+
+  checkedDeleteIS = () => {
+    if (confirm('Are You Sure?')) {
+      let array = this.state.assets.filter(asset => !this.state.lineTableCheckedIS.includes(asset.id))
+      this.state.lineTableCheckedIS.forEach(id => {
+        this.resource.delete(id)
+      })
+      this.setState(state => ({
+        ...state,
+        assets: array,
+        lineTableCheckedIS: []
+      }))
+    }
+  }
+
   render() {
     let UploadIcon = iconsManager().getIconComponent('upload');
     let CloseIcon = iconsManager().getIconComponent('close');
     let AviIcon = iconsManager().getIconComponent('avi');
+    let assetsMapIS = this.state.assets.map(asset =>
+      ({...asset, clickToImage: () => this.openImageDetail(asset.id), checkedTable: this.checkedLineTableIS })
+    )
+    let assetsMapOthers = this.state.assets.map(asset => ({...asset, button__table: () => this.openDocumentDetail(asset.id) }))
     return <div className="admin-assets admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
         <div className="admin-heading-left">
@@ -280,8 +350,13 @@ class Assets extends Component {
             <span className="admin-breadcrumbs__current">All Assets</span>
           </div>
           <button className="btn" onClick={this.toggleUploadLoader}>{this.state.uploadActive ? "Close file uploader" : "Open file uploader"}</button>
-          {this.state.imageSettings.length > 0 && (
+          {(this.state.imageSettings.length > 0 && this.state.activeLink === 'images') && (
             <button onClick={this.resizeAllImages} style={{marginLeft: '10px'}} className="btn">Resize All Image</button>
+          )}
+          {(this.state.activeLink === 'svgs' || this.state.activeLink === 'images') && (
+            <button onClick={this.changeToTable} style={{marginLeft: '10px'}} className="btn">
+              {this.state.changeTable ? 'Change to list' : 'Change to table'}
+            </button>
           )}
         </div>
         <UserTopPanel />
@@ -317,6 +392,13 @@ class Assets extends Component {
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
+            to={`${this.path}/svgs`}
+            isActive={this.isActiveLink('svgs')}
+            onClick={this.onFilterAssets('svgs')}
+          >Svgs</NavLink>
+          <NavLink
+            className="custom-tab__tab"
+            activeClassName="custom-tab__tab--selected"
             to={`${this.path}/documents`}
             isActive={this.isActiveLink('documents')}
             onClick={this.onFilterAssets('documents')}
@@ -328,13 +410,6 @@ class Assets extends Component {
             isActive={this.isActiveLink('fonts')}
             onClick={this.onFilterAssets('fonts')}
           >Fonts</NavLink>
-          <NavLink
-            className="custom-tab__tab"
-            activeClassName="custom-tab__tab--selected"
-            to={`${this.path}/svgs`}
-            isActive={this.isActiveLink('svgs')}
-            onClick={this.onFilterAssets('svgs')}
-          >Svgs</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
@@ -357,48 +432,220 @@ class Assets extends Component {
             onClick={this.onFilterAssets('others')}
           >Others</NavLink>
         </div>
-        <div className={this.state.activeLink === 'images'
-        || this.state.activeLink === 'svgs' ? "admin-assets__list custom-tab__tab-panel assets-shell-blocks__background"
-        : "admin-assets__list custom-tab__tab-panel assets-shell-blocks"}>
-          {
-            this.state.assets.map(asset => {
-              return (
-                <div key={asset.id} className={this.state.activeLink === 'images' || this.state.activeLink === 'svgs' ? "assets-shell-background" : "assets-shell"}>
+         <div className={this.state.loading ? "assets-loading" : ""}>
+           {this.state.loading ? (
+             <div className="loading-assets-block">
+               {/*<span>Loading...</span>*/}
+               {/*<AnimatedLoader />*/}
+               <div className="loader-assets-animate"/>
+             </div>
+           ) : (
+             <>
+               {(this.state.activeLink === 'images' || this.state.activeLink === 'svgs') && (
+                 <div>
+                   {this.state.changeTable ? (
+                     <AdminTable
+                       columns={[
+                         {
+                           name: 'image',
+                           title: 'Image',
+                         },
+                         {
+                           name: 'title',
+                           title: 'Title',
+                         },
+                         {
+                           name: 'media_type',
+                           title: 'File type',
+                         },
+                         {
+                           name: 'size',
+                           title: 'File size'
+                         },
+                         {
+                           name: 'categories',
+                           title: 'Categories'
+                         },
+                         {
+                           name: 'created_at',
+                           title: 'Created at'
+                         },
+                         {
+                           name: 'updated_at',
+                           title: 'Updated at'
+                         }
+                       ]}
 
-                  <div className="assets-list__item item" >
-                    {(() => {
-                        if (this.state.activeLink === 'images' || this.state.activeLink === 'svgs') {
-                          return (
-                            <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
-                                 style={{ 'backgroundImage': `url('${asset.url}')` }} />
-                          )
-                        } else {
-                          let typeIcon = asset.url.split('.').pop();
-                          let IconFile = iconsManager().getIconComponent('file');
-                          this.typesFiles[this.state.activeLink].forEach((type) => {
-                            if (typeIcon === type) {
-                              IconFile = iconsManager().getIconComponent(typeIcon);
-                              return <IconFile className="item__background-icon" />
-                            }
-                          });
-                          return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__background-icon" />
-                        }
-                      }
-                    )()}
-                    <button className={this.state.itemDeleteClasses}
-                            data-assetid={asset.id}
-                            title="Delete"
-                            onClick={this.deleteClick}>
-                      <CloseIcon className="item__delete-icon" />
-                    </button>
-                  </div>
+                       allChecked={this.checkedAllIS}
+                       deleteCheckedLine={this.checkedDeleteIS}
+                       arrayChecked={this.state.lineTableCheckedIS}
 
-                </div>
-              )
-            }
-            )
-          }
-        </div>
+                       quickActions={[
+                         {
+                           tag: "button",
+                           route: "/admin/ajax/media/:id",
+                           method: "delete",
+                           confirm: "Are You Sure?",
+                           after: () => this.filterAssets(this.state.activeLink),
+                           className: "quick-action-menu__item_danger",
+                           title: "Delete"
+                         }
+                       ]}
+                       rows={assetsMapIS.slice(
+                         this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+                         this.state.currentPage * this.itemsPerPage)
+                       }
+                       searchTables={{
+                         submit: this.searchValueTable,
+                         value: this.state.tableSearch,
+                         change: (e) => this.changeValueTable(e)
+                       }}
+
+                       pageCount={Math.ceil(this.state.assets.length / this.itemsPerPage) || 1}
+                       currentPage={this.state.currentPage}
+                       changePage={page => {
+                         if (this.state.currentPage !== page) {
+                           this.setState({currentPage: page});
+                         }
+                       }}
+                       itemsCount={this.state.assets.length}
+
+                       openPagination={true}
+                     />
+                   ) : (
+                     <div className={this.state.activeLink === 'images'
+                     || this.state.activeLink === 'svgs' ? "admin-assets__list custom-tab__tab-panel assets-shell-blocks__background"
+                       : "admin-assets__list custom-tab__tab-panel assets-shell-blocks"}>
+                       {
+                         this.state.assets.map(asset => {
+                             return (
+                               <div key={asset.id} className={this.state.activeLink === 'images' || this.state.activeLink === 'svgs' ? "assets-shell-background" : "assets-shell"}>
+
+                                 <div className="assets-list__item item" >
+                                   {(() => {
+                                       if (this.state.activeLink === 'images' || this.state.activeLink === 'svgs') {
+                                         return (
+                                           <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
+                                                style={{ 'backgroundImage': `url('${asset.url}')` }} />
+                                         )
+                                       }
+                                     }
+                                   )()}
+                                   <button className={this.state.itemDeleteClasses}
+                                           data-assetid={asset.id}
+                                           title="Delete"
+                                           onClick={this.deleteClick}>
+                                     <CloseIcon className="item__delete-icon" />
+                                   </button>
+                                 </div>
+
+                               </div>
+                             )
+                           }
+                         )
+                       }
+                     </div>
+                   )}
+                 </div>
+               )}
+               {(this.state.activeLink !== "images" && this.state.activeLink !== 'svgs') && (
+                 <div>
+                   {/*{*/}
+                   {/*  this.state.assets.map(asset => {*/}
+                   {/*      return (*/}
+                   {/*        <div key={asset.id} className={this.state.activeLink === 'images' || this.state.activeLink === 'svgs' ? "assets-shell-background" : "assets-shell"}>*/}
+
+                   {/*          <div className="assets-list__item item" >*/}
+                   {/*            {(() => {*/}
+                   {/*                let typeIcon = asset.url.split('.').pop();*/}
+                   {/*                let IconFile = iconsManager().getIconComponent('file');*/}
+                   {/*                this.typesFiles[this.state.activeLink].forEach((type) => {*/}
+                   {/*                  if (typeIcon === type) {*/}
+                   {/*                    IconFile = iconsManager().getIconComponent(typeIcon);*/}
+                   {/*                    return <IconFile className="item__background-icon" />*/}
+                   {/*                  }*/}
+                   {/*                });*/}
+                   {/*                return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__background-icon" />*/}
+                   {/*              }*/}
+                   {/*            )()}*/}
+                   {/*            <button className={this.state.itemDeleteClasses}*/}
+                   {/*                    data-assetid={asset.id}*/}
+                   {/*                    title="Delete"*/}
+                   {/*                    onClick={this.deleteClick}>*/}
+                   {/*              <CloseIcon className="item__delete-icon" />*/}
+                   {/*            </button>*/}
+                   {/*          </div>*/}
+
+                   {/*        </div>*/}
+                   {/*      )*/}
+                   {/*    }*/}
+                   {/*  )*/}
+                   {/*}*/}
+                   <AdminTable
+                     columns={[
+                       {
+                         name: 'title',
+                         title: 'Title',
+                         button__table: true,
+                       },
+                       {
+                         name: 'media_type',
+                         title: 'File type',
+                       },
+                       {
+                         name: 'size',
+                         title: 'File size'
+                       },
+                       {
+                         name: 'categories',
+                         title: 'Categories'
+                       },
+                       {
+                         name: 'created_at',
+                         title: 'Created at'
+                       },
+                       {
+                         name: 'updated_at',
+                         title: 'Updated at'
+                       }
+                     ]}
+                     quickActions={[
+                       {
+                         tag: "button",
+                         route: "/admin/ajax/media/:id",
+                         method: "delete",
+                         confirm: "Are You Sure?",
+                         after: () => this.filterAssets(this.state.activeLink),
+                         className: "quick-action-menu__item_danger",
+                         title: "Delete"
+                       }
+                     ]}
+                     rows={assetsMapOthers.slice(
+                       this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+                       this.state.currentPage * this.itemsPerPage)
+                     }
+                     searchTables={{
+                       submit: this.searchValueTable,
+                       value: this.state.tableSearch,
+                       change: (e) => this.changeValueTable(e)
+                     }}
+
+                     pageCount={Math.ceil(this.state.assets.length / this.itemsPerPage) || 1}
+                     currentPage={this.state.currentPage}
+                     changePage={page => {
+                       if (this.state.currentPage !== page) {
+                         this.setState({currentPage: page});
+                       }
+                     }}
+                     itemsCount={this.state.assets.length}
+
+                     openPagination={true}
+                   />
+                 </div>
+               )}
+             </>
+           )}
+         </div>
       </div>
       <div>
         <ImageDetail getAuthorList={this.getAuthorList} havePreviousImage={this.state.havePreviousImage} haveNextImage={this.state.haveNextImage} updateAsset={this.updateAsset} getAsset={this.getAsset} deleteAsset={this.deleteAsset} imageId={this.state.imageId} closeImageDetail={this.closeImageDetail} nextImageDetail={this.nextImageDetail} prevImageDetail={this.prevImageDetail} />

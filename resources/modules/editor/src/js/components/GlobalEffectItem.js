@@ -6,7 +6,7 @@ import {
   Button,
   Slider,
   MenuItem,
-  Collapse
+  Collapse, Alignment
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
 import { SketchPicker } from "react-color";
@@ -150,143 +150,154 @@ class GlobalEffectItem extends Component {
 
   render() {
     const { effect } = this.state;
+    const mgButton = this.state.edit ? '20px' : '0';
+
     return (
       <React.Fragment>
         {!this.props.isNew && (
           <Button
-            style={{ width: "100%" }}
+            style={{ width: "100%", marginBottom: mgButton }}
             onClick={e => this.setState(s => ({ ...s, edit: !s.edit }))}
           >
             {!this.props.isNew && effect.name}
           </Button>
         )}
-        <Collapse isOpen={this.state.edit}>
-          <ControlGroup vertical>
-            <form onSubmit={this.onSaveEffect}>
-              <FormGroup label="Enter Effect Name">
-                <InputGroup
-                  required
-                  name="name"
-                  id="text-input"
-                  placeholder="Enter Effect Name"
-                  defaultValue={effect.name}
-                  onChange={this.nameChange}
-                />
-              </FormGroup>
+        {this.state.edit && (
+          <form onSubmit={this.onSaveEffect}>
+            <div className="global-effect__group">
+              <label htmlFor="enter_effect_name">Enter Effect Name</label>
+              <InputGroup
+                required
+                name="name"
+                id="text-input"
+                placeholder="Enter Effect Name"
+                defaultValue={effect.name}
+                onChange={this.nameChange}
+              />
+            </div>
 
-              <FormGroup label="Choose Effect Color">
-                <div
-                  className={"control-color-colorPicker"}
+            <div className="global-effect__group">
+              <label htmlFor="choose_effect_color">Choose Effect Color</label>
+              <div
+                className={"control-color-colorPicker"}
+                style={{
+                  position: "relative",
+                  marginTop: `0`
+                }}
+              >
+                <SketchPicker
+                  color={effect.color}
+                  presetColors={[]}
+                  onChange={color => this.colorChange(color)}
                   style={{
-                    position: "relative",
-                    marginTop: `0`
+                    padding: 0,
+                    boxShadow: "none"
                   }}
-                >
-                  <SketchPicker
-                    color={effect.color}
-                    presetColors={[]}
-                    onChange={color => this.colorChange(color)}
-                    style={{
-                      padding: 0,
-                      boxShadow: "none"
-                    }}
-                  ></SketchPicker>
-                  <GlobalPresetColors
-                    changeValue={color => {
-                      console.log(color);
-                      this.globalColor(color);
-                      // this._changeValue(color);
-                      // this.setState(state=>({...state, colorRGB: color.colorRGB}))
-                    }}
-                  ></GlobalPresetColors>
-                </div>
-              </FormGroup>
-              <FormGroup label="Blur">
-                <Slider
-                  onChange={value => this.onSlide(value, "blur")}
-                  min={0}
-                  max={100}
-                  stepSize={1}
-                  labelStepSize={10}
-                  showTrackFill={true}
-                  value={effect.blur}
                 />
-              </FormGroup>
-              <FormGroup label="Horizontal displacement">
-                <Slider
-                  onChange={value => this.onSlide(value, "horizontal")}
-                  min={-100}
-                  max={100}
-                  stepSize={1}
-                  labelStepSize={25}
-                  value={effect.horizontal}
-                  showTrackFill={true}
+                <GlobalPresetColors
+                  changeValue={color => {
+                    console.log(color);
+                    this.globalColor(color);
+                    // this._changeValue(color);
+                    // this.setState(state=>({...state, colorRGB: color.colorRGB}))
+                  }}
                 />
-              </FormGroup>
-              <FormGroup label="Vertical displacement">
-                <Slider
-                  onChange={value => this.onSlide(value, "vertical")}
-                  min={-100}
-                  max={100}
-                  stepSize={1}
-                  labelStepSize={25}
-                  value={effect.vertical}
-                  showTrackFill={true}
-                />
-              </FormGroup>
-              <FormGroup label="Spread">
-                <Slider
-                  onChange={value => this.onSlide(value, "spread")}
-                  min={-100}
-                  max={100}
-                  stepSize={1}
-                  labelStepSize={25}
-                  value={effect.spread}
-                  showTrackFill={true}
-                />
-              </FormGroup>
-              <FormGroup label="Position" inline={true}>
-                <Select
-                  activeItem={
-                    typeOptions.filter(item => item.value == effect.type)[0]
-                  }
-                  itemRenderer={item => (
-                    <MenuItem
-                      key={item.key}
-                      text={item.label}
-                      onClick={e => this.onSelect(e, item.value)}
-                    />
-                  )}
-                  items={typeOptions}
-                  noResults={<MenuItem disabled={true} text="No results." />}
-                >
-                  <Button
-                    text={
-                      typeOptions.filter(item => item.value == effect.type)[0]
-                        .label
-                    }
-                    rightIcon="double-caret-vertical"
+              </div>
+            </div>
+
+            <div className="global-effect__group">
+              <label htmlFor="position">Position</label>
+              <Select
+                activeItem={typeOptions.filter(item => item.value === effect.type)[0]}
+                matchTargetWidth
+                itemRenderer={item => (
+                  <MenuItem
+                    key={item.key}
+                    active={item.value === this.state.effect.type}
+                    text={item.label}
+                    onClick={e => this.onSelect(e, item.value)}
                   />
-                </Select>
-              </FormGroup>
-              <FormGroup>
+                )}
+                items={typeOptions}
+                noResults={
+                  <MenuItem disabled={true} text="No results." />
+                }
+              >
                 <Button
-                  type="submit"
-                  style={{ width: "100%", marginBottom: "5px" }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  intent="danger"
-                  onClick={this.onDeleteEffect}
-                  style={{ width: "100%" }}
-                >
-                  Delete
-                </Button>
-              </FormGroup>
-            </form>
-          </ControlGroup>
-        </Collapse>
+                  fill={true}
+                  alignText={Alignment.LEFT}
+                  text={typeOptions.filter(item => item.value === effect.type)[0].label}
+                  rightIcon="double-caret-vertical"
+                />
+              </Select>
+            </div>
+
+            <FormGroup label="Blur">
+              <Slider
+                onChange={value => this.onSlide(value, "blur")}
+                min={0}
+                max={100}
+                stepSize={1}
+                labelStepSize={10}
+                showTrackFill={true}
+                value={effect.blur}
+              />
+            </FormGroup>
+            <FormGroup label="Horizontal displacement">
+              <Slider
+                onChange={value => this.onSlide(value, "horizontal")}
+                min={-100}
+                max={100}
+                stepSize={1}
+                labelStepSize={25}
+                value={effect.horizontal}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Vertical displacement">
+              <Slider
+                onChange={value => this.onSlide(value, "vertical")}
+                min={-100}
+                max={100}
+                stepSize={1}
+                labelStepSize={25}
+                value={effect.vertical}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Spread">
+              <Slider
+                onChange={value => this.onSlide(value, "spread")}
+                min={-100}
+                max={100}
+                stepSize={1}
+                labelStepSize={25}
+                value={effect.spread}
+                showTrackFill={true}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <button
+                className="btn-global__fonts-save"
+                type="submit"
+                style={{ width: "100%" }}
+              >
+                Save
+              </button>
+            </FormGroup>
+
+            <FormGroup>
+              <button
+                className="btn-global__fonts-delete"
+                onClick={this.onDeleteEffect}
+                style={{ width: "100%" }}
+              >
+                Delete
+              </button>
+            </FormGroup>
+          </form>
+        )}
       </React.Fragment>
     );
   }
