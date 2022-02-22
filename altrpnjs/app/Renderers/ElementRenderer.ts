@@ -46,8 +46,10 @@ export default class ElementRenderer {
         link_class: this.isLink() ? 'altrp-pointer' : '',
         columns_count,
       })
+      // if(this.getName() === 'heading'){
+      //   console.log(element_content);
+      // }
     } else {
-      fs.writeFileSync(app_path(`altrp-templates/views/elements/widgets/${this.element.name}.stub`), '' )
       console.error(`Template for ${this.element.name} not found!`);
     }
 

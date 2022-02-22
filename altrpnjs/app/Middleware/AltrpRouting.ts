@@ -115,8 +115,6 @@ export default class AltrpRouting {
       const altrp_settings = await page.getPageSettings(this)
       const pageAreas = await page.getAreas(true);
 
-      // _.set(areas, '1.template.styles', null)
-      // console.log(_.get(pageAreas, '1.template.styles'))
       // @ts-ignore
       const user: User = auth.user
       let is_admin = user && await user.isAdmin();
@@ -144,13 +142,6 @@ export default class AltrpRouting {
       let title = replaceContentWithData(page.title, model_data)
       const datasources= {}
 
-
-      const context = prepareContext({
-        title,
-        model_data,
-        altrpRouting: this
-      })
-
       const _frontend_route = page.serialize()
       const altrpContext = {
         ...params,
@@ -170,7 +161,8 @@ export default class AltrpRouting {
           Edge({
             hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
             url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
-            title: replaceContentWithData(page.title || 'Altrp', context),
+            title: replaceContentWithData(page.title || 'Altrp', altrpContext),
+            altrpContext,
             is_admin,
             pages,
             csrfToken: request.csrfToken,
@@ -182,7 +174,6 @@ export default class AltrpRouting {
             fonts: this.getFonts(),
             altrp_settings,
             _frontend_route,
-            altrpContext,
             route_args: pageMatch.params,
             datasources,
             device: getCurrentDevice(request),
@@ -217,7 +208,7 @@ export default class AltrpRouting {
         }
       })
 
-      preload_content.content = replaceContentWithData(preload_content.content, context)
+      preload_content.content = replaceContentWithData(preload_content.content, altrpContext)
 
 
 
@@ -227,7 +218,7 @@ export default class AltrpRouting {
         hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
         url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
         page: pageAreas,
-        title: replaceContentWithData(page.title || 'Altrp', context),
+        title: replaceContentWithData(page.title || 'Altrp', altrpContext),
         is_admin,
         pages,
         csrfToken: request.csrfToken,
