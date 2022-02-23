@@ -8,12 +8,14 @@
     @include('favicons')
 
     <meta property="og:title" content="{{title}}">
-    <title>{{ title }}</title>
-
+ {{=<% %>=}}
+   <title>{{ title }}</title>
+ <%={{ }}=%>
     <script src="/data/current-user" defer></script>
 {{=<% %>=}}
 {{{fonts}}}
 <%={{ }}=%>
+{{{all_styles}}}
 
     <script>
         /* <![CDATA[ */
@@ -41,7 +43,6 @@
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
   <!-- Style -->
   @!component('front-app-css')
-  {{{all_styles}}}
 </head>
 <body class="front-app-body">
     <div id="front-app" class="front-app {{ is_admin ? 'front-app_admin' : '' }}">

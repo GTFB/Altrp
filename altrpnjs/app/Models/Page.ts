@@ -424,18 +424,18 @@ export default class Page extends BaseModel {
   async getAllStyles() {
 
     let styles = ''
-    // let contentStyles = data_get(await Template.getTemplate(this.id, 'content'), 'styles')
-    // let headerStyles = data_get(await Template.getTemplate(this.id, 'header'), 'styles')
-    // if (headerStyles) {
-    //   headerStyles = JSON.parse(headerStyles)
-    //   headerStyles = _.get(headerStyles, 'all_styles', [])
-    //   styles += headerStyles.join('')
-    // }
-    // if (contentStyles) {
-    //   contentStyles = JSON.parse(contentStyles)
-    //   contentStyles = _.get(contentStyles, 'all_styles', [])
-    //   styles += contentStyles.join('')
-    // }
+    let contentStyles = data_get(await Template.getTemplate(this.id, 'content'), 'styles')
+    let headerStyles = data_get(await Template.getTemplate(this.id, 'header'), 'styles')
+    if (headerStyles) {
+      headerStyles = JSON.parse(headerStyles)
+      headerStyles = _.get(headerStyles, 'all_styles', [])
+      styles += headerStyles.join('')
+    }
+    if (contentStyles) {
+      contentStyles = JSON.parse(contentStyles)
+      contentStyles = _.get(contentStyles, 'all_styles', [])
+      styles += contentStyles.join('')
+    }
     return styles
   }
 
@@ -453,8 +453,6 @@ export default class Page extends BaseModel {
       <div class="app-area app-area_footer">
       ${footerGuid ? `@include('altrp/templates/footer/${footerGuid}')` : ''}
       </div>
-      ${headerGuid ? `<link href="/altrp/css/${headerGuid}.css" rel="stylesheet"/>` : ''}
-      ${contentGuid ? `<link href="/altrp/css/${contentGuid}.css" rel="stylesheet"/>` : ''}
       ${footerGuid ? `<link href="/altrp/css/${footerGuid}.css" rel="stylesheet"/>` : ''}
       `
     /*
