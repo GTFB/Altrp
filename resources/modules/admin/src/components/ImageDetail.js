@@ -151,14 +151,10 @@ export class ImageDetail extends React.Component {
                                             mediaVariation.map((variation, key)=>{
                                               //console.log(variation);
                                               return <div key={key} className="document-detail__line-to-change"><span className="document-detail__name-of-changes">{variation.name}:</span>
-                                                <Field
-                                                    name={variation.name}
-                                                    label={variation.name}
-                                                    component="input"
-                                                    type="text"
-                                                    className="document-detail__input"
-                                                    value={variation.file}
-                                                /></div>                                               
+                                                <input type="text" id="page-title"
+                                                       value={variation.file}
+                                                       className="document-detail__input" />
+                                                </div>                                               
                                             })
                                           : ""
                                         }
