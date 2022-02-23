@@ -19,6 +19,8 @@ class RunRobotsJob implements ShouldQueue
     protected $robots;
 
     protected $robotsService;
+    
+    protected $chatData;
 
 
     /**
@@ -30,7 +32,7 @@ class RunRobotsJob implements ShouldQueue
      * @param $startCond
      * @param $currentEnv
      */
-    public function __construct($robots, $robotsService, $data, $startCond, $currentEnv)
+    public function __construct($robots, $robotsService, $data, $startCond, $currentEnv, $chatData = null)
     {
         $this->robots = $robots;
         $this->startCond = $startCond;
@@ -41,6 +43,7 @@ class RunRobotsJob implements ShouldQueue
         $this->data['altrpdata'] = $data['sources'] ?? null;
         $this->data['altrprequest'] = $currentEnv->request ?? null;
         $this->data['altrpenv'] = array_change_key_case( getenv() );
+        $this->data['altrpchat'] = $chatData;
     }
 
     /**

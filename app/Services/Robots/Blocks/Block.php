@@ -294,6 +294,35 @@ class Block
         else return self::$nextNode->data->props->type == 'finish';
     }
 
+
+    /**
+     * Проверить, Есть ли в блоке кнопки
+     * @return bool
+     */
+    public function isButtons()
+    {   
+        if (isset(self::$nextNode->data->props->nodeData->data->content)) {
+            $content = self::$nextNode->data->props->nodeData->data->content;
+            if (is_array($content) && count($content) > 0) {
+                foreach ($content as $key => $item) {
+                    if ($item->type == "button") {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentNodeId()
+    {
+        return self::$nextNode->id;
+    }
+
     /**
      * Проверить условия старта робота
      * @return bool
