@@ -109,12 +109,12 @@ class InputRangeSlider extends BaseElement{
 
     this.startControlSection('form_start', {
       tab: TAB_CONTENT,
-      label: 'Start form',
+      label: 'Start Form',
     });
 
     this.addControl("form_id_start", {
       type: CONTROLLER_TEXT,
-      label: "Start form ID",
+      label: "Start Form ID",
       responsive: false
     });
 
@@ -125,9 +125,9 @@ class InputRangeSlider extends BaseElement{
     });
 
     this.addControl("content_default_value_start", {
-      type: CONTROLLER_TEXTAREA,
+      type: CONTROLLER_NUMBER,
       responsive: false,
-      label: "Start default Value"
+      label: "Start Default Value"
     });
 
     this.addControl("content_calculation_start", {
@@ -158,7 +158,7 @@ class InputRangeSlider extends BaseElement{
     });
 
     this.addControl("content_default_value_end", {
-      type: CONTROLLER_TEXTAREA,
+      type: CONTROLLER_NUMBER,
       responsive: false,
       label: "End default Value"
     });
@@ -285,7 +285,17 @@ class InputRangeSlider extends BaseElement{
 
     this.addControl("handle_size", {
       type: CONTROLLER_SLIDER,
-      label: 'Size',
+      label: 'Height',
+      units: [
+        'px',
+      ],
+      max: 50,
+      min: 0,
+    });
+
+    this.addControl("handle_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
       units: [
         'px',
       ],
@@ -295,10 +305,12 @@ class InputRangeSlider extends BaseElement{
 
     this.addControl("tr_x", {
       label: 'Translate X',
+      type: CONTROLLER_NUMBER,
     });
 
     this.addControl("tr_y", {
       label: 'Translate Y',
+      type: CONTROLLER_NUMBER,
     });
 
     this.addControl('handle_radius', {
