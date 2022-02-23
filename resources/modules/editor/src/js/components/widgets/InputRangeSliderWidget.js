@@ -173,10 +173,14 @@ class InputRangeSliderWidget extends Component {
       valueEnd = _.get(appStore.getState().formsStore, `${formIdEnd}`, '')
       valueEnd = _.get(valueEnd, fieldNameEnd, '')
 
-      value = [
-        valueStart,
-        valueEnd
-      ];
+      if (valueStart || valueEnd) {
+        value = [
+          valueStart,
+          valueEnd
+        ];
+      } else {
+        value = this.state.value
+      }
     }
 
     if(!value[0] && !value[1]) {
@@ -211,6 +215,7 @@ class InputRangeSliderWidget extends Component {
     if(isEditor()){
       this.setState((s) => ({...s, value: values}))
     } else {
+      this.setState((s) => ({...s, value: values}))
       this.dispatchFieldValueToStore(values[0], 0, true)
       this.dispatchFieldValueToStore(values[1], 1, true)
     }
