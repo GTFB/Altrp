@@ -8,6 +8,7 @@ import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
 import filtration from "../../../helpers/filtration";
+import TemplateGenerator from "App/Generators/TemplateGenerator";
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -30,6 +31,7 @@ export default class TemplatesController {
       .preload("user")
       .preload("currentArea")
       .whereNotNull('guid')
+      .whereNull('deleted_at')
       .where("type", "template")
       .preload("categories")
       .whereHas("currentArea", (query) => {
@@ -141,8 +143,8 @@ export default class TemplatesController {
         }
       }
     }
-
-    // await TemplateFactory.createMany(100)
+    let templateGenerator = new TemplateGenerator()
+    await templateGenerator.run(template)
     return {
       message: "Success",
       redirect: true,
@@ -170,7 +172,9 @@ export default class TemplatesController {
   public async delete({ params }) {
     const template = await Template.query().where("id", parseInt(params.id)).firstOrFail();
 
-    template.delete()
+    let templateGenerator = new TemplateGenerator()
+    await templateGenerator.deleteFile(template)
+    await template.delete()
     return {
       success: true
     }
@@ -207,6 +211,8 @@ export default class TemplatesController {
 
       await template.save()
 
+      let templateGenerator = new TemplateGenerator()
+      await templateGenerator.run(template)
       return {
         currentTemplate: template,
         prevVersions: prevVersions,

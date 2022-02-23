@@ -5,6 +5,7 @@ import Template from "App/Models/Template";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
+import PageGenerator from "App/Generators/PageGenerator";
 
 export default class PagesController {
   public async create({auth, request, response}) {
@@ -81,7 +82,8 @@ export default class PagesController {
       res.success = true
       res.page = page
       page.parseRoles(request.input('roles'));
-
+      const pageGenerator = new PageGenerator()
+      await pageGenerator.run(page)
       await page.save()
 
       return res
@@ -202,9 +204,9 @@ export default class PagesController {
           page[input] = body[input]
         }
       })
-
       await page.save()
-
+      const pageGenerator = new PageGenerator()
+      await pageGenerator.run(page)
       if(request.input("categories")) {
         await page.related("categories").detach()
 

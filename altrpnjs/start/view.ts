@@ -5,6 +5,15 @@ import print_statics from "../helpers/print_statics";
 import config from "../helpers/config";
 import get_altrp_setting from "../helpers/get_altrp_setting";
 import getFavicons from "../helpers/getFavicons";
+import getResponsiveSetting from "../helpers/getResponsiveSetting";
+import * as _ from "lodash";
+import getAddingClasses from "../helpers/getAddingClasses";
+import allowedForUser from "../helpers/allowedForUser";
+import getContent from "../helpers/getContent";
+import renderAsset from "../helpers/renderAsset";
+import renderButton from "../helpers/widgets-renders/renderButton";
+import renderImage from "../helpers/widgets-renders/renderImage";
+import renderHeading from "../helpers/widgets-renders/renderHeading";
 
 
 View.global('get_logo_url', get_logo_url)
@@ -13,59 +22,19 @@ View.global('config', config)
 View.global('print_statics', print_statics)
 View.global('get_altrp_setting', get_altrp_setting)
 View.global('getFavicons', getFavicons)
+View.global('getResponsiveSetting', getResponsiveSetting)
+View.global('getAddingClasses', getAddingClasses)
+View.global('allowedForUser', allowedForUser)
+View.global('getContent', getContent)
+View.global('renderAsset', renderAsset)
+/**
+ * RENDERS START
+ */
+View.global('renderButton', renderButton)
+View.global('renderImage', renderImage)
+View.global('renderHeading', renderHeading)
+/**
+ * RENDERS END
+ */
+View.global('isEmpty', _.isEmpty)
 
-
-// let data = [
-//   {
-//     value: 7,
-//     parent: 6,
-//   },
-//   {
-//     value: 1,
-//     parent: 2,
-//   },
-//   {
-//     value: 2,
-//     parent: 465456,
-//   },
-//   {
-//     value: 8,
-//     parent: 465456,
-//   },
-//   {
-//     value: 3,
-//     parent: 2,
-//   },
-//   {
-//     value: 4,
-//     parent: 2,
-//   },
-//   {
-//     value: 5,
-//     parent: 2,
-//   },
-//   {
-//     value: 6,
-//     parent: 4,
-//   },
-// ];
-//
-// let _data = [...data];
-//
-// _data.forEach(item => {
-//   item["childNodes"] = [];
-//   _data.forEach(_i=>{
-//     if(_i.parent === item.value){
-//       item["childNodes"].push(_i)
-//     }
-//   })
-// })
-//
-// _data = _data.filter(item=>{
-//   return ! data.find(_i=>{
-//     return _i.value === item.parent
-//   })
-// })
-//
-//
-// console.log(JSON.stringify(_data, null,' '));
