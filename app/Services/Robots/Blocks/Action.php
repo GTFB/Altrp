@@ -47,7 +47,8 @@ class Action
     {
         $res = [
             'name' => '',
-            'value' => ''
+            'value' => '',
+            'record' => '',
         ];
         switch ($this->getNodeProperties()->nodeData->type) {
             case 'crud':
@@ -191,7 +192,8 @@ class Action
 
         return [
             'name' => $model->name,
-            'value' => $result
+            'value' => $result,
+            'record' => $entity ? $entity->first()->toArray() : '',
         ];
     }
 

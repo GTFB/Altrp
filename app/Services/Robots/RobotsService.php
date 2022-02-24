@@ -17,7 +17,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Ixudra\Curl\Facades\Curl;
 use App\Services\Robots\Bots\TelegramBot\TelegramBotService;
-use Illuminate\Support\Facades\Log;
 
 
 class RobotsService
@@ -178,7 +177,7 @@ class RobotsService
                 if (isset($modelData['altrpchat'])) {
                   $chat_id = $modelData['altrpchat']['from']['id'];
                   $user = $this->robot->getUser($modelData['altrpchat']['from']['username'], $modelData['altrpchat']['from']['first_name']);
-                  $modelData['altrpuser'] = $user;
+                  $this->data['altrpuser'] = $user;
                 }
 
                 if (isset($modelData['altrpchat']['data'])) {
@@ -187,6 +186,7 @@ class RobotsService
                 }
 
                 do {
+
                     $currentAction->run();
 
                     if(!$currentAction->isEnd()){
