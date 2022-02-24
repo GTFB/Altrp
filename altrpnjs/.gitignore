@@ -5,7 +5,6 @@ coverage
 .DS_STORE
 .env
 tmp
-views/templates
 .env-prod
 
 #bundles
@@ -15,3 +14,4 @@ app/AltrpModels/
 app/AltrpControllers/
 app/AltrpPlugins/
 start/altrp-routes/
+/resources/views/altrp

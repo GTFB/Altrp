@@ -7,6 +7,10 @@ import Application from '@ioc:Adonis/Core/Application'
 import sharp from "sharp";
 import FAVICONS_SIZES from "../../../../helpers/const/FAVICONS_SIZES";
 import Drive from '@ioc:Adonis/Core/Drive'
+import Template from "App/Models/Template";
+import TemplateGenerator from "App/Generators/TemplateGenerator";
+import PageGenerator from "App/Generators/PageGenerator";
+import Page from "App/Models/Page";
 
 export default class AdminController {
 
@@ -18,6 +22,8 @@ export default class AdminController {
     // const step = 10
     const modelGenerator = new ModelGenerator()
     const controllerGenerator = new ControllerGenerator()
+    const templateGenerator = new TemplateGenerator()
+    const pageGenerator = new PageGenerator()
 
     for (let model of models){
       if(model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media'){
@@ -35,12 +41,15 @@ export default class AdminController {
       }
       await controllerGenerator.run(controller)
     }
-    await Promise.all(models.map(async model=>{
-      if(! model.altrp_controller){
-        console.log(model.name);
-      }
-    }))
-    return response.json({success: true,})
+    const templates = await Template.query().where('type', 'template').whereNull('deleted_at').select('*')
+    for (let template of templates) {
+      await templateGenerator.run(template)
+    }
+    const pages = await Page.query().whereNull('deleted_at').select('*')
+    for (let page of pages) {
+      await pageGenerator.run(page)
+    }
+      return response.json({success: true,})
   }
 
 

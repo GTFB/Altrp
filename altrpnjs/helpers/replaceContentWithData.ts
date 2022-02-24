@@ -10,7 +10,6 @@ export default function replaceContentWithData(content: string, context: object)
 
       if (value === 0) {
         value = "0";
-        console.log();
       }
       path = escapeRegExp(path);
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");

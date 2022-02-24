@@ -1298,6 +1298,7 @@ class AltrpAction extends AltrpModel {
    * Проверка условий
    * @return {Promise<{success: boolean}>}
    */
+
   async doActionCondition() {
     const compare = this.getProperty('compare');
     let conditionLeft = this.getProperty('condition_left');
@@ -1381,22 +1382,6 @@ class AltrpAction extends AltrpModel {
       }
     }
     let settings = {
-      client_id: 'AisOrder',
-      redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
-      post_logout_redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
-      response_type: 'token id_token',
-      scope: 'openid profile',
-      authority:'https://fs.geobuilder.ru/idp',
-      automaticSilentRenew: false,
-      userStore: new WebStorageStateStore({ store: window.localStorage }),
-      filterProtocolClaims: true,
-      loadUserInfo: true,
-      monitorSession: false,
-      checkSessionInterval: 3600000
-    };
-    const _manager = new UserManager(settings);
-    console.log(_manager);
-    settings = {
       client_id: this.getProperty('client_id'),
       redirect_uri: this.getProperty('redirect_uri'),
       post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),

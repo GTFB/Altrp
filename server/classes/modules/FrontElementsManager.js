@@ -69,7 +69,7 @@ class FrontElementsManager {
     this.components['html'] = HtmlWidget;
     this.components['video'] = VideoWidget;
     this.components['template'] = TemplateWidget;
-    this.components['icon'] = IconWidget;
+    // this.components['icon'] = IconWidget;
   }
 
   /**
