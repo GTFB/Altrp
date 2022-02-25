@@ -29,7 +29,6 @@ import Template from "App/Models/Template";
 import Category from "App/Models/Category";
 import PageDatasource from "App/Models/PageDatasource";
 import mbParseJSON from "../../helpers/mbParseJSON";
-import RootElementRenderer from "App/Renderers/RootElement";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -139,7 +138,7 @@ export default class Page extends BaseModel {
   })
   public categories: ManyToMany<typeof Category>
 
-  public async getAreas(deleteContent) {
+  public async getAreas(deleteContent = false) {
     // const all_site_templates = Template.query().where("all_site", true).preload("currentArea")
 
     const data: {

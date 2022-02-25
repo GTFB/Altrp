@@ -1,4 +1,4 @@
-export default function renderImage(settings, device, context){
+export default function renderImage(){
 
   return ''
 }
