@@ -15490,8 +15490,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
     key: "doActionOAuth",
     value: function () {
       var _doActionOAuth = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee33() {
-        var OIDC, WebStorageStateStore, UserManager, authority, OidcClient, method, settings, _manager, manager, result;
-
+        var OIDC, WebStorageStateStore, UserManager, authority, OidcClient, method, settings, manager, result;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee33$(_context33) {
           while (1) {
             switch (_context33.prev = _context33.next) {
@@ -15516,24 +15515,6 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 8:
                 settings = {
-                  client_id: 'AisOrder',
-                  redirect_uri: "http://zayavka.geobuilder.ru/login/laravelpassport/callback",
-                  post_logout_redirect_uri: "http://zayavka.geobuilder.ru/login/laravelpassport/callback",
-                  response_type: 'token id_token',
-                  scope: 'openid profile',
-                  authority: 'https://fs.geobuilder.ru/idp',
-                  automaticSilentRenew: false,
-                  userStore: new WebStorageStateStore({
-                    store: window.localStorage
-                  }),
-                  filterProtocolClaims: true,
-                  loadUserInfo: true,
-                  monitorSession: false,
-                  checkSessionInterval: 3600000
-                };
-                _manager = new UserManager(settings);
-                console.log(_manager);
-                settings = {
                   client_id: this.getProperty('client_id'),
                   redirect_uri: this.getProperty('redirect_uri'),
                   post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),
@@ -15555,39 +15536,39 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 console.log(method);
 
                 if (!_.isFunction(manager[method])) {
-                  _context33.next = 24;
+                  _context33.next = 21;
                   break;
                 }
 
-                _context33.prev = 15;
-                _context33.next = 18;
+                _context33.prev = 12;
+                _context33.next = 15;
                 return manager[method]();
 
-              case 18:
+              case 15:
                 result = _context33.sent;
-                _context33.next = 24;
+                _context33.next = 21;
                 break;
 
-              case 21:
-                _context33.prev = 21;
-                _context33.t0 = _context33["catch"](15);
+              case 18:
+                _context33.prev = 18;
+                _context33.t0 = _context33["catch"](12);
                 return _context33.abrupt("return", {
                   success: false
                 });
 
-              case 24:
+              case 21:
                 console.log(result); // await manager.signoutRedirect();
 
                 return _context33.abrupt("return", {
                   success: true
                 });
 
-              case 26:
+              case 23:
               case "end":
                 return _context33.stop();
             }
           }
-        }, _callee33, this, [[15, 21]]);
+        }, _callee33, this, [[12, 18]]);
       }));
 
       function doActionOAuth() {

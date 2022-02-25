@@ -1,4 +1,6 @@
-import {minify} from'html-minifier'
+// import {minify} from'html-minifier'
+// import prepareContext from "../../helpers/prepareContext";
+import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
@@ -6,7 +8,6 @@ import Env from '@ioc:Adonis/Core/Env';
 // @ts-ignore
 import renderResult from '../../helpers/server-render/renderResult'
 import replaceContentWithData from "../../helpers/replaceContentWithData";
-import prepareContext from "../../helpers/prepareContext";
 import {matchPath} from 'react-router'
 import empty from "../../helpers/empty";
 import * as _ from 'lodash'
@@ -20,7 +21,6 @@ import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
-import getCurrentDevice from "../../helpers/getCurrentDevice";
 // import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
@@ -154,6 +154,7 @@ export default class AltrpRouting {
           params: request.qs()
         }
       }
+      /*
       try {
         _.set(page, 'templates', [])
         _.set(_frontend_route, 'templates', [])
@@ -192,7 +193,7 @@ export default class AltrpRouting {
         console.error(`Error to View Custom Page: ${e.message}
          ${e.stack}
          `);
-      }
+      }*/
       //@ts-ignore
       const preload_content:any = renderResult({
         protocol: request.protocol(),
@@ -226,6 +227,7 @@ export default class AltrpRouting {
         page_areas: pageAreas,
         page_id: page.id,
         altrpElementsLists,
+        device: getCurrentDevice(request),
         elements_list: altrpElementsLists,
         model_data,
         fonts: this.getFonts(),
