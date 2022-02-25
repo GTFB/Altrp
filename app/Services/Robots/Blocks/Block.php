@@ -93,6 +93,11 @@ class Block
             $currentNode->data->props->type === 'bot'
         ) {
             $prevAction = $this->doAction($currentNode);
+
+            if (isset($prevAction['record'])) {
+                $this->modelData['crudrecord'] = $prevAction['record'];
+            }
+
             $this->savePrevAction($prevAction);
         } elseif ($currentNode->data->props->type == 'robot') {
             $this->runRobot($currentNode);
