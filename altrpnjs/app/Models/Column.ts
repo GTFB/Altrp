@@ -122,7 +122,7 @@ decorate([
         '{autoCreate: true, autoUpdate: true}' : ''}${
         this.name === 'created_at' ?
           '{autoCreate: true}' : ''}),
-  metadata("design:type", luxon.${this.getColumnTypeForModel()})
+  metadata("design:type", ${this.getColumnTypeForModel()})
 ], ${this.altrp_model.name}.prototype, "${this.name}", void 0);
 `
     }
@@ -130,7 +130,7 @@ decorate([
     return `
 
 decorate([
-    (0, Orm_1.column)(${this.name == 'id' ? '{isPrimary: true}' : ''}),
+    (0, Orm.column)(${this.name == 'id' ? '{isPrimary: true}' : ''}),
     metadata("design:type", ${this.getColumnTypeForModel()})
 ], ${this.altrp_model.name}.prototype, "${this.name}", void 0);
 `

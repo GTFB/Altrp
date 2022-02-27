@@ -23,6 +23,7 @@ export default class AltrpModels extends BaseSchema {
         table.boolean('time_stamps')
         table.bigInteger('parent_model_id').unsigned().nullable()
         table.bigInteger('user_id').unsigned().nullable()
+        table.bigInteger('table_id').unsigned().nullable()
 
         /**
          * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

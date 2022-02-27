@@ -123,7 +123,7 @@ class AddPage extends Component {
               value: '',
               label: 'None',
             },
-            ...models_res.filter(item => item.value >= 5)]
+            ...models_res]
         };
       });
     }

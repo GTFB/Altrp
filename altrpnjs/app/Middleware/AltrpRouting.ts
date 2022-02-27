@@ -1,3 +1,4 @@
+import {minify} from'html-minifier'
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
@@ -20,6 +21,7 @@ import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import getCurrentDevice from "../../helpers/getCurrentDevice";
+// import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
 
@@ -40,8 +42,7 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async handle({request, response, view, auth}: HttpContextContract, next: () => Promise<void>) {
-
+  public async handle({request, response, view, auth, params}: HttpContextContract, next: () => Promise<void>) {
     /**
      * Игнорим все запросы кроме get
      */
@@ -53,13 +54,16 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
-
     if (url === '/altrp-login'
       || url === '/login'
-      || url === '/data/current-user') {
+      || url === '/data/current-user' ||
+      url === "/modules/admin/admin.js" ||
+      url === "/modules/front-app/front-app.css"
+    ) {
       await next()
       return
     }
+
     /**
      * Игнорим админку и ajax
      */
@@ -96,8 +100,11 @@ export default class AltrpRouting {
       }
       return matchPath(url, page.path,)?.isExact
     });
+
     if (page) {
       const pages = await page.getPagesForFrontend();
+
+
       if (!await page.allowedForUser(this)) {
         return response.redirect(page.redirect || '/')
       }
@@ -106,22 +113,13 @@ export default class AltrpRouting {
       await page.load('model');
 
       const altrp_settings = await page.getPageSettings(this)
-      const pageAreas = await page.getAreas();
+      const pageAreas = await page.getAreas(true);
+
       // @ts-ignore
-      const preload_content:any = renderResult({
-        protocol: request.protocol(),
-        host: request.host(),
-        originalUrl: url,
-        current_device: getCurrentDevice(request),
-        json: {
-          altrp_settings,
-          page: pageAreas,
-          altrpImageLazy: get_altrp_setting('altrp_image_lazy', 'none'),
-          altrpSkeletonColor: get_altrp_setting('altrp_skeleton_color', '#ccc'),
-          altrpSkeletonHighlightColor: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
-          current_user: auth.user || {is_guest: true}
-        }
-      })
+      const user: User = auth.user
+      let is_admin = user && await user.isAdmin();
+      const altrpElementsLists = await this.extractElementsNames(pageAreas);
+
       let model_data = {}
       if (page.model) {
         try {
@@ -142,27 +140,85 @@ export default class AltrpRouting {
         }
       }
       let title = replaceContentWithData(page.title, model_data)
-
-      const context = prepareContext({
-        title,
-        model_data,
-        altrpRouting: this
-      })
-      preload_content.content = replaceContentWithData(preload_content.content, context)
+      const datasources= {}
 
       const _frontend_route = page.serialize()
+      const altrpContext = {
+        ...params,
+        ...model_data,
+        altrpdata: datasources,
+        altrpuser: user.toObject(),
+        altrppage:{
+          title,
+          url,
+          params: request.qs()
+        }
+      }
+      try {
+        _.set(page, 'templates', [])
+        _.set(_frontend_route, 'templates', [])
+        let res = await view.render(`altrp/pages/${page.guid}`,
+          Edge({
+            hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
+            url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+            title: replaceContentWithData(page.title || 'Altrp', altrpContext),
+            altrpContext,
+            is_admin,
+            pages,
+            csrfToken: request.csrfToken,
+            page_areas: pageAreas,
+            page_id: page.id,
+            altrpElementsLists,
+            elements_list: altrpElementsLists,
+            model_data,
+            fonts: this.getFonts(),
+            altrp_settings,
+            _frontend_route,
+            route_args: pageMatch.params,
+            datasources,
+            device: getCurrentDevice(request),
+            _altrp: {
+              version: getLatestVersion()
+            },
+          })
+        )
+        // res = minify(res, {
+        //   collapseWhitespace:true,
+        //   minifyCSS: true,
+        //   minifyJS: true,
+        // })
+        return response.send(res)
+      } catch (e) {
+        console.error(`Error to View Custom Page: ${e.message}
+         ${e.stack}
+         `);
+      }
+      //@ts-ignore
+      const preload_content:any = renderResult({
+        protocol: request.protocol(),
+        host: request.host(),
+        originalUrl: url,
+        json: {
+          altrp_settings,
+          page: pageAreas,
+          altrpImageLazy: get_altrp_setting('altrp_image_lazy', 'none'),
+          altrpSkeletonColor: get_altrp_setting('altrp_skeleton_color', '#ccc'),
+          altrpSkeletonHighlightColor: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
+          current_user: auth.user || {is_guest: true}
+        }
+      })
+
+      preload_content.content = replaceContentWithData(preload_content.content, altrpContext)
+
 
 
       _frontend_route.title = title
-      // @ts-ignore
-      const user: User = auth.user
-      let is_admin = user && await user.isAdmin();
-      const altrpElementsLists = await this.extractElementsNames(pageAreas);
-      const v = await view.render('front-app', Edge({
+      const v = await view.render('front-app',
+        Edge({
         hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
         url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
         page: pageAreas,
-        title: replaceContentWithData(page.title || 'Altrp', context),
+        title: replaceContentWithData(page.title || 'Altrp', altrpContext),
         is_admin,
         pages,
         csrfToken: request.csrfToken,
@@ -176,10 +232,11 @@ export default class AltrpRouting {
         altrp_settings,
         _frontend_route,
         route_args: pageMatch.params,
-        altrp: {
+        _altrp: {
           version: getLatestVersion()
         },
-      }))
+      })
+      )
       return response.send(v)
     }
     response.status(404)
@@ -208,7 +265,7 @@ export default class AltrpRouting {
     if( ! template ){
       return;
     }
-    data_set(altrpSettings, 'templates_data.' + template_id,  template);
+    data_set(altrpSettings, 'templates_data.' + template_id,  template.toArray());
 
     let data = JSON.parse( template.data );
     this._extractElementsNames( data, elementNames, false );
@@ -317,7 +374,7 @@ export default class AltrpRouting {
     // elementNames = array_unique( elementNames );
     // elementNames = array_values( elementNames );
     elementNames = _.uniq(elementNames)
-    console.log('finish');
+
     return elementNames;
   }
 }

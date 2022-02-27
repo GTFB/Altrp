@@ -52,6 +52,10 @@
       "reloadServer": false
     },
     {
+      "pattern": "app/config/file-types.json",
+      "reloadServer": false
+    },
+    {
       "pattern": "../public/modules/*",
       "reloadServer": false
     }

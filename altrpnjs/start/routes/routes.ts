@@ -22,18 +22,40 @@ import Route from '@ioc:Adonis/Core/Route'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
+import Drive from '@ioc:Adonis/Core/Drive'
+import path from "path";
 // import {UserFactory} from "Database/factories";
 
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
 Route.post("/logout", "IndicesController.logout").name = 'logout'
 
+Route.post("/sockets", "SocketsController.handle")
 
 // Route.get("/userr", async () => {
 //   const user = await User.query().where("id", 1).firstOrFail();
 //   const permission = await Permission.query().where("id", 1).firstOrFail();
 //   return user.can([1, 2]);
 // })
+
+Route.get("/modules/*", async ({request, response}) => {
+  const url = request.url()
+
+  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+
+  const file = await Drive.get(pathToModules + url)
+
+  switch (url.split(".")[1]) {
+    case "js":
+      response.header("Content-Type", "text/javascript")
+      break
+    case "css":
+      response.header("Content-Type", "text/css")
+      break
+  }
+
+  return file
+})
 
 Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
   response.header('Content-Type', 'application/javascript')
@@ -56,6 +78,8 @@ Route.group(() => {
   Route.get("/pages/:id", "admin/PagesController.getAreas")
 
   Route.get("/current-user", "users/UsersController.getCurrentUser")
+
+  Route.get("favicon/:path", "IndicesController.favicons")
 
   Route.get("/_token", ({request}) => {
     return {
@@ -102,6 +126,9 @@ Route.group(() => {
 
     const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
     try {
+      if(isProd()){
+        require.cache = {};
+      }
       const ControllerClass = isProd() ? (await require(controllerName)).default
         : (await import(controllerName)).default
       const controller = new ControllerClass()
@@ -158,3 +185,4 @@ Route.group(() => {
   })
 })
   .prefix("/ajax")
+

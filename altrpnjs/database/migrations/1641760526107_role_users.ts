@@ -18,6 +18,9 @@ export default class RoleUsers extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
+
+      table.foreign('user_id').references('users.id')
+      table.foreign('role_id').references('roles.id')
     })
   }
 

@@ -14,7 +14,7 @@ export default class UsersSchema extends BaseSchema {
         table.string('remember_me_token').nullable()
         table.string('last_name').nullable()
         table.string('telegram_user_id').nullable()
-        table.string('test').nullable()
+        table.string('name')
         table.text('local_storage', 'longtext').nullable()
 
         /**
@@ -27,6 +27,7 @@ export default class UsersSchema extends BaseSchema {
 
     } else {
       this.schema.table(this.tableName, (table) => {
+
         table.string('remember_me_token').nullable()
       })
       }

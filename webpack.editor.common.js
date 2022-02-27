@@ -83,7 +83,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "editor/"),
-    publicPath: "http://localhost:3000/src/",
+    publicPath: "http://127.0.0.1:3000/src/",
     chunkFilename: "[chunkhash].bundle.js",
     filename: "bundle.js"
   },
@@ -91,7 +91,7 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
-    publicPath: "http://localhost:3000/src/",
+    publicPath: "http://127.0.0.1:3000/src/",
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

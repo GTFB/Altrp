@@ -17,4 +17,12 @@ class Chat extends Model
       'user_id',
       'node_id'
     ];
+    
+    public function setData($key, $value){
+      return data_set( $this->data, $key, $value );
+    }
+
+    public function getData($key, $value){
+      return data_get( $this->data, $key, $value );
+    }
 }

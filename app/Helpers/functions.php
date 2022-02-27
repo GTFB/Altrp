@@ -1471,8 +1471,8 @@ function getPageSettings( $page_id ): array
 
           if($element["name"] === "menu") {
             $guid = data_get($element, "settings.menu");
-            $menu = Menu::where("guid", $guid)->get()[0];
             try {
+              $menu = Menu::where("guid", $guid)->get()[0];
               if($menu) {
                 $settings["altrpMenus"][] = $menu;
               }
@@ -1890,35 +1890,35 @@ function print_statics( string $type, string $place, $attributes  = []): string
  * @param string $place
  * @return string
  */
-function str_replace_once($search, $replace, $text) 
-{ 
-   $pos = strpos($text, $search); 
-   return $pos!==false ? substr_replace($text, $replace, $pos, strlen($search)) : $text; 
-} 
+function str_replace_once($search, $replace, $text)
+{
+   $pos = strpos($text, $search);
+   return $pos!==false ? substr_replace($text, $replace, $pos, strlen($search)) : $text;
+}
 
 
-function getAppUrl() 
+function getAppUrl()
 {
   return substr(env('APP_URL'), -1) == "/" ? substr(env('APP_URL'),0,-1) : env('APP_URL');
 }
 
-function array_unique_key($array, $key) { 
-  $tmp = $key_array = array(); 
-  $i = 0; 
- 
-  foreach($array as $val) { 
-    if (!in_array($val[$key], $key_array)) { 
-      $key_array[$i] = $val[$key]; 
-      $tmp[$i] = $val; 
-    } 
-    $i++; 
-  } 
-  return $tmp; 
+function array_unique_key($array, $key) {
+  $tmp = $key_array = array();
+  $i = 0;
+
+  foreach($array as $val) {
+    if (!in_array($val[$key], $key_array)) {
+      $key_array[$i] = $val[$key];
+      $tmp[$i] = $val;
+    }
+    $i++;
+  }
+  return $tmp;
 }
 
-function generateSitemap() 
-{ 
-   
+function generateSitemap()
+{
+
     $pages_ = PagesTemplate::select('templates.updated_at as updated_at', 'pages.path as path')
       ->leftJoin('pages', 'pages.id', '=', 'pages_templates.page_id')
       ->leftJoin('templates', 'templates.id', '=', 'pages_templates.template_id')
@@ -1954,8 +1954,8 @@ function generateSitemap()
 }
 
 
-function generateRobotsTXT() 
-{ 
+function generateRobotsTXT()
+{
     $pobots_txt = 'User-agent: *' . PHP_EOL;
     $pobots_txt .= 'Sitemap: ' . getAppUrl() . '/sitemap.xml' . PHP_EOL;
     file_put_contents(public_path().'/robots.txt' , $pobots_txt);

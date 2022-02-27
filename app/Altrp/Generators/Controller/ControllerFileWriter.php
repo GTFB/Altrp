@@ -396,8 +396,11 @@ class ControllerFileWriter
     $methodContent = explode( PHP_EOL, $methodContent );
     $controllerContent = file($this->controller->getFile(), 2);
     $namespaces = [
-      "use App\\Altrp\\Robot;",
-      "use App\\Services\\TelegramService;"
+      "use App\\Helpers\\Classes\\CurrentEnvironment;",
+      "use App\\Jobs\\RunRobotsJob;",
+      "use App\\Services\Robots\\RobotsService;",
+      "use Illuminate\\Foundation\\Bus\\DispatchesJobs;",
+      "use App\\Services\\Robots\\Repositories\\RobotsRepository;",
     ];
     foreach ($namespaces as $key => $value) {
       if (!$this->namespaceExists($controllerContent, $value)) {

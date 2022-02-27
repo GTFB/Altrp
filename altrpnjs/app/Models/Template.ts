@@ -1,5 +1,14 @@
 import {DateTime} from 'luxon'
-import {BaseModel, column, HasMany, hasMany, HasOne, hasOne, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  column,
+  HasMany,
+  hasMany,
+  HasOne,
+  hasOne,
+  ManyToMany,
+  manyToMany
+} from '@ioc:Adonis/Lucid/Orm'
 import User from "App/Models/User";
 import Area from "App/Models/Area";
 import Page from "App/Models/Page";
@@ -7,8 +16,10 @@ import TemplateSetting from "App/Models/TemplateSetting";
 import empty from "../../helpers/empty";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
+import RootElementRenderer from "App/Renderers/RootElement";
 
 export default class Template extends BaseModel {
+
   @column({isPrimary: true})
   public id: number
 
@@ -25,13 +36,16 @@ export default class Template extends BaseModel {
   public styles: string
 
   @column()
+  public parent_template: number|null
+
+  @column()
   public html_content: string
 
   @column()
   public type: string
 
   @column()
-  public guid: string
+  public guid: string|null
 
   @column()
   public all_site: boolean
@@ -106,8 +120,9 @@ export default class Template extends BaseModel {
   /**
    * Получить объект шаблона по параметрам
    */
-  static async getTemplate(pageId, templateType = 'content',): Promise<Template | object> {
+  static async getTemplate(pageId, templateType = 'content',): Promise<Template | {}> {
     let page = await Page.find(pageId)
+
     if (!page) {
       return {data: Template.getDefaultData()}
     }
@@ -122,6 +137,7 @@ export default class Template extends BaseModel {
       .where('templates.type', 'template')
       .where('pages_templates.page_guid', page.guid)
       .where('pages_templates.template_type', templateType).select('templates.*').first()
+
     if (template) {
       let _template = template.serialize()
       _template.data = JSON.parse(template.data)
@@ -146,6 +162,7 @@ export default class Template extends BaseModel {
     if (template && !await Template.query().join('pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       .where('pages_templates.condition_type', 'exclude')
       .where('pages_templates.page_guid', page.guid)
+      //@ts-ignore
       .where('templates.guid', template.guid)
       .where('pages_templates.template_type', templateType).first()) {
       //_template.check_elements_conditions();
@@ -200,7 +217,7 @@ export default class Template extends BaseModel {
 
 
     templates.forEach((template)=>{
-      template.data = JSON.parse(template.data);
+      template.data = JSON.parse(template.data)
     }
   )
     ;
@@ -208,4 +225,9 @@ export default class Template extends BaseModel {
     return templates;
   }
 
+  async getChildrenContent() {
+    const data = JSON.parse(this.data)
+    const renderer = new RootElementRenderer(data)
+    return await renderer.render()
+  }
 }

@@ -2,6 +2,8 @@ import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import Edge from "../../../helpers/edge";
 import Env from "@ioc:Adonis/Core/Env";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
+import Drive from '@ioc:Adonis/Core/Drive'
+import Application from '@ioc:Adonis/Core/Application'
 
 export default class IndicesController {
   async admin({view}) {
@@ -17,7 +19,7 @@ export default class IndicesController {
 
   public editor({view}) {
     return view.render('editor', Edge({
-      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://localhost:3000/src/bundle.js",
+      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://127.0.0.1:3000/src/bundle.js",
       css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
     }))
   }
@@ -73,7 +75,6 @@ export default class IndicesController {
     }
 
     await auth.use('web').attempt(email, password, remember)
-    // session.regenerate()
     if (! auth.use('web').isAuthenticated && request.input('altrpLogin')) {
       await auth.use('web').authenticate()
 
@@ -99,7 +100,35 @@ export default class IndicesController {
     }
   }
 
-  public async logout() {
+  public async logout({ auth }) {
+    await auth.use("web").logout();
 
+    return {
+      success: true
+    }
+  }
+
+  public async favicons({params, response}) {
+    response.header('Content-type', 'image/png');
+
+    let value: any = null
+
+    const faviconPath = Application.tmpPath("favicon") + `/${params.path}`;
+    const defaultFaviconPath = Application.resourcesPath("favicon") + `/altrp_${params.path}`
+
+    if(await Drive.exists(faviconPath)) {
+      value = await Drive.get(faviconPath)
+    } else if(await Drive.exists(defaultFaviconPath)) {
+      value = await Drive.get(defaultFaviconPath)
+    }
+
+    if(value) {
+      return value
+    } else {
+      response.status(404)
+      return {
+        message: "favicon not found"
+      }
+    }
   }
 }

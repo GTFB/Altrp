@@ -1,5 +1,15 @@
 import {DateTime} from 'luxon'
-import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  beforeDelete,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasMany,
+  hasMany,
+  ManyToMany,
+  manyToMany
+} from '@ioc:Adonis/Lucid/Orm'
 import Model from 'App/Models/Model'
 import data_get from '../../helpers/data_get'
 import empty from '../../helpers/empty'
@@ -12,12 +22,14 @@ import Database from "@ioc:Adonis/Lucid/Database"
 import Logger from "@ioc:Adonis/Core/Logger"
 import AltrpRouting from "App/Middleware/AltrpRouting"
 import User from "App/Models/User";
-import { isString } from "lodash";
+import {isString} from "lodash";
 import PageRole from "App/Models/PageRole";
 import Role from "App/Models/Role";
 import Template from "App/Models/Template";
 import Category from "App/Models/Category";
 import PageDatasource from "App/Models/PageDatasource";
+import mbParseJSON from "../../helpers/mbParseJSON";
+import RootElementRenderer from "App/Renderers/RootElement";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -127,7 +139,7 @@ export default class Page extends BaseModel {
   })
   public categories: ManyToMany<typeof Category>
 
-  public async getAreas() {
+  public async getAreas(deleteContent) {
     // const all_site_templates = Template.query().where("all_site", true).preload("currentArea")
 
     const data: {
@@ -139,6 +151,7 @@ export default class Page extends BaseModel {
     }[] = []
 
     let headerTemplate = await Template.getTemplate(this.id, 'header')
+
 
     data.push({
       area_name: 'header',
@@ -172,7 +185,18 @@ export default class Page extends BaseModel {
       settings: [],
       templates: popups
     })
-
+    if(deleteContent){
+      _.set(headerTemplate, 'html_content', null)
+      _.set(contentTemplate, 'html_content', null)
+      _.set(footerTemplate, 'html_content', null)
+      _.set(headerTemplate, 'styles', null)
+      _.set(contentTemplate, 'styles', null)
+      _.set(footerTemplate, 'styles', null)
+      popups.forEach(t=>{
+        _.set(t, 'html_content', null)
+        _.set(t, 'styles', null)
+      })
+    }
     return data
   }
 
@@ -214,11 +238,12 @@ export default class Page extends BaseModel {
     foreignKey: "page_id"
   })
   public pageDatasources: HasMany<typeof PageDatasource>
+
   /**
    * Привязывает набор ролей к сттанице, удаляя старые связи
    */
-  public attachRoles( roles ) {
-    if ( !this.id ) {
+  public attachRoles(roles) {
+    if (!this.id) {
       return;
     }
 
@@ -233,13 +258,13 @@ export default class Page extends BaseModel {
   @column.dateTime({autoCreate: true})
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate:true })
+  @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime
 
   @column.dateTime()
   public deleted_at: DateTime
 
-  async getPageSettings(altrpRouting: AltrpRouting):Promise<object> {
+  async getPageSettings(altrpRouting: AltrpRouting): Promise<object> {
     const altrpSettings: any = altrpRouting.__altrp_global__.altrpSettings
     altrpSettings.action_components = []
     altrpSettings.libsToLoad = []
@@ -248,7 +273,7 @@ export default class Page extends BaseModel {
     if (!this.id) {
       return altrpSettings
     }
-    const fonts:string[] = []
+    const fonts: string[] = []
     const areas = await this.getAreas()
     const json_areas = JSON.stringify(areas)
     if (json_areas.indexOf('altrptime') !== -1) {
@@ -265,7 +290,11 @@ export default class Page extends BaseModel {
       }
       for (let template of templates) {
         {
-          const root_element = data_get(template, 'data')
+          let root_element = data_get(template, 'data')
+
+          if (_.isString(root_element)) {
+            root_element = mbParseJSON(root_element)
+          }
           if (root_element) {
             recurseMapElements(root_element, function (element) {
 
@@ -280,10 +309,10 @@ export default class Page extends BaseModel {
               /**
                * get font from element settings
                */
-              if(! empty(data_get(element, 'settings.__altrpFonts__'))) {
+              if (!empty(data_get(element, 'settings.__altrpFonts__'))) {
                 const _fonts = _.values(data_get(element, 'settings.__altrpFonts__'))
-                _fonts.forEach(font =>{
-                  if(fonts.indexOf(font) === -1){
+                _fonts.forEach(font => {
+                  if (fonts.indexOf(font) === -1) {
                     fonts.push(font)
                   }
                 })
@@ -297,7 +326,7 @@ export default class Page extends BaseModel {
                 return
               }
 
-              let actions:any = []
+              let actions: any = []
               for (let actionName of ACTIONS_NAMES) {
                 {
                   actions = _.concat(actions, data_get(element, 'settings.' + actionName, []))
@@ -325,16 +354,15 @@ export default class Page extends BaseModel {
     altrpSettings.altrpMenus = _.uniq(altrpSettings.altrpMenus)
     altrpSettings.altrpMenus =
       (await Promise.all(altrpSettings.altrpMenus
-        .map(async (menuGuid) =>  await Menu.query().where('guid', menuGuid).select('*').first()
-      ))).filter(menu => menu)
-
+        .map(async (menuGuid) => await Menu.query().where('guid', menuGuid).select('*').first()
+        ))).filter(menu => menu)
     altrpRouting.setGlobal('fonts', fonts)
 
     return altrpSettings
   }
 
 
-  async allowedForUser(altrpRouting:AltrpRouting) {
+  async allowedForUser(altrpRouting: AltrpRouting) {
     const currentUser: User | null = data_get(altrpRouting, '__altrp_global__.currentUser')
 
 
@@ -366,21 +394,78 @@ export default class Page extends BaseModel {
     return allowed
   }
 
-  async getPagesForFrontend():Promise<Page[]> {
+  @beforeDelete()
+  public static async deletePage(page: Page) {
+    const datasource = await PageDatasource.query().where("page_id", page.id);
 
-    let pages:Page[] = [this]
-    let page:Page|null = this
+    datasource.forEach((source) => {
+      source.delete()
+    })
+  }
+
+  async getPagesForFrontend(): Promise<Page[]> {
+
+    let pages: Page[] = [this]
+    let page: Page | null = this
     try {
 
-      while( page && page.parent_page_id ){
-        page = await Page.find( page.parent_page_id )
-        if( page ){
-          pages.push( page )
+      while (page && page.parent_page_id) {
+        page = await Page.find(page.parent_page_id)
+        if (page) {
+          pages.push(page)
         }
       }
-    } catch( e ){
-      Logger.error( e.message )
+    } catch (e) {
+      Logger.error(e.message)
     }
     return pages
+  }
+
+  async getAllStyles() {
+
+    let styles = ''
+    let contentStyles = data_get(await Template.getTemplate(this.id, 'content'), 'styles')
+    let headerStyles = data_get(await Template.getTemplate(this.id, 'header'), 'styles')
+    if (headerStyles) {
+      headerStyles = JSON.parse(headerStyles)
+      headerStyles = _.get(headerStyles, 'all_styles', [])
+      styles += headerStyles.join('')
+    }
+    if (contentStyles) {
+      contentStyles = JSON.parse(contentStyles)
+      contentStyles = _.get(contentStyles, 'all_styles', [])
+      styles += contentStyles.join('')
+    }
+    return styles
+  }
+
+  async getChildrenContent() {
+    let contentGuid = data_get(await Template.getTemplate(this.id, 'content'), 'guid')
+    let footerGuid = data_get(await Template.getTemplate(this.id, 'footer'), 'guid')
+    let headerGuid = data_get(await Template.getTemplate(this.id, 'header'), 'guid')
+
+    return `<div class="app-area app-area_header">
+      ${headerGuid ? `@include('altrp/templates/header/${headerGuid}')` : ''}
+      </div>
+      <div class="app-area app-area_content">
+      ${contentGuid ? `@include('altrp/templates/content/${contentGuid}')` : ''}
+      </div>
+      <div class="app-area app-area_footer">
+      ${footerGuid ? `@include('altrp/templates/footer/${footerGuid}')` : ''}
+      </div>
+      ${footerGuid ? `<link href="/altrp/css/${footerGuid}.css" rel="stylesheet"/>` : ''}
+      `
+    /*
+        return `<div class="app-area app-area_header">
+          ${await (new RootElementRenderer(headerData)).render()}
+          </div>
+          <div class="app-area app-area_content">
+          ${await (new RootElementRenderer(contentData)).render()}
+          </div>
+          <div class="app-area app-area_footer">
+          ${await (new RootElementRenderer(footerData)).render()}
+          </div>
+          `
+    */
   }
 }

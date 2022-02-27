@@ -2,6 +2,9 @@ import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
 import {togglePopup} from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
 import {changeCurrentModel} from "../store/current-model/actions";
+import { v4 as uuid } from "uuid";
+import { io } from "socket.io-client";
+import axios from "axios";
 const {
   altrpLogin,
   altrpLogout,
@@ -308,6 +311,19 @@ class AltrpAction extends AltrpModel {
         break;
       case 'oauth': {
         result = await this.doActionOAuth();
+      }
+        break;
+      case 'metamask_connect': {
+        result = await this.metaMaskConnect();
+      }
+        break;
+      case 'socket_emit': {
+        result = await this.doActionSocketEmit();
+
+      }
+        break;
+      case 'socket_receiver': {
+        result = this.doActionSocketReceiver();
 
       }
         break;
@@ -324,6 +340,71 @@ class AltrpAction extends AltrpModel {
     }
     return result;
   }
+
+  /**
+   * заставляет сервер отправить сокет
+   * @return {object}
+   */
+  async doActionSocketEmit() {
+    // if(!window.io) {
+    //   window.io = io()
+    // }
+    let name = replaceContentWithData(this.getProperty("socket_emit_name"), this.getCurrentModel().getData())
+
+    const value = {
+      name,
+      data: replaceContentWithData(this.getProperty("socket_value"), this.getCurrentModel().getData())
+    }
+
+    console.log(value)
+    await axios.post("/sockets", value)
+    return {
+      success: true
+    }
+  }
+
+  /**
+   * слушает сокеты
+   * @return {object}
+   */
+  doActionSocketReceiver() {
+    if(!window.io) {
+      window.io = io(`:${process.env.SOCKETS_KEY}`)
+      window
+    }
+
+    let name = ""
+
+    if(this.getProperty("socket_type") === "custom") {
+      name = replaceContentWithData(this.getProperty("socket_name"), this.getCurrentModel().getData());
+    } else {
+      const user = window.current_user
+
+      if(!user.is_guest && user.guid) {
+        name = user.guid
+      } else {
+        let guid = localStorage.getItem("socket_guid");
+        if(!guid) {
+          localStorage.setItem("socket_guid", uuid())
+          guid = localStorage.getItem("socket_guid")
+        }
+
+        name = guid
+      }
+
+    }
+
+    console.log(name)
+    window.io.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
+      console.log(data)
+    });
+
+    return {
+      success: true
+    }
+  }
+
+
 
   /**
    * Ассинхронно выполняет действие-формы
@@ -1217,6 +1298,7 @@ class AltrpAction extends AltrpModel {
    * Проверка условий
    * @return {Promise<{success: boolean}>}
    */
+
   async doActionCondition() {
     const compare = this.getProperty('compare');
     let conditionLeft = this.getProperty('condition_left');
@@ -1225,6 +1307,34 @@ class AltrpAction extends AltrpModel {
     conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return {success: res};
+  }
+
+  metaMaskConnect = async () => {
+    let path = this.getProperty('path');
+    let currentValue = getDataByPath(path); // не получаю значение, приходит всегда null
+
+    if (!window.ethereum) {
+      return {
+        success: false
+      };
+    }
+
+    const accounts = await window.ethereum.request({
+      method: "eth_accounts",
+    });
+    if (accounts.length > 0) {
+      return {
+        success: false
+      };
+    } else {
+      const requestAccounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setDataByPath(path, requestAccounts[0])
+      return {
+        success: true
+      };
+    }
   }
 
   /**
@@ -1272,22 +1382,6 @@ class AltrpAction extends AltrpModel {
       }
     }
     let settings = {
-      client_id: 'AisOrder',
-      redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
-      post_logout_redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
-      response_type: 'token id_token',
-      scope: 'openid profile',
-      authority:'https://fs.geobuilder.ru/idp',
-      automaticSilentRenew: false,
-      userStore: new WebStorageStateStore({ store: window.localStorage }),
-      filterProtocolClaims: true,
-      loadUserInfo: true,
-      monitorSession: false,
-      checkSessionInterval: 3600000
-    };
-    const _manager = new UserManager(settings);
-    console.log(_manager);
-    settings = {
       client_id: this.getProperty('client_id'),
       redirect_uri: this.getProperty('redirect_uri'),
       post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),

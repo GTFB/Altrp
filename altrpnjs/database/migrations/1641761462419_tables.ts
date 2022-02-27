@@ -20,7 +20,7 @@ export default class Tables extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
-      table.timestamp('deleted_at', { useTz: true })
+      table.timestamp('deleted_at', { useTz: true }).nullable()
 
       table.foreign('user_id').references('users.id')
     })
