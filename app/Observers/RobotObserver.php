@@ -191,8 +191,6 @@ class RobotObserver
                 throw new RouteGenerateFailedException( 'Failed to generate routes', 500 );
               }
 
-              $base_url = substr(env('APP_URL'), -1) == "/" ? substr(env('APP_URL'),0,-1) : env('APP_URL');
-
               if (!$robot->is_active && $_SERVER['REQUEST_SCHEME'] == "https") {
                 $client = new \GuzzleHttp\Client();              
                 $base_url = substr(env('APP_URL'), -1) == "/" ? substr(env('APP_URL'),0,-1) : env('APP_URL');
