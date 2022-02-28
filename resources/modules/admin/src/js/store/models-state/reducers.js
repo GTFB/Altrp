@@ -4,6 +4,7 @@ const initialState = {
   toggleModels: false,
   modelID: null,
   modelRelationID: null,
+  standardModels: [{ name: 'role_user', label: 'Role User' }, { name: 'media', label: 'Media' }]
 }
 
 export const modelsReducer = (state = initialState, action) => {

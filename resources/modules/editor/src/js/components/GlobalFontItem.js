@@ -7,7 +7,7 @@ import {
   MenuItem,
   NumericInput,
   HTMLSelect,
-  Collapse
+  Collapse, Alignment
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
 import Resource from "../classes/Resource";
@@ -266,165 +266,167 @@ class GlobalFontItem extends Component {
 
   render() {
     const { font } = this.state;
+    const mgButton = this.state.edit ? '20px' : '0';
 
     return (
       <>
         {" "}
         {!this.props.isNew && (
           <Button
-            style={{ width: "100%" }}
+            style={{ width: "100%", marginBottom: mgButton }}
             onClick={e => this.setState(s => ({ ...s, edit: !s.edit }))}
           >
             {!this.props.isNew && font.name}
           </Button>
         )}
-        <Collapse isOpen={this.state.edit}>
-          <ControlGroup vertical>
-            <form onSubmit={this.onSaveFont}>
-              <FormGroup label="Enter Font Name">
-                <InputGroup
-                  required
-                  name="name"
-                  id="text-input"
-                  placeholder="Enter Font Name"
-                  defaultValue={font.name}
-                  onChange={this.nameChange}
-                />
-              </FormGroup>
-              <FormGroup label="Family" inline={true}>
-                <Select
-                  itemPredicate={(query, item) =>
-                    item.label.indexOf(query) >= 0
-                  }
-                  activeItem={
-                    familyOptions.filter(item => item.value == font.family)[0]
-                  }
-                  itemRenderer={item => (
-                    <MenuItem
-                      text={item.label}
-                      onClick={e => this.onSelect(e, item)}
-                    />
-                  )}
-                  items={familyOptions}
-                  noResults={<MenuItem disabled={true} text="No results." />}
-                >
-                  <Button
-                    text={
-                      familyOptions.filter(item => item.value == font.family)[0]
-                        .label
-                    }
-                    rightIcon="double-caret-vertical"
+        {this.state.edit && (
+          <form onSubmit={this.onSaveFont}>
+            <div className="global-font__group">
+              <label htmlFor="enter_for_name">Enter Font Name</label>
+              <InputGroup
+                required
+                name="name"
+                id="text-input"
+                placeholder="Enter Font Name"
+                defaultValue={font.name}
+                onChange={this.nameChange}
+              />
+            </div>
+            <div className="global-font__group">
+              <label htmlFor="family">Family</label>
+              <Select
+                itemPredicate={(query, item) =>
+                  item.label.indexOf(query) >= 0
+                }
+                activeItem={familyOptions.filter(item => item.value === font.family)[0]}
+                matchTargetWidth
+                itemRenderer={item => (
+                  <MenuItem
+                    text={item.label}
+                    key={item.label}
+                    active={item.value === this.state.font.family}
+                    onClick={e => this.onSelect(e, item)}
                   />
-                </Select>
-              </FormGroup>
-              <FormGroup label="Size" inline={true}>
-                <ControlGroup fill={true} vertical={false}>
-                  <NumericInput
-                    style={{
-                      width: "100px"
-                    }}
-                    value={font.size}
-                    placeholder="Enter size"
-                    min={0}
-                    max={200}
-                    stepSize={0.1}
-                    onValueChange={this.changeSize}
-                  />
-                  <HTMLSelect
-                    onChange={this.changeUnit}
-                    options={units}
-                    defaultChecked={font.sizeUnit}
-                    value={font.sizeUnit}
-                  />
-                </ControlGroup>
-              </FormGroup>
-              <FormGroup label="Weight" inline={true}>
-                <ControlGroup fill={true} vertical={false}>
-                  <HTMLSelect
-                    onChange={this.changeWeight}
-                    options={weightOptions}
-                    defaultChecked={font.weight}
-                    value={font.weight}
-                  />
-                </ControlGroup>
-              </FormGroup>
-              <FormGroup label="Transform" inline={true}>
-                <ControlGroup fill={true} vertical={false}>
-                  <HTMLSelect
-                    onChange={this.changeTransform}
-                    options={transformOptions}
-                    defaultChecked={font.transform}
-                    value={font.transform}
-                  />
-                </ControlGroup>
-              </FormGroup>
-              <FormGroup label="Style" inline={true}>
-                <ControlGroup fill={true} vertical={false}>
-                  <HTMLSelect
-                    onChange={this.changeStyle}
-                    options={styleOptions}
-                    defaultChecked={font.style}
-                    value={font.style}
-                  />
-                </ControlGroup>
-              </FormGroup>
-              <FormGroup label="Decoration" inline={true}>
-                <ControlGroup fill={true} vertical={false}>
-                  <HTMLSelect
-                    onChange={this.changeDecoration}
-                    options={decorationOptions}
-                    defaultChecked={font.decoration}
-                    value={font.decoration}
-                  />
-                </ControlGroup>
-              </FormGroup>
-              <FormGroup label="Line height" inline={true}>
-                <ControlGroup fill={true} vertical={false}>
-                  <NumericInput
-                    style={{
-                      width: "100px"
-                    }}
-                    value={font.lineHeight}
-                    placeholder="Enter line height"
-                    stepSize={0.1}
-                    min={0.1}
-                    max={10}
-                    onValueChange={this.changeLineHeight}
-                  />
-                </ControlGroup>
-              </FormGroup>
-              <FormGroup label="Letter spacing" inline={true}>
-                <ControlGroup fill={true} vertical={false}>
-                  <NumericInput
-                    style={{
-                      width: "100px"
-                    }}
-                    value={font.spacing}
-                    placeholder="Enter letter spacing"
-                    stepSize={0.1}
-                    min={-5}
-                    max={10}
-                    onValueChange={this.changeSpacing}
-                  />
-                </ControlGroup>
-              </FormGroup>
-              <FormGroup>
-                <Button type="submit" style={{ width: "100%" }}>
-                  Save
-                </Button>
-              </FormGroup>
-              <FormGroup>
+                )}
+                items={familyOptions}
+                noResults={<MenuItem disabled={true} text="No results." />}
+              >
                 <Button
-                  intent="danger"
-                  onClick={this.onDeleteFont}
-                  style={{ width: "100%" }}
-                >
-                  Delete
-                </Button>
-              </FormGroup>
-            </form>
-          </ControlGroup>
-        </Collapse>
+                  fill={true}
+                  alignText={Alignment.LEFT}
+                  text={familyOptions.filter(item => item.value === font.family)[0].label}
+                  rightIcon="double-caret-vertical"
+                />
+              </Select>
+            </div>
+            <div className="global-font__group">
+              <label htmlFor="size">Size</label>
+              <ControlGroup fill={true} vertical={false}>
+                <NumericInput
+                  style={{
+                    width: "100px"
+                  }}
+                  value={font.size}
+                  placeholder="Enter size"
+                  min={0}
+                  max={200}
+                  stepSize={0.1}
+                  onValueChange={this.changeSize}
+                />
+                <HTMLSelect
+                  onChange={this.changeUnit}
+                  options={units}
+                  defaultChecked={font.sizeUnit}
+                  value={font.sizeUnit}
+                />
+              </ControlGroup>
+            </div>
+            <div className="global-font__group">
+              <label htmlFor="weight">Weight</label>
+              <ControlGroup fill={true} vertical={false}>
+                <HTMLSelect
+                  onChange={this.changeWeight}
+                  options={weightOptions}
+                  defaultChecked={font.weight}
+                  value={font.weight}
+                />
+              </ControlGroup>
+            </div>
+            <div className="global-font__group">
+              <label htmlFor="transform">Transform</label>
+              <ControlGroup fill={true} vertical={false}>
+                <HTMLSelect
+                  onChange={this.changeTransform}
+                  options={transformOptions}
+                  defaultChecked={font.transform}
+                  value={font.transform}
+                />
+              </ControlGroup>
+            </div>
+            <div className="global-font__group">
+              <label htmlFor="style">Style</label>
+              <ControlGroup fill={true} vertical={false}>
+                <HTMLSelect
+                  onChange={this.changeStyle}
+                  options={styleOptions}
+                  defaultChecked={font.style}
+                  value={font.style}
+                />
+              </ControlGroup>
+            </div>
+            <div className="global-font__group">
+              <label htmlFor="decoration">Decoration</label>
+              <ControlGroup fill={true} vertical={false}>
+                <HTMLSelect
+                  onChange={this.changeDecoration}
+                  options={decorationOptions}
+                  defaultChecked={font.decoration}
+                  value={font.decoration}
+                />
+              </ControlGroup>
+            </div>
+            <div className="global-font__group numeric_fix">
+              <label htmlFor="line_height">Line height</label>
+              <ControlGroup fill={true} vertical={false}>
+                <NumericInput
+                  value={font.lineHeight}
+                  placeholder="Enter line height"
+                  stepSize={0.1}
+                  min={0.1}
+                  max={10}
+                  onValueChange={this.changeLineHeight}
+                />
+              </ControlGroup>
+            </div>
+            <div className="global-font__group numeric_fix">
+              <label htmlFor="letter_spacing">Letter spacing</label>
+              <ControlGroup fill={true} vertical={false}>
+                <NumericInput
+                  value={font.spacing}
+                  placeholder="Enter letter spacing"
+                  stepSize={0.1}
+                  min={-5}
+                  max={10}
+                  onValueChange={this.changeSpacing}
+                />
+              </ControlGroup>
+            </div>
+            <FormGroup>
+              <button className="btn-global__fonts-save" type="submit" style={{ width: "100%" }}>
+                Save
+              </button>
+            </FormGroup>
+            <FormGroup>
+              <button
+                className="btn-global__fonts-delete"
+                onClick={this.onDeleteFont}
+                style={{ width: "100%" }}
+              >
+                Delete
+              </button>
+            </FormGroup>
+          </form>
+        )}
       </>
     );
   }

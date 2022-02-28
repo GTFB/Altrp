@@ -6,7 +6,7 @@ import {
   dimensionsControllerToStyles,
   typographicControllerToStyles,
   sizeStyled,
-  shadowControllerToStyles, sliderStyled, colorStyled,
+  shadowControllerToStyles, sliderStyled, colorStyled, dimensionsStyled,
 } from "../../helpers/styles";
 
 const getTabsStyles = (settings, id) => {
@@ -192,7 +192,7 @@ const getTabsStyles = (settings, id) => {
   }
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
   //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
@@ -276,7 +276,7 @@ const getTabsStyles = (settings, id) => {
   }
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
   //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
@@ -373,7 +373,7 @@ const getTabsStyles = (settings, id) => {
   }
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
   //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
@@ -448,7 +448,7 @@ const getTabsStyles = (settings, id) => {
   }
 
   if (borderRadius) {
-    styles += simplePropertyStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
   styles += "} ";
@@ -513,13 +513,13 @@ const getTabsStyles = (settings, id) => {
   }
 
   if (borderRadius) {
-    styles += simplePropertyStyled(borderRadius, 'border-radius');
+    styles += dimensionsStyled(borderRadius, 'border-radius');
   }
 
 
   styles += "} ";
 
-  styles += `${parentClass} .altrp-tab-content div {`;
+  styles += `${parentClass} .altrp-tab {`;
 
   //Получаем значения color из контроллера, обрабатываем и добавляем в styles
 
@@ -543,7 +543,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += "} ";
 
-  styles += `${parentClass} .altrp-tab-content div:hover {`;
+  styles += `${parentClass} .altrp-tab:hover {`;
 
   //Получаем значения color из контроллера, обрабатываем и добавляем в styles
 
@@ -802,7 +802,71 @@ const getTabsStyles = (settings, id) => {
   }
 
   if (contentBorderRadius) {
-    styles += `border-radius:${sliderStyled(contentBorderRadius)}`;
+    styles += dimensionsStyled(contentBorderRadius, 'border-radius');
+  }
+
+  styles += `} `;
+
+  styles += `${parentClass} .altrp-tab:hover {`;
+
+  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBackgroundColor = getResponsiveSetting(settings, 'background_content_style', ':hover');
+  }
+
+  if (contentBackgroundColor) {
+    styles += colorPropertyStyled(contentBackgroundColor, 'background-color');
+  }
+
+  //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentPadding = getResponsiveSetting(settings, 'padding_content_style', ':hover');
+  }
+
+  if (contentPadding) {
+    styles += dimensionsControllerToStyles(contentPadding);
+  }
+
+  //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderType = getResponsiveSetting(settings, 'border_type_content_style', ':hover');
+  }
+
+  if (contentBorderType) {
+    styles += simplePropertyStyled(contentBorderType, 'border-style');
+  }
+
+  //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderWidth = getResponsiveSetting(settings, 'border_width_content_style', ':hover');
+  }
+
+  if (contentBorderWidth) {
+    styles += borderWidthStyled(contentBorderWidth);
+  }
+
+  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderColor = getResponsiveSetting(settings, 'border_color_content_style', ':hover');
+  }
+
+  if (contentBorderColor) {
+    styles += colorPropertyStyled(contentBorderColor, 'border-color');
+  }
+
+  //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderRadius = getResponsiveSetting(settings, 'border_radius_content_style', ':hover');
+  }
+
+  if (contentBorderRadius) {
+    styles += dimensionsStyled(contentBorderRadius, 'border-radius');
   }
 
   styles += `} `;

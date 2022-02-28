@@ -43,7 +43,8 @@ class AdminModelsDropList extends React.Component {
                         ) : (
                             <ul
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist_active"
-                                    : (this.props.models.length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
+                                    : (this.props.models.filter(item => !this.props.standardModels.some(model => model.label === item.label)).length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
+
                                 {
                                     this.props.models
                                         .sort((a, b) => {
@@ -52,7 +53,7 @@ class AdminModelsDropList extends React.Component {
                                             if (a.label.toUpperCase() > b.label.toUpperCase())
                                                 return 1;
                                             return 0;
-                                        })
+                                        }).filter(item => !this.props.standardModels.some(model => model.label === item.label))
                                         .map(({value: id, label}) => (
                                             <li key={id}>
                                                 <Link
@@ -100,7 +101,7 @@ class AdminModelsDropList extends React.Component {
                         ) : (
                             <ul
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist models-sublist__item"
-                                    : (this.props.models.length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
+                                    : (this.props.models.filter(item => !this.props.standardModels.some(model => model.label === item.label)).length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
                                 {
                                     this.props.models
                                         .sort((a, b) => {
@@ -109,7 +110,7 @@ class AdminModelsDropList extends React.Component {
                                             if (a.label.toUpperCase() > b.label.toUpperCase())
                                                 return 1;
                                             return 0;
-                                        })
+                                        }).filter(item => !this.props.standardModels.some(model => model.label === item.label))
                                         .map(({value: id, label}) => (
                                             <li key={id}>
                                                 <Link
@@ -136,7 +137,8 @@ class AdminModelsDropList extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        modelsState: state.modelsState.toggleModels
+        modelsState: state.modelsState.toggleModels,
+        standardModels: state.modelsState.standardModels
     }
 }
 

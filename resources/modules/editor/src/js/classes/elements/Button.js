@@ -189,6 +189,20 @@ class Button extends BaseElement {
       ],
     });
 
+    this.addControl('position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
     this.addControl('position_z_index', {
       hideOnEmail: true,
       type: CONTROLLER_NUMBER,
@@ -228,8 +242,8 @@ class Button extends BaseElement {
         firstColor: "rgba(97,206,112,1)",
         firstPoint: '0',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
-        angle: "0",
+        secondPoint: "90",
+        angle: "260",
         value: ""
       },
     });
@@ -501,7 +515,6 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
-      stateless: true,
     });
 
     this.addControl('icon_padding_left', {
@@ -516,7 +529,6 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
-      stateless: true,
     });
 
     this.addControl('icon_padding_top', {
@@ -531,7 +543,6 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
-      stateless: true,
     });
 
     this.addControl('icon_padding_bottom', {
@@ -546,7 +557,62 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
-      stateless: true,
+    });
+
+    this.addControl('icon_margin_right', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin for icon right',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('icon_margin_left', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin for icon left',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('icon_margin_top', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin for icon top',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('icon_margin_bottom', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin for icon bottom',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     });
 
     this.addControl('icon_color', {
@@ -575,7 +641,6 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
-      stateless: true,
     });
 
     this.addControl('icon_size_left', {
@@ -588,7 +653,6 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
-      stateless: true,
     });
 
     this.addControl('icon_size_top', {
@@ -601,7 +665,6 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
-      stateless: true,
     });
 
     this.addControl('icon_size_bottom', {
@@ -614,7 +677,6 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
-      stateless: true,
     });
 
     this.endControlSection();
