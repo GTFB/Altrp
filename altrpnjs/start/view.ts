@@ -14,6 +14,8 @@ import renderAsset from "../helpers/renderAsset";
 import renderButton from "../helpers/widgets-renders/renderButton";
 import renderImage from "../helpers/widgets-renders/renderImage";
 import renderHeading from "../helpers/widgets-renders/renderHeading";
+import renderTabsSwitcher from '../helpers/widgets-renders/renderTabsSwitcher';
+import renderTabs from '../helpers/widgets-renders/renderTabs';
 
 
 View.global('get_logo_url', get_logo_url)
@@ -33,6 +35,8 @@ View.global('renderAsset', renderAsset)
 View.global('renderButton', renderButton)
 View.global('renderImage', renderImage)
 View.global('renderHeading', renderHeading)
+View.global('renderTabsSwitcher', renderTabsSwitcher)
+View.global('renderTabs', renderTabs)
 /**
  * RENDERS END
  */

@@ -86,15 +86,15 @@ class TabsSwitcherWidget extends Component {
 
   render() {
     // section 1
-    const oneTitle = this.props.element.getResponsiveSetting("one_title", "", "");
-    const oneType = this.props.element.getResponsiveSetting("one_type", "", "text");
-    const oneWysiwyg = this.props.element.getResponsiveSetting("one_wysiwyg", "", "");
-    const oneTemplate = this.props.element.getResponsiveSetting("one_template", "", "");
+    const oneTitle = this.props.element.getResponsiveLockedSetting("one_title", "", "");
+    const oneType = this.props.element.getResponsiveLockedSetting("one_type", "", "text");
+    const oneWysiwyg = this.props.element.getResponsiveLockedSetting("one_wysiwyg", "", "");
+    const oneTemplate = this.props.element.getResponsiveLockedSetting("one_template", "", "");
     // section 2
-    const twoTitle = this.props.element.getResponsiveSetting("two_title", "", "");
-    const twoType = this.props.element.getResponsiveSetting("two_type", "", "text");
-    const twoWysiwyg = this.props.element.getResponsiveSetting("two_wysiwyg", "", "");
-    const twoTemplate = this.props.element.getResponsiveSetting("two_template", "", null);
+    const twoTitle = this.props.element.getResponsiveLockedSetting("two_title", "", "");
+    const twoType = this.props.element.getResponsiveLockedSetting("two_type", "", "text");
+    const twoWysiwyg = this.props.element.getResponsiveLockedSetting("two_wysiwyg", "", "");
+    const twoTemplate = this.props.element.getResponsiveLockedSetting("two_template", "", null);
 
     function getContent(type, contentValue) {
       if(type === "text") {

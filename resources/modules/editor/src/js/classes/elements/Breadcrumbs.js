@@ -57,6 +57,7 @@ class Breadcrumbs extends BaseElement {
         },
       ],
       stateless: true,
+      locked: true,
     });
 
     this.addControl('delimiter', {

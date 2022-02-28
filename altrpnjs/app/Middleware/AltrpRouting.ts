@@ -21,6 +21,7 @@ import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import Source from "App/Models/Source";
 // import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
@@ -140,6 +141,8 @@ export default class AltrpRouting {
         }
       }
       let title = replaceContentWithData(page.title, model_data)
+
+      // const datasources= Source.fetchDatasourcesForPage(page.id)
       const datasources= {}
 
       const _frontend_route = page.serialize()
@@ -154,7 +157,7 @@ export default class AltrpRouting {
           params: request.qs()
         }
       }
-      /*
+
       try {
         _.set(page, 'templates', [])
         _.set(_frontend_route, 'templates', [])
@@ -193,7 +196,7 @@ export default class AltrpRouting {
         console.error(`Error to View Custom Page: ${e.message}
          ${e.stack}
          `);
-      }*/
+      }
       //@ts-ignore
       const preload_content:any = renderResult({
         protocol: request.protocol(),

@@ -1,5 +1,5 @@
 import Resource from '../../classes/Resource';
-
+const {isEditor} = window.altrpHelpers
 const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction, locales} = window.altrpLibs.fullCalendar
 const {InputGroup, TextArea} = window.altrpLibs.Blueprint
 
@@ -48,7 +48,13 @@ class SchedulerWidget extends Component {
   }
 
   getFormattedEvents = async () => {
-    const resource = new Resource({route: this.state.settings.get_url, dynamicURL: true});
+    const getUrl = this.props.element.getResponsiveLockedSetting('get_url')
+
+    if (!getUrl) {
+      return []
+    }
+
+    const resource = new Resource({route: getUrl, dynamicURL: true});
 
     const {data} = await resource.getAll();
 
@@ -212,7 +218,7 @@ class SchedulerWidget extends Component {
   }
 
   render() {
-    const lang = this.props.element.getResponsiveSetting('lang', '', 'en-gb')
+    const lang = this.props.element.getResponsiveLockedSetting('lang', '', 'en-gb')
     const popupText = this.popupLocalization[lang]
     return (
       <div className="popup-wrapper">

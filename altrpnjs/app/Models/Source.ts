@@ -17,6 +17,7 @@ import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
 import Customizer from "App/Models/Customizer";
 import SQLEditor from "App/Models/SQLEditor";
+import _ from "lodash";
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -385,5 +386,38 @@ export default class Source extends BaseModel {
        'table_name' : '${this.model?.table?.name}',
      }, httpContext.request );
     `;
+  }
+
+  static async fetchDatasourcesForPage(id: number):Promise<{}> {
+
+    const datasources:any = {}
+    if(! id){
+      return datasources
+    }
+    console.error(id);
+
+    const sources:any[] = await Source.query()
+      .join('page_data_sources', 'altrp_sources.id', 'source_id')
+      .where('page_data_sources.page_id', id)
+      .select(['page_data_sources.alias', 'altrp_sources.*'])
+
+    for(const source of sources){
+      console.log(source.id);
+      const data = await Source.fetchDatasourcesForPage(source)
+      if(! _.isEmpty(data)){
+        datasources[source.alias] = data
+      }
+    }
+
+    return datasources
+  }
+
+  async fetchSourceData(source: any):Promise<{}>{
+
+    let data = {}
+
+
+
+    return  data
   }
 }

@@ -119,7 +119,7 @@ class DropbarWidget extends Component {
     e.persist();
     if (isEditor()) {
       e.preventDefault();
-    } else if (this.props.element.getResponsiveSetting("actions", null, []).length) {
+    } else if (this.props.element.getResponsiveLockedSetting("actions", null, []).length) {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
@@ -130,7 +130,7 @@ class DropbarWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         'click',
-        this.props.element.getSettings("actions", []),
+        this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
     }
@@ -143,7 +143,7 @@ class DropbarWidget extends Component {
           try {
             let res = await form.submit(
               this.getModelId(),
-              this.props.element.getResponsiveSetting("form_confirm")
+              this.props.element.getResponsiveLockedSetting("form_confirm")
             );
             if (res.success) {
               let {
@@ -158,8 +158,8 @@ class DropbarWidget extends Component {
                 return this.props.history.push(redirect_after);
               }
 
-              if (this.props.element.getResponsiveSetting("text_after", null,"")) {
-                alert(this.props.element.getResponsiveSetting("text_after", null, ""));
+              if (this.props.element.getResponsiveLockedSetting("text_after", null,"")) {
+                alert(this.props.element.getResponsiveLockedSetting("text_after", null, ""));
               }
             } else if (res.message) {
               alert(res.message);
@@ -173,11 +173,11 @@ class DropbarWidget extends Component {
       );
     }
     // else      if (
-    //   this.props.element.getSettings("popup_trigger_type") &&
-    //   this.props.element.getSettings("popup_id")
+    //   this.props.element.getLockedSettings("popup_trigger_type") &&
+    //   this.props.element.getLockedSettings("popup_id")
     // ) {
     //   this.props.appStore.dispatch(
-    //     togglePopup(this.props.element.getSettings("popup_id"))
+    //     togglePopup(this.props.element.getLockedSettings("popup_id"))
     //   );
     //   /**
     //    * Проверим надо ли по ID скроллить к элементу
@@ -197,16 +197,16 @@ class DropbarWidget extends Component {
         e.preventDefault();
         scrollToElement(mainScrollbars, element);
       }
-    } else if (this.props.element.getResponsiveSetting("hide_elements_trigger")) {
+    } else if (this.props.element.getResponsiveLockedSetting("hide_elements_trigger")) {
       this.props.toggleTrigger(
-        this.props.element.getResponsiveSetting("hide_elements_trigger")
+        this.props.element.getResponsiveLockedSetting("hide_elements_trigger")
       );
     } else if (
       this.props.element
-        .getResponsiveSetting("other_action_type", null,[])
+        .getResponsiveLockedSetting("other_action_type", null,[])
         .includes("print_elements")
     ) {
-      let IDs = this.props.element.getResponsiveSetting("print_elements_ids", null,"");
+      let IDs = this.props.element.getResponsiveLockedSetting("print_elements_ids", null,"");
       IDs = IDs.split(",");
       let elementsToPrint = [];
       IDs.forEach(elementId => {
@@ -235,16 +235,16 @@ class DropbarWidget extends Component {
   }
 
   render() {
-    const buttonText = this.props.element.getResponsiveSetting("button_text", "", "");
-    const id = this.props.element.getResponsiveSetting("position_css_id", "", "")
-    const customClasses = this.props.element.getResponsiveSetting("position_css_classes", "", null);
-    const background_image = this.props.element.getResponsiveSetting(
+    const buttonText = this.props.element.getResponsiveLockedSetting("button_text", "", "");
+    const id = this.props.element.getResponsiveLockedSetting("position_css_id", "", "")
+    const customClasses = this.props.element.getResponsiveLockedSetting("position_css_classes", "", null);
+    const background_image = this.props.element.getResponsiveLockedSetting(
       "background_image",
       null,
       {}
     );
-    const buttonMedia = this.props.element.getResponsiveSetting("button_icon", "", {});
-    const dropbarDelay = this.props.element.getResponsiveSetting("show_delay_dropbar_options");
+    const buttonMedia = this.props.element.getResponsiveLockedSetting("button_icon", "", {});
+    const dropbarDelay = this.props.element.getResponsiveLockedSetting("show_delay_dropbar_options");
 
     const showIcon = buttonMedia.url;
 
@@ -286,10 +286,10 @@ class DropbarWidget extends Component {
     return <div className="altrp-btn-wrapper_dropbar altrp-btn-wrapper">
       <AltrpDropbar
         elemenentId={this.props.element.getId()}
-        settings={this.props.element.getSettings()}
+        settings={this.props.element.getLockedSettings()}
         className="btn"
         element={this.props.element}
-        getContent={this.getContent}
+        getContent={this.getLockedContent}
         showDelay={dropbarDelay}
       >
         {buttonTemplate}

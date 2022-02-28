@@ -591,7 +591,7 @@ class InputCropImageWidget extends Component {
   render() {
     const {element} = this.props
     const text = element.getResponsiveSetting('text')
-    const required = element.getResponsiveSetting('reequired')
+    const required = element.getResponsiveSetting('required')
 
     const renderComponent = <img src={this.state.imageUrl} ref={this.imageToCrop} className="ReactCrop__image" />
 

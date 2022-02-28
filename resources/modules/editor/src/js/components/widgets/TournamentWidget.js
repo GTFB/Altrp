@@ -88,7 +88,7 @@ class TournamentWidget extends Component {
         ]
       })
     } else {
-      const {data, headers} = getDataByPath(this.props.element.getResponsiveSetting('path'))
+      const {data, headers} = getDataByPath(this.props.element.getResponsiveLockedSetting('path'))
 
       this.setState({data, headers})
     }

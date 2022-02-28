@@ -43,7 +43,7 @@ class StarsWidget extends Component {
 
     const settings = props.element.getSettings();
 
-    let defaultValue = this.getContent(
+    let defaultValue = this.getLockedContent(
       "default_value"
     );
 
@@ -82,7 +82,7 @@ class StarsWidget extends Component {
 
   _componentDidUpdate(previousProps, previousState) {
     if(this.state.settings.default_value !== previousState.settings.default_value) {
-      let defaultValue = this.getContent(
+      let defaultValue = this.getLockedContent(
         "default_value"
       );
 
@@ -119,7 +119,7 @@ class StarsWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -157,10 +157,10 @@ class StarsWidget extends Component {
   }
 
   render() {
-    const countNumber = parseInt(this.props.element.getContent("count")?.size) || 1;
+    const countNumber = parseInt(this.props.element.getLockedContent("count")?.size) || 1;
     const count = new Array(countNumber).fill("", 0, countNumber);
     const value = this.getValue();
-    let visualValue = this.getContent("second_default_value");
+    let visualValue = this.getLockedContent("second_default_value");
 
     if(!isNaN(visualValue)) {
       visualValue = _.parseInt(visualValue) || 0;

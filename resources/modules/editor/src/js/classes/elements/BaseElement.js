@@ -21,9 +21,11 @@ class BaseElement extends ControlStack {
     super();
     if(!element) {
       this.settings = {};
+      this.settingsLock = {};
       this.cssClassStorage = {};
     } else {
       this.settings = element.settings;
+      this.settingsLock = element.settingsLock;
       this.cssClassStorage = element.cssClassStorage;
     }
     this.controls = {};
@@ -49,6 +51,22 @@ class BaseElement extends ControlStack {
    */
   setSettings(settings) {
     this.settings = settings || this.settings;
+
+    this.settingsLock =  this.settingsLock || {};
+
+    const controls = controllersManager.getControls(this.getName())
+
+    // Выбираем locked настройки
+    Object.keys(controls).map(key => {
+      controls[key].map(tab => {
+        tab.controls.map(control => {
+          if (control.locked) {
+            this.settingsLock[control.controlId] = settings[control.controlId] || this.settingsLock[control.controlId]
+          }
+        })
+      })
+    })
+
     if (this.component && settings) {
       this.component.setState(state => {
         return {
@@ -125,6 +143,7 @@ class BaseElement extends ControlStack {
     data.id = this.getId();
     data.name = this.getName();
     data.settings = this.settings;
+    data.settingsLock = this.settingsLock;
     data.type = this.getType();
     if (this.dynamicContentSettings && this.dynamicContentSettings.length) {
       data.dynamicContentSettings = [...this.dynamicContentSettings];
@@ -410,12 +429,14 @@ class BaseElement extends ControlStack {
    * @param {*}_default
    * @return {*}
    */
-  getSettings(settingName, _default = "") {
+  getSettings(settingName, _default = "", locked = false) {
     this._initDefaultSettings();
+    const settings = locked ? this.settingsLock : this.settings
+
     if (!settingName) {
-      return _.cloneDeep(this.settings);
+      return _.cloneDeep(settings);
     }
-    if (this.settings[settingName] === undefined) {
+    if (settings[settingName] === undefined) {
       let control = window.controllersManager.getElementControl(
         this.getName(),
         settingName
@@ -427,9 +448,13 @@ class BaseElement extends ControlStack {
         }
         return _default || null;
       }
-      this.settings[settingName] = control.default;
+      settings[settingName] = control.default;
     }
-    return this.settings[settingName] || _default;
+    return settings[settingName] || _default;
+  }
+
+  getLockedSettings(settingName, _default = "") {
+    return this.getSettings(settingName, _default, true)
   }
 
   _initDefaultSettings() {
@@ -450,11 +475,12 @@ class BaseElement extends ControlStack {
             continue;
           }
           for (let control of section.controls) {
+            const settings = control.locked ? this.settingsLock : this.settings
             if (
               control.default !== undefined &&
-              this.settings[control.controlId] === undefined
+              settings[control.controlId] === undefined
             ) {
-              this.settings[control.controlId] = control.default;
+              settings[control.controlId] = control.default;
             }
           }
         }
@@ -464,9 +490,11 @@ class BaseElement extends ControlStack {
     this.defaultSettingsIsApply = true;
   }
 
-  setSettingValue(settingName, value, dispatchToHistory = true) {
+  setSettingValue(settingName, value, dispatchToHistory = true, locked = false) {
+    const settings = locked ? this.settingsLock : this.settings
+
     //check change value
-    if (this.settings[settingName] !== value) {
+    if (settings[settingName] !== value) {
       if (
         dispatchToHistory &&
         store.getState().templateStatus.status ===
@@ -475,13 +503,20 @@ class BaseElement extends ControlStack {
         store.dispatch(
           addHistoryStoreItem("EDIT", {
             element: this,
-            oldValue: this.settings[settingName],
+            oldValue: settings[settingName],
             newValue: value,
+            locked,
             settingName
           })
         );
       // this.settings = {...this.settings};
+
+      if (locked) {
+        this.settingsLock[settingName] = value;
+      }
+
       this.settings[settingName] = value;
+      
       if (this.component) {
         (async () => {
           this.component?.changeSetting && this.component?.changeSetting(settingName, value);

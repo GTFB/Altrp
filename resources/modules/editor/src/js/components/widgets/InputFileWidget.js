@@ -33,15 +33,15 @@ class InputFileWidget extends Component {
       window.elementDecorator(this);
     }
     this.wrapperRef = React.createRef()
-    this.defaultValue = this.getContent("content_default_value");
+    this.defaultValue = this.getLockedContent("content_default_value");
 
     this.state = {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
-      imageUrls_0: _.get(props.element.getResponsiveSetting('preview_placeholder'), 'url'),
+      imageUrls_0: _.get(props.element.getResponsiveLockedSetting('preview_placeholder'), 'url'),
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
+    if (this.getLockedContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.defaultValue);
     }
   }
@@ -79,9 +79,9 @@ class InputFileWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
+    if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.props.element.getLockedSettings("content_options")
       );
 
       this.setState(state => ({...state, options}));
@@ -91,14 +91,14 @@ class InputFileWidget extends Component {
 
     /**
      * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
+     * то используем this.getLockedContent для получение этого динамического значения
      * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
 
     /**
@@ -109,7 +109,7 @@ class InputFileWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -124,7 +124,7 @@ class InputFileWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -149,9 +149,9 @@ class InputFileWidget extends Component {
    */
   async _componentDidUpdate(prevProps, prevState) {
     const {content_options, model_for_options} = this.state.settings;
-    if (!this.getValue() && this.state.imageUrls_0 !== _.get(this.props.element.getResponsiveSetting('preview_placeholder'), 'url')) {
+    if (!this.getValue() && this.state.imageUrls_0 !== _.get(this.props.element.getResponsiveLockedSetting('preview_placeholder'), 'url')) {
       this.setState(
-        state => ({...state, imageUrls_0: _.get(this.props.element.getResponsiveSetting('preview_placeholder'), 'url')})
+        state => ({...state, imageUrls_0: _.get(this.props.element.getResponsiveLockedSetting('preview_placeholder'), 'url')})
       )
     }
     if (
@@ -159,9 +159,9 @@ class InputFileWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        this.props.element.getLockedSettings("select2_multiple")
       );
       this.setState(
         state => ({...state, value, contentLoaded: true}),
@@ -179,7 +179,7 @@ class InputFileWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
 
     if (content_options && !model_for_options) {
@@ -201,7 +201,7 @@ class InputFileWidget extends Component {
       return;
     }
 
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -349,9 +349,9 @@ class InputFileWidget extends Component {
       console.error(e);
     }
     const files = e.target.files;
-    const limit = this.props.element.getResponsiveSetting('limit');
+    const limit = this.props.element.getResponsiveLockedSetting('limit');
     let value;
-    if (this.props.element.getResponsiveSetting('multiple')) {
+    if (this.props.element.getResponsiveLockedSetting('multiple')) {
       value = _.map(files, (file, idx) => {
         return new AltrpFile(file)
       })
@@ -420,7 +420,7 @@ class InputFileWidget extends Component {
       );
 
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -451,12 +451,12 @@ class InputFileWidget extends Component {
 
   render() {
     const {element} = this.props
-    let disabled = element.getResponsiveSetting('readonly');
+    let disabled = element.getResponsiveLockedSetting('readonly');
 
     const inputProps = {
       name: this.getName(),
-      accept: element.getResponsiveSetting('accept'),
-      multiple: element.getResponsiveSetting('multiple'),
+      accept: element.getResponsiveLockedSetting('accept'),
+      multiple: element.getResponsiveLockedSetting('multiple'),
     }
     let text
     const {filesStorage, notActive} = this.state
@@ -465,7 +465,7 @@ class InputFileWidget extends Component {
     } else if(filesStorage instanceof AltrpFile) {
       text = filesStorage.getFileName()
     } else {
-      text = replaceContentWithData(element.getResponsiveSetting('placeholder'), element.getCurrentModel().getData())
+      text = replaceContentWithData(element.getResponsiveLockedSetting('placeholder'), element.getCurrentModel().getData())
     }
     const fileInputProps = {
       disabled,
@@ -473,10 +473,10 @@ class InputFileWidget extends Component {
       inputProps,
       text,
       className: `${notActive ? 'pointer-event-none' : ''}`,
-      buttonText: replaceContentWithData(element.getResponsiveSetting('button_text'), element.getCurrentModel().getData()),
+      buttonText: replaceContentWithData(element.getResponsiveLockedSetting('button_text'), element.getCurrentModel().getData()),
       onInputChange: this.onChange
     }
-    if (element.getResponsiveSetting('preview')) {
+    if (element.getResponsiveLockedSetting('preview')) {
       fileInputProps.style = {
         backgroundImage: `url(${this.state.imageUrls_0})`,
         pointerEvents : notActive ? 'none' : '',
