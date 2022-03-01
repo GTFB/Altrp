@@ -24,6 +24,8 @@ import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
+import app_path from "../../helpers/app_path";
+import Customizer from "App/Models/Customizer";
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -121,9 +123,10 @@ Route.group(() => {
    * роут для обработка кастомных ajax запросов
    */
   Route.any('models/*', async (httpContext: HttpContextContract) => {
-    const segments = httpContext.request.url().split('/')
+    const segments = httpContext.request.url().split('/').filter(segment => segment)
+
     let tableName = segments[2]
-    if (['queries', 'data_sources', 'filters'].indexOf(tableName)) {
+    if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
       tableName = segments[3]
     }
     const table = await Table.query().preload('altrp_model').where('name', tableName).first()
@@ -148,7 +151,8 @@ Route.group(() => {
       })
     }
 
-    const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
+    // const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
+    const controllerName = app_path(`AltrpControllers/${model.name}Controller`)
     try {
       if(isProd()){
         Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
@@ -157,34 +161,43 @@ Route.group(() => {
         : (await import(controllerName)).default
       const controller = new ControllerClass()
       let methodName
+
       if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
         methodName = segments[4]
-      }
-      if (segments[3] === undefined && httpContext.request.method() === 'GET') {
+        const customizer = await Customizer.query().where('name', methodName).first()
+        if( !customizer ){
+          return httpContext.response.status(404).json({
+            success: false,
+            message: 'Customizer Not Found'
+          })
+        }
+
+        if(! customizer.allowMethod(httpContext.request.method())){
+          return httpContext.response.status(405).json({
+            success: false,
+            message: 'Method not Allowed'
+          })
+        }
+      }else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
         methodName = 'index'
-      }
-      if (segments[3] === undefined && httpContext.request.method() === 'POST') {
+      }else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
         methodName = 'store'
-      }
-      if (segments[4] === undefined
+      }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'GET') {
         methodName = 'show'
         httpContext.params[model.name] = Number(segments[3])
-      }
-      if (segments[4] === undefined
+      }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'DELETE') {
         methodName = 'destroy'
         httpContext.params[model.name] = Number(segments[3])
-      }
-      if (segments[4] === undefined
+      }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'PUT') {
         methodName = 'update'
         httpContext.params[model.name] = Number(segments[3])
-      }
-      if (segments[5] === undefined
+      }else if  (segments[5] === undefined
         && Number(segments[3])
         && segments[4]
       ) {

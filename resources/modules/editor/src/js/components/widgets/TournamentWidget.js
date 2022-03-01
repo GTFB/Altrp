@@ -43,8 +43,8 @@ const { isEditor, getDataByPath } = window.altrpHelpers;
 
 const PlayerComponent = ({id, name, seed, score, winner, highlightedPlayer, setHighlightedPlayer, player}) => {
   return (
-    <div 
-      onMouseEnter={() => setHighlightedPlayer(id)} 
+    <div
+      onMouseEnter={() => setHighlightedPlayer(id)}
       onMouseLeave={() => setHighlightedPlayer(null)}
       title={name + ' ' + (winner ? '(W)' : '(L)')}
       className={'reacket-player ' + (winner ? 'reacket-winner' : '') + ' ' + (highlightedPlayer === id ? 'reacket-highlighted' : '')}
@@ -78,17 +78,17 @@ class TournamentWidget extends Component {
     if(isEditor()){
       this.setState({
         data: [
-          { "id": 1, "round": 1, "match": 1, "players": [{ "id": 1, "name": "Mr. Orange", "seed": 1 }, { "id": 2, "name": "Mr. White", "seed": 8 }], "score": [0, 1] }, 
-          { "id": 2, "round": 1, "match": 2, "players": [{ "id": 3, "name": "Mr. Pink", "seed": 5 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] }, 
-          { "id": 3, "round": 1, "match": 3, "players": [{ "id": 5, "name": "Mr. Brown", "seed": 3 }, { "id": 6, "name": "Mr. Black", "seed": 6 }], "score": [0, 1] }, 
-          { "id": 4, "round": 1, "match": 4, "players": [{ "id": 7, "name": "Mr. Red", "seed": 7 }, { "id": 8, "name": "Mr. Yellow", "seed": 2 }], "score": [1, 0] }, 
-          { "id": 5, "round": 2, "match": 1, "players": [{ "id": 2, "name": "Mr. White", "seed": 7 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] }, 
-          { "id": 6, "round": 2, "match": 2, "players": [{ "id": 6, "name": "Mr. Black", "seed": 6 }, { "id": 7, "name": "Mr. Red", "seed": 7 }], "score": [0, 1] }, 
+          { "id": 1, "round": 1, "match": 1, "players": [{ "id": 1, "name": "Mr. Orange", "seed": 1 }, { "id": 2, "name": "Mr. White", "seed": 8 }], "score": [0, 1] },
+          { "id": 2, "round": 1, "match": 2, "players": [{ "id": 3, "name": "Mr. Pink", "seed": 5 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] },
+          { "id": 3, "round": 1, "match": 3, "players": [{ "id": 5, "name": "Mr. Brown", "seed": 3 }, { "id": 6, "name": "Mr. Black", "seed": 6 }], "score": [0, 1] },
+          { "id": 4, "round": 1, "match": 4, "players": [{ "id": 7, "name": "Mr. Red", "seed": 7 }, { "id": 8, "name": "Mr. Yellow", "seed": 2 }], "score": [1, 0] },
+          { "id": 5, "round": 2, "match": 1, "players": [{ "id": 2, "name": "Mr. White", "seed": 7 }, { "id": 4, "name": "Mr. Blue", "seed": 4 }], "score": [0, 1] },
+          { "id": 6, "round": 2, "match": 2, "players": [{ "id": 6, "name": "Mr. Black", "seed": 6 }, { "id": 7, "name": "Mr. Red", "seed": 7 }], "score": [0, 1] },
           { "id": 7, "round": 3, "match": 1, "players": [{ "id": 4, "name": "Mr. Blue", "seed": 4 }, { "id": 7, "name": "Mr. Red", "seed": 7 }], "score": [0, 1] }
         ]
       })
     } else {
-      const {data, headers} = getDataByPath(this.props.element.getResponsiveLockedSetting('path'))
+      const {data, headers} = getDataByPath(this.props.element.getResponsiveLockedSetting('path')) || {}
 
       this.setState({data, headers})
     }
@@ -102,8 +102,8 @@ class TournamentWidget extends Component {
     }
 
     return (
-      <Reacket 
-        matches={data} 
+      <Reacket
+        matches={data}
         playerComponent={PlayerComponent}
         headers={headers}
       />

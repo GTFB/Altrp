@@ -144,8 +144,8 @@ export default class AltrpRouting {
       }
       let title = replaceContentWithData(page.title, model_data)
 
-      // const datasources= Source.fetchDatasourcesForPage(page.id)
-      const datasources= {}
+      const datasources= Source.fetchDatasourcesForPage(page.id)
+      // const datasources= {}
 
       const _frontend_route = page.serialize()
       const altrpContext = {

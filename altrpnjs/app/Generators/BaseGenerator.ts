@@ -2,6 +2,7 @@ import * as mustache from 'mustache'
 import fs from 'fs'
 import Application from "@ioc:Adonis/Core/Application";
 import path from "path";
+import isProd from "../../helpers/isProd";
 
 export abstract class BaseGenerator{
   private fileName: string;
@@ -35,6 +36,9 @@ export abstract class BaseGenerator{
       fs.mkdirSync(this.directory, {recursive:true})
     }
     fs.writeFileSync(this.getFullFileName(), content)
+    if(isProd()){
+      Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+    }
     return
   }
 

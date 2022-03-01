@@ -362,15 +362,15 @@ export default class Source extends BaseModel {
     switch (this.type) {
       case 'customizer': {
         this.methodBody = `
-    this.setCustomizerData('context.CurrentModel', ${this.model.name} )
-    this.setCustomizerData('context.request', httpContext.request)
-    this.setCustomizerData('httpContext', httpContext)
-    this.setCustomizerData('request', httpContext.request)
-    this.setCustomizerData('context.response', httpContext.response)
-    this.setCustomizerData('response', httpContext.response)
-    this.setCustomizerData('session', httpContext.session)
-    this.setCustomizerData('this', this)
-    this.setCustomizerData('current_user', httpContext.auth.user)
+    this.setCustomizerData('context.CurrentModel', ${this.model.name} );
+    this.setCustomizerData('context.request', httpContext.request);
+    this.setCustomizerData('httpContext', httpContext);
+    this.setCustomizerData('request', httpContext.request);
+    this.setCustomizerData('context.response', httpContext.response);
+    this.setCustomizerData('response', httpContext.response);
+    this.setCustomizerData('session', httpContext.session);
+    this.setCustomizerData('this', this);
+    this.setCustomizerData('current_user', httpContext.auth?.user);
     ${this?.customizer?.getMethodContent() || ''}
     `}
       break;
@@ -394,7 +394,6 @@ export default class Source extends BaseModel {
     if(! id){
       return datasources
     }
-    console.error(id);
 
     const sources:any[] = await Source.query()
       .join('page_data_sources', 'altrp_sources.id', 'source_id')
@@ -402,8 +401,9 @@ export default class Source extends BaseModel {
       .select(['page_data_sources.alias', 'altrp_sources.*'])
 
     for(const source of sources){
-      console.log(source.id);
-      const data = await Source.fetchDatasourcesForPage(source)
+      console.log(source.web_url);
+      console.log(source.toObject());
+      const data = await Source.fetchSourceData()
       if(! _.isEmpty(data)){
         datasources[source.alias] = data
       }
@@ -412,7 +412,7 @@ export default class Source extends BaseModel {
     return datasources
   }
 
-  async fetchSourceData(source: any):Promise<{}>{
+  static async fetchSourceData():Promise<{}>{
 
     let data = {}
 

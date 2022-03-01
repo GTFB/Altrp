@@ -11,7 +11,7 @@ Ws.io.on("connection", async (socket) => {
       Ws.removeClient(guid, socket)
     })
 
-    socket.on("message", (message) => {
-    })
+    // socket.on("message", (message) => {
+    // })
   }
 })

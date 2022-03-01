@@ -1,7 +1,6 @@
 import isProd from "../../helpers/isProd";
 import base_path from "../../helpers/base_path";
 import fs from "fs";
-import ListenerGenerator from "App/Generators/ListenerGenerator";
 import path from "path";
 
 export default class AltrpEvent {

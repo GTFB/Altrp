@@ -2,7 +2,6 @@ import {Server, Socket} from 'socket.io'
 import Env from "@ioc:Adonis/Core/Env";
 import AdonisServer from '@ioc:Adonis/Core/Server'
 import User from "App/Models/User";
-import {awaitExpression} from "@babel/types";
 import Role from "App/Models/Role";
 
 class Ws {

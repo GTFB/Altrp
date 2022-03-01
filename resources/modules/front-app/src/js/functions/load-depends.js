@@ -82,7 +82,6 @@ window.LIBS = {
   },
 };
 
-console.log(window.__altrp_settings__)
 window.libsToLoad = window.libsToLoad || [];
 window.__altrp_settings__?.libsToLoad?.forEach(lib=>{
   libsToLoad.push(LIBS[lib]())

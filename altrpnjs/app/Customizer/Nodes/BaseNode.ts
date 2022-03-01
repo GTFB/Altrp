@@ -43,14 +43,8 @@ export  default class BaseNode
     return data_get( this.data, 'id' )
   }
   constructor( public data, protected customizer: Customizer ){
-    if(data.type === "listener") {
-      this.generate(data, customizer)
-    }
   }
 
-  public generate(data, customizer) {
-
-  }
 
   public static findNodeById( id,  data: BaseNode[] ):BaseNode|undefined{
     return data.find( function(  node:BaseNode ) {
