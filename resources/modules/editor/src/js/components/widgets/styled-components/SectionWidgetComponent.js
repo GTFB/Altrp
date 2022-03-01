@@ -233,7 +233,7 @@ function sectionBackground(settings) {
     backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width');
   }
 
-  if (backgroundSizeInUnit === undefined || backgroundSizeInUnit.size === '0' || backgroundSizeInUnit.size === '' ) {
+  if (backgroundSizeInUnit === undefined || backgroundSizeInUnit?.size === '0' || backgroundSizeInUnit?.size === '' ) {
     styles += '';
   } else {
     styles += sizeStyled(backgroundSizeInUnit, 'background-size');
@@ -305,7 +305,7 @@ function sectionBackgroundHover(settings, state=':hover') {
     backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width', state);
   }
 
-  if (backgroundSizeInUnit === undefined || backgroundSizeInUnit.size === '0' || backgroundSizeInUnit.size === '' ) {
+  if (backgroundSizeInUnit === undefined || backgroundSizeInUnit?.size === '0' || backgroundSizeInUnit?.size === '' ) {
     styles += '';
   } else {
     styles += sizeStyled(backgroundSizeInUnit, 'background-size');

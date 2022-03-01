@@ -198,7 +198,7 @@ class AssetsBrowser extends Component {
     if(! this.props.active){
       return  '';
     }
-    console.log("опа", this.state)
+    
     return (
       <div className={classes}>
         <div className="assets-browser__bg" onClick={this.toggleBrowser} />

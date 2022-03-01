@@ -14,8 +14,8 @@ function ImageSettingsTable(props) {
 
   const history = useHistory()
 
-  useEffect(async () => {
-    await getImageSettings();
+  useEffect(() => {
+    getImageSettings();
   }, [])
 
   const getImageSettings = async () => {

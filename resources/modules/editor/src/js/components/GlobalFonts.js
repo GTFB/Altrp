@@ -11,13 +11,12 @@ import BaseElement from "../classes/elements/BaseElement";
 import GlobalFontItemAdd from "./GlobalFontItemAdd";
 import GlobalFontItem from "./GlobalFontItem";
 import { getTemplateDataStorage } from "../helpers";
+import Scrollbars from "react-custom-scrollbars";
 
 const Panel = styled.div`
   background-color: #fff;
-  padding: 25px 20px;
   width: 100%;
   margin: 20px 0;
-  overflow: auto;
 `;
 
 const mapStateToProps = state => ({
@@ -89,12 +88,9 @@ class GlobalFonts extends Component {
     );
   }
 
-  addItem(e) {
+  addItem() {
     this.setState(
-      s => ({ new: !s.new }),
-      () => {
-        console.log(this.state.new);
-      }
+      s => ({ new: !s.new })
     );
   }
 
@@ -133,33 +129,38 @@ class GlobalFonts extends Component {
   render() {
     return (
       <Panel>
-        <Collapse isOpen={this.state.new}>
-          <GlobalFontItemAdd
-            addFont={this.props.addFont}
-            onSaveFontClose={this.onSaveFont}
-            isNew={true}
-          />
-        </Collapse>
-        {!this.state.new &&
-          (this.props.fonts.length > 0 ? (
-            this.props.fonts.map((item, index) => (
-              <div key={index} style={{ marginBottom: "10px" }}>
-                <GlobalFontItem
-                  font={item}
-                  editFont={this.props.editFont}
-                  deleteFont={this.props.deleteFont}
-                  onSaveFontClose={this.onSaveFont}
-                  updateAllTree={this.updateAllTree}
-                />
-              </div>
-            ))
-          ) : (
-            <div>Font list empty</div>
-          ))}
-        <Divider></Divider>
-        <Button style={{ width: "100%" }} onClick={this.addItem}>
-          {!this.state.new ? "Add Item" : "Cancel"}
-        </Button>
+        <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+          <div className='panel-global__styles'>
+            {this.state.new && (
+              <GlobalFontItemAdd
+                addFont={this.props.addFont}
+                onSaveFontClose={this.onSaveFont}
+                isNew={true}
+              />
+            )}
+
+            {!this.state.new &&
+            (this.props.fonts.length > 0 ? (
+              this.props.fonts.map((item, index) => (
+                <div key={index} style={{ marginBottom: "10px" }}>
+                  <GlobalFontItem
+                    font={item}
+                    editFont={this.props.editFont}
+                    deleteFont={this.props.deleteFont}
+                    onSaveFontClose={this.onSaveFont}
+                    updateAllTree={this.updateAllTree}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="list__empty">Font list empty</div>
+            ))}
+
+            <Button style={{ width: "100%" }} onClick={this.addItem}>
+              {!this.state.new ? "Add Font" : "Cancel"}
+            </Button>
+          </div>
+        </Scrollbars>
       </Panel>
     );
   }
