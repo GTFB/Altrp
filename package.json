@@ -218,10 +218,10 @@
         "uuid": "^3.4.0",
         "web3": "^1.7.0",
         "webpack-build-notifier": "^2.3.0",
-        "workbox-cacheable-response": "^6.1.5",
-        "workbox-expiration": "^6.1.5",
-        "workbox-routing": "^6.1.5",
-        "workbox-strategies": "^6.1.5"
+        "workbox-cacheable-response": "^6.4.2",
+        "workbox-expiration": "^6.4.2",
+        "workbox-routing": "^6.4.2",
+        "workbox-strategies": "^6.4.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.10.3",

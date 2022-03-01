@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import {io} from "socket.io-client";
+import getCookie from "../../editor/src/js/helpers/getCookie";
+import {v4 as uuid} from "uuid";
 
 window.React = React;
 window.Component = Component;

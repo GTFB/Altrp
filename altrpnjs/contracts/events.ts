@@ -32,5 +32,14 @@ declare module '@ioc:Adonis/Core/Event' {
     'model:updated': Model,
     'model:deleting': Model,
     'model:deleted': Model,
+    'altrp:message': {
+      type: string,
+      body: any,
+      clients: string[]
+    },
+    'altrp:models': {
+      type: string
+      model: any
+    }
   }
 }

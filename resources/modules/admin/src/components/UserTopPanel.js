@@ -5,9 +5,12 @@ import BellIcon from './../svgs/bell.svg';
 import UserIcon from './../svgs/user.svg';
 import LogoutIcon from './../svgs/logout.svg';
 import {logout} from "../js/helpers";
-
+import {io} from "socket.io-client";
+import getCookie from "../../../editor/src/js/helpers/getCookie";
+import  Cookies from 'js-cookie';
 
 class UserTopPanel extends Component {
+
   render(){
     return<div className="admin-user-top-panel top-panel d-flex align-items-center">
       {this.props.userName&&<a href="#" className="top-panel-notification notification">
@@ -24,7 +27,9 @@ class UserTopPanel extends Component {
 
 const mapStateToProps = state => {
   return {
-    userName: state.currentUser?.data?.name || ''
+    userName: state.currentUser?.data?.name || '',
+    userGuid: state.currentUser?.data?.guid || '',
+    currentUser: state.currentUser
   }
 };
 

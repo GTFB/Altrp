@@ -45,9 +45,7 @@ export default class TemplatesController {
     const modTemplates = templates.all().map( template => {
       return {
         categories: template.categories.map(category => {
-          return {
-            category: category
-          }
+          return category
         }),
         author: template.getAuthor(),
         area: template.getArea(),
@@ -73,7 +71,16 @@ export default class TemplatesController {
   }
 
   public async settingsSet({ params, request, response}) {
-    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail()
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
+
 
     const settingName = request.input("setting_name");
 
@@ -112,6 +119,7 @@ export default class TemplatesController {
     await auth.use('web').authenticate()
 
     const guid = uuid();
+
     const data = {
       area: parseInt(request.input("area")),
       data: JSON.stringify(request.input("data")),
@@ -164,13 +172,29 @@ export default class TemplatesController {
   }
 
   public async get({ params }) {
-    const template = await Template.find(parseInt(params.id));
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
 
     return template
   }
 
   public async delete({ params }) {
-    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail();
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
 
     let templateGenerator = new TemplateGenerator()
     await templateGenerator.deleteFile(template)
@@ -181,7 +205,15 @@ export default class TemplatesController {
   }
 
   public async update({ params, request }) {
-    const template = await Template.find(parseInt(params.id));
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
 
     if(template) {
       //@ts-ignore
@@ -264,16 +296,10 @@ export default class TemplatesController {
     const templates = await Template.query().where("type", "review");
 
     if(templates.length > 0) {
-      return {
-        success: true,
-        data: templates
-      }
+      return templates
     } else {
       response.status(404)
-      return {
-        success: false,
-        data: templates
-      }
+      return templates
     }
   }
 
@@ -281,16 +307,10 @@ export default class TemplatesController {
     const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
 
     if(templates.length > 0) {
-      return {
-        success: true,
-        data: templates
-      }
+      return templates
     } else {
       response.status(404)
-      return {
-        success: false,
-        data: templates
-      }
+      return templates
     }
   }
 
@@ -302,6 +322,7 @@ export default class TemplatesController {
    */
   public async conditions({params}) {
     const id = parseInt(params.id);
+
     let res = {
       data: [],
       success: true

@@ -107,6 +107,7 @@ import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
 import SearchPlugins from "./components/plugins/SearchPlugins";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
+import {io} from "socket.io-client";
 
 
 window.React = React;
@@ -162,71 +163,17 @@ class Admin extends Component {
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
 
-
-    let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
-    let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
-    let websocketsHost = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_host");
-
-    pusherKey = pusherKey?.pusher_app_key;
-    websocketsPort = websocketsPort?.websockets_port;
-    websocketsHost = websocketsHost?.pusher_host;
-
-    // Проверка наличия ключа и порта
-    if (pusherKey && websocketsPort) {
-      try {
-        window.Pusher = require("pusher-js");
-        window.Echo = new Echo({
-          broadcaster: "pusher",
-          key: pusherKey,
-          wsHost: websocketsHost,
-          wsPort: websocketsPort,
-          forceTLS: false,
-          disableStats: true,
-        });
-        console.log("Вебсокеты включены");
-
-      } catch (error) {
-        console.log(error);
-      }
-
-      // Запись ключа и порта в store
-      store.dispatch(setWebsocketsKey(pusherKey));
-      store.dispatch(setWebsocketsPort(websocketsPort));
-
-      // Подключение слушателя канала
-      window.Echo.private("App.User." + currentUser.id)
-        .notification((notification) => {
-          console.log(notification);
-        });
-
-      // Подключение слушателя для получения users online
-      let presenceChannel = window.Echo.join("online");
-      let activeUsers = [];
-      presenceChannel.here((users) => {
-        activeUsers = users;
-        store.dispatch(setUsersOnline(activeUsers));
+    if(currentUser.guid && !this.altrpIo) {
+      this.altrpIo = io( {
+        auth: {
+          key: currentUser.guid,
+        },
       })
-        .joining((user) => {
-          activeUsers.push(user);
-          store.dispatch(setUsersOnline(activeUsers));
-        })
-        .leaving((user) => {
-          activeUsers.splice(activeUsers.indexOf(user), 1);
-          store.dispatch(setUsersOnline(activeUsers));
-        });
 
-    } else {
-      console.log("Вебсокеты выключены");
+      this.altrpIo.on("message", (data) => {
+        console.log(data)
+      })
     }
-
-    this.getPusherConnect();
-  }
-
-  // Запись в store в случае успешного соединения
-  getPusherConnect() {
-    window?.Echo?.connector?.pusher.connection.bind('connected', function () {
-      store.dispatch(setWebsocketsEnabled(true));
-    });
   }
 
   /**

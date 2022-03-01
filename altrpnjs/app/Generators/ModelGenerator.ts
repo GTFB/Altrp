@@ -91,6 +91,8 @@ export default class ModelGenerator extends BaseGenerator {
   }
   private _getProdImportsContent(): string {
     return `
+    const Event = require("@ioc:Adonis/Core/Event").default
+
 ${_.uniqBy(
   this.altrp_relationships
       .filter(relationship => relationship?.altrp_target_model?.name),
@@ -104,6 +106,8 @@ ${_.uniqBy(
   private _getDevImportsContent(): string {
     return `import * as luxon from 'luxon'
 import * as Orm from '@ioc:Adonis/Lucid/Orm'
+import Event from '@ioc:Adonis/Core/Event'
+import { softDelete, forceDelete } from "../../helpers/delete"
 ${_.uniqBy(
   this.altrp_relationships
       .filter(relationship => relationship?.altrp_target_model?.name),
@@ -116,7 +120,7 @@ ${_.uniqBy(
   }
 
   private getClassnameContent(): string {
-    return ` ${this.model.name} `
+    return `${this.model.name}`
   }
 
   private getPropertiesContent(): string {

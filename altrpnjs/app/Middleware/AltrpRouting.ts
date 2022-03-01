@@ -59,7 +59,9 @@ export default class AltrpRouting {
       || url === '/login'
       || url === '/data/current-user' ||
       url === "/modules/admin/admin.js" ||
-      url === "/modules/front-app/front-app.css"
+      url === "/modules/front-app/front-app.css" ||
+      url === "/sw.js" ||
+      url === "/sw/workbox-sw.js"
     ) {
       await next()
       return
@@ -221,6 +223,7 @@ export default class AltrpRouting {
         Edge({
         hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
         url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+        sw: '/modules/front-app/sw.js',
         page: pageAreas,
         title: replaceContentWithData(page.title || 'Altrp', altrpContext),
         is_admin,
