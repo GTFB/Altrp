@@ -14,6 +14,7 @@ const Orm = global[Symbol.for('ioc.use')]("Adonis/Lucid/Orm");
 {{{imports}}}
 
 class {{{classname}}} extends Orm.BaseModel {
+
   {{{properties}}}
   {{{computed}}}
   {{{relations}}}

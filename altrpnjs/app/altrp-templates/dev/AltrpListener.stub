@@ -1,4 +1,4 @@
-function {{{listener}}}(model) {
+function {{{listener}}}(type, data) {
 
 }
 

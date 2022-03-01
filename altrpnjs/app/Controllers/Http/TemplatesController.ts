@@ -119,6 +119,7 @@ export default class TemplatesController {
     await auth.use('web').authenticate()
 
     const guid = uuid();
+
     const data = {
       area: parseInt(request.input("area")),
       data: JSON.stringify(request.input("data")),

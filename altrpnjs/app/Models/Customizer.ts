@@ -13,6 +13,7 @@ import * as _ from "lodash";
 import str_replace from "../../helpers/str_replace";
 import Source from "App/Models/Source";
 import escapeRegExp from "../../helpers/escapeRegExp";
+import ListenerNode from "App/Customizer/Nodes/ListenerNode";
 
 export default class Customizer extends BaseModel {
 
@@ -300,6 +301,7 @@ export default class Customizer extends BaseModel {
         case 'start': return new StartNode( item , customizer)
         case 'return': return new ReturnNode( item, customizer )
         case 'change': return new ChangeNode( item, customizer )
+        case 'listener': return new ListenerNode(item, customizer)
         default: return new BaseNode( item, customizer )
       }
     })

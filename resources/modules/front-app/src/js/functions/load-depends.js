@@ -82,8 +82,9 @@ window.LIBS = {
   },
 };
 
+console.log(window.__altrp_settings__)
 window.libsToLoad = window.libsToLoad || [];
-__altrp_settings__.libsToLoad?.forEach(lib=>{
+window.__altrp_settings__?.libsToLoad?.forEach(lib=>{
   libsToLoad.push(LIBS[lib]())
 })
 export default function loadDepends(){

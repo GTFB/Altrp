@@ -14,4 +14,4 @@ Event.on('model:updated', 'Model.updated');
 Event.on('model:deleting', 'Model.deleting');
 Event.on('model:deleted', 'Model.deleted');
 Event.on('altrp:message', 'Message.receiver')
-Event.on('altrp:models', "Model.")
+Event.on('altrp_event', "AltrpEvent.listener")

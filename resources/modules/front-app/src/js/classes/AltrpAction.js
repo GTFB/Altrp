@@ -5,6 +5,7 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
+import getCookie from "../../../../editor/src/js/helpers/getCookie";
 const {
   altrpLogin,
   altrpLogout,
@@ -382,6 +383,8 @@ class AltrpAction extends AltrpModel {
       window.io = io( {
         auth: {
           key: name,
+          xsrf_token: getCookie('XSRF-TOKEN'),
+          adonis_session: getCookie('adonis-session')
         },
       })
       window

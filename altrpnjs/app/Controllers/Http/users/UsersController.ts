@@ -37,14 +37,17 @@ export default class UsersController {
       }
     }
 
-    body.roles = body._roles;
-    delete body._roles;
-    body.permissions = body._permissions;
-    delete body._permissions
-
     delete body.password_confirmation
 
-    const user = await User.create(body)
+    const user = await User.create({
+      email: body.email,
+      password: body.password,
+      name: body.name,
+      telegram_user_id: body.telegram_user_id,
+    })
+
+    await user.related("roles").attach(body._roles)
+    await user.related("permissions").attach(body._permissions)
 
     return user
   }

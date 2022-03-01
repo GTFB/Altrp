@@ -58,10 +58,6 @@
     {
       "pattern": "../public/modules/*",
       "reloadServer": false
-    },
-    {
-      "pattern": "app/altrpListeners/**/*.stub\"",
-      "reloadServer": false
     }
   ]
 }

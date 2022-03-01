@@ -4,6 +4,7 @@ const IGNORED_ROUTES = [
   "/data/current-user",
   "/modules/admin/admin.js",
   "/modules/front-app/front-app.css",
+  "/modules/editor/editor.css",
   "/sw.js",
   "/sw/workbox-sw.js"
 ];

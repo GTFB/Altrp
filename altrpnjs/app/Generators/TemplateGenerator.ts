@@ -34,7 +34,7 @@ export default class TemplateGenerator extends BaseGenerator {
     }
     await template.load('currentArea')
 
-    const styles = JSON.parse(template.styles)
+    const styles = JSON.parse(template.styles || "{}")
 
     let all_styles = _.get(styles, 'all_styles', [])
     //
