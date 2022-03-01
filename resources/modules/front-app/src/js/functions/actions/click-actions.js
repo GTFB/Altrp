@@ -11,6 +11,7 @@ const CLICK_EXCLUDE_TAG_NAMES = [
 ];
 
 const ACTIONS_CACHE = (window.altrp.ACTIONS_CACHE = window.altrp.ACTIONS_CACHE || {})
+
 /**
  *
  * @param {PointerEvent} e

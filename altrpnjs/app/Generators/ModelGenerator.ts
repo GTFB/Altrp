@@ -120,7 +120,7 @@ ${_.uniqBy(
   }
 
   private getClassnameContent(): string {
-    return ` ${this.model.name} `
+    return `${this.model.name}`
   }
 
   private getPropertiesContent(): string {

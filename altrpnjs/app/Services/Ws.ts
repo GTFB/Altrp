@@ -28,6 +28,10 @@ class Ws {
   async pushClient(client: Socket) {
     const guid = client.handshake.auth.key;
 
+    if(!guid) {
+      return
+    }
+
     if(!this.clients[guid]) {
       const user = await User.query().where("guid", guid).preload("roles").first();
 
@@ -71,7 +75,6 @@ class Ws {
     // this.adminClients.forEach((admin) => {
     //   this.io.emit(admin.socket.handshake.auth.key, data)
     // })
-
     this.emitToRole(type, data, "admin")
   }
 
@@ -95,7 +98,8 @@ class Ws {
     roleValue.users.forEach(user => {
       if(this.clients[user.guid]) {
         this.clients[user.guid].sockets.forEach((socket) => {
-          socket.emit(user.guid, {
+          console.log(socket)
+          socket.send({
             data,
             type
           })

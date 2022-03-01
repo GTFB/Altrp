@@ -10,17 +10,6 @@ import getCookie from "../../../editor/src/js/helpers/getCookie";
 import  Cookies from 'js-cookie';
 
 class UserTopPanel extends Component {
-  componentDidUpdate() {
-    console.log(Cookies.get("adonis-session"))
-    if(this.props.userGuid && !this.altrpIo) {
-      this.altrpIo = io( {
-        auth: {
-          key: this.props.userGuid,
-        },
-      })
-
-    }
-  }
 
   render(){
     return<div className="admin-user-top-panel top-panel d-flex align-items-center">
