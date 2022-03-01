@@ -1,7 +1,9 @@
 import * as _ from "lodash";
+import { string } from '@ioc:Adonis/Core/Helpers';
 
 export default function objectToStylesString(styles = {}){
   return _.map(styles, (value, key)=>{
-    return `${key}=${value};`
+    let dashCase = string.dashCase(key)
+    return `${dashCase}: ${value};`
   }).join('')
 }
