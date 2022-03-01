@@ -57,7 +57,8 @@ class Robot extends Model
 
     public function getTelegramBotToken()
     {
-        return json_decode($this->start_config, true)['bot_token'];
+        //return json_decode($this->start_config, true)['bot_token'];
+        return $this->start_config['bot_token'];
     }
 
 

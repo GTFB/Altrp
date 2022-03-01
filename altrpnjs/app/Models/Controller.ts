@@ -66,7 +66,7 @@ export default class Controller extends BaseModel {
     }
     const controllerName = base_path(`/app/AltrpControllers/${model.name}Controller`)
     if(isProd()){
-      require.cache = {}
+      Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
     }
     let controller = isProd() ? new (require(controllerName).default)
       :  (new (await import(controllerName)).default)
