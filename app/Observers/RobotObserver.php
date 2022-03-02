@@ -13,6 +13,7 @@ use App\Altrp\Model;
 use App\Altrp\Source;
 use App\Exceptions\RouteGenerateFailedException;
 use App\PageDatasource;
+use Illuminate\Support\Facades\DB;
 
 class RobotObserver
 {
@@ -75,16 +76,20 @@ class RobotObserver
               );
               $controllerWriter->writeRobotMethod( $robot );
 
-              $qwe = $generator->generateRoutes( $controller->model, new RouteGenerator( $controller, 'AltrpApiRoutes' ), true );
+              $generator->generateRoutes( $controller->model, new RouteGenerator( $controller, 'AltrpApiRoutes' ), true );
 
               if ( ! $generator->generateRoutes( $controller->model, new RouteGenerator( $controller, 'AltrpApiRoutes' ), true ) ) {
                 throw new RouteGenerateFailedException( 'Failed to generate routes', 500 );
               }
 
-              if (!$robot->is_active && $_SERVER['REQUEST_SCHEME'] == "https") {
+              DB::table('altrp_robots')
+                        ->where('start_condition', 'telegram_bot')
+                        ->where('id', '!=', $robot->id)
+                        ->update(['is_active' => 0]);
+
+              if ($robot->start_condition == "telegram_bot" && $_SERVER['REQUEST_SCHEME'] == "https") {
                 $client = new \GuzzleHttp\Client();              
                 $base_url = substr(env('APP_URL'), -1) == "/" ? substr(env('APP_URL'),0,-1) : env('APP_URL');
-
                 try {
                   $model_source = Source::where('model_id', $model->id)
                     ->where('type', 'add')
@@ -92,8 +97,8 @@ class RobotObserver
                     ->first();
                   $url = "https://api.telegram.org/bot".$robot->getTelegramBotToken()."/setWebhook?url=".$base_url."/api/altrp_models".$model_source->api_url."/robots/".$robot->name;
                   $req = $client->get($url);
-
                   $response = json_decode($req->getBody()->getContents(),true);
+
                   if ($response['result']) {
                     $robot->is_active = 1;
                     $robot->save();
@@ -185,25 +190,29 @@ class RobotObserver
               );
               $controllerWriter->writeRobotMethod( $robot );
 
-              $qwe = $generator->generateRoutes( $controller->model, new RouteGenerator( $controller, 'AltrpApiRoutes' ), true );
+              $generator->generateRoutes( $controller->model, new RouteGenerator( $controller, 'AltrpApiRoutes' ), true );
 
               if ( ! $generator->generateRoutes( $controller->model, new RouteGenerator( $controller, 'AltrpApiRoutes' ), true ) ) {
                 throw new RouteGenerateFailedException( 'Failed to generate routes', 500 );
               }
 
-              if (!$robot->is_active && $_SERVER['REQUEST_SCHEME'] == "https") {
+              DB::table('altrp_robots')
+                        ->where('start_condition', 'telegram_bot')
+                        ->where('id', '!=', $robot->id)
+                        ->update(['is_active' => 0]);
+
+              if ($robot->start_condition == "telegram_bot" && !$robot->is_active && $_SERVER['REQUEST_SCHEME'] == "https") {
                 $client = new \GuzzleHttp\Client();              
                 $base_url = substr(env('APP_URL'), -1) == "/" ? substr(env('APP_URL'),0,-1) : env('APP_URL');
-
                 try {
                   $model_source = Source::where('model_id', $model->id)
                     ->where('type', 'add')
                     ->where('request_type', 'post')
                     ->first();
                   $url = "https://api.telegram.org/bot".$robot->getTelegramBotToken()."/setWebhook?url=".$base_url."/api/altrp_models".$model_source->api_url."/robots/".$robot->name;
-
                   $req = $client->get($url);
                   $response = json_decode($req->getBody()->getContents(),true);
+
                   if ($response['result']) {
                     $robot->is_active = 1;
                     $robot->save();
