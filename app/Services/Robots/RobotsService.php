@@ -176,7 +176,7 @@ class RobotsService
                 $chat_id = null;
                 if (isset($modelData['altrpchat'])) {
                   $chat_id = $modelData['altrpchat']['from']['id'];
-                  $user = $this->robot->getUser($modelData['altrpchat']['from']['username'], $modelData['altrpchat']['from']['first_name']);
+                  $user = $this->robot->getUser($modelData['altrpchat']['from']['id'], $modelData['altrpchat']['from']['first_name']);
                   $this->data['altrpuser'] = $user;
                 }
 
