@@ -21,8 +21,6 @@ class Ws {
         origin: '*'
       }
     })
-
-    this.io.listen(Env.get('SOCKET_PORT'))
   }
 
   async pushClient(client: Socket) {
