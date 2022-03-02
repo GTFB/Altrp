@@ -16,6 +16,7 @@ class Ws {
 
     this.booted = true
     this.io = new Server(AdonisServer.instance!, {
+      path: '/wsaltrp',
       cors: {
         origin: '*'
       }
