@@ -21,6 +21,7 @@ import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import getCurrentDevice from "../../helpers/getCurrentDevice";
+import isProd from "../../helpers/isProd";
 // import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
@@ -167,6 +168,7 @@ export default class AltrpRouting {
             altrpContext,
             is_admin,
             pages,
+            isProd: isProd(),
             csrfToken: request.csrfToken,
             page_areas: pageAreas,
             page_id: page.id,
@@ -224,6 +226,7 @@ export default class AltrpRouting {
         title: replaceContentWithData(page.title || 'Altrp', altrpContext),
         is_admin,
         pages,
+        isProd: isProd(),
         csrfToken: request.csrfToken,
         preload_content,
         page_areas: pageAreas,
