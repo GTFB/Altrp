@@ -44,6 +44,7 @@
     "lodash": "^4.17.21",
     "luxon": "^2.2.0",
     "mobile-detect": "^1.4.5",
+    "moment": "^2.29.1",
     "mustache": "^4.2.0",
     "mysql": "^2.18.1",
     "node-html-parser": "^5.2.0",
