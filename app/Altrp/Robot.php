@@ -69,13 +69,17 @@ class Robot extends Model
   {
 
     $content = "";
+
+    // if (isset(\$data) && isset(\$data['message']) && isset(\$data['message']['text']) && \$data['message']['text'] == '/start') {
+    //   \$chatData = \$data['message'];
+    // }
     $content .= "\tpublic function " . $this->getMethodName() . "( ApiRequest \$request ){
 
       \$data = \$request->all();
 
       \$chatData = null;
 
-      if (isset(\$data) && isset(\$data['message']) && isset(\$data['message']['text']) && \$data['message']['text'] == '/start') {
+      if (isset(\$data) && isset(\$data['message']) && isset(\$data['message']['text'])) {
         \$chatData = \$data['message'];
       }
 

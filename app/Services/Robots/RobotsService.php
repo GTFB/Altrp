@@ -180,7 +180,12 @@ class RobotsService
                   $this->data['altrpuser'] = $user;
                 }
 
-                if (isset($modelData['altrpchat']['data'])) {
+                // if (isset($modelData['altrpchat']['data'])) {
+                //   $chat = $this->robot->getChat($chat_id);
+                //   $currentAction = $this->getCurrentBlock($chat->node_id);
+                // }
+
+                if (isset($modelData['altrpchat']['data']) || (isset($modelData['altrpchat']['text']) && $modelData['altrpchat']['text'] !== "/start")) {
                   $chat = $this->robot->getChat($chat_id);
                   $currentAction = $this->getCurrentBlock($chat->node_id);
                 }
