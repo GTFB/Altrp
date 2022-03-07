@@ -122,7 +122,7 @@ class Models extends Component {
       this.setState(state => {
         return {
           ...state,
-          modelsDidMount: res.models,
+          modelsDidMount: res.models.filter(item => !this.props.standardModels.some(model => model.name === item.name)),
         }
       });
     }
@@ -164,7 +164,8 @@ class Models extends Component {
       this.setState(state => {
         return {
           ...state,
-          models: res.models,
+          models: res.models.filter(item => !this.props.standardModels.some(model => model.name === item.name)),
+
           modelsSearch: urlS === null ? this.state.modelsSearch : urlS,
           modelsPageCount: res.pageCount,
           activeCategory: urlCategories === null ? 'All' : urlCategories
@@ -201,7 +202,7 @@ class Models extends Component {
       } else {
         this.setState(state => ({
           ...state,
-          models: models,
+          models: models.filter(item => !this.props.standardModels.some(model => model.name === item.name)),
           activeCategory: guid
         }))
       }
@@ -220,7 +221,7 @@ class Models extends Component {
       } else {
         this.setState(state => ({
           ...state,
-          models: models,
+          models: models.filter(item => !this.props.standardModels.some(model => model.name === item.name)),
           activeCategory: all
         }))
       }
@@ -244,10 +245,10 @@ class Models extends Component {
     }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
+  }
 
-    return () => {
-      window.removeEventListener("scroll", this.listenScrollHeader)
-    }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.listenScrollHeader)
   }
 
   listenScrollHeader = () => {
@@ -466,7 +467,8 @@ class Models extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    modelsState: state.modelsState.toggleModels
+    modelsState: state.modelsState.toggleModels,
+    standardModels: state.modelsState.standardModels
   }
 }
 

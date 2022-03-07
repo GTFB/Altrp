@@ -28,7 +28,7 @@ class InputTextCommon extends BaseElement {
     return "input-text-common";
   }
   static getTitle() {
-    return "Text";
+    return "Input Text";
   }
   static getIconComponent() {
     return FromIcon;

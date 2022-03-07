@@ -14,9 +14,7 @@ const {
     display: flex;
     flex-direction: column;
 
-    & img {
-      max-width: 100%;
-    }
+
   }
 
   .altrp-btn svg {
@@ -72,6 +70,55 @@ const {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+  }
+
+  .altrp-btn-icon-right img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-right svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-left svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-top img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-top svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-bottom img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-bottom svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `);
 
@@ -258,7 +305,7 @@ class ButtonWidget extends Component {
     let classes =
       this.getClasses() + (this.state.settings.position_css_classes || "");
     if (background_image.url) {
-      classes += " altrp-background-image";
+      classes += " altrp-background-image_btn";
     }
 
     let buttonText = this.getContent("button_text");
@@ -296,11 +343,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'r') {
       buttonInner = (
         <div className="btn-container-row">
-          <span></span>
-          {buttonText}
-          <span className={"altrp-btn-icon-right "}>
+          <div>{buttonText}</div>
+          <div className={"altrp-btn-icon-right "}>
             {renderAsset(buttonMediaRight)}{" "}
-          </span>
+          </div>
         </div>
       )
     }
@@ -309,11 +355,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'l') {
       buttonInner = (
         <div className="btn-container-row">
-          <span className={"altrp-btn-icon-left "}>
+          <div className={"altrp-btn-icon-left "}>
             {renderAsset(buttonMediaLeft)}{" "}
-          </span>
-          {buttonText}
-          <span></span>
+          </div>
+          <div>{buttonText}</div>
         </div>
       )
     }
@@ -321,11 +366,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 't') {
       buttonInner = (
         <div className="btn-container-column">
-          <span className={"altrp-btn-icon-top "}>
+          <div className={"altrp-btn-icon-top "}>
             {renderAsset(buttonMediaTop)}{" "}
-          </span>
-          {buttonText}
-          <span></span>
+          </div>
+          <div>{buttonText}</div>
         </div>
       )
     }
@@ -333,11 +377,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'b') {
       buttonInner = (
         <div className="btn-container-column">
-          <span></span>
-          {buttonText}
-          <span className={"altrp-btn-icon-bottom "}>
+          <div>{buttonText}</div>
+          <div className={"altrp-btn-icon-bottom "}>
             {renderAsset(buttonMediaBottom)}{" "}
-          </span>
+          </div>
         </div>
       )
     }
@@ -583,7 +626,7 @@ class ButtonWidget extends Component {
       id={this.state.settings.position_css_id}
       title={tooltip || null}
     >
-      {buttonInner}
+      <span>{buttonInner}</span>
     </button>;
     // let buttonTemplate = (
     //   <button

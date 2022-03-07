@@ -11,13 +11,12 @@ import BaseElement from "../classes/elements/BaseElement";
 import GlobalEffectItemAdd from "./GlobalEffectItemAdd";
 import GlobalEffectItem from "./GlobalEffectItem";
 import { getTemplateDataStorage } from "../helpers";
+import Scrollbars from "react-custom-scrollbars";
 
 const Panel = styled.div`
   background-color: #fff;
-  padding: 25px 20px;
   width: 100%;
   margin: 20px 0;
-  overflow: auto;
 `;
 
 const mapStateToProps = state => ({
@@ -141,33 +140,38 @@ class GlobalEffects extends Component {
   render() {
     return (
       <Panel>
-        <Collapse isOpen={this.state.new}>
-          <GlobalEffectItemAdd
-            addEffect={this.props.addEffect}
-            onSaveEffectClose={this.onSaveEffect}
-            isNew={true}
-          />
-        </Collapse>
-        {!this.state.new &&
-          (this.props.effects.length > 0 ? (
-            this.props.effects.map((item, index) => (
-              <div key={index} style={{ marginBottom: "10px" }}>
-                <GlobalEffectItem
-                  effect={item}
-                  editEffect={this.props.editEffect}
-                  deleteEffect={this.props.deleteEffect}
-                  onSaveEffectClose={this.onSaveEffect}
-                  updateAllTree={this.updateAllTree}
-                />
-              </div>
-            ))
-          ) : (
-            <div>Effects list empty</div>
-          ))}
-        <Divider></Divider>
-        <Button style={{ width: "100%" }} onClick={this.addItem}>
-          {!this.state.new ? "Add Item" : "Cancel"}
-        </Button>
+        <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+          <div className='panel-global__styles'>
+            {this.state.new && (
+              <GlobalEffectItemAdd
+                addEffect={this.props.addEffect}
+                onSaveEffectClose={this.onSaveEffect}
+                isNew={true}
+              />
+            )}
+
+            {!this.state.new &&
+            (this.props.effects.length > 0 ? (
+              this.props.effects.map((item, index) => (
+                <div key={index} style={{ marginBottom: "10px" }}>
+                  <GlobalEffectItem
+                    effect={item}
+                    editEffect={this.props.editEffect}
+                    deleteEffect={this.props.deleteEffect}
+                    onSaveEffectClose={this.onSaveEffect}
+                    updateAllTree={this.updateAllTree}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="list__empty">Effects list empty</div>
+            ))}
+
+            <Button style={{ width: "100%" }} onClick={this.addItem}>
+              {!this.state.new ? "Add Effect" : "Cancel"}
+            </Button>
+          </div>
+        </Scrollbars>
       </Panel>
     );
   }

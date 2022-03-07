@@ -1,5 +1,4 @@
 import { Server } from 'socket.io'
-import Env from "@ioc:Adonis/Core/Env";
 
 class Ws {
   public io: Server
@@ -17,7 +16,6 @@ class Ws {
       }
     })
 
-    this.io.listen(Env.get('SOCKET_PORT'))
   }
 }
 

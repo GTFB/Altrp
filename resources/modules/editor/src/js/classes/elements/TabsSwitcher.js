@@ -28,7 +28,7 @@ class TabsSwitcher extends BaseElement{
     return'tabs-switcher';
   }
   static getTitle(){
-    return'Tabs Switcher';
+    return'Switcher';
   }
 
   static getIconComponent(){

@@ -46,10 +46,10 @@ class ImageWidget extends Component {
     const { element } = this.props;
     const link = this.state.settings.image_link || {};
     const cursorPointer = this.props.element.getSettings("cursor_pointer", false);
-    const background_image = this.props.element.getSettings(
-      "background_image",
-      {}
-    );
+    // const background_image = this.props.element.getSettings(
+    //   "background_image",
+    //   {}
+    // );
     let classNames = "altrp-image-container";
     let media = this.state.settings.content_media;
 
@@ -121,10 +121,11 @@ class ImageWidget extends Component {
         width={width}
         element={this.props.element}
         height={height}
-        className={
-          "altrp-image" +
-          (background_image ? " altrp-background-image" : "")
-        }
+        // className={
+        //   "altrp-image" +
+        //   (background_image ? " altrp-background-image-widget" : "")
+        // }
+        className="altrp-image"
       />
     );
 
