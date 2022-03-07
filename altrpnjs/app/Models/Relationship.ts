@@ -110,16 +110,16 @@ export default class Relationship extends BaseModel {
   private renderDecorator() {
     switch (this.type){
       case 'hasOne':{
-        return '@Orm.hasOne()'
+        return '@Orm.hasOne'
       }
       case 'belongsTo':{
-        return '@Orm.belongsTo()'
+        return '@Orm.belongsTo'
       }
       case 'hasMany':{
-        return '@Orm.hasMany()'
+        return '@Orm.hasMany'
       }
       default:{
-        return '@Orm.hasOne()'
+        return '@Orm.hasOne'
       }
     }
   }

@@ -1,5 +1,4 @@
 import {Server, Socket} from 'socket.io'
-import Env from "@ioc:Adonis/Core/Env";
 import AdonisServer from '@ioc:Adonis/Core/Server'
 import User from "App/Models/User";
 import Role from "App/Models/Role";
@@ -70,25 +69,9 @@ class Ws {
   }
 
   emitAdmin(type, data) {
-    // this.adminClients.forEach((admin) => {
-    //   this.io.emit(admin.socket.handshake.auth.key, data)
-    // })
     this.emitToRole(type, data, "admin")
   }
 
-  // addToRoles(client) {
-  //   if(client.is_guest) {
-  //     this.clientsByRoles.guests[client.sockets[0].handshake.auth.key] = client;
-  //   } else {
-  //     client.user.roles.forEach(role => {
-  //       if(!this.clientsByRoles[role.name]) {
-  //         this.clientsByRoles[role.name] = {}
-  //       }
-  //       this.clientsByRoles[role.name][client.sockets[0].handshake.auth.key] = client
-  //       console.log(this.clientsByRoles.admin['47564cbc-304c-4941-9c8c-7d4cad66b613'].sockets.length)
-  //     })
-  //   }
-  // }
 
   async emitToRole(type, data, role: string) {
     const roleValue = await Role.query().where("name", role).preload("users").firstOrFail();
@@ -109,7 +92,7 @@ class Ws {
   sendMessage(type, data, guid: string) {
     if(this.clients[guid]) {
       this.clients[guid].sockets.forEach((socket) => {
-        socket.emit({
+        socket.send({
           type,
           data
         })

@@ -138,7 +138,7 @@ export default class MediaController {
       }
       media.main_color = ''
       media.url =  '/storage'+urlBase+ filename;
-      media.save();
+      await media.save();
 
       const categories = request.input( '_categories' );
       if( is_array(categories) && categories.length > 0 && media.guid){

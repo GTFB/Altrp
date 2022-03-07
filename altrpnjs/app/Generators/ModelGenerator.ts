@@ -91,7 +91,7 @@ export default class ModelGenerator extends BaseGenerator {
   }
   private _getProdImportsContent(): string {
     return `
-    const Event = require("@ioc:Adonis/Core/Event").default
+    const Event =__importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Event"));
 
 ${_.uniqBy(
   this.altrp_relationships

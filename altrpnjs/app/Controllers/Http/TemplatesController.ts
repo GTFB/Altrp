@@ -217,7 +217,6 @@ export default class TemplatesController {
 
     if(template) {
       //@ts-ignore
-      const prevVersions = await Template.query().where("guid", template.getGuid())
       const data = template.serialize();
 
       delete data.created_at
@@ -230,13 +229,6 @@ export default class TemplatesController {
         await prevTemplates[4].delete()
       }
 
-      const prevVersion = await Template.create({
-        ...data,
-        guid: null,
-        parent_template: template.id,
-        type: "review"
-      })
-
       template.data = JSON.stringify(request.input("data"));
       template.styles = JSON.stringify(request.input("styles"));
       template.html_content = request.input("html_content");
@@ -247,8 +239,6 @@ export default class TemplatesController {
       await templateGenerator.run(template)
       return {
         currentTemplate: template,
-        prevVersions: prevVersions,
-        prevVersion: prevVersion,
         clearData: request.input("data")
       }
     }

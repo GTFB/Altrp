@@ -428,11 +428,23 @@ export default class Page extends BaseModel {
     if (headerStyles) {
       headerStyles = JSON.parse(headerStyles)
       headerStyles = _.get(headerStyles, 'all_styles', [])
+      headerStyles = headerStyles.map(s=>{
+        if (s.indexOf('</style>') === -1){
+          s = `<style>${s}</style>`
+          return s
+        }
+      })
       styles += headerStyles.join('')
     }
     if (contentStyles) {
       contentStyles = JSON.parse(contentStyles)
       contentStyles = _.get(contentStyles, 'all_styles', [])
+      contentStyles = contentStyles.map(s=>{
+        if (s.indexOf('</style>') === -1){
+          s = `<style>${s}</style>`
+          return s
+        }
+      })
       styles += contentStyles.join('')
     }
     return styles

@@ -16,7 +16,7 @@ export default class CustomizersController {
     customizer.fill(request.all())
     customizer.guid = guid()
     try {
-      const model = await Model.find(customizer.model_id)
+      const model = customizer.model_id ? await Model.find(customizer.model_id) : null
       if (customizer.model_id && model) {
         customizer.model_guid = model.guid
       }
@@ -42,7 +42,9 @@ export default class CustomizersController {
         await source.save()
       }
       //@ts-ignore
-      await Event.emit('model:updated', model)
+      if(model){
+        await Event.emit('model:updated', model)
+      }
     } catch (e) {
       return response.json({
           'success':
@@ -99,9 +101,6 @@ export default class CustomizersController {
     const oldSource = await Source.query().where('sourceable_id', params.id)
       .where('sourceable_type', Customizer.sourceable_type)
       .first()
-    if (oldSource) {
-      await oldSource.delete()
-    }
     if (!customizer) {
       return response.json({
           'success':
@@ -130,6 +129,9 @@ export default class CustomizersController {
         await model.load('altrp_controller')
 
         let source = new Source();
+        if(oldSource){
+          source = oldSource
+        }
         source.fill({
           'sourceable_type': Customizer.sourceable_type,
           'sourceable_id': customizer.id,

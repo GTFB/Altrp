@@ -47,6 +47,7 @@
 
       <script>
         /* <![CDATA[ */
+        window['h-altrp'] = true;
         window.altrpPages = {{{ JSON.stringify( pages) }}};
         window.altrp = {{{JSON.stringify(_altrp)}}};
         window.altrpElementsLists = [{{{ elements_list.map(e=>`'${e}'`) }}}];
