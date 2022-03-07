@@ -85,6 +85,8 @@ Route.group(() => {
     Route.put("/menus/:id", "admin/MenusController.update")
     Route.get("/menus/:id", "admin/MenusController.show")
 
+    Route.get("/data_sources", "admin/ModelsController.getDataSources")
+
     Route.get("/page_data_sources/pages/:id", () => {
       return []
     })

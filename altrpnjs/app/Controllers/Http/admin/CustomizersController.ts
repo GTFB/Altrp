@@ -6,6 +6,7 @@ import * as _ from 'lodash'
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class CustomizersController {
 
@@ -40,6 +41,11 @@ export default class CustomizersController {
           'request_type': customizer.getRequestType(),
         })
         await source.save()
+      }
+      if(customizer.type === "listener" && model) {
+        const generator = new ListenerGenerator()
+
+        await generator.run(model, customizer.settings.hook_type)
       }
       //@ts-ignore
       await Event.emit('model:updated', model)
@@ -111,6 +117,15 @@ export default class CustomizersController {
       )
     }
 
+    if(customizer.type === "listener" && request.input("type") !== "listener") {
+      const generator = new ListenerGenerator()
+
+      const model = await Model.find(customizer.model_id);
+      if(model) {
+        await generator.delete(model, customizer.settings.hook_type)
+      }
+    }
+
     customizer.merge(request.all())
     let model
     try {
@@ -143,6 +158,11 @@ export default class CustomizersController {
           'request_type': customizer.getRequestType(),
         })
         await source.save()
+      }
+      if(customizer.type === "listener" && model) {
+        const generator = new ListenerGenerator()
+
+        await generator.run(model, customizer.settings.hook_type)
       }
       Event.emit('model:updated', model)
     } catch
@@ -227,7 +247,17 @@ export default class CustomizersController {
       },)
     }
     try {
+      if(customizer.type === "listener") {
+        const generator = new ListenerGenerator()
+
+        const model = await Model.find(customizer.model_id);
+        if(model) {
+          await generator.delete(model, customizer.settings.hook_type)
+        }
+      }
+
       await customizer.delete()
+
     } catch (e) {
       return response.json({
           'success':
