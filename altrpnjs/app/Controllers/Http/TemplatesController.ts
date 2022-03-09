@@ -441,8 +441,4 @@ export default class TemplatesController {
       success: true
     }
   }
-
-  public async globalTemplateStyles() {
-    return []
-  }
 }
