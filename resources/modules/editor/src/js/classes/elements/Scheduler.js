@@ -40,21 +40,25 @@ class Scheduler extends BaseElement {
     this.addControl('get_url', {
       type: CONTROLLER_TEXT,
       label: 'URL for get',
+      locked: true,
     });
 
     this.addControl('create_url', {
       type: CONTROLLER_TEXT,
       label: 'URL for create',
+      locked: true,
     });
 
     this.addControl('update_url', {
       type: CONTROLLER_TEXT,
       label: 'URL for update',
+      locked: true,
     });
 
     this.addControl('delete_url', {
       type: CONTROLLER_TEXT,
       label: 'URL for delete requests',
+      locked: true,
     });
 
     this.endControlSection();
@@ -119,7 +123,8 @@ class Scheduler extends BaseElement {
           value: 'ru',
           label: 'Ru'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.endControlSection();

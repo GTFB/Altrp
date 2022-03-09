@@ -26,7 +26,7 @@ class HeadingTypeHeading extends BaseElement {
     return "heading";
   }
   static getTitle() {
-    return "Heading";
+    return "Text";
   }
   static getIconComponent() {
     return HeadingIcon;
@@ -51,6 +51,7 @@ class HeadingTypeHeading extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       label: "Text",
       default: "I Am Advanced Heading",
+      locked: true,
     });
 
     this.endControlSection();
@@ -125,7 +126,8 @@ class HeadingTypeHeading extends BaseElement {
           value: 'div',
           label: 'div'
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('link_link', {
@@ -137,6 +139,7 @@ class HeadingTypeHeading extends BaseElement {
         noFollow: false
       },
       label: 'Link',
+      locked: true,
     });
 
     this.endControlSection();
@@ -221,12 +224,14 @@ class HeadingTypeHeading extends BaseElement {
 
     this.addControl("position_css_id", {
       type: CONTROLLER_TEXT,
-      label: "CSS ID"
+      label: "CSS ID",
+      locked: true,
     });
 
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
-      label: "CSS Classes"
+      label: "CSS Classes",
+      locked: true,
     });
 
     this.endControlSection();
@@ -274,6 +279,7 @@ class HeadingTypeHeading extends BaseElement {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
+      locked: true,
     });
 
     this.addControl('background_position', {
@@ -627,7 +633,8 @@ class HeadingTypeHeading extends BaseElement {
         "{{ELEMENT}} .altrp-link-cl-style-28::before{{STATE}}": "background-color: {{COLOR}};",
         "{{ELEMENT}} .altrp-link-cl-style-29::after{{STATE}}": "background-color: {{COLOR}};",
         "{{ELEMENT}} .altrp-link-cl-style-29::before{{STATE}}": "background-color: {{COLOR}};",
-      }
+      },
+      locked: true,
     });
 
     this.endControlSection();

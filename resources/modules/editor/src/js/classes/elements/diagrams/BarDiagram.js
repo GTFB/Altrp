@@ -52,27 +52,25 @@ class BarDiagram extends BaseElement {
     this.addControl("datasource_path", {
       dynamic: false,
       type: CONTROLLER_TEXTAREA,
-      label: "Path to Data"
+      label: "Path to Data",
+      locked: true,
     });
 
     this.addControl('dataKeys', {
       type: CONTROLLER_TEXTAREA,
-      label: 'Data Keys'
+      label: 'Data Keys',
+      locked: true,
     })
 
     this.addControl('indexBy', {
-      label: 'Index By'
+      label: 'Index By',
+      locked: true,
     })
-
-    this.addControl("key_is_date", {
-      dynamic: false,
-      label: "Key has Date format?",
-      type: CONTROLLER_SWITCHER
-    });
 
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
+      locked: true,
     });
 
     this.endControlSection();
@@ -115,7 +113,8 @@ class BarDiagram extends BaseElement {
 
     this.addControl("markersRepeater", {
       type: CONTROLLER_REPEATER,
-      fields: repeaterMarker.getControls()
+      fields: repeaterMarker.getControls(),
+      locked: true,
     });
 
     this.endControlSection();
@@ -132,27 +131,32 @@ class BarDiagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      options: colors
+      options: colors,
+      locked: true,
     });
 
     this.addControl("yScaleMax", {
       type: CONTROLLER_NUMBER,
-      label: "Y scale max"
+      label: "Y scale max",
+      locked: true,
     });
 
     this.addControl("bottomAxis", {
       type: CONTROLLER_SWITCHER,
       label: "Enable bottom legend",
+      locked: true,
     });
 
     this.addControl("enableGridX", {
       type: CONTROLLER_SWITCHER,
       label: "Enable grid X",
+      locked: true,
     });
 
     this.addControl("enableGridY", {
       type: CONTROLLER_SWITCHER,
       label: "Enable grid Y",
+      locked: true,
     });
 
     this.addControl("layout", {
@@ -169,7 +173,8 @@ class BarDiagram extends BaseElement {
           value: "horizontal",
           label: "Horizontal"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("groupMode", {
@@ -186,22 +191,26 @@ class BarDiagram extends BaseElement {
           value: "grouped",
           label: "Grouped"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("enableLabel", {
       type: CONTROLLER_SWITCHER,
       label: "Enable arc labels",
+      locked: true,
     });
 
     this.addControl("reverse", {
       type: CONTROLLER_SWITCHER,
       label: "Reverse",
+      locked: true,
     });
 
     this.addControl('enableMinValue', {
       type: CONTROLLER_SWITCHER,
-      label: 'Enable min value'
+      label: 'Enable min value',
+      locked: true,
     })
 
     this.addControl('minValue', {
@@ -209,12 +218,14 @@ class BarDiagram extends BaseElement {
       label: 'Min value',
       conditions: {
         enableMinValue: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('enableMaxValue', {
       type: CONTROLLER_SWITCHER,
-      label: 'Enable max value'
+      label: 'Enable max value',
+      locked: true,
     })
 
     this.addControl('maxValue', {
@@ -222,7 +233,8 @@ class BarDiagram extends BaseElement {
       label: 'Max value',
       conditions: {
         enableMaxValue: true
-      }
+      },
+      locked: true,
     })
 
     this.endControlSection();
@@ -238,6 +250,7 @@ class BarDiagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("height", {
@@ -246,12 +259,14 @@ class BarDiagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       units: ["px", "%", "vh"],
+      locked: true,
     });
 
     this.startControlSection('styles', {
@@ -264,7 +279,8 @@ class BarDiagram extends BaseElement {
       label: "Padding",
       min: 0,
       max: 0.95,
-      step: 0.05
+      step: 0.05,
+      locked: true,
     });
 
     this.addControl("borderRadius", {
@@ -272,7 +288,8 @@ class BarDiagram extends BaseElement {
       label: "Border radius",
       min: 0,
       max: 36,
-      step: 1
+      step: 1,
+      locked: true,
     });
 
     this.addControl("borderWidth", {
@@ -280,12 +297,14 @@ class BarDiagram extends BaseElement {
       label: "Border width",
       min: 0,
       max: 20,
-      step: 1
+      step: 1,
+      locked: true,
     });
 
     this.addControl("borderColor", {
       type: CONTROLLER_COLOR,
       label: "Border color",
+      locked: true,
     });
 
     this.endControlSection()
@@ -296,7 +315,8 @@ class BarDiagram extends BaseElement {
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
-      label: "Custom Color Scheme"
+      label: "Custom Color Scheme",
+      locked: true,
     });
 
     let repeaterScheme = new Repeater();
@@ -310,11 +330,13 @@ class BarDiagram extends BaseElement {
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
       label: "Use custom color scheme?",
+      locked: true,
     });
 
     this.addControl("customScheme", {
       type: CONTROLLER_REPEATER,
-      fields: repeaterScheme.getControls()
+      fields: repeaterScheme.getControls(),
+      locked: true,
     });
 
     this.endControlSection()

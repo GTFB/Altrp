@@ -14,7 +14,7 @@ import AltrpInput from "../altrp-input/AltrpInput";
 }
 .bp3-icon_text-widget img{
   width: 16px;
-  height: 16px;
+  height: auto;
   object-fit: contain;
   pointer-events: none;
 }
@@ -34,14 +34,6 @@ import AltrpInput from "../altrp-input/AltrpInput";
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.altrp-label-icon svg,
-.altrp-label-icon img {
-  width: 20px;
-}
-.altrp-label-icon svg{
-  height: 20px;
 }
 .altrp-field-file__field{
   display: none;
@@ -82,7 +74,6 @@ import AltrpInput from "../altrp-input/AltrpInput";
   padding-left: 10px;
 }
 .altrp-field-label {
-  font-size: 16px;
   font-family: "Open Sans";
   line-height: 1.5;
   letter-spacing: 0;
@@ -382,7 +373,7 @@ class InputTextCommonWidget extends Component {
     this.onChange = this.onChange.bind(this);
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
-    this.defaultValue = this.getContent("content_default_value")
+    this.defaultValue = this.getLockedContent("content_default_value")
 
     this.state = {
       settings: {...props.element.getSettings()},
@@ -394,8 +385,8 @@ class InputTextCommonWidget extends Component {
       portalClassName: `altrp-portal altrp-portal${this.props.element.getId()}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    if (this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
 
@@ -447,7 +438,7 @@ class InputTextCommonWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, contentLoaded: true}),
         () => {
@@ -461,7 +452,7 @@ class InputTextCommonWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, contentLoaded: true}),
         () => {
@@ -498,7 +489,7 @@ class InputTextCommonWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value"
       );
       this.setState(
@@ -521,7 +512,7 @@ class InputTextCommonWidget extends Component {
     if (isEditor()) {
       return;
     }
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -661,11 +652,11 @@ class InputTextCommonWidget extends Component {
      * Обновляем хранилище только если не текстовое поле
      */
 
-    const change_actions = this.props.element.getSettings("change_actions");
-    const change_change_end = this.props.element.getSettings(
+    const change_actions = this.props.element.getLockedSettings("change_actions");
+    const change_change_end = this.props.element.getLockedSettings(
       "change_change_end"
     );
-    const change_change_end_delay = this.props.element.getSettings(
+    const change_change_end_delay = this.props.element.getLockedSettings(
       "change_change_end_delay"
     );
 
@@ -702,7 +693,7 @@ class InputTextCommonWidget extends Component {
    */
 
   onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
+    const focus_actions = this.props.element.getLockedSettings("focus_actions");
 
     if (focus_actions && !isEditor()) {
       const actionsManager = (
@@ -727,7 +718,7 @@ class InputTextCommonWidget extends Component {
   onBlur = async (e, editor = null) => {
     this.dispatchFieldValueToStore(e.target.value, true);
 
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
@@ -737,7 +728,7 @@ class InputTextCommonWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         "blur",
-        this.props.element.getSettings("actions", []),
+        this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
     }
@@ -759,7 +750,7 @@ class InputTextCommonWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -798,8 +789,8 @@ class InputTextCommonWidget extends Component {
 
   renderLeftIcon(){
     const {element} = this.props;
-    let left_icon = element.getResponsiveSetting('left_icon');
-    let password_show_left_icon = element.getResponsiveSetting('password_show_left_icon');
+    let left_icon = element.getResponsiveLockedSetting('left_icon');
+    let password_show_left_icon = element.getResponsiveLockedSetting('password_show_left_icon');
     const {content_type} = element.settings
     const leftIconProps = {}
     if(content_type === 'password' && this.state.showPassword && password_show_left_icon){
@@ -816,13 +807,13 @@ class InputTextCommonWidget extends Component {
       return null
     }
     return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" {...leftIconProps} tabIndex="0">
-      {renderAsset(left_icon, )}
+      {renderAsset(left_icon)}
     </span>
   }
   renderRightIcon(){
     const {element} = this.props;
-    let right_icon = element.getResponsiveSetting('right_icon');
-    let password_show_right_icon = element.getResponsiveSetting('password_show_right_icon');
+    let right_icon = element.getResponsiveLockedSetting('right_icon');
+    let password_show_right_icon = element.getResponsiveLockedSetting('password_show_right_icon');
     const {content_type} = element.settings
     const rightIconProps = {}
     if(content_type === 'password' && this.state.showPassword && password_show_right_icon){
@@ -853,11 +844,11 @@ class InputTextCommonWidget extends Component {
 
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
-    const label_icon_position = this.props.element.getResponsiveSetting('label_icon_position')
-    let label_style_spacing = this.props.element.getResponsiveSetting('label_style_spacing')
+    const label_icon_position = this.props.element.getResponsiveLockedSetting('label_icon_position')
+    let label_style_spacing = this.props.element.getResponsiveLockedSetting('label_style_spacing')
     switch (content_label_position_type) {
       case "top":
         styleLabel = {

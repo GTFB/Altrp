@@ -55,7 +55,8 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
+      locked: true,
     });
 
     this.addControl("content_label_position_type", {
@@ -117,30 +118,35 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "Search Placeholder",
       responsive: false,
+      locked: true,
     });
 
     this.addControl("minimal", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
-      label: "Minimal"
+      label: "Minimal",
+      locked: true,
     });
 
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
-      label: "Required"
+      label: "Required",
+      locked: true,
     });
 
     this.addControl("content_readonly", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
-      label: "Readonly"
+      label: "Readonly",
+      locked: true,
     });
 
     this.addControl("content_options_nullable", {
       type: CONTROLLER_SWITCHER,
       label: "Select Nullable",
       responsive: false,
+      locked: true,
     });
 
     this.addControl("nulled_option_title", {
@@ -150,6 +156,7 @@ class InputSelectTree extends BaseElement {
       conditions:{
         content_options_nullable: true,
       },
+      locked: true,
     });
 
     this.addControl("options_sorting", {
@@ -198,18 +205,20 @@ class InputSelectTree extends BaseElement {
     this.addControl("content_options", {
       type: CONTROLLER_TEXTAREA,
       label: "Path",
+      locked: true,
     });
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
-      label: "Default Value"
+      label: "Default Value",
+      locked: true,
     });
 
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+      description: "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+      locked: true,
     });
 
     this.endControlSection();
@@ -244,11 +253,13 @@ class InputSelectTree extends BaseElement {
     this.addControl('right_icon', {
       label: 'Right Icon',
       type: CONTROLLER_MEDIA,
+      locked: true,
     })
 
     this.addControl('left_icon', {
       label: 'Left Icon',
       type: CONTROLLER_MEDIA,
+      locked: true,
     })
 
     this.endControlSection();
@@ -259,13 +270,15 @@ class InputSelectTree extends BaseElement {
 
     this.addControl('s_off', {
       type: CONTROLLER_SWITCHER,
-      label: 'Search Off'
+      label: 'Search Off',
+      locked: true,
     })
 
     this.addControl("no_results_text", {
       type: CONTROLLER_TEXT,
       label: "No results text",
       responsive: false,
+      locked: true,
     });
 
     this.endControlSection();
@@ -297,7 +310,7 @@ class InputSelectTree extends BaseElement {
       units: ["px", "%", "vh"],
       max: 60,
       min: 0,
-
+      locked: true,
     });
 
     this.addControl("label_padding", {
@@ -333,7 +346,8 @@ class InputSelectTree extends BaseElement {
       },
       units: ["px", "%", "vh"],
       max: 100,
-      min: -100
+      min: -100,
+      locked: true,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "top: {{SIZE}}{{UNIT}};"

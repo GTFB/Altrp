@@ -124,8 +124,9 @@ class CustomizerSettingsPanel extends React.Component {
 
     let Url = ''
     if (this.props.customizer.source !== null) {
-      const { model, url } = this.props.customizer.source
-      Url = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
+      const { web_url } = this.props.customizer.source
+      let strippedDownUrl = new URL(web_url)
+      Url = strippedDownUrl.pathname
     }
 
     return (

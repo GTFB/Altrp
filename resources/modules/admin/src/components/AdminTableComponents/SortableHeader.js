@@ -3,7 +3,7 @@ import VectorSvg from '../../svgs/vector.svg';
 
 class SortableHeader extends Component {
   state = {
-    order: 'ASC'
+    order: 'DESC'
   }
 
   clickHandler = () => {
@@ -18,11 +18,12 @@ class SortableHeader extends Component {
     const { order } = this.state;
 
 
-    return <td className="admin-table__td " title={column.name}>
-      {column.title}
-      <VectorSvg onClick={this.clickHandler} className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === column.name ? 'vector-svg--active' : ''}`} />
+    return <td className="admin-table__td "  title={column.name}>
+      <span style={{ cursor: 'pointer' }} onClick={this.clickHandler}>{column.title}</span>
+      <small style={{marginLeft: '6px', visibility: `${sortingField === column.name ? 'visible' : 'hidden'}`}}>{order}</small>
+      {/*<VectorSvg onClick={this.clickHandler} className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === column.name ? 'vector-svg--active' : ''}`} />*/}
     </td>
   }
-};
+}
 
 export default SortableHeader;

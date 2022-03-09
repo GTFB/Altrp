@@ -79,6 +79,7 @@ class Tree extends BaseElement {
           label: 'Datasource'
         },
       ],
+      locked: true,
     });
 
 
@@ -89,6 +90,7 @@ class Tree extends BaseElement {
       conditions: {
         'select_type': "repeater",
       },
+      locked: true,
     });
 
     this.addControl('tree_from_datasource', {

@@ -4,7 +4,7 @@ class FunnelDiagramWidget extends Component {
     super(props);
 
     this.state = {
-      settings: props.element.getSettings(),
+      settings: props.element.getLockedSettings(),
       id: props.element.getId()
     };
 

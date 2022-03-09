@@ -57,7 +57,8 @@ class Section extends BaseElement{
         //   label: 'full fill'
         // }
       ],
-      prefixClass: 'altrp-section_'
+      prefixClass: 'altrp-section_',
+      locked: true,
     });
 
     this.addControl(
@@ -260,6 +261,7 @@ class Section extends BaseElement{
           label: 'min height'
         }
       ],
+      locked: true,
     });
 
     this.addControl("label_style_min_height", {
@@ -330,7 +332,8 @@ class Section extends BaseElement{
           value: 'form',
           label: 'form',
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('layout_columns_height', {
@@ -355,6 +358,7 @@ class Section extends BaseElement{
         noFollow: false
       },
       label: 'Link',
+      locked: true,
     });
 
     this.endControlSection();
@@ -409,6 +413,7 @@ class Section extends BaseElement{
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: {url: ""},
+      locked: true,
     });
 
     this.addControl('background_position', {
@@ -659,12 +664,14 @@ class Section extends BaseElement{
 
     this.addControl("position_style_css_id", {
       type: CONTROLLER_TEXT,
-      label: "CSS ID"
+      label: "CSS ID",
+      locked: true,
     });
 
     this.addControl("position_style_css_classes", {
       type: CONTROLLER_TEXT,
-      label: "CSS Classes"
+      label: "CSS Classes",
+      locked: true,
     });
 
     this.endControlSection();
@@ -739,9 +746,19 @@ class Section extends BaseElement{
       label: "Background Video"
     });
 
+    this.addControl("url_video-poster", {
+      type: CONTROLLER_TEXT,
+      label: "Poster"
+    });
+
     this.addControl("url_video", {
       type: CONTROLLER_TEXT,
-      label: "Url Video"
+      label: "Url Video mp4"
+    });
+
+    this.addControl("url_video-webm", {
+      type: CONTROLLER_TEXT,
+      label: "Url Video webm"
     });
 
     this.addControl('object_fit_select', {
@@ -775,6 +792,26 @@ class Section extends BaseElement{
         }
       ],
     });
+
+    // this.addControl('preload_select', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'preload',
+    //   default: 'metadata',
+    //   options: [
+    //     {
+    //       value: 'metadata',
+    //       label: 'metadata'
+    //     },
+    //     {
+    //       value: 'none',
+    //       label: 'none'
+    //     },
+    //     {
+    //       value: 'auto',
+    //       label: 'auto'
+    //     }
+    //   ],
+    // });
 
     this.endControlSection();
 

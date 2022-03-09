@@ -68,6 +68,7 @@ class Carousel extends BaseElement {
     repeater.addControl('switch_slides_repeater', {
       type: CONTROLLER_SWITCHER,
       label: 'Image or card',
+      locked: true,
     });
 
     repeater.addControl('image_slides_repeater', {
@@ -142,8 +143,8 @@ class Carousel extends BaseElement {
           value: 'path',
         },
       ],
-      default: 'custom'
-
+      default: 'custom',
+      locked: true,
     });
 
     this.addControl('slides_repeater', {
@@ -155,6 +156,7 @@ class Carousel extends BaseElement {
       conditions: {
         'slides_item_source': 'custom',
       },
+      locked: true,
     });
 
     this.addControl('slides_path', {
@@ -164,12 +166,14 @@ class Carousel extends BaseElement {
       conditions: {
         'slides_item_source': 'path',
       },
+      locked: true,
     });
 
     this.addControl('lightbox_slides_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Lightbox',
-      default: false
+      default: false,
+      locked: true,
     });
 
     this.addControl('lightbox_s_click', {
@@ -178,6 +182,7 @@ class Carousel extends BaseElement {
       conditions:{
         'lightbox_slides_content' : true,
       },
+      locked: true,
     });
 
     this.addControl('img_content', {
@@ -230,7 +235,8 @@ class Carousel extends BaseElement {
           value: 10,
           label: '10'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('to_scroll_slides_content', {
@@ -278,7 +284,8 @@ class Carousel extends BaseElement {
           value: 10,
           label: '10'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('per_row_slides_content', {
@@ -326,7 +333,8 @@ class Carousel extends BaseElement {
           value: 10,
           label: '10'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("height_slides_content", {
@@ -368,7 +376,8 @@ class Carousel extends BaseElement {
     this.addControl('arrows_navigation_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Arrows',
-      default: false
+      default: false,
+      locked: true,
     });
 
     this.addControl('arrows_position_navigation_content', {
@@ -407,13 +416,15 @@ class Carousel extends BaseElement {
           value: 'bottomRight',
           label: 'bottom right'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('dots_navigation_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Dots',
-      default: true
+      default: true,
+      locked: true,
     });
 
     this.addControl('dots_position_navigation_content', {
@@ -448,7 +459,8 @@ class Carousel extends BaseElement {
           value: 'bottomRight',
           label: 'bottom right'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.endControlSection();
@@ -462,12 +474,14 @@ class Carousel extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Transition duration",
       default: 500,
+      locked: true,
     });
 
     this.addControl('autoplay_additional_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Autoplay',
-      default: false
+      default: false,
+      locked: true,
     });
 
     this.addControl('transition_autoplay_duration_additional_content', {
@@ -477,18 +491,21 @@ class Carousel extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Transition duration autoplay",
       default: 2000,
+      locked: true,
     });
 
     this.addControl('infinite_loop_additional_content', {
       type: CONTROLLER_SWITCHER,
       label: 'infinite',
-      default: true
+      default: true,
+      locked: true,
     });
 
     this.addControl('pause_on_interaction_loop_additional_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Pause on interaction',
-      default: true
+      default: true,
+      locked: true,
     });
 
     this.addControl('overlay_heading_additional_content', {
@@ -514,8 +531,8 @@ class Carousel extends BaseElement {
           'label': 'icon',
         },
       ],
-    }
-    );
+      locked: true,
+    });
 
     this.addControl('overlay_animation_text_heading_additional_content', {
       type: CONTROLLER_SELECT,
@@ -729,7 +746,8 @@ class Carousel extends BaseElement {
         'arrows_navigation_content': true,
       },
       type: CONTROLLER_HEADING,
-      label: 'Arrows'
+      label: 'Arrows',
+      locked: true,
     })
 
     this.addControl('arrows_size_navigation_style', {
@@ -836,7 +854,8 @@ class Carousel extends BaseElement {
         'dots_navigation_content': true,
       },
       type: CONTROLLER_HEADING,
-      label: 'Dots'
+      label: 'Dots',
+      locked: true,
     })
 
     this.addControl('dots_size_navigation_style', {

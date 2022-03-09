@@ -156,7 +156,7 @@ const getImageStyles = (settings,id)=>{
       }
 
       if (borderRadius) {
-        styles += sizeStyled(borderRadius, 'border-radius');
+        styles += dimensionsControllerToStyles(borderRadius, 'border-radius');
       }
 
       //Получаем значения transition-duration в точных юнитах из контроллера, обрабатываем и добавляем в styles
@@ -313,7 +313,7 @@ const getImageStyles = (settings,id)=>{
       }
 
       if (borderRadius) {
-        styles += sizeStyled(borderRadius, 'border-radius');
+        styles += dimensionsControllerToStyles(borderRadius, 'border-radius');
       }
 
       //Получаем значения transition-duration в точных юнитах из контроллера, обрабатываем и добавляем в styles
@@ -354,7 +354,7 @@ const getImageStyles = (settings,id)=>{
       styles+="} ";
 
 
-      styles+=`${parentClass} .altrp-background-image {`;
+      styles+=`${parentClass} .altrp-background-image-widget {`;
 
       //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
 
@@ -418,7 +418,7 @@ const getImageStyles = (settings,id)=>{
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-background-image:hover {`;
+      styles+=`${parentClass} .altrp-background-image-widget:hover {`;
 
       //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
 

@@ -1,4 +1,6 @@
-import {minify} from'html-minifier'
+// import {minify} from'html-minifier'
+// import prepareContext from "../../helpers/prepareContext";
+import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
@@ -6,7 +8,6 @@ import Env from '@ioc:Adonis/Core/Env';
 // @ts-ignore
 import renderResult from '../../helpers/server-render/renderResult'
 import replaceContentWithData from "../../helpers/replaceContentWithData";
-import prepareContext from "../../helpers/prepareContext";
 import {matchPath} from 'react-router'
 import empty from "../../helpers/empty";
 import * as _ from 'lodash'
@@ -20,6 +21,7 @@ import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import Source from "App/Models/Source";
 import getCurrentDevice from "../../helpers/getCurrentDevice";
 import isProd from "../../helpers/isProd";
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES";
@@ -56,11 +58,14 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
-    for(const route of IGNORED_ROUTES) {
-      if(route === url) {
-        await next()
-        return
-      }
+    if (url === '/altrp-login'
+      || url === '/login'
+      || url === '/data/current-user' ||
+      url === "/modules/admin/admin.js" ||
+      url === "/modules/front-app/front-app.css"
+    ) {
+      await next()
+      return
     }
 
     /**
@@ -153,6 +158,7 @@ export default class AltrpRouting {
           params: request.qs()
         }
       }
+      /*
       try {
         _.set(page, 'templates', [])
         _.set(_frontend_route, 'templates', [])
@@ -164,7 +170,6 @@ export default class AltrpRouting {
             altrpContext,
             is_admin,
             pages,
-            isProd: isProd(),
             csrfToken: request.csrfToken,
             page_areas: pageAreas,
             page_id: page.id,
@@ -192,7 +197,7 @@ export default class AltrpRouting {
         console.error(`Error to View Custom Page: ${e.message}
          ${e.stack}
          `);
-      }
+      }*/
       //@ts-ignore
       const preload_content:any = renderResult({
         protocol: request.protocol(),
@@ -217,17 +222,16 @@ export default class AltrpRouting {
         Edge({
         hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
         url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
-        sw: '/modules/front-app/sw.js',
         page: pageAreas,
         title: replaceContentWithData(page.title || 'Altrp', altrpContext),
         is_admin,
         pages,
-        isProd: isProd(),
         csrfToken: request.csrfToken,
         preload_content,
         page_areas: pageAreas,
         page_id: page.id,
         altrpElementsLists,
+        device: getCurrentDevice(request),
         elements_list: altrpElementsLists,
         model_data,
         fonts: this.getFonts(),

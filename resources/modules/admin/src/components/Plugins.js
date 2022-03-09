@@ -15,7 +15,7 @@ export default class Plugins extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     const req = await axios.get("/admin/ajax/plugins");
     let plugins = req.data
     if(! _.isArray(plugins)){
@@ -24,11 +24,11 @@ export default class Plugins extends Component {
     this.setState({
       plugins
     });
-
     window.addEventListener("scroll", this.listenScrollHeader)
-    return () => {
-      window.removeEventListener("scroll", this.listenScrollHeader)
-    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.listenScrollHeader)
   }
 
   updatePlugins = async ()=>{

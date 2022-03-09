@@ -91,14 +91,15 @@ function subscribeToModels(id){
  * @param {boolean} returnRaw - возврщать ли объект в том виде, в котором он хранится (если false, возвращаем строку)
  * @return {*}
  */
-function getContent(settingName, returnRaw = false) {
+function getContent(settingName, returnRaw = false, locked = false) {
   /**
    * @member {FrontElement} element
    */
   const element = this.props.element;
  // return this.props.element.getContent(settingName);
 
-  let content = this.props.element.getSettings(settingName);
+  let content = this.props.element.getSettings(settingName, '', locked);
+
   if(content && content.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
     // console.log(element.getRoot());
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
@@ -146,6 +147,12 @@ function getContent(settingName, returnRaw = false) {
   }
   return content === 'null' ? '' : content;
 }
+
+
+function getLockedContent(settingName, returnRaw = false) {
+  return this.getContent(settingName, returnRaw, true)
+}
+
 /**
  * Компоненте загрузился в DOM
  */
@@ -386,6 +393,7 @@ export default function frontDecorate(component) {
   component.componentDidMount = componentDidMount.bind(component);
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component.getContent = getContent.bind(component);
+  component.getLockedContent = getLockedContent.bind(component);
   component.getModelId = getModelId.bind(component);
   component.updateModelData = updateModelData.bind(component);
   component.isActive = isActive.bind(component);

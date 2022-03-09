@@ -199,11 +199,11 @@ class AltrpPosts extends React.Component {
       return null;
     }
 
-    if(element.getResponsiveSetting('posts_per_page') >= posts?.length || element.getResponsiveSetting('posts_per_page') <= 0){
+    if(element.getResponsiveLockedSetting('posts_per_page') >= posts?.length || element.getResponsiveLockedSetting('posts_per_page') <= 0){
       return null;
     }
-    let prev_text = element.getResponsiveSetting('prev_text', '', 'Previous Page')
-    let next_text = element.getResponsiveSetting('next_text', '', 'Next Page')
+    let prev_text = element.getResponsiveLockedSetting('prev_text', '', 'Previous Page')
+    let next_text = element.getResponsiveLockedSetting('next_text', '', 'Next Page')
     let posts_pagination_type = getResponsiveSetting(this.props.settings, 'posts_pagination_type') || '';
     if(posts_pagination_type){
       const {currentPage} = this.state;
@@ -224,7 +224,7 @@ class AltrpPosts extends React.Component {
           gotoPage: (page)=>{
             this.setPage(page + 1);
           },
-          pageSize: this.props.element.getResponsiveSetting('posts_per_page'),
+          pageSize: this.props.element.getResponsiveLockedSetting('posts_per_page'),
           widgetId: this.props.element.getId(),
         };
 

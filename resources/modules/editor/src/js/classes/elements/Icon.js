@@ -61,16 +61,19 @@ class Icon extends BaseElement {
     this.addControl('title_text', {
       type: CONTROLLER_TEXT,
       label: 'Title',
+      locked: true,
     })
 
     this.addControl('description', {
       type: CONTROLLER_TEXT,
       label: 'Description',
+      locked: true,
     })
 
     this.addControl('content_alignment', {
       type: CONTROLLER_SELECT,
       label: 'Content alignment',
+      default: 'center',
       options:[
         {
           label: 'left',
@@ -136,6 +139,7 @@ class Icon extends BaseElement {
     this.addControl('icon_horizontal_alignment', {
       type: CONTROLLER_SELECT,
       label: 'Icon horizontal alignment',
+      default: 'center',
       options:[
         {
           label: 'left',
@@ -195,7 +199,8 @@ class Icon extends BaseElement {
           label: 'div',
           value: 'div'
         },
-      ]
+      ],
+      locked: true,
     })
 
     this.addControl('title_typography', {
@@ -222,7 +227,7 @@ class Icon extends BaseElement {
 
     this.startControlSection('description_styles', {
       label: 'Description',
-      tab: TAB_STYLE
+      tab: TAB_STYLE,
     })
 
     this.addControl('description_typography', {
@@ -249,7 +254,8 @@ class Icon extends BaseElement {
 
     this.startControlSection('icon_styles', {
       label: 'Icon',
-      tab: TAB_STYLE
+      tab: TAB_STYLE,
+      locked: true,
     })
 
     this.addControl('icon_margin', {

@@ -48,7 +48,8 @@ class InputDateRange extends BaseElement {
           value: "ru",
           label: "RU"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("form_id_start", {
@@ -65,7 +66,8 @@ class InputDateRange extends BaseElement {
 
     this.addControl("start_placeholder", {
       type: CONTROLLER_TEXT,
-      label: "Start placeholder"
+      label: "Start placeholder",
+      locked: true,
     });
 
     this.addControl("content_default_value_start", {
@@ -89,7 +91,8 @@ class InputDateRange extends BaseElement {
 
     this.addControl("end_placeholder", {
       type: CONTROLLER_TEXT,
-      label: "End placeholder"
+      label: "End placeholder",
+      locked: true,
     });
 
     this.addControl("content_default_value_end", {

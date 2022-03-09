@@ -30,18 +30,18 @@ class InputHiddenWidget extends Component {
     this.onChange = this.onChange.bind(this);
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
-    this.defaultValue = this.getContent("content_default_value") || "";
+    this.defaultValue = this.getLockedContent("content_default_value") || "";
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
       options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
+        props.element.getLockedSettings("content_options")
       ),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    if (this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
 
@@ -68,7 +68,7 @@ class InputHiddenWidget extends Component {
         create_allowed,
         create_label,
         create_url
-      } = this.props.element.getSettings();
+      } = this.props.element.getLockedSettings();
       if (create_allowed && create_label && create_url) {
         this.createItem(e);
       }
@@ -81,9 +81,9 @@ class InputHiddenWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
+    if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.props.element.getLockedSettings("content_options")
       );
 
       this.setState(state => ({ ...state, options }));
@@ -93,14 +93,14 @@ class InputHiddenWidget extends Component {
 
     /**
      * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
+     * то используем this.getLockedContent для получение этого динамического значения
      * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
 
     /**
@@ -111,7 +111,7 @@ class InputHiddenWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -126,7 +126,7 @@ class InputHiddenWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -150,7 +150,7 @@ class InputHiddenWidget extends Component {
    * Получить url для запросов
    */
   getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
+    let url = this.props.element.getLockedSettings("model_for_options");
 
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
@@ -172,9 +172,9 @@ class InputHiddenWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        this.props.element.getLockedSettings("select2_multiple")
       );
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -192,7 +192,7 @@ class InputHiddenWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
 
     /**
@@ -224,7 +224,7 @@ class InputHiddenWidget extends Component {
       return;
     }
 
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -361,7 +361,7 @@ class InputHiddenWidget extends Component {
   async updateOptions() {
     {
       let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let paramsForUpdate = this.props.element.getLockedSettings("params_for_update");
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(
         paramsForUpdate,
@@ -374,7 +374,7 @@ class InputHiddenWidget extends Component {
 
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
+          if (this.props.element.getLockedSettings("params_as_filters", false)) {
             paramsForUpdate = JSON.stringify(paramsForUpdate);
             options = await new Resource({
               route: this.getRoute()
@@ -427,7 +427,7 @@ class InputHiddenWidget extends Component {
     }
 
     if (
-      this.props.element.getSettings("content_options_nullable") &&
+      this.props.element.getLockedSettings("content_options_nullable") &&
       e &&
       e.value === "<null>"
     ) {
@@ -444,11 +444,11 @@ class InputHiddenWidget extends Component {
          * Обновляем хранилище только если не текстовое поле
          */
 
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
+        const change_actions = this.props.element.getLockedSettings("change_actions");
+        const change_change_end = this.props.element.getLockedSettings(
           "change_change_end"
         );
-        const change_change_end_delay = this.props.element.getSettings(
+        const change_change_end_delay = this.props.element.getLockedSettings(
           "change_change_end_delay"
         );
 
@@ -487,7 +487,7 @@ class InputHiddenWidget extends Component {
       options = convertData(optionsDynamicSetting, options);
     }
 
-    if (!this.props.element.getSettings("sort_default")) {
+    if (!this.props.element.getLockedSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     }
 
@@ -513,7 +513,7 @@ class InputHiddenWidget extends Component {
       );
 
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -564,10 +564,12 @@ class InputHiddenWidget extends Component {
       return <FromIcon/>
     }
     let value = this.getValue()
-    return <input value={value}
-                  type="hidden"
-                  name={this.getName()}
-                  id={this.getName()}/>
+    return <input 
+      value={value}
+      type="hidden"
+      name={this.getName()}
+      id={this.getName()}
+    />
   }
 }
 

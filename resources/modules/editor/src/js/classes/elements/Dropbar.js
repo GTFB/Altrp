@@ -59,7 +59,8 @@ class Dropbar extends BaseElement {
     this.addControl('button_text', {
       type: CONTROLLER_TEXTAREA,
       label: 'Button Text',
-      default: `Show dropdown`
+      default: `Show dropdown`,
+      locked: true,
     });
 
     this.addControl('button_alignment', {
@@ -88,6 +89,7 @@ class Dropbar extends BaseElement {
     this.addControl('button_icon', {
       type: CONTROLLER_MEDIA,
       label: 'Choose Icon',
+      locked: true,
     });
 
     this.addControl('button_icon_position', {
@@ -121,21 +123,21 @@ class Dropbar extends BaseElement {
     });
 
     this.addControl('type_dropbar_section', {
-        type: CONTROLLER_SELECT,
-        label: 'Type',
-        default: 'text',
-        options: [
-          {
-            'value': 'text',
-            'label': 'Text',
-          },
-          {
-            'value': 'card',
-            'label': 'Card',
-          },
-        ],
-      }
-    );
+      type: CONTROLLER_SELECT,
+      label: 'Type',
+      default: 'text',
+      options: [
+        {
+          'value': 'text',
+          'label': 'Text',
+        },
+        {
+          'value': 'card',
+          'label': 'Card',
+        },
+      ],
+      locked: true,
+    });
 
     this.addControl("content_dropbar_section", {
       conditions: {
@@ -143,7 +145,8 @@ class Dropbar extends BaseElement {
       },
       type: CONTROLLER_WYSIWYG,
       label: "Content",
-      default: "I Am Text in dropbar"
+      default: "I Am Text in dropbar",
+      locked: true,
     });
 
     this.addControl("template_dropbar_section", {
@@ -160,6 +163,7 @@ class Dropbar extends BaseElement {
         textTemplate: 'Go to Template',
       },
       nullable: true,
+      locked: true,
     });
 
     this.endControlSection();
@@ -223,6 +227,7 @@ class Dropbar extends BaseElement {
           label: "Right bottom"
         },
       ],
+      locked: true,
     });
 
     this.addControl("mode_dropbar_options", {
@@ -239,6 +244,7 @@ class Dropbar extends BaseElement {
           label: "Hover"
         }
       ],
+      locked: true,
     });
 
     this.addControl("show_delay_dropbar_options", {
@@ -252,6 +258,7 @@ class Dropbar extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("hide_delay_dropbar_options", {
@@ -265,6 +272,7 @@ class Dropbar extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("offset_dropbar_options", {
@@ -276,6 +284,7 @@ class Dropbar extends BaseElement {
       },
       max: 100,
       min: -100,
+      locked: true,
     });
 
     this.endControlSection();
@@ -332,6 +341,7 @@ class Dropbar extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       label: 'Confirm Submit Form Text',
       default: '',
+      locked: true,
     });
 
     this.addControl('email_subject', {
@@ -347,6 +357,7 @@ class Dropbar extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       label: 'Text After Sending',
       default: '',
+      locked: true,
     });
 
     this.addControl('choose_model', {
@@ -361,11 +372,13 @@ class Dropbar extends BaseElement {
 
     this.addControl('redirect_after', {
       label: 'Redirect After',
+      locked: true,
     });
 
     this.addControl('redirect_to_prev_page', {
       type: CONTROLLER_SWITCHER,
       label: 'Redirect To Prev Page',
+      locked: true,
     });
 
     this.addControl('close_popups', {
@@ -391,7 +404,7 @@ class Dropbar extends BaseElement {
           value: 'print_elements',
         },
       ],
-
+      locked: true,
     });
 
     this.addControl('print_elements_ids', {
@@ -400,6 +413,7 @@ class Dropbar extends BaseElement {
       conditions: {
         'other_action_type': 'print_elements'
       },
+      locked: true,
     });
 
     this.endControlSection();
@@ -450,7 +464,8 @@ class Dropbar extends BaseElement {
     this.addControl('position_css_classes', {
       type: CONTROLLER_TEXT,
       label: 'CSS Classes',
-      default: ''
+      default: '',
+      locked: true,
     });
 
     this.addControl('position_opacity', {
@@ -496,6 +511,7 @@ class Dropbar extends BaseElement {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
+      locked: true,
     });
 
     this.addControl('background_position', {
@@ -879,6 +895,7 @@ class Dropbar extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("background_dropbar_content_style", {

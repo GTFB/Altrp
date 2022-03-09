@@ -14,9 +14,7 @@ const {
     display: flex;
     flex-direction: column;
 
-    & img {
-      max-width: 100%;
-    }
+
   }
 
   .altrp-btn svg {
@@ -72,6 +70,55 @@ const {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+  }
+
+  .altrp-btn-icon-right img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-right svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-left svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-top img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-top svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-bottom img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .altrp-btn-icon-bottom svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `);
 
@@ -114,7 +161,7 @@ class ButtonWidget extends Component {
     e.persist();
     if (isEditor()) {
       e.preventDefault();
-    } else if (this.props.element.getResponsiveSetting("actions", null, []).length) {
+    } else if (this.props.element.getResponsiveLockedSetting("actions", null, []).length) {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
@@ -125,7 +172,7 @@ class ButtonWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         'click',
-        this.props.element.getSettings("actions", []),
+        this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
     }
@@ -138,7 +185,7 @@ class ButtonWidget extends Component {
           try {
             let res = await form.submit(
               this.getModelId(),
-              this.props.element.getResponsiveSetting("form_confirm")
+              this.props.element.getResponsiveLockedSetting("form_confirm")
             );
             if (res.success) {
               let {
@@ -153,8 +200,8 @@ class ButtonWidget extends Component {
                 return this.props.history.push(redirect_after);
               }
 
-              if (this.props.element.getResponsiveSetting("text_after", null,"")) {
-                alert(this.props.element.getResponsiveSetting("text_after", null, ""));
+              if (this.props.element.getResponsiveLockedSetting("text_after", null,"")) {
+                alert(this.props.element.getResponsiveLockedSetting("text_after", null, ""));
               }
             } else if (res.message) {
               alert(res.message);
@@ -192,16 +239,16 @@ class ButtonWidget extends Component {
         e.preventDefault();
         scrollToElement(mainScrollbars, element);
       }
-    } else if (this.props.element.getResponsiveSetting("hide_elements_trigger")) {
+    } else if (this.props.element.getResponsiveLockedSetting("hide_elements_trigger")) {
       this.props.toggleTrigger(
-        this.props.element.getResponsiveSetting("hide_elements_trigger")
+        this.props.element.getResponsiveLockedSetting("hide_elements_trigger")
       );
     } else if (
       this.props.element
-        .getResponsiveSetting("other_action_type", '',[])
+        .getResponsiveLockedSetting("other_action_type", '',[])
         .includes("print_elements")
     ) {
-      let IDs = this.props.element.getResponsiveSetting("print_elements_ids", null,"");
+      let IDs = this.props.element.getResponsiveLockedSetting("print_elements_ids", null,"");
       IDs = IDs.split(",");
       let elementsToPrint = [];
       IDs.forEach(elementId => {
@@ -246,7 +293,7 @@ class ButtonWidget extends Component {
   render() {
     const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
     const { back } = history;
-    const background_image = this.props.element.getResponsiveSetting(
+    const background_image = this.props.element.getResponsiveLockedSetting(
       "background_image",
       null,
       {}
@@ -258,10 +305,10 @@ class ButtonWidget extends Component {
     let classes =
       this.getClasses() + (this.state.settings.position_css_classes || "");
     if (background_image.url) {
-      classes += " altrp-background-image";
+      classes += " altrp-background-image_btn";
     }
 
-    let buttonText = this.getContent("button_text");
+    let buttonText = this.getLockedContent("button_text");
     let buttonMediaRight = { ...this.state.settings.button_icon_right };
     let buttonMediaLeft = { ...this.state.settings.button_icon_left };
     let buttonMediaTop = { ...this.state.settings.button_icon_top };
@@ -296,11 +343,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'r') {
       buttonInner = (
         <div className="btn-container-row">
-          <span></span>
-          {buttonText}
-          <span className={"altrp-btn-icon-right "}>
+          <div>{buttonText}</div>
+          <div className={"altrp-btn-icon-right "}>
             {renderAsset(buttonMediaRight)}{" "}
-          </span>
+          </div>
         </div>
       )
     }
@@ -309,11 +355,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'l') {
       buttonInner = (
         <div className="btn-container-row">
-          <span className={"altrp-btn-icon-left "}>
+          <div className={"altrp-btn-icon-left "}>
             {renderAsset(buttonMediaLeft)}{" "}
-          </span>
-          {buttonText}
-          <span></span>
+          </div>
+          <div>{buttonText}</div>
         </div>
       )
     }
@@ -321,11 +366,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 't') {
       buttonInner = (
         <div className="btn-container-column">
-          <span className={"altrp-btn-icon-top "}>
+          <div className={"altrp-btn-icon-top "}>
             {renderAsset(buttonMediaTop)}{" "}
-          </span>
-          {buttonText}
-          <span></span>
+          </div>
+          <div>{buttonText}</div>
         </div>
       )
     }
@@ -333,11 +377,10 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'b') {
       buttonInner = (
         <div className="btn-container-column">
-          <span></span>
-          {buttonText}
-          <span className={"altrp-btn-icon-bottom "}>
+          <div>{buttonText}</div>
+          <div className={"altrp-btn-icon-bottom "}>
             {renderAsset(buttonMediaBottom)}{" "}
-          </span>
+          </div>
         </div>
       )
     }
@@ -583,7 +626,7 @@ class ButtonWidget extends Component {
       id={this.state.settings.position_css_id}
       title={tooltip || null}
     >
-      {buttonInner}
+      <span>{buttonInner}</span>
     </button>;
     // let buttonTemplate = (
     //   <button
@@ -603,7 +646,7 @@ class ButtonWidget extends Component {
     //   </button>
     // );
 
-    // switch (this.props.element.getResponsiveSetting("link_button_type", null,"none")) {
+    // switch (this.props.element.getResponsiveLockedSetting("link_button_type", null,"none")) {
     //   case "dropbar":
     //     button = (
     //       <Suspense fallback={<div>Загрузка...</div>}>

@@ -49,6 +49,7 @@ class Image extends BaseElement {
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Image',
+      locked: true,
     });
 
     this.addControl('content_path', {
@@ -56,6 +57,7 @@ class Image extends BaseElement {
       dynamic: false,
       responsive: false,
       label: 'Path',
+      locked: true,
     });
 
     this.addControl('raw_url', {
@@ -63,6 +65,7 @@ class Image extends BaseElement {
       dynamic: false,
       responsive: false,
       label: 'URL',
+      locked: true,
     });
 
     this.addControl('default_url', {
@@ -70,13 +73,15 @@ class Image extends BaseElement {
       dynamic: false,
       responsive: false,
       label: 'Path to Default Image URL',
+      locked: true,
     });
 
     this.addControl('cursor_pointer', {
       hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Cursor pointer',
-      default: false
+      default: false,
+      locked: true,
     });
 
 
@@ -122,6 +127,7 @@ class Image extends BaseElement {
         tag: 'Link'
       },
       label: 'Link',
+      locked: true,
     });
 
     this.endControlSection();
@@ -229,6 +235,7 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl('width_size', {
@@ -245,6 +252,7 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.endControlSection();
@@ -329,183 +337,183 @@ class Image extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('background_section', {
-      hideOnEmail: true,
-      tab: TAB_STYLE,
-      label: 'Background'
-    });
-
-    this.addControl("background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
-    });
-
-    this.addControl('gradient', {
-      type: CONTROLLER_GRADIENT,
-      label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
-        angle: "0",
-        value: ""
-      },
-    });
-
-
-    this.addControl('background_image', {
-      type: CONTROLLER_MEDIA,
-      label: 'Background Image',
-      default: { url: "" },
-    });
-
-    this.addControl('background_position', {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "top left",
-          label: "top left"
-        },
-        {
-          value: "top",
-          label: "top"
-        },
-        {
-          value: "top right",
-          label: "top right"
-        },
-        {
-          value: "right",
-          label: "right"
-        },
-        {
-          value: "bottom right",
-          label: "bottom right"
-        },
-        {
-          value: "bottom",
-          label: "bottom"
-        },
-        {
-          value: "bottom left",
-          label: "bottom left"
-        },
-        {
-          value: "left",
-          label: "left"
-        },
-        {
-          value: "center",
-          label: "center"
-        }
-      ],
-      label: 'Background Position',
-      default: 'top left',
-    });
-
-    this.addControl('background_attachment', {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "scroll",
-          label: "scroll"
-        },
-        {
-          value: "fixed",
-          label: "fixed"
-        },
-        {
-          value: "local",
-          label: "local"
-        }
-      ],
-      label: 'Background Attachment',
-      default: 'scroll',
-    });
-
-    this.addControl('background_repeat', {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "repeat",
-          label: "repeat"
-        },
-        {
-          value: "repeat-x",
-          label: "repeat-x"
-        },
-        {
-          value: "repeat-y",
-          label: "repeat-y"
-        },
-        {
-          value: "space",
-          label: "space"
-        },
-        {
-          value: "round",
-          label: "round"
-        },
-        {
-          value: "no-repeat",
-          label: "no-repeat"
-        }
-      ],
-      label: 'Background Repeat',
-      default: 'repeat',
-    });
-
-    this.addControl("background_image_width", {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
-      conditions: {
-        'background_size': [''],
-      },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
-      max: 1000,
-      min: 0,
-    });
-
-    this.addControl('background_size', {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "unset",
-          label: "unset"
-        },
-        {
-          value: "cover",
-          label: "cover"
-        },
-        {
-          value: "contain",
-          label: "contain"
-        },
-        {
-          value: "",
-          label: "set width"
-        },
-      ],
-      label: 'Background Size',
-      default: 'unset',
-    });
-
-
-    this.endControlSection();
+    // this.startControlSection('background_section', {
+    //   hideOnEmail: true,
+    //   tab: TAB_STYLE,
+    //   label: 'Background'
+    // });
+    //
+    // this.addControl("background_color", {
+    //   type: CONTROLLER_COLOR,
+    //   label: "Background color",
+    //   default: {
+    //     color: "",
+    //     colorPickedHex: "",
+    //   },
+    // });
+    //
+    // this.addControl('gradient', {
+    //   type: CONTROLLER_GRADIENT,
+    //   label: 'Gradient',
+    //   default: {
+    //     isWithGradient: false,
+    //     firstColor: "rgba(97,206,112,1)",
+    //     firstPoint: '100',
+    //     secondColor: "rgba(242,41,91,1)",
+    //     secondPoint: "0",
+    //     angle: "0",
+    //     value: ""
+    //   },
+    // });
+    //
+    //
+    // this.addControl('background_image', {
+    //   type: CONTROLLER_MEDIA,
+    //   label: 'Background Image',
+    //   default: { url: "" },
+    // });
+    //
+    // this.addControl('background_position', {
+    //   type: CONTROLLER_SELECT,
+    //   options: [
+    //     {
+    //       value: "top left",
+    //       label: "top left"
+    //     },
+    //     {
+    //       value: "top",
+    //       label: "top"
+    //     },
+    //     {
+    //       value: "top right",
+    //       label: "top right"
+    //     },
+    //     {
+    //       value: "right",
+    //       label: "right"
+    //     },
+    //     {
+    //       value: "bottom right",
+    //       label: "bottom right"
+    //     },
+    //     {
+    //       value: "bottom",
+    //       label: "bottom"
+    //     },
+    //     {
+    //       value: "bottom left",
+    //       label: "bottom left"
+    //     },
+    //     {
+    //       value: "left",
+    //       label: "left"
+    //     },
+    //     {
+    //       value: "center",
+    //       label: "center"
+    //     }
+    //   ],
+    //   label: 'Background Position',
+    //   default: 'top left',
+    // });
+    //
+    // this.addControl('background_attachment', {
+    //   type: CONTROLLER_SELECT,
+    //   options: [
+    //     {
+    //       value: "scroll",
+    //       label: "scroll"
+    //     },
+    //     {
+    //       value: "fixed",
+    //       label: "fixed"
+    //     },
+    //     {
+    //       value: "local",
+    //       label: "local"
+    //     }
+    //   ],
+    //   label: 'Background Attachment',
+    //   default: 'scroll',
+    // });
+    //
+    // this.addControl('background_repeat', {
+    //   type: CONTROLLER_SELECT,
+    //   options: [
+    //     {
+    //       value: "repeat",
+    //       label: "repeat"
+    //     },
+    //     {
+    //       value: "repeat-x",
+    //       label: "repeat-x"
+    //     },
+    //     {
+    //       value: "repeat-y",
+    //       label: "repeat-y"
+    //     },
+    //     {
+    //       value: "space",
+    //       label: "space"
+    //     },
+    //     {
+    //       value: "round",
+    //       label: "round"
+    //     },
+    //     {
+    //       value: "no-repeat",
+    //       label: "no-repeat"
+    //     }
+    //   ],
+    //   label: 'Background Repeat',
+    //   default: 'repeat',
+    // });
+    //
+    // this.addControl("background_image_width", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Width',
+    //   default: {
+    //     size: 100,
+    //     unit: 'px',
+    //   },
+    //   conditions: {
+    //     'background_size': [''],
+    //   },
+    //   units: [
+    //     'px',
+    //     '%',
+    //     'vw',
+    //   ],
+    //   max: 1000,
+    //   min: 0,
+    // });
+    //
+    // this.addControl('background_size', {
+    //   type: CONTROLLER_SELECT,
+    //   options: [
+    //     {
+    //       value: "unset",
+    //       label: "unset"
+    //     },
+    //     {
+    //       value: "cover",
+    //       label: "cover"
+    //     },
+    //     {
+    //       value: "contain",
+    //       label: "contain"
+    //     },
+    //     {
+    //       value: "",
+    //       label: "set width"
+    //     },
+    //   ],
+    //   label: 'Background Size',
+    //   default: 'unset',
+    // });
+    //
+    //
+    // this.endControlSection();
 
     this.startControlSection('border_section', {
       tab: TAB_STYLE,
@@ -566,20 +574,18 @@ class Image extends BaseElement {
     }
     );
 
-    this.addControl('border_radius', {
-      type: CONTROLLER_SLIDER,
+    this.addControl("border_radius", {
+      type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
       default: {
-        // size: 0,
-        unit: 'px',
+        unit: 'px'
       },
-      units: [
+      stateless: true,
+      units:[
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
     });
 
     this.endControlSection();

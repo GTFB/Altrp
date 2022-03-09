@@ -174,6 +174,9 @@ import AltrpTableWithoutUpdate from'../altrp-table/altrp-table-without-update';
 .altrp-table-global-filter label {
   display: inline-block;
 }
+.altrp_table-zIndex {
+  z-index: 1;
+}
 `)
 
 class TableWidget extends Component {
@@ -194,9 +197,9 @@ class TableWidget extends Component {
   }
 
   _componentDidMount(){
-    if(this.props.element.getSettings('store_state') && getWidgetState(this.props.element.getId())){
+    if(this.props.element.getLockedSettings('store_state') && getWidgetState(this.props.element.getId())){
       this.setState(state=>({...state, widgetState: getWidgetState(this.props.element.getId())}));
-    } else if (this.props.element.getSettings('store_state')){
+    } else if (this.props.element.getLockedSettings('store_state')){
       storeWidgetState(this.props.element.getId(), null);
     }
   }
@@ -207,7 +210,7 @@ class TableWidget extends Component {
    * @return {boolean}
    */
   showTable(query = {}){
-    if( this.props.element.getSettings('choose_datasource') === 'datasource' ){
+    if( this.props.element.getLockedSettings('choose_datasource') === 'datasource' ){
       return true;
     }
     if(! query.modelName && ! query.dataSource){
@@ -221,14 +224,14 @@ class TableWidget extends Component {
       return '';
     }
     let data = [];
-    if(this.props.element.getSettings('table_datasource')
-        && this.props.element.getSettings('choose_datasource') === 'datasource'){
-      let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
+    if(this.props.element.getLockedSettings('table_datasource')
+        && this.props.element.getLockedSettings('choose_datasource') === 'datasource'){
+      let path = this.props.element.getLockedSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData())
     }
-    if(! this.query || ! this.table_query || this.table_query !== this.props.element.getSettings().table_query){
-      this.table_query = this.props.element.getSettings().table_query;
-      this.query = new Query(this.props.element.getSettings().table_query || {}, this);
+    if(! this.query || ! this.table_query || this.table_query !== this.props.element.getLockedSettings().table_query){
+      this.table_query = this.props.element.getLockedSettings().table_query;
+      this.query = new Query(this.props.element.getLockedSettings().table_query || {}, this);
     }
     const query = this.query;
     if(! this.showTable(query)){
@@ -244,7 +247,7 @@ class TableWidget extends Component {
         return<div className="altrp-scroll__vertical-track" style={style} {...props} />
       },
     };
-    if(this.props.element.getSettings('table_transpose', false)){
+    if(this.props.element.getLockedSettings('table_transpose', false)){
       scrollbarsProps.autoHeight = true;
       scrollbarsProps.autoHeightMax = 10000;
     }
@@ -253,10 +256,10 @@ class TableWidget extends Component {
       return <div children="Please Add Column"/>
     }
 
-    const TableComponent = this.props.element.getSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
+    const TableComponent = this.props.element.getLockedSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
     return <Scrollbars
         ref={this.scrollbar}
-        style={{zIndex: 99999}}
+        className="altrp_table-zIndex"
         autoHide
         autoHeightMax={30000}
         autoHeight={true}

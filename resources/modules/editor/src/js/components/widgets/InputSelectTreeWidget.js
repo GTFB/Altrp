@@ -448,7 +448,7 @@ class InputSelectTreeWidget extends Component {
       window.elementDecorator(this);
     }
     this.defaultValue =
-      this.getContent("content_default_value")
+      this.getLockedContent("content_default_value")
     let options = [];
 
     const flatOptions = [];
@@ -510,7 +510,7 @@ class InputSelectTreeWidget extends Component {
     this.popoverProps = {
       usePortal: true,
       position: 'bottom',
-      minimal: props.element.getResponsiveSetting('minimal'),
+      minimal: props.element.getResponsiveLockedSetting('minimal'),
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
@@ -518,8 +518,8 @@ class InputSelectTreeWidget extends Component {
       // this.popoverProps.boundary = '#front-app'
     }
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    if (this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
 
@@ -543,14 +543,14 @@ class InputSelectTreeWidget extends Component {
 
     /**
      * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
+     * то используем this.getLockedContent для получение этого динамического значения
      * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
 
     /**
@@ -561,7 +561,7 @@ class InputSelectTreeWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -575,7 +575,7 @@ class InputSelectTreeWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -598,7 +598,7 @@ class InputSelectTreeWidget extends Component {
    * Получить url для запросов
    */
   getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
+    let url = this.props.element.getLockedSettings("model_for_options");
 
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
@@ -619,7 +619,7 @@ class InputSelectTreeWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value",
       );
       this.setState(
@@ -641,7 +641,7 @@ class InputSelectTreeWidget extends Component {
     if (isEditor()) {
       return;
     }
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -769,7 +769,7 @@ class InputSelectTreeWidget extends Component {
       return;
     }
 
-    let newOptions = this.props.element.getResponsiveSetting('content_options') || '';
+    let newOptions = this.props.element.getResponsiveLockedSetting('content_options') || '';
     newOptions = getDataByPath(newOptions.replace('{{', '').replace('}}', ''))
     if(! _.isArray(newOptions)) {
       return;
@@ -805,10 +805,10 @@ class InputSelectTreeWidget extends Component {
         }]
       })
     }
-    if(this.props.element.getResponsiveSetting('content_options_nullable')){
+    if(this.props.element.getResponsiveLockedSetting('content_options_nullable')){
       let nullLabel = '';
-      if(this.props.element.getResponsiveSetting('nulled_option_title')){
-        nullLabel = this.props.element.getResponsiveSetting('nulled_option_title')
+      if(this.props.element.getResponsiveLockedSetting('nulled_option_title')){
+        nullLabel = this.props.element.getResponsiveLockedSetting('nulled_option_title')
       }
       options.unshift({
         value: '',
@@ -842,7 +842,7 @@ class InputSelectTreeWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -900,7 +900,7 @@ class InputSelectTreeWidget extends Component {
    * @return {JSX.Element|string}
    */
   renderRightIcon = ()=>{
-    const right_icon = this.props.element.getResponsiveSetting('right_icon')
+    const right_icon = this.props.element.getResponsiveLockedSetting('right_icon')
     if(_.isEmpty(right_icon)){
       return 'caret-down'
     }
@@ -913,7 +913,7 @@ class InputSelectTreeWidget extends Component {
    * @return {JSX.Element|null}
    */
   renderLeftIcon = ()=>{
-    const left_icon = this.props.element.getResponsiveSetting('left_icon')
+    const left_icon = this.props.element.getResponsiveLockedSetting('left_icon')
     if(_.isEmpty(left_icon)){
       return null
     }
@@ -937,8 +937,8 @@ class InputSelectTreeWidget extends Component {
   getLabel = ()=>{
     const flatOptions = this.state.flatOptions;
     let label =  flatOptions.find(o=>o.value === this.getValue())?.label || '';
-    if(! this.getValue() && this.props.element.getResponsiveSetting('content_options_nullable')){
-      label = this.props.element.getResponsiveSetting('nulled_option_title') || ''
+    if(! this.getValue() && this.props.element.getResponsiveLockedSetting('content_options_nullable')){
+      label = this.props.element.getResponsiveLockedSetting('nulled_option_title') || ''
     }
     return label
   }
@@ -971,7 +971,7 @@ class InputSelectTreeWidget extends Component {
    * @return {Promise<void>}
    */
   onClick = async ()=>{
-    if (this.props.element.getSettings("click_actions", []) && !isEditor()) {
+    if (this.props.element.getLockedSettings("click_actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
@@ -981,7 +981,7 @@ class InputSelectTreeWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         "click",
-        this.props.element.getSettings("click_actions", []),
+        this.props.element.getLockedSettings("click_actions", []),
         this.props.element
       );
     }
@@ -1012,7 +1012,7 @@ class InputSelectTreeWidget extends Component {
 
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     ) || 'top';
     switch (content_label_position_type) {
@@ -1053,7 +1053,7 @@ class InputSelectTreeWidget extends Component {
         classLabel = "";
         break;
     }
-    const content_label = this.getContent('content_label')
+    const content_label = this.getLockedContent('content_label')
     if (content_label) {
       label = (
         <div
@@ -1079,10 +1079,10 @@ class InputSelectTreeWidget extends Component {
       label = null;
     }
 
-    const placeholder = element.getResponsiveSetting('content_placeholder');
-    const content_readonly = element.getResponsiveSetting('content_readonly');
-    const no_results_text = element.getResponsiveSetting('no_results_text');
-    const s_off = element.getResponsiveSetting('s_off');
+    const placeholder = element.getResponsiveLockedSetting('content_placeholder');
+    const content_readonly = element.getResponsiveLockedSetting('content_readonly');
+    const no_results_text = element.getResponsiveLockedSetting('no_results_text');
+    const s_off = element.getResponsiveLockedSetting('s_off');
 
     const inputProps = {
       placeholder,
@@ -1090,8 +1090,8 @@ class InputSelectTreeWidget extends Component {
 
     let input = null;
 
-    const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
-    const position_css_id = this.getContent('position_css_id')
+    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    const position_css_id = this.getLockedContent('position_css_id')
 
     let body = isEditor() ?
       document.getElementById("editorContent").contentWindow.document.body

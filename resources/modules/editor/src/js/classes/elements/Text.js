@@ -49,7 +49,8 @@ class Text extends BaseElement {
 
     this.addControl('content', {
       label: 'Path To Content',
-      type: CONTROLLER_TEXTAREA
+      type: CONTROLLER_TEXTAREA,
+      locked: true,
     })
 
     this.endControlSection()
@@ -156,11 +157,13 @@ class Text extends BaseElement {
     this.addControl("text_advanced_tooltip_active", {
       type: CONTROLLER_SWITCHER,
       label: "Tooltip Active",
+      locked: true,
     });
 
     this.addControl("text_advanced_tooltip_label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
+      locked: true,
     });
 
     this.addControl("text_advanced_tooltip_color", {

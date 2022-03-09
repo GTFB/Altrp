@@ -5,7 +5,6 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
-import getCookie from "../../../../editor/src/js/helpers/getCookie";
 const {
   altrpLogin,
   altrpLogout,
@@ -312,6 +311,19 @@ class AltrpAction extends AltrpModel {
         break;
       case 'oauth': {
         result = await this.doActionOAuth();
+      }
+        break;
+      case 'metamask_connect': {
+        result = await this.metaMaskConnect();
+      }
+        break;
+      case 'socket_emit': {
+        result = await this.doActionSocketEmit();
+
+      }
+        break;
+      case 'socket_receiver': {
+        result = this.doActionSocketReceiver();
 
       }
         break;
@@ -356,6 +368,10 @@ class AltrpAction extends AltrpModel {
    * @return {object}
    */
   doActionSocketReceiver() {
+    if(!window.io) {
+      window.io = io(`:${process.env.SOCKETS_KEY}`)
+      window
+    }
 
     let name = ""
 
@@ -377,26 +393,6 @@ class AltrpAction extends AltrpModel {
       }
 
     }
-
-
-    if(!window.io) {
-      window.io = io( {
-        auth: {
-          key: name,
-          xsrf_token: getCookie('XSRF-TOKEN'),
-          adonis_session: getCookie('adonis-session')
-        },
-      })
-      window
-    }
-
-    window.io.on("message", (...data) => {
-      console.log(data)
-    })
-
-    window.io.on("connection", (socket) => {
-      socket.data.asdasdas = "asdasdasdass"
-    })
 
     console.log(name)
     window.io.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
@@ -1311,6 +1307,50 @@ class AltrpAction extends AltrpModel {
     conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return {success: res};
+  }
+
+  metaMaskConnect = async () => {
+    let path = this.getProperty('path');
+    let currentValue = getDataByPath(path); // не получаю значение, приходит всегда null
+
+    if (!window.ethereum) {
+
+      return {
+        success: false
+      };
+    }
+
+    try {
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+      if (accounts.length > 0) {
+
+        return {
+          success: false
+        };
+      } else {
+        try {
+          const requestAccounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          setDataByPath(path, requestAccounts[0])
+          return {
+            success: true
+          };
+        } catch (e) {
+          console.error(e);
+          return {
+            success: false
+          };
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      return {
+        success: false
+      };
+    }
   }
 
   /**

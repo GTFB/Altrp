@@ -256,10 +256,10 @@ class GlobalColors extends Component {
                     }}
                     onChange={e => this.nameChange(e.target.value, item.id)}
                     value={item.name}
-                  ></InputGroup>
+                  />
 
                   <Button onClick={e => this.deleteItem(item.id)}>
-                    <Icon icon="trash"></Icon>
+                    <Icon icon="trash"/>
                   </Button>
                   <Button
                     onClick={e => this.toggleColorPanel(item.id)}
@@ -277,7 +277,7 @@ class GlobalColors extends Component {
                   </Button>
                 </ControlGroup>
                 <div
-                  className={!item.colorPanelOpen ? " control-color-hide" : ""}
+                  className={!item.colorPanelOpen ? " control-color-hide" : "control-color-open__global-colors"}
                 >
                   <SketchPicker
                     presetColors={[]}
@@ -287,7 +287,7 @@ class GlobalColors extends Component {
                       padding: 0,
                       boxShadow: "none"
                     }}
-                  ></SketchPicker>
+                  />
                 </div>
               </React.Fragment>
             );
@@ -295,9 +295,9 @@ class GlobalColors extends Component {
         ) : (
           <div>Color list empty</div>
         )}
-        <Divider></Divider>
+        <Divider/>
         <Button style={{ width: "100%" }} onClick={this.addItem}>
-          Add Item
+          Add Color
         </Button>
       </Panel>
     );

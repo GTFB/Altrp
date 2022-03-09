@@ -35,23 +35,27 @@ class AdminTable extends Component {
     const {
       searchTables,
       sortingHandler,
-      radiusTable, sortingField, filterPropsCategories, tableHalf } = this.props;
+      radiusTable, sortingField, filterPropsCategories, arrayChecked, deleteCheckedLine, tableHalf } = this.props;
     const { filter } = this.state
-
 
     return (
       /*Search всех компонент*/
       <div className={"admin-table" + (radiusTable ? " admin-table-noRadius" : "")}>
 
         {searchTables && (
-          <div className={filterPropsCategories ? "admin-table-top admin-table-top__flex" : "admin-table-top"}>
-            <form className={filterPropsCategories ? "admin-table-top__form" : "admin-table-top__form-off"} onSubmit={searchTables.submit}>
+          <div className={filterPropsCategories || arrayChecked?.length > 0 ? "admin-table-top admin-table-top__flex" : "admin-table-top"}>
+            <form className={filterPropsCategories || arrayChecked?.length > 0 ? "admin-table-top__form" : "admin-table-top__form-off"} onSubmit={searchTables.submit}>
               <InputGroup className="form-tables" value={searchTables.value} onChange={searchTables.change} />
               <Search />
               <button className="btn btn_bare admin-users-button btn__tables">Search</button>
             </form>
             {filterPropsCategories && (
               <span onClick={this.toggleFilterCategories} className="showFilter">{filter ? "Close filter categories" : "Open filter categories"}</span>
+            )}
+            {(arrayChecked?.length > 0 && !filterPropsCategories) && (
+              <div onClick={deleteCheckedLine} className="admin-table__delete-icon">
+                Delete
+              </div>
             )}
           </div>
         )}
@@ -61,7 +65,7 @@ class AdminTable extends Component {
             <span className="heading__categories">Categories:</span>
             <span onClick={() => filterPropsCategories.getCategories(null, "All")} className="admin-filters__current">
               <a className={filterPropsCategories.activeCategory === "All" ? "admin-filters__link active-category" : "admin-filters__link"}>
-                All ({filterPropsCategories.DidMountArray.length || "0"})
+                All
               </a>
             </span>
             {filterPropsCategories.categoryOptions.map(item => {
@@ -84,9 +88,19 @@ class AdminTable extends Component {
         <table>
           <thead className="admin-table-head">
             <tr className="admin-table-row">
-              <td className="admin-table__td admin-table__td_check">
-                <input type="checkbox" />
-              </td>
+              {this.props.arrayChecked ? (
+                <td className="admin-table__td admin-table__td_check">
+                  <input
+                    onChange={(e) => this.props.allChecked(e)}
+                    checked={this.props.arrayChecked.length === (this.props.itemsCount || 1) }
+                    type="checkbox"
+                  />
+                </td>
+              ) : (
+                <td className="admin-table__td admin-table__td_check">
+                  <input type="checkbox" />
+                </td>
+              )}
               {this.props.columns.map(column =>
                 sortingHandler ? (
                   <SortableHeader
@@ -97,7 +111,7 @@ class AdminTable extends Component {
                   />
                 ) : (
                   <td
-                    className="admin-table__td "
+                    className={`admin-table__td ${column.name === 'image' ? ' admin-table__td-image-thead' : ''}`}
                     key={column.name}
                     title={column.name}
                   >

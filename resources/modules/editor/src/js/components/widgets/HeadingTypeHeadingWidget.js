@@ -59,8 +59,8 @@ class HeadingTypeHeadingWidget extends Component {
     let heading;
 
     let modelData = this.props.element.getCurrentModel().getData();
-    const background_image = this.props.element.getSettings('background_image', {});
-    let text = this.getContent('text');
+    const background_image = this.props.element.getLockedSettings('background_image', {});
+    let text = this.getLockedContent('text');
     let link;
     const className = "altrp-heading altrp-heading--link " + (this.state.settings.position_css_classes || ' ') + (background_image.url ? ' altrp-background-image' : '');
 
@@ -72,7 +72,7 @@ class HeadingTypeHeadingWidget extends Component {
       };
 
       linkProps.tag = this.state.settings.link_link.tag;
-      linkProps.creativelink = this.getContent("heading_settings_html_tag") !== "p" ? this.getContent("creative_link_controller") : null;
+      linkProps.creativelink = this.getLockedContent("heading_settings_html_tag") !== "p" ? this.getLockedContent("creative_link_controller") : null;
 
       if (this.state.settings.link_link.openInNew) {
         linkProps.target = '_black';
