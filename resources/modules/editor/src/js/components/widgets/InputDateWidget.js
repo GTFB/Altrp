@@ -551,6 +551,8 @@ class InputDateWidget extends Component {
     const content_label_position_type = this.props.element.getResponsiveSetting(
       "content_label_position_type"
     );
+    const arrayDates = moment().daysInMonth()
+    console.log(arrayDates)
 
     switch (content_label_position_type) {
       case "top":
