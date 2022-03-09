@@ -158,4 +158,31 @@ class CustomizerController extends Controller
     return response()->json( [ 'success' => true, ], 200, [], JSON_UNESCAPED_UNICODE );
 
   }
+
+  /**
+   * @param string $id
+   * @return Json
+   */
+  public function exportCustomizer( string $id )
+  {
+
+    if( Uuid::isValid( $id ) ){
+      $customizer = Customizer::where( 'guid', $id )->first();
+    } else {
+      $customizer = Customizer::find( $id );
+    }
+    /**
+     * @var $template Template
+     */
+    if( ! $customizer ){
+      return response()
+        ->json(
+          ['success' => false, 'message' => 'Customizer not Found'],
+          404,
+          [],
+          JSON_UNESCAPED_UNICODE );
+    }
+
+    return response()->json( $customizer->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
+  }
 }

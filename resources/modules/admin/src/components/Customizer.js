@@ -3,7 +3,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
-import {redirect, titleToName} from "../js/helpers";
+import {redirect, titleToName, objectDeepCleaning} from "../js/helpers";
 import {altrpRandomId} from "../../../front-app/src/js/helpers";
 import UserTopPanel from "./UserTopPanel";
 import { withRouter } from 'react-router-dom'
@@ -25,8 +25,37 @@ class Customizer extends Component {
     });
 
     this.itemsPerPage = 10;
+    this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
 
     this.addNew = this.addNew.bind(this);
+  }
+
+  /** @function generateTemplateJSON
+   * Generating customizer file content to JSON
+   * @param {object} customizer data from server
+   * @return {string} JSON string
+   */
+  generateTemplateJSON(customizer) {
+    return JSON.stringify({
+      name: customizer.name,
+      title: customizer.title,
+      type: customizer.type,
+      guid: customizer.guid,
+      data: customizer.data,
+    });
+  }
+
+  /** @function downloadJSONFile
+   * Download file
+   * @param {object} template Данные, получаемые с сервера
+   */
+  downloadJSONFile(customizer) {
+    const element = document.createElement("a");
+    const file = new Blob([this.generateTemplateJSON(customizer)], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `${customizer.name}.json`;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
   }
 
   async componentDidMount() {
@@ -179,6 +208,12 @@ class Customizer extends Component {
                 data: {power: 1},
                 after: () => this.fetchData(),
                 title: "Enable"
+              }, {
+                tag: 'button',
+                route: '/admin/ajax/exports/customizers',
+                method: 'get',
+                after: response => this.downloadJSONFile(response),
+                title: 'Export'
               }, {
                 tag: "button",
                 route: "/admin/ajax/customizers/:id",
