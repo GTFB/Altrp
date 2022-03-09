@@ -55,6 +55,7 @@
         /* <![CDATA[ */
         {{=<% %>=}}
         window['h-altrp'] = true;
+        window.isProd = {{{ isProd }}}
         window.altrpPages = {{{ JSON.stringify( pages) }}};
         window.altrp = {{{JSON.stringify(_altrp)}}};
         window.altrpElementsLists = [{{{ elements_list.map(e=>`'${e}'`) }}}];

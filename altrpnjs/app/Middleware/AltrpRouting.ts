@@ -1,6 +1,3 @@
-// import {minify} from'html-minifier'
-// import prepareContext from "../../helpers/prepareContext";
-import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
@@ -22,6 +19,9 @@ import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import Source from "App/Models/Source";
+import getCurrentDevice from "../../helpers/getCurrentDevice";
+import isProd from "../../helpers/isProd";
+import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES";
 // import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
@@ -55,16 +55,11 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
-    if (url === '/altrp-login'
-      || url === '/login'
-      || url === '/data/current-user' ||
-      url === "/modules/admin/admin.js" ||
-      url === "/modules/front-app/front-app.css" ||
-      url === "/sw.js" ||
-      url === "/sw/workbox-sw.js"
-    ) {
-      await next()
-      return
+    for(const route of IGNORED_ROUTES) {
+      if(route === url) {
+        await next()
+        return
+      }
     }
 
     /**
@@ -176,6 +171,7 @@ export default class AltrpRouting {
             is_admin,
             pages,
             csrfToken: httpContext.request.csrfToken,
+            isProd: isProd(),
             page_areas: pageAreas,
             page_id: page.id,
             altrpElementsLists,
@@ -233,11 +229,13 @@ export default class AltrpRouting {
         is_admin,
         pages,
         csrfToken: httpContext.request.csrfToken,
+        isProd: isProd(),
         preload_content,
         page_areas: pageAreas,
         page_id: page.id,
         altrpElementsLists,
         device: getCurrentDevice(httpContext.request),
+
         elements_list: altrpElementsLists,
         model_data,
         fonts: this.getFonts(),

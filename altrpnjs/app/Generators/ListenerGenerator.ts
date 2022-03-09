@@ -25,32 +25,45 @@ export default class ListenerGenerator extends BaseGenerator {
   private static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpListener.stub`)
   private model: Model
 
-  public async run(model, data) {
-    if(!model || !data) {
-      return
-    }
-
-    if(!data.data.socket_type || !data.data.socket_listener) {
+  public async run(model, type) {
+    if(!model || !type) {
       return
     }
 
     this.model = model;
 
-    const dir = ListenerGenerator.directory + this.model.name;
+    const dir = ListenerGenerator.directory + "altrp_models" + "." + this.model.name + "." + type;
 
     if (!fs.existsSync(dir)){
       fs.mkdirSync(dir);
     }
 
-    const listener = data.data.socket_listener
+    const listener = type
 
-    console.log(this.model.name + ":" + listener + ListenerGenerator.ext)
     await this.addFile( listener + ListenerGenerator.ext)
       .destinationDir(dir)
       .stub(ListenerGenerator.template)
       .apply({
         listener,
       });
+  }
+
+  public async delete(model, type) {
+    if(!model || !type) {
+      return
+    }
+
+    this.model = model;
+
+    const dir = ListenerGenerator.directory + "altrp_models" + "." + this.model.name + "." + type;
+
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
+
+    const listener = type
+
+    fs.unlinkSync(dir + "\\" + listener + ListenerGenerator.ext)
   }
 
   public async runAll(model) {
