@@ -41,6 +41,7 @@ export function advancedTabControllers(element) {
     label: 'Dynamic Element',
     type: CONTROLLER_SWITCHER,
     responsive: false,
+    locked: true,
     stateless: true,
   });
 

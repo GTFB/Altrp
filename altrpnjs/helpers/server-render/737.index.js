@@ -2673,6 +2673,66 @@ Backoff.prototype.setJitter = function (jitter) {
 
 /***/ }),
 
+/***/ "./node_modules/bufferutil/fallback.js":
+/***/ ((module) => {
+
+"use strict";
+
+/**
+ * Masks a buffer using the given mask.
+ *
+ * @param {Buffer} source The buffer to mask
+ * @param {Buffer} mask The mask to use
+ * @param {Buffer} output The buffer where to store the result
+ * @param {Number} offset The offset at which to start writing
+ * @param {Number} length The number of bytes to mask.
+ * @public
+ */
+
+const mask = (source, mask, output, offset, length) => {
+  for (var i = 0; i < length; i++) {
+    output[offset + i] = source[i] ^ mask[i & 3];
+  }
+};
+/**
+ * Unmasks a buffer using the given mask.
+ *
+ * @param {Buffer} buffer The buffer to unmask
+ * @param {Buffer} mask The mask to use
+ * @public
+ */
+
+
+const unmask = (buffer, mask) => {
+  // Required until https://github.com/nodejs/node/issues/9006 is resolved.
+  const length = buffer.length;
+
+  for (var i = 0; i < length; i++) {
+    buffer[i] ^= mask[i & 3];
+  }
+};
+
+module.exports = {
+  mask,
+  unmask
+};
+
+/***/ }),
+
+/***/ "./node_modules/bufferutil/index.js":
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+try {
+  module.exports = __webpack_require__("./node_modules/node-gyp-build/index.js")(__dirname);
+} catch (e) {
+  module.exports = __webpack_require__("./node_modules/bufferutil/fallback.js");
+}
+
+/***/ }),
+
 /***/ "./node_modules/debug/src/browser.js":
 /***/ ((module, exports, __webpack_require__) => {
 
@@ -3438,7 +3498,7 @@ function toBuffer(data) {
 }
 
 try {
-  const bufferUtil = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module 'bufferutil'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+  const bufferUtil = __webpack_require__("./node_modules/bufferutil/index.js");
 
   module.exports = {
     concat,
@@ -5869,7 +5929,7 @@ function _isValidUTF8(buf) {
 }
 
 try {
-  const isValidUTF8 = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module 'utf-8-validate'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+  const isValidUTF8 = __webpack_require__("./node_modules/utf-8-validate/index.js");
 
   module.exports = {
     isValidStatusCode,
@@ -7898,9 +7958,9 @@ RedirectableRequest.prototype._processResponse = function (response) {
     debug("redirecting to", redirectUrl);
     this._isRedirect = true;
     var redirectUrlParts = url.parse(redirectUrl);
-    Object.assign(this._options, redirectUrlParts); // Drop the confidential headers when redirecting to another domain
+    Object.assign(this._options, redirectUrlParts); // Drop confidential headers when redirecting to another scheme:domain
 
-    if (!(redirectUrlParts.host === currentHost || isSubdomainOf(redirectUrlParts.host, currentHost))) {
+    if (redirectUrlParts.protocol !== currentUrlParts.protocol || !isSameOrSubdomain(redirectUrlParts.host, currentHost)) {
       removeMatchingHeaders(/^(?:authorization|cookie)$/i, this._options.headers);
     } // Evaluate the beforeRedirect callback
 
@@ -8081,7 +8141,11 @@ function abortRequest(request) {
   request.abort();
 }
 
-function isSubdomainOf(subdomain, domain) {
+function isSameOrSubdomain(subdomain, domain) {
+  if (subdomain === domain) {
+    return true;
+  }
+
   const dot = subdomain.length - domain.length - 1;
   return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
 } // Exports
@@ -8293,6 +8357,203 @@ function plural(ms, msAbs, n, name) {
   var isPlural = msAbs >= n * 1.5;
   return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
 }
+
+/***/ }),
+
+/***/ "./node_modules/node-gyp-build/index.js":
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var fs = __webpack_require__("fs");
+
+var path = __webpack_require__("path");
+
+var os = __webpack_require__("os"); // Workaround to fix webpack's build warnings: 'the request of a dependency is an expression'
+
+
+var runtimeRequire =  true ? require : 0; // eslint-disable-line
+
+var vars = process.config && process.config.variables || {};
+var prebuildsOnly = !!process.env.PREBUILDS_ONLY;
+var abi = process.versions.modules; // TODO: support old node where this is undef
+
+var runtime = isElectron() ? 'electron' : 'node';
+var arch = os.arch();
+var platform = os.platform();
+var libc = process.env.LIBC || (isAlpine(platform) ? 'musl' : 'glibc');
+var armv = process.env.ARM_VERSION || (arch === 'arm64' ? '8' : vars.arm_version) || '';
+var uv = (process.versions.uv || '').split('.')[0];
+module.exports = load;
+
+function load(dir) {
+  return runtimeRequire(load.path(dir));
+}
+
+load.path = function (dir) {
+  dir = path.resolve(dir || '.');
+
+  try {
+    var name = runtimeRequire(path.join(dir, 'package.json')).name.toUpperCase().replace(/-/g, '_');
+    if (process.env[name + '_PREBUILD']) dir = process.env[name + '_PREBUILD'];
+  } catch (err) {}
+
+  if (!prebuildsOnly) {
+    var release = getFirst(path.join(dir, 'build/Release'), matchBuild);
+    if (release) return release;
+    var debug = getFirst(path.join(dir, 'build/Debug'), matchBuild);
+    if (debug) return debug;
+  }
+
+  var prebuild = resolve(dir);
+  if (prebuild) return prebuild;
+  var nearby = resolve(path.dirname(process.execPath));
+  if (nearby) return nearby;
+  var target = ['platform=' + platform, 'arch=' + arch, 'runtime=' + runtime, 'abi=' + abi, 'uv=' + uv, armv ? 'armv=' + armv : '', 'libc=' + libc, 'node=' + process.versions.node, process.versions.electron ? 'electron=' + process.versions.electron : '',  true ? 'webpack=true' : 0 // eslint-disable-line
+  ].filter(Boolean).join(' ');
+  throw new Error('No native build was found for ' + target + '\n    loaded from: ' + dir + '\n');
+
+  function resolve(dir) {
+    // Find matching "prebuilds/<platform>-<arch>" directory
+    var tuples = readdirSync(path.join(dir, 'prebuilds')).map(parseTuple);
+    var tuple = tuples.filter(matchTuple(platform, arch)).sort(compareTuples)[0];
+    if (!tuple) return; // Find most specific flavor first
+
+    var prebuilds = path.join(dir, 'prebuilds', tuple.name);
+    var parsed = readdirSync(prebuilds).map(parseTags);
+    var candidates = parsed.filter(matchTags(runtime, abi));
+    var winner = candidates.sort(compareTags(runtime))[0];
+    if (winner) return path.join(prebuilds, winner.file);
+  }
+};
+
+function readdirSync(dir) {
+  try {
+    return fs.readdirSync(dir);
+  } catch (err) {
+    return [];
+  }
+}
+
+function getFirst(dir, filter) {
+  var files = readdirSync(dir).filter(filter);
+  return files[0] && path.join(dir, files[0]);
+}
+
+function matchBuild(name) {
+  return /\.node$/.test(name);
+}
+
+function parseTuple(name) {
+  // Example: darwin-x64+arm64
+  var arr = name.split('-');
+  if (arr.length !== 2) return;
+  var platform = arr[0];
+  var architectures = arr[1].split('+');
+  if (!platform) return;
+  if (!architectures.length) return;
+  if (!architectures.every(Boolean)) return;
+  return {
+    name,
+    platform,
+    architectures
+  };
+}
+
+function matchTuple(platform, arch) {
+  return function (tuple) {
+    if (tuple == null) return false;
+    if (tuple.platform !== platform) return false;
+    return tuple.architectures.includes(arch);
+  };
+}
+
+function compareTuples(a, b) {
+  // Prefer single-arch prebuilds over multi-arch
+  return a.architectures.length - b.architectures.length;
+}
+
+function parseTags(file) {
+  var arr = file.split('.');
+  var extension = arr.pop();
+  var tags = {
+    file: file,
+    specificity: 0
+  };
+  if (extension !== 'node') return;
+
+  for (var i = 0; i < arr.length; i++) {
+    var tag = arr[i];
+
+    if (tag === 'node' || tag === 'electron' || tag === 'node-webkit') {
+      tags.runtime = tag;
+    } else if (tag === 'napi') {
+      tags.napi = true;
+    } else if (tag.slice(0, 3) === 'abi') {
+      tags.abi = tag.slice(3);
+    } else if (tag.slice(0, 2) === 'uv') {
+      tags.uv = tag.slice(2);
+    } else if (tag.slice(0, 4) === 'armv') {
+      tags.armv = tag.slice(4);
+    } else if (tag === 'glibc' || tag === 'musl') {
+      tags.libc = tag;
+    } else {
+      continue;
+    }
+
+    tags.specificity++;
+  }
+
+  return tags;
+}
+
+function matchTags(runtime, abi) {
+  return function (tags) {
+    if (tags == null) return false;
+    if (tags.runtime !== runtime && !runtimeAgnostic(tags)) return false;
+    if (tags.abi !== abi && !tags.napi) return false;
+    if (tags.uv && tags.uv !== uv) return false;
+    if (tags.armv && tags.armv !== armv) return false;
+    if (tags.libc && tags.libc !== libc) return false;
+    return true;
+  };
+}
+
+function runtimeAgnostic(tags) {
+  return tags.runtime === 'node' && tags.napi;
+}
+
+function compareTags(runtime) {
+  // Precedence: non-agnostic runtime, abi over napi, then by specificity.
+  return function (a, b) {
+    if (a.runtime !== b.runtime) {
+      return a.runtime === runtime ? -1 : 1;
+    } else if (a.abi !== b.abi) {
+      return a.abi ? -1 : 1;
+    } else if (a.specificity !== b.specificity) {
+      return a.specificity > b.specificity ? -1 : 1;
+    } else {
+      return 0;
+    }
+  };
+}
+
+function isElectron() {
+  if (process.versions && process.versions.electron) return true;
+  if (process.env.ELECTRON_RUN_AS_NODE) return true;
+  return typeof window !== 'undefined' && window.process && window.process.type === 'renderer';
+}
+
+function isAlpine(platform) {
+  return platform === 'linux' && fs.existsSync('/etc/alpine-release');
+} // Exposed for unit tests
+// TODO: move to lib
+
+
+load.parseTags = parseTags;
+load.matchTags = matchTags;
+load.compareTags = compareTags;
+load.parseTuple = parseTuple;
+load.matchTuple = matchTuple;
+load.compareTuples = compareTuples;
 
 /***/ }),
 
@@ -11890,6 +12151,81 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/utf-8-validate/fallback.js":
+/***/ ((module) => {
+
+"use strict";
+
+/**
+ * Checks if a given buffer contains only correct UTF-8.
+ * Ported from https://www.cl.cam.ac.uk/%7Emgk25/ucs/utf8_check.c by
+ * Markus Kuhn.
+ *
+ * @param {Buffer} buf The buffer to check
+ * @return {Boolean} `true` if `buf` contains only correct UTF-8, else `false`
+ * @public
+ */
+
+function isValidUTF8(buf) {
+  const len = buf.length;
+  let i = 0;
+
+  while (i < len) {
+    if ((buf[i] & 0x80) === 0x00) {
+      // 0xxxxxxx
+      i++;
+    } else if ((buf[i] & 0xe0) === 0xc0) {
+      // 110xxxxx 10xxxxxx
+      if (i + 1 === len || (buf[i + 1] & 0xc0) !== 0x80 || (buf[i] & 0xfe) === 0xc0 // overlong
+      ) {
+        return false;
+      }
+
+      i += 2;
+    } else if ((buf[i] & 0xf0) === 0xe0) {
+      // 1110xxxx 10xxxxxx 10xxxxxx
+      if (i + 2 >= len || (buf[i + 1] & 0xc0) !== 0x80 || (buf[i + 2] & 0xc0) !== 0x80 || buf[i] === 0xe0 && (buf[i + 1] & 0xe0) === 0x80 || // overlong
+      buf[i] === 0xed && (buf[i + 1] & 0xe0) === 0xa0 // surrogate (U+D800 - U+DFFF)
+      ) {
+        return false;
+      }
+
+      i += 3;
+    } else if ((buf[i] & 0xf8) === 0xf0) {
+      // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+      if (i + 3 >= len || (buf[i + 1] & 0xc0) !== 0x80 || (buf[i + 2] & 0xc0) !== 0x80 || (buf[i + 3] & 0xc0) !== 0x80 || buf[i] === 0xf0 && (buf[i + 1] & 0xf0) === 0x80 || // overlong
+      buf[i] === 0xf4 && buf[i + 1] > 0x8f || buf[i] > 0xf4 // > U+10FFFF
+      ) {
+        return false;
+      }
+
+      i += 4;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+module.exports = isValidUTF8;
+
+/***/ }),
+
+/***/ "./node_modules/utf-8-validate/index.js":
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+try {
+  module.exports = __webpack_require__("./node_modules/node-gyp-build/index.js")(__dirname);
+} catch (e) {
+  module.exports = __webpack_require__("./node_modules/utf-8-validate/fallback.js");
+}
+
+/***/ }),
+
 /***/ "./node_modules/uuid/index.js":
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -12805,14 +13141,15 @@ module.exports = yeast;
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _editor_src_js_classes_AltrpModel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./resources/modules/editor/src/js/classes/AltrpModel.js");
-/* harmony import */ var _store_popup_trigger_actions__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("./resources/modules/front-app/src/js/store/popup-trigger/actions.js");
+/* harmony import */ var _store_popup_trigger_actions__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("./resources/modules/front-app/src/js/store/popup-trigger/actions.js");
 /* harmony import */ var _helpers_sendEmail__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("./resources/modules/front-app/src/js/helpers/sendEmail.js");
-/* harmony import */ var _store_current_model_actions__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("./resources/modules/front-app/src/js/store/current-model/actions.js");
+/* harmony import */ var _store_current_model_actions__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__("./resources/modules/front-app/src/js/store/current-model/actions.js");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("./node_modules/uuid/index.js");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_11__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("./node_modules/socket.io-client/build/esm-debug/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__("./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var _editor_src_js_helpers_getCookie__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("./resources/modules/editor/src/js/helpers/getCookie.js");
 
 
 
@@ -12837,6 +13174,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -12905,16 +13243,17 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
               });
 
             case 4:
-              _context.next = 6;
+              _context.prev = 4;
+              _context.next = 7;
               return window.ethereum.request({
                 method: "eth_accounts"
               });
 
-            case 6:
+            case 7:
               accounts = _context.sent;
 
               if (!(accounts.length > 0)) {
-                _context.next = 11;
+                _context.next = 12;
                 break;
               }
 
@@ -12922,25 +13261,46 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 success: false
               });
 
-            case 11:
-              _context.next = 13;
+            case 12:
+              _context.prev = 12;
+              _context.next = 15;
               return window.ethereum.request({
                 method: "eth_requestAccounts"
               });
 
-            case 13:
+            case 15:
               requestAccounts = _context.sent;
               setDataByPath(path, requestAccounts[0]);
               return _context.abrupt("return", {
                 success: true
               });
 
-            case 16:
+            case 20:
+              _context.prev = 20;
+              _context.t0 = _context["catch"](12);
+              console.error(_context.t0);
+              return _context.abrupt("return", {
+                success: false
+              });
+
+            case 24:
+              _context.next = 30;
+              break;
+
+            case 26:
+              _context.prev = 26;
+              _context.t1 = _context["catch"](4);
+              console.error(_context.t1);
+              return _context.abrupt("return", {
+                success: false
+              });
+
+            case 30:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, null, [[4, 26], [12, 20]]);
     }));
 
     _this.setProperty('_widgetId', widgetId);
@@ -13151,7 +13511,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 5:
                 _context3.t0 = this.getType();
-                _context3.next = _context3.t0 === 'form' ? 8 : _context3.t0 === 'delay' ? 12 : _context3.t0 === 'email' ? 16 : _context3.t0 === 'redirect' ? 20 : _context3.t0 === 'toggle_element' ? 24 : _context3.t0 === 'toggle_popup' ? 28 : _context3.t0 === 'print_page' ? 32 : _context3.t0 === 'print_elements' ? 36 : _context3.t0 === 'scroll_to_element' ? 40 : _context3.t0 === 'scroll_to_top' ? 44 : _context3.t0 === 'scroll_to_bottom' ? 48 : _context3.t0 === 'trigger' ? 52 : _context3.t0 === 'page_to_pdf' ? 56 : _context3.t0 === 'elements_to_pdf' ? 60 : _context3.t0 === 'data_to_csv' ? 64 : _context3.t0 === 'table_to_csv' ? 68 : _context3.t0 === 'table_to_xml' ? 72 : _context3.t0 === 'table_to_xls' ? 76 : _context3.t0 === 'login' ? 80 : _context3.t0 === 'logout' ? 84 : _context3.t0 === 'set_data' ? 88 : _context3.t0 === 'update_current_datasources' ? 92 : _context3.t0 === 'update_current_model' ? 96 : _context3.t0 === 'forms_manipulate' ? 100 : _context3.t0 === 'custom_code' ? 104 : _context3.t0 === 'play_sound' ? 108 : _context3.t0 === 'condition' ? 112 : _context3.t0 === 'vi_toggle' ? 116 : _context3.t0 === 'oauth' ? 120 : _context3.t0 === 'metamask_connect' ? 124 : _context3.t0 === 'socket_emit' ? 128 : _context3.t0 === 'socket_receiver' ? 132 : 134;
+                _context3.next = _context3.t0 === 'form' ? 8 : _context3.t0 === 'delay' ? 12 : _context3.t0 === 'email' ? 16 : _context3.t0 === 'redirect' ? 20 : _context3.t0 === 'toggle_element' ? 24 : _context3.t0 === 'toggle_popup' ? 28 : _context3.t0 === 'print_page' ? 32 : _context3.t0 === 'print_elements' ? 36 : _context3.t0 === 'scroll_to_element' ? 40 : _context3.t0 === 'scroll_to_top' ? 44 : _context3.t0 === 'scroll_to_bottom' ? 48 : _context3.t0 === 'trigger' ? 52 : _context3.t0 === 'page_to_pdf' ? 56 : _context3.t0 === 'elements_to_pdf' ? 60 : _context3.t0 === 'data_to_csv' ? 64 : _context3.t0 === 'table_to_csv' ? 68 : _context3.t0 === 'table_to_xml' ? 72 : _context3.t0 === 'table_to_xls' ? 76 : _context3.t0 === 'login' ? 80 : _context3.t0 === 'logout' ? 84 : _context3.t0 === 'set_data' ? 88 : _context3.t0 === 'update_current_datasources' ? 92 : _context3.t0 === 'update_current_model' ? 96 : _context3.t0 === 'forms_manipulate' ? 100 : _context3.t0 === 'custom_code' ? 104 : _context3.t0 === 'play_sound' ? 108 : _context3.t0 === 'condition' ? 112 : _context3.t0 === 'vi_toggle' ? 116 : _context3.t0 === 'oauth' ? 120 : 124;
                 break;
 
               case 8:
@@ -13160,7 +13520,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 10:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 12:
                 _context3.next = 14;
@@ -13168,7 +13528,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 14:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 16:
                 _context3.next = 18;
@@ -13176,7 +13536,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 18:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 20:
                 _context3.next = 22;
@@ -13184,7 +13544,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 22:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 24:
                 _context3.next = 26;
@@ -13192,7 +13552,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 26:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 28:
                 _context3.next = 30;
@@ -13200,7 +13560,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 30:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 32:
                 _context3.next = 34;
@@ -13208,7 +13568,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 34:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 36:
                 _context3.next = 38;
@@ -13216,7 +13576,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 38:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 40:
                 _context3.next = 42;
@@ -13224,7 +13584,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 42:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 44:
                 _context3.next = 46;
@@ -13232,7 +13592,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 46:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 48:
                 _context3.next = 50;
@@ -13240,7 +13600,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 50:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 52:
                 _context3.next = 54;
@@ -13248,7 +13608,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 54:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 56:
                 _context3.next = 58;
@@ -13256,7 +13616,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 58:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 60:
                 _context3.next = 62;
@@ -13264,7 +13624,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 62:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 64:
                 _context3.next = 66;
@@ -13272,7 +13632,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 66:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 68:
                 _context3.next = 70;
@@ -13280,7 +13640,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 70:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 72:
                 _context3.next = 74;
@@ -13288,7 +13648,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 74:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 76:
                 _context3.next = 78;
@@ -13296,7 +13656,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 78:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 80:
                 _context3.next = 82;
@@ -13304,7 +13664,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 82:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 84:
                 _context3.next = 86;
@@ -13312,7 +13672,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 86:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 88:
                 _context3.next = 90;
@@ -13320,7 +13680,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 90:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 92:
                 _context3.next = 94;
@@ -13328,7 +13688,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 94:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 96:
                 _context3.next = 98;
@@ -13336,7 +13696,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 98:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 100:
                 _context3.next = 102;
@@ -13344,7 +13704,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 102:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 104:
                 _context3.next = 106;
@@ -13352,7 +13712,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 106:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 108:
                 _context3.next = 110;
@@ -13360,7 +13720,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 110:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 112:
                 _context3.next = 114;
@@ -13368,7 +13728,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 114:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 116:
                 _context3.next = 118;
@@ -13376,7 +13736,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 118:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 120:
                 _context3.next = 122;
@@ -13384,29 +13744,9 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 122:
                 result = _context3.sent;
-                return _context3.abrupt("break", 134);
+                return _context3.abrupt("break", 124);
 
               case 124:
-                _context3.next = 126;
-                return this.metaMaskConnect();
-
-              case 126:
-                result = _context3.sent;
-                return _context3.abrupt("break", 134);
-
-              case 128:
-                _context3.next = 130;
-                return this.doActionSocketEmit();
-
-              case 130:
-                result = _context3.sent;
-                return _context3.abrupt("break", 134);
-
-              case 132:
-                result = this.doActionSocketReceiver();
-                return _context3.abrupt("break", 134);
-
-              case 134:
                 alertText = '';
 
                 if (result.success) {
@@ -13422,7 +13762,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
                 return _context3.abrupt("return", result);
 
-              case 138:
+              case 128:
               case "end":
                 return _context3.stop();
             }
@@ -13489,11 +13829,6 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "doActionSocketReceiver",
     value: function doActionSocketReceiver() {
-      if (!window.io) {
-        window.io = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_12__.io)(":".concat(process.env.SOCKETS_KEY));
-        window;
-      }
-
       var name = "";
 
       if (this.getProperty("socket_type") === "custom") {
@@ -13515,6 +13850,27 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
         }
       }
 
+      if (!window.io) {
+        window.io = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_12__.io)({
+          auth: {
+            key: name,
+            xsrf_token: (0,_editor_src_js_helpers_getCookie__WEBPACK_IMPORTED_MODULE_14__/* .default */ .Z)('XSRF-TOKEN'),
+            adonis_session: (0,_editor_src_js_helpers_getCookie__WEBPACK_IMPORTED_MODULE_14__/* .default */ .Z)('adonis-session')
+          }
+        });
+        window;
+      }
+
+      window.io.on("message", function () {
+        for (var _len = arguments.length, data = new Array(_len), _key = 0; _key < _len; _key++) {
+          data[_key] = arguments[_key];
+        }
+
+        console.log(data);
+      });
+      window.io.on("connection", function (socket) {
+        socket.data.asdasdas = "asdasdasdass";
+      });
       console.log(name);
       window.io.on(replaceContentWithData(name, this.getCurrentModel().getData()), function (data) {
         console.log(data);
@@ -13869,7 +14225,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 return loadPopups();
 
               case 9:
-                appStore.dispatch((0,_store_popup_trigger_actions__WEBPACK_IMPORTED_MODULE_14__/* .togglePopup */ .z)(id));
+                appStore.dispatch((0,_store_popup_trigger_actions__WEBPACK_IMPORTED_MODULE_15__/* .togglePopup */ .z)(id));
                 return _context9.abrupt("return", {
                   success: true
                 });
@@ -15069,10 +15425,10 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 model.altrpModelUpdated = true;
 
                 if (!_.isEqual(model, oldModel)) {
-                  appStore.dispatch((0,_store_current_model_actions__WEBPACK_IMPORTED_MODULE_15__/* .changeCurrentModel */ .D)({
+                  appStore.dispatch((0,_store_current_model_actions__WEBPACK_IMPORTED_MODULE_16__/* .changeCurrentModel */ .D)({
                     altrpModelUpdated: false
                   }));
-                  appStore.dispatch((0,_store_current_model_actions__WEBPACK_IMPORTED_MODULE_15__/* .changeCurrentModel */ .D)(model));
+                  appStore.dispatch((0,_store_current_model_actions__WEBPACK_IMPORTED_MODULE_16__/* .changeCurrentModel */ .D)(model));
                 }
 
                 return _context25.abrupt("return", {
@@ -15490,8 +15846,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
     key: "doActionOAuth",
     value: function () {
       var _doActionOAuth = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee33() {
-        var OIDC, WebStorageStateStore, UserManager, authority, OidcClient, method, settings, _manager, manager, result;
-
+        var OIDC, WebStorageStateStore, UserManager, authority, OidcClient, method, settings, manager, result;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee33$(_context33) {
           while (1) {
             switch (_context33.prev = _context33.next) {
@@ -15516,24 +15871,6 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
 
               case 8:
                 settings = {
-                  client_id: 'AisOrder',
-                  redirect_uri: "http://zayavka.geobuilder.ru/login/laravelpassport/callback",
-                  post_logout_redirect_uri: "http://zayavka.geobuilder.ru/login/laravelpassport/callback",
-                  response_type: 'token id_token',
-                  scope: 'openid profile',
-                  authority: 'https://fs.geobuilder.ru/idp',
-                  automaticSilentRenew: false,
-                  userStore: new WebStorageStateStore({
-                    store: window.localStorage
-                  }),
-                  filterProtocolClaims: true,
-                  loadUserInfo: true,
-                  monitorSession: false,
-                  checkSessionInterval: 3600000
-                };
-                _manager = new UserManager(settings);
-                console.log(_manager);
-                settings = {
                   client_id: this.getProperty('client_id'),
                   redirect_uri: this.getProperty('redirect_uri'),
                   post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),
@@ -15555,39 +15892,39 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 console.log(method);
 
                 if (!_.isFunction(manager[method])) {
-                  _context33.next = 24;
+                  _context33.next = 21;
                   break;
                 }
 
-                _context33.prev = 15;
-                _context33.next = 18;
+                _context33.prev = 12;
+                _context33.next = 15;
                 return manager[method]();
 
-              case 18:
+              case 15:
                 result = _context33.sent;
-                _context33.next = 24;
+                _context33.next = 21;
                 break;
 
-              case 21:
-                _context33.prev = 21;
-                _context33.t0 = _context33["catch"](15);
+              case 18:
+                _context33.prev = 18;
+                _context33.t0 = _context33["catch"](12);
                 return _context33.abrupt("return", {
                   success: false
                 });
 
-              case 24:
+              case 21:
                 console.log(result); // await manager.signoutRedirect();
 
                 return _context33.abrupt("return", {
                   success: true
                 });
 
-              case 26:
+              case 23:
               case "end":
                 return _context33.stop();
             }
           }
-        }, _callee33, this, [[15, 21]]);
+        }, _callee33, this, [[12, 18]]);
       }));
 
       function doActionOAuth() {

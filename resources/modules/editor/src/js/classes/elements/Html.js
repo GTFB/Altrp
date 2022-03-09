@@ -30,7 +30,8 @@ class Html extends BaseElement {
 
     this.startControlSection("Data", {
       tab: TAB_CONTENT,
-      label: "Data"
+      label: "Data",
+      locked: true,
     });
     this.addControl("data", {
       type: CONTROLLER_TEXTAREA,

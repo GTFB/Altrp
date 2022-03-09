@@ -6,6 +6,7 @@ import * as _ from 'lodash'
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class CustomizersController {
 
@@ -16,7 +17,7 @@ export default class CustomizersController {
     customizer.fill(request.all())
     customizer.guid = guid()
     try {
-      const model = await Model.find(customizer.model_id)
+      const model = customizer.model_id ? await Model.find(customizer.model_id) : null
       if (customizer.model_id && model) {
         customizer.model_guid = model.guid
       }
@@ -41,8 +42,15 @@ export default class CustomizersController {
         })
         await source.save()
       }
+      if(customizer.type === "listener" && model) {
+        const generator = new ListenerGenerator()
+
+        await generator.run(model, customizer.settings.hook_type)
+      }
       //@ts-ignore
-      await Event.emit('model:updated', model)
+      if(model){
+        await Event.emit('model:updated', model)
+      }
     } catch (e) {
       return response.json({
           'success':
@@ -99,9 +107,6 @@ export default class CustomizersController {
     const oldSource = await Source.query().where('sourceable_id', params.id)
       .where('sourceable_type', Customizer.sourceable_type)
       .first()
-    if (oldSource) {
-      await oldSource.delete()
-    }
     if (!customizer) {
       return response.json({
           'success':
@@ -109,6 +114,15 @@ export default class CustomizersController {
             'Customizer not found'
         },
       )
+    }
+
+    if(customizer.type === "listener" && request.input("type") !== "listener") {
+      const generator = new ListenerGenerator()
+
+      const model = await Model.find(customizer.model_id);
+      if(model) {
+        await generator.delete(model, customizer.settings.hook_type)
+      }
     }
 
     customizer.merge(request.all())
@@ -130,6 +144,9 @@ export default class CustomizersController {
         await model.load('altrp_controller')
 
         let source = new Source();
+        if(oldSource){
+          source = oldSource
+        }
         source.fill({
           'sourceable_type': Customizer.sourceable_type,
           'sourceable_id': customizer.id,
@@ -143,6 +160,11 @@ export default class CustomizersController {
           'request_type': customizer.getRequestType(),
         })
         await source.save()
+      }
+      if(customizer.type === "listener" && model) {
+        const generator = new ListenerGenerator()
+
+        await generator.run(model, customizer.settings.hook_type)
       }
       Event.emit('model:updated', model)
     } catch
@@ -227,7 +249,17 @@ export default class CustomizersController {
       },)
     }
     try {
+      if(customizer.type === "listener") {
+        const generator = new ListenerGenerator()
+
+        const model = await Model.find(customizer.model_id);
+        if(model) {
+          await generator.delete(model, customizer.settings.hook_type)
+        }
+      }
+
       await customizer.delete()
+
     } catch (e) {
       return response.json({
           'success':

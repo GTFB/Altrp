@@ -13,5 +13,9 @@ storage/
 app/AltrpModels/
 app/AltrpControllers/
 app/AltrpPlugins/
+app/altrp-listeners/
 start/altrp-routes/
 /resources/views/altrp
+
+cert.pem
+key.pem

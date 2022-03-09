@@ -1,9 +1,11 @@
 import * as _ from "lodash";
-import { string } from '@ioc:Adonis/Core/Helpers';
+
+function camelCaseToDash (str: string) {
+  return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
+}
 
 export default function objectToStylesString(styles = {}){
   return _.map(styles, (value, key)=>{
-    let dashCase = string.dashCase(key)
-    return `${dashCase}: ${value};`
+    return `${camelCaseToDash(key)}: ${value};`
   }).join('')
 }

@@ -16,6 +16,7 @@ class FrontElement {
   constructor(data = {}, withoutComponent = false){
     this.name = data.name;
     this.settings = data.settings;
+    this.settingsLock = data.settingsLock;
     this.lazySection = data.lazySection;
     this.children = data.children;
     this.cssClassStorage = data.cssClassStorage;
@@ -357,18 +358,28 @@ class FrontElement {
    * Получить настройку или все настройки
    * @param {string} settingName
    * @param {*} _default
+   * @param {boolean} locked
    * @return {*}
    */
-  getSettings(settingName, _default = ''){
+  getSettings(settingName, _default = '', locked = false){
+    let settings = this.settings;
+    if(locked && !_.isEmpty(this.settingsLock)){
+      settings = this.settingsLock
+    }
     if(! settingName)
     {
-      return _.cloneDeep(this.settings);
+      return _.cloneDeep(settings);
     }
-    if(_.get(this.settings, settingName) === false || _.get(this.settings, settingName) === 0){
-      return _.get(this.settings, settingName);
+    if(_.get(settings, settingName) === false || _.get(settings, settingName) === 0){
+      return _.get(settings, settingName);
     }
-    return _.get(this.settings, settingName) || _default;
+    return _.get(settings, settingName) || _default;
   }
+
+  getLockedSettings(settingName, _default = '') {
+    return this.getSettings(settingName, _default, true)
+  }
+
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
       /**
@@ -651,6 +662,13 @@ class FrontElement {
     return'';
   }
 
+  getLockedContent(settingName){
+    if(this.component){
+      return this.component.getContent(settingName)
+    }
+    return'';
+  }
+
   /**
    * Сохраняет данные модели
    * @param modelName
@@ -803,6 +821,23 @@ class FrontElement {
   getResponsiveSetting(settingName, elementState = '', _default){
     return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
   }
+
+   /**
+   * значение locked настройки в зависимости от разрешения
+   * @param {string} settingName
+   * @param {string} elementState
+   * @param _default
+   * @return {*}
+   */
+    getResponsiveLockedSetting(settingName, elementState = '', _default){
+      const setting = getResponsiveSetting(this.getLockedSettings(), settingName, elementState, _default)
+
+      if (setting === undefined) {
+        return this.getResponsiveSetting(settingName, elementState = '', _default)
+      }
+
+      return setting
+    }
 
   /**
    * Возвращает текущий тип шаблона

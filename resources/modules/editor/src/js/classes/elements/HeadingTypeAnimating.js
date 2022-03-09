@@ -55,7 +55,8 @@ class HeadingTypeAnimating extends BaseElement {
           value: 'rotating',
           label: 'Rotating'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('shape_animating', {
@@ -149,7 +150,8 @@ class HeadingTypeAnimating extends BaseElement {
           value: 'slideDown',
           label: 'Slide down'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('text_heading_animating', {
@@ -163,7 +165,8 @@ class HeadingTypeAnimating extends BaseElement {
     this.addControl('text_before_animating', {
       type: CONTROLLER_TEXT,
       label: 'Before',
-      default: "this website is"
+      default: "this website is",
+      locked: true,
     });
 
     this.addControl('text_highlighted_animating', {
@@ -172,7 +175,8 @@ class HeadingTypeAnimating extends BaseElement {
       },
       type: CONTROLLER_TEXT,
       label: 'Highlighted',
-      default: "Amazing"
+      default: "Amazing",
+      locked: true,
     });
 
     this.addControl('text_rotating_animating', {
@@ -181,12 +185,14 @@ class HeadingTypeAnimating extends BaseElement {
       },
       type: CONTROLLER_TEXTAREA,
       label: 'Rotating',
-      default: "Amazing\nBigger\nFaster"
+      default: "Amazing\nBigger\nFaster",
+      locked: true,
     });
 
     this.addControl('text_after_animating', {
       type: CONTROLLER_TEXT,
       label: 'After',
+      locked: true,
     });
 
     this.addControl('settings_heading_animating', {
@@ -269,7 +275,8 @@ class HeadingTypeAnimating extends BaseElement {
           value: 'p',
           label: 'p'
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.endControlSection();
@@ -302,13 +309,15 @@ class HeadingTypeAnimating extends BaseElement {
     this.addControl('bring_to_front_shape_animating', {
       type: CONTROLLER_SWITCHER,
       label: 'Bring to front',
-      default: false
+      default: false,
+      locked: true,
     });
 
     this.addControl('rounded_edges_shape_animating', {
       type: CONTROLLER_SWITCHER,
       label: 'Rounded edges',
-      default: false
+      default: false,
+      locked: true,
     });
 
     this.endControlSection();

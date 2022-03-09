@@ -33,14 +33,40 @@ export default class PageGenerator extends BaseGenerator {
       return
     }
     let children_content = await page.getChildrenContent()
+
+    let elements_list:string[]|string = await page.extractElementsNames()
+    const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
+    elements_list = elements_list.map(e=>`'${e}'`)
+    elements_list = elements_list.join(',')
     let all_styles = await page.getAllStyles()
     return await this.addFile(fileName)
       .destinationDir(PageGenerator.directory)
       .stub(PageGenerator.template)
       .apply({
         children_content,
+        elements_list,
+        extra_header_styles,
+        extra_footer_styles,
         all_styles,
       })
 
+  }
+  async getExtraStyles(elementsList):Promise<{
+    extra_header_styles:string
+    extra_footer_styles:string
+  }>{
+    const extraStyles = {
+      extra_header_styles: '',
+      extra_footer_styles: '',
+    }
+    for(let element of elementsList){
+      const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
+      if(fs.existsSync(fileName)){
+        let content = fs.readFileSync(fileName, {encoding:'utf8'})
+        content = content.replace(/\n/g, '')
+        extraStyles.extra_header_styles += `<style>${content}</styles>`
+      }
+    }
+    return extraStyles
   }
 }

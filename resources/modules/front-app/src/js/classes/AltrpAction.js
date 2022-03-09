@@ -5,6 +5,7 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
+import getCookie from "../../../../editor/src/js/helpers/getCookie";
 const {
   altrpLogin,
   altrpLogout,
@@ -311,19 +312,6 @@ class AltrpAction extends AltrpModel {
         break;
       case 'oauth': {
         result = await this.doActionOAuth();
-      }
-        break;
-      case 'metamask_connect': {
-        result = await this.metaMaskConnect();
-      }
-        break;
-      case 'socket_emit': {
-        result = await this.doActionSocketEmit();
-
-      }
-        break;
-      case 'socket_receiver': {
-        result = this.doActionSocketReceiver();
 
       }
         break;
@@ -368,10 +356,6 @@ class AltrpAction extends AltrpModel {
    * @return {object}
    */
   doActionSocketReceiver() {
-    if(!window.io) {
-      window.io = io(`:${process.env.SOCKETS_KEY}`)
-      window
-    }
 
     let name = ""
 
@@ -393,6 +377,26 @@ class AltrpAction extends AltrpModel {
       }
 
     }
+
+
+    if(!window.io) {
+      window.io = io( {
+        auth: {
+          key: name,
+          xsrf_token: getCookie('XSRF-TOKEN'),
+          adonis_session: getCookie('adonis-session')
+        },
+      })
+      window
+    }
+
+    window.io.on("message", (...data) => {
+      console.log(data)
+    })
+
+    window.io.on("connection", (socket) => {
+      socket.data.asdasdas = "asdasdasdass"
+    })
 
     console.log(name)
     window.io.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
@@ -1298,6 +1302,7 @@ class AltrpAction extends AltrpModel {
    * Проверка условий
    * @return {Promise<{success: boolean}>}
    */
+
   async doActionCondition() {
     const compare = this.getProperty('compare');
     let conditionLeft = this.getProperty('condition_left');
@@ -1346,7 +1351,6 @@ class AltrpAction extends AltrpModel {
       }
     } catch (e) {
       console.error(e);
-
       return {
         success: false
       };
@@ -1398,22 +1402,6 @@ class AltrpAction extends AltrpModel {
       }
     }
     let settings = {
-      client_id: 'AisOrder',
-      redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
-      post_logout_redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
-      response_type: 'token id_token',
-      scope: 'openid profile',
-      authority:'https://fs.geobuilder.ru/idp',
-      automaticSilentRenew: false,
-      userStore: new WebStorageStateStore({ store: window.localStorage }),
-      filterProtocolClaims: true,
-      loadUserInfo: true,
-      monitorSession: false,
-      checkSessionInterval: 3600000
-    };
-    const _manager = new UserManager(settings);
-    console.log(_manager);
-    settings = {
       client_id: this.getProperty('client_id'),
       redirect_uri: this.getProperty('redirect_uri'),
       post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),

@@ -43,28 +43,33 @@ class Map extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Canvas",
       default: true,
+      locked: true,
     });
 
     this.addControl("lat", {
       type: CONTROLLER_TEXT,
       label: "Latitude",
       default: 50.7496449,
+      locked: true,
     });
 
     this.addControl("lng", {
       type: CONTROLLER_TEXT,
       label: "Longitude",
       default: 86.1250068,
+      locked: true,
     });
 
     this.addControl("zoom", {
       type: CONTROLLER_NUMBER,
       label: "Zoom",
       default: 6,
+      locked: true,
     });
 
     this.addControl("query", {
       type: CONTROLLER_QUERY,
+      locked: true,
     });
 
     this.addControl("handler", {
@@ -74,6 +79,7 @@ class Map extends BaseElement {
         evt: "",
         params: "",
       },
+      locked: true,
     });
 
     this.endControlSection();
@@ -93,6 +99,7 @@ class Map extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("style_margin", {
@@ -107,6 +114,7 @@ class Map extends BaseElement {
         bind: true,
       },
       units: ["px", "%", "vh"],
+      locked: true,
     });
 
     advancedTabControllers(this);

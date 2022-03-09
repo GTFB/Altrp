@@ -129,7 +129,7 @@ class BreadcrumbsWidget extends Component {
   render() {
     const breadcrumbsProps = {
       items: this.getBreadcrumbsItems(),
-      collapseFrom: this.element.getResponsiveSetting('collapse') || 'start',
+      collapseFrom: this.element.getResponsiveLockedSetting('collapse') || 'start',
       popoverProps: {
         portalClassName: `altrp-portal altrp-portal${this.elementId}`,
       },

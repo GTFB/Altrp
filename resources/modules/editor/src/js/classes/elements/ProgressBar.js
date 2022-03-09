@@ -48,13 +48,15 @@ class ProgressBar extends BaseElement {
 
     this.addControl("value", {
       type: CONTROLLER_TEXT,
-      label: "Value"
+      label: "Value",
+      locked: true,
     });
 
     this.addControl("stripes", {
       type: CONTROLLER_SWITCHER,
       label: "Stripes",
-      default: true
+      default: true,
+      locked: true,
     });
 
     this.addControl("animate", {
@@ -63,7 +65,8 @@ class ProgressBar extends BaseElement {
       default: true,
       conditions: {
         stripes: true
-      }
+      },
+      locked: true,
     });
 
     this.endControlSection();

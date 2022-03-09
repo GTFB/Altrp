@@ -1,4 +1,16 @@
 import View from '@ioc:Adonis/Core/View'
+import renderTabsSwitcher from '../helpers/widgets-renders/renderTabsSwitcher';
+import renderTabs from '../helpers/widgets-renders/renderTabs';
+import renderInputImageSelect from '../helpers/widgets-renders/renderInputImageSelect';
+import renderInputDate from '../helpers/widgets-renders/renderInputDate';
+import renderInputSelectTree from '../helpers/widgets-renders/renderInputSelectTree';
+import renderInputDateRange from '../helpers/widgets-renders/renderInputDateRange';
+import renderInputGallery from '../helpers/widgets-renders/renderInputGallery';
+import renderInputCropImage from '../helpers/widgets-renders/renderInputCropImage';
+import renderInputAccept from '../helpers/widgets-renders/renderInputAccept';
+import renderInputHidden from '../helpers/widgets-renders/renderInputHidden';
+import renderInputFile from '../helpers/widgets-renders/renderInputFile';
+
 import get_logo_url from '../helpers/get_logo_url'
 import getLocale from '../helpers/getLocale'
 import print_statics from '../helpers/print_statics'
@@ -52,6 +64,8 @@ View.global('renderAsset', renderAsset)
 View.global('renderButton', renderButton)
 View.global('renderImage', renderImage)
 View.global('renderHeading', renderHeading)
+View.global('renderTabsSwitcher', renderTabsSwitcher)
+View.global('renderTabs', renderTabs)
 View.global('renderIcon', renderIcon)
 View.global('renderHtml', renderHtml)
 View.global('renderDropbar', renderDropbar)
@@ -72,6 +86,15 @@ View.global('renderProgressBar', renderProgressBar)
 View.global('renderScheduler', renderScheduler)
 View.global('renderAccordion', renderAccordion)
 View.global('renderStars', renderStars)
+View.global('renderInputSelectTree', renderInputSelectTree)
+View.global('renderInputImageSelect', renderInputImageSelect)
+View.global('renderInputDate', renderInputDate)
+View.global('renderInputDateRange', renderInputDateRange)
+View.global('renderInputGallery', renderInputGallery)
+View.global('renderInputCropImage', renderInputCropImage)
+View.global('renderInputAccept', renderInputAccept)
+View.global('renderInputHidden', renderInputHidden)
+View.global('renderInputFile', renderInputFile)
 /**
  * RENDERS END
  */

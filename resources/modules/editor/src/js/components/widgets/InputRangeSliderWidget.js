@@ -54,9 +54,9 @@ class InputRangeSliderWidget extends Component {
   constructor(props) {
     super(props);
 
-    let step = props.element.getResponsiveSetting("step", "", null);
-    const min = props.element.getResponsiveSetting("min", "", 0);
-    const max = props.element.getResponsiveSetting("max", "", 100);
+    let step = props.element.getResponsiveLockedSetting("step", "", null);
+    const min = props.element.getResponsiveLockedSetting("min", "", 0);
+    const max = props.element.getResponsiveLockedSetting("max", "", 100);
 
     if(step) {
       step = (max - min) / step;
@@ -85,9 +85,9 @@ class InputRangeSliderWidget extends Component {
 
   _componentDidUpdate(prevProps, prevState) {
     const prevStep = prevState.step
-    let step = this.props.element.getResponsiveSetting("step", "", null);
-    const min = this.props.element.getResponsiveSetting("min", "", 0);
-    const max = this.props.element.getResponsiveSetting("max", "", 100);
+    let step = this.props.element.getResponsiveLockedSetting("step", "", null);
+    const min = this.props.element.getResponsiveLockedSetting("min", "", 0);
+    const max = this.props.element.getResponsiveLockedSetting("max", "", 100);
 
     if(step && step < max) {
       step = (max - min) / step;
@@ -97,8 +97,8 @@ class InputRangeSliderWidget extends Component {
       this.setState((s) => ({...s,
         step,
         value: [
-          this.props.element.getResponsiveSetting("initial", "", 0),
-          this.props.element.getResponsiveSetting("initial_second", "", 0)
+          this.props.element.getResponsiveLockedSetting("initial", "", 0),
+          this.props.element.getResponsiveLockedSetting("initial_second", "", 0)
         ]
       }))
     }
@@ -130,7 +130,7 @@ class InputRangeSliderWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -173,32 +173,36 @@ class InputRangeSliderWidget extends Component {
       valueEnd = _.get(appStore.getState().formsStore, `${formIdEnd}`, '')
       valueEnd = _.get(valueEnd, fieldNameEnd, '')
 
-      value = [
-        valueStart,
-        valueEnd
-      ];
+      if (valueStart || valueEnd) {
+        value = [
+          valueStart,
+          valueEnd
+        ];
+      } else {
+        value = this.state.value
+      }
     }
 
     if(!value[0] && !value[1]) {
       return [
-        this.props.element.getResponsiveSetting('min', "", 0),
-        this.props.element.getResponsiveSetting('max', "", 100),
+        this.props.element.getResponsiveLockedSetting('min', "", 0),
+        this.props.element.getResponsiveLockedSetting('max', "", 100),
       ]
     }
 
     if(!value[0]) {
-      value[0] = this.props.element.getResponsiveSetting('min', "", 0);
+      value[0] = this.props.element.getResponsiveLockedSetting('min', "", 0);
     }
 
     if(!value[1]) {
-      value[1] = this.props.element.getResponsiveSetting('max', "", 100);
+      value[1] = this.props.element.getResponsiveLockedSetting('max', "", 100);
     }
     value = value.map((value)=>(Number(value) || 0))
     return value
   }
 
   onChange(values) {
-    let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
+    let decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
     decimalPlace = Math.abs(decimalPlace);
 
     values.forEach((value, idx) => {
@@ -211,17 +215,18 @@ class InputRangeSliderWidget extends Component {
     if(isEditor()){
       this.setState((s) => ({...s, value: values}))
     } else {
+      this.setState((s) => ({...s, value: values}))
       this.dispatchFieldValueToStore(values[0], 0, true)
       this.dispatchFieldValueToStore(values[1], 1, true)
     }
   }
 
   label(value) {
-    let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
-    const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
-    const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
-    let thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
-    const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator");
+    let decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
+    const custom = this.props.element.getResponsiveLockedSetting("custom_label", "", "{n}");
+    const thousandsSeparator = this.props.element.getResponsiveLockedSetting("thousands_separator", "", false);
+    let thousandsSeparatorValue = this.props.element.getResponsiveLockedSetting("thousands_separator_value", "", " ");
+    const decimalSeparator = this.props.element.getResponsiveLockedSetting("decimal_separator");
     value = Number(value)
 
     if(!Number.isInteger(value) && decimalPlace) {
@@ -248,14 +253,14 @@ class InputRangeSliderWidget extends Component {
   }
 
   render() {
-    const min = this.props.element.getResponsiveSetting("min", "", 0);
-    const max = this.props.element.getResponsiveSetting("max", "", 100);
-    // const step = this.props.element.getResponsiveSetting("step", "", 1);
-    const labelStepSize = this.props.element.getResponsiveSetting("label_step", "", 25);
-    const decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
-    const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
-    const handleSize = this.props.element.getResponsiveSetting("handle_size", "", null);
-    let step = this.props.element.getResponsiveSetting("step", "", 1);
+    const min = this.props.element.getResponsiveLockedSetting("min", "", 0);
+    const max = this.props.element.getResponsiveLockedSetting("max", "", 100);
+    // const step = this.props.element.getResponsiveLockedSetting("step", "", 1);
+    const labelStepSize = this.props.element.getResponsiveLockedSetting("label_step", "", 25);
+    const decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
+    const vertical = this.props.element.getResponsiveLockedSetting("vertical", "", false);
+    const handleSize = this.props.element.getResponsiveLockedSetting("handle_size", "", null);
+    let step = this.props.element.getResponsiveLockedSetting("step", "", 1);
 
     let value = this.getValue();
 

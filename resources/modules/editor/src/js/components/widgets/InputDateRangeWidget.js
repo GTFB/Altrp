@@ -22,7 +22,7 @@ class InputDateRangeWidget extends Component {
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
-    this.locale = this.props.element.getSettings("content_locale", "en");
+    this.locale = this.props.element.getLockedSettings("content_locale", "en");
 
     switch (this.typeDate) {
       case "date":
@@ -79,7 +79,7 @@ class InputDateRangeWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       // if (userInput) {
-      //   const change_actions = this.props.element.getSettings("change_actions");
+      //   const change_actions = this.props.element.getLockedSettings("change_actions");
       //
       //   if (change_actions && !isEditor()) {
       //     const actionsManager = (
@@ -134,7 +134,7 @@ class InputDateRangeWidget extends Component {
 
   render(){
 
-    const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+    const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
     const dayPickerProps = {};
 
     let value = this.getValue();
@@ -160,10 +160,10 @@ class InputDateRangeWidget extends Component {
       dayPickerProps={dayPickerProps}
       value={value}
       startInputProps={{
-        placeholder: this.props.element.getResponsiveSetting("start_placeholder", "", "start date")
+        placeholder: this.props.element.getResponsiveLockedSetting("start_placeholder", "", "start date")
       }}
       endInputProps={{
-        placeholder: this.props.element.getResponsiveSetting("end_placeholder", "", "end date")
+        placeholder: this.props.element.getResponsiveLockedSetting("end_placeholder", "", "end date")
       }}
       popoverProps={{
         usePortal: true,

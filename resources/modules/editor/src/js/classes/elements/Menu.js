@@ -48,7 +48,8 @@ class Menu extends BaseElement {
       options_resource: '/admin/ajax/menus/options?value=guid',
       nullable: true,
       after: <div className="control-button-container mt-2"><button onClick={()=>{
-      }} className="btn btn_success">Edit Menus</button></div>
+      }} className="btn btn_success">Edit Menus</button></div>,
+      locked: true,
     });
 
     this.addControl('type', {
@@ -64,7 +65,8 @@ class Menu extends BaseElement {
           'value': 'horizontal',
         },
       ],
-      default: 'vertical'
+      default: 'vertical',
+      locked: true,
     })
 
 
@@ -155,7 +157,8 @@ class Menu extends BaseElement {
     this.addControl('sub_popover_position', {
       type: CONTROLLER_SELECT,
       label: 'Popover position',
-      options: popoverPositions
+      options: popoverPositions,
+      locked: true,
     });
 
     this.addControl('sub_width', {
@@ -171,6 +174,7 @@ class Menu extends BaseElement {
     this.addControl('button', {
       label: 'Toggle Button',
       type: CONTROLLER_SWITCHER,
+      locked: true,
     })
 
     this.addControl('alignment', {
@@ -200,7 +204,8 @@ class Menu extends BaseElement {
     this.addControl('popover_position_toggle', {
       type: CONTROLLER_SELECT,
       label: 'Popover position',
-      options: popoverPositions
+      options: popoverPositions,
+      locked: true,
     });
 
     this.addControl('width', {

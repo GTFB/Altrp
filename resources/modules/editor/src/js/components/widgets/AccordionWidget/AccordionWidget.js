@@ -86,8 +86,8 @@ class AccordionWidget extends Component {
       }
     };
 
-    const metaData = props.element.getSettings("repeater_meta_data_section", []);
-    const activeItem = props.element.getSettings("active_item_additional_content", 0);
+    const metaData = props.element.getLockedSettings("repeater_meta_data_section", []);
+    const activeItem = props.element.getLockedSettings("active_item_additional_content", 0);
     for (let i = 0; i<metaData.length; i++) {
       if(i !== Number(activeItem - 1)) {
         this.state.activeItem.id.push(false)
@@ -156,20 +156,22 @@ class AccordionWidget extends Component {
         {className: "altrp-accordion-item-active-icon-svg"}
       );
     }
-    const title_html_tag_accordion_content = this.props.element.getSettings('title_html_tag_accordion_content') || 'div'
+    const title_html_tag_accordion_content = this.props.element.getLockedSettings('title_html_tag_accordion_content') || 'div'
 
     return <div className="altrp-accordion">
       {
         items.map((item, idx) => (
-          <AccordionItem idArray={this.state.activeItem.id}
-                         idx={idx}
-                         open={(e) => this.open(e)}
-                         item={item}
-                         key={idx}
-                         title_html_tag_accordion_content={title_html_tag_accordion_content}
-                         icon={icon}
-                         activeIcon={active_icon}
-                         activeMode={this.state.activeItem.id[idx]}/>
+          <AccordionItem 
+            idArray={this.state.activeItem.id}
+            idx={idx}
+            open={(e) => this.open(e)}
+            item={item}
+            key={idx}
+            title_html_tag_accordion_content={title_html_tag_accordion_content}
+            icon={icon}
+            activeIcon={active_icon}
+            activeMode={this.state.activeItem.id[idx]}
+          />
         ))
       }
     </div>

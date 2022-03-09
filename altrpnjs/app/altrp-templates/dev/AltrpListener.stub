@@ -1,0 +1,5 @@
+function {{{listener}}}(type, data) {
+
+}
+
+export default {{{listener}}}

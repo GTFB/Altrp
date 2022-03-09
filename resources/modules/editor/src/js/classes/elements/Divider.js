@@ -107,16 +107,19 @@ class Divider extends BaseElement {
           value: 'flex-end',
         }
       ],
+      locked: true,
     });
     
     this.addControl('divider_text', {
       type: CONTROLLER_TEXT,
       label: 'Text',
+      locked: true,
     });
 
     this.addControl('divider_image', {
       type: CONTROLLER_MEDIA,
       label: 'Image',
+      locked: true,
     });
     
     this.addControl('label_position', {
@@ -137,6 +140,7 @@ class Divider extends BaseElement {
           value: 'right',
         }
       ],
+      locked: true,
     });
 
     this.endControlSection();

@@ -8,7 +8,7 @@ export default class AltrpColumns extends BaseSchema {
 
       this.schema.createTable(this.tableName, (table) => {
         table.bigIncrements('id')
-        table.string('name').unique()
+        table.string('name').index()
         table.string('title').nullable()
         table.text('description').nullable()
         table.string('type')
@@ -41,6 +41,7 @@ export default class AltrpColumns extends BaseSchema {
 
         table.foreign('user_id').references('users.id')
         table.foreign('model_id').references('altrp_models.id')
+        table.foreign('table_id').references('tables.id')
 
       })
     }

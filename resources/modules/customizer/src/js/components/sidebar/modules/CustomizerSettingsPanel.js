@@ -120,6 +120,7 @@ class CustomizerSettingsPanel extends React.Component {
     const {customizer} = this.props;
     const {type, model_id, settings = {}} = customizer
     const Middlewares = settings?.middlewares;
+    const HookType = settings?.hook_type;
 
     let Url = ''
     if (this.props.customizer.source !== null) {
@@ -165,6 +166,10 @@ class CustomizerSettingsPanel extends React.Component {
                                        value: 'api',
                                        label: 'Api',
                                      },
+                                     {
+                                       value: 'listener',
+                                       label: 'Listener',
+                                     },
                                      // {
                                      //   value: 'method',
                                      //   label: 'Model Custom Method',
@@ -192,16 +197,32 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>}
-                    <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                      <div className="controller-container__label control-select__label controller-label">Model:</div>
-                      <AltrpSelect id="crud-fields"
-                                   className="controller-field"
-                                   isMulti={false}
-                                   value={modelsOptions.find(o=>o.value === model_id) || {}}
-                                   onChange={this.changeModel}
-                                   options={modelsOptions.filter(item => item.value >= 5)}
-                      />
-                    </div>
+                    {type !== 'listener' && (
+                      <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                        <div className="controller-container__label control-select__label controller-label">Model:</div>
+                        <AltrpSelect id="crud-fields"
+                                     className="controller-field"
+                                     isMulti={false}
+                                     value={modelsOptions.find(o=>o.value === model_id) || {}}
+                                     onChange={this.changeModel}
+                                     options={modelsOptions.filter(item => item.value >= 5)}
+                        />
+                      </div>
+                    )}
+                    {
+                      type === "listener" && (
+                        <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                          <div className="controller-container__label control-select__label controller-label">Type:</div>
+                          <InputGroup className="form-control-blueprint"
+                                      type="text"
+                                      id="customizer-title"
+                                      value={HookType || ""}
+                                      onChange={this.changeHookType}
+                          />
+                        </div>
+                      )
+                    }
+
                     <form className="Customizer-title" onSubmit={this.EditTitleForm}>
                       <div className="controller-container__label control-select__label controller-label">Title:</div>
                       <div className="customizer-block__title">
@@ -251,6 +272,14 @@ class CustomizerSettingsPanel extends React.Component {
   changeModel = (e)=>{
     let {customizer} = this.props;
     customizer = mutate.set(customizer, 'model_id', e.value||'')
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+  };
+  changeHookType = (e)=>{
+    let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
+    customizer = mutate.set(customizer, 'settings.hook_type', e.target.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   };
 

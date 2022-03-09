@@ -54,12 +54,14 @@ class LineDiagram extends BaseElement {
     this.addControl("datasource_path", {
       dynamic: false,
       type: CONTROLLER_TEXTAREA,
-      label: "Path to Data"
+      label: "Path to Data",
+      locked: true,
     });
 
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
+      locked: true,
     });
 
     this.endControlSection();
@@ -82,12 +84,14 @@ class LineDiagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      options: colors
+      options: colors,
+      locked: true,
     });
 
     this.addControl("yScaleMax", {
       type: CONTROLLER_NUMBER,
-      label: "Y scale max"
+      label: "Y scale max",
+      locked: true,
     });
 
     this.addControl("xScaleType", {
@@ -106,7 +110,8 @@ class LineDiagram extends BaseElement {
           label: "Time",
           value: "time"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("precision", {
@@ -119,7 +124,8 @@ class LineDiagram extends BaseElement {
       ],
       conditions: {
         xScaleType: 'time'
-      }
+      },
+      locked: true,
     });
 
     this.addControl('lineWidth', {
@@ -127,7 +133,8 @@ class LineDiagram extends BaseElement {
       label: 'Line width',
       min: 0,
       max: 30,
-      step: 1
+      step: 1,
+      locked: true,
     })
 
     this.addControl("curve", {
@@ -144,7 +151,8 @@ class LineDiagram extends BaseElement {
         { id: 7, value: "step", label: "Step" },
         { id: 8, value: "stepAfter", label: "Step After" },
         { id: 9, value: "stepBefore", label: "Step Before" }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('enableSlices', {
@@ -163,7 +171,8 @@ class LineDiagram extends BaseElement {
           label: 'Y',
           value: 'y'
         },
-      ]
+      ],
+      locked: true,
     })
 
     this.endControlSection();
@@ -176,16 +185,19 @@ class LineDiagram extends BaseElement {
     this.addControl("enableGridX", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Grid X",
+      locked: true,
     });
 
     this.addControl("enableGridY", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Grid Y",
+      locked: true,
     });
 
     this.addControl("axisBottom", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Bottom Axis",
+      locked: true,
     });
 
     this.addControl('bottomTickSize', {
@@ -196,7 +208,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisBottom: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('bottomTickPadding', {
@@ -204,7 +217,8 @@ class LineDiagram extends BaseElement {
       label: 'Bottom Tick Padding',
       conditions: {
         axisBottom: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl("bottomTickRotation", {
@@ -215,7 +229,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisBottom: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl('bottomLegend', {
@@ -223,7 +238,8 @@ class LineDiagram extends BaseElement {
       label: 'Bottom Legend',
       conditions: {
         axisBottom: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('bottomLegendOffset', {
@@ -234,12 +250,14 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisBottom: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl("axisTop", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Top Axis",
+      locked: true,
     });
 
     this.addControl('topTickSize', {
@@ -250,7 +268,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisTop: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('topTickPadding', {
@@ -258,7 +277,8 @@ class LineDiagram extends BaseElement {
       label: 'Top Tick Padding',
       conditions: {
         axisTop: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl("topTickRotation", {
@@ -269,7 +289,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisTop: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl('topLegend', {
@@ -277,7 +298,8 @@ class LineDiagram extends BaseElement {
       label: 'Top Legend',
       conditions: {
         axisTop: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('topLegendOffset', {
@@ -288,12 +310,14 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisTop: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl("axisLeft", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Left Axis",
+      locked: true,
     });
 
     this.addControl('leftTickSize', {
@@ -304,7 +328,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisLeft: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('leftTickPadding', {
@@ -312,7 +337,8 @@ class LineDiagram extends BaseElement {
       label: 'Left Tick Padding',
       conditions: {
         axisLeft: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl("leftTickRotation", {
@@ -323,7 +349,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisLeft: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl('leftLegend', {
@@ -331,7 +358,8 @@ class LineDiagram extends BaseElement {
       label: 'Left Legend',
       conditions: {
         axisLeft: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('leftLegendOffset', {
@@ -342,12 +370,14 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisLeft: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl("axisRight", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Right Axis",
+      locked: true,
     });
 
     this.addControl('rightTickSize', {
@@ -358,7 +388,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisRight: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('rightTickPadding', {
@@ -366,7 +397,8 @@ class LineDiagram extends BaseElement {
       label: 'Right Tick Padding',
       conditions: {
         axisRight: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl("rightTickRotation", {
@@ -377,7 +409,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisRight: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl('rightLegend', {
@@ -385,7 +418,8 @@ class LineDiagram extends BaseElement {
       label: 'Right Legend',
       conditions: {
         axisRight: true
-      }
+      },
+      locked: true,
     })
 
     this.addControl('rightLegendOffset', {
@@ -396,7 +430,8 @@ class LineDiagram extends BaseElement {
       step: 1,
       conditions: {
         axisRight: true
-      }
+      },
+      locked: true,
     })
 
     this.endControlSection()
@@ -409,21 +444,25 @@ class LineDiagram extends BaseElement {
     this.addControl("enablePoints", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Points?",
+      locked: true,
     });
 
     this.addControl("pointSize", {
       type: CONTROLLER_NUMBER,
-      label: "Point Size"
+      label: "Point Size",
+      locked: true,
     });
 
     this.addControl("pointColor", {
       type: CONTROLLER_COLOR,
-      label: "Point color"
+      label: "Point color",
+      locked: true,
     });
 
     this.addControl('pointBorderColor', {
       type: CONTROLLER_COLOR,
-      label: 'Point Border Color'
+      label: 'Point Border Color',
+      locked: true,
     })
 
     this.addControl('pointBorderWidth', {
@@ -431,7 +470,8 @@ class LineDiagram extends BaseElement {
       label: 'Point Border Width',
       min: 0,
       max: 25,
-      step: 1
+      step: 1,
+      locked: true,
     })
 
     this.endControlSection()
@@ -444,11 +484,13 @@ class LineDiagram extends BaseElement {
     this.addControl("enableArea", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Area?",
+      locked: true,
     });
 
     this.addControl('areaBaselineValue', {
       type: CONTROLLER_NUMBER,
       label: 'Baseline Value',
+      locked: true,
     })
 
     this.addControl('areaOpacity', {
@@ -456,7 +498,8 @@ class LineDiagram extends BaseElement {
       label: 'Opacity',
       min: 0,
       max: 1,
-      step: 0.05
+      step: 0.05,
+      locked: true,
     })
 
     this.addControl('areaBlendMode', {
@@ -527,12 +570,14 @@ class LineDiagram extends BaseElement {
           label: "Luminosity",
           value: "luminosity"
         },
-      ]
+      ],
+      locked: true,
     })
 
     this.addControl("enableGradient", {
       type: CONTROLLER_SWITCHER,
       label: "Enable Gradient?",
+      locked: true,
     });
 
     this.endControlSection()
@@ -544,6 +589,7 @@ class LineDiagram extends BaseElement {
       tabID: 'y_format_value',
       tabName: 'Y Format Value',
       useCurrency: false,
+      locked: true,
     })
 
     valueFormatControllers(this, {
@@ -551,6 +597,7 @@ class LineDiagram extends BaseElement {
       tabID: 'x_format_value',
       tabName: 'X Format Value',
       useCurrency: false,
+      locked: true,
     })
 
     this.startControlSection("axisConstants", {
@@ -601,7 +648,8 @@ class LineDiagram extends BaseElement {
     this.addControl("axisY", {
       label: "AXIS Y",
       type: CONTROLLER_REPEATER,
-      fields: repeaterY.getControls()
+      fields: repeaterY.getControls(),
+      locked: true,
     });
 
     let repeaterX = new Repeater();
@@ -609,18 +657,21 @@ class LineDiagram extends BaseElement {
     repeaterX.addControl("xMarkerLabel", {
       type: CONTROLLER_TEXT,
       label: "Label X",
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
 
     repeaterX.addControl("xMarkerIsDate", {
       type: CONTROLLER_SWITCHER,
       label: "Value X Is Date",
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
     repeaterX.addControl("xMarkerValue", {
       type: CONTROLLER_TEXT,
       label: "Value X (Only Numbers Or Dates)",
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
     repeaterX.addControl("xMarkerOrientation", {
       type: CONTROLLER_SELECT,
@@ -629,31 +680,36 @@ class LineDiagram extends BaseElement {
         { id: 0, value: "vertical", label: "Vertical" },
         { id: 1, value: "horizontal", label: "Horizontal" }
       ],
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
 
     repeaterX.addControl("xMarkerColor", {
       type: CONTROLLER_COLOR,
       label: "Color X",
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
 
     repeaterX.addControl("xMarkerLabelColor", {
       type: CONTROLLER_COLOR,
       label: "Label Color X",
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
 
     repeaterX.addControl("xMarkerWidth", {
       type: CONTROLLER_NUMBER,
       label: "Width X",
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
     //X AXIS
     this.addControl("axisX", {
       label: "AXIS X",
       type: CONTROLLER_REPEATER,
-      fields: repeaterX.getControls()
+      fields: repeaterX.getControls(),
+      locked: true,
     });
 
     this.endControlSection();
@@ -668,24 +724,28 @@ class LineDiagram extends BaseElement {
     repeaterScheme.addControl("color", {
       label: "Color",
       type: CONTROLLER_COLOR,
-      dynamic: false
+      dynamic: false,
+      locked: true,
     });
 
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
       label: "Use Custom Color Scheme?",
+      locked: true,
     });
 
     this.addControl("customScheme", {
       type: CONTROLLER_REPEATER,
-      fields: repeaterScheme.getControls()
+      fields: repeaterScheme.getControls(),
+      locked: true,
     });
 
     this.endControlSection();
 
     this.startControlSection("size", {
       tab: TAB_STYLE,
-      label: "Size"
+      label: "Size",
+      locked: true,
     });
 
     this.addControl("width", {
@@ -694,6 +754,7 @@ class LineDiagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("height", {
@@ -702,12 +763,14 @@ class LineDiagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       units: ["px", "%", "vh"],
+      locked: true,
     });
 
     advancedTabControllers(this);

@@ -58,7 +58,8 @@ class Button extends BaseElement {
     this.addControl('button_text', {
       type: CONTROLLER_TEXTAREA,
       label: 'Button Text',
-      default: 'Click Me'
+      default: 'Click Me',
+      locked: true,
     });
 
     this.addControl('button_alignment', {
@@ -106,21 +107,25 @@ class Button extends BaseElement {
     this.addControl('button_icon_right', {
       type: CONTROLLER_MEDIA,
       label: 'Right Icon',
+      locked: true,
     });
 
     this.addControl('button_icon_left', {
       type: CONTROLLER_MEDIA,
       label: 'Left Icon',
+      locked: true,
     });
 
     this.addControl('button_icon_top', {
       type: CONTROLLER_MEDIA,
       label: 'Top Icon',
+      locked: true,
     });
 
     this.addControl('button_icon_bottom', {
       type: CONTROLLER_MEDIA,
       label: 'Bottom Icon',
+      locked: true,
     });
 
     // this.addControl('button_icon_position', {
@@ -162,6 +167,7 @@ class Button extends BaseElement {
         tag: 'Link'
       },
       label: 'Link',
+      locked: true,
     });
 
     this.endControlSection();
@@ -252,6 +258,7 @@ class Button extends BaseElement {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
+      locked: true,
     });
 
     this.addControl('background_position', {
