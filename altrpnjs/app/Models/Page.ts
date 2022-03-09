@@ -29,6 +29,9 @@ import Template from "App/Models/Template";
 import Category from "App/Models/Category";
 import PageDatasource from "App/Models/PageDatasource";
 import mbParseJSON from "../../helpers/mbParseJSON";
+import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import is_array from "../../helpers/is_array";
+import validGuid from "../../helpers/validGuid";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -454,7 +457,6 @@ export default class Page extends BaseModel {
     let contentGuid = data_get(await Template.getTemplate(this.id, 'content'), 'guid')
     let footerGuid = data_get(await Template.getTemplate(this.id, 'footer'), 'guid')
     let headerGuid = data_get(await Template.getTemplate(this.id, 'header'), 'guid')
-
     return `<div class="app-area app-area_header">
       ${headerGuid ? `@include('altrp/templates/header/${headerGuid}')` : ''}
       </div>
@@ -478,5 +480,128 @@ export default class Page extends BaseModel {
           </div>
           `
     */
+  }
+
+  async  extractElementsNames( _only_react_elements = true){
+    let elementNames = [];
+    const areas = await this.getAreas(true);
+
+    await Promise.all(areas.map(async area => {
+      if(area?.template?.data) {
+        let data = area.template.data
+        if(_.isString(data)){
+          data= JSON.parse(data)
+          area.template.data=data
+        }
+        await this._extractElementsNames( data, elementNames, _only_react_elements );
+      } else {
+      }
+    }))
+
+    elementNames = _.uniq(elementNames)
+
+    return elementNames;
+  }
+
+  async _extractElementsNames(element, elementNames, only_react_elements) {
+    let plugins_widget_list: any = ''
+    if (!plugins_widget_list) {
+      plugins_widget_list = []
+    } else {
+      plugins_widget_list = plugins_widget_list.split(',')
+    }
+    const reactElements = _.concat(DEFAULT_REACT_ELEMENTS, plugins_widget_list)
+    if (!is_array(elementNames)) {
+      elementNames = []
+    }
+    if (!element.name || !_.isString(element.name)) {
+      return
+    }
+    if (!(only_react_elements
+      && !(data_get(element, 'settings.react_element')
+        || (reactElements.indexOf(element.name) !== -1)))) {
+      elementNames.push(element.name)
+      if (element.name === 'section' || element.name === 'column' || element.name === 'section_widget') {
+
+        recurseMapElements(element, function (element) {
+            if (element.name && elementNames.indexOf(element.name) === -1) {
+              elementNames.push(element.name)
+            }
+          }
+        )
+
+      }
+    }
+    if (element.children && is_array(element.children)) {
+      for(const child of element.children)
+      {
+        await this._extractElementsNames(child, elementNames, only_react_elements)
+      }
+    }
+    if (element.name === 'template' && data_get(element, 'settings.template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template'), elementNames)
+    }
+    if (element.name === 'posts' && data_get(element, 'settings.posts_card_template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_template'), elementNames)
+    }
+    if (element.name === 'posts' && data_get(element, 'settings.posts_card_hover_template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames)
+    }
+    if (element.name === 'table'
+      && data_get(element, 'settings.row_expand')
+      && data_get(element, 'settings.card_template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.card_template'), elementNames)
+    }
+    if (element.name === 'dropbar'
+      && data_get(element, 'settings.template_dropbar_section')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames)
+    }
+    if (element.name === 'table'
+      && data_get(element, 'settings.tables_columns')) {
+      let columns = data_get(element, 'settings.tables_columns', [])
+      for(let column of columns)
+      {
+        if (data_get(column, 'column_template')) {
+          await this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
+        }
+      }
+    }
+    if (element.name === 'tabs'
+      && data_get(element, 'settings.items_tabs')) {
+      let tabs = data_get(element, 'settings.items_tabs', [])
+      for(let tab of tabs)
+      {
+        if (data_get(tab, 'card_template')) {
+          this.extractElementsNamesFromTemplate(data_get(tab, 'card_template'), elementNames)
+        }
+      }
+    }
+    if (element.name === 'table'
+      && data_get(element, 'settings.row_expand')
+      && data_get(element, 'settings.tables_columns')
+      && is_array(data_get(element, 'settings.tables_columns'))) {
+      let columns = data_get(element, 'settings.tables_columns')
+      for(let column of columns)
+      {
+        if (data_get(column, 'column_template')) {
+          this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
+        }
+      }
+    }
+
+  }
+  async  extractElementsNamesFromTemplate( template_id, elementNames ){
+    let template
+    if( validGuid( template_id ) ){
+      template = await Template.query().where( 'guid', template_id ).first();
+    } else {
+      template = await Template.find( template_id );
+    }
+    if( ! template ){
+      return;
+    }
+
+    let data = JSON.parse( template.data );
+    this._extractElementsNames( data, elementNames, false );
   }
 }

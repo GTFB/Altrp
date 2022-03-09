@@ -16,6 +16,7 @@
 {{=<% %>=}}
 {{{fonts}}}
 <%={{ }}=%>
+{{{extra_header_styles}}}
 {{{all_styles}}}
 
     <script>
@@ -58,7 +59,9 @@
         window.isProd = {{{ isProd }}}
         window.altrpPages = {{{ JSON.stringify( pages) }}};
         window.altrp = {{{JSON.stringify(_altrp)}}};
-        window.altrpElementsLists = [{{{ elements_list.map(e=>`'${e}'`) }}}];
+<%={{ }}=%>
+        window.altrpElementsLists = [{{{elements_list}}}];
+{{=<% %>=}}
         window.pageStorage = {};
         window.ALTRP_DEBUG = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_debug', false ) ) }}};
         window.ALTRP_LOAD_BY_USER = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_user_load', false ) ) }}};
@@ -84,5 +87,6 @@
 
     <%={{ }}=%>
     <link rel="stylesheet" href="/modules/front-app/front-app.css?0.0.0">
+    {{{extra_footer_styles}}}
 </body>
 </html>

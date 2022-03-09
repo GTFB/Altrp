@@ -153,7 +153,7 @@ class GlobalStylesPresets extends React.Component {
   constructor(props) {
     super(props);
     const currentElement = props.currentElement.currentElement;
-    const presets = props.globalStylesPresets.styles;
+    const presets = props.globalStylesPresets.styles || {};
 
     let items = [];
     if(presets) {
@@ -177,7 +177,7 @@ class GlobalStylesPresets extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const currentElement = this.props.currentElement.currentElement;
-    const presets = this.props.globalStylesPresets.styles;
+    const presets = this.props.globalStylesPresets.styles || {};
     let items = [];
     if (presets[currentElement.getName()]) {
       items = _.keys(presets[currentElement.getName()])

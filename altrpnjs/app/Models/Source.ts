@@ -216,7 +216,7 @@ export default class Source extends BaseModel {
       switch ( this.sourceable_type) {
         case Customizer.sourceable_type:{
           if(!this.customizer?.name){
-            Logger.error(`Customizer Not found method name type
+            Logger.trace(`Customizer Not found method name type
              Source: ${this.name}`);
           }
           return this.customizer?.name || `_${altrpRandomId()}`
