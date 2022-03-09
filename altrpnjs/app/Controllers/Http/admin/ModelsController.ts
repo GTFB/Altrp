@@ -18,7 +18,6 @@ import Role from "App/Models/Role"
 import SourceRole from "App/Models/SourceRole"
 import guid from "../../../../helpers/guid"
 import SQLEditor from "App/Models/SQLEditor";
-import filtration from "../../../../helpers/filtration";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {

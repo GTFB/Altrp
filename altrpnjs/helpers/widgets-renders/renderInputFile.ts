@@ -1,7 +1,7 @@
 import getResponsiveSetting from '../getResponsiveSetting';
 
-export default function renderInputFile(settings, device, context) {
-  
+export default function renderInputFile(settings, device) {
+
   const disabled = getResponsiveSetting(settings, 'readonly', device);
   const buttonText = getResponsiveSetting(settings, 'button_text', device)
   const accept = getResponsiveSetting(settings, 'accept', device)

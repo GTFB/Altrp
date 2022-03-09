@@ -1,7 +1,7 @@
 import getResponsiveSetting from '../getResponsiveSetting'
 import _ from 'lodash'
 import renderAsset from './../renderAsset'
-import getContent from '../getContent'
+// import getContent from '../getContent'
 
 export default function renderDropbar(settings, device) {
   const buttonText = getResponsiveSetting(settings,"button_text", device, "");
@@ -9,7 +9,7 @@ export default function renderDropbar(settings, device) {
   const customClasses = getResponsiveSetting(settings,"position_css_classes", device, null);
   const background_image = getResponsiveSetting(settings,"background_image", device, {});
   const buttonMedia = getResponsiveSetting(settings,"button_icon", device, {});
-  const dropbarDelay = getResponsiveSetting(settings,"show_delay_dropbar_options", device);
+  // const dropbarDelay = getResponsiveSetting(settings,"show_delay_dropbar_options", device);
 
   const showIcon = buttonMedia.url;
 
@@ -35,13 +35,13 @@ export default function renderDropbar(settings, device) {
   ${ showIcon ? (! isSSR() && `<span class="altrp-btn-icon">${renderAsset(buttonMedia)}</span>`) : "" }
   </button>`
 
-  let altrpDropbar = AltrpDropbar({
-    className: "btn",
-    element: settings,
-    getContent,
-    showDelay: dropbarDelay,
-    buttonTemplate
-  })
+  // let altrpDropbar = AltrpDropbar({
+  //   className: "btn",
+  //   element: settings,
+  //   getContent,
+  //   showDelay: dropbarDelay,
+  //   buttonTemplate
+  // })
 
-  return `<div class="altrp-btn-wrapper_dropbar altrp-btn-wrapper">${altrpDropbar}</div>`
+  return buttonTemplate
 }

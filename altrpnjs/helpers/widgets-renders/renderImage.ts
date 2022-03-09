@@ -4,6 +4,7 @@ import getResponsiveSetting from '../getResponsiveSetting'
 import _ from 'lodash'
 import parseURLTemplate from '../parseURLTemplate'
 import objectToAttributesString from './../objectToAttributesString'
+import AltrpImage from "./components/AltrpImage";
 
 export default function renderImage(settings, device, context) {
   const link = settings.image_link || {}
@@ -58,7 +59,7 @@ export default function renderImage(settings, device, context) {
     height = ''
   }
 
-  let altrpImage = AltrpImage({image: media, width, height, settings, className: 'altrp-image' })
+  let altrpImage = AltrpImage({image: media, width, height, settings, class: 'altrp-image' })
 
   if (link.toPrevPage) {
     return `<div class='${classNames}'>${altrpImage}</div>`

@@ -1,1 +1,1 @@
-{{=<% %>=}}{{{<%={{ }}=%>renderInputGallery(element{{id}}_settings, device, altrpContext){{=<% %>=}}}}}<%={{ }}=%>
+{{=<% %>=}}{{{<%={{ }}=%>renderInputGallery(element{{id}}_settings, device){{=<% %>=}}}}}<%={{ }}=%>
