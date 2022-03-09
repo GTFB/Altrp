@@ -347,4 +347,14 @@ export default class Customizer extends BaseModel {
     }
     return expression
   }
+
+  allowMethod(method: string){
+    const startNode = this.getStartNode()
+    if (! startNode){
+      return false
+    }
+    const request_type = startNode.getDataByPath('request_type') || 'get'
+
+    return request_type.toLowerCase() === method.toLowerCase()
+  }
 }

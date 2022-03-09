@@ -1,7 +1,6 @@
 import app_path from "../../helpers/app_path";
 import fs from "fs";
 import * as mustache from 'mustache'
-import isProd from "../../helpers/isProd";
 import ElementRenderer from "App/Renderers/ElementRenderer";
 
 export default class RootElementRenderer{
@@ -30,7 +29,7 @@ export default class RootElementRenderer{
     let children_content = ''
     for(let child of this.children){
       try {
-        let path = child.type === 'widget' ? `./widgets/${child.name}` : `./${child.name}`
+        // let path = child.type === 'widget' ? `./widgets/${child.name}` : `./${child.name}`
         const renderer = new ElementRenderer(child)
         children_content += await renderer.render()
       } catch (e) {

@@ -12,7 +12,7 @@
     background-color: white;
     padding: 30px 20px;
 
-    & svg {
+    & .admin-table__search-icon-svg {
       position: absolute;
       left: 35px;
       top: 42px;
@@ -199,5 +199,40 @@
 
   &:focus {
     box-shadow: 0 0 0 1px #315efb, 0 0 0 3px rgb(19 124 189 / 30%);
+  }
+}
+
+.admin-table .admin-table__td-image {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  margin: 10px;
+}
+
+.td__content-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.admin-table__td-image-thead {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.admin-table-body .admin-table-row .admin-table__td-image .quick-action-menu {
+  bottom: 51px;
+  left: 150px;
+}
+
+.admin-table__delete-icon {
+  position: relative;
+  color: #cf0025;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
   }
 }

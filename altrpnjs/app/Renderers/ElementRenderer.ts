@@ -46,9 +46,6 @@ export default class ElementRenderer {
         link_class: this.isLink() ? 'altrp-pointer' : '',
         columns_count,
       })
-      // if(this.getName() === 'heading'){
-      //   console.log(element_content);
-      // }
     } else {
       console.error(`Template for ${this.element.name} not found!`);
     }

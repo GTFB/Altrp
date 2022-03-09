@@ -5,16 +5,26 @@ import Resource from "../../../editor/src/js/classes/Resource";
 export default class AdminTableRow extends Component {
 
   render() {
-    const { row } = this.props;
+    const { row, arrayChecked } = this.props;
     return (
       <tr className={this.props.offBorderLast ? "admin-table-row admin-table-row-offLastBorder" : "admin-table-row"} key={row.id} title={row.id}>
-        <td
-          className="admin-table__td admin-table__td_check"
-          key={"choose" + row.id}
-          title={"choose" + row.id}
-        >
-          <input type="checkbox" />
-        </td>
+        {arrayChecked ? (
+          <td
+            className="admin-table__td admin-table__td_check"
+            key={"choose" + row.id}
+            title={"choose" + row.id}
+          >
+            <input onChange={(e) => row.checkedTable(e, row.id)} type="checkbox" checked={arrayChecked.includes(row.id)}/>
+          </td>
+        ) : (
+          <td
+            className="admin-table__td admin-table__td_check"
+            key={"choose" + row.id}
+            title={"choose" + row.id}
+          >
+            <input type="checkbox" />
+          </td>
+        )}
         {this.props.columns.map((column, index) => {
           let tag = "span";
           let text = _.get(row, column.name, '')
@@ -59,6 +69,13 @@ export default class AdminTableRow extends Component {
             props.className = "td__content button__table";
             props.onClick = row.button__table
           }
+          if (column.name === 'image') {
+            tag = 'img'
+            props.className = 'td__content td__content-image'
+            props.src = row.url
+            props.onClick = row.clickToImage
+            delete props.children
+          }
           if (column.is_boolean) {
             props.children = [
               _.get(row, column.name, false).toString()
@@ -67,7 +84,7 @@ export default class AdminTableRow extends Component {
 
           return (
             <td
-              className="admin-table__td td"
+              className={`admin-table__td td ${column.name === 'image' ? 'admin-table__td-image' : ''}`}
               key={column.name + row.id}
               title={column.name + row.id}
             >

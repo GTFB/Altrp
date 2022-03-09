@@ -1,4 +1,3 @@
-import {minify} from'html-minifier'
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
@@ -6,7 +5,6 @@ import Env from '@ioc:Adonis/Core/Env';
 // @ts-ignore
 import renderResult from '../../helpers/server-render/renderResult'
 import replaceContentWithData from "../../helpers/replaceContentWithData";
-import prepareContext from "../../helpers/prepareContext";
 import {matchPath} from 'react-router'
 import empty from "../../helpers/empty";
 import * as _ from 'lodash'
@@ -20,7 +18,10 @@ import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import Source from "App/Models/Source";
 import getCurrentDevice from "../../helpers/getCurrentDevice";
+import isProd from "../../helpers/isProd";
+import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES";
 // import Ws from "App/Services/Ws";
 
 export default class AltrpRouting {
@@ -42,26 +43,23 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async handle({request, response, view, auth, params}: HttpContextContract, next: () => Promise<void>) {
+  public async handle(httpContext: HttpContextContract, next: () => Promise<void>) {
     /**
      * Игнорим все запросы кроме get
      */
-    if (request.method() !== 'GET') {
+    if (httpContext.request.method() !== 'GET') {
       await next()
       return
     }
-    const url = request.url();
+    const url = httpContext.request.url();
     /**
      * Игнорим логинизацию
      */
-    if (url === '/altrp-login'
-      || url === '/login'
-      || url === '/data/current-user' ||
-      url === "/modules/admin/admin.js" ||
-      url === "/modules/front-app/front-app.css"
-    ) {
-      await next()
-      return
+    for(const route of IGNORED_ROUTES) {
+      if(route === url) {
+        await next()
+        return
+      }
     }
 
     /**
@@ -75,13 +73,13 @@ export default class AltrpRouting {
     /**
      * init global object
      */
-    this.setGlobal('currentUser', auth.user)
-    if(auth.user){
+    this.setGlobal('currentUser', httpContext.auth.user)
+    if(httpContext.auth.user){
 
       // @ts-ignore
-      await auth.user.load('permissions')
+      await httpContext.auth.user.load('permissions')
       // @ts-ignore
-      await auth.user.load('roles')
+      await httpContext.auth.user.load('roles')
     }
     this.setGlobal('url', url)
     const altrpSettings: {
@@ -89,24 +87,24 @@ export default class AltrpRouting {
       libsToLoad?: [],
       page_params: object,
     } = {
-      page_params: request.qs(),
+      page_params: httpContext.request.qs(),
 
     }
     this.setGlobal('altrpSettings', altrpSettings)
-    let pageMatch
+    let pageMatch:any = {}
     const page: Page | undefined = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
       if (matchPath(url, page.path,)?.isExact) {
         pageMatch = matchPath(url, page.path,)
       }
       return matchPath(url, page.path,)?.isExact
     });
-
+    httpContext.params = pageMatch.params
     if (page) {
       const pages = await page.getPagesForFrontend();
 
 
       if (!await page.allowedForUser(this)) {
-        return response.redirect(page.redirect || '/')
+        return httpContext.response.redirect(page.redirect || '/')
       }
 
       await page.load('templates');
@@ -116,7 +114,7 @@ export default class AltrpRouting {
       const pageAreas = await page.getAreas(true);
 
       // @ts-ignore
-      const user: User = auth.user
+      const user: User = httpContext.auth.user
       let is_admin = user && await user.isAdmin();
       const altrpElementsLists = await this.extractElementsNames(pageAreas);
 
@@ -125,8 +123,8 @@ export default class AltrpRouting {
         try {
           const ModelClass = (await import(`../AltrpModels/${page.model.name}`)).default
           let classInstance
-          if (page.param_name && page.model_column) {
-            classInstance = await ModelClass.where(page.model_column, pageMatch[page.param_name])
+          if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
+            classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
           } else {
             classInstance = await ModelClass.find(pageMatch.params.id)
           }
@@ -135,29 +133,36 @@ export default class AltrpRouting {
           console.error(e);
         }
         if (empty(model_data)) {
-          response.status(404)
-          return response.send('Not Found')
+          httpContext.response.status(404)
+          return httpContext.response.send('Not Found')
         }
       }
       let title = replaceContentWithData(page.title, model_data)
-      const datasources= {}
 
+      // const datasources= {}
+      let altrpuser:any = {
+        is_guest: true,
+      }
+      if(user){
+        altrpuser = user.toObject()
+      }
       const _frontend_route = page.serialize()
       const altrpContext = {
-        ...params,
+        ...pageMatch.params,
         ...model_data,
-        altrpdata: datasources,
-        altrpuser: user.toObject(),
+        altrpuser,
         altrppage:{
           title,
           url,
-          params: request.qs()
+          params: httpContext.request.qs()
         }
       }
+      const datasources= await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
+      altrpContext.altrpdata = datasources
       try {
         _.set(page, 'templates', [])
         _.set(_frontend_route, 'templates', [])
-        let res = await view.render(`altrp/pages/${page.guid}`,
+        let res = await httpContext.view.render(`altrp/pages/${page.guid}`,
           Edge({
             hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
             url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
@@ -165,7 +170,8 @@ export default class AltrpRouting {
             altrpContext,
             is_admin,
             pages,
-            csrfToken: request.csrfToken,
+            csrfToken: httpContext.request.csrfToken,
+            isProd: isProd(),
             page_areas: pageAreas,
             page_id: page.id,
             altrpElementsLists,
@@ -176,7 +182,7 @@ export default class AltrpRouting {
             _frontend_route,
             route_args: pageMatch.params,
             datasources,
-            device: getCurrentDevice(request),
+            device: getCurrentDevice(httpContext.request),
             _altrp: {
               version: getLatestVersion()
             },
@@ -187,7 +193,7 @@ export default class AltrpRouting {
         //   minifyCSS: true,
         //   minifyJS: true,
         // })
-        return response.send(res)
+        return httpContext.response.send(res)
       } catch (e) {
         console.error(`Error to View Custom Page: ${e.message}
          ${e.stack}
@@ -195,8 +201,8 @@ export default class AltrpRouting {
       }
       //@ts-ignore
       const preload_content:any = renderResult({
-        protocol: request.protocol(),
-        host: request.host(),
+        protocol: httpContext.request.protocol(),
+        host: httpContext.request.host(),
         originalUrl: url,
         json: {
           altrp_settings,
@@ -204,7 +210,7 @@ export default class AltrpRouting {
           altrpImageLazy: get_altrp_setting('altrp_image_lazy', 'none'),
           altrpSkeletonColor: get_altrp_setting('altrp_skeleton_color', '#ccc'),
           altrpSkeletonHighlightColor: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
-          current_user: auth.user || {is_guest: true}
+          current_user: httpContext.auth.user || {is_guest: true}
         }
       })
 
@@ -213,19 +219,23 @@ export default class AltrpRouting {
 
 
       _frontend_route.title = title
-      const v = await view.render('front-app',
+      const v = await httpContext.view.render('front-app',
         Edge({
         hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
         url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+        sw: '/modules/front-app/sw.js',
         page: pageAreas,
         title: replaceContentWithData(page.title || 'Altrp', altrpContext),
         is_admin,
         pages,
-        csrfToken: request.csrfToken,
+        csrfToken: httpContext.request.csrfToken,
+        isProd: isProd(),
         preload_content,
         page_areas: pageAreas,
         page_id: page.id,
         altrpElementsLists,
+        device: getCurrentDevice(httpContext.request),
+
         elements_list: altrpElementsLists,
         model_data,
         fonts: this.getFonts(),
@@ -237,10 +247,10 @@ export default class AltrpRouting {
         },
       })
       )
-      return response.send(v)
+      return httpContext.response.send(v)
     }
-    response.status(404)
-    return response.send('Not Found')
+    httpContext.response.status(404)
+    return httpContext.response.send('Not Found')
   }
 
   getFonts(): string {
@@ -265,12 +275,12 @@ export default class AltrpRouting {
     if( ! template ){
       return;
     }
-    data_set(altrpSettings, 'templates_data.' + template_id,  template.toArray());
+    data_set(altrpSettings, 'templates_data.' + template_id,  template.dataWithoutContent());
 
     let data = JSON.parse( template.data );
     this._extractElementsNames( data, elementNames, false );
   }
-  async  _extractElementsNames(element, elementNames, only_react_elements) {
+  async _extractElementsNames(element, elementNames, only_react_elements) {
     let plugins_widget_list: any = ''
     if (!plugins_widget_list) {
       plugins_widget_list = []

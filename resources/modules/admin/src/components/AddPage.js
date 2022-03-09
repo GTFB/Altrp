@@ -12,6 +12,9 @@ import "./../sass/components/AddPost.scss";
 import {Alignment, Button, InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import {MultiSelect, Select} from "@blueprintjs/select";
 import UserTopPanel from "./UserTopPanel";
+import {compose} from "redux";
+import {connect} from "react-redux";
+import Models from "./Models";
 
 const columns = [
   {
@@ -123,7 +126,8 @@ class AddPage extends Component {
               value: '',
               label: 'None',
             },
-            ...models_res]
+            ...models_res.filter(item => !this.props.standardModels.some(model => model.label === item.label))]
+
         };
       });
     }
@@ -918,4 +922,15 @@ class AddPage extends Component {
   }
 }
 
-export default withRouter(AddPage);
+const mapStateToProps = (state) => {
+  return {
+    standardModels: state.modelsState.standardModels
+  }
+}
+
+AddPage = compose(
+  connect(mapStateToProps),
+  withRouter
+)(AddPage)
+
+export default AddPage;

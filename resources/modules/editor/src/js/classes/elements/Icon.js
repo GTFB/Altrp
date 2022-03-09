@@ -73,6 +73,7 @@ class Icon extends BaseElement {
     this.addControl('content_alignment', {
       type: CONTROLLER_SELECT,
       label: 'Content alignment',
+      default: 'center',
       options:[
         {
           label: 'left',
@@ -138,6 +139,7 @@ class Icon extends BaseElement {
     this.addControl('icon_horizontal_alignment', {
       type: CONTROLLER_SELECT,
       label: 'Icon horizontal alignment',
+      default: 'center',
       options:[
         {
           label: 'left',

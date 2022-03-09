@@ -18,6 +18,7 @@ import Role from "App/Models/Role"
 import SourceRole from "App/Models/SourceRole"
 import guid from "../../../../helpers/guid"
 import SQLEditor from "App/Models/SQLEditor";
+import filtration from "../../../../helpers/filtration";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -284,6 +285,30 @@ export default class ModelsController {
           name: request.qs().name || ''
         }).first()
       })
+  }
+
+  async getDataSources(contract: HttpContextContract) {
+    this.getDataSourcesAndPageCount(contract)
+  }
+
+  async getDataSourcesAndPageCount({request}: HttpContextContract) {
+
+    const page = request.input("page")
+    console.log(page)
+
+    if(page) {
+
+    } else {
+      const sources = await Source.query();
+
+      return {
+        data_sources: sources,
+        pageCount: 0
+      }
+    }
+    // filtration(templatesQuery, request, [
+    //   "title",
+    // ])
   }
 
   async getDataSourcesOptionsByModel({response, params}: HttpContextContract) {

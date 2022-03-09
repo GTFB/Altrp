@@ -1,6 +1,7 @@
 import objectToStylesString from "../objectToStylesString";
 import renderAsset from "../renderAsset";
 import getResponsiveSetting from "../getResponsiveSetting"
+import replaceContentWithData from "../replaceContentWithData";
 
 export default function renderTabs(settings, device, context) {
   let buttonClasses = "";
@@ -51,15 +52,15 @@ export default function renderTabs(settings, device, context) {
 
       return {
         id: `tab-${idx + 1}`,
-        className: "altrp-tab-btn" + 
-          buttonClasses + 
-          (selected === `tab-${idx + 1}` ? " active" : "") + 
+        className: "altrp-tab-btn" +
+          buttonClasses +
+          (selected === `tab-${idx + 1}` ? " active" : "") +
           (vertical ? " altrp-tab-vertical" : " altrp-tab-horizontal")
         ,
         panel: `
           <div class="altrp-tab ${selected === `tab-${idx + 1}` ? " active" : ""}>
             ${tab.card_template ? `
-              ${Template} 
+              ${Template}
             ` : `
               ${tab.wysiwyg_items}
             `}
@@ -82,28 +83,28 @@ export default function renderTabs(settings, device, context) {
       <div class="bp3-tab-list" role="tablist">
         ${tabs.map(({title, id, className}) => `
           <div
-            aria-controls="bp3-tab-panel_${id}" 
+            aria-controls="bp3-tab-panel_${id}"
             aria-disabled="false"
-            aria-selected="${defaultSelectedTabId === id}" 
-            class="bp3-tab ${className}" 
+            aria-selected="${defaultSelectedTabId === id}"
+            class="bp3-tab ${className}"
             data-tab-id="${id}"
-            id="bp3-tab-title_${id}" 
-            role="tab" 
+            id="bp3-tab-title_${id}"
+            role="tab"
             tabindex="0"
           >
-            ${title}
+            ${replaceContentWithData(title, context)}
           </div>
         `)}
       </div>
       ${tabs.map(({panel, id, className}) => `
         <div
-          aria-labelledby="bp3-tab-title_${id}" 
-          aria-hidden="false" 
-          class="bp3-tab-panel ${className}" 
-          id="bp3-tab-panel_${id}" 
+          aria-labelledby="bp3-tab-title_${id}"
+          aria-hidden="false"
+          class="bp3-tab-panel ${className}"
+          id="bp3-tab-panel_${id}"
           role="tabpanel"
         >
-          ${panel}
+          ${replaceContentWithData(panel, context)}
         </div>
       `)}
     </div>
