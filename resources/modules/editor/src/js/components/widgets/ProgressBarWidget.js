@@ -21,15 +21,15 @@ class ProgressBarWidget extends Component {
   }
 
   render() {
-    let value = this.props.element.getContent("value") || "100";
+    let value = this.props.element.getLockedContent("value") || "100";
 
     if(!isNaN(value)) {
       value = parseInt(value) * 0.01;
     }
 
     const settings = {
-      stripes: this.props.element.getResponsiveSetting("stripes", "", true),
-      animate: this.props.element.getResponsiveSetting("animate", "", true)
+      stripes: this.props.element.getResponsiveLockedSetting("stripes", "", true),
+      animate: this.props.element.getResponsiveLockedSetting("animate", "", true)
     }
 
     return (

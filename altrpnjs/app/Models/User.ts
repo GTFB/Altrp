@@ -116,9 +116,11 @@ export default class User extends BaseModel {
     if(empty(roles)){
       return  true
     }
+
     if(typeof roles === 'string' || typeof roles === 'number'){
       roles = [roles]
     }
+
     // @ts-ignore
     await this.load('roles')
 

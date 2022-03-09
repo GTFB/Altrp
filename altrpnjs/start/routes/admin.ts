@@ -19,8 +19,6 @@ Route.group(() => {
 
     Route.post("/favicon", "admin/AdminController.updateFavicon")
 
-    Route.get('/global_template_styles', 'TemplatesController.globalTemplateStyles')
-
     Route.post('/templates', 'TemplatesController.create').middleware('auth')
     Route.get('/templates', 'TemplatesController.index')
     Route.get('/templates/options', 'TemplatesController.options')
@@ -85,6 +83,10 @@ Route.group(() => {
     Route.put("/menus/:id", "admin/MenusController.update")
     Route.get("/menus/:id", "admin/MenusController.show")
 
+    Route.get("/data_sources", "admin/ModelsController.getDataSources")
+
+    Route.resource('global_template_styles', 'GlobalTemplateStylesController')
+
     Route.get("/page_data_sources/pages/:id", () => {
       return []
     })
@@ -93,6 +95,8 @@ Route.group(() => {
       return []
     })
 
+
+    Route.get("/changelog", "indicesController.changelog")
 
     Route.get('/pages_options', 'OptionsController.pages')
 

@@ -65,6 +65,7 @@ class InputCropImage extends BaseElement {
     this.addControl('text', {
       type: CONTROLLER_TEXT,
       label: 'Text',
+      locked: true,
     });
 
     this.addControl('background_image', {
@@ -75,7 +76,8 @@ class InputCropImage extends BaseElement {
     this.addControl('required', {
       type: CONTROLLER_SWITCHER,
       responsive: false,
-      label: 'Required'
+      label: 'Required',
+      locked: true,
     });
 
     this.endControlSection();

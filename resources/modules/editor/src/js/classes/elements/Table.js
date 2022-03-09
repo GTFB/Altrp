@@ -101,7 +101,8 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       hideOnEmail: true,
       label: 'Table 2.0',
-      default: true
+      default: true,
+      locked: true,
     });
 
     this.addControl('table_position_style_z_index', {
@@ -162,6 +163,7 @@ class Table extends BaseElement {
         },
       ],
       default: 'datasource',
+      locked: true,
     });
 
     this.addControl('table_datasource', {
@@ -170,6 +172,7 @@ class Table extends BaseElement {
       conditions: {
         'choose_datasource': 'datasource',
       },
+      locked: true,
     });
 
     this.addControl('table_query_heading', {
@@ -185,6 +188,7 @@ class Table extends BaseElement {
       conditions: {
         'choose_datasource': 'query',
       },
+      locked: true,
     });
 
     this.endControlSection();
@@ -715,6 +719,7 @@ class Table extends BaseElement {
       hideOnEmail: true,
       conditionsCallback: ()=>!!getCurrentElement().getResponsiveSetting('table_transpose'),
       label: 'Header Full Width',
+      locked: true,
     });
 
     repeater.addControl('header_bg', {
@@ -1005,6 +1010,7 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
       label: 'Store State',
+      locked: true,
     });
 
     this.addControl('loading_text', {

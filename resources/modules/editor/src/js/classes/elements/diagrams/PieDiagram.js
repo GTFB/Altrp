@@ -57,7 +57,8 @@ class PieDiagram extends BaseElement {
     this.addControl("datasource_path", {
       dynamic: false,
       type: CONTROLLER_TEXTAREA,
-      label: "Path To Data"
+      label: "Path To Data",
+      locked: true,
     });
 
     this.addControl("use_legend", {
@@ -68,16 +69,19 @@ class PieDiagram extends BaseElement {
     this.addControl("useCenteredMetric", {
       type: CONTROLLER_SWITCHER,
       label: "Use Centered Metric?",
+      locked: true,
     });
 
     this.addControl("useProcent", {
       type: CONTROLLER_SWITCHER,
       label: "Add Procent?",
+      locked: true,
     });
 
     this.addControl("useLinkArcLabels", {
       type: CONTROLLER_SWITCHER,
       label: "Use Link Arc Labels?",
+      locked: true,
     });
 
     this.endControlSection();
@@ -93,12 +97,14 @@ class PieDiagram extends BaseElement {
 
     this.addControl("activeOuterRadiusOffset", {
       type: CONTROLLER_NUMBER,
-      label: "Active Outer Radius Offset"
+      label: "Active Outer Radius Offset",
+      locked: true,
     });
 
     this.addControl("activeInnerRadiusOffset", {
       type: CONTROLLER_NUMBER,
-      label: "Active Inner Radius Offset"
+      label: "Active Inner Radius Offset",
+      locked: true,
     });
 
     this.addControl("innerRadius", {
@@ -106,7 +112,8 @@ class PieDiagram extends BaseElement {
       label: "Inner Radius",
       min: 0,
       max: 0.95,
-      step: 0.05
+      step: 0.05,
+      locked: true,
     });
 
     this.addControl("padAngle", {
@@ -114,18 +121,21 @@ class PieDiagram extends BaseElement {
       label: "Pad Angle",
       min: 0,
       max: 45,
-      step: 1
+      step: 1,
+      locked: true,
     });
 
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      options: colors
+      options: colors,
+      locked: true,
     });
 
     this.addControl("yScaleMax", {
       type: CONTROLLER_NUMBER,
-      label: "Y Scale Max"
+      label: "Y Scale Max",
+      locked: true,
     });
 
     this.addControl("cornerRadius", {
@@ -134,6 +144,7 @@ class PieDiagram extends BaseElement {
       min: 0,
       max: 45,
       step: 1,
+      locked: true,
     });
 
     this.endControlSection();
@@ -178,6 +189,7 @@ class PieDiagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("height", {
@@ -186,12 +198,14 @@ class PieDiagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl("margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       units: ["px", "%", "vh"],
+      locked: true,
     });
 
     this.endControlSection()

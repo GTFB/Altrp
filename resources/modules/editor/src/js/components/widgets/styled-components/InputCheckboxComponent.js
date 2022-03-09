@@ -49,19 +49,6 @@ const containerStyle = settings => {
  * @returns {String} CSS style string
  */
 const fieldStyle = settings => {
-  let styles = `&& .altrp-field, && .altrp-field-checkbox .bp3-control-indicator {`;
-  let padding,
-    color,
-    typographic,
-    backgroundColor,
-    borderType,
-    borderWidth,
-    borderColor,
-    borderRadius,
-    boxShadow,
-    size
-  ;
-
   const {
     placeholder_and_value_alignment_position_section,
     position_z_index,
@@ -74,6 +61,19 @@ const fieldStyle = settings => {
     image_select_image_position,
     cross_size
   } = settings;
+
+  let styles = `&& .altrp-field, && .altrp-field-checkbox .bp3-control-indicator {`;
+  let padding,
+    color,
+    typographic,
+    backgroundColor,
+    borderType,
+    borderWidth,
+    borderColor,
+    borderRadius,
+    boxShadow,
+    size
+  ;
 
   settings && (size = getResponsiveSetting(settings, "field_size"));
   size && (styles += `height:${sliderStyled(size)};width:${sliderStyled(size)};`);
@@ -233,11 +233,6 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  styles += "&& .altrp-field-option{";
-
-  input_position && (styles += `flex-direction:${input_position};`);
-
-  styles += "}";
 
   styles += "&& .altrp-image-select{";
 
@@ -539,7 +534,20 @@ const fieldLabelContainerStyle = settings => {
   label_position_left && (styles += `left:${label_position_left};`);
   label_icon_position && (styles += `flex-direction:${label_icon_position};`);
 
-  styles += "}";
+  styles += "}";  
+
+  styles += `&& .altrp-field-container:hover .altrp-field-label-container {`
+
+  settings &&
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "label_background_color",
+      ':hover'
+    ));
+  backgroundColor &&
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  styles += '}'
+
   return styles;
 };
 /**
@@ -548,7 +556,7 @@ const fieldLabelContainerStyle = settings => {
  * @returns {String} CSS style string
  */
 const fieldLabel = settings => {
-  let styles = `&& .altrp-field-label {`;
+  let styles = `.altrp-field-label {`;
   let color, typographic;
 
   settings &&
@@ -563,6 +571,7 @@ const fieldLabel = settings => {
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
+
   return styles;
 };
 /**
@@ -821,9 +830,18 @@ const maskMismatchMessage = (settings, id) => {
   return styles;
 };
 //Точка входа
-function InputCheckboxComponent(settings) {
+function InputCheckboxComponent(settings, id) {
+  const parentClass = `.altrp-element${id}`;
 
-  let styles = "";
+  let styles = ''
+
+  styles += `.altrp-field-option {`;
+  if (settings.input_position) {
+    styles += `flex-direction:${settings.input_position};`
+  }
+  styles += "}";
+
+  styles += `${parentClass} {`;
   const { background_section_opacity } = settings;
   //for all element
   background_section_opacity &&
@@ -871,6 +889,8 @@ function InputCheckboxComponent(settings) {
   const maskMismatchMessageStyles = maskMismatchMessage(settings);
   maskMismatchMessageStyles && (styles += maskMismatchMessageStyles);
   //finish
+
+  styles += '}'
   return styles;
 }
 export default InputCheckboxComponent

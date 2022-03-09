@@ -71,7 +71,8 @@ class InputTextCommon extends BaseElement {
           value: "tel",
           label: "Tel"
         },
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("form_id", {
@@ -315,7 +316,8 @@ class InputTextCommon extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("label_icon", {
@@ -344,13 +346,15 @@ class InputTextCommon extends BaseElement {
           value: "column-reverse",
           label: "Top"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
-      default: "Placeholder"
+      default: "Placeholder",
+      locked: true,
     });
 
     this.addControl("content_mask", {
@@ -379,7 +383,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
-      label: "Required"
+      label: "Required",
+      locked: true,
     });
 
     this.addControl("content_readonly", {
@@ -420,12 +425,14 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("options", {
       type: CONTROLLER_TEXTAREA,
-      label: "Autocomplete Options"
+      label: "Autocomplete Options",
+      locked: true,
     });
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
-      label: "Default Value"
+      label: "Default Value",
+      locked: true,
     });
 
     this.addControl("content_calculation", {
@@ -434,8 +441,8 @@ class InputTextCommon extends BaseElement {
       conditions: {
         "content_type!": ["file"]
       },
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+      description: "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+      locked: true,
     });
 
     this.endControlSection();
@@ -450,7 +457,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("create_allowed", {
       type: CONTROLLER_SWITCHER,
-      label: "Allowed"
+      label: "Allowed",
+      locked: true,
     });
 
     this.addControl("create_url", {
@@ -460,7 +468,8 @@ class InputTextCommon extends BaseElement {
       description: "/ajax/models/tests",
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_label", {
@@ -469,7 +478,8 @@ class InputTextCommon extends BaseElement {
       responsive: false,
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_data", {
@@ -490,7 +500,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl('left_icon', {
       type: CONTROLLER_MEDIA,
-      label: 'Left Icon'
+      label: 'Left Icon',
+      locked: true,
     })
 
     this.addControl('password_show_left_icon', {
@@ -498,12 +509,14 @@ class InputTextCommon extends BaseElement {
       conditions:{
         content_type: 'password'
       },
-      label: 'Password Show Left Icon'
+      label: 'Password Show Left Icon',
+      locked: true,
     })
 
     this.addControl('right_icon', {
       type: CONTROLLER_MEDIA,
-      label: 'Right Icon'
+      label: 'Right Icon',
+      locked: true,
     })
 
     this.addControl('password_show_right_icon', {
@@ -511,7 +524,8 @@ class InputTextCommon extends BaseElement {
       conditions:{
         content_type: 'password'
       },
-      label: 'Password Show Right Icon'
+      label: 'Password Show Right Icon',
+      locked: true,
     })
 
     this.addControl('icons_size', {
@@ -538,8 +552,8 @@ class InputTextCommon extends BaseElement {
           value: 'prevent_filter',
           label: 'Prevent Filter',
         },
-
       ],
+      locked: true,
     })
 
     this.endControlSection();
@@ -649,6 +663,7 @@ class InputTextCommon extends BaseElement {
       units: ["px", "%", "vh"],
       max: 60,
       min: 0,
+      locked: true,
     });
 
     this.addControl("label_padding", {
@@ -680,7 +695,8 @@ class InputTextCommon extends BaseElement {
       },
       units: ["px", "%", "vh"],
       max: 100,
-      min: -100
+      min: -100,
+      locked: true,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "top: {{SIZE}}{{UNIT}};"

@@ -15,9 +15,7 @@ export default class RobotsController {
         author: robot.user.name,
         ...robot.serialize(),
         categories: robot.categories.map(category => {
-          return {
-            category: category
-          }
+          return category
         })
       }
 
@@ -49,7 +47,7 @@ export default class RobotsController {
     })
 
     for (const option of categories) {
-      const category = await Category.find(option.value);
+      const category = await Category.query().where("guid", option.value).first();
 
       if(!category) {
         response.status(404)

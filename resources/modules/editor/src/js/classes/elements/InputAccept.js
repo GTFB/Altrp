@@ -58,12 +58,14 @@ class InputAccept extends BaseElement {
 
     this.addControl("accept_checked", {
       type: CONTROLLER_TEXT,
-      label: "Accept Checked Value"
+      label: "Accept Checked Value",
+      locked: true,
     });
 
     this.addControl("accept_unchecked", {
       type: CONTROLLER_TEXT,
-      label: "Accept Unchecked Value"
+      label: "Accept Unchecked Value",
+      locked: true,
     });
 
     const optionsRepeater = new Repeater();
@@ -85,7 +87,8 @@ class InputAccept extends BaseElement {
 
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
+      locked: true,
     });
 
     this.addControl("content_label_position_type", {
@@ -118,7 +121,8 @@ class InputAccept extends BaseElement {
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon"
+      label: "Choose Icon",
+      locked: true,
     });
 
     this.addControl("label_icon_position", {
@@ -153,7 +157,8 @@ class InputAccept extends BaseElement {
 
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
-      label: "Required"
+      label: "Required",
+      label: true,
     });
 
     this.addControl("content_readonly", {
@@ -169,14 +174,15 @@ class InputAccept extends BaseElement {
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
-      label: "Default Value"
+      label: "Default Value",
+      locked: true,
     });
 
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+      description: "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+      locked: true,
     });
 
     this.endControlSection();
@@ -201,7 +207,8 @@ class InputAccept extends BaseElement {
       description: "/ajax/models/tests",
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_label", {
@@ -210,7 +217,8 @@ class InputAccept extends BaseElement {
       responsive: false,
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_data", {
@@ -219,8 +227,8 @@ class InputAccept extends BaseElement {
       conditions: {
         create_allowed: true
       },
-      description:
-        'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
+      description: 'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+      locked: true,
     });
 
     this.endControlSection();
@@ -322,7 +330,7 @@ class InputAccept extends BaseElement {
       units: ["px", "%", "vh"],
       max: 60,
       min: 0,
-
+      locked: true,
     });
 
     this.addControl("label_background_color", {
@@ -369,7 +377,7 @@ class InputAccept extends BaseElement {
       },
       units: ["px", "%", "vh"],
       max: 100,
-      min: -100
+      min: -100,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "top: {{SIZE}}{{UNIT}};"

@@ -99,7 +99,7 @@ class Dropbar extends Component {
             updateToken={this.state.updateToken}
             settings={{
               placement: this.props.settings.position_dropbar_options,
-              offset: [0, this.props.settings.offset_dropbar_options.size],
+              offset: [0, this.props.settings.offset_dropbar_options?.size||0],
               updateSettings: {
                 width: this.props.settings.width_dropbar_options
               }

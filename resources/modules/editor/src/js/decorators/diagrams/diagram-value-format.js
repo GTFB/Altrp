@@ -14,6 +14,7 @@ export default function valueFormatControllers(element, options) {
   element.addControl(name + 'Enable', {
     label: 'Enable Formatting',
     type: CONTROLLER_SWITCHER,
+    locked: true,
   })
 
     element.addControl(name + 'Type', {
@@ -76,7 +77,8 @@ export default function valueFormatControllers(element, options) {
           label: "Converts the integer to the corresponding unicode character before printing",
           value: "c",
         },
-      ]
+      ],
+      locked: true,
     })
 
     element.addControl(name + 'Sign', {
@@ -99,7 +101,8 @@ export default function valueFormatControllers(element, options) {
           label: "A space for zero or positive and a minus sign for negative",
           value: " ",
         }
-      ]
+      ],
+      locked: true,
     })
 
     if (useCurrency) {
@@ -167,13 +170,15 @@ export default function valueFormatControllers(element, options) {
             label: '₪',
             value: '₪'
           },
-        ]
+        ],
+        locked: true,
       })
     }
 
     element.addControl(name + 'Precision', {
       type: CONTROLLER_NUMBER,
       label: 'Precision',
+      locked: true,
     })
 
     element.addControl(name + 'Width', {
@@ -181,7 +186,8 @@ export default function valueFormatControllers(element, options) {
       label: 'Width',
       min: 0,
       max: 30,
-      step: 1
+      step: 1,
+      locked: true,
     })
 
     element.addControl(name + 'Fill', {
@@ -189,7 +195,8 @@ export default function valueFormatControllers(element, options) {
       label: 'Fill',
       min: 0,
       max: 9,
-      step: 1
+      step: 1,
+      locked: true,
     })
 
     element.addControl(name + 'Align', {
@@ -212,22 +219,26 @@ export default function valueFormatControllers(element, options) {
           label: "Force the field to be right-aligned within the available space, but with any sign and symbol to the left of any padding",
           value: "=",
         }
-      ]
+      ],
+      locked: true,
     })
 
     element.addControl(name + 'ZeroPadding', {
       type: CONTROLLER_SWITCHER,
-      label: 'Zero Padding'
+      label: 'Zero Padding',
+      locked: true,
     })
 
     element.addControl(name + 'Comma', {
       type: CONTROLLER_SWITCHER,
-      label: 'Comma'
+      label: 'Comma',
+      locked: true,
     })
 
     element.addControl(name + 'TrimTrailingZeros', {
       type: CONTROLLER_SWITCHER,
-      label: 'Trim Trailing Zeros'
+      label: 'Trim Trailing Zeros',
+      locked: true,
     })
 
     element.endControlSection()
