@@ -237,7 +237,9 @@ export default class Customizer extends BaseModel {
         } else {
           path = namespace + '.' + path
         }
-        JSContent = `${type}_customizer_data('${path}', ${value})`
+        JSContent = `
+        this.${type}CustomizerData('${path}', ${value});
+        `
 
       }
         break

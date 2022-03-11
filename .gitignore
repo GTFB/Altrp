@@ -64,7 +64,6 @@ public/modules/editor
 public/modules/reports
 public/modules/reports-new
 
-package-lock.json
 yarn.lock
 *.conf
 rootCA.crt

@@ -11,7 +11,6 @@ import {
 import Model from 'App/Models/Model';
 import Controller from 'App/Models/Controller';
 import config from "../../helpers/config";
-import { string } from '@ioc:Adonis/Core/Helpers'
 import data_get from "../../helpers/data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
@@ -128,7 +127,7 @@ export default class Source extends BaseModel {
       case 'App\\Altrp\\Query':
         return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
-        return config('app.url') + '/ajax/models/' + string.pluralize(this?.altrp_model?.name || '') + '/customizers' + data_get( this, 'url' );
+        return config('app.url') + '/ajax/models/' + this.model.table.name + '/customizers' + data_get( this, 'url' );
       default:
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
