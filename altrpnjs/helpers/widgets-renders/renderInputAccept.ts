@@ -7,7 +7,7 @@ const AltrpFieldContainer = (settings, child) => {
   const { content_label_position_type, className } = settings
 
   return `
-    <div 
+    <div
       style="
         ${content_label_position_type == 'left' ? 'display: flex;' : ''}
         ${content_label_position_type == 'right' ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;' : ''}
@@ -21,7 +21,7 @@ const AltrpFieldContainer = (settings, child) => {
 
 export default function renderInputAccept(settings, device, context) {
     let label = ``;
-    const isMultiple = getResponsiveSetting(settings, 'select2_multiple', device)
+    // const isMultiple = getResponsiveSetting(settings, 'select2_multiple', device)
     const label_icon = getResponsiveSetting(settings, 'label_icon', device)
 
     let value = getContent(settings, context, "content_default_value", device) ||  "";
@@ -88,7 +88,7 @@ export default function renderInputAccept(settings, device, context) {
       label = ``;
     }
 
-    
+
     let trueValue = getResponsiveSetting(settings, "accept_checked", device) || true;
     let falseValue = getResponsiveSetting(settings, "accept_unchecked", device) || false;
 

@@ -7,7 +7,7 @@ const AltrpFieldContainer = (settings, child) => {
   const { content_label_position_type, className } = settings
 
   return `
-    <div 
+    <div
       style="
         ${content_label_position_type == 'left' ? 'display: flex;' : ''}
         ${content_label_position_type == 'right' ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;' : ''}
@@ -19,7 +19,7 @@ const AltrpFieldContainer = (settings, child) => {
   `
 }
 
-export default function renderInputDate(settings, device, context) {
+export default function renderInputDate(settings, device) {
   let label = '';
   let classLabel = "";
   let styleLabel = {};

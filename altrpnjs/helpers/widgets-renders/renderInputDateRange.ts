@@ -1,6 +1,6 @@
 import getResponsiveSetting from '../getResponsiveSetting';
 
-export default function renderInputDateRange(settings, device, context) {
+export default function renderInputDateRange(settings, device) {
   const startInputPlaceholder = getResponsiveSetting(settings, "start_placeholder", device, "start date")
   const endInputPlaceholder = getResponsiveSetting(settings, "end_placeholder", device, "end date")
 

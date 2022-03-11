@@ -1,3 +1,5 @@
+import isAltrpJS from "../helpers/isAltrpJS";
+
 const PROPERTY_OPTIONS =  [
   {
     label: 'context.',
@@ -24,4 +26,16 @@ const PROPERTY_OPTIONS =  [
     value: 'expression',
   },
 ];
+if(isAltrpJS()){
+  PROPERTY_OPTIONS.push(
+    {
+      label: 'httpContext.',
+      value: 'httpContext',
+    },)
+  PROPERTY_OPTIONS.push(
+    {
+      label: 'current_user.',
+      value: 'current_user',
+    },)
+}
 export default PROPERTY_OPTIONS;

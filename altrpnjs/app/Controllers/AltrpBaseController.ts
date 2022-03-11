@@ -9,6 +9,9 @@ export default class AltrpBaseController {
   protected setCustomizerData(path:string, data:any){
     _.set(this.customizerData, path, data)
   }
+  protected unsetCustomizerData(path:string){
+    _.unset(this.customizerData, path)
+  }
   protected getCustomizerData(path:string, _default:any = null):any{
     return _.get(this.customizerData, path, _default)
   }

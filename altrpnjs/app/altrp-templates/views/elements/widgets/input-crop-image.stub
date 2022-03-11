@@ -1,1 +1,1 @@
-{{=<% %>=}}{{{<%={{ }}=%>renderInputCropImage(element{{id}}_settings, device, altrpContext){{=<% %>=}}}}}<%={{ }}=%>
+{{=<% %>=}}{{{<%={{ }}=%>renderInputCropImage(element{{id}}_settings, device){{=<% %>=}}}}}<%={{ }}=%>

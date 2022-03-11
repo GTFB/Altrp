@@ -22,7 +22,7 @@ const AltrpFieldContainer = (settings, child) => {
   const {content_label_position_type, className} = settings
 
   return `
-    <div 
+    <div
       style="
         ${content_label_position_type == 'left' ? 'display: flex;' : ''}
         ${content_label_position_type == 'right' ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;' : ''}
@@ -34,6 +34,7 @@ const AltrpFieldContainer = (settings, child) => {
   `
 }
 
+// @ts-ignore
 export default function renderInputImageSelect(settings, device, context) {
   let label = '';
 
@@ -62,7 +63,7 @@ export default function renderInputImageSelect(settings, device, context) {
     case "top":
       styleLabel = {
         marginBottom: label_style_spacing
-          ? label_style_spacing.size + label_style_spacing.unit 
+          ? label_style_spacing.size + label_style_spacing.unit
           : '2px'
       };
       break;
@@ -108,7 +109,7 @@ export default function renderInputImageSelect(settings, device, context) {
   } else {
     label = '';
   }
-  
+
   let input = AltrpImageSelect({
     options: image_select_options,
     value: value,

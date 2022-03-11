@@ -92,7 +92,9 @@ export default class CustomizersController {
      * @var customizer Customizer
      */
     await customizer.load('source', query => {
-      query.preload('model')
+      query.preload('model',model => {
+        model.preload('table')
+      })
     })
     return response.json({
       'success':
@@ -124,8 +126,15 @@ export default class CustomizersController {
         await generator.delete(model, customizer.settings.hook_type)
       }
     }
-
+    const oldType = customizer.type
     customizer.merge(request.all())
+    /**
+     * Delete source if type `api` changed
+     */
+
+    if(oldType === 'api' && customizer.$dirty.type && oldSource){
+      await oldSource.delete()
+    }
     let model
     try {
       model = await Model.find(customizer.model_id)
@@ -143,11 +152,8 @@ export default class CustomizersController {
       if (customizer.type === 'api' && model) {
         await model.load('altrp_controller')
 
-        let source = new Source();
-        if(oldSource){
-          source = oldSource
-        }
-        source.fill({
+        let source = oldSource ? oldSource : new Source
+        source.merge({
           'sourceable_type': Customizer.sourceable_type,
           'sourceable_id': customizer.id,
           'model_id': customizer.model_id,
@@ -173,6 +179,7 @@ export default class CustomizersController {
       if(model){
         Event.emit('model:updated', model)
       }
+      response.status(500)
       return response.json({
           'success':
             false,
@@ -186,9 +193,10 @@ export default class CustomizersController {
       )
     }
     await customizer.load('source', query => {
-      query.preload('model')
+      query.preload('model',model => {
+        model.preload('table')
+      })
     })
-
     return response.json({
       'success':
         true, 'data':

@@ -280,7 +280,7 @@ export default class AltrpRouting {
     let data = JSON.parse( template.data );
     this._extractElementsNames( data, elementNames, false );
   }
-  async  _extractElementsNames(element, elementNames, only_react_elements) {
+  async _extractElementsNames(element, elementNames, only_react_elements) {
     let plugins_widget_list: any = ''
     if (!plugins_widget_list) {
       plugins_widget_list = []
