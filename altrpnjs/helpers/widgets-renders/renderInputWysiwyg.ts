@@ -1,19 +1,21 @@
 import getResponsiveSetting from "../getResponsiveSetting";
 import renderAsset from "../renderAsset";
-import getContent from "../getContent";
 import objectToStylesString from "../objectToStylesString";
+import getContent from '../getContent'
 
 
-export default function renderInputMultiSelect(settings, device, context) {
+export default function renderInputWysiwyg(settings, device, context) {
   const label_icon = getResponsiveSetting(settings, 'label_icon', device)
+  const content_label_position_type = getResponsiveSetting(settings, "content_label_position_type", device);
+  const content_value = getContent(settings, context, "content_default_value", device)
+  const read_only = getContent(settings, context, "read_only", device)
 
   let label: string = "";
   let labelIcon: string = "";
-
-  let classLabel: string = "";
   let containerClass: string = "";
+  let classLabel: string = "";
   let styleLabel = {};
-  const content_label_position_type = getResponsiveSetting(settings,"content_label_position_type", device) || 'top';
+
   switch (content_label_position_type) {
     case "top":
       styleLabel = {
@@ -64,34 +66,23 @@ export default function renderInputMultiSelect(settings, device, context) {
     labelIcon = `<span class="altrp-label-icon">${renderAsset(label_icon)}</span>`
   }
 
-  const content_label = getContent(settings,context,'content_label', device)
-  if (content_label) {
-    label = `<div class="${"altrp-field-label-container " + classLabel}" style="${objectToStylesString(styleLabel)}">
-    <label class="${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}">${content_label}</label>
+  if (settings.content_label) {
+    label = `<div class='${"altrp-field-label-container " + classLabel}' style='${objectToStylesString(styleLabel)}'>
+    <label class='${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}'>${settings.content_label}</label>
     ${labelIcon}
     </div>`
   }
 
-  const placeholder = getResponsiveSetting(settings,'content_placeholder', device);
-
-  let input: string = `<span class="bp3-popover-wrapper  ">
-                       <span aria-haspopup="true" class="bp3-popover-target">
-                          <div class="">
-                            <div class="bp3-input bp3-tag-input bp3-multi-select">
-                              <div class="bp3-tag-input-values">
-                                <input class="bp3-input-ghost bp3-multi-select-tag-input-input" placeholder="${placeholder}">
-                              </div>
-                            </div>
-                          </div>
-                       </span>
-                       </span>`
+  let altrpWysiwyg: string = `<div class="${"ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline ck-blurred" + (read_only ? " ck-read-only" : "")}" lang="en" dir="ltr" role="textbox" aria-label="Rich Text Editor, main" contenteditable="true">
+                                  <p>${content_value ? content_value : `<br data-cke-filler="true">`}</p>
+                              </div>`
 
   return `<div class="altrp-field-container " style="${containerClass}">
   ${content_label_position_type === "top" ? label : ""}
   ${content_label_position_type === "left" ? label : ""}
   ${content_label_position_type === "right" ? label : ""}
   ${content_label_position_type === "absolute" ? label : ""}
-  ${input}
+  ${altrpWysiwyg}
   ${content_label_position_type === "bottom" ? label : ""}
   </div>`
 }

@@ -44,6 +44,12 @@ import renderInputRadio from "../helpers/widgets-renders/renderInputRadio";
 import renderInputSelect from "../helpers/widgets-renders/renderInputSelect";
 import renderInputMultiSelect from "../helpers/widgets-renders/renderInputMultiSelect";
 import renderInputSlider from "../helpers/widgets-renders/renderInputSlider";
+import renderInputRangeSlider from "../helpers/widgets-renders/renderInputRangeSlider";
+import renderGallery from "../helpers/widgets-renders/renderGallery";
+import renderCarousel from "../helpers/widgets-renders/renderCarousel";
+import renderProgressBar from "../helpers/widgets-renders/renderProgressBar";
+import renderInputWysiwyg from "../helpers/widgets-renders/renderInputWysiwyg";
+import renderScheduler from "../helpers/widgets-renders/renderScheduler";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -76,6 +82,12 @@ View.global('renderInputRadio', renderInputRadio)
 View.global('renderInputSelect', renderInputSelect)
 View.global('renderInputMultiSelect', renderInputMultiSelect)
 View.global('renderInputSlider', renderInputSlider)
+View.global('renderInputRangeSlider', renderInputRangeSlider)
+View.global('renderInputWysiwyg', renderInputWysiwyg)
+View.global('renderGallery', renderGallery)
+View.global('renderCarousel', renderCarousel)
+View.global('renderProgressBar', renderProgressBar)
+View.global('renderScheduler', renderScheduler)
 View.global('renderAccordion', renderAccordion)
 View.global('renderStars', renderStars)
 View.global('renderInputSelectTree', renderInputSelectTree)
