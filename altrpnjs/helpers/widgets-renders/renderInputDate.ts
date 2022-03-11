@@ -3,7 +3,7 @@ import getResponsiveSetting from '../getResponsiveSetting';
 import renderAsset from "../renderAsset";
 import moment from 'moment'
 
-const AltrpFieldContainer = (settings, child) => {
+const AltrpFieldContainer = (settings, child) => { 
   const { content_label_position_type, className } = settings
 
   return `

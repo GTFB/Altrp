@@ -25,7 +25,7 @@ export const normalizeValues = function(branch) {
     ...branch,
     labelValue: label,
     label: label,
-    icon: icon.indexOf("/") !== -1 || icon.url ? renderAsset(icon) : folderIcon,
+    icon: icon?.indexOf && icon.indexOf("/") !== -1 || icon.url ? renderAsset(icon) : folderIcon,
     iconValue: icon,
     treeId: branch.tree_id || -1,
     parentId: branch.parent || -1,

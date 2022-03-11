@@ -10,6 +10,10 @@ import renderInputCropImage from '../helpers/widgets-renders/renderInputCropImag
 import renderInputAccept from '../helpers/widgets-renders/renderInputAccept';
 import renderInputHidden from '../helpers/widgets-renders/renderInputHidden';
 import renderInputFile from '../helpers/widgets-renders/renderInputFile';
+import renderMap from '../helpers/widgets-renders/renderMap';
+import renderHeadingTypeAnimating from '../helpers/widgets-renders/renderHeadingTypeAnimating';
+import renderImageLightbox from '../helpers/widgets-renders/renderImageLightbox';
+import renderTree from '../helpers/widgets-renders/renderTree';
 
 import get_logo_url from '../helpers/get_logo_url'
 import getLocale from '../helpers/getLocale'
@@ -83,6 +87,10 @@ View.global('renderInputCropImage', renderInputCropImage)
 View.global('renderInputAccept', renderInputAccept)
 View.global('renderInputHidden', renderInputHidden)
 View.global('renderInputFile', renderInputFile)
+View.global('renderMap', renderMap)
+View.global('renderHeadingTypeAnimating', renderHeadingTypeAnimating)
+View.global('renderImageLightbox', renderImageLightbox)
+View.global('renderTree', renderTree)
 /**
  * RENDERS END
  */
