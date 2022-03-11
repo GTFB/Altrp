@@ -360,10 +360,24 @@ export default class ModelsController {
       soft_deletes: modelData.soft_deletes,
       guid: guid(),
       time_stamps: modelData.time_stamps,
+      id: modelData.id,
       parent_model_id: modelData.parent_model_id || null,
       table_id: table.id,
     })
     await model.save()
+    const id_column = new Column()
+    id_column.fill({
+      name: 'id',
+      title: 'ID',
+      description: 'ID',
+      null: true,
+      type: 'bigInteger',
+      table_id: table.id,
+      model_id: model.id,
+      // @ts-ignore
+      user_id: auth?.user?.id,
+    })
+    await id_column.save()
     if (modelData.time_stamps) {
       const created_at_column = new Column()
       created_at_column.fill({
