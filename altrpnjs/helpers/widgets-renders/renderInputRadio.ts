@@ -226,7 +226,7 @@ export default function renderInputRadio(settings, device, context) {
       checked = altrpCompare(option.value, value, "in");
 
       return (
-        `<label key="${fieldName + "-" + idx}" class="${"bp3-control bp3-radio" + (!inline ? " bp3-inline" : "") + " altrp-field-radio" + (checked ? " active" : "")}"><input checked="${checked}" name="${formID + "-" + fieldName}" type="radio" value="${option.value}"><span class="bp3-control-indicator"></span>${option.label}</label>`
+        `<label key="${fieldName + "-" + idx}" class="${"bp3-control bp3-radio" + (!inline ? " bp3-inline" : "") + " altrp-field-radio" + (checked ? " active" : "")}"><input checked="${checked}" name="${formID + "-" + fieldName}" type="radio"><span class="bp3-control-indicator"></span>${option.label}</label>`
       );
     }).join(" ")}</div></div>`
   }

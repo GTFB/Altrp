@@ -29,9 +29,9 @@ export default function renderScheduler(settings, device) {
                  <div class="fc-header-toolbar fc-toolbar fc-toolbar-ltr">
                     <div class="fc-toolbar-chunk">
                         <div class="fc-button-group">
-                            <button type="button" title="Previous month" aria-pressed="false" class="fc-prev-button fc-button fc-button-primary">
+                            <button type="button" title="${lang === "ru" ? "Пред" : "Previous month"}" aria-pressed="false" class="fc-prev-button fc-button fc-button-primary">
                                <span class="fc-icon fc-icon-chevron-left"></span></button>
-                            <button type="button" title="Next month" aria-pressed="false" class="fc-next-button fc-button fc-button-primary">
+                            <button type="button" title="${lang === "ru" ? "След" : "Next month"}" aria-pressed="false" class="fc-next-button fc-button fc-button-primary">
                                <span class="fc-icon fc-icon-chevron-right"></span>
                             </button>
                         </div>
