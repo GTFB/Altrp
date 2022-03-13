@@ -20,7 +20,7 @@
         "jenssegers/date": "^3.2",
         "joshbrw/laravel-module-installer": "^1.0",
         "kint-php/kint": "^3.3",
-        "laravel-notification-channels/telegram": "^0.5.1",
+        "laravel-notification-channels/telegram": "0.9.0",
         "laravel/framework": "^6.2",
         "laravel/passport": "^8.4",
         "laravel/tinker": "^2.0",

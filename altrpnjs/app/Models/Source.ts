@@ -217,7 +217,11 @@ export default class Source extends BaseModel {
         case 'add': {
           return `
     let newModel = new ${modelClassName}();
-    newModel.fill(httpContext.request.all());
+    const newModelData = httpContext.request.all();
+    if(newModelData.altrp_ajax){
+      delete newModelData.altrp_ajax;
+    }
+    newModel.fill(newModelData);
     await newModel.save();
     return httpContext.response.json({success: true, data: newModel.serialize()});
         `

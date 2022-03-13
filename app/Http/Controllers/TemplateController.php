@@ -388,6 +388,8 @@ class TemplateController extends Controller
         CategoryObject::insert($insert);
       }
 
+      generateSitemap();
+
       return response()->json( $old_template, 200, [], JSON_UNESCAPED_UNICODE );
 
     }

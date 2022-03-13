@@ -57,7 +57,8 @@ class Robot extends Model
 
     public function getTelegramBotToken()
     {
-        return json_decode($this->start_config, true)['bot_token'];
+        //return json_decode($this->start_config, true)['bot_token'];
+        return $this->start_config['bot_token'];
     }
 
 
@@ -66,110 +67,51 @@ class Robot extends Model
    */
   public function getWebhookContent()
   {
+
     $content = "";
     $content .= "\tpublic function " . $this->getMethodName() . "( ApiRequest \$request ){
 
-	      \$data = \$request->all();
-	      \$robot = Robot::find(".$this->id.");
-	  	  \$bot_token = \$robot->getTelegramBotToken();
-		    \$chart = \$robot->getChartAsArray();
+      \$data = \$request->all();
 
-		    \$chat_id = null;
-		    \$current_node_id = null;
+      \$chatData = null;
+      if (isset(\$data) && isset(\$data['message'])) {
+        \$chatData = \$data['message'];
+      }
 
-		    //Start Bot
-		    if ( isset(\$data['message']) && \$data['message']['text'] == '/start') {
-		      if (\$data['message']['chat']['type'] == 'private') {
+      if (isset(\$data) && isset(\$data['callback_query'])) {
+        \$chatData = \$data['callback_query'];
+      }
 
-		        \$user = \$robot->getUserOnStartTelegramBot(\$data['message']['chat']['username'], \$data['message']['chat']['first_name']);
-		        \$user_id = \$user->id;
-		        
-		      }
+      \$robotsService = new RobotsService(new RobotsRepository());
+    
+      \$currentEnvironment = CurrentEnvironment::getInstance();
 
-		      \$chat_id = \$data['message']['chat']['id'];
-		      \$current_node_id = (string)array_search('start', \$robot->getNodeIdTypes());
-		      \$chat = \$robot->getTelegramChat(\$chat_id, \$current_node_id, \$user_id);
+      \$model = Model::where('name', '" . $this->altrp_model->name . "')->first();
+      \$source = \$model->altrp_sources->where('type', 'add')->first();
+      \$columns = explode(',',\$model->table->columns->implode('name',','));
 
-		    }
+      \$order = new order();
 
-		    //Call node button
-		    if ( isset(\$data['callback_query']) && isset(\$data['callback_query']['from']['id'])) {
+      \$data = [
+          'model' => \$model,
+          'source' => \$source,
+          'columns' => \$columns,
+          'record' => \$order,
+          'action_type' => 'telegram_bot'
+      ];
 
-		      \$chat_id = \$data['callback_query']['from']['id'];
-		      \$button_value = \$data['callback_query']['data'];//node shortcode
+      \$robots = \$robotsService->getCurrentModelRobots(\$model);
+      \$this->dispatch(new RunRobotsJob(
+          \$robots,
+          \$robotsService,
+          \$data,
+          'telegram_bot',
+          \$currentEnvironment,
+          \$chatData
+      ));
+      
+      return response()->json(\"['success' => true]\", 200, [], JSON_UNESCAPED_UNICODE);
 
-		      foreach (\$chart as \$node) {
-		        if (isset(\$node['data']) && isset(\$node['data']['props']['nodeData']['data']) && \$node['data']['props']['nodeData']['data']['shortcode'] == \$button_value) {
-
-		          \$current_node_id = \$value['id'];
-		          break;
-		        }
-		      }
-
-		      \$chat = \$robot->getTelegramChat(\$chat_id, \$current_node_id);
-		    } 
-
-		    if (!\$chat_id || !\$current_node_id) {
-		      return;
-		    }
-
-		    \$following_nodes = \$robot->getFollowingNodes((string)\$current_node_id);
-
-		    //Sending messages
-		    foreach (\$following_nodes as \$node) {
-
-		      \$node_key = array_search(\$node, array_column(\$chart, 'id'));
-
-		      \$current_node = \$chart[\$node_key];
-
-		      if (!isset(\$current_node['data']['props']['nodeData']['data'])) {
-		        continue;
-		      }
-
-		      \$message = '';
-		      \$buttons = [];
-		      \$document = null;
-
-		      \$node_content = \$current_node['data']['props']['nodeData']['data']['content'];
-		      foreach (\$node_content as \$content) {
-
-		        if (\$content['type'] == 'content') {
-		          \$message .= \$content['data']['text'] . ' ';
-		        }
-		        if (\$value['type'] == 'link') {
-			        \$message .= '<a href=\"'.\$value['data']['url'].'\">'.\$value['data']['text'].'</a> ';
-			      }
-		        if (\$content['type'] == 'button' && \$content['data']['text'] && \$content['data']['shortcode'] ) {
-		          \$buttons[] = [
-		              'text' => \$content['data']['text'],
-		              'callback_data' => \$content['data']['shortcode'],
-		          ];
-		        }
-		        if (\$content['type'] == 'document') {
-		          \$document = \$content['data']['url'];
-		          \$filename = \$content['data']['text'];
-		        }
-
-		      }
-
-		      //Send message
-		      if (!empty(\$buttons)) {
-		        \$reply_markup['inline_keyboard'] = [\$buttons];
-		        \$res = \$this->telegram->sendButtons(\$bot_token, \$chat_id, \$message, \$reply_markup);
-		      } else if(\$document) {
-		        \$res = \$this->telegram->sendPhoto(\$bot_token, \$chat_id, \$document, \$filename);
-		      } else {
-		        \$res = \$this->telegram->sendMessage(\$bot_token, \$chat_id, \$message);
-		      }
-
-		    }
-
-		    //Update chat state
-		    \$chat->node_id = \$current_node['id'];
-		    \$chat->save();
-
-		    \$result = json_decode(\$res->getBody()->getContents(), true);
-		    return \$result;
     }";
 
     return $content;
@@ -179,48 +121,37 @@ class Robot extends Model
   /**
    * @return Object
    */
-  public function getUserOnStartTelegramBot($telegram_user_id, $first_name)
+  public function getUser($telegram_user_id, $first_name)
   {
-    
   	$user = User::where('telegram_user_id', $telegram_user_id)->first();
     if (!$user) {
       $user = new User([
         'name' => $first_name,
         'password' => Hash::make( base_convert(rand(), 10, 36) ),
+        'telegram_user_id' => $telegram_user_id,
       ]);
-      $user->telegram_user_id = $telegram_user_id;
       $user->save();
     }
     return $user;
-
   }
 
   /**
    * @return Object
    */
-  public function getTelegramChat($chat_id, $node_id = null, $user_id = null)
+  public function getChat($chat_id, $node_id = null, $user_id = null)
   {
-    
-  	$chat = Chat::where('chat_id', $chat_id)
-            ->where('robot_id', $this->id)
-            ->when($user_id, function ($query, $user_id) {
-                return $query->where('user_id', $user_id);
-            })->first();
-
+    $chat = Chat::where('chat_id', $chat_id)->where('robot_id', $this->id)->first();
     if (!$chat) {
       $chat = new Chat([
         'chat_id' => $chat_id,
         'robot_id' => $this->id,
         'user_id' => $user_id,
-        'node_id' => $node_id,
       ]);
       $chat->save();
     }
-    if ($chat && $node_id) {
-    	$chat->node_id = $node_id;
-    	$chat->save();
-    }
-    
+    $node_id ? $chat->node_id = $node_id : true;
+    $user_id ? $chat->user_id = $user_id : true;
+    $chat->save();
     return $chat;
   }
 

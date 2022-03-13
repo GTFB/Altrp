@@ -56,7 +56,7 @@ class MediaController extends Controller
           })
           ->get();
       }
-      $media = $media->sortBy( 'title' )->values()->toArray();
+      $media = $media->sortByDesc( 'created_at' )->values()->toArray();
       return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -68,7 +68,7 @@ class MediaController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
-          ->get()->sortBy( 'altrp_media.title' )->values()->toArray();
+          ->get()->sortByDesc( 'altrp_media.created_at' )->values()->toArray();
 
     return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
   }
@@ -144,7 +144,8 @@ class MediaController extends Controller
       if (count($mediaSettings) > 0 && $ext != 'svg') {
         foreach ($mediaSettings as $setting) {
           $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
-          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+          //$media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+          $media_variation[][$setting->id] = '/storage/'.$media_filename;
         }
       }
       $media->media_variation = json_encode($media_variation);
@@ -244,7 +245,8 @@ class MediaController extends Controller
     $media_variation = [];      
     foreach ($mediaSettings as $setting) {
       $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
-      $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+      //$media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+      $media_variation[][$setting->id] = '/storage/'.$media_filename;
     }
 
     if ($media->media_variation) {
@@ -287,7 +289,8 @@ class MediaController extends Controller
       if (count($mediaSettings) > 0 && $ext != 'svg') {
         foreach ($mediaSettings as $setting) {
           $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
-          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+          //$media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+          $media_variation[][$setting->id] = '/storage/'.$media_filename;
         }
       }
 
@@ -369,7 +372,8 @@ class MediaController extends Controller
       if (count($mediaSettings) > 0 && $ext != 'svg') {
         foreach ($mediaSettings as $setting) {
           $media_filename = $this->storeResizedImage( $path, $setting->width, $setting->height);
-          $media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+          //$media_variation[][str_replace(" ", "_", $setting->name)] = '/storage/'.$media_filename;
+          $media_variation[][$setting->id] = '/storage/'.$media_filename;
         }
       }
       $media->media_variation = json_encode($media_variation);
@@ -394,7 +398,24 @@ class MediaController extends Controller
   {
     //
     $media = $media->find( $id );
+    $filesize = filesize(Storage::path( 'public/' . $media->filename ));
+    $media->filesize = $filesize > 1048576 ? round($filesize/1024/1024, 2)." MB" : round($filesize/1024, 2)." KB";
     $media->categories = $media->categoryOptions();
+    $variations = json_decode($media->media_variation, true);
+    $settings = MediaSetting::all();
+    $mediaVariation = [];
+    foreach ($variations as $file) {
+      foreach ($file as $id => $url) {
+        $setting = $settings->find($id);
+        if ($setting) {
+          $mediaVariation[] = [
+            'name' => $setting->name,
+            'file' => $url
+          ];
+        }
+      }
+    }
+    $media->mediaVariation = $mediaVariation;
     return response()->json( $media->toArray() );
 
   }

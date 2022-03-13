@@ -173,7 +173,6 @@ return [
          * Package Service Providers...
          */
         Ixudra\Curl\CurlServiceProvider::class,
-        WeStacks\TeleBot\Laravel\TeleBotServiceProvider::class,
 
         /*
          * Application Service Providers...
