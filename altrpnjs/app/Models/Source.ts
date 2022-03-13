@@ -75,7 +75,6 @@ export default class Source extends BaseModel {
   @column()
   public need_all_roles: boolean
 
-
   @belongsTo(() => Model, {
     foreignKey: 'model_id'
   })
@@ -118,6 +117,11 @@ export default class Source extends BaseModel {
   public sQLEditor: SQLEditor| null
 
   private methodBody: string = ''
+
+  @computed()
+  public get notice_settings(){
+    return []
+  }
 
   @computed()
   public get web_url(){
