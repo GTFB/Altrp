@@ -1,3 +1,5 @@
+const empty = __importDefault(require("../../helpers/empty"));
+
 function {{{listener}}}(type, data) {
 
 }
