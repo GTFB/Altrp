@@ -923,11 +923,11 @@ class InputSelectWidget extends Component {
     const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)) {
       if (content_options.indexOf('{{') === 0 && ! model_for_options) {
-        options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+        options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       } else {
         options = parseOptionsFromSettings(this.props.element.getLockedSettings("content_options"));
       }
-      
+
       if( ! _.isArray(options)){
         options = [];
       }
@@ -1170,7 +1170,7 @@ class InputSelectWidget extends Component {
     this.popoverProps.onOpening = (e) => {
       if(fullWidth) {
         const inputWidth = this.inputRef.current.offsetWidth;
-        
+
         e.style.width = `${inputWidth}px`
       } else if(e.style.width) {
         e.style.width = ""
