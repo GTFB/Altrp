@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon'
 import {BaseModel, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import Category from "App/Models/Category";
+import mbParseJSON from "../../helpers/mbParseJSON";
+import _ from "lodash"
 
 export default class Area extends BaseModel {
   @column({ isPrimary: true })
@@ -51,4 +53,30 @@ export default class Area extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+
+  /**
+   * Получить пользовательские стили, если они есть
+   * @return {string}
+   */
+  getCustomCSS(){
+    let styles = '';
+
+    let setting = mbParseJSON(this.settings)
+
+    if(! _.isString(setting.custom_css)){
+      return styles;
+    }
+    styles = setting.custom_css.replace(/__selector__/g, `.app-area_id-${this.name}`);
+    return  styles;
+  }
+
+
+  /**
+   * Получить значение настройки
+   */
+  getSetting(settingName, _default){
+    let setting = mbParseJSON(this.settings)
+    return _.get(setting, settingName, _default);
+  }
 }
