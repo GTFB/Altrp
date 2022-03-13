@@ -56,6 +56,25 @@ export default class Area extends BaseModel {
 
 
   /**
+   * Проверка является ли область пользовательской
+   * @return {[string]}
+   */
+  getAreaClasses(){
+    let CSSclasses : string[] = []
+    let setting = mbParseJSON(this.settings,{})
+
+    if (setting) {
+      CSSclasses.push(`app-area_id-${this.name}`);
+      setting.sidebar_type && CSSclasses.push(`app-area_${setting.sidebar_type}`);
+      setting.sidebar_location && CSSclasses.push(`app-area_sidebar-location-${setting.sidebar_location}`);
+    }
+
+    console.log(this.settings)
+
+    return CSSclasses;
+  }
+
+  /**
    * Получить пользовательские стили, если они есть
    * @return {string}
    */
