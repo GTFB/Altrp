@@ -626,6 +626,9 @@ export default class Page extends BaseModel {
     } else {
       plugins_widget_list = plugins_widget_list.split(',')
     }
+    if(_.isObject(element.settingsLock)){
+      element.settings = _.merge(element.settings, element.settingsLock)
+    }
     const reactElements = _.concat(DEFAULT_REACT_ELEMENTS, plugins_widget_list)
     if (!is_array(elementNames)) {
       elementNames = []
