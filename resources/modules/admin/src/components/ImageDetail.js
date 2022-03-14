@@ -55,7 +55,7 @@ export class ImageDetail extends React.Component {
   }
 
   render() {
-    const {authorName, url, created_at, filename, media_type, height, width} = this.state
+    const {authorName, url, created_at, filename, media_type, height, width, filesize, mediaVariation} = this.state
 
     if (!this.props.imageId) return null;
 
@@ -71,11 +71,9 @@ export class ImageDetail extends React.Component {
                 <button onClick={this.props.prevImageDetail} disabled={!this.props.havePreviousImage} className="document-detail__btn-nav">
                   <ArrowImageDet style={{transform: 'rotate(-180deg)'}} width={24} height={16}/>
                 </button>
-
                 <button onClick={this.props.nextImageDetail} disabled={!this.props.haveNextImage} className="document-detail__btn-nav">
                   <ArrowImageDet width={24} height={16}/>
                 </button>
-
                 <button onClick={this.props.closeImageDetail} className="document-detail__btn-nav">
                   <CloseModal />
                 </button>
@@ -95,7 +93,7 @@ export class ImageDetail extends React.Component {
                         <li>Uploaded by: <span className="document-detail__data-result">{authorName}</span></li>
                         <li>File name: <span className="document-detail__data-result">{filename}</span></li>
                         <li>File type: <span className="document-detail__data-result">{media_type}</span></li>
-                        <li>File size: <span className="document-detail__data-result">7 KB</span></li>
+                        <li>File size: <span className="document-detail__data-result">{filesize}</span></li>
                         <li>Dimensions: <span className="document-detail__data-result">{height} by {width} pixels</span></li>
                       </ul>
                     </div>
@@ -178,6 +176,20 @@ export class ImageDetail extends React.Component {
                               <button className="document-detail__btn document-detail__btn-copy-url">Copy URL to clipboard</button>
                             </CopyToClipboard>
                           </div>
+                          {typeof mediaVariation !== "undefined" ?
+                            <div className="document-detail__line-to-change_uploated-by">Size variations</div>
+                          : ""}
+                          { typeof mediaVariation !== "undefined" ?                                       
+                              mediaVariation.map((variation, key)=>{
+                                //console.log(variation);
+                                return <div key={key} className="document-detail__line-to-change"><span className="document-detail__name-of-changes">{variation.name}:</span>
+                                  <input type="text" id="page-title"
+                                         value={variation.file}
+                                         className="document-detail__input" />
+                                  </div>                                               
+                              })
+                            : ""
+                          }
                           <div className="document-detail__btn-delete-wrap">
                             <button onClick={() => this.deleteAsset(props.values.id)}
                                     className="document-detail__btn-delete">Delete permanently

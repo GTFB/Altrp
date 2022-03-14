@@ -84,6 +84,17 @@ Route.group(() => {
     Route.get("/menus/:id", "admin/MenusController.show")
 
     Route.get("/data_sources", "admin/ModelsController.getDataSources")
+    Route.get('/data_source_options', 'admin/ModelsController.getDataSourceOptions');
+    Route.post('/data_sources', 'admin/ModelsController.storeDataSource');
+    Route.put('/data_sources/:id', 'admin/ModelsController.updateDataSource');
+    Route.get('/data_sources/:id', 'admin/ModelsController.showDataSource');
+    Route.delete('/data_sources/:id', 'admin/ModelsController.destroyDataSource');
+    Route.get('/models/:model_id/data_source_options', 'admin/ModelsController.getDataSourcesByModel');
+
+
+
+
+
 
     Route.resource('global_template_styles', 'GlobalTemplateStylesController')
 

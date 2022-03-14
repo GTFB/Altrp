@@ -286,6 +286,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Customizers Resource
      */
     Route::resource('customizers', 'Admin\CustomizerController');
+    Route::get('exports/customizers/{id}', 'Admin\CustomizerController@exportCustomizer' );
 
     /**
      * Модели

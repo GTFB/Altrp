@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.0.0
+* Release version
+
 ### 0.20.25
 * Some Fixes for Section 
 + Add Video Background for Sections

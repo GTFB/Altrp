@@ -6,6 +6,8 @@ namespace App\Services\Robots;
 
 use App\Altrp\Model;
 use App\Altrp\Robot;
+use App\Chat;
+use App\User;
 use App\Jobs\SendCurl;
 use App\Services\Robots\Blocks\Block;
 use App\Services\Robots\Repositories\RobotsRepository;
@@ -159,15 +161,53 @@ class RobotsService
     {
         $modelData['sources'] = $this->getDataSources($modelData);
 
-        $this->data = $modelData;       
+        $this->data = $modelData;  
 
         $currentAction = $this->getCurrentBlock('start');
 
         if ($this->robot->start_condition !== 'telegram_bot' && !$currentAction->toStart()) return false;
 
         if ($this->robot->start_condition === 'telegram_bot') {
-                $bot = new TelegramBotService($this->robot->start_config['bot_token'], $this);
-                $update = $bot->getUpdates();
+
+                // $start_config = json_decode($this->robot->start_config, true);
+                // $bot = new TelegramBotService($start_config['bot_token'], $this);
+                // $update = $bot->getUpdates();
+
+                $chat_id = null;
+                if (isset($modelData['altrpchat'])) {
+                  $chat_id = $modelData['altrpchat']['from']['id'];
+                  $user = $this->robot->getUser($modelData['altrpchat']['from']['id'], $modelData['altrpchat']['from']['first_name']);
+                  $this->data['altrpuser'] = $user;
+                }
+
+                // if (isset($modelData['altrpchat']['data'])) {
+                //   $chat = $this->robot->getChat($chat_id);
+                //   $currentAction = $this->getCurrentBlock($chat->node_id);
+                // }
+
+                if (isset($modelData['altrpchat']['data']) || (isset($modelData['altrpchat']['text']) && $modelData['altrpchat']['text'] !== "/start")) {
+                  $chat = $this->robot->getChat($chat_id);
+                  $currentAction = $this->getCurrentBlock($chat->node_id);
+                }
+
+                do {
+
+                    $currentAction->run();
+
+                    if(!$currentAction->isEnd()){
+                      $modelData['altrpchatdata'] = $chat_id ? $this->robot->getChat($chat_id, $currentAction->getCurrentNodeId(), $user ? $user->id : null)->toArray() : null;
+                    }
+                  
+                    $currentAction = $currentAction->next();
+
+                    if ($currentAction->isButtons()) {
+                        $currentAction->run();
+
+                        $modelData['altrpchatdata'] = $chat_id ? $this->robot->getChat($chat_id, $currentAction->getCurrentNodeId(), $user ? $user->id : null)->toArray() : null;
+                        break;
+                    }
+
+                } while(! $currentAction->isEnd());
         } else {
             do {
                 $currentAction->run();

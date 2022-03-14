@@ -817,15 +817,16 @@ class InputCheckboxWidget extends Component {
    */
   getOptions() {
     let options = [...this.state.options];
+    const element = this.props
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
-    const content_options = this.props.element.getResponsiveLockedSetting('content_options');
-    const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
+    const content_options = element.getResponsiveLockedSetting('content_options');
+    const model_for_options = element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0
       && ! model_for_options){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
         options = [];
       }
@@ -1136,7 +1137,7 @@ class InputCheckboxWidget extends Component {
       Math.random()
         .toString(36)
         .substr(2, 9);
-    
+
     return (
       <div className="altrp-field-subgroup">
         {options.map((option, idx) => {

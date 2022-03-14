@@ -47,7 +47,8 @@ class Action
     {
         $res = [
             'name' => '',
-            'value' => ''
+            'value' => '',
+            'record' => '',
         ];
         switch ($this->getNodeProperties()->nodeData->type) {
             case 'crud':
@@ -174,8 +175,10 @@ class Action
         $model = Model::find($this->node->data->props->nodeData->data->model_id);
         $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
         $modelClass = '\\' . $modelNamespace;
+
         $method = $this->node->data->props->nodeData->data->method;
-      $result = false;
+        $result = false;
+
         if ($method == 'create') {
             $entity = new $modelClass($newData);
             $result = $entity->$method($newData);
@@ -189,7 +192,8 @@ class Action
 
         return [
             'name' => $model->name,
-            'value' => $result
+            'value' => $result,
+            'record' => $entity ? $entity->first()->toArray() : '',
         ];
     }
 
@@ -203,7 +207,6 @@ class Action
         $params = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
 
         if ($params) {
-
             $params = preg_split('/\r\n|\r|\n/', $params);
             $data = [];
             foreach ($params as $param) {
