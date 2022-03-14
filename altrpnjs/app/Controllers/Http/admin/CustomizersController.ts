@@ -283,4 +283,25 @@ export default class CustomizersController {
     }
     return response.json({'success': true,},)
   }
+
+
+  public async exportCustomizer( {params, response}: HttpContextContract )
+  {
+    let _customizer
+    if (validGuid(params.id)) {
+      _customizer = await Customizer.query().where('guid', params.id).first()
+    } else {
+      _customizer = await Customizer.find(params.id)
+    }
+    if (!_customizer) {
+      return response.json({
+          'success':
+            false, 'message':
+            'Customizer not found'
+        },
+      )
+    }
+    let customizer = _customizer.serialize()
+    return response.json(customizer)
+  }
 }

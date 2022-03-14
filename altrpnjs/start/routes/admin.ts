@@ -147,6 +147,7 @@ Route.group(() => {
     Route.get('/customizers/:id', 'admin/CustomizersController.show')
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
+    Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
     /**
      *
      * sql_editors
