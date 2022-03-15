@@ -17,7 +17,14 @@ function loadDatastorageUpdater(){
     dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
   });
 }
-
+import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+  window.currentRouterMatch = new window.AltrpModel({
+    params:queryString.parseUrl(window.location.href).query
+  });
+  import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+    loadDatastorageUpdater();
+  })
+})
 
 documentCheckEvents(() => {
   /**
@@ -63,14 +70,10 @@ documentCheckEvents(() => {
    */
 
   import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
-    window.currentRouterMatch = new window.AltrpModel({
-      params:queryString.parseUrl(window.location.href).query
-    });
 
     import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
       console.log('LOAD appStore: ', performance.now());
       loadingCallback();
-      loadDatastorageUpdater();
       loadFontsManager();
       loadDepends()
     });

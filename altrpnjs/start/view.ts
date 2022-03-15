@@ -40,6 +40,7 @@ import renderInputRadio from "../helpers/widgets-renders/renderInputRadio";
 import renderInputSelect from "../helpers/widgets-renders/renderInputSelect";
 import renderInputMultiSelect from "../helpers/widgets-renders/renderInputMultiSelect";
 import renderInputSlider from "../helpers/widgets-renders/renderInputSlider";
+import renderSectionBG from "../helpers/renderSectionBG";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -52,6 +53,7 @@ View.global('getAddingClasses', getAddingClasses)
 View.global('allowedForUser', allowedForUser)
 View.global('getContent', getContent)
 View.global('renderAsset', renderAsset)
+View.global('renderSectionBG', renderSectionBG)
 /**
  * RENDERS START
  */

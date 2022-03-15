@@ -202,7 +202,6 @@ class ElementWrapper extends Component {
 
       if(elementDisplay){
         elementDisplay = user.hasRoles(roles, false) || user.hasPermissions(permissions, false)
-        console.log(elementDisplay);
       }
     }
 

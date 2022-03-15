@@ -155,6 +155,9 @@ export default class AltrpRouting {
       if(user){
         altrpuser = user.toObject()
       }
+      await page.load('data_sources', data_source=>{
+        data_source.preload('source')
+      })
       const _frontend_route = page.serialize()
       const altrpContext = {
         ...pageMatch.params,
