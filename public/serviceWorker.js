@@ -34,13 +34,13 @@ const ServiceWorker = () => {
           httpRequest.send();
 
           httpRequest.onreadystatechange = () => {
-            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-              r.controller.postMessage({
-                type: "GET_FILENAMES",
-                filenames: JSON.parse(httpRequest.response)
-              })
-              localStorage.setItem(cachedName, "1")
-            }
+            // if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+            //   r.controller.postMessage({
+            //     type: "GET_FILENAMES",
+            //     filenames: JSON.parse(httpRequest.response)
+            //   })
+            //   localStorage.setItem(cachedName, "1")
+            // }
           };
         }
 
