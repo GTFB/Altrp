@@ -170,6 +170,7 @@ export default class AltrpRouting {
             altrpContext,
             is_admin,
             pages,
+            user,
             csrfToken: httpContext.request.csrfToken,
             isProd: isProd(),
             page_areas: pageAreas,

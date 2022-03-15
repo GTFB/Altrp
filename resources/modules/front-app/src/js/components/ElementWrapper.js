@@ -163,11 +163,10 @@ class ElementWrapper extends Component {
   checkElementDisplay(prevProps, prevState) {
     /**
      * @member {FrontElement} element
+     * @member {AltrpUser} user
      */
-    const { element } = this.props;
-    if (!element.getSettings("conditional_other")) {
-      return;
-    }
+    const { element, currentUser:user } = this.props;
+    const settings = element.getSettings();
     let conditions = element.getSettings("conditions", []);
     conditions = conditions.map(c => {
       const {
@@ -181,12 +180,40 @@ class ElementWrapper extends Component {
         value
       };
     });
-    let elementDisplay = conditionsChecker(
-      conditions,
-      element.getSettings("conditional_other_display") === "AND",
-      this.props.element.getCurrentModel(),
-      true
-    );
+
+    const {conditional_display_choose} = settings
+    let elementDisplay = false
+    if ( ! conditional_display_choose  ) {
+      elementDisplay = true;
+    }
+    if ( conditional_display_choose === 'all' ) {
+      elementDisplay = true;
+    }
+
+    if ( conditional_display_choose === 'guest' ) {
+      elementDisplay = user.isGuest();
+    }
+    if ( conditional_display_choose === 'auth' ) {
+
+      const roles = _.get( settings, 'conditional_roles', [] );
+      const permissions = _.get( settings, 'conditional_permissions', [] );
+
+      elementDisplay = ! user.isGuest();
+
+      if(elementDisplay){
+        elementDisplay = user.hasRoles(roles, false) || user.hasPermissions(permissions, false)
+        console.log(elementDisplay);
+      }
+    }
+
+    if (element.getSettings("conditional_other")) {
+      elementDisplay = elementDisplay && conditionsChecker(
+        conditions,
+        element.getSettings("conditional_other_display") === "AND",
+        this.props.element.getCurrentModel(),
+        true
+      );
+    }
 
     if (this.state.elementDisplay === elementDisplay) {
       return;

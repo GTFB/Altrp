@@ -1,4 +1,5 @@
 import AltrpForm from "../AltrpForm";
+const {Resource} = window.altrpHelpers
 /**
  * Класс менеджер форм для фронтенда/редактора
  */
@@ -43,7 +44,7 @@ class FormsManager {
       form.options = options
     }
 
-    if (form.resource.route != options.customRoute) {
+    if (options.customRoute && form.resource.route !== options.customRoute) {
       form.resource = new Resource({ route: options.customRoute })
     }
 

@@ -13426,7 +13426,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.t0 = this.getType();
-                _context2.next = _context2.t0 === 'form' ? 3 : _context2.t0 === 'login' ? 7 : 9;
+                _context2.next = _context2.t0 === 'form' ? 3 : _context2.t0 === 'login' ? 7 : 11;
                 break;
 
               case 3:
@@ -13442,10 +13442,12 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 return _context2.abrupt("return");
 
               case 7:
+                console.trace(this);
                 form = formsManager.registerForm(this.getFormId(), 'login', 'POST');
+                console.log(form);
                 this.setProperty('_form', form);
 
-              case 9:
+              case 11:
               case "end":
                 return _context2.stop();
             }
@@ -14991,14 +14993,16 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                  */
                 form = this.getProperty('_form');
                 success = true;
+                console.trace(form);
                 form.fields.forEach(function (field) {
                   if (!field.fieldValidate()) {
                     success = false;
                   }
                 });
+                console.log(success);
 
                 if (success) {
-                  _context21.next = 5;
+                  _context21.next = 7;
                   break;
                 }
 
@@ -15006,14 +15010,14 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: false
                 });
 
-              case 5:
-                _context21.next = 7;
+              case 7:
+                _context21.next = 9;
                 return altrpLogin(form.getData(), this.getFormId());
 
-              case 7:
+              case 9:
                 return _context21.abrupt("return", _context21.sent);
 
-              case 8:
+              case 10:
               case "end":
                 return _context21.stop();
             }
