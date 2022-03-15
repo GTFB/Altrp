@@ -37,9 +37,9 @@ export default class ModelsController {
             continue
           }
           subQuery.where(subSubQuery => {
-            return subSubQuery.orWhere('title', 'like', `%{s}%`)
-              .orWhere('name', 'like', `%{s}%`)
-              .orWhere('description', 'like', `%{s}%`)
+            return subSubQuery.orWhere('title', 'like', `%${s}%`)
+              .orWhere('name', 'like', `%${s}%`)
+              .orWhere('description', 'like', `%${s}%`)
           })
         }
         return subQuery
@@ -303,7 +303,7 @@ export default class ModelsController {
         pageCount: 0
       }
     } else {
-      const sources = await Source.query().select('*');
+      const sources = await Source.query().select('*')
       return {
         data_sources: sources,
         pageCount: 0
@@ -435,96 +435,96 @@ export default class ModelsController {
 
     let sources = [
       (new Source()).fill({
-        url: `/filters/{table.name}/{column}`,
-        api_url: `/filters/{table.name}/{column}`,
+        url: `/filters/${table.name}/{column}`,
+        api_url: `/filters/${table.name}/{column}`,
         type: `filters`,
         request_type: `get`,
-        name: `Filters {model.name}`,
-        title: `Filters {model.name}`,
+        name: `Filters ${model.name}`,
+        title: `Filters ${model.name}`,
         auth: true,
         need_all_roles: false,
         controller_id: controller.id,
         model_id: model.id,
       }),
       (new Source()).fill({
-        url: `/{table.name}/{{model.name}}/{column}`,
-        api_url: `/{table.name}/{{model.name}}/{column}`,
+        url: `/${table.name}/{${model.name}}/{column}`,
+        api_url: `/${table.name}/{${model.name}}/{column}`,
         type: `update_column`,
         request_type: `put`,
-        name: `Update column {model.name}`,
-        title: `Update column {model.name}`,
+        name: `Update column ${model.name}`,
+        title: `Update column ${model.name}`,
         auth: true,
         need_all_roles: false,
         controller_id: controller.id,
         model_id: model.id,
       }),
       (new Source()).fill({
-        url: `/{table.name}/{{model.name}}`,
-        api_url: `/{table.name}/{{model.name}}`,
+        url: `/${table.name}/{${model.name}}`,
+        api_url: `/${table.name}/{${model.name}}`,
         type: `delete`,
         request_type: `delete`,
-        name: `Delete {model.name}`,
-        title: `Delete {model.name}`,
+        name: `Delete ${model.name}`,
+        title: `Delete ${model.name}`,
         auth: true,
         need_all_roles: false,
         controller_id: controller.id,
         model_id: model.id,
       }),
       (new Source()).fill({
-        url: `/{table.name}/{{model.name}}`,
-        api_url: `/{table.name}/{{model.name}}`,
+        url: `/${table.name}/{${model.name}}`,
+        api_url: `/${table.name}/{${model.name}}`,
         type: `update`,
         request_type: `put`,
-        name: `Update {model.name}`,
-        title: `Update {model.name}`,
+        name: `Update ${model.name}`,
+        title: `Update ${model.name}`,
         auth: true,
         need_all_roles: false,
         controller_id: controller.id,
         model_id: model.id,
       }),
       (new Source()).fill({
-        url: `/{table.name}`,
-        api_url: `/{table.name}`,
+        url: `/${table.name}`,
+        api_url: `/${table.name}`,
         type: `add`,
         request_type: `post`,
-        name: `Add {model.name}`,
-        title: `Add {model.name}`,
+        name: `Add ${model.name}`,
+        title: `Add ${model.name}`,
         auth: true,
         need_all_roles: false,
         controller_id: controller.id,
         model_id: model.id,
       }),
       (new Source()).fill({
-        url: `/{table.name}`,
-        api_url: `/{table.name}`,
+        url: `/${table.name}`,
+        api_url: `/${table.name}`,
         type: `get`,
         request_type: `get`,
-        name: `Get  {model.name}`,
-        title: `Get  {model.name}`,
+        name: `Get  ${model.name}`,
+        title: `Get  ${model.name}`,
         auth: false,
         need_all_roles: false,
         controller_id: controller.id,
         model_id: model.id,
       }),
       (new Source()).fill({
-        url: `/{table.name}/{{model.name}}`,
-        api_url: `/{table.name}/{{model.name}}`,
+        url: `/${table.name}/{${model.name}}`,
+        api_url: `/${table.name}/{${model.name}}`,
         type: `show`,
         request_type: `get`,
-        name: `Show  {model.name}`,
-        title: `Show {model.name}`,
+        name: `Show  ${model.name}`,
+        title: `Show ${model.name}`,
         auth: false,
         need_all_roles: false,
         controller_id: controller.id,
         model_id: model.id,
       }),
       (new Source()).fill({
-        url: `/{{model.name}}_options`,
-        api_url: `/{{model.name}}_options`,
+        url: `/{${model.name}}_options`,
+        api_url: `/{${model.name}}_options`,
         type: `options`,
         request_type: `get`,
-        name: `Get options {model.name}`,
-        title: `Get options {model.name}`,
+        name: `Get options ${model.name}`,
+        title: `Get options ${model.name}`,
         auth: false,
         need_all_roles: false,
         controller_id: controller.id,

@@ -13,16 +13,15 @@ const {CacheableResponsePlugin} = workbox.cacheableResponse;
 registerRoute(
   ({url, request}) => {
 
-    if(url.pathname.startsWith("/admin")) return false;
+    if(!url.pathname.startsWith('/modules/front-app')) {
+      return false
+    }
 
     if(url.pathname.startsWith("/storage/media")) return true;
 
     switch (request.destination) {
       case "style":
       case "script":
-      case "image":
-      case "video":
-      case "audio":
         return true
     }
 
@@ -36,12 +35,28 @@ registerRoute(
   }),
 );
 
-//
-// self.addEventListener('install', function(event) {
+
+
+// self.addEventListener('install', (e) => {
+//   e.waitUntil(
+//     caches.open('hello').then((cache) => {
+//       return cache.addAll([
+//         '/modules/front-app/0b540f0ba6066179f03f.front-app.css',
+//       ]);
+//     })
+//   );
 // });
-//
-// self.addEventListener('activate', (event) => {
-// });
+
+self.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'GET_FILENAMES') {
+    const filenames = e.data.filenames.map(file => {
+      return "/modules/front-app/" + file
+    })
+    caches.open('altrp').then((cache) => {
+      return cache.addAll(filenames);
+    })
+  }
+});
 //
 // self.addEventListener('fetch', (event) => {
 //   console.log(event)

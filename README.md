@@ -3,6 +3,13 @@
 
 ## Changelog
 
+### 1.0.1
+* Fix Elements Conditions Display
+* Fix HTML in JSON-data for Templates
+* Add Styles for Custom Areas
+* Show Section Background on Front-end
+* Fix Login Action for Elements
+
 ### 1.0.0
 * Release version
 

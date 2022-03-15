@@ -18,21 +18,21 @@ import Menu from 'App/Models/Menu'
 import ACTIONS_NAMES from '../../helpers/const/ACTIONS_NAMES'
 import * as _ from 'lodash'
 import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
-import Database from "@ioc:Adonis/Lucid/Database"
-import Logger from "@ioc:Adonis/Core/Logger"
-import AltrpRouting from "App/Middleware/AltrpRouting"
-import User from "App/Models/User";
-import {isString} from "lodash";
-import PageRole from "App/Models/PageRole";
-import Role from "App/Models/Role";
-import Template from "App/Models/Template";
-import Area from "App/Models/Area";
-import Category from "App/Models/Category";
-import PageDatasource from "App/Models/PageDatasource";
-import mbParseJSON from "../../helpers/mbParseJSON";
-import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
-import is_array from "../../helpers/is_array";
-import validGuid from "../../helpers/validGuid";
+import Database from '@ioc:Adonis/Lucid/Database'
+import Logger from '@ioc:Adonis/Core/Logger'
+import AltrpRouting from 'App/Middleware/AltrpRouting'
+import User from 'App/Models/User';
+import {isString} from 'lodash';
+import PageRole from 'App/Models/PageRole';
+import Role from 'App/Models/Role';
+import Template from 'App/Models/Template';
+import Area from 'App/Models/Area';
+import Category from 'App/Models/Category';
+import PageDatasource from 'App/Models/PageDatasource';
+import mbParseJSON from '../../helpers/mbParseJSON';
+import DEFAULT_REACT_ELEMENTS from '../../helpers/const/DEFAULT_REACT_ELEMENTS';
+import is_array from '../../helpers/is_array';
+import validGuid from '../../helpers/validGuid';
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -134,11 +134,11 @@ export default class Page extends BaseModel {
   }
 
   @manyToMany(() => Category, {
-    pivotTable: "altrp_category_objects",
-    pivotForeignKey: "object_guid",
-    pivotRelatedForeignKey: "category_guid",
-    relatedKey: "guid",
-    localKey: "guid",
+    pivotTable: 'altrp_category_objects',
+    pivotForeignKey: 'object_guid',
+    pivotRelatedForeignKey: 'category_guid',
+    relatedKey: 'guid',
+    localKey: 'guid',
   })
   public categories: ManyToMany<typeof Category>
 
@@ -147,7 +147,6 @@ export default class Page extends BaseModel {
   ];
 
   public async getAreas(deleteContent = false) {
-    // const all_site_templates = Template.query().where("all_site", true).preload("currentArea")
 
     const data: {
       area_name: string,
@@ -192,14 +191,14 @@ export default class Page extends BaseModel {
       settings: [],
       templates: popups
     })
-    if(deleteContent){
+    if (deleteContent) {
       _.set(headerTemplate, 'html_content', null)
       _.set(contentTemplate, 'html_content', null)
       _.set(footerTemplate, 'html_content', null)
       _.set(headerTemplate, 'styles', null)
       _.set(contentTemplate, 'styles', null)
       _.set(footerTemplate, 'styles', null)
-      popups.forEach(t=>{
+      popups.forEach(t => {
         _.set(t, 'html_content', null)
         _.set(t, 'styles', null)
       })
@@ -225,26 +224,16 @@ export default class Page extends BaseModel {
     this.for_guest = for_guest
   }
 
-  public getForFront() {
-    return {
-      allowed: true,
-      areas: [],
-      data_sources: [],
-      icon: this.icon,
-      id: this.id,
-      lazy: true,
-      models: [],
-      parent_page_id: this.parent_page_id,
-      path: this.path,
-      redirect: this.redirect,
-      title: this.title
-    }
-  }
 
   @hasMany(() => PageDatasource, {
-    foreignKey: "page_id"
+    foreignKey: 'page_id'
   })
   public pageDatasources: HasMany<typeof PageDatasource>
+
+  @hasMany(() => PageDatasource, {
+    foreignKey: 'page_id'
+  })
+  public data_sources: HasMany<typeof PageDatasource>
 
   /**
    * Привязывает набор ролей к сттанице, удаляя старые связи
@@ -403,7 +392,7 @@ export default class Page extends BaseModel {
 
   @beforeDelete()
   public static async deletePage(page: Page) {
-    const datasource = await PageDatasource.query().where("page_id", page.id);
+    const datasource = await PageDatasource.query().where('page_id', page.id);
 
     datasource.forEach((source) => {
       source.delete()
@@ -428,11 +417,11 @@ export default class Page extends BaseModel {
     return pages
   }
 
-  static getRouteStyles(areas){
-      if(! areas || !_.isArray(areas)){
-        return '';
-      }
-      let styles = `
+  static getRouteStyles(areas) {
+    if (!areas || !_.isArray(areas)) {
+      return '';
+    }
+    let styles = `
       .route-content {
         min-height: 100vh;
         display: flex;
@@ -440,54 +429,55 @@ export default class Page extends BaseModel {
         overflow: hidden;
       }`
 
-      areas = areas.filter(area=>Page.FRONT_DEFAULT_AREAS.indexOf(area.id) === -1)
-      if(! areas.length){
-        return styles;
-      }
-      styles += `.route-content.route-content{`;
+    areas = areas.filter(area => Page.FRONT_DEFAULT_AREAS.indexOf(area.name) === -1)
 
-      styles += 'display:grid;grid-template-rows:auto 1fr auto;'
-      let columnsGrid = '';
-      let rightSidebar = areas.find(area=>area.getSetting('area_type') === 'sidebar'
-        && area.getSetting('sidebar_location') === 'right');
-      let leftSidebar = areas.find(area=>area.getSetting('area_type') === 'sidebar'
-        && area.getSetting('sidebar_location') === 'left');
-      columnsGrid += leftSidebar ? `${leftSidebar.getSetting('sidebar_width')}` : '0px';
-      columnsGrid += ` calc(100% - ${leftSidebar ? `${leftSidebar.getSetting('sidebar_width')}` : '0px'} - ${rightSidebar ? `${rightSidebar.getSetting('sidebar_width')}` : '0px'}) `;
-      columnsGrid += rightSidebar ? `${rightSidebar.getSetting('sidebar_width')}` : '0px';
+    if (!areas.length) {
+      return styles;
+    }
+    styles += `.route-content.route-content{`;
 
-      let contentRow = '';
-      contentRow = leftSidebar ? `left-sidebar content` : `content content`;
-      contentRow += rightSidebar ? ` right-sidebar` : ` content`;
+    styles += 'display:grid;grid-template-rows:auto 1fr auto;'
+    let columnsGrid = '';
+    let rightSidebar = areas.find(area => area.getSetting('area_type') === 'sidebar'
+      && area.getSetting('sidebar_location') === 'right');
+    let leftSidebar = areas.find(area => area.getSetting('area_type') === 'sidebar'
+      && area.getSetting('sidebar_location') === 'left');
+    columnsGrid += leftSidebar ? `${leftSidebar.getSetting('sidebar_width')}` : '0px';
+    columnsGrid += ` calc(100% - ${leftSidebar ? `${leftSidebar.getSetting('sidebar_width')}` : '0px'} - ${rightSidebar ? `${rightSidebar.getSetting('sidebar_width')}` : '0px'}) `;
+    columnsGrid += rightSidebar ? `${rightSidebar.getSetting('sidebar_width')}` : '0px';
+
+    let contentRow = '';
+    contentRow = leftSidebar ? `left-sidebar content` : `content content`;
+    contentRow += rightSidebar ? ` right-sidebar` : ` content`;
 
 
-      styles += `grid-template-columns:${columnsGrid};grid-template-areas:
+    styles += `grid-template-columns:${columnsGrid};grid-template-areas:
         '${(leftSidebar && leftSidebar.getSetting('sidebar_type')) === 'app_sidebar' ? 'left-sidebar' : 'header'} header ${(rightSidebar && rightSidebar.getSetting('sidebar_type')) === 'app_sidebar' ? 'right-sidebar' : 'header'}'
         '${contentRow}'
-        '${(leftSidebar && leftSidebar.getSetting('sidebar_type')) === 'app_sidebar' ? 'left-sidebar' : 'footer'} footer ${(rightSidebar && rightSidebar.getSetting('sidebar_type')) === 'app_sidebar' ? 'right-sidebar' :'footer'}';
+        '${(leftSidebar && leftSidebar.getSetting('sidebar_type')) === 'app_sidebar' ? 'left-sidebar' : 'footer'} footer ${(rightSidebar && rightSidebar.getSetting('sidebar_type')) === 'app_sidebar' ? 'right-sidebar' : 'footer'}';
         `
 
-      styles += '}'
-      styles += '.app-area_sidebar-location-left{grid-area:left-sidebar;overflow:hidden;}'
-      styles += '.app-area_sidebar-location-right{grid-area:right-sidebar;overflow:hidden;}'
-      styles += '.app-area_header{grid-area:header;}'
-      styles += '.app-area_footer{grid-area:footer;}'
-      styles += '.app-area_content{grid-area:content;}'
-      styles += '.altrp-section.altrp-section--full-width, .altrp-section.altrp-section--boxed{max-width:100%;}  .sections-wrapper{max-width: 100%;width: 100%;}'
-      if(rightSidebar){
-        styles += rightSidebar.getCustomCSS();
-        if(rightSidebar.getSetting('sidebar_fixed')){
-          styles += `.app-area_sidebar-location-right .sections-wrapper.sections-wrapper.sections-wrapper{overflow:hidden;position:fixed;top:0;right:0;width:${rightSidebar.getSetting('sidebar_width', '0px')};}`
-        }
+    styles += '}'
+    styles += '.app-area_sidebar-location-left{grid-area:left-sidebar;overflow:hidden;}'
+    styles += '.app-area_sidebar-location-right{grid-area:right-sidebar;overflow:hidden;}'
+    styles += '.app-area_header{grid-area:header;}'
+    styles += '.app-area_footer{grid-area:footer;}'
+    styles += '.app-area_content{grid-area:content;}'
+    styles += '.altrp-section.altrp-section--full-width, .altrp-section.altrp-section--boxed{max-width:100%;}  .sections-wrapper{max-width: 100%;width: 100%;}'
+    if (rightSidebar) {
+      styles += rightSidebar.getCustomCSS();
+      if (rightSidebar.getSetting('sidebar_fixed')) {
+        styles += `.app-area_sidebar-location-right .sections-wrapper.sections-wrapper.sections-wrapper{overflow:hidden;position:fixed;top:0;right:0;width:${rightSidebar.getSetting('sidebar_width', '0px')};}`
       }
-      if(leftSidebar){
-        styles += leftSidebar.getCustomCSS();
-        if(leftSidebar.getSetting('sidebar_fixed')){
-          styles += `.app-area_sidebar-location-left .sections-wrapper.sections-wrapper.sections-wrapper{overflow:hidden;position:fixed;top:0;left:0;width:${leftSidebar.getSetting('sidebar_width', '0px')};}`
-        }
+    }
+    if (leftSidebar) {
+      styles += leftSidebar.getCustomCSS();
+      if (leftSidebar.getSetting('sidebar_fixed')) {
+        styles += `.app-area_sidebar-location-left .sections-wrapper.sections-wrapper.sections-wrapper{overflow:hidden;position:fixed;top:0;left:0;width:${leftSidebar.getSetting('sidebar_width', '0px')};}`
       }
-      styles += `.app-area > .sections-wrapper.sections-wrapper{width:100%;}`
-      return  styles;
+    }
+    styles += `.app-area > .sections-wrapper.sections-wrapper{width:100%;}`
+    return styles;
   }
 
   async getAllStyles() {
@@ -497,30 +487,30 @@ export default class Page extends BaseModel {
     let headerStyles = data_get(await Template.getTemplate(this.id, 'header'), 'styles')
 
     let areas = await Area.query().whereNotIn('name', [
-          'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
-        ])
-        .select('name')
+      'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
+    ])
+      .select('name')
 
     for (let area of areas) {
       let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
       if (customStyles) {
-          customStyles = JSON.parse(customStyles)
-          customStyles = _.get(customStyles, 'all_styles', [])
-          customStyles = customStyles.map(s=>{
-            if (s.indexOf('</style>') === -1){
-              s = `<style>${s}</style>`
-              return s
-            }
-          })
-          styles += customStyles.join('')
+        customStyles = JSON.parse(customStyles)
+        customStyles = _.get(customStyles, 'all_styles', [])
+        customStyles = customStyles.map(s => {
+          if (s.indexOf('</style>') === -1) {
+            s = `<style>${s}</style>`
+            return s
+          }
+        })
+        styles += customStyles.join('')
       }
     }
 
     if (headerStyles) {
       headerStyles = JSON.parse(headerStyles)
       headerStyles = _.get(headerStyles, 'all_styles', [])
-      headerStyles = headerStyles.map(s=>{
-        if (s.indexOf('</style>') === -1){
+      headerStyles = headerStyles.map(s => {
+        if (s.indexOf('</style>') === -1) {
           s = `<style>${s}</style>`
           return s
         }
@@ -530,8 +520,8 @@ export default class Page extends BaseModel {
     if (contentStyles) {
       contentStyles = JSON.parse(contentStyles)
       contentStyles = _.get(contentStyles, 'all_styles', [])
-      contentStyles = contentStyles.map(s=>{
-        if (s.indexOf('</style>') === -1){
+      contentStyles = contentStyles.map(s => {
+        if (s.indexOf('</style>') === -1) {
           s = `<style>${s}</style>`
           return s
         }
@@ -540,15 +530,15 @@ export default class Page extends BaseModel {
     }
 
     let _contentAreas = await Area.query().whereNotIn('name', [
-          'card', 'popup', 'reports', 'email'
-        ])
-        .select('*')
+      'card', 'popup', 'reports', 'email'
+    ]).select('*')
 
-    let contentAreas : Area[] = []
+    let contentAreas: Area[] = []
     for (let contentArea of _contentAreas) {
 
       if (Page.FRONT_DEFAULT_AREAS.indexOf(contentArea.name) != -1) {
         contentAreas.push(contentArea)
+        continue
       }
 
       if (data_get(await Template.getTemplate(this.id, contentArea.name), 'guid')) {
@@ -581,9 +571,9 @@ export default class Page extends BaseModel {
       `
 
     let areas = await Area.query().whereNotIn('name', [
-          'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
-        ])
-        .select('*')
+      'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
+    ])
+      .select('*')
 
     for (let area of areas) {
       let customGuid = data_get(await Template.getTemplate(this.id, area.name), 'guid')
@@ -598,18 +588,18 @@ export default class Page extends BaseModel {
 
   }
 
-  async  extractElementsNames( _only_react_elements = true){
+  async extractElementsNames(_only_react_elements = true) {
     let elementNames = [];
     const areas = await this.getAreas(true);
 
     await Promise.all(areas.map(async area => {
-      if(area?.template?.data) {
+      if (area?.template?.data) {
         let data = area.template.data
-        if(_.isString(data)){
-          data= JSON.parse(data)
-          area.template.data=data
+        if (_.isString(data)) {
+          data = JSON.parse(data)
+          area.template.data = data
         }
-        await this._extractElementsNames( data, elementNames, _only_react_elements );
+        await this._extractElementsNames(data, elementNames, _only_react_elements);
       } else {
       }
     }))
@@ -625,6 +615,9 @@ export default class Page extends BaseModel {
       plugins_widget_list = []
     } else {
       plugins_widget_list = plugins_widget_list.split(',')
+    }
+    if (_.isObject(element.settingsLock)) {
+      element.settings = _.merge(element.settings, element.settingsLock)
     }
     const reactElements = _.concat(DEFAULT_REACT_ELEMENTS, plugins_widget_list)
     if (!is_array(elementNames)) {
@@ -649,8 +642,7 @@ export default class Page extends BaseModel {
       }
     }
     if (element.children && is_array(element.children)) {
-      for(const child of element.children)
-      {
+      for (const child of element.children) {
         await this._extractElementsNames(child, elementNames, only_react_elements)
       }
     }
@@ -675,8 +667,7 @@ export default class Page extends BaseModel {
     if (element.name === 'table'
       && data_get(element, 'settings.tables_columns')) {
       let columns = data_get(element, 'settings.tables_columns', [])
-      for(let column of columns)
-      {
+      for (let column of columns) {
         if (data_get(column, 'column_template')) {
           await this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
         }
@@ -685,8 +676,7 @@ export default class Page extends BaseModel {
     if (element.name === 'tabs'
       && data_get(element, 'settings.items_tabs')) {
       let tabs = data_get(element, 'settings.items_tabs', [])
-      for(let tab of tabs)
-      {
+      for (let tab of tabs) {
         if (data_get(tab, 'card_template')) {
           this.extractElementsNamesFromTemplate(data_get(tab, 'card_template'), elementNames)
         }
@@ -697,8 +687,7 @@ export default class Page extends BaseModel {
       && data_get(element, 'settings.tables_columns')
       && is_array(data_get(element, 'settings.tables_columns'))) {
       let columns = data_get(element, 'settings.tables_columns')
-      for(let column of columns)
-      {
+      for (let column of columns) {
         if (data_get(column, 'column_template')) {
           this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
         }
@@ -706,18 +695,19 @@ export default class Page extends BaseModel {
     }
 
   }
-  async  extractElementsNamesFromTemplate( template_id, elementNames ){
+
+  async extractElementsNamesFromTemplate(template_id, elementNames) {
     let template
-    if( validGuid( template_id ) ){
-      template = await Template.query().where( 'guid', template_id ).first();
+    if (validGuid(template_id)) {
+      template = await Template.query().where('guid', template_id).first();
     } else {
-      template = await Template.find( template_id );
+      template = await Template.find(template_id);
     }
-    if( ! template ){
+    if (!template) {
       return;
     }
 
-    let data = JSON.parse( template.data );
-    this._extractElementsNames( data, elementNames, false );
+    let data = JSON.parse(template.data);
+    this._extractElementsNames(data, elementNames, false);
   }
 }

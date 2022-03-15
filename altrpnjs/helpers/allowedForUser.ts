@@ -3,8 +3,23 @@ import data_get from "./data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
 
-export default function allowedForUser(settings: any, user:User|null|undefined){
+export default function allowedForUser(settings: any, user:User|null|undefined):boolean{
   let result = true;
+
+  const {conditional_display_choose} = settings
+  if ( ! conditional_display_choose  ) {
+    return result;
+  }
+  if ( conditional_display_choose === 'all' ) {
+    return result;
+  }
+
+  if ( conditional_display_choose === 'guest' ) {
+    return ! user;
+  }
+  if ( conditional_display_choose === 'auth' ) {
+    return ! ! user;
+  }
   if ( ! ( settings['conditional_roles']
     || settings['conditional_permissions'] ) ) {
     return result;

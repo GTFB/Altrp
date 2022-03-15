@@ -24,11 +24,15 @@ class AltrpUser extends AltrpModel{
   /**
    * Проверяет наличие permission у пользователя
    * @param {array} permissions
+   * @param {boolean} strict
    * $return {boolean}
    */
-  hasPermissions(permissions = []){
+  hasPermissions(permissions = [], strict = true){
     if(! _.isArray(permissions)){
       permissions = [permissions];
+    }
+    if(!permissions.length && ! strict){
+      return true
     }
     let ownPermissions = this.getProperty('permissions', []);
     return _.find(ownPermissions, ownPermission => {
@@ -45,11 +49,15 @@ class AltrpUser extends AltrpModel{
   /**
    * Проверяет наличие роли у пользователя
    * @param {array} roles
+   * @param {boolean} strict
    * $return {boolean}
    */
-  hasRoles(roles = []){
+  hasRoles(roles = [], strict = true){
     if(! _.isArray(roles)){
       roles = [roles];
+    }
+    if(!roles.length && ! strict){
+      return true
     }
     let ownRoles = this.getProperty('roles', []);
     return _.find(ownRoles, ownRole => {

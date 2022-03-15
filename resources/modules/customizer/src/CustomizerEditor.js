@@ -32,6 +32,7 @@ import ContextMenuCustomizer from "./js/components/sidebar/modules/data/ContextM
 import {contextMenu} from "react-contexify";
 import {setCopyNode, setSelectNode} from "./js/store/copy-node/action";
 import {isJSON} from "../../front-app/src/js/helpers";
+import {io} from "socket.io-client";
 
 const mapStateToProps = state => {
   return {
@@ -64,6 +65,7 @@ class CustomizerEditor extends Component {
     this.reactFlowRef = React.createRef();
     this.dagreGraph = new dagre.graphlib.Graph();
 
+    this.getConnect()
   }
 
   // Записьв store в state
@@ -85,6 +87,26 @@ class CustomizerEditor extends Component {
       store.dispatch(setCopyNode(true))
     } else {
       store.dispatch(setCopyNode(false))
+    }
+  }
+
+  // Подключение вебсокетов
+  async getConnect() {
+    let currentUser = await new Resource({
+      route: "/ajax/current-user"
+    }).getAll();
+    currentUser = currentUser.data;
+
+    if(currentUser.guid && !this.altrpIo) {
+      this.altrpIo = io( {
+        auth: {
+          key: currentUser.guid,
+        },
+      })
+
+      this.altrpIo.on("message", (data) => {
+        console.log(data)
+      })
     }
   }
 

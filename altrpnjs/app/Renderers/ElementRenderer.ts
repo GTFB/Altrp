@@ -37,11 +37,14 @@ export default class ElementRenderer {
     const columns_count = this.element.children.length;
 
     if(fs.existsSync(this.elementStub)){
+      const section_background = this.getType() === 'section' ? `{{{renderSectionBG(element${this.getId()}_settings, device)}}}` : ''
+
       element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
       element_content = mustache.render(element_content, {
         settings: JSON.stringify(this.element.settings),
         id: this.element.id,
         children_content,
+        section_background,
         layout_html_tag,
         link_class: this.isLink() ? 'altrp-pointer' : '',
         columns_count,
@@ -72,9 +75,10 @@ export default class ElementRenderer {
     data-margin-top="\${getResponsiveSetting(element${this.getId()}_settings, 'st_spacing', device, 0)}"\` }}}
     data-altrp-id="${this.getId()}"
     `
+
     wrapper_attributes = wrapper_attributes.replace(/\s+/g, ' ');
     content = mustache.render(content, {
-      settings: JSON.stringify(this.element.settings),
+      settings: JSON.stringify(this.element.settings).replace(/\//g, '\\/'),
       id: this.getId(),
       element_content,
       type: this.getType(),
