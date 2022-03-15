@@ -29,6 +29,8 @@ Route.group(() => {
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
+    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
+
     Route.get("/role_options", "OptionsController.roles")
     Route.get("/permissions_options", "OptionsController.permissions")
 
@@ -90,11 +92,6 @@ Route.group(() => {
     Route.get('/data_sources/:id', 'admin/ModelsController.showDataSource');
     Route.delete('/data_sources/:id', 'admin/ModelsController.destroyDataSource');
     Route.get('/models/:model_id/data_source_options', 'admin/ModelsController.getDataSourcesByModel');
-
-
-
-
-
 
     Route.resource('global_template_styles', 'GlobalTemplateStylesController')
 
