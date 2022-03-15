@@ -15,6 +15,7 @@ export default class CustomizersController {
 
     let customizer = new Customizer()
     customizer.fill(request.all())
+
     customizer.guid = guid()
     try {
       const model = customizer.model_id ? await Model.find(customizer.model_id) : null

@@ -58,6 +58,7 @@ import EditorWindowPopup from "./js/components/EditorWindowPopup";
 import ConditionsPopup from "./js/components/ConditionsPopup";
 import {Rnd} from "react-rnd";
 import { Resizable } from "re-resizable";
+import {io} from "socket.io-client";
 
 /**
  * Главный класс редактора.<br/>
@@ -137,6 +138,21 @@ class Editor extends Component {
     this.setState({
       showDialogWindow: !this.state.showDialogWindow
     });
+  }
+
+  // Подключение вебсокетов
+  async getConnect(currentUser) {
+    if(currentUser.guid && !this.altrpIo) {
+      this.altrpIo = io( {
+        auth: {
+          key: currentUser.guid,
+        },
+      })
+
+      this.altrpIo.on("message", (data) => {
+        console.log(data)
+      })
+    }
   }
 
   /**
@@ -232,6 +248,8 @@ class Editor extends Component {
       route: "/ajax/current-user"
     }).getAll();
     currentUser = currentUser.data;
+
+    this.getConnect(currentUser)
     appStore.dispatch(changeCurrentUser(currentUser));
     const presetColors = await AltrpMeta.getMetaByName("preset_colors");
     let presetGlobalStyles = await AltrpMeta.getMetaByName("global_styles");

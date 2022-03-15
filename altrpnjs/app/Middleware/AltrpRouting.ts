@@ -1,3 +1,6 @@
+// import {minify} from'html-minifier'
+// import prepareContext from "../../helpers/prepareContext";
+import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
@@ -19,7 +22,6 @@ import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import Source from "App/Models/Source";
-import getCurrentDevice from "../../helpers/getCurrentDevice";
 import isProd from "../../helpers/isProd";
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES";
 // import Ws from "App/Services/Ws";
@@ -60,6 +62,13 @@ export default class AltrpRouting {
         await next()
         return
       }
+    }
+
+    const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
+
+    if(httpContext.request.completeUrl().split(modulesUrl).length > 1) {
+      await next()
+      return
     }
 
     /**
@@ -159,6 +168,7 @@ export default class AltrpRouting {
       }
       const datasources= await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
       altrpContext.altrpdata = datasources
+
       try {
         _.set(page, 'templates', [])
         _.set(_frontend_route, 'templates', [])
@@ -224,7 +234,6 @@ export default class AltrpRouting {
         Edge({
         hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
         url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
-        sw: '/modules/front-app/sw.js',
         page: pageAreas,
         title: replaceContentWithData(page.title || 'Altrp', altrpContext),
         is_admin,
@@ -236,7 +245,6 @@ export default class AltrpRouting {
         page_id: page.id,
         altrpElementsLists,
         device: getCurrentDevice(httpContext.request),
-
         elements_list: altrpElementsLists,
         model_data,
         fonts: this.getFonts(),
