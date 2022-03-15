@@ -40,9 +40,8 @@ export default class TemplatesController {
         }
       })
       .orderBy('title')
-      .paginate(page, pageSize)
 
-    const modTemplates = templates.all().map( template => {
+    const modTemplates = templates.map( template => {
       return {
         categories: template.categories.map(category => {
           return category
@@ -57,7 +56,6 @@ export default class TemplatesController {
     })
 
     return {
-      pageCount: templates.lastPage,
       templates: modTemplates
     }
   }

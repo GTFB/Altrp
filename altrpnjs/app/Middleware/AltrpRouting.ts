@@ -58,12 +58,16 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
-    if (url === '/altrp-login'
-      || url === '/login'
-      || url === '/data/current-user' ||
-      url === "/modules/admin/admin.js" ||
-      url === "/modules/front-app/front-app.css"
-    ) {
+    for (const route of IGNORED_ROUTES) {
+      if(route === url) {
+        await next()
+        return
+      }
+    }
+
+    const modulesUrl = request.protocol() + "://" + request.host() + "/modules";
+
+    if(request.completeUrl().split(modulesUrl).length > 1) {
       await next()
       return
     }
@@ -241,6 +245,7 @@ export default class AltrpRouting {
         _altrp: {
           version: getLatestVersion()
         },
+        isProd: true
       })
       )
       return response.send(v)

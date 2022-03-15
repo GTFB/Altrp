@@ -83,13 +83,7 @@ Route.group(() => {
     Route.put("/menus/:id", "admin/MenusController.update")
     Route.get("/menus/:id", "admin/MenusController.show")
 
-    Route.get("/data_sources", "admin/ModelsController.getDataSources")
-
     Route.resource('global_template_styles', 'GlobalTemplateStylesController')
-
-    Route.get("/page_data_sources/pages/:id", () => {
-      return []
-    })
 
     Route.get('/reports_options', () => {
       return []
@@ -194,6 +188,14 @@ Route.group(() => {
       return httpContext.response.json({result: false})
     }).name = 'admin.check_update'
 
+    Route.get("/data_sources", "admin/ModelsController.getDataSources")
+
+    Route.post("/page_data_sources", "admin/PageDatasourcesController.store")
+    Route.put("/page_data_sources/:id", "admin/PageDatasourcesController.update")
+    Route.delete("/page_data_sources/:id", "admin/PageDatasourcesController.destroy")
+    Route.get("/page_data_sources/pages/:id", "admin/PageDatasourcesController.getByPage")
+    Route.get("/page_data_sources/:id", "admin/PageDatasourcesController.show")
+    Route.get("/page_data_sources", "admin/PageDatasourcesController.index")
   }).prefix('/ajax')
   Route.get('/customizers-editor', 'IndicesController.customizer')
 

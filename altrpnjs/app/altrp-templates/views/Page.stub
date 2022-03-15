@@ -79,7 +79,7 @@
         /* ]]> */
       </script>
     <script defer src="{{ hAltrp }}"></script>
-
+    <script src="/serviceWorker.js"></script>
     <%={{ }}=%>
     <link rel="stylesheet" href="/modules/front-app/front-app.css?0.0.0">
 </body>

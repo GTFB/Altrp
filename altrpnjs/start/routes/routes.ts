@@ -24,6 +24,7 @@ import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
+import fs from "fs";
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -60,6 +61,44 @@ Route.get("/modules/*", async ({request, response}) => {
   return file
 })
 
+Route.get("/service-worker-files", async ({request}) => {
+
+  const pathToFrontApp = path.join(__dirname, "../", "../", "../", "public", "modules", "front-app");
+
+  let files = fs.readdirSync(pathToFrontApp)
+
+  const variants = [
+    ".js.map",
+    ".txt"
+  ]
+
+  files = files.filter(file => {
+
+    if("node_modules" === file) return false
+
+    for(const variant of variants) {
+      if(file.split(variant).length > 1) {
+        return false
+      }
+    }
+
+    return true
+  })
+  return files
+})
+
+Route.get("/serviceWorker.js", async ({request, response}) => {
+  const url = request.url()
+
+  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+
+  const file = await Drive.get(pathToModules + url)
+
+  response.header("Content-Type", "text/javascript")
+
+  return file
+})
+
 Route.get("/sw/*", async ({request, response}) => {
   const url = request.url()
 
@@ -80,6 +119,7 @@ Route.get("/sw/*", async ({request, response}) => {
 
   return file
 })
+
 
 Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
   response.header('Content-Type', 'application/javascript')

@@ -288,19 +288,15 @@ export default class ModelsController {
   }
 
   async getDataSources(contract: HttpContextContract) {
-    this.getDataSourcesAndPageCount(contract)
+    return this.getDataSourcesAndPageCount(contract)
   }
 
-  async getDataSourcesAndPageCount({request}: HttpContextContract) {
+  async getDataSourcesAndPageCount({request, response}: HttpContextContract) {
 
-    const page = request.input("page")
-    console.log(page)
-
+    const page = request.input("page");
     if(page) {
-
     } else {
       const sources = await Source.query();
-
       return {
         data_sources: sources,
         pageCount: 0
