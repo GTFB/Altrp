@@ -1,3 +1,4 @@
+import md5 from 'md5'
 import {DateTime} from 'luxon'
 import {
   BaseModel,
@@ -547,17 +548,18 @@ export default class Page extends BaseModel {
 
     }
 
-    styles += `<style>${Page.getRouteStyles(contentAreas)}</style>`
+    styles += `<style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
 
     return styles
   }
 
   async getChildrenContent() {
-
+    // @ts-ignore
+    let footer:Template = await Template.getTemplate(this.id, 'footer')
     let contentGuid = data_get(await Template.getTemplate(this.id, 'content'), 'guid')
-    let footerGuid = data_get(await Template.getTemplate(this.id, 'footer'), 'guid')
+    let footerGuid = data_get(footer, 'guid')
     let headerGuid = data_get(await Template.getTemplate(this.id, 'header'), 'guid')
-
+    const footerHash = footer.html_content ?  encodeURI(md5(footer.html_content)) : ''
     let result = `<div class="app-area app-area_header">
       ${headerGuid ? `@include('altrp/templates/header/${headerGuid}')` : ''}
       </div>
@@ -567,7 +569,7 @@ export default class Page extends BaseModel {
       <div class="app-area app-area_footer">
       ${footerGuid ? `@include('altrp/templates/footer/${footerGuid}')` : ''}
       </div>
-      ${footerGuid ? `<link href="/altrp/css/${footerGuid}.css" rel="stylesheet"/>` : ''}
+      ${footerGuid ? `<link href="/altrp/css/${footerGuid}.css?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>` : ''}
       `
 
     let areas = await Area.query().whereNotIn('name', [
@@ -576,7 +578,8 @@ export default class Page extends BaseModel {
       .select('*')
 
     for (let area of areas) {
-      let customGuid = data_get(await Template.getTemplate(this.id, area.name), 'guid')
+      const template = await Template.getTemplate(this.id, area.name)
+      let customGuid = data_get(template, 'guid')
       if (customGuid) {
         result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
           ${customGuid ? `@include('altrp/templates/${area.name}/${customGuid}')` : ''}
