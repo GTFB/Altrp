@@ -16,7 +16,7 @@ export default function renderMap(settings, device, context) {
 
   return `
     <div class="altrp-map" style="${objectToStylesString(styles)}">
-      <div class="altrp-map__container leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="height: 400px;">
+      <div class="altrp-map__container leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="height: ${styles.height};">
         <div class="leaflet-control-container">
           <div class="leaflet-top leaflet-left">
             <div class="leaflet-control-zoom leaflet-bar leaflet-control">
