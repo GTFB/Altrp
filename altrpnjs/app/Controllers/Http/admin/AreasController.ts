@@ -27,20 +27,16 @@ export default class AreasController {
     const area = await Area.query().where("id", parseInt(params.id)).firstOrFail();
 
     area.name = request.input("name");
-    area.settings = request.input("settings");
+    area.settings = JSON.stringify(request.input("settings"));
     area.title = request.input("title")
 
     await area.related("categories").detach();
+    await area.save()
 
     for (const option of request.input("categories")) {
       const category = await Category.query().where("guid", option.value).first();
 
-      if (!category) {
-        response.status(404)
-        return {
-          message: "Category not Found"
-        }
-      } else {
+      if (category) {
         await CategoryObject.create({
           category_guid: category.guid,
           object_type: "Area",
@@ -48,6 +44,11 @@ export default class AreasController {
         })
       }
     }
+
+    return response.json({
+      success: true
+    })
+
   }
 
   public async delete({ params }) {

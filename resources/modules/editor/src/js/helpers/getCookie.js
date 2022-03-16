@@ -5,3 +5,4 @@ export default function getCookie(name) {
     return decodeURI(parts.pop().split(';').shift())
   }
 }
+(window.altrpHelpers = window.altrpHelpers || {}).getCookie = getCookie

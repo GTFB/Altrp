@@ -75,7 +75,6 @@ export default class Source extends BaseModel {
   @column()
   public need_all_roles: boolean
 
-
   @belongsTo(() => Model, {
     foreignKey: 'model_id'
   })
@@ -120,6 +119,11 @@ export default class Source extends BaseModel {
   private methodBody: string = ''
 
   @computed()
+  public get notice_settings(){
+    return []
+  }
+
+  @computed()
   public get web_url(){
 
     switch ( this.sourceable_type ){
@@ -127,11 +131,11 @@ export default class Source extends BaseModel {
       case 'App\\Altrp\\Query':
         return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
-        return config('app.url') + '/ajax/models/' + this.model.table.name + '/customizers' + data_get( this, 'url' );
+        return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
       default:
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
-      : config('app.url') + '/ajax/models/data_sources/' + this.model.table.name + '/' + data_get( this, 'name' );
+      : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
     }
   }
 
@@ -250,7 +254,11 @@ export default class Source extends BaseModel {
         case 'add': {
           return `
     let newModel = new ${modelClassName}();
-    newModel.fill(httpContext.request.all());
+    const newModelData = httpContext.request.all();
+    if(newModelData.altrp_ajax){
+      delete newModelData.altrp_ajax;
+    }
+    newModel.fill(newModelData);
     await newModel.save();
     return httpContext.response.json({success: true, data: newModel.serialize()});
         `

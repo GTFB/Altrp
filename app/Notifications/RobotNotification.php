@@ -218,7 +218,16 @@ class RobotNotification extends Notification implements ShouldQueue
                     $text .= '[' . setDynamicData($item->data->text, $this->modelData) . '](' . setDynamicData($item->data->url, $this->modelData) . ") \n";
                     break;
                 case "button":
-                    $tmObj = $tmObj->button(setDynamicData($item->data->text, $this->modelData), setDynamicData($item->data->url, $this->modelData));
+                    if (!empty($item->data->url)) {
+                        $tmObj = $tmObj->button(setDynamicData($item->data->text, $this->modelData), setDynamicData($item->data->url, $this->modelData));
+                    }
+                    if (!empty($item->data->shortcode)) {
+                        $tmObj = $tmObj->buttonWithCallback(setDynamicData($item->data->text, $this->modelData), setDynamicData($item->data->shortcode, $this->modelData));
+                    }
+                    break;
+                case "photo":
+                    if (!empty($item->data->url)) $tmObj = $tmObj->photo(setDynamicData($item->data->url, $this->modelData));
+                    elseif (!empty($item->data->path)) $tmObj = $tmObj->file(setDynamicData($item->data->path, $this->modelData), setDynamicData($item->data->text, $this->modelData));
                     break;
                 case "file":
                     if (!empty($item->data->url)) $tmObj = $tmObj->photo(setDynamicData($item->data->url, $this->modelData));
@@ -239,7 +248,6 @@ class RobotNotification extends Notification implements ShouldQueue
                     break;
             }
         }
-
         if ($text) $tmObj = $tmObj->content($text);
 
         return $tmObj;

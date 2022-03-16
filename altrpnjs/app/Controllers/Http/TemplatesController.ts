@@ -13,13 +13,13 @@ import TemplateGenerator from "App/Generators/TemplateGenerator";
 export default class TemplatesController {
   public async index({ request }) {
     const params = request.qs();
-    const page = parseInt(params.page) || 1
+    // const page = parseInt(params.page) || 1
     // const search = params.s
 
     // const orderType = params.order || "DESC"
     // const orderBy = params.order_by || "id"
 
-    const pageSize = params.pageSize
+    // const pageSize = params.pageSize
 
     const templatesQuery = Template.query()
 
@@ -40,9 +40,8 @@ export default class TemplatesController {
         }
       })
       .orderBy('title')
-      .paginate(page, pageSize)
 
-    const modTemplates = templates.all().map( template => {
+    const modTemplates = templates.map( template => {
       return {
         categories: template.categories.map(category => {
           return category
@@ -57,7 +56,6 @@ export default class TemplatesController {
     })
 
     return {
-      pageCount: templates.lastPage,
       templates: modTemplates
     }
   }

@@ -26,6 +26,7 @@ import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
 import app_path from "../../helpers/app_path";
 import Customizer from "App/Models/Customizer";
+import fs from 'fs'
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -62,6 +63,44 @@ Route.get("/modules/*", async ({request, response}) => {
   return file
 })
 
+Route.get("/service-worker-files", async ({}) => {
+
+  const pathToFrontApp = path.join(__dirname, "../", "../", "../", "public", "modules", "front-app");
+
+  let files = fs.readdirSync(pathToFrontApp)
+
+  const variants = [
+    ".js.map",
+    ".txt"
+  ]
+
+  files = files.filter(file => {
+
+    if("node_modules" === file) return false
+
+    for(const variant of variants) {
+      if(file.split(variant).length > 1) {
+        return false
+      }
+    }
+
+    return true
+  })
+  return files
+})
+
+Route.get("/serviceWorker.js", async ({request, response}) => {
+  const url = request.url()
+
+  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+
+  const file = await Drive.get(pathToModules + url)
+
+  response.header("Content-Type", "text/javascript")
+
+  return file
+})
+
 Route.get("/sw/*", async ({request, response}) => {
   const url = request.url()
 
@@ -83,6 +122,7 @@ Route.get("/sw/*", async ({request, response}) => {
   return file
 })
 
+
 Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
   response.header('Content-Type', 'application/javascript')
   let user = auth.user
@@ -91,11 +131,12 @@ Route.get('/data/current-user', async ({response, auth}: HttpContextContract) =>
 window.current_user = ${JSON.stringify({is_guest: true})}
   `);
   }
+  // @ts-ignore
   await user.load('roles')
+  // @ts-ignore
   await user.load('permissions')
-  return response.send(`
-window.current_user = ${JSON.stringify(user.toObject())}
-  `);
+  // @ts-ignore
+  return response.send(`window.current_user = ${JSON.stringify(user.toObject())}`);
 })
 
 Route.group(() => {
