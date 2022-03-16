@@ -24,8 +24,8 @@ export default function renderInputRangeSlider(settings, device) {
             <div class="${"bp3-slider" + (vertical ? " bp3-vertical" : "") + " altrp-field-slider"}">
                <div class="bp3-slider-track">
                   <div class="bp3-slider-progress" style="${vertical ? "left: 0px; top: 100%; bottom: 0%;" : "left: 0; right: 100%; top: 0;"}"></div>
-                  <div class="bp3-slider-progress bp3-intent-primary" style="${vertical ? "left: 0px; top: 100%; bottom: 0%;" : "left: 0; right: 100%; top: 0;"}"></div>
-                  <div class="bp3-slider-progress" style="${vertical ? "left: 0px; top: 0%; bottom: 0%;" : "left: 0%; right: 0%; top: 0px;"}"></div>
+                  <div class="bp3-slider-progress bp3-intent-primary" style="${vertical ? "left: 0px; top: 0; bottom: 0;" : "left: 0; right: 0; top: 0;"}"></div>
+                  <div class="bp3-slider-progress" style="${vertical ? "left: 0px; top: 0%; bottom: 100%;" : "left: 100%; right: 0%; top: 0px;"}"></div>
                </div>
                <div class="bp3-slider-axis">
                    ${sliderLabels.map(step => {

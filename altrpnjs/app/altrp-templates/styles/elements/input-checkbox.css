@@ -1,0 +1,115 @@
+.altrp-field-subgroup {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.altrp-field-option {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 10px;
+}
+
+.altrp-field-option-span {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.altrp-field-container .altrp-field-checkbox.altrp-field-checkbox {
+  margin: 0;
+}
+
+.bp3-control.bp3-inline {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.bp3-control:not(.bp3-align-right) {
+  padding-left: 26px;
+}
+
+.bp3-control {
+  cursor: pointer;
+  display: block;
+  margin-bottom: 10px;
+  position: relative;
+  text-transform: none;
+}
+
+.altrp-field-option__label {
+  cursor: pointer;
+  font-size: 16px;
+}
+
+input[type=checkbox] {
+  cursor: pointer;
+}
+
+.bp3-control input {
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+}
+
+.bp3-control:not(.bp3-align-right) .bp3-control-indicator {
+  margin-left: -26px;
+}
+
+.bp3-control.bp3-checkbox .bp3-control-indicator {
+  border-radius: 3px;
+}
+
+.altrp-field-container .altrp-field-checkbox .bp3-control-indicator:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.bp3-control .bp3-control-indicator {
+  background-clip: padding-box;
+  background-color: #f5f8fa;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+  border: none;
+  -webkit-box-shadow: inset 0 0 0 1px rgb(16 22 26 / 20%), inset 0 -1px 0 rgb(16 22 26 / 10%);
+  box-shadow: inset 0 0 0 1px rgb(16 22 26 / 20%), inset 0 -1px 0 rgb(16 22 26 / 10%);
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  height: 1em;
+  margin-right: 10px;
+  margin-top: -3px;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  width: 1em;
+}
+
+.bp3-control .bp3-control-indicator::before {
+  content: "";
+  display: block;
+  height: 1em;
+  width: 1em;
+}
+

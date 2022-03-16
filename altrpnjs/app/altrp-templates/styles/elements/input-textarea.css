@@ -1,11 +1,3 @@
-.bp3-input-group {
-  display: block;
-  position: relative;
-}
-.bp3-input-group .bp3-input {
-  position: relative;
-  width: 100%;
-}
 .bp3-input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -29,11 +21,14 @@
   vertical-align: middle;
 }
 
-.bp3-input::placeholder {
-  color: #a4b0be;
+textarea.bp3-input {
+  max-width: 100%;
+  padding: 10px;
+  border-style: none;
+  border-radius: 3px;
 }
 
-.bp3-input[readonly] {
-  -webkit-box-shadow: inset 0 0 0 1px rgb(16 22 26 / 15%);
-  box-shadow: inset 0 0 0 1px rgb(16 22 26 / 15%);
+textarea.bp3-input, textarea.bp3-input.bp3-large, textarea.bp3-input.bp3-small {
+  height: auto;
+  line-height: inherit;
 }

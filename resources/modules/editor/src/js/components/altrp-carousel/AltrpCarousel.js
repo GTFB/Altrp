@@ -45,7 +45,6 @@ class AltrpCarousel extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props.width_slides_content)
     if(this.props.slides_repeater !== prevProps.slides_repeater
         && getResponsiveSetting(this.props, 'slides_item_source', '', 'custom') !== 'custom') {
       let sliderImagesArray = [];

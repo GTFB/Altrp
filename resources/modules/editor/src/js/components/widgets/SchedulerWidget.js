@@ -73,11 +73,11 @@ class SchedulerWidget extends Component {
     return formattedData
   }
 
-  _componentDidUpdate = async () => {
-    if(isEditor()) {
-      window.dispatchEvent(new Event('resize'))
-    }
-  }
+  // _componentDidUpdate = async () => {
+  //   if(isEditor()) {
+  //     window.dispatchEvent(new Event('resize'))
+  //   }
+  // }
   _componentDidMount = async () => {
 
     const formattedData = await this.getFormattedEvents()

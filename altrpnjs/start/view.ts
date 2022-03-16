@@ -50,6 +50,7 @@ import renderCarousel from "../helpers/widgets-renders/renderCarousel";
 import renderProgressBar from "../helpers/widgets-renders/renderProgressBar";
 import renderInputWysiwyg from "../helpers/widgets-renders/renderInputWysiwyg";
 import renderScheduler from "../helpers/widgets-renders/renderScheduler";
+import renderDivider from "../helpers/widgets-renders/renderDivider";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -103,6 +104,7 @@ View.global('renderMap', renderMap)
 View.global('renderHeadingTypeAnimating', renderHeadingTypeAnimating)
 View.global('renderImageLightbox', renderImageLightbox)
 View.global('renderTree', renderTree)
+View.global('renderDivider', renderDivider)
 /**
  * RENDERS END
  */

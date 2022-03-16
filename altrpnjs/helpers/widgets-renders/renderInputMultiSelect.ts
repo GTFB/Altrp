@@ -79,7 +79,7 @@ export default function renderInputMultiSelect(settings, device, context) {
                           <div class="">
                             <div class="bp3-input bp3-tag-input bp3-multi-select">
                               <div class="bp3-tag-input-values">
-                                <input class="bp3-input-ghost bp3-multi-select-tag-input-input" placeholder="${placeholder}">
+                                <input class="bp3-input-ghost bp3-multi-select-tag-input-input" placeholder="${placeholder || ""}">
                               </div>
                             </div>
                           </div>

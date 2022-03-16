@@ -6,8 +6,8 @@ import objectToStylesString from "../objectToStylesString";
 export default function renderInputTextCommon(settings, device) {
   const content_readonly = getResponsiveSetting(settings, 'content_readonly', device)
   const label_icon = getResponsiveSetting(settings, 'label_icon', device)
-  const form_id = getResponsiveSetting(settings, 'form_id', device)
-  const field_id = getResponsiveSetting(settings, 'field_id', device)
+  const form_id = getResponsiveSetting(settings, 'form_id', device) || []
+  const field_id = getResponsiveSetting(settings, 'field_id', device) || []
   const content_label_position_type = getResponsiveSetting(settings,"content_label_position_type", device) || 'top';
   const label_icon_position = getResponsiveSetting(settings,'label_icon_position', device)
   const label_style_spacing = getResponsiveSetting(settings,'label_style_spacing', device)
@@ -89,7 +89,7 @@ export default function renderInputTextCommon(settings, device) {
 
   let altrpInput = AltrpInput({
     type: settings.content_type === 'password' ? (showPassword ? "text" : "password") : settings.content_type,
-    placeholder: settings.content_placeholder,
+    placeholder: settings.content_placeholder || "",
     getName: () => getName(),
     readOnly: content_readonly,
     autoComplete: autocomplete,
