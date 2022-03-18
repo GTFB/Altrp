@@ -26,7 +26,6 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {boolean} initialUpdate
    */
   async updateCurrent(dataSources = null, initialUpdate = true) {
-    console.trace(dataSources);
     dataSources = dataSources.map(ds => {
       if(ds instanceof Datasource){
         return ds;

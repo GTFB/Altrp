@@ -5,7 +5,8 @@
 
 ### 1.0.2
 * Fix Section Width
-
+* Add Import/Export Visual Codes
+* Delete `altrp_ajax` from Request Body
 
 ### 1.0.1
 * Fix Elements Conditions Display
