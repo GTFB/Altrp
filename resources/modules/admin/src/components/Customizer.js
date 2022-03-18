@@ -3,7 +3,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
-import {redirect, titleToName} from "../js/helpers";
+import {redirect, titleToName, objectDeepCleaning, generateId} from "../js/helpers";
 import {altrpRandomId} from "../../../front-app/src/js/helpers";
 import UserTopPanel from "./UserTopPanel";
 import { withRouter } from 'react-router-dom'
@@ -25,8 +25,37 @@ class Customizer extends Component {
     });
 
     this.itemsPerPage = 10;
+    this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
 
     this.addNew = this.addNew.bind(this);
+  }
+
+  /** @function generateTemplateJSON
+   * Generating customizer file content to JSON
+   * @param {object} customizer data from server
+   * @return {string} JSON string
+   */
+  generateTemplateJSON(customizer) {
+    return JSON.stringify({
+      name: customizer.name,
+      title: customizer.title,
+      type: customizer.type,
+      guid: customizer.guid,
+      data: customizer.data,
+    });
+  }
+
+  /** @function downloadJSONFile
+   * Download file
+   * @param {object} template Данные, получаемые с сервера
+   */
+  downloadJSONFile(customizer) {
+    const element = document.createElement("a");
+    const file = new Blob([this.generateTemplateJSON(customizer)], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `${customizer.name}.json`;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
   }
 
   async componentDidMount() {
@@ -50,6 +79,45 @@ class Customizer extends Component {
       })
     }
   }
+
+  /**
+   * Show/hide import form
+   */
+  toggleImportForm = () => {
+    this.setState(state => ({...state, showImportForm: !this.state.showImportForm}))
+  };
+  /**
+   * Import customizer from file
+   */
+  importCustomizer = (e) => {
+    e.preventDefault();
+    let files = _.get(e, 'target.files.files', []);
+    let uploadedFilesCount = 0;
+    if (files.length) {
+      _.forEach(files, f => {
+        let fr = new FileReader();
+        fr.onload = async (e) => {
+          let importedCustomizerData = _.get(e, 'target.result', '{}');
+          importedCustomizerData = JSON.parse(importedCustomizerData);
+          //importedCustomizerData.isImported = true;
+          importedCustomizerData.name = importedCustomizerData.title+generateId();
+          try {
+            let res = await this.resource.post(importedCustomizerData);
+            if (res.redirect_route) {
+              const newLink = document.createElement('a');
+              newLink.href = res.redirect_route
+              newLink.setAttribute('target', '_blank');
+              newLink.click()
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        fr.readAsText(f);
+      })
+    }
+  };
 
   async fetchData() {
     let url = new URL(location.href);
@@ -133,6 +201,7 @@ class Customizer extends Component {
             <button onClick={this.addNew} className="btn">
               Add New
             </button>
+            <button onClick={this.toggleImportForm} className="btn ml-3">Import</button>
             {/* <button className="btn ml-3">Import Robot</button> */}
             <div className="admin-filters">
             <span className="admin-filters__current">
@@ -143,6 +212,17 @@ class Customizer extends Component {
           <UserTopPanel />
         </div>
         <div className="admin-content">
+          {this.state.showImportForm &&
+          <form className={"admin-form justify-content-center" + (this.state.showImportForm ? ' d-flex' : ' d-none')}
+                onSubmit={this.importCustomizer}>
+            <input type="file"
+                   name="files"
+                   multiple={true}
+                   required={true}
+                   accept="application/json"
+                   className="form__input"/>
+            <button className="btn">Import</button>
+          </form>}
           <AdminTable
             columns={[
               {
@@ -179,6 +259,12 @@ class Customizer extends Component {
                 data: {power: 1},
                 after: () => this.fetchData(),
                 title: "Enable"
+              }, {
+                tag: 'button',
+                route: '/admin/ajax/exports/customizers',
+                method: 'get',
+                after: response => this.downloadJSONFile(response),
+                title: 'Export'
               }, {
                 tag: "button",
                 route: "/admin/ajax/customizers/:id",

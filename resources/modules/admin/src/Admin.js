@@ -165,11 +165,12 @@ class Admin extends Component {
 
     if(currentUser.guid && !this.altrpIo) {
       this.altrpIo = io( {
+        path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-
+      console.log(this.altrpIo);
       this.altrpIo.on("message", (data) => {
         console.log(data)
       })

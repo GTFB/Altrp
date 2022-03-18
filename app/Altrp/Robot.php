@@ -69,12 +69,17 @@ class Robot extends Model
   {
 
     $content = "";
+
+    // if (isset(\$data) && isset(\$data['message']) && isset(\$data['message']['text']) && \$data['message']['text'] == '/start') {
+    //   \$chatData = \$data['message'];
+    // }
     $content .= "\tpublic function " . $this->getMethodName() . "( ApiRequest \$request ){
 
       \$data = \$request->all();
 
       \$chatData = null;
-      if (isset(\$data) && isset(\$data['message'])) {
+
+      if (isset(\$data) && isset(\$data['message']) && isset(\$data['message']['text'])) {
         \$chatData = \$data['message'];
       }
 
@@ -90,13 +95,13 @@ class Robot extends Model
       \$source = \$model->altrp_sources->where('type', 'add')->first();
       \$columns = explode(',',\$model->table->columns->implode('name',','));
 
-      \$order = new order();
+      \$modelName = new " . $this->altrp_model->name . "();
 
       \$data = [
           'model' => \$model,
           'source' => \$source,
           'columns' => \$columns,
-          'record' => \$order,
+          'record' => \$modelName,
           'action_type' => 'telegram_bot'
       ];
 

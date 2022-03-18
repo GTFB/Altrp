@@ -5,8 +5,6 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
-import marked from "marked";
-import sanitizeHtml from "sanitize-html";
 
 
 export default class IndicesController {

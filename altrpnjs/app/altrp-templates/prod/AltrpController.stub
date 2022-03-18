@@ -1,4 +1,7 @@
 const selectForSQLEditor = require("../../helpers/selectForSQLEditor").default
+const empty = __importDefault(require("../../helpers/empty"));
+const _ = __importStar(require("lodash"));
+
 {{{imports}}}
 
 class {{{classname}}} extends AltrpBaseController {

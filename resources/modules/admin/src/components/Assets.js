@@ -7,7 +7,6 @@ import { ImageDetail } from "./ImageDetail";
 import { FontsDetail } from "./FontsDetail";
 import IconUpload from "./../svgs/upload.svg"
 import UserTopPanel from "./UserTopPanel";
-import AnimatedLoader from './../svgs/animatedLoader.svg'
 
 class Assets extends Component {
   constructor(props) {
@@ -38,7 +37,8 @@ class Assets extends Component {
       tableSearch: '',
       currentPage: 1,
       loading: true,
-      lineTableCheckedIS: []
+      lineTableCheckedIS: [],
+      lineTableCheckedOthers: []
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
@@ -179,7 +179,7 @@ class Assets extends Component {
 
   filterAssets(activeLink) {
     this.setState(state => {
-      return { ...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}`, loading: true, lineTableCheckedIS: [] }
+      return { ...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}`, loading: true, lineTableCheckedIS: [], lineTableCheckedOthers: [] }
     });
     let filterResource = new Resource({ route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}` });
     filterResource.getQueried({s: this.state.tableSearch}).then(res => {
@@ -333,6 +333,48 @@ class Assets extends Component {
     }
   }
 
+  checkedLineTableOthers = (e, id) => {
+    if (e.target.checked) {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedOthers: [...state.lineTableCheckedOthers, id]
+      }))
+    } else {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedOthers: [...state.lineTableCheckedOthers].filter(item => item !== id)
+      }))
+    }
+  }
+
+  checkedAllOthers = (e) => {
+    if (e.target.checked) {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedOthers: this.state.assets.map(item => item.id)
+      }))
+    } else {
+      this.setState(state => ({
+        ...state,
+        lineTableCheckedOthers: []
+      }))
+    }
+  }
+
+  checkedDeleteOthers = () => {
+    if (confirm('Are You Sure?')) {
+      let array = this.state.assets.filter(asset => !this.state.lineTableCheckedOthers.includes(asset.id))
+      this.state.lineTableCheckedOthers.forEach(id => {
+        this.resource.delete(id)
+      })
+      this.setState(state => ({
+        ...state,
+        assets: array,
+        lineTableCheckedOthers: []
+      }))
+    }
+  }
+
   render() {
     let UploadIcon = iconsManager().getIconComponent('upload');
     let CloseIcon = iconsManager().getIconComponent('close');
@@ -340,7 +382,9 @@ class Assets extends Component {
     let assetsMapIS = this.state.assets.map(asset =>
       ({...asset, clickToImage: () => this.openImageDetail(asset.id), checkedTable: this.checkedLineTableIS })
     )
-    let assetsMapOthers = this.state.assets.map(asset => ({...asset, button__table: () => this.openDocumentDetail(asset.id) }))
+    let assetsMapOthers = this.state.assets.map(asset =>
+      ({...asset, button__table: () => this.openDocumentDetail(asset.id), checkedTable: this.checkedLineTableOthers })
+    )
     return <div className="admin-assets admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
         <div className="admin-heading-left">
@@ -435,8 +479,6 @@ class Assets extends Component {
          <div className={this.state.loading ? "assets-loading" : ""}>
            {this.state.loading ? (
              <div className="loading-assets-block">
-               {/*<span>Loading...</span>*/}
-               {/*<AnimatedLoader />*/}
                <div className="loader-assets-animate"/>
              </div>
            ) : (
@@ -609,6 +651,11 @@ class Assets extends Component {
                          title: 'Updated at'
                        }
                      ]}
+
+                     allChecked={this.checkedAllOthers}
+                     deleteCheckedLine={this.checkedDeleteOthers}
+                     arrayChecked={this.state.lineTableCheckedOthers}
+
                      quickActions={[
                        {
                          tag: "button",

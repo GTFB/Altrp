@@ -5,6 +5,7 @@ import FUNCTION from "../parameter-types/FUNCTION";
 import STREAM from "../parameter-types/STREAM";
 import BOOL from "../parameter-types/BOOL";
 import ANY from "../parameter-types/ANY";
+import NUMBER from "../parameter-types/NUMBER";
 
 const classDescription = 'Following are the methods to work with the response headers and the response status.'
 
@@ -168,6 +169,23 @@ const RESPONSE_OPTIONS = [
       new Parameter({
         name: "data",
         types: [ANY],
+        required: true,
+      }),
+    ],
+  },
+  {
+    value: 'response.status',
+    objectInstance: 'response',
+    label: 'status',
+    description: 'Set HTTP status code',
+    classDescription,
+    returns: [
+      THIS,
+    ],
+    parameters:[
+      new Parameter({
+        name: "code",
+        types: [NUMBER],
         required: true,
       }),
     ],

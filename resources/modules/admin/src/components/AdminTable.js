@@ -46,7 +46,7 @@ class AdminTable extends Component {
           <div className={filterPropsCategories || arrayChecked?.length > 0 ? "admin-table-top admin-table-top__flex" : "admin-table-top"}>
             <form className={filterPropsCategories || arrayChecked?.length > 0 ? "admin-table-top__form" : "admin-table-top__form-off"} onSubmit={searchTables.submit}>
               <InputGroup className="form-tables" value={searchTables.value} onChange={searchTables.change} />
-              <Search />
+              <Search className="admin-table__search-icon-svg" />
               <button className="btn btn_bare admin-users-button btn__tables">Search</button>
             </form>
             {filterPropsCategories && (

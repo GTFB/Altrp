@@ -225,6 +225,14 @@ export default class Template extends BaseModel {
     return templates;
   }
 
+  dataWithoutContent(){
+    // @ts-ignore
+    const data = this.toJSON();
+    delete data.htmlContent
+    delete data.styles
+    return data
+  }
+
   async getChildrenContent() {
     try {
       const data = JSON.parse(this.data)

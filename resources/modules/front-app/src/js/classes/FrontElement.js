@@ -362,7 +362,10 @@ class FrontElement {
    * @return {*}
    */
   getSettings(settingName, _default = '', locked = false){
-    const settings = locked ? this.settingsLock : this.settings;
+    let settings = this.settings;
+    if(locked && !_.isEmpty(this.settingsLock)){
+      settings = this.settingsLock
+    }
     if(! settingName)
     {
       return _.cloneDeep(settings);

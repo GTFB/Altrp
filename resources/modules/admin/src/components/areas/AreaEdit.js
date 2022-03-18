@@ -20,6 +20,10 @@ class AreaEdit extends Component {
     try {
       let { data } = await this.categoryOptions.getAll();
       let value = await this.resource.get(this.props.match.params.id)
+      if (_.isArray(value.settings)) {
+        value.settings = {}
+      }
+
       this.setState(state => ({
         ...state,
         categoryOptions: data,

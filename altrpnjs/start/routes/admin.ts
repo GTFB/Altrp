@@ -29,6 +29,8 @@ Route.group(() => {
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
+    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
+
     Route.get("/role_options", "OptionsController.roles")
     Route.get("/permissions_options", "OptionsController.permissions")
 
@@ -83,6 +85,14 @@ Route.group(() => {
     Route.put("/menus/:id", "admin/MenusController.update")
     Route.get("/menus/:id", "admin/MenusController.show")
 
+    Route.get("/data_sources", "admin/ModelsController.getDataSources")
+    Route.get('/data_source_options', 'admin/ModelsController.getDataSourceOptions');
+    Route.post('/data_sources', 'admin/ModelsController.storeDataSource');
+    Route.put('/data_sources/:id', 'admin/ModelsController.updateDataSource');
+    Route.get('/data_sources/:id', 'admin/ModelsController.showDataSource');
+    Route.delete('/data_sources/:id', 'admin/ModelsController.destroyDataSource');
+    Route.get('/models/:model_id/data_source_options', 'admin/ModelsController.getDataSourcesByModel');
+
     Route.resource('global_template_styles', 'GlobalTemplateStylesController')
 
     Route.get('/reports_options', () => {
@@ -130,6 +140,7 @@ Route.group(() => {
     Route.get('/customizers/:id', 'admin/CustomizersController.show')
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
+    Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
     /**
      *
      * sql_editors
@@ -188,7 +199,6 @@ Route.group(() => {
       return httpContext.response.json({result: false})
     }).name = 'admin.check_update'
 
-    Route.get("/data_sources", "admin/ModelsController.getDataSources")
 
     Route.post("/page_data_sources", "admin/PageDatasourcesController.store")
     Route.put("/page_data_sources/:id", "admin/PageDatasourcesController.update")
