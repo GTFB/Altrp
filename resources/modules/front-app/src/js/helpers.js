@@ -1444,7 +1444,7 @@ export async function altrpLogin(data = {}, formId = "login") {
   }).getAll();
   currentUser = currentUser.data;
   appStore.dispatch(changeCurrentUser(currentUser));
-  let routes = [];
+  /*let routes = [];
   try {
     let routesData = await new Resource({
       route: "/ajax/routes"
@@ -1457,7 +1457,7 @@ export async function altrpLogin(data = {}, formId = "login") {
   } catch (err) {
     console.error(err);
     return { success: false };
-  }
+  }*/
   return { success: true };
 }
 

@@ -915,6 +915,7 @@ class InputSelectWidget extends Component {
    */
   getOptions() {
     let options = this.state.options;
+    const {element} = this.props
 
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"

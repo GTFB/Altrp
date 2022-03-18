@@ -102,7 +102,6 @@ export default class GlobalTemplateStylesController {
   {
     let elementData = JSON.parse(element.data);
     elementData = GlobalTemplateStylesController.recursiveReplaceGlobalStyles(elementData, guid, style);
-    console.log(elementData)
     element.data = JSON.stringify(elementData);
     element.save();
   }

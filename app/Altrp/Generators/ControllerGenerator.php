@@ -138,7 +138,7 @@ class ControllerGenerator extends AppGenerator
     if ( $this->getSourceActions()->isEmpty() ) {
       // Записать основные действия над ресурсом в базу
       if ( ! $this->writeSourceActions() ) {
-        throw new ModelNotWrittenException( 'Failed to write source action to the database', 500 );
+        throw new ModelNotWrittenException( 'Failed to write source action to the database (Controller Generator)', 500 );
       }
     }
 

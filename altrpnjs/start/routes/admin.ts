@@ -29,6 +29,8 @@ Route.group(() => {
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
+    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
+
     Route.get("/role_options", "OptionsController.roles")
     Route.get("/permissions_options", "OptionsController.permissions")
 
@@ -138,6 +140,7 @@ Route.group(() => {
     Route.get('/customizers/:id', 'admin/CustomizersController.show')
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
+    Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
     /**
      *
      * sql_editors
