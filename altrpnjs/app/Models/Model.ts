@@ -150,7 +150,9 @@ export default class Model extends BaseModel {
   }
 
   getLabelColumnName() {
-    let label = this?.table?.columns.find(c => c.is_label)?.name
+    let label = this?.table?.columns.find(c => {
+      return c.is_label
+    })?.name
     if (!label) {
       label = this?.table?.columns.find(c => c.is_title)?.name
     }

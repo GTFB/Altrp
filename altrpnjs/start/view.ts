@@ -41,6 +41,7 @@ import renderInputSelect from "../helpers/widgets-renders/renderInputSelect";
 import renderInputMultiSelect from "../helpers/widgets-renders/renderInputMultiSelect";
 import renderInputSlider from "../helpers/widgets-renders/renderInputSlider";
 import renderSectionBG from "../helpers/renderSectionBG";
+import getColumnClasses from "../helpers/getColumnClasses";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -54,6 +55,7 @@ View.global('allowedForUser', allowedForUser)
 View.global('getContent', getContent)
 View.global('renderAsset', renderAsset)
 View.global('renderSectionBG', renderSectionBG)
+View.global('getColumnClasses', getColumnClasses)
 /**
  * RENDERS START
  */

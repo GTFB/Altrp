@@ -129,13 +129,18 @@ export default class Source extends BaseModel {
     switch ( this.sourceable_type ){
       case SQLEditor.sourceable_type:
       case 'App\\Altrp\\Query':
-        return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
+        return config('app.url') + '/ajax/models/queries' + this.model?.table?.name + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
         return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
-      default:
+      default:{
+        let url = data_get( this, 'url', '' )
+        if(url.indexOf('{') !== -1){
+          url = url.replace(/{/g, '').replace(/}/g, '')
+        }
         return this.type != 'remote'
-          ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
-      : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
+          ? config('app.url') + '/ajax/models' + url
+          : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
+      }
     }
   }
 
@@ -381,7 +386,7 @@ export default class Source extends BaseModel {
     if(search){
       ${this.altrp_model.getIndexedColumns().map(column => `
       query.orWhere('${column.name}', 'like', \`%\${search}%\`);
-      `)}
+      `).join('')}
     }
 
     const order = httpContext.request.qs()?.order === 'asc' ? 'asc' : 'desc';

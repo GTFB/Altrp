@@ -68,6 +68,7 @@ export default class ElementRenderer {
         children_content,
         element_styles:styles,
         section_classes,
+        column_classes: `{{getColumnClasses(element${this.getId()}_settings, device)}}`,
         section_background,
         layout_html_tag,
         link_class: this.isLink() ? 'altrp-pointer' : '',
