@@ -12,6 +12,7 @@ export default function renderCarousel(settings, device) {
   let img_content = getResponsiveSetting(settings,"img_content", device);
   let arrowsToggle = getResponsiveSetting(settings, "arrows_navigation_content", device)
   let dotsToggle = getResponsiveSetting(settings, "dots_navigation_content", device)
+  let slides = getResponsiveSetting(settings,'slides_repeater', device, []) ;
 
   let {unit, size}: Destructuring = width_slides_content
   let destructuringSize: number = size ? +size : 1420
@@ -27,6 +28,9 @@ export default function renderCarousel(settings, device) {
 
   let slickTrackSize: number = +sizeSlide * carouselItems.length
 
+  if (slides.length === 0) {
+    return 'No Slides'
+  }
 
   return `<div class="sc-bkkeKt fRdskG altrp-carousel">
             <div class="${"altrp-carousel-container" + (arrowsToggle ? "" : " altrp-carousel-container-no-arrow")}">

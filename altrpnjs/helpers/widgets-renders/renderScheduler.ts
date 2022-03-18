@@ -128,11 +128,91 @@ export default function renderScheduler(settings, device) {
                                               )
                                             }).join(" ")}
                                           </tr>
-                                          <tr role="row"></tr>
-                                          <tr role="row"></tr>
-                                          <tr role="row"></tr>
-                                          <tr role="row"></tr>
-                                          <tr role="row"></tr>
+                                          <tr role="row">
+                                            ${arrayDates.filter((_, idx) => idx + 1 > 7 && idx + 1 <= 14).map(number => {
+                                               return (
+                                                `<td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-future fc-day-other" data-date="${getDataDate()}" aria-labelledby="fc-dom-548">
+                                                   <div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner">
+                                                      <div class="fc-daygrid-day-top">
+                                                         <a id="fc-dom-548" class="fc-daygrid-day-number" aria-label="${number + " " + ariaLabelDate}">${number}</a>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-events">
+                                                        <div class="fc-daygrid-day-bottom" style="margin-top: 0;"></div>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-bg"></div>
+                                                   </div>
+                                                </td>`
+                                               )
+                                            }).join(" ")}
+                                          </tr>
+                                          <tr role="row">
+                                            ${arrayDates.filter((_, idx) => idx + 1 > 14 && idx + 1 <= 21).map(number => {
+                                               return (
+                                                 `<td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-future fc-day-other" data-date="${getDataDate()}" aria-labelledby="fc-dom-548">
+                                                   <div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner">
+                                                      <div class="fc-daygrid-day-top">
+                                                         <a id="fc-dom-548" class="fc-daygrid-day-number" aria-label="${number + " " + ariaLabelDate}">${number}</a>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-events">
+                                                        <div class="fc-daygrid-day-bottom" style="margin-top: 0;"></div>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-bg"></div>
+                                                   </div>
+                                                </td>`
+                                              )
+                                            }).join(" ")}
+                                          </tr>
+                                          <tr role="row">
+                                             ${arrayDates.filter((_, idx) => idx + 1 > 21 && idx + 1 <= 28).map(number => {
+                                               return (
+                                                 `<td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-future fc-day-other" data-date="${getDataDate()}" aria-labelledby="fc-dom-548">
+                                                   <div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner">
+                                                      <div class="fc-daygrid-day-top">
+                                                         <a id="fc-dom-548" class="fc-daygrid-day-number" aria-label="${number + " " + ariaLabelDate}">${number}</a>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-events">
+                                                        <div class="fc-daygrid-day-bottom" style="margin-top: 0;"></div>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-bg"></div>
+                                                   </div>
+                                                </td>`
+                                               )
+                                             }).join(" ")}
+                                          </tr>
+                                          <tr role="row">
+                                             ${arrayDates.filter((_, idx) => idx + 1 > 28 && idx + 1 <= 35).map(number => {
+                                               return (
+                                                 `<td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-future fc-day-other" data-date="${getDataDate()}" aria-labelledby="fc-dom-548">
+                                                   <div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner">
+                                                      <div class="fc-daygrid-day-top">
+                                                         <a id="fc-dom-548" class="fc-daygrid-day-number" aria-label="${number + " " + ariaLabelDate}">${number}</a>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-events">
+                                                        <div class="fc-daygrid-day-bottom" style="margin-top: 0;"></div>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-bg"></div>
+                                                   </div>
+                                                </td>`
+                                               )
+                                             }).join(" ")}
+                                          </tr>
+                                          <tr role="row">
+                                            ${arrayDates.filter((_, idx) => idx + 1 > 35 && idx + 1 <= 42).map(number => {
+                                               return (
+                                                 `<td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-future fc-day-other" data-date="${getDataDate()}" aria-labelledby="fc-dom-548">
+                                                   <div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner">
+                                                      <div class="fc-daygrid-day-top">
+                                                         <a id="fc-dom-548" class="fc-daygrid-day-number" aria-label="${number + " " + ariaLabelDate}">${number}</a>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-events">
+                                                        <div class="fc-daygrid-day-bottom" style="margin-top: 0;"></div>
+                                                      </div>
+                                                      <div class="fc-daygrid-day-bg"></div>
+                                                   </div>
+                                                </td>`
+                                               )
+                                            }).join(" ")}
+                                          </tr>
                                         </tbody>
                                       </table>
                                     </div>
