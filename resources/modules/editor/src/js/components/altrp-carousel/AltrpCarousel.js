@@ -45,7 +45,6 @@ class AltrpCarousel extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props.width_slides_content)
     if(this.props.slides_repeater !== prevProps.slides_repeater
         && getResponsiveSetting(this.props, 'slides_item_source', '', 'custom') !== 'custom') {
       let sliderImagesArray = [];
@@ -124,7 +123,13 @@ class AltrpCarousel extends Component {
 
     //точки
     let slides = getResponsiveSetting(this.props,'slides_repeater', '', []) ;
-
+    if (slides.length === 0) {
+      if (isEditor()) {
+        return 'No Slides'
+      } else {
+        return ''
+      }
+    }
 
     let dotsClasses = "altrp-carousel-dots";
 

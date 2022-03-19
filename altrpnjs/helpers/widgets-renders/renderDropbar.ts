@@ -29,10 +29,16 @@ export default function renderDropbar(settings, device) {
     return true
   }
 
-  const buttonTemplate: string = `<button class='${_.join(classes, " ")}' id='${id}'>
-    ${buttonText}
-    ${ showIcon ? (! isSSR() && `<span class="altrp-btn-icon">${renderAsset(buttonMedia)}</span>`) : "" }
-  </button>`
+  const buttonTemplate: string = `<div class="altrp-btn-wrapper_dropbar altrp-btn-wrapper">
+      <div class="altrp-dropbar altrp-dropbar-altrp-dropbar-btn">
+        <span class="altrp-dropbar-children-wrapper altrp-dropbar-btn-wrapper">
+          <button class='${_.join(classes, " ")}' id='${id}'>
+            ${buttonText}
+            ${ showIcon ? (! isSSR() && `<span class="altrp-btn-icon">${renderAsset(buttonMedia)}</span>`) : "" }
+          </button>
+        </span>
+      </div>
+</div>`
 
   // let altrpDropbar = AltrpDropbar({
   //   className: "btn",

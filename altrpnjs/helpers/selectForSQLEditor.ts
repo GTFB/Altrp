@@ -7,7 +7,7 @@ import before from "./string/before"
 import Database from "@ioc:Adonis/Lucid/Database";
 
 async function  selectForSQLEditor( sql:string, bindings,  request:RequestContract ){
-
+  sql = sql.replace(/{{PREFIX}}/g, '')
   let _sql_order_by = ''
   let _sql_and_filters = ''
   let _sql_filters = ''

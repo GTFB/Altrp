@@ -96,7 +96,7 @@ export default function renderInputSelect(settings, device, context) {
   let input: string = `<span class="bp3-popover-wrapper  ">
              <span aria-haspopup="true" class="bp3-popover-target altrp-select-popover">
                 <div class="">
-                  <button type="button" disabled="${content_readonly}" class="${"bp3-button" + (content_readonly ? " bp3-disabled" : "")}">
+                  <button type="button" ${content_readonly ? "disabled" : ""} class="${"bp3-button" + (content_readonly ? " bp3-disabled" : "")}">
                      ${leftIcon}
                      ${selectText}
                      ${rightIcon ? rightIcon : `<span class="bp3-icon bp3-icon-caret-down" icon="caret-down" aria-hidden="true">

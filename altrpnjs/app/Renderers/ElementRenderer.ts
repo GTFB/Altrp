@@ -2,19 +2,21 @@ import app_path from "../../helpers/app_path";
 import fs from "fs";
 import * as mustache from 'mustache'
 import * as _ from 'lodash'
-import altrpRandomId from "../../helpers/altrpRandomId";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import objectToStylesString from "../../helpers/objectToStylesString";
 
 export default class ElementRenderer {
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
   private elementStub: string
-  private idForAction: string;
   constructor(private element: {
     children: [],
     settingsLock: {},
     settings: {
-      layout_html_tag?: string;
+      advanced_element_id?: string,
+      layout_html_tag?: string
       react_element?:boolean
+      layout_content_width_type?:string
+      isFixed?:boolean
     },
     name: string,
     type: string,
@@ -28,6 +30,7 @@ export default class ElementRenderer {
   async render(): Promise<string>{
     const reactElement =  this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
+    const {advanced_element_id} = this.element.settings
     let children_content = ''
     for (const child of this.element.children){
       let renderer = new ElementRenderer(child)
@@ -37,11 +40,36 @@ export default class ElementRenderer {
     const columns_count = this.element.children.length;
 
     if(fs.existsSync(this.elementStub)){
+      const section_background = this.getType() === 'section' ? `{{{renderSectionBG(element${this.getId()}_settings, device)}}}` : ''
+      let styles:{}|string = {}
+      const {layout_content_width_type:widthType, isFixed} = this.element.settings
+      let section_classes = ''
+      switch (this.getName() ){
+        case 'section':{
+          if (widthType === "boxed" && !isFixed) {
+            section_classes = " altrp-section_boxed ";
+            styles['max-width'] = '100%'
+          }
+          if (widthType === "section_boxed" && !isFixed) {
+            section_classes = " altrp-section_section-boxed "
+          }
+
+          if (widthType === "full" && !isFixed) {
+            section_classes = " altrp-section--full-width "
+          }
+        }
+        break;
+      }
+      styles = objectToStylesString(styles)
       element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
       element_content = mustache.render(element_content, {
         settings: JSON.stringify(this.element.settings),
         id: this.element.id,
         children_content,
+        element_styles:styles,
+        section_classes,
+        column_classes: `{{getColumnClasses(element${this.getId()}_settings, device)}}`,
+        section_background,
         layout_html_tag,
         link_class: this.isLink() ? 'altrp-pointer' : '',
         columns_count,
@@ -72,9 +100,13 @@ export default class ElementRenderer {
     data-margin-top="\${getResponsiveSetting(element${this.getId()}_settings, 'st_spacing', device, 0)}"\` }}}
     data-altrp-id="${this.getId()}"
     `
+
     wrapper_attributes = wrapper_attributes.replace(/\s+/g, ' ');
+    if(advanced_element_id){
+      wrapper_attributes += ` id="${advanced_element_id}" `
+    }
     content = mustache.render(content, {
-      settings: JSON.stringify(this.element.settings),
+      settings: JSON.stringify(this.element.settings).replace(/\//g, '\\/'),
       id: this.getId(),
       element_content,
       type: this.getType(),
@@ -94,10 +126,7 @@ export default class ElementRenderer {
     return this.element.name
   }
   private getIdForAction(){
-    if(! this.idForAction){
-      this.idForAction = altrpRandomId()
-    }
-    return this.idForAction
+    return this.element.id
   }
   private isLink(){
     return ! !_.get(this, 'element.settings.link_link.url');

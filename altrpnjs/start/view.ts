@@ -51,6 +51,9 @@ import renderProgressBar from "../helpers/widgets-renders/renderProgressBar";
 import renderInputWysiwyg from "../helpers/widgets-renders/renderInputWysiwyg";
 import renderScheduler from "../helpers/widgets-renders/renderScheduler";
 import renderTournament from '../helpers/widgets-renders/renderTournament';
+import renderDivider from "../helpers/widgets-renders/renderDivider";
+import renderSectionBG from "../helpers/renderSectionBG";
+import getColumnClasses from "../helpers/getColumnClasses";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -63,6 +66,8 @@ View.global('getAddingClasses', getAddingClasses)
 View.global('allowedForUser', allowedForUser)
 View.global('getContent', getContent)
 View.global('renderAsset', renderAsset)
+View.global('renderSectionBG', renderSectionBG)
+View.global('getColumnClasses', getColumnClasses)
 /**
  * RENDERS START
  */
@@ -105,6 +110,7 @@ View.global('renderMap', renderMap)
 View.global('renderHeadingTypeAnimating', renderHeadingTypeAnimating)
 View.global('renderImageLightbox', renderImageLightbox)
 View.global('renderTree', renderTree)
+View.global('renderDivider', renderDivider)
 /**
  * RENDERS END
  */

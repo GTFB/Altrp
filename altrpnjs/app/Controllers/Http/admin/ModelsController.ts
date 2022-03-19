@@ -303,7 +303,7 @@ export default class ModelsController {
         pageCount: 0
       }
     } else {
-      const sources = await Source.query().select('*');
+      const sources = await Source.query().select('*')
       return {
         data_sources: sources,
         pageCount: 0

@@ -1,4 +1,6 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
+import validGuid from '../../../helpers/validGuid';
 
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
@@ -7,19 +9,21 @@ import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
+//import AltrpMeta from "App/Models/AltrpMeta";
 import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
+//import recurseMapElements from '../../../helpers/recurseMapElements';
 
 export default class TemplatesController {
   public async index({ request }) {
     const params = request.qs();
-    const page = parseInt(params.page) || 1
+    // const page = parseInt(params.page) || 1
     // const search = params.s
 
     // const orderType = params.order || "DESC"
     // const orderBy = params.order_by || "id"
 
-    const pageSize = params.pageSize
+    // const pageSize = params.pageSize
 
     const templatesQuery = Template.query()
 
@@ -40,9 +44,8 @@ export default class TemplatesController {
         }
       })
       .orderBy('title')
-      .paginate(page, pageSize)
 
-    const modTemplates = templates.all().map( template => {
+    const modTemplates = templates.map( template => {
       return {
         categories: template.categories.map(category => {
           return category
@@ -57,7 +60,6 @@ export default class TemplatesController {
     })
 
     return {
-      pageCount: templates.lastPage,
       templates: modTemplates
     }
   }
@@ -431,4 +433,30 @@ export default class TemplatesController {
       success: true
     }
   }
+
+
+  public async exportCustomizer( {params, response}: HttpContextContract )
+  {
+
+    let template
+    if (validGuid(params.id)) {
+      template = await Template.query().where('guid', params.id).first()
+    } else {
+      template = await Template.find(params.id)
+    }
+    if (!template) {
+      return response.json({
+          'success':
+            false, 'message':
+            'Customizer not found'
+        },
+      )
+    }
+    let data = template.serialize()
+
+    
+
+    return response.json(data)
+  }
+
 }

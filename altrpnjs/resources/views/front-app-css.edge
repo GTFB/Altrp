@@ -1,12 +1,17 @@
-{{--  .app-area > .sections-wrapper{
-    width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
-  }
-  .altrp-section--boxed {
-    padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
-    padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
-  }  --}}
 <style>
-
+.altrp-skeleton__span{
+  -webkit-animation: skeleton-animation 1.2s ease-in-out infinite;
+  animation: skeleton-animation 1.2s ease-in-out infinite;
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+}
+@-webkit-keyframes skeleton-animation{0%{background-position:-200px 0;}100%{background-position:calc(200px + 100%) 0;}}@keyframes skeleton-animation{0%{background-position:-200px 0;}100%{background-position:calc(200px + 100%) 0;}}
   .app-area > .sections-wrapper{
     width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
   }

@@ -1,6 +1,6 @@
 import objectToStylesString from "../objectToStylesString"
 import getResponsiveSetting from "../getResponsiveSetting"
-
+//@ts-ignore
 export default function renderMap(settings, device, context) {
   const height = getResponsiveSetting(settings, 'style_height', device, {size: 400, unit: 'px'})
   const margin = getResponsiveSetting(settings, 'style_margin', device, {top: 0, bottom: 0, left: 0, right: 0, unit: 'px'})
@@ -33,10 +33,10 @@ export default function renderMap(settings, device, context) {
               <a href="https://leafletjs.com" title="A JS library for interactive maps">
                 Leaflet
               </a>
-              | © 
+              | ©
               <a href="http://osm.org/copyright">
                 OpenStreetMap
-              </a> 
+              </a>
               contributors
             </div>
           </div>

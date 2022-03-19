@@ -1,0 +1,174 @@
+// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
+import GlobalStyle from "App/Models/GlobalStyle";
+import { v4 as uuid } from "uuid";
+import Template from "App/Models/Template";
+import is_null from "../../../helpers/is_null";
+import data_set from "../../../helpers/data_set";
+import data_get from "../../../helpers/data_get";
+import is_array from "../../../helpers/is_array";
+
+export default class GlobalTemplateStylesController {
+  public async index() {
+
+    try {
+      const globalStyles = await GlobalStyle.query()
+
+      const groups = {};
+
+      globalStyles.forEach((style) => {
+        if(!groups[style.type]) groups[style.type] = [];
+
+        groups[style.type].push(style)
+      })
+      return groups
+    } catch (e) {
+      console.log(e)
+      return {}
+    }
+  }
+
+  public async store({ request, response }) {
+    const data = request.body()
+
+    if(!data.type || !data.settings) {
+      response.status(500)
+      return "fill all fields"
+    }
+
+    data.guid = uuid()
+
+    try {
+      const style = await GlobalStyle.create(data)
+      return style
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  public async destroy({request}) {
+    const params = request.params();
+    const id = parseInt(params.id);
+
+    const style = await GlobalStyle.query().where("id", id).firstOrFail()
+
+    style.delete()
+
+    return {
+      success: true
+    }
+  }
+
+  public async update({request, response}) {
+    const params = request.params();
+    const id = parseInt(params.id);
+
+    const style = await GlobalStyle.query().where("id", id).firstOrFail()
+
+    const body = request.body();
+
+
+    switch (style.type) {
+      case "color":
+        const data = JSON.parse(style.settings);
+
+        data.name = body.name ?? data.name;
+        data.color = body.color ?? data.color;
+        data.colorPickedHex = body.colorPickedHex ?? data.colorPickedHex;
+        data.colorRGB = body.colorRGB ?? data.colorRGB;
+
+        style.settings = JSON.stringify(data);
+        break
+    }
+
+    if(!style.save()) {
+      response.status(409)
+      return "Save failed"
+    }
+
+    await this.updateStylesInAllTemplates(style)
+
+    return style
+  }
+
+  private async updateStylesInAllTemplates(style) {
+    let templates = await Template.all();
+    templates.forEach((template) => {
+     this.replaceGlobalStyles(template, style.guid, style.settings);
+  });
+  }
+
+  public replaceGlobalStyles(element, guid, style)
+  {
+    let elementData = JSON.parse(element.data);
+    elementData = GlobalTemplateStylesController.recursiveReplaceGlobalStyles(elementData, guid, style);
+    element.data = JSON.stringify(elementData);
+    element.save();
+  }
+
+  public static recursiveReplaceGlobalStyles(data, guid, style) {
+    if(data.settings.global_styles_storage) {
+      const globalStylesStorage = data.settings.global_styles_storage
+
+      if(globalStylesStorage.length > 0) {
+        globalStylesStorage.forEach(s => {
+          if(!is_null(s)) {
+            if(s.search("typographic") !== -1) {
+              data_set(data, "settings.__altrpFonts__", s)
+            }
+
+            if(s.search("gradient-first-color:") !== -1) {
+              const currentSetting = s.replace('gradient-first-color:', '')
+
+              s = currentSetting;
+
+              const dataSettings = data_get(data, `settings.${currentSetting}`);
+
+              if(!is_array(dataSettings) && dataSettings <= 0) return;
+
+              const newColor = style["color"];
+              const oldColor = style["firstColor"];
+              const newValue = dataSettings.value.replace(oldColor, newColor);
+
+              dataSettings.secondColor = newColor;
+              dataSettings.value = newValue
+
+              style = dataSettings
+            }
+
+            if(s.search("gradient-second-color:") !== -1) {
+              const currentSetting = s.replace('gradient-second-color:', '')
+
+              s = currentSetting;
+
+              const dataSettings = data_get(data, `settings.${currentSetting}`);
+
+              if(!is_array(dataSettings) && dataSettings <= 0) return;
+
+              const newColor = style["color"];
+              const oldColor = style["secondColor"];
+              const newValue = dataSettings.value.replace(oldColor, newColor);
+
+              dataSettings.secondColor = newColor;
+              dataSettings.value = newValue
+
+              style = dataSettings
+            }
+
+            data_set(data, 'settings.' + s, style);
+          }
+        })
+      }
+    }
+
+    if(data.children.length > 0) {
+      data.children.forEach((child, idx) => {
+        if(child !== null) {
+          data.children[idx] = GlobalTemplateStylesController.recursiveReplaceGlobalStyles(child, guid, style)
+        }
+      })
+    }
+
+    return data
+  }
+}

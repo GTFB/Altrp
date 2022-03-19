@@ -3,8 +3,26 @@ import data_get from "./data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
 
-export default function allowedForUser(settings: any, user:User|null|undefined){
+export default function allowedForUser(settings: any, user:User|null|undefined):boolean{
   let result = true;
+  const {conditional_display_choose, default_hidden} = settings
+  if(default_hidden){
+    return false
+  }
+  if ( ! conditional_display_choose  ) {
+    return result;
+  }
+  if ( conditional_display_choose === 'all' ) {
+    return result;
+  }
+
+  if ( conditional_display_choose === 'guest' ) {
+    return ! user;
+  }
+
+  if ( conditional_display_choose === 'auth' ) {
+    result = ! ! user;
+  }
   if ( ! ( settings['conditional_roles']
     || settings['conditional_permissions'] ) ) {
     return result;
@@ -15,6 +33,7 @@ export default function allowedForUser(settings: any, user:User|null|undefined){
   if ( (  roles.length  ||  permissions.length  ) && ! user ) {
     return false;
   }
+
   if ( roles ) {
     return ! ! roles.filter((roleName)=>{
       // @ts-ignore
@@ -24,7 +43,7 @@ export default function allowedForUser(settings: any, user:User|null|undefined){
         }
         return role.id
       }).indexOf(roleName) !== -1;
-    });
+    })?.length;
   }
 
   if ( permissions ) {
@@ -36,7 +55,7 @@ export default function allowedForUser(settings: any, user:User|null|undefined){
         }
         return permission.id
       }).indexOf(permissionName) !== -1;
-    });
+    })?.length;
   }
   return result;
 }

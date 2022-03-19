@@ -1,0 +1,315 @@
+
+@font-face {
+  font-family: 'fcicons';
+  font-weight: normal;
+  font-style: normal;
+  src: local('fcicons'),
+  url("../../../../public/fonts/fcicons.ttf") format('ttf');
+}
+
+.popup-wrapper {
+  position: relative;
+}
+
+.fc-direction-ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+.fc {
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 1.5em;
+}
+
+.fc .fc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fc .fc-button-group {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.fc-direction-ltr .fc-button-group>.fc-button:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.fc-direction-ltr .fc-button-group>.fc-button:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.fc .fc-button-group>.fc-button.fc-button-active, .fc .fc-button-group>.fc-button:active, .fc .fc-button-group>.fc-button:focus, .fc .fc-button-group>.fc-button:hover {
+  z-index: 1;
+}
+
+.fc .fc-button-group>.fc-button {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+.fc .fc-button:not(:disabled), .fc a[data-navlink], .fc-event.fc-event-draggable, .fc-event[href] {
+  cursor: pointer;
+}
+
+.popup-wrapper .fc .fc-button {
+  border-style: solid;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-color: rgba(44,62,80,100);
+}
+
+.fc .fc-button-primary {
+  color: #fff;
+}
+
+.fc .fc-button {
+  -webkit-appearance: button;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.4em 0.65em;
+  font-size: 1em;
+  line-height: 1.5;
+  border-radius: 0.25em;
+}
+
+.fc .fc-button {
+  overflow: visible;
+  text-transform: none;
+  margin: 0;
+  font-family: inherit;
+}
+
+.fc .fc-button, .fc-icon {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+}
+
+.popup-wrapper .fc-button {
+  background-color: rgba(44,62,80,100) !important;
+}
+
+.fc .fc-button .fc-icon {
+  vertical-align: middle;
+  font-size: 1.5em;
+}
+
+.fc-icon {
+  width: 1em;
+  height: 1em;
+  user-select: none;
+  font-family: 'fcicons', sans-serif !important;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fc-icon-chevron-left:before {
+  content: "\E900";
+}
+
+.fc-icon-chevron-right:before {
+  content: "\E901";
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.75em;
+  margin: 0;
+}
+
+.popup-wrapper .fc-toolbar-title {
+  color: rgba(0,0,0,100);
+}
+
+.fc .fc-button-group {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.fc .fc-view-harness {
+  flex-grow: 1;
+  position: relative;
+}
+
+.popup-wrapper .fc .fc-scroller {
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+/*.fc .fc-bg-event, .fc .fc-highlight, .fc .fc-non-business, .fc .fc-view-harness-active>.fc-view {*/
+/*  position: absolute;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  right: 0;*/
+/*  bottom: 0;*/
+/*}*/
+
+.popup-wrapper .fc-theme-standard .fc-scrollgrid {
+  border-color: rgba(221,221,221,100);
+}
+
+.fc .fc-scrollgrid {
+  border-right-width: 0;
+}
+
+.fc .fc-scrollgrid, .fc .fc-scrollgrid table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.fc .fc-scrollgrid, .fc .fc-scrollgrid-section-footer>*, .fc .fc-scrollgrid-section-header>* {
+  border-bottom-width: 0;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border: 1px solid #ddd;
+}
+
+.fc .fc-scroller-harness-liquid, .fc .fc-scroller-liquid, .fc .fc-scrollgrid-liquid {
+  height: 100%;
+}
+
+.fc table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 1em;
+}
+
+.fc .fc-scrollgrid-section, .fc .fc-scrollgrid-section table, .fc .fc-scrollgrid-section>td {
+  height: 1px;
+}
+
+.popup-wrapper .fc-theme-standard td, .popup-wrapper .fc-theme-standard th {
+  border-color: rgba(221,221,221,100);
+}
+
+.fc .fc-scrollgrid-section>* {
+  border-top-width: 0;
+  border-left-width: 0;
+}
+
+.fc .fc-scrollgrid, .fc .fc-scrollgrid-section-footer>*, .fc .fc-scrollgrid-section-header>* {
+  border-bottom-width: 0;
+}
+
+.fc-theme-standard td, .fc-theme-standard th {
+  border: 1px solid #ddd;
+}
+
+.fc td, .fc th {
+  vertical-align: top;
+  padding: 0;
+}
+
+.fc th {
+  text-align: center;
+}
+
+.fc .fc-scroller-harness {
+  position: relative;
+  overflow: hidden;
+  direction: ltr;
+}
+
+.fc .fc-scrollgrid table {
+  border-top-style: hidden;
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+
+.popup-wrapper .fc-col-header-cell {
+  color: rgba(0,0,0,100);
+  background-color: rgba(255,255,255,100);
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: inline-block;
+  padding: 2px 4px;
+}
+
+.popup-wrapper .fc-col-header-cell-cushion {
+  color: inherit;
+}
+
+.fc .fc-scrollgrid-section-liquid>td {
+  height: 100%;
+}
+
+.fc .fc-scroller-liquid-absolute {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.fc .fc-daygrid-body {
+  position: relative;
+  z-index: 1;
+}
+
+.fc .fc-scrollgrid-section-body table, .fc .fc-scrollgrid-section-footer table {
+  border-bottom-style: hidden;
+}
+
+.popup-wrapper .fc-day-other {
+  color: rgba(34,25,77,100);
+  background-color: rgba(255,255,255,100);
+}
+
+.fc .fc-daygrid-day-frame {
+  position: relative;
+  min-height: 100%;
+}
+
+.fc-daygrid-day-events:after, .fc-daygrid-day-events:before, .fc-daygrid-day-frame:after, .fc-daygrid-day-frame:before, .fc-daygrid-event-harness:after, .fc-daygrid-event-harness:before {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.popup-wrapper .fc .fc-day-other .fc-daygrid-day-top {
+  opacity: 1;
+}
+
+.fc .fc-day-other .fc-daygrid-day-top {
+  opacity: .3;
+}
+
+.fc .fc-daygrid-day-top {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.fc .fc-daygrid-day-number {
+  position: relative;
+  z-index: 4;
+  padding: 4px;
+}
+
+.popup-wrapper .fc-daygrid-day-number {
+  color: inherit;
+}

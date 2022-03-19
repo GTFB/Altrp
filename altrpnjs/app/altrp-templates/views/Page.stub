@@ -10,6 +10,8 @@
     <meta property="og:title" content="{{title}}">
  {{=<% %>=}}
    <title>{{ title }}</title>
+  <!-- Style -->
+  @!component('front-app-css')
 
  <%={{ }}=%>
     <script src="/data/current-user" defer></script>
@@ -43,8 +45,6 @@
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
-  <!-- Style -->
-  @!component('front-app-css')
 </head>
 <body class="front-app-body">
     <div id="front-app" class="front-app {{ is_admin ? 'front-app_admin' : '' }}">
@@ -86,7 +86,7 @@
         /* ]]> */
       </script>
     <script defer src="{{ hAltrp }}"></script>
-
+    <script src="/serviceWorker.js"></script>
     <%={{ }}=%>
     <link rel="stylesheet" href="/modules/front-app/front-app.css?0.0.0">
     {{{extra_footer_styles}}}

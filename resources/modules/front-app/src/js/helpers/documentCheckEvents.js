@@ -1,21 +1,26 @@
 const documentCheckEvents = (cb) => {
 
   const events = [
-    "click",
-    "mouseenter",
-    "mouseover",
-    "mouseleave",
-    "touch",
-    "scroll",
-    "resize"
+    'click',
+    'dblclick',
+    'mouseenter',
+    'mousedown',
+    'mouseout',
+    'mouseup',
+    'mousewheel',
+    'mouseover',
+    'mouseleave',
+    'mousemove',
+    'touch',
+    'scroll',
+    'resize'
   ]
 
   const eventFunction = () => {
-    cb()
-
     events.forEach((name) => {
       document.removeEventListener(name, eventFunction)
     })
+    cb()
   }
 
   events.forEach((name) => {
