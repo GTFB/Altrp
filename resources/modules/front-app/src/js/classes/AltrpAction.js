@@ -672,6 +672,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionScrollToElement() {
     let elementId = this.getProperty('element_id');
+    console.log(elementId);
     if (!elementId) {
       return {success: true};
     }

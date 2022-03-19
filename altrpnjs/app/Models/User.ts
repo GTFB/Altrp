@@ -116,22 +116,20 @@ export default class User extends BaseModel {
     if(empty(roles)){
       return  true
     }
-
     if(typeof roles === 'string' || typeof roles === 'number'){
       roles = [roles]
     }
 
     // @ts-ignore
     await this.load('roles')
-
-    return ! ! roles.filter((roleName)=>{
+    return ! ! (roles.filter((roleName)=>{
       return this.roles.map((role:Role)=>{
         if(typeof roleName === 'string'){
           return role.name
         }
         return role.id
       }).indexOf(roleName) !== -1;
-    })
+    }).length)
   }
 
   @afterCreate()
