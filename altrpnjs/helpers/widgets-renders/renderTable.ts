@@ -1,5 +1,5 @@
 import getResponsiveSetting from "../getResponsiveSetting"
-
+//@ts-ignore
 export function renderTable(settings, device, context) {
   const columns = getResponsiveSetting(settings, 'tables_columns', device)
   const additionalRows = getResponsiveSetting(settings, 'additional_rows', device)
@@ -30,9 +30,10 @@ export function renderTable(settings, device, context) {
           </div>
         </div>
         <div role="rowgroup" class="altrp-table-tbody">
-          ${(new Array(10)).fill(1).map(row => `
+          ${(new Array(10)).fill(1).map(() => `
             <div role="row" class="altrp-table-tr" style="opacity: 1;">
-              ${tableColumns.map((col, i) => `
+              ${//@ts-ignore
+            tableColumns.map((col, i) => `
                 <div role="cell" class="altrp-table-td altrp-table-cell" ${i == 0 ? 'style="text-align: center; vertical-align: top;"' : ''}>
                   <span class="altrp-inherit altrp-table-td__default-content">&nbsp;</span>
                 </div>
