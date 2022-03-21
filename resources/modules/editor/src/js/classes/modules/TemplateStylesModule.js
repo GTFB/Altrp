@@ -51,7 +51,7 @@ class TemplateStylesModule{
       style ? style.innerHTML : ""
     );
     for(const screen of CONSTANTS.SCREENS){
-      await delay(250)
+      await delay(300)
       editorStore.dispatch(setCurrentScreen(screen))
 
       let styledTag = window.altrpEditorContent.editorWindow.current
@@ -69,6 +69,7 @@ class TemplateStylesModule{
         stylesElements.push(css);
       }
     }
+    stylesElements = _.uniq(stylesElements)
     editorStore.dispatch(setCurrentScreen(currentScreen))
     styles = {
       all_styles: stylesElements,

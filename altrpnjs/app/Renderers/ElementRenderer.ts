@@ -4,6 +4,7 @@ import * as mustache from 'mustache'
 import * as _ from 'lodash'
 import altrpRandomId from "../../helpers/altrpRandomId";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import objectToStylesString from "../../helpers/objectToStylesString";
 
 export default class ElementRenderer {
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
@@ -13,8 +14,10 @@ export default class ElementRenderer {
     children: [],
     settingsLock: {},
     settings: {
-      layout_html_tag?: string;
+      layout_html_tag?: string
       react_element?:boolean
+      layout_content_width_type?:string
+      isFixed?:boolean
     },
     name: string,
     type: string,
@@ -38,12 +41,33 @@ export default class ElementRenderer {
 
     if(fs.existsSync(this.elementStub)){
       const section_background = this.getType() === 'section' ? `{{{renderSectionBG(element${this.getId()}_settings, device)}}}` : ''
+      let styles:{}|string = {}
+      const {layout_content_width_type:widthType, isFixed} = this.element.settings
+      let section_classes = ''
+      switch (this.getName() ){
+        case 'section':{
+          if (widthType === "boxed" && !isFixed) {
+            section_classes = " altrp-section_boxed ";
+            styles['max-width'] = '100%'
+          }
+          if (widthType === "section_boxed" && !isFixed) {
+            section_classes = " altrp-section_section-boxed "
+          }
 
+          if (widthType === "full" && !isFixed) {
+            section_classes = " altrp-section--full-width "
+          }
+        }
+        break;
+      }
+      styles = objectToStylesString(styles)
       element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
       element_content = mustache.render(element_content, {
         settings: JSON.stringify(this.element.settings),
         id: this.element.id,
         children_content,
+        element_styles:styles,
+        section_classes,
         section_background,
         layout_html_tag,
         link_class: this.isLink() ? 'altrp-pointer' : '',
