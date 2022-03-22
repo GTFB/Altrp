@@ -9,10 +9,12 @@ import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
-//import AltrpMeta from "App/Models/AltrpMeta";
+import AltrpMeta from "App/Models/AltrpMeta";
+import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
+import env from "../../../helpers/env";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
-//import recurseMapElements from '../../../helpers/recurseMapElements';
+import recurseMapElements from '../../../helpers/recurseMapElements';
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -452,11 +454,15 @@ export default class TemplatesController {
         },
       )
     }
-    let data = template.serialize()
 
-    
+    template.__exported_metas__ = {}
+    template.__exported_metas__.styles_presets = AltrpMeta.getGlobalStyles()
+    template.__exported_metas__ = {}
+    template.__exported_metas__.global_styles = GlobalStyle.all();   
 
-    return response.json(data)
+    let res = template.serialize()
+
+    return response.json(res)
   }
 
 }

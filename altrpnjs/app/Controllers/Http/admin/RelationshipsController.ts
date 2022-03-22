@@ -2,6 +2,7 @@ import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Model from "App/Models/Model";
 import Event from '@ioc:Adonis/Core/Event'
 import Relationship from "App/Models/Relationship";
+import Database from '@ioc:Adonis/Lucid/Database';
 
 export default class RelationshipsController {
 
@@ -52,6 +53,19 @@ export default class RelationshipsController {
       Event.emit('model:updated', targetModel)
     }
 
+    if (targetModel) {
+      await targetModel.load('table')
+
+      let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+        ${relationshipData.name}
+        FOREIGN KEY (${relationshipData.local_key})
+        REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
+        ON DELETE ${relationshipData.onDelete}
+        ON UPDATE ${relationshipData.onUpdate}`
+
+       await Database.rawQuery(query)
+    }
+
     return response.json({success: true, data: relationship})
   }
 
@@ -66,7 +80,8 @@ export default class RelationshipsController {
       })
 
     }
-    const relationship = await Relationship.find(params.field_id)
+    //const relationship = await Relationship.find(params.field_id)
+    const relationship = await Relationship.find(params.id)
     if (!relationship) {
       response.status(404)
       return response.json({
@@ -93,8 +108,26 @@ export default class RelationshipsController {
       name: relationshipData.name,
     })
 
-    await relationshipData.save()
+    await relationship.save()
     Event.emit('model:updated', model)
+
+    let targetModel = await Model.find(relationshipData.target_model_id)
+    if (targetModel) {
+      await model.load('table')
+      let createQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${relationship.name}`
+      await Database.rawQuery(createQuery)
+
+      await targetModel.load('table')
+
+      let deleteQuery = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+        ${relationshipData.name}
+        FOREIGN KEY (${relationshipData.local_key})
+        REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
+        ON DELETE ${relationshipData.onDelete}
+        ON UPDATE ${relationshipData.onUpdate}`
+
+       await Database.rawQuery(deleteQuery)
+    }
 
     return response.json({success: true, data: relationship})
   }
@@ -149,6 +182,11 @@ export default class RelationshipsController {
     }
     await relationship.delete()
     Event.emit('model:updated', model)
+
+    await model.load('table')
+
+    let query = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${relationship.name}`
+    await Database.rawQuery(query)
 
     return response.json({success: true,})
   }
