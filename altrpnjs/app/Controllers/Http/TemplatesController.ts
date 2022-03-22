@@ -1,4 +1,6 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
+import validGuid from '../../../helpers/validGuid';
 
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
@@ -7,8 +9,10 @@ import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
+//import AltrpMeta from "App/Models/AltrpMeta";
 import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
+//import recurseMapElements from '../../../helpers/recurseMapElements';
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -429,4 +433,30 @@ export default class TemplatesController {
       success: true
     }
   }
+
+
+  public async exportCustomizer( {params, response}: HttpContextContract )
+  {
+
+    let template
+    if (validGuid(params.id)) {
+      template = await Template.query().where('guid', params.id).first()
+    } else {
+      template = await Template.find(params.id)
+    }
+    if (!template) {
+      return response.json({
+          'success':
+            false, 'message':
+            'Customizer not found'
+        },
+      )
+    }
+    let data = template.serialize()
+
+    
+
+    return response.json(data)
+  }
+
 }

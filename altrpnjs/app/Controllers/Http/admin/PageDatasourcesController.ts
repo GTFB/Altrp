@@ -38,7 +38,7 @@ export default class PageDatasourcesController {
 
     const body = request.body();
 
-    if(!body.source || !body.alias) {
+    if(!body.source_id || !body.alias) {
       response.status(500)
       return {
         message: "fill all fields"
@@ -49,7 +49,7 @@ export default class PageDatasourcesController {
     pageDatasource.autoload = body.autoload || false;
     pageDatasource.parameters = body.parameters || null;
     pageDatasource.priority = body.priority;
-    pageDatasource.source_id = body.source.id;
+    pageDatasource.source_id = body.source_id;
     pageDatasource.server_side = body.server_side || false;
     pageDatasource.page_id = body.page_id;
     pageDatasource.page_guid = body.page_guid

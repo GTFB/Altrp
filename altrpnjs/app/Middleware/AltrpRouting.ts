@@ -156,7 +156,11 @@ export default class AltrpRouting {
         altrpuser = user.toObject()
       }
       await page.load('data_sources', data_source=>{
-        data_source.preload('source')
+        data_source.preload('source', source=>{
+          source.preload('model', model=>{
+            model.preload('table')
+          })
+        })
       })
       const _frontend_route = page.serialize()
       const altrpContext = {
