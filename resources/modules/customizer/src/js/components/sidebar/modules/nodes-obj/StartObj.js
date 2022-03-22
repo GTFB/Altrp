@@ -7,5 +7,6 @@ export const StartObj = {
   name: 'start',
   selectedNode: StartNode,
   node: Start,
-  icon: StartIcon
+  icon: StartIcon,
+  type: "required"
 }
