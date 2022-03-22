@@ -72,32 +72,32 @@ export default class Document extends Component{
                       />
                   </div>
                 </div>
-              <div className="controller-container controller-container_select">
-                <div className="controller-container__label control-select__label controller-label">Template Name</div>
-                <div className="control-container_select-wrapper controller-field">
-                    <input
-                      className="control-field"
-                      type="text"
-                      id="document-template"
-                      name="document-template"
-                      value={template || ''}
-                      onChange={(e) => { this.changeInput(e, 'template') }}
-                    />
-                </div>
-              </div>
-              <div className="controller-container controller-container_select">
-                  <div className="controller-container__label control-select__label controller-label">Data</div>
-                  <div className="control-container_select-wrapper controller-field">
-                      <textarea
-                        className="control-field"
-                        type="text"
-                        id="document-data"
-                        name="document-data"
-                        value={docData || ''}
-                        onChange={(e) => { this.changeInput(e, 'docData') }}
-                      />
-                  </div>
-                </div>
+              {/*<div className="controller-container controller-container_select">*/}
+              {/*  <div className="controller-container__label control-select__label controller-label">Template Name</div>*/}
+              {/*  <div className="control-container_select-wrapper controller-field">*/}
+              {/*      <input*/}
+              {/*        className="control-field"*/}
+              {/*        type="text"*/}
+              {/*        id="document-template"*/}
+              {/*        name="document-template"*/}
+              {/*        value={template || ''}*/}
+              {/*        onChange={(e) => { this.changeInput(e, 'template') }}*/}
+              {/*      />*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+              {/*<div className="controller-container controller-container_select">*/}
+              {/*    <div className="controller-container__label control-select__label controller-label">Data</div>*/}
+              {/*    <div className="control-container_select-wrapper controller-field">*/}
+              {/*        <textarea*/}
+              {/*          className="control-field"*/}
+              {/*          type="text"*/}
+              {/*          id="document-data"*/}
+              {/*          name="document-data"*/}
+              {/*          value={docData || ''}*/}
+              {/*          onChange={(e) => { this.changeInput(e, 'docData') }}*/}
+              {/*        />*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
 
             </div> {/* ./controllers-wrapper */}
         </div>  {/* ./settings-section */}

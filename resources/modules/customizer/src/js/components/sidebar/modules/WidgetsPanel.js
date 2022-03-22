@@ -35,14 +35,6 @@ class WidgetsPanel extends React.Component {
     return node;
   }
 
-  renderNode(item) {
-    return (
-      <div className="customizer-widget" key={item.name} onDragStart={(event) => this.onDragStart( event, item.name )} draggable>
-        <item.icon/>
-        <p>{item.title}</p>
-      </div>
-    )
-  }
 
   render() {
     let start = this.issetNode('start');
@@ -85,26 +77,21 @@ class WidgetsPanel extends React.Component {
             {/*  <p>Return</p>*/}
             {/*</div>}*/}
             {this.props.nodeState.map(item => {
-              switch (item.type) {
-                case "required":
-                  if (item.name === "start" && start) {
-                    return (
-                      <div className="customizer-widget" key={item.name} onDragStart={(event) => this.onDragStart( event, item.name )} draggable>
-                        <item.icon/>
-                        <p>{item.title}</p>
-                      </div>
-                    )
-                  } else if (item.name !== "start") return this.renderNode(item);
-
-                case "robot":
-                  if(this.props.customizer.type !== "robot") return null;
-                  return this.renderNode(item)
-                  break
-                default:
-                  if(this.props.customizer.type === "robot") return null;
-
-                  return this.renderNode(item)
-                  break
+              if (item.name === "start" && start) {
+                return (
+                  <div className="customizer-widget" key={item.name}
+                       onDragStart={(event) => this.onDragStart(event, item.name)} draggable>
+                    <item.icon/>
+                    <p>{item.title}</p>
+                  </div>
+                )
+              } else if (item.name !== "start") {
+                return (
+                  <div className="customizer-widget" key={item.name} onDragStart={(event) => this.onDragStart( event, item.name )} draggable>
+                    <item.icon/>
+                    <p>{item.title}</p>
+                  </div>
+                )
               }
             })}
           </div>

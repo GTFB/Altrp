@@ -100,11 +100,11 @@ class CustomizerEditor extends Component {
 
     if(currentUser.guid && !this.altrpIo) {
       this.altrpIo = io( {
+        path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-
       this.altrpIo.on("message", (data) => {
         console.log(data)
       })
@@ -194,11 +194,7 @@ class CustomizerEditor extends Component {
     const type = event.dataTransfer.getData("reactflow-type");
     let props;
 
-    if(this.props.customizer.type === "robot") {
-      props = getNodeData(type);
-    } else {
-      props = this.getNodeData(type);
-    }
+    props = this.getNodeData(type);
 
     const position = this.state.reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
@@ -270,6 +266,93 @@ class CustomizerEditor extends Component {
       case "customizer":
         data = {
           "type": "customizer",
+          "nodeData": {
+            "id": "",
+          }
+        };
+        break;
+      case "bot":
+        data = {
+          "type": "bot",
+          "nodeData": {
+            "type": "bot",
+            "data": {
+              "shortcode": "",
+              "content": [],
+            }
+          }
+        };
+        break;
+      case "documentAction":
+        data = {
+          "type": "documentAction",
+          "nodeData": {
+            "type": "document",
+            "data": {
+            }
+          },
+        };
+        break;
+      case "crudAction":
+        data = {
+          "type": "crudAction",
+          "nodeData": {
+            "type": "crud",
+            "data": {
+              "method": "",
+              "body": {},
+              "record": "",
+              "model_id": "",
+            }
+          }
+        };
+        break;
+      case "apiAction":
+        data = {
+          "type": "apiAction",
+          "nodeData": {
+            "type": "api",
+            "data": {
+              "source": "",
+              "method": "",
+              "headers": "",
+              "name": "",
+              "url": "",
+              "data": ""
+            }
+          },
+        };
+        break;
+      case "messageAction":
+        data = {
+          "type": "messageAction",
+          "nodeData": {
+            "type": "send_notification",
+            "data": {
+              "entities": "",
+              "entitiesData": {
+                "users": [],
+                "roles": [],
+                "dynamicValue": "",
+              },
+              "channel": "",
+              "content": {},
+            }
+          }
+        };
+        break;
+      case "condition":
+        data = {
+          "type": "condition",
+          "nodeData": {
+            "operator": "",
+            "body": []
+          }
+        };
+        break;
+      case "robot":
+        data = {
+          "type": "robot",
           "nodeData": {
             "id": "",
           }

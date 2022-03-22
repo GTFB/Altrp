@@ -170,7 +170,6 @@ class Admin extends Component {
           key: currentUser.guid,
         },
       })
-      console.log(this.altrpIo);
       this.altrpIo.on("message", (data) => {
         console.log(data)
       })

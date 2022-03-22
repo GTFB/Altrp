@@ -13,6 +13,7 @@ import * as _ from "lodash";
 import str_replace from "../../helpers/str_replace";
 import Source from "App/Models/Source";
 import escapeRegExp from "../../helpers/escapeRegExp";
+import DocumentNode from "App/Customizer/Nodes/DocumentNode";
 
 export default class Customizer extends BaseModel {
 
@@ -222,8 +223,13 @@ export default class Customizer extends BaseModel {
     }
   }
 
-  changePropertyToJS(propertyData, value, type = 'set'): string {
+  changeToJS(path, value, type = "set") {
 
+    return `this.${type}CustomizerData('${path}', '${value}');
+    `;
+  }
+
+  changePropertyToJS(propertyData, value, type = 'set'): string {
     if (empty(propertyData)) {
       return 'null'
     }
@@ -302,6 +308,7 @@ export default class Customizer extends BaseModel {
         case 'start': return new StartNode( item , customizer)
         case 'return': return new ReturnNode( item, customizer )
         case 'change': return new ChangeNode( item, customizer )
+        case 'documentAction': return new DocumentNode(item, customizer)
         default: return new BaseNode( item, customizer )
       }
     })

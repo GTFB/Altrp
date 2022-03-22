@@ -23,6 +23,7 @@ import Logger from "@ioc:Adonis/Core/Logger";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import PageDatasource from "App/Models/PageDatasource";
 import altrpRandomId from "../../helpers/altrpRandomId";
+import Env from '@ioc:Adonis/Core/Env'
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -125,17 +126,18 @@ export default class Source extends BaseModel {
 
   @computed()
   public get web_url(){
+    const url = Env.get("CUSTOM_URL");
 
     switch ( this.sourceable_type ){
       case SQLEditor.sourceable_type:
       case 'App\\Altrp\\Query':
-        return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
+        return (config('app.url') || url) + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
-        return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
+        return (config('app.url') || url) + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
       default:
         return this.type != 'remote'
-          ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
-      : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
+          ? (config('app.url') || url) + '/ajax/models' + data_get( this, 'url' )
+      : (config('app.url') || url) + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
     }
   }
 
