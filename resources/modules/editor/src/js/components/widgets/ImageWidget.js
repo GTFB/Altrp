@@ -16,8 +16,6 @@ import AltrpImage from "../altrp-image/AltrpImage";
     padding-left: 0;
     opacity: 1;
     object-fit: cover;
-    border-color: rgb(50,168,82);
-    border-radius: 0;
   }
 
   .altrp-image-container {

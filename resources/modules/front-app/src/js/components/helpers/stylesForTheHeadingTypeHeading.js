@@ -28,31 +28,31 @@ const headingTransformToStyles = (settings, state) => {
   if (rotate?.size) {
     styles += ` rotate(${rotate?.size}deg)`
   }
-  
+
   if (scaleX?.size) {
     styles += ` scaleX(${scaleX?.size})`
   }
-  
+
   if (scaleY?.size) {
     styles += ` scaleY(${scaleY?.size})`
   }
-  
+
   if (skewX?.size) {
     styles += ` skewX(${skewX?.size}deg)`
   }
-  
+
   if (skewY?.size) {
     styles += ` skewY(${skewY?.size}deg)`
   }
-  
+
   if (translateX?.size) {
     styles += ` translateX(${translateX?.size}px)`
   }
-  
+
   if (translateY?.size) {
     styles += ` translateY(${translateY?.size}px)`
   }
-  
+
   return styles == 'transform:' ? '' : styles + ';';
 }
 

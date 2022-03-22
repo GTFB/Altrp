@@ -167,15 +167,7 @@ class HeadingTypeHeading extends BaseElement {
     this.addControl('heading_style_text_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-      },
+
     });
 
     this.endControlSection();
@@ -381,10 +373,6 @@ class HeadingTypeHeading extends BaseElement {
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
       conditions: {
         'background_size': [''],
       },
@@ -469,10 +457,6 @@ class HeadingTypeHeading extends BaseElement {
     this.addControl("style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border Color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
     });
 
     this.addControl("style_border_radius", {

@@ -546,6 +546,10 @@ class AltrpAction extends AltrpModel {
   async doActionRedirect() {
     let URL = this.getFormURL();
     if(! URL){
+      if (this.getProperty('back')) {
+        let history = window.history
+        history.back()
+      }
       return {
         success: true
       }
@@ -563,6 +567,7 @@ class AltrpAction extends AltrpModel {
       }
     } else {
       if (this.getProperty('back')) {
+        let history = window.history
         history.back()
       } else {
         window.location.href = URL;

@@ -326,13 +326,6 @@ class Image extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_FILTERS,
       label: 'filters',
-      default: {
-        blur: 0,
-        brightness: 100,
-        contrast: 100,
-        saturate: 100,
-        hue: 0,
-      },
     });
 
     this.endControlSection();
