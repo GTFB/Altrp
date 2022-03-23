@@ -7,6 +7,7 @@
 * Fix Section Width
 * Add Import/Export Visual Codes
 * Delete `altrp_ajax` from Request Body
+* Add Function to Send Emails
 
 ### 1.0.1
 * Fix Elements Conditions Display

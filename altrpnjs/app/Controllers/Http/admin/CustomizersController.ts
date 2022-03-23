@@ -120,6 +120,7 @@ export default class CustomizersController {
     }
 
     if(customizer.type === "listener" && request.input("type") !== "listener") {
+      // @ts-ignore
       const generator = new ListenerGenerator()
 
       const model = await Model.find(customizer.model_id);
@@ -169,6 +170,7 @@ export default class CustomizersController {
         await source.save()
       }
       if(customizer.type === "listener" && model) {
+        // @ts-ignore
         const generator = new ListenerGenerator()
 
         // await generator.run(model, customizer.settings.hook_type)
