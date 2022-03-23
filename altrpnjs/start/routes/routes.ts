@@ -172,7 +172,7 @@ Route.group(() => {
     if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
       tableName = segments[3]
     }
-    const table = await Table.query().preload('altrp_model').where('name', "aaaaaaaaaaaas").first()
+    const table = await Table.query().preload('altrp_model').where('name', tableName).first()
     if (!table) {
       return httpContext.response.status(404).json({
         success: false,
