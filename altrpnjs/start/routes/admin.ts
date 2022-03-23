@@ -206,6 +206,13 @@ Route.group(() => {
     Route.get("/page_data_sources/pages/:id", "admin/PageDatasourcesController.getByPage")
     Route.get("/page_data_sources/:id", "admin/PageDatasourcesController.show")
     Route.get("/page_data_sources", "admin/PageDatasourcesController.index")
+
+    /**
+     * Email settings
+     */
+    Route.post('/write_mail_settings', 'admin/MailController.writeSettingsToEnv');
+    Route.get('/get_mail_settings', 'admin/MailController.getSettings');
+
   }).prefix('/ajax')
   Route.get('/customizers-editor', 'IndicesController.customizer')
 

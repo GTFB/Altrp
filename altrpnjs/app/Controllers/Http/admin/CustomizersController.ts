@@ -124,7 +124,7 @@ export default class CustomizersController {
 
       const model = await Model.find(customizer.model_id);
       if(model) {
-        await generator.delete(model, customizer.settings.hook_type)
+        // await generator.delete(model, customizer.settings.hook_type)
       }
     }
     const oldType = customizer.type
@@ -171,7 +171,7 @@ export default class CustomizersController {
       if(customizer.type === "listener" && model) {
         const generator = new ListenerGenerator()
 
-        await generator.run(model, customizer.settings.hook_type)
+        // await generator.run(model, customizer.settings.hook_type)
       }
       Event.emit('model:updated', model)
     } catch

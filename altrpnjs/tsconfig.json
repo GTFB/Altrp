@@ -40,6 +40,7 @@
       "@adonisjs/lucid",
       "@adonisjs/auth",
       "@adonisjs/session",
+      "@adonisjs/mail",
       "@adonisjs/shield"
     ],
     "jsx": "react",
