@@ -10,6 +10,8 @@ export default class AddVariationsToMediaTables extends BaseSchema {
   }
 
   public async down () {
-    this.schema.dropTable(this.tableName)
+    this.schema.alterTable(this.tableName, (table) => {
+      table.dropColumn("media_variation")
+    })
   }
 }
