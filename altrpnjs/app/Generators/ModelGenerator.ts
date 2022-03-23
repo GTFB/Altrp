@@ -106,7 +106,7 @@ ${_.uniqBy(
   private _getDevImportsContent(): string {
     return `import * as luxon from 'luxon'
 import * as Orm from '@ioc:Adonis/Lucid/Orm'
-import Event from '@ioc:Adonis/Core/Event'
+import * as Event from '@ioc:Adonis/Core/Event'
 import { softDelete, forceDelete } from "../../helpers/delete"
 ${_.uniqBy(
   this.altrp_relationships

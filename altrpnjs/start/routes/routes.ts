@@ -41,12 +41,14 @@ Route.post("/sockets", "SocketsController.handle")
 //   return user.can([1, 2]);
 // })
 
+const fromBuildDir = isProd() ? "../" : ""
+
 Route.get("sw.js", "IndicesController.serviceWorker")
 
 Route.get("/modules/*", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -66,7 +68,7 @@ Route.get("/modules/*", async ({request, response}) => {
 
 Route.get("/service-worker-files", async ({}) => {
 
-  const pathToFrontApp = path.join(__dirname, "../", "../", "../", "public", "modules", "front-app");
+  const pathToFrontApp = path.join(__dirname, "../", "../", "../", fromBuildDir, "public", "modules", "front-app");
 
   let files = fs.readdirSync(pathToFrontApp)
 
@@ -93,7 +95,7 @@ Route.get("/service-worker-files", async ({}) => {
 Route.get("/serviceWorker.js", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -105,7 +107,7 @@ Route.get("/serviceWorker.js", async ({request, response}) => {
 Route.get("/sw/*", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 

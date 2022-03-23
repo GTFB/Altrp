@@ -111,7 +111,15 @@ export default class UsersController {
             }
           }
         }
-        if(user[input]) {
+
+        if([
+          "email_verified",
+          "last_name",
+          "telegram_user_id",
+          "local_storage",
+          "updated_at",
+        ].find(i => i === input)) {
+
           user[input] = data[input];
         }
       })

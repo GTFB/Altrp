@@ -148,8 +148,12 @@ export default class CustomizersController {
 
       if(customizer.$dirty?.model_id && customizer.$original.model_id) {
         const oldModel = await Model.find(customizer.$original.model_id)
-        //@ts-ignore
-        await Event.emit('model:updated', oldModel)
+
+        if(oldModel) {
+          //@ts-ignore
+          await Event.emit('model:updated', oldModel)
+        }
+
       }
       if (customizer.type === 'api' && model) {
         await model.load('altrp_controller')
@@ -169,13 +173,15 @@ export default class CustomizersController {
         })
         await source.save()
       }
-      if(customizer.type === "listener" && model) {
-        // @ts-ignore
-        const generator = new ListenerGenerator()
-
-        // await generator.run(model, customizer.settings.hook_type)
+      // if(customizer.type === "listener" && model) {
+      //   const generator = new ListenerGenerator()
+      //
+      //   await generator.run(model, customizer.settings.hook_type)
+      // }
+      if(model) {
+        Event.emit('model:updated', model)
       }
-      Event.emit('model:updated', model)
+
     } catch
       (e) {
       console.trace(e);

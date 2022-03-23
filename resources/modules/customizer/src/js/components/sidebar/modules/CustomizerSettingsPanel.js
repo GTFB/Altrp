@@ -169,10 +169,6 @@ class CustomizerSettingsPanel extends React.Component {
                                      {
                                        value: 'listener',
                                        label: 'Listener',
-                                     },
-                                     {
-                                       value: 'robot',
-                                       label: 'Robot'
                                      }
                                      // {
                                      //   value: 'method',
