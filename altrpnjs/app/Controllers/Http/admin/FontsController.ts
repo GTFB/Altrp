@@ -18,7 +18,7 @@ export default class FontsController {
           'success':
             false,
           'message':
-            'Customizer don\'t saved',
+            'Font don\'t saved',
           'throw message': e.message,
           'trace': e.stack.split('\n'),
         },
@@ -38,6 +38,7 @@ export default class FontsController {
     } else {
       font = await Font.find(params.id)
     }
+    await font.load('fontSettings')
     if (!font) {
       return response.json({
           'success': false,

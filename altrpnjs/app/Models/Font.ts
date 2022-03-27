@@ -1,7 +1,11 @@
-import {BaseModel, column, ManyToMany, manyToMany} from "@ioc:Adonis/Lucid/Orm";
+import {BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany} from "@ioc:Adonis/Lucid/Orm";
 import Category from "App/Models/Category";
+import FontSetting from "App/Models/FontSetting";
 
 export default class Font extends BaseModel {
+
+  public static table = 'altrp_fonts'
+
   @column({ isPrimary: true })
   public id: number
 
@@ -22,5 +26,11 @@ export default class Font extends BaseModel {
     pivotRelatedForeignKey: 'category_guid',
   })
   public categories: ManyToMany<typeof Category>
+
+  @hasMany(() => FontSetting, {
+    localKey: 'guid',
+    foreignKey: 'font_guid'
+  })
+  public fontSettings: HasMany<typeof FontSetting>
 
 }
