@@ -97,9 +97,11 @@ export default class Crud extends Component {
             let fields = new Resource({ route: `/admin/ajax/models/${item}/field_options` });
             let recordOptions = new Resource({ route: `/admin/ajax/models/${item}/records_options` });
             fields = await fields.getAll();
-            recordOptions = await recordOptions.getAll();
 
             this.setState(s => ({ ...s, fieldOptions: fields.options }));
+
+            recordOptions = await recordOptions.getAll();
+
             this.setState(s => ({ ...s, recordOptions }));
         }
     }

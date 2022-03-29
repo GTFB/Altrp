@@ -44,7 +44,7 @@ export default class DocumentNode extends BaseNode implements NodeInterface
     JSContent += this.customizer.changeToJS("document.type", type)
     JSContent += this.customizer.changeToJS("document.fileName", fileName)
     // JSContent += this.customizer.changeToJS("document.template", template)
-    JSContent += `return await this.toDocument()
+    JSContent += `await this.toDocument()
     `
 
     // for(let item of items){

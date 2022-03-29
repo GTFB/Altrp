@@ -122,7 +122,7 @@ export default class IndicesController {
   }
 
   public async changelog({ response }) {
-    const pathToPublic = path.join(__dirname, "../", "../", "../", "../", (isProd() ? "../" : ""), "README.md");
+    const pathToPublic = path.join(__dirname, "../", "../", "../", "../", "README.md");
 
     const file = await Drive.get(pathToPublic)
 

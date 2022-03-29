@@ -14,6 +14,9 @@ import str_replace from "../../helpers/str_replace";
 import Source from "App/Models/Source";
 import escapeRegExp from "../../helpers/escapeRegExp";
 import DocumentNode from "App/Customizer/Nodes/DocumentNode";
+import CrudNode from "App/Customizer/Nodes/crudNode";
+import ApiNode from "App/Customizer/Nodes/apiNode";
+import MessageNode from "App/Customizer/Nodes/MessageNode";
 
 export default class Customizer extends BaseModel {
 
@@ -223,9 +226,21 @@ export default class Customizer extends BaseModel {
     }
   }
 
-  changeToJS(path, value, type = "set") {
+  changeToJS(path, value, settings?: { dynamic?: boolean, type?: string }) {
 
-    return `this.${type}CustomizerData('${path}', '${value}');
+    let v: any = null;
+
+    if(_.isString(value)) {
+      if(settings?.dynamic) {
+        v = value
+      } else {
+        v = `'${value}'`
+      }
+    } else {
+      v = value
+    }
+
+    return `this.${settings?.type || "set"}CustomizerData('${path}', ${v});
     `;
   }
 
@@ -302,6 +317,7 @@ export default class Customizer extends BaseModel {
   public static  parseData( data, customizer ){
     data = data.map( item  => {
       const type = data_get( item, 'type' )
+
       switch( type ){
         case 'default': return new Edge( item, customizer )
         case 'switch': return new SwitchNode( item, customizer )
@@ -309,6 +325,9 @@ export default class Customizer extends BaseModel {
         case 'return': return new ReturnNode( item, customizer )
         case 'change': return new ChangeNode( item, customizer )
         case 'documentAction': return new DocumentNode(item, customizer)
+        case 'crudAction': return new CrudNode(item, customizer)
+        case 'apiAction': return new ApiNode(item, customizer)
+        case 'messageAction': return new MessageNode(item, customizer)
         default: return new BaseNode( item, customizer )
       }
     })

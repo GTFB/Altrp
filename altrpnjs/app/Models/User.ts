@@ -26,6 +26,11 @@ export default class User extends BaseModel {
   public email: string
 
   @column()
+  public telegram_chat: number
+
+  @column({ serialize: (value, _attribute, model: User) => {
+    return value || model.email
+  }})
   public name: string
 
   @column()

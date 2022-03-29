@@ -93,6 +93,7 @@
         "dot-prop-immutable": "^2.1.0",
         "dotenv": "^16.0.0",
         "express-session": "^1.17.1",
+        "file-loader": "^6.2.0",
         "final-form": "^4.20.2",
         "gsap": "^3.6.0",
         "highlight.js": "^10.1.1",

@@ -32,6 +32,7 @@ Route.group(() => {
     Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
 
     Route.get("/role_options", "OptionsController.roles")
+    Route.get("/users_options", "OptionsController.users")
     Route.get("/permissions_options", "OptionsController.permissions")
 
 

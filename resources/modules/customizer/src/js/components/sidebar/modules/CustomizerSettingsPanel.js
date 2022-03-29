@@ -197,18 +197,16 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>}
-                    {type !== 'listener' && (
-                      <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                        <div className="controller-container__label control-select__label controller-label">Model:</div>
-                        <AltrpSelect id="crud-fields"
-                                     className="controller-field"
-                                     isMulti={false}
-                                     value={modelsOptions.find(o=>o.value === model_id) || {}}
-                                     onChange={this.changeModel}
-                                     options={modelsOptions.filter(item => item.value >= 5)}
-                        />
-                      </div>
-                    )}
+                    <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                      <div className="controller-container__label control-select__label controller-label">Model:</div>
+                      <AltrpSelect id="crud-fields"
+                                   className="controller-field"
+                                   isMulti={false}
+                                   value={modelsOptions.find(o=>o.value === model_id) || {}}
+                                   onChange={this.changeModel}
+                                   options={modelsOptions.filter(item => item.value >= 5)}
+                      />
+                    </div>
                     {
                       type === "listener" && (
                         <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
