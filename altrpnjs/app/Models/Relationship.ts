@@ -2,6 +2,7 @@ import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany,} from '@ioc:A
 import User from 'App/Models/User';
 import Source from 'App/Models/Source';
 import Model from 'App/Models/Model';
+import isProd from "../../helpers/isProd";
 
 
 export default class Relationship extends BaseModel {
@@ -84,11 +85,22 @@ export default class Relationship extends BaseModel {
   })
   public altrp_table: HasMany<typeof Source>
 
-  renderForModel():string {
+  renderForModelDev():string {
     return `
-  ${this.renderDecorator()}(() => ${this.renderRelatedModel()}, ${this.renderOptions()})
-  public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>
-    `
+  ${this.renderDecoratorDev()}(() => ${this.renderRelatedModel()}, ${this.renderOptions()})
+  public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>`
+  }
+
+  renderForModelProd():string {
+    return `
+decorate([
+  (0, ${this.renderType()})(() => ${this.renderRelatedModel()}.default, ${this.renderOptions()}),
+  metadata("design:type", Object)
+], ${this.altrp_model?.name}.prototype, "${this.name}", void 0);`
+  }
+
+  renderForModel():string {
+    return isProd() ? this.renderForModelProd() : this.renderForModelDev()
   }
 
   private renderOptions():string {
@@ -107,7 +119,7 @@ export default class Relationship extends BaseModel {
     return JSON.stringify(options)
   }
 
-  private renderDecorator() {
+  private renderDecoratorDev() {
     switch (this.type){
       case 'hasOne':{
         return '@Orm.hasOne'
@@ -127,16 +139,16 @@ export default class Relationship extends BaseModel {
   private renderType() {
     switch (this.type){
       case 'hasOne':{
-        return 'Orm.HasOne'
+        return isProd() ? 'Orm.hasOne':'Orm.HasOne'
       }
       case 'belongsTo':{
-        return 'Orm.BelongsTo'
+        return isProd() ? 'Orm.belongsTo':'Orm.BelongsTo'
       }
       case 'hasMany':{
-        return 'Orm.HasMany'
+        return isProd() ? 'Orm.hasMany':'Orm.HasMany'
       }
       default:{
-        return 'Orm.HasOne'
+        return isProd() ? 'Orm.hasOne':'Orm.HasOne'
       }
     }
 

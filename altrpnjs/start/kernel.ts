@@ -13,6 +13,7 @@ import Server from '@ioc:Adonis/Core/Server'
 import Route from "@ioc:Adonis/Core/Route";
 import './view'
 import './events'
+import _ from "lodash";
 
 /*
 |--------------------------------------------------------------------------
@@ -54,5 +55,6 @@ Server.middleware.registerNamed({
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
 })
+
 
 

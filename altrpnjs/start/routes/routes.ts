@@ -164,6 +164,17 @@ Route.group(() => {
     }
   })
   /**
+   * Templates for front
+   */
+  Route.get('/templates/:template_id', 'TemplatesController.getTemplates')
+  /**
+   * media for front
+   */
+  Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
+  Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
+
+
+  /**
    * роут для обработка кастомных ajax запросов
    */
   Route.any('models/*', async (httpContext: HttpContextContract) => {

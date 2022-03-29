@@ -459,7 +459,7 @@ class AddPage extends Component {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
     let id = this.props.match.params.id
-
+    console.log(this.state.value.rolesOptions.filter(i=>this.isItemSelectedRoles(i)));
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
       <div className="admin-pages admin-page">
@@ -676,7 +676,7 @@ class AddPage extends Component {
                                        noResults={<MenuItem disabled={true} text="No results."/>}
                                        fill={true}
                                        placeholder="All..."
-                                       selectedItems={this.state.value.roles}
+                                       selectedItems={this.state.value.rolesOptions.filter(i=>this.isItemSelectedRoles(i))}
                                        onItemSelect={this.handleItemSelectRoles}
                                        itemRenderer={(item, {handleClick, modifiers, query}) => {
                                          return (

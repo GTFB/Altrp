@@ -47,6 +47,7 @@ export default class ModelGenerator extends BaseGenerator {
       })
       loader.load('altrp_relationships', relation => {
         relation.preload('altrp_target_model')
+        relation.preload('altrp_model')
       })
     })
 
@@ -106,7 +107,7 @@ ${_.uniqBy(
   private _getDevImportsContent(): string {
     return `import * as luxon from 'luxon'
 import * as Orm from '@ioc:Adonis/Lucid/Orm'
-import * as Event from '@ioc:Adonis/Core/Event'
+import Event from '@ioc:Adonis/Core/Event'
 import { softDelete, forceDelete } from "../../helpers/delete"
 ${_.uniqBy(
   this.altrp_relationships

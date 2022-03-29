@@ -19,7 +19,6 @@ class {{{classname}}} extends Orm.BaseModel {
 
   {{{properties}}}
   {{{computed}}}
-  {{{relations}}}
   {{{methods}}}
   // CUSTOM_START
   {{{custom}}}
@@ -27,4 +26,5 @@ class {{{classname}}} extends Orm.BaseModel {
 }
 {{{staticProperties}}}
 {{{columns}}}
+{{{relations}}}
 exports.default = {{{classname}}};

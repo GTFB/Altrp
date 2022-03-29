@@ -1182,7 +1182,6 @@ export function replaceContentWithData(content = "", modelContext = null) {
 
       if (value === 0) {
         value = "0";
-        console.log();
       }
       path = escapeRegExp(path);
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
