@@ -327,6 +327,171 @@ class InputTextarea extends BaseElement {
     //
     // this.endControlSection();
 
+    this.startControlSection("position_section", {
+      tab: TAB_STYLE,
+      label: "Input Position",
+    });
+
+    this.addControl("field_width_textarea", {
+      type: CONTROLLER_SLIDER,
+      label: "Width",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vw"]
+    });
+
+    this.addControl("placeholder_and_value_alignment_position_section", {
+      type: CONTROLLER_CHOOSE,
+      label: "Alignment",
+      options: [
+        {
+          icon: "left",
+          value: "left"
+        },
+        {
+          icon: "center",
+          value: "center"
+        },
+        {
+          icon: "right",
+          value: "right"
+        }
+      ]
+    });
+
+    this.addControl("position_margin", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Margin",
+      default: {
+        unit: "px"
+      },
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        unit: "px"
+      },
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("position_z_index", {
+      type: CONTROLLER_NUMBER,
+      label: "Z-index",
+      default: 0
+    });
+
+    this.addControl("position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID",
+      locked: true,
+    });
+
+    this.addControl("position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes",
+      locked: true,
+    });
+
+    this.addControl("background_section_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      max: 1,
+      min: 0,
+      step: 0.01
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("background_section", {
+      tab: TAB_STYLE,
+      label: "Background"
+    });
+
+    this.addControl("background_style_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background Color"
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("border_section", {
+      tab: TAB_STYLE,
+      label: "Border"
+    });
+
+    this.addControl("border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ]
+    });
+
+    this.addControl("border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border Color"
+    });
+
+    this.addControl("border_radius", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Radius",
+      default: {
+        unit: "px"
+      },
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("box_shadow", {
+      type: CONTROLLER_SHADOW,
+      label: "Box shadow",
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: "rgb(0, 0, 0)",
+        color: "rgb(0, 0, 0)",
+        colorPickedHex: "#000000",
+        type: " "
+      }
+    });
+
+    this.endControlSection();
+
+
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
       label: "Label"
@@ -488,75 +653,6 @@ class InputTextarea extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("position_section", {
-      tab: TAB_STYLE,
-      label: "Input Position",
-    });
-
-    this.addControl("field_width", {
-      type: CONTROLLER_SLIDER,
-      label: "Width",
-      max: 500,
-      min: 0,
-      units: ["px", "%", "vw"]
-    });
-
-    this.addControl("placeholder_and_value_alignment_position_section", {
-      type: CONTROLLER_CHOOSE,
-      label: "Alignment",
-      options: [
-        {
-          icon: "left",
-          value: "left"
-        },
-        {
-          icon: "center",
-          value: "center"
-        },
-        {
-          icon: "right",
-          value: "right"
-        }
-      ]
-    });
-
-    this.addControl("position_margin", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Margin",
-      default: {
-        unit: "px"
-      },
-      units: ["px", "%", "vh"]
-    });
-
-    this.addControl("position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        unit: "px"
-      },
-      units: ["px", "%", "vh"]
-    });
-
-    this.addControl("position_z_index", {
-      type: CONTROLLER_NUMBER,
-      label: "Z-index",
-      default: 0
-    });
-
-    this.addControl("position_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID",
-      locked: true,
-    });
-
-    this.addControl("position_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes",
-      locked: true,
-    });
-
-    this.endControlSection();
 
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
@@ -617,100 +713,6 @@ class InputTextarea extends BaseElement {
         family: "Open Sans",
         decoration: ""
       }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("background_section", {
-      tab: TAB_STYLE,
-      label: "Background"
-    });
-
-    this.addControl("background_style_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color"
-    });
-
-    this.addControl("background_section_opacity", {
-      type: CONTROLLER_SLIDER,
-      label: "Opacity",
-      max: 1,
-      min: 0,
-      step: 0.01
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("border_section", {
-      tab: TAB_STYLE,
-      label: "Border"
-    });
-
-    this.addControl("border_type", {
-      type: CONTROLLER_SELECT,
-      label: "Border Type",
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "solid",
-          label: "Solid"
-        },
-        {
-          value: "double",
-          label: "Double"
-        },
-        {
-          value: "dotted",
-          label: "Dotted"
-        },
-        {
-          value: "dashed",
-          label: "Dashed"
-        },
-        {
-          value: "groove",
-          label: "Groove"
-        }
-      ]
-    });
-
-    this.addControl("border_width", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
-      units: ["px", "%", "vh"]
-    });
-
-    this.addControl("border_color", {
-      type: CONTROLLER_COLOR,
-      label: "Border Color"
-    });
-
-    this.addControl("box_shadow", {
-      type: CONTROLLER_SHADOW,
-      label: "Box shadow",
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: "rgb(0, 0, 0)",
-        color: "rgb(0, 0, 0)",
-        colorPickedHex: "#000000",
-        type: " "
-      }
-    });
-
-    this.addControl("border_radius", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
-      default: {
-        unit: "px"
-      },
-      units: ["px", "%", "vh"]
     });
 
     this.endControlSection();

@@ -144,7 +144,7 @@ class Tabs extends BaseElement {
     this.addControl('animate', {
       type: CONTROLLER_SWITCHER,
       label: 'Animate',
-      locked: true, 
+      locked: true,
     });
 
 
@@ -286,7 +286,7 @@ class Tabs extends BaseElement {
 
     this.addControl("background_content_style", {
       type: CONTROLLER_COLOR,
-      label: "Background",
+      label: "Background Content",
       presetColors: ["#eaeaea", "#9c18a8"],
     });
 

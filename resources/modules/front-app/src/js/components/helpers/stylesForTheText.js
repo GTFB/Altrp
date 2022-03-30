@@ -54,6 +54,12 @@ export function getTextStyles(settings, id) {
     styles += simplePropertyStyled(zIndex, 'z-index');
   }
 
+  const zIndexStyle = getResponsiveSetting(settings, 'position_z_index');
+
+  if (zIndexStyle) {
+    styles += simplePropertyStyled(zIndexStyle, 'z-index');
+  }
+
   const backgroundColor = getResponsiveSetting(settings, 'text_style_background_color');
 
   if (backgroundColor) {
@@ -85,7 +91,7 @@ export function getTextStyles(settings, id) {
   const borderRadius = getResponsiveSetting(settings, 'text_style_border_radius');
 
   if (borderRadius) {
-    styles += borderRadiusStyled(borderRadius);
+    styles += dimensionsStyled(borderRadius, "border-radius");
   }
 
   styles += `} `;
@@ -151,7 +157,7 @@ export function getTextStyles(settings, id) {
   const blockquoteBorderRadius = getResponsiveSetting(settings, 'text_blockquote_border_radius');
 
   if (blockquoteBorderRadius) {
-    styles += borderRadiusStyled(blockquoteBorderRadius);
+    styles += dimensionsStyled(blockquoteBorderRadius, "border-radius");
   }
 
   const blockquoteBoxShadow = getResponsiveSetting(

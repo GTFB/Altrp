@@ -109,7 +109,7 @@ class Divider extends BaseElement {
       ],
       locked: true,
     });
-    
+
     this.addControl('divider_text', {
       type: CONTROLLER_TEXT,
       label: 'Text',
@@ -121,7 +121,7 @@ class Divider extends BaseElement {
       label: 'Image',
       locked: true,
     });
-    
+
     this.addControl('label_position', {
       type: CONTROLLER_CHOOSE,
       label: 'Label Position',
@@ -144,7 +144,39 @@ class Divider extends BaseElement {
     });
 
     this.endControlSection();
-    
+
+    this.startControlSection('position_section', {
+      tab: TAB_STYLE,
+      label: 'Position (content)',
+    });
+
+    this.addControl('position_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: 'Z-Index',
+    });
+
+    this.addControl("position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID",
+      locked: true,
+    });
+
+    this.addControl("position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes",
+      locked: true,
+    });
+
+    this.addControl('position_opacity', {
+      type: CONTROLLER_SLIDER,
+      label: 'Opacity',
+      step: 0.01,
+      min: 0,
+      max: 1,
+    });
+
+    this.endControlSection();
+
     this.startControlSection("divider_style", {
       tab: TAB_STYLE,
       label: "Divider",
@@ -233,18 +265,6 @@ class Divider extends BaseElement {
     this.addControl("image_fill", {
       type: CONTROLLER_COLOR,
       label: "Fill",
-    });
-    
-    this.endControlSection();
-
-    this.startControlSection('position_section', {
-      tab: TAB_STYLE,
-      label: 'Position',
-    });
-
-    this.addControl('position_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: 'Z-Index',
     });
 
     this.endControlSection();

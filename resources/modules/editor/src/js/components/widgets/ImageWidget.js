@@ -130,7 +130,8 @@ class ImageWidget extends Component {
     if (link.toPrevPage && !isEditor()) {
       return (
         <div
-          className={classNames}
+          className={classNames + ` ${this.state.settings.position_css_classes || ""}`}
+          id={this.state.settings.position_css_id}
           onClick={() => {
             history.back();//todo: реализовать для h-altrp
           }}
@@ -150,7 +151,8 @@ class ImageWidget extends Component {
 
       return (
         <div
-          className={classNames}
+          className={classNames + ` ${this.state.settings.position_css_classes || ""}`}
+          id={this.state.settings.position_css_id}
         >
           {(linkUrl && ! isEditor()) ? (
             link.tag === "a" || window['h-altrp'] ? (

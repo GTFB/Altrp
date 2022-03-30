@@ -26,7 +26,6 @@ import UserSvg from "./svgs/users-v2.svg";
 import DropletSvg from "./svgs/droplet-new.svg";
 import MarketPlace from "./svgs/marketplace.svg"
 import ChevronMenu from "./svgs/chevron__menu.svg"
-import AdminLogoMini from "./svgs/admin-logo-mini.svg"
 
 import AdminLogo from "./components/AdminLogo";
 import AllPages from "./components/AllPages";
@@ -421,7 +420,6 @@ class Admin extends Component {
             ) : (
               <nav className="admin-nav-mini">
                 <div className="admin-nav-top-mini">
-                  {/*<AdminLogoMini />*/}
                   <AdminLogo menu={this.state.menu} />
                 </div>
                 <div className="admin-nav-main">

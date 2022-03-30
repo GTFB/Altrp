@@ -144,37 +144,9 @@ class HeadingTypeHeading extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('heading_style_font', {
-      tab: TAB_STYLE,
-      label: 'Font',
-    });
-
-    this.addControl("heading_style_color", {
-      type: CONTROLLER_COLOR,
-      label: "Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
-    });
-
-    this.addControl('heading_style_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-    }
-    );
-
-    this.addControl('heading_style_text_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Shadow',
-
-    });
-
-    this.endControlSection();
-
     this.startControlSection("style_position", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: 'Position (content)'
     });
 
     this.addControl('style_position_margin', {
@@ -226,6 +198,14 @@ class HeadingTypeHeading extends BaseElement {
       locked: true,
     });
 
+    this.addControl("style_background_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      max: 1,
+      min: 0,
+      step: 0.01,
+    });
+
     this.endControlSection();
 
     this.startControlSection("style_background", {
@@ -240,17 +220,6 @@ class HeadingTypeHeading extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-    });
-
-    this.addControl("style_background_opacity", {
-      type: CONTROLLER_SLIDER,
-      label: "Opacity",
-      // default: {
-      //   size: 1
-      // },
-      max: 1,
-      min: 0,
-      step: 0.01,
     });
 
     this.addControl('gradient', {
@@ -370,21 +339,6 @@ class HeadingTypeHeading extends BaseElement {
       default: 'repeat',
     });
 
-    this.addControl("background_image_width", {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      conditions: {
-        'background_size': [''],
-      },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
-      max: 1000,
-      min: 0,
-    });
-
     this.addControl('background_size', {
       type: CONTROLLER_SELECT,
       options: [
@@ -409,6 +363,20 @@ class HeadingTypeHeading extends BaseElement {
       default: 'unset',
     });
 
+    this.addControl("background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
+    });
 
     this.endControlSection();
 
@@ -460,19 +428,44 @@ class HeadingTypeHeading extends BaseElement {
     });
 
     this.addControl("style_border_radius", {
-      type: CONTROLLER_SLIDER,
+      type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
       default: {
-        size: 0,
         unit: 'px',
+        bind: true,
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('heading_style_font', {
+      tab: TAB_STYLE,
+      label: 'Font',
+    });
+
+    this.addControl("heading_style_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+    });
+
+    this.addControl('heading_style_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
+    );
+
+    this.addControl('heading_style_text_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Text Shadow',
     });
 
     this.endControlSection();

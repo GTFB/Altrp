@@ -10,7 +10,7 @@ import {
   gradientStyled,
   backgroundImageControllerToStyles,
   translateStyled,
-  sliderStyled
+  sliderStyled, dimensionsStyled
 } from "../../helpers/styles";
 import { getResponsiveSetting } from "../../helpers";
 
@@ -202,7 +202,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   const borderRadius = getResponsiveSetting(settings, "style_border_radius");
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, "border-radius");
+    styles += dimensionsStyled(borderRadius, "border-radius");
   }
   //fix display with <strong> and <b> tags
   styles += "display:block;";
@@ -375,19 +375,20 @@ export function getHeadingTypeHeadingStyles(settings, id) {
     styles += simplePropertyStyled(backgroundRepeat, "background-repeat");
   }
 
-  const backgroundSizeInUnits = getResponsiveSetting(
-    settings,
-    "background_image_width"
-  );
-
-  if (backgroundSizeInUnits) {
-    styles += sizeStyled(backgroundSizeInUnits, "background-size");
-  }
+  const backgroundSizeInUnits = getResponsiveSetting(settings, "background_image_width");
 
   const backgroundSize = getResponsiveSetting(settings, "background_size");
 
-  if (backgroundSize) {
+  if (backgroundSizeInUnits && backgroundSize === "") {
+    styles += sizeStyled(backgroundSizeInUnits, "background-size");
+  } else {
+    styles += ""
+  }
+
+  if (backgroundSize !== "") {
     styles += simplePropertyStyled(backgroundSize, "background-size");
+  } else {
+    styles += ""
   }
 
   styles += `} `;

@@ -4,7 +4,7 @@ import { CustomizerSettingsPanelCompose } from "./modules/CustomizerSettingsPane
 import SelectedPanel from "./modules/SelectedPanel";
 import store from "../../store/store";
 import Resource from "../../../../../editor/src/js/classes/Resource";
-import LogoIcon from "../../../../../editor/src/svgs/logo.svg";
+import LogoIcon from "../../../../../editor/src/svgs/logotext.svg";
 import DotsIcon from "../../../../../editor/src/svgs/dots.svg";
 import HamburgerIcon from "../../../../../editor/src/svgs/hamburger.svg";
 import SettingsIcon from "../../../../../editor/src/svgs/settings.svg";
@@ -54,7 +54,7 @@ class Sidebar extends React.Component {
             {window.admin_logo ? (
               renderAsset(window.admin_logo, { className: "editor__logo" })
             ) : (
-              <LogoIcon viewBox="0 0 97 35" className="editor__logo" />
+              <LogoIcon className="editor__logo" />
             )}
           </a>
 

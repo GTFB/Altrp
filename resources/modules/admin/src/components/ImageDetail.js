@@ -1,8 +1,7 @@
 import React from 'react';
 import {Form, Field} from 'react-final-form';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseModal from '../svgs/clear_black.svg';
+import ArrowImageDet from '../svgs/arrowImageDet.svg';
 import AutoSave from './AutoSaveDocumentDetail';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {createGlobalStyle} from "styled-components";
@@ -61,7 +60,7 @@ export class ImageDetail extends React.Component {
     return (
       <div>
         <GlobalStyle/>
-        <div onClick={this.props.closeImageDetail} className="document-detail_opacity-background"></div>
+        <div onClick={this.props.closeImageDetail} className="document-detail_opacity-background"/>
         <div className="document-detail">
           <div className="document-detail_header">
             <div className="document-detail__title">Attachment details</div>
