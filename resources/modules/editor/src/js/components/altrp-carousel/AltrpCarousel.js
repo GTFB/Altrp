@@ -123,7 +123,13 @@ class AltrpCarousel extends Component {
 
     //точки
     let slides = getResponsiveSetting(this.props,'slides_repeater', '', []) ;
-
+    if (slides.length === 0) {
+      if (isEditor()) {
+        return 'No Slides'
+      } else {
+        return ''
+      }
+    }
 
     let dotsClasses = "altrp-carousel-dots";
 

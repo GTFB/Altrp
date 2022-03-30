@@ -3,7 +3,7 @@ import getResponsiveSetting from '../getResponsiveSetting';
 import renderAsset from "../renderAsset";
 import moment from 'moment'
 
-const AltrpFieldContainer = (settings, child) => {
+const AltrpFieldContainer = (settings, child) => { 
   const { content_label_position_type, className } = settings
 
   return `
@@ -88,12 +88,15 @@ export default function renderInputDate(settings, device) {
 
   if (defaultValue) {
     value = moment(defaultValue, format)
-    value = value.isValid() ? value.format(format) : '';
+  } else {
+    value = moment()
   }
+
+  value = value.isValid() ? value.format(format) : '';
 
   const input = `
       <div class="altrp-input-wrapper">
-        <span class="bp3-popover-wrapper altrp-date-picker${settings.getId()}">
+        <span class="bp3-popover-wrapper altrp-date-picker">
           <span aria-haspopup="true" class="bp3-popover-target">
             <div class="bp3-input-group">
               <input type="text" autocomplete="off" class="bp3-input" value="${value}">

@@ -2,6 +2,9 @@ import {Server, Socket} from 'socket.io'
 import AdonisServer from '@ioc:Adonis/Core/Server'
 import User from "App/Models/User";
 import Role from "App/Models/Role";
+import _ from "lodash";
+import Logger from "@ioc:Adonis/Core/Logger";
+
 
 class Ws {
   public io: Server
@@ -66,6 +69,13 @@ class Ws {
     } else {
       this.clients[guid].sockets = sockets
     }
+    let _c:any = []
+    for(let k in this.clients){
+      if(this.clients.hasOwnProperty(k) && _.isArray(this.clients[k].sockets)){
+        this.clients[k].sockets.forEach(s => _c.push(s))
+      }
+    }
+    Logger.info(_c.length);
   }
 
   emitAdmin(type, data) {
@@ -79,7 +89,6 @@ class Ws {
     roleValue.users.forEach(user => {
       if(this.clients[user.guid]) {
         this.clients[user.guid].sockets.forEach((socket) => {
-          console.log(socket)
           socket.send({
             data,
             type

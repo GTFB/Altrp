@@ -1,0 +1,33 @@
+.bp3-progress-bar {
+  background: rgba(92, 112, 128, 0.2);
+  border-radius: 40px;
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.bp3-progress-bar .bp3-progress-meter {
+  background: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%) rgba(92, 112, 128, 0.8);
+  background-size: 30px 30px;
+  border-radius: 40px;
+  height: 100%;
+  position: absolute;
+  -webkit-transition: width 200ms cubic-bezier(0.4, 1, 0.75, 0.9);
+  transition: width 200ms cubic-bezier(0.4, 1, 0.75, 0.9);
+  width: 100%;
+}
+
+.bp3-progress-bar:not(.bp3-no-animation):not(.bp3-no-stripes) .bp3-progress-meter {
+  animation: linear-progress-bar-stripes 300ms linear infinite reverse;
+}
+
+@keyframes linear-progress-bar-stripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 30px 0;
+  }
+}

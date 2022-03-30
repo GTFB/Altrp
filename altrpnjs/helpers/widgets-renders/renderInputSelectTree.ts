@@ -23,8 +23,8 @@ export default function renderInputSelectTree(settings, device, context) {
   const renderLeftIcon = () => {
     const left_icon = getResponsiveSetting(settings, 'left_icon', device)
 
-    if(Object.keys(left_icon).length){
-      return null
+    if(!left_icon || !Object.keys(left_icon).length){
+      return ''
     }
 
     return `
@@ -37,8 +37,8 @@ export default function renderInputSelectTree(settings, device, context) {
   const renderRightIcon = () => {
     const right_icon = getResponsiveSetting(settings, 'right_icon', device)
 
-    if(Object.keys(right_icon).length){
-      return null
+    if(!right_icon || !Object.keys(right_icon).length){
+      return ''
     }
 
     return `
@@ -127,7 +127,7 @@ export default function renderInputSelectTree(settings, device, context) {
     <span class="bp3-popover-wrapper">
       <span aria-haspopup="true" class="bp3-popover-target altrp-select-popover">
         <div class="">
-          <button type="button" disabled="${content_readonly}" class="${"bp3-button" + (content_readonly ? " bp3-disabled" : "")}">
+          <button type="button" disabled="${content_readonly}" class="${"bp3-button" + (content_readonly ? " bp3-disabled" : "")} bp3-fill bp3-popover2-target altrp-select-tree-btn">
               ${leftIcon}
               <span class="bp3-button-text">${buttonLabel ? buttonLabel : ''}</span>
               ${rightIcon ? rightIcon : `<span class="bp3-icon bp3-icon-caret-down" icon="caret-down" aria-hidden="true">

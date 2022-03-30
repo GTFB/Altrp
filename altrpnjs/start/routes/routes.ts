@@ -27,6 +27,7 @@ import path from "path";
 import app_path from "../../helpers/app_path";
 import Customizer from "App/Models/Customizer";
 import fs from 'fs'
+import Model from "App/Models/Model";
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -163,16 +164,47 @@ Route.group(() => {
     }
   })
   /**
+   * Templates for front
+   */
+  Route.get('/templates/:template_id', 'TemplatesController.getTemplates')
+  /**
+   * media for front
+   */
+  Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
+  Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
+
+
+  /**
    * роут для обработка кастомных ajax запросов
    */
   Route.any('models/*', async (httpContext: HttpContextContract) => {
     const segments = httpContext.request.url().split('/').filter(segment => segment)
 
+    /**
+     * delete `altrp_ajax` from request body
+     */
+    let methodName
+    if(httpContext.request.input('altrp_ajax') !== undefined){
+      const body = httpContext.request.all();
+      delete body['altrp_ajax']
+      httpContext.request.updateBody(body)
+    }
     let tableName = segments[2]
     if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
       tableName = segments[3]
+      methodName = segments[4]
     }
-    const table = await Table.query().preload('altrp_model').where('name', tableName).first()
+    let table = await Table.query().preload('altrp_model').where('name', tableName).first()
+    /**
+     * In get options case
+     */
+    if(! table && segments[2].indexOf('_options') !== -1){
+      let model = await Model.query().preload('table').where('name', segments[2].replace('_options','')).first()
+      if(model){
+        table = model.table
+        await table.load('altrp_model')
+      }
+    }
     if (!table) {
       return httpContext.response.status(404).json({
         success: false,
@@ -201,9 +233,9 @@ Route.group(() => {
         Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
       }
       const ControllerClass = isProd() ? (await require(controllerName)).default
+        // @ts-ignore
         : (await import(controllerName)).default
       const controller = new ControllerClass()
-      let methodName
 
       if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
         methodName = segments[4]
@@ -222,9 +254,10 @@ Route.group(() => {
           })
         }
       }else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
-        methodName = 'index'
+        methodName = segments[2].indexOf('_options') === -1 ? 'index'  : 'options'
+
       }else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
-        methodName = 'store'
+        methodName = 'add'
       }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'GET') {
@@ -244,7 +277,7 @@ Route.group(() => {
         && Number(segments[3])
         && segments[4]
       ) {
-        methodName = 'updateColumn'
+        methodName = 'update_column'
         httpContext.params[model.name] = Number(segments[3])
         httpContext.params.column = Number(segments[4])
       }

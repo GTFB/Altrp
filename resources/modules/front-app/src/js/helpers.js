@@ -1182,7 +1182,6 @@ export function replaceContentWithData(content = "", modelContext = null) {
 
       if (value === 0) {
         value = "0";
-        console.log();
       }
       path = escapeRegExp(path);
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
@@ -1444,7 +1443,7 @@ export async function altrpLogin(data = {}, formId = "login") {
   }).getAll();
   currentUser = currentUser.data;
   appStore.dispatch(changeCurrentUser(currentUser));
-  let routes = [];
+  /*let routes = [];
   try {
     let routesData = await new Resource({
       route: "/ajax/routes"
@@ -1457,7 +1456,7 @@ export async function altrpLogin(data = {}, formId = "login") {
   } catch (err) {
     console.error(err);
     return { success: false };
-  }
+  }*/
   return { success: true };
 }
 
