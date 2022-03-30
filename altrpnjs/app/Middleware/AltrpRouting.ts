@@ -133,10 +133,10 @@ export default class AltrpRouting {
           let classInstance
           if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
             classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
-          } else {
+          } else if(pageMatch.params?.id){
             classInstance = await ModelClass.find(pageMatch.params.id)
           }
-          model_data = classInstance.serialize()
+          model_data = classInstance ? classInstance.serialize() : {}
         } catch (e) {
           console.error(e);
         }

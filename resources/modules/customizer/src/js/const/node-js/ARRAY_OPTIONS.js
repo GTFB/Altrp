@@ -1,67 +1,173 @@
-import THIS from "../parameter-types/THIS";
 import Parameter from "../../classes/Parameter";
-import STRING from "../parameter-types/STRING";
-import OBJECT from "../parameter-types/OBJECT";
 import ANY from "../parameter-types/ANY";
+import ARRAY from "../parameter-types/ARRAY";
+import FUNCTION from "../parameter-types/FUNCTION";
+import UNDEFINED from "../parameter-types/UNDEFINED";
+import NUMBER from "../parameter-types/NUMBER";
 
-const classDescription = 'The instance of the request class holds data for the current HTTP request including the request body, uploaded files, cookies and much more.\n' +
-  '\n' +
-  'You can access the request object from the HTTP context passed to the route handler, middleware, and exception handler.'
+const classDescription = `The Array object, as with arrays in other programming languages, enables storing a collection of multiple items under a single variable name, and has members for performing common array operations.`
 
-const REQUEST_OPTIONS = [
+const ARRAY_OPTIONS = [
   {
-    value: 'request.all',
-    objectInstance: 'request',
-    label: 'all',
-    description: 'Also, you can use the request.all method. It returns a merged copy of the request body and the request query string.',
+    value: 'array.map',
+    objectInstance: 'array',
+    label: 'map',
+    description: 'The map() method creates a new array populated with the results of calling a provided function on every element in the calling array.',
     classDescription,
     returns: [
-      OBJECT,
+      ARRAY,
     ],
     parameters:[
+      new Parameter({
+        name: 'callback',
+        types:[
+          FUNCTION,
+        ],
+        required: true,
+      }),
+      new Parameter({
+        name: 'thisArg',
+        types:[
+          ANY,
+        ],
+      }),
     ],
   },
   {
-    value: 'request.body',
-    objectInstance: 'request',
-    label: 'body',
-    description: 'You can access the request body using the request.body method.',
+    value: 'array.forEach',
+    objectInstance: 'array',
+    label: 'forEach',
+    description: 'The forEach() method executes a provided function once for each array element.',
     classDescription,
     returns: [
-      OBJECT,
+      UNDEFINED,
     ],
     parameters:[
+      new Parameter({
+        name: 'callback',
+        types:[
+          FUNCTION,
+        ],
+        required: true,
+      }),
+      new Parameter({
+        name: 'thisArg',
+        types:[
+          ...ANY,
+        ],
+      }),
     ],
   },
   {
-    value: 'request.input',
-    objectInstance: 'request',
-    label: 'input',
-    description: 'You can use the request.input method to read value for a single input field. The method also supports reading nested values using a dot notation.',
+    value: 'array.pop',
+    objectInstance: 'array',
+    label: 'pop',
+    description: ' The pop() method removes the last element from an array and returns that element. This method changes the length of the array.',
+    classDescription,
+    returns: [
+      ...ANY,
+    ],
+    parameters:[],
+  },
+  {
+    value: 'array.push',
+    objectInstance: 'array',
+    label: 'push',
+    description: 'The push() method adds one or more elements to the end of an array and returns the new length of the array.',
+    classDescription,
+    returns: [
+      ...ANY,
+    ],
+    parameters:[],
+  },
+  {
+    value: 'array.reverse',
+    objectInstance: 'array',
+    label: 'reverse',
+    description: 'The reverse() method reverses an array in place. The first array element becomes the last, and the last array element becomes the first.',
+    classDescription,
+    returns: [
+      ARRAY,
+    ],
+    parameters:[],
+  },
+  {
+    value: 'array.shift',
+    objectInstance: 'array',
+    label: 'shift',
+    description: 'The shift() method removes the first element from an array and returns that removed element. This method changes the length of the array.',
+    classDescription,
+    returns: [
+      ...ANY,
+    ],
+    parameters:[],
+  },
+  {
+    value: 'array.unshift',
+    objectInstance: 'array',
+    label: 'unshift',
+    description: 'The unshift() method adds one or more elements to the beginning of an array and returns the new length of the array.',
+    classDescription,
+    returns: [
+      ...ANY,
+    ],
+    parameters:[],
+  },
+  {
+    value: 'array.slice',
+    objectInstance: 'array',
+    label: 'slice',
+    description: 'The slice() method returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included) where start and end represent the index of items in that array. The original array will not be modified.',
+    classDescription,
+    returns: [
+      ARRAY,
+    ],
+    parameters:[
+      new Parameter({
+        name: 'start',
+        types:[
+          NUMBER,
+        ],
+      }),
+      new Parameter({
+        name: 'end',
+        types:[
+          NUMBER,
+        ],
+      }),
+    ],
+  },
+  {
+    value: 'array.splice',
+    objectInstance: 'array',
+    label: 'splice',
+    description: 'The splice() method changes the contents of an array by removing or replacing existing elements and/or adding new elements in place. To access part of an array without modifying it, see slice().',
     classDescription,
     returns: [
       ...ANY,
     ],
     parameters:[
       new Parameter({
-        name: "path",
-        types: [STRING],
-        required: true,
+        name: 'start',
+        types:[
+          NUMBER,
+        ],
+        required:true,
       }),
-    ],
-  },
-  {
-    value: 'request.qs',
-    objectInstance: 'request',
-    label: 'qs',
-    description: 'The parsed query string can be accessed using the request.qs() method.',
-    classDescription,
-    returns: [
-      OBJECT,
-    ],
-    parameters:[
+      new Parameter({
+        name: 'deleteCount',
+        types:[
+          NUMBER,
+        ],
+      }),
+      new Parameter({
+        name: 'item',
+        types:[
+          ...ANY,
+        ],
+      }),
     ],
   },
 ];
 
-export default REQUEST_OPTIONS
+export default ARRAY_OPTIONS
