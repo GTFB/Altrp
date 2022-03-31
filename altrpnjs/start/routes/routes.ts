@@ -27,7 +27,6 @@ import path from "path";
 import app_path from "../../helpers/app_path";
 import Customizer from "App/Models/Customizer";
 import fs from 'fs'
-import Model from "App/Models/Model";
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -41,12 +40,14 @@ Route.post("/sockets", "SocketsController.handle")
 //   return user.can([1, 2]);
 // })
 
+const fromBuildDir = isProd() ? "../" : ""
+
 Route.get("sw.js", "IndicesController.serviceWorker")
 
 Route.get("/modules/*", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -66,7 +67,7 @@ Route.get("/modules/*", async ({request, response}) => {
 
 Route.get("/service-worker-files", async ({}) => {
 
-  const pathToFrontApp = path.join(__dirname, "../", "../", "../", "public", "modules", "front-app");
+  const pathToFrontApp = path.join(__dirname, "../", "../", "../", fromBuildDir, "public", "modules", "front-app");
 
   let files = fs.readdirSync(pathToFrontApp)
 
@@ -93,7 +94,7 @@ Route.get("/service-worker-files", async ({}) => {
 Route.get("/serviceWorker.js", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -105,7 +106,7 @@ Route.get("/serviceWorker.js", async ({request, response}) => {
 Route.get("/sw/*", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -167,19 +168,9 @@ Route.group(() => {
   Route.any('models/*', async (httpContext: HttpContextContract) => {
     const segments = httpContext.request.url().split('/').filter(segment => segment)
 
-    /**
-     * delete `altrp_ajax` from request body
-     */
-    let methodName
-    if(httpContext.request.input('altrp_ajax') !== undefined){
-      const body = httpContext.request.all();
-      delete body['altrp_ajax']
-      httpContext.request.updateBody(body)
-    }
     let tableName = segments[2]
     if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
       tableName = segments[3]
-      methodName = segments[4]
     }
     let table = await Table.query().preload('altrp_model').where('name', tableName).first()
     /**
@@ -220,9 +211,9 @@ Route.group(() => {
         Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
       }
       const ControllerClass = isProd() ? (await require(controllerName)).default
-        // @ts-ignore
         : (await import(controllerName)).default
       const controller = new ControllerClass()
+      let methodName
 
       if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
         methodName = segments[4]
@@ -241,10 +232,9 @@ Route.group(() => {
           })
         }
       }else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
-        methodName = segments[2].indexOf('_options') === -1 ? 'index'  : 'options'
-
+        methodName = 'index'
       }else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
-        methodName = 'add'
+        methodName = 'store'
       }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'GET') {
@@ -264,7 +254,7 @@ Route.group(() => {
         && Number(segments[3])
         && segments[4]
       ) {
-        methodName = 'update_column'
+        methodName = 'updateColumn'
         httpContext.params[model.name] = Number(segments[3])
         httpContext.params.column = Number(segments[4])
       }

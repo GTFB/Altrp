@@ -50,6 +50,7 @@ import renderCarousel from "../helpers/widgets-renders/renderCarousel";
 import renderProgressBar from "../helpers/widgets-renders/renderProgressBar";
 import renderInputWysiwyg from "../helpers/widgets-renders/renderInputWysiwyg";
 import renderScheduler from "../helpers/widgets-renders/renderScheduler";
+import renderTournament from '../helpers/widgets-renders/renderTournament';
 import renderDivider from "../helpers/widgets-renders/renderDivider";
 import renderSectionBG from "../helpers/renderSectionBG";
 import getColumnClasses from "../helpers/getColumnClasses";
@@ -74,6 +75,7 @@ View.global('renderButton', renderButton)
 View.global('renderImage', renderImage)
 View.global('renderHeading', renderHeading)
 View.global('renderTabsSwitcher', renderTabsSwitcher)
+View.global('renderTournament', renderTournament)
 View.global('renderTabs', renderTabs)
 View.global('renderIcon', renderIcon)
 View.global('renderHtml', renderHtml)

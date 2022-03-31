@@ -13,6 +13,7 @@ const documentCheckEvents = (cb) => {
     'mousemove',
     'touch',
     'scroll',
+    'altrpe',
     'resize'
   ]
 

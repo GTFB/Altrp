@@ -7,5 +7,6 @@ export const ReturnObj = {
   name: 'return',
   selectedNode: ReturnNode,
   node: Return,
-  icon: ReturnIcon
+  icon: ReturnIcon,
+  type: "required"
 }

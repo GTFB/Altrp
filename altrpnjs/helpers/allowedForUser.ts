@@ -5,8 +5,10 @@ import Permission from "App/Models/Permission";
 
 export default function allowedForUser(settings: any, user:User|null|undefined):boolean{
   let result = true;
-
-  const {conditional_display_choose} = settings
+  const {conditional_display_choose, default_hidden} = settings
+  if(default_hidden){
+    return false
+  }
   if ( ! conditional_display_choose  ) {
     return result;
   }
@@ -17,8 +19,9 @@ export default function allowedForUser(settings: any, user:User|null|undefined):
   if ( conditional_display_choose === 'guest' ) {
     return ! user;
   }
+
   if ( conditional_display_choose === 'auth' ) {
-    return ! ! user;
+    result = ! ! user;
   }
   if ( ! ( settings['conditional_roles']
     || settings['conditional_permissions'] ) ) {
@@ -30,6 +33,7 @@ export default function allowedForUser(settings: any, user:User|null|undefined):
   if ( (  roles.length  ||  permissions.length  ) && ! user ) {
     return false;
   }
+
   if ( roles ) {
     return ! ! roles.filter((roleName)=>{
       // @ts-ignore
@@ -39,7 +43,7 @@ export default function allowedForUser(settings: any, user:User|null|undefined):
         }
         return role.id
       }).indexOf(roleName) !== -1;
-    });
+    })?.length;
   }
 
   if ( permissions ) {
@@ -51,7 +55,7 @@ export default function allowedForUser(settings: any, user:User|null|undefined):
         }
         return permission.id
       }).indexOf(permissionName) !== -1;
-    });
+    })?.length;
   }
   return result;
 }

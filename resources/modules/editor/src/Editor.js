@@ -144,11 +144,11 @@ class Editor extends Component {
   async getConnect(currentUser) {
     if(currentUser.guid && !this.altrpIo) {
       this.altrpIo = io( {
+        path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-
       this.altrpIo.on("message", (data) => {
         console.log(data)
       })

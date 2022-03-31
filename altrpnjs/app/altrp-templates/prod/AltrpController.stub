@@ -1,5 +1,6 @@
 const selectForSQLEditor = require("../../helpers/selectForSQLEditor").default
 const empty = __importDefault(require("../../helpers/empty"));
+const Database = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
 const _ = __importStar(require("lodash"));
 
 {{{imports}}}

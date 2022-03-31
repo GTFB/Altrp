@@ -59,10 +59,10 @@ class SimpleElementWrapper extends Component {
     })
 
     const {element} = this.props
-    const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
-    const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
-    document.dispatchEvent(mountElementEvent)
-    document.dispatchEvent(mountElementTypeEvent)
+    // const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
+    // const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
+    // document.dispatchEvent(mountElementEvent)
+    // document.dispatchEvent(mountElementTypeEvent)
   }
 
   componentWillUnmount() {
