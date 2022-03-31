@@ -8,10 +8,7 @@ const AltrpFieldContainer = (settings, child) => {
 
   return `
     <div
-      style="
-        ${content_label_position_type == 'left' ? 'display: flex;' : ''}
-        ${content_label_position_type == 'right' ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;' : ''}
-      "
+      style="${content_label_position_type == 'left' ? 'display: flex;' : ''} ${content_label_position_type == 'right' ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;' : ''}"
       class="${className}"
     >
       ${child}
@@ -75,7 +72,7 @@ export default function renderInputAccept(settings, device, context) {
       </span>
     `
 
-    if (this.state.settings.content_label) {
+    if (content_label) {
       label = `
         <div class="altrp-field-label-container ${classLabel}" style="${objectToStylesString(styleLabel)}">
           <label class="altrp-field-label ${content_required ? "altrp-field-label--required" : ""}">

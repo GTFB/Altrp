@@ -120,11 +120,12 @@ export default class CustomizersController {
     }
 
     if(customizer.type === "listener" && request.input("settings.hook_type")) {
+      // @ts-ignore
       const generator = new ListenerGenerator()
 
       const model = await Model.find(customizer.model_id);
       if(model) {
-        await generator.delete(model, customizer.settings.hook_type)
+        // await generator.delete(model, customizer.settings.hook_type)
       }
     }
     const oldType = customizer.type

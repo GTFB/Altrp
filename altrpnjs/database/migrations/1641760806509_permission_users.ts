@@ -11,7 +11,7 @@ export default class PermissionUsers extends BaseSchema {
       table.bigIncrements('id')
       table.bigInteger('permission_id').unsigned()
       table.bigInteger('user_id').unsigned()
-      table.string('user_type')
+      table.string('user_type').nullable()
 
 
       /**

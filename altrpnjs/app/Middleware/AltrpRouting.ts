@@ -1,30 +1,29 @@
 // import {minify} from'html-minifier'
 // import prepareContext from "../../helpers/prepareContext";
+
 import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
 import Env from '@ioc:Adonis/Core/Env';
 // @ts-ignore
-import renderResult from '../../helpers/server-render/renderResult'
-import replaceContentWithData from "../../helpers/replaceContentWithData";
+// import renderResult from '../../helpers/server-render/renderResult'
+import replaceContentWithData from "../../helpers/replaceContentWithData"
 import {matchPath} from 'react-router'
-import empty from "../../helpers/empty";
+import empty from "../../helpers/empty"
 import * as _ from 'lodash'
-import getLatestVersion from "../../helpers/getLatestVersion";
+import getLatestVersion from "../../helpers/getLatestVersion"
 import User from "App/Models/User";
-import get_altrp_setting from "../../helpers/get_altrp_setting"
-import is_array from "../../helpers/is_array";
-import data_get from "../../helpers/data_get";
-import recurseMapElements from "../../helpers/recurseMapElements";
+import is_array from "../../helpers/is_array"
+import data_get from "../../helpers/data_get"
+import recurseMapElements from "../../helpers/recurseMapElements"
 import validGuid from "../../helpers/validGuid";
 import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
-import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
-import Source from "App/Models/Source";
-import isProd from "../../helpers/isProd";
-import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES";
-// import Ws from "App/Services/Ws";
+import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS"
+import Source from "App/Models/Source"
+import isProd from "../../helpers/isProd"
+import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
 
 export default class AltrpRouting {
 
@@ -134,10 +133,10 @@ export default class AltrpRouting {
           let classInstance
           if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
             classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
-          } else {
+          } else if(pageMatch.params?.id){
             classInstance = await ModelClass.find(pageMatch.params.id)
           }
-          model_data = classInstance.serialize()
+          model_data = classInstance ? classInstance.serialize() : {}
         } catch (e) {
           console.error(e);
         }
@@ -156,7 +155,11 @@ export default class AltrpRouting {
         altrpuser = user.toObject()
       }
       await page.load('data_sources', data_source=>{
-        data_source.preload('source')
+        data_source.preload('source', source=>{
+          source.preload('model', model=>{
+            model.preload('table')
+          })
+        })
       })
       const _frontend_route = page.serialize()
       const altrpContext = {
@@ -212,8 +215,12 @@ export default class AltrpRouting {
         console.error(`Error to View Custom Page: ${e.message}
          ${e.stack}
          `);
+        httpContext.response.status(500)
+        return httpContext.response.send(`500 Internal Server Error to View Custom Page: ${e.message}
+         ${e.stack}
+         `)
       }
-      //@ts-ignore
+      /*
       const preload_content:any = renderResult({
         protocol: httpContext.request.protocol(),
         host: httpContext.request.host(),
@@ -260,6 +267,8 @@ export default class AltrpRouting {
       })
       )
       return httpContext.response.send(v)
+
+     */
     }
     httpContext.response.status(404)
     return httpContext.response.send('Not Found')

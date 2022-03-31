@@ -9,10 +9,11 @@ import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
-//import AltrpMeta from "App/Models/AltrpMeta";
+import AltrpMeta from "App/Models/AltrpMeta";
+import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
-//import recurseMapElements from '../../../helpers/recurseMapElements';
+import Area from "App/Models/Area";
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -163,14 +164,21 @@ export default class TemplatesController {
     }
   }
 
-  public async options() {
-    const templates = await Template.all();
-
-    const options = templates.map((template) => ({
+  public async options({ request}:HttpContextContract) {
+    const query = Template.query()
+    query.where('type', 'template')
+    const qs = request.qs()
+    if(qs.template_type){
+      let area = await Area.query().where('name', qs.template_type).first()
+      if(area){
+        query.where('area', area.id)
+      }
+    }
+    const templates = await query.select('id', 'title')
+    return templates.map((template) => ({
       value: template.id,
       label: template.title
     }))
-    return options
   }
 
   public async get({ params }) {
@@ -308,7 +316,7 @@ export default class TemplatesController {
 
   /**
    * Получение условий текущего шаблона
-   * @param $template_id
+   * @param template_id
    * @param Request $request
    * @return JsonResponse
    */
@@ -330,8 +338,8 @@ export default class TemplatesController {
 
   /**
    * Сохранение условий текущего шаблона
-   * @param $template_id
-   * @param $template_id
+   * @param template_id
+   * @param template_id
    * @param Request $request
    * @return JsonResponse
    */
@@ -452,11 +460,38 @@ export default class TemplatesController {
         },
       )
     }
-    let data = template.serialize()
 
-    
+    template.__exported_metas__ = {}
+    template.__exported_metas__.styles_presets = AltrpMeta.getGlobalStyles()
+    template.__exported_metas__ = {}
+    template.__exported_metas__.global_styles = GlobalStyle.all();
 
-    return response.json(data)
+    let res = template.serialize()
+
+    return response.json(res)
   }
 
+  async show_frontend({params,response}:HttpContextContract )
+{
+
+  // if (self::loadCachedTemplate( template_id )) {
+  //    return self::loadCachedTemplate( template_id );
+  // }
+  const template_id = params.template_id
+  let template
+  if ( validGuid( template_id ) ) {
+    template = await Template.query().where( 'guid', template_id ).first();
+  } else {
+    template = await Template.find( template_id );
+  }
+  if ( ! template ) {
+    response.status(404)
+    return response.json( { 'success' : false, 'message' : 'Template not found' })
+  }
+
+  template = template.serialize()
+  delete template.html_content
+  delete template.styles
+  return response.json(template);
+  }
 }

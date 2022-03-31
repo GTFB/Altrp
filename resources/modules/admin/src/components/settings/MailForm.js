@@ -7,6 +7,7 @@ import {Select} from "@blueprintjs/select";
 const DriverOptions = ['', 'smtp']
 const EncryptionOptions = ['', 'tls', 'ssl']
 
+
 class MailForm extends Component {
   constructor(props) {
     super(props);
@@ -111,7 +112,7 @@ class MailForm extends Component {
                     noResults={<MenuItem disabled={true} text="No results." />}
                     itemRenderer={(item, {handleClick, modifiers, query}) => {
                       return <MenuItem
-                        text={item}
+                        text={item || 'None'}
                         key={item}
                         active={item === this.state.mail_driver }
                         onClick={handleClick}
@@ -151,7 +152,7 @@ class MailForm extends Component {
                     noResults={<MenuItem disabled={true} text="No results." />}
                     itemRenderer={(item, {handleClick, modifiers, query}) => {
                       return <MenuItem
-                        text={item}
+                        text={item || 'None'}
                         key={item}
                         active={item === this.state.mail_encryption }
                         onClick={handleClick}
@@ -210,23 +211,22 @@ class MailForm extends Component {
 
         <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
-            <label htmlFor="mail_from_address">Mail from Address</label>
-            {/*<input type="text" id="mail_username" required*/}
-            {/*       name="mail_username"*/}
-            {/*       value={mail_username}*/}
+            <label htmlFor="mail_username">User Name</label>
+            {/*<input type="email" id="mail_from_address"*/}
+            {/*       name="mail_from_address"*/}
+            {/*       value={mail_from_address}*/}
             {/*       onChange={this.changeHandler}*/}
             {/*       className="form-control"*/}
             {/*/>*/}
-            <InputGroup type="email"
-                        name="mail_from_address"
-                        id="mail_from_address"
-                        value={mail_from_address}
+            <InputGroup type="text"
+                        name="mail_username"
+                        id="mail_username"
+                        value={mail_username}
                         onChange={this.changeHandler}
                         className="form-control-blueprint"
                         required
             />
           </div>
-
           <div className="form-group form-group_width47">
             <label htmlFor="mail_password">Password</label>
             {/*<input type="password"*/}
@@ -251,22 +251,23 @@ class MailForm extends Component {
 
         <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
-            <label htmlFor="mail_username">User Name</label>
-            {/*<input type="email" id="mail_from_address"*/}
-            {/*       name="mail_from_address"*/}
-            {/*       value={mail_from_address}*/}
+            <label htmlFor="mail_from_address">Mail from Address</label>
+            {/*<input type="text" id="mail_username" required*/}
+            {/*       name="mail_username"*/}
+            {/*       value={mail_username}*/}
             {/*       onChange={this.changeHandler}*/}
             {/*       className="form-control"*/}
             {/*/>*/}
-            <InputGroup type="text"
-                        name="mail_username"
-                        id="mail_username"
-                        value={mail_username}
+            <InputGroup type="email"
+                        name="mail_from_address"
+                        id="mail_from_address"
+                        value={mail_from_address}
                         onChange={this.changeHandler}
                         className="form-control-blueprint"
                         required
             />
           </div>
+
 
           <div className="form-group form-group_width47">
             <label htmlFor="mail_from_name">Mail from Name</label>

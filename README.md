@@ -3,9 +3,16 @@
 
 ## Changelog
 
+### 1.0.3
+* Fix Page Roles
+* Fix Dynamic Variables in SQL-Editor
+* Fix Controller Generate Issues
+
 ### 1.0.2
 * Fix Section Width
-
+* Add Import/Export Visual Codes
+* Delete `altrp_ajax` from Request Body
+* Add Function to Send Emails
 
 ### 1.0.1
 * Fix Elements Conditions Display

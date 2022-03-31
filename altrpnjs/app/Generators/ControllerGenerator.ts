@@ -24,7 +24,11 @@ export default class ControllerGenerator extends BaseGenerator {
     await controller.load((loader) => {
       loader.load('sources', loader=>{
         loader.preload('roles')
-        loader.preload('altrp_model')
+        loader.preload('altrp_model', loader=>{
+          loader.preload('table', loader=>{
+            loader.preload('columns')
+          })
+        })
         loader.preload('model')
         loader.preload('permissions')
       })

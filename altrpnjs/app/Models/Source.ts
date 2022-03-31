@@ -23,7 +23,6 @@ import Logger from "@ioc:Adonis/Core/Logger";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import PageDatasource from "App/Models/PageDatasource";
 import altrpRandomId from "../../helpers/altrpRandomId";
-import Env from '@ioc:Adonis/Core/Env'
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -126,18 +125,28 @@ export default class Source extends BaseModel {
 
   @computed()
   public get web_url(){
-    const url = Env.get("CUSTOM_URL");
 
     switch ( this.sourceable_type ){
       case SQLEditor.sourceable_type:
-      case 'App\\Altrp\\Query':
-        return (config('app.url') || url) + '/ajax/models/queries' + data_get( this, 'url' );
+      case 'App\\Altrp\\Query': {
+        let url = data_get(this, 'url', '')
+        if(! url){
+          Logger.warn(`Source id:${this.id} has not url`)
+        }
+        url = url.replace(`/${this.model?.table?.name}`, '')
+        return config('app.url') + '/ajax/models/queries/' + this.model?.table?.name + url;
+      }
       case 'App\\Altrp\\Customizer':
-        return (config('app.url') || url) + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
-      default:
+        return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
+      default:{
+        let url = data_get( this, 'url', '' )
+        if(url.indexOf('{') !== -1){
+          url = url.replace(/{/g, '').replace(/}/g, '')
+        }
         return this.type != 'remote'
-          ? (config('app.url') || url) + '/ajax/models' + data_get( this, 'url' )
-      : (config('app.url') || url) + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
+          ? config('app.url') + '/ajax/models' + url
+          : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
+      }
     }
   }
 
@@ -383,7 +392,7 @@ export default class Source extends BaseModel {
     if(search){
       ${this.altrp_model.getIndexedColumns().map(column => `
       query.orWhere('${column.name}', 'like', \`%\${search}%\`);
-      `)}
+      `).join('')}
     }
 
     const order = httpContext.request.qs()?.order === 'asc' ? 'asc' : 'desc';
@@ -435,15 +444,43 @@ export default class Source extends BaseModel {
   }
 
   private renderSQLEditorMethodBody() {
+    let sql = this.sQLEditor?.sql || ''
+    sql = sql.replace(/`/g, '\\`')
+    sql = sql.replace(/{{PREFIX}}/g, '')
+    let paths = _.isString(sql) ? sql.match(/{{([\s\S]+?)(?=}})/g) : null;
+    if (_.isArray(paths)) {
+      paths.forEach(path => {
+        path = path.replace("{{", "");
+        let [namespace = '',prop = ''] = path.split(':');
+        prop = prop.trim()
+        namespace = namespace.trim()
+        switch (namespace){
+          case 'REQUEST':{
+            namespace = 'httpContext.request.qs()'
+          }
+            break;
+          case 'CURRENT_USER':{
+            namespace = '_.get(httpContext, \'auth.user\', {})'
+          }
+            break;
+          default: return
+        }
+        let value = `\${${namespace}.${prop}}`
+        path = Source.escapeRegExp(path)
+        sql = sql.replace(new RegExp(`{{${path}}}`, "g"), value || "")
+      });
+    }
     return `
-    const res = await selectForSQLEditor(
-    "${this.sQLEditor?.sql}", {
+    return httpContext.response.json( {success: true,data:await selectForSQLEditor(
+    \`${sql}\`, {
        'sql_name' : '${this.sQLEditor?.name}',
        'table_name' : '${this.model?.table?.name}',
-     }, httpContext.request );
+     }, httpContext.request )});
     `;
   }
-
+  static escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+  }
   static async fetchDatasourcesForPage(id: number, httpContext: HttpContextContract, altrpContext: any):Promise<{}> {
 
     const datasources:any = {}

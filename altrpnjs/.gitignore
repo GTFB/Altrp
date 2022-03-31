@@ -13,7 +13,7 @@ storage/
 app/AltrpModels/
 app/AltrpControllers/
 app/AltrpPlugins/
-app/altrp-listeners/
+app/AltrpListeners/
 start/altrp-routes/
 /resources/views/altrp
 

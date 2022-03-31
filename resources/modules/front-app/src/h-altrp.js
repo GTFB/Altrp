@@ -158,3 +158,6 @@ window.addEventListener('h-altrp-loaded', e =>{
     })
   }
 })
+
+const altrpe = new Event(`altrpe`);
+document.dispatchEvent(altrpe)

@@ -40,12 +40,14 @@ Route.post("/sockets", "SocketsController.handle")
 //   return user.can([1, 2]);
 // })
 
+const fromBuildDir = isProd() ? "../" : ""
+
 Route.get("sw.js", "IndicesController.serviceWorker")
 
 Route.get("/modules/*", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -65,7 +67,7 @@ Route.get("/modules/*", async ({request, response}) => {
 
 Route.get("/service-worker-files", async ({}) => {
 
-  const pathToFrontApp = path.join(__dirname, "../", "../", "../", "public", "modules", "front-app");
+  const pathToFrontApp = path.join(__dirname, "../", "../", "../", fromBuildDir, "public", "modules", "front-app");
 
   let files = fs.readdirSync(pathToFrontApp)
 
@@ -92,7 +94,7 @@ Route.get("/service-worker-files", async ({}) => {
 Route.get("/serviceWorker.js", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -104,7 +106,7 @@ Route.get("/serviceWorker.js", async ({request, response}) => {
 Route.get("/sw/*", async ({request, response}) => {
   const url = request.url()
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
   const file = await Drive.get(pathToModules + url)
 
@@ -170,7 +172,17 @@ Route.group(() => {
     if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
       tableName = segments[3]
     }
-    const table = await Table.query().preload('altrp_model').where('name', "aaaaaaaaaaaas").first()
+    let table = await Table.query().preload('altrp_model').where('name', tableName).first()
+    /**
+     * In get options case
+     */
+    if(! table && segments[2].indexOf('_options') !== -1){
+      let model = await Model.query().preload('table').where('name', segments[2].replace('_options','')).first()
+      if(model){
+        table = model.table
+        await table.load('altrp_model')
+      }
+    }
     if (!table) {
       return httpContext.response.status(404).json({
         success: false,
@@ -252,7 +264,6 @@ Route.group(() => {
           message: 'Method Not Found'
         })
       }
-
       return await controller[methodName](httpContext)
     } catch (e) {
       return httpContext.response.status(500).json({

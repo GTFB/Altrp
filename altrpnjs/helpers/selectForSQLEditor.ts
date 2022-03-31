@@ -5,9 +5,9 @@ import {RequestContract} from "@ioc:Adonis/Core/Request"
 import after from "./string/after"
 import before from "./string/before"
 import Database from "@ioc:Adonis/Lucid/Database";
+import _ from "lodash";
 
-async function  selectForSQLEditor( sql:string, bindings,  request:RequestContract ){
-
+async function selectForSQLEditor( sql:string, bindings,  request:RequestContract ){
   let _sql_order_by = ''
   let _sql_and_filters = ''
   let _sql_filters = ''
@@ -109,8 +109,7 @@ async function  selectForSQLEditor( sql:string, bindings,  request:RequestContra
   sql = sql.replace(/'?(ALTRP_DETAIL_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_filters)
   sql = sql.replace(/'?(ALTRP_DETAIL_AND_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_and_filters)
 
-  let data = await Database.rawQuery(sql, bindings)
-  return { data }
+  return _.get(await Database.rawQuery(sql, bindings), '0', [])
 }
 export default selectForSQLEditor
 

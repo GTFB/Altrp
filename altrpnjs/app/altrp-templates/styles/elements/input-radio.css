@@ -1,0 +1,19 @@
+.altrp-field-radio-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+
+.bp3-control.bp3-radio .bp3-control-indicator {
+  border-radius: 50%;
+}
+
+.altrp-field-radio {
+  font-size: 16px;
+}
