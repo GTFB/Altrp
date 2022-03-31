@@ -17,6 +17,7 @@ import DocumentNode from "App/Customizer/Nodes/DocumentNode";
 import CrudNode from "App/Customizer/Nodes/crudNode";
 import ApiNode from "App/Customizer/Nodes/apiNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
+import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 
 export default class Customizer extends BaseModel {
 
@@ -328,6 +329,7 @@ export default class Customizer extends BaseModel {
         case 'crudAction': return new CrudNode(item, customizer)
         case 'apiAction': return new ApiNode(item, customizer)
         case 'messageAction': return new MessageNode(item, customizer)
+        case 'customizer': return new CustomizerNode(item, customizer)
         default: return new BaseNode( item, customizer )
       }
     })

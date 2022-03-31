@@ -10,7 +10,7 @@ export default class RobotNode extends Component{
         this.state={
             robotOptions: []
         }
-        this.robotOptionsResource = new Resource({ route: "/admin/ajax/robots_options" });
+        this.robotOptionsResource = new Resource({ route: "/admin/ajax/customizers_options" });
     }
 
     async componentDidMount() {
@@ -36,7 +36,7 @@ export default class RobotNode extends Component{
                 <div className="settings-section__icon d-flex">
                     <Chevron />
                 </div>
-                <div className="settings-section__label">Settings Robot</div>
+                <div className="settings-section__label">Settings Customizer</div>
             </div>
 
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
@@ -48,7 +48,7 @@ export default class RobotNode extends Component{
                         onChange={e => {this.changeSelect(e)}}
                     >
                         <option disabled value="" />
-                        {robotOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                        {robotOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label} ({option.value})</option> })}
                     </select>
                     </div>
                 </div>

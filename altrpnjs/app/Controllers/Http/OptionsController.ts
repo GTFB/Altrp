@@ -9,6 +9,7 @@ import Menu from "App/Models/Menu";
 import Template from "App/Models/Template";
 import filtration from "../../../helpers/filtration";
 import User from "App/Models/User";
+import Customizer from "App/Models/Customizer";
 
 export default class OptionsController {
   public async pages() {
@@ -72,6 +73,15 @@ export default class OptionsController {
       message: "success",
       success: true
     }
+  }
+
+  public async customizers() {
+    const customizers = await Customizer.all()
+
+    return options(customizers, {
+      value: "name",
+      label: "title"
+    })
   }
 
   public async templates({ request}) {

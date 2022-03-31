@@ -10,6 +10,7 @@ import Source from "App/Models/Source";
 import fetch from 'node-fetch';
 import User from "App/Models/User";
 import Notification from "App/Services/Notification";
+import Customizer from "App/Models/Customizer";
 
 export default class AltrpBaseController {
   protected customizerData = {
@@ -91,6 +92,28 @@ export default class AltrpBaseController {
 
     const notification = new Notification(content, messageData);
     notification.send(users)
+  }
+
+  protected async execCustomizer(name) {
+    console.log(name)
+    const customizer = await Customizer.query().where("name", name).preload("altrp_model").firstOrFail();
+
+    const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
+
+    const ControllerClass = isProd() ? (await require(controllerName)).default
+      : (await import(controllerName)).default
+    const controller = new ControllerClass()
+
+    const httpContext = _.get(this.customizerData, "httpContext");
+
+    if(controller[customizer.name]) {
+      return await controller[customizer.name](httpContext)
+    } else {
+      return {
+        message: "customizer name invalid",
+        success: false
+      }
+    }
   }
 
   protected async getRequiredUsers(entities, entitiesData): Promise<User[]> {

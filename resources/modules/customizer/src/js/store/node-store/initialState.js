@@ -22,6 +22,5 @@ export const initialState = {
     ApiObj,
     MessageObj,
     RobotObj,
-    BotObj
   ]
 }
