@@ -56,13 +56,13 @@ class AltrpAction extends AltrpModel {
    * Получить id для регистрации формы
    * @return {string}
    */
-  getFormId() {
+  getFormId(item = {}) {
     let formId = this.getProperty('form_id');
     if (!formId) {
       return formId;
     }
     if (formId.indexOf('{{') !== -1) {
-      formId = replaceContentWithData(formId, this.getCurrentModel().getData());
+      formId = replaceContentWithData(formId, {...this.getCurrentModel().getData(), ...item});
     }
     return formId;
   }
@@ -468,6 +468,9 @@ class AltrpAction extends AltrpModel {
             );
           }
           let url = this.getProperty('form_url');
+          if(! _.isObject(item)){
+            item = {id: item}
+          }
           url = replaceContentWithData(url, item);
           const form = formsManager.registerForm(
             this.getFormId() + idx,
@@ -477,7 +480,7 @@ class AltrpAction extends AltrpModel {
               customRoute: url
             }
           );
-          return await form.submit('', '', data, customHeaders);
+          return  form.submit('', '', data, customHeaders);
         });
         try {
           let res = await Promise.all(bulkRequests);

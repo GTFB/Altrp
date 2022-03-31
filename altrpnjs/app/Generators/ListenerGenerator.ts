@@ -6,7 +6,7 @@ import fs from "fs";
 
 
 export default class ListenerGenerator extends BaseGenerator {
-  public static directory = app_path('/altrp-listeners/')
+  public static directory = app_path('/AltrpListeners/')
   public static listeners =  [
     'beforeSave',
     'beforeCreate',
@@ -32,7 +32,6 @@ export default class ListenerGenerator extends BaseGenerator {
 
     this.model = model;
 
-    console.log(model)
 
     const dir = ListenerGenerator.directory + "altrp_models" + "." + this.model.name + "." + type;
 

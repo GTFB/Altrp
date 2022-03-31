@@ -77,3 +77,6 @@ dhparam.pem
 #files
 /public/sitemap.xml
 /public/robots.txt
+/AltrpObservers/
+/Controllers/
+/Entities/
