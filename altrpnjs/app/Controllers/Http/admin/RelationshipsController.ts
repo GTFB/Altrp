@@ -56,14 +56,25 @@ export default class RelationshipsController {
     if (targetModel) {
       await targetModel.load('table')
 
-      let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
-        ${relationshipData.name}
-        FOREIGN KEY (${relationshipData.local_key})
-        REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
-        ON DELETE ${relationshipData.onDelete}
-        ON UPDATE ${relationshipData.onUpdate}`
+      let query
 
-       await Database.rawQuery(query)
+      if (relationshipData.type == "belongsTo") {
+        query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+          ${model.table.name}_${relationshipData.local_key}_foreign
+          FOREIGN KEY (${relationshipData.local_key})
+          REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
+          ON DELETE ${relationshipData.onDelete}
+          ON UPDATE ${relationshipData.onUpdate}`
+      } else if(relationshipData.type == "hasMany" || relationshipData.type == "hasOne") {
+        query = `ALTER TABLE ${targetModel.table.name} ADD CONSTRAINT
+          ${targetModel.table.name}_${relationshipData.foreign_key}_foreign
+          FOREIGN KEY (${relationshipData.foreign_key})
+          REFERENCES ${model.table.name}(${relationshipData.local_key})
+          ON DELETE ${relationshipData.onDelete}
+          ON UPDATE ${relationshipData.onUpdate}`
+      }
+
+      await Database.rawQuery(query)
     }
 
     return response.json({success: true, data: relationship})
@@ -80,8 +91,11 @@ export default class RelationshipsController {
       })
 
     }
+
+    let relationshipData = request.all()
+
     //const relationship = await Relationship.find(params.field_id)
-    const relationship = await Relationship.find(params.id)
+    const relationship = await Relationship.find(relationshipData.id)
     if (!relationship) {
       response.status(404)
       return response.json({
@@ -90,7 +104,22 @@ export default class RelationshipsController {
       })
 
     }
-    let relationshipData = request.all()
+
+    let targetModel = await Model.find(relationship.target_model_id)
+    if (targetModel) {
+      await model.load('table')
+      await targetModel.load('table')
+
+      let deleteQuery
+      if (relationship.type == "belongsTo") {
+        deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+      } else if(relationship.type == "hasMany" || relationship.type == "hasOne") {
+        deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+      }
+      await Database.rawQuery(deleteQuery)
+    }
+
+    
     relationship.merge({
       title: relationshipData.title,
       description: relationshipData.description,
@@ -111,22 +140,33 @@ export default class RelationshipsController {
     await relationship.save()
     Event.emit('model:updated', model)
 
-    let targetModel = await Model.find(relationshipData.target_model_id)
-    if (targetModel) {
-      await model.load('table')
-      let createQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${relationship.name}`
-      await Database.rawQuery(createQuery)
+    let newTargetModel = await Model.find(relationshipData.target_model_id)
+    if (newTargetModel) {
 
-      await targetModel.load('table')
+      await newTargetModel.load('table')
 
-      let deleteQuery = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
-        ${relationshipData.name}
-        FOREIGN KEY (${relationshipData.local_key})
-        REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
-        ON DELETE ${relationshipData.onDelete}
-        ON UPDATE ${relationshipData.onUpdate}`
+      let query
+      if (relationshipData.type == "belongsTo") {
 
-       await Database.rawQuery(deleteQuery)
+        query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+          ${model.table.name}_${relationshipData.local_key}_foreign
+          FOREIGN KEY (${relationshipData.local_key})
+          REFERENCES ${newTargetModel.table.name}(${relationshipData.foreign_key})
+          ON DELETE ${relationshipData.onDelete}
+          ON UPDATE ${relationshipData.onUpdate}`
+
+      } else if(relationshipData.type == "hasMany" || relationshipData.type == "hasOne") {
+
+        query = `ALTER TABLE ${newTargetModel.table.name} ADD CONSTRAINT
+          ${newTargetModel.table.name}_${relationshipData.foreign_key}_foreign
+          FOREIGN KEY (${relationshipData.foreign_key})
+          REFERENCES ${model.table.name}(${relationshipData.local_key})
+          ON DELETE ${relationshipData.onDelete}
+          ON UPDATE ${relationshipData.onUpdate}`
+
+      }
+      await Database.rawQuery(query)
+
     }
 
     return response.json({success: true, data: relationship})
@@ -176,17 +216,26 @@ export default class RelationshipsController {
       })
 
     }
-    let targetModel = await Model.find(relationship.target_model_id)
-    if(targetModel){
-      Event.emit('model:updated', targetModel)
-    }
-    await relationship.delete()
-    Event.emit('model:updated', model)
 
     await model.load('table')
 
-    let query = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${relationship.name}`
-    await Database.rawQuery(query)
+    let targetModel = await Model.find(relationship.target_model_id)
+    if(targetModel){
+      Event.emit('model:updated', targetModel)
+
+      await targetModel.load('table')
+
+      let deleteQuery
+      if (relationship.type == "belongsTo") {
+        deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+      } else if(relationship.type == "hasMany" || relationship.type == "hasOne") {
+        deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+      }
+      await Database.rawQuery(deleteQuery)
+    }
+
+    await relationship.delete()
+    Event.emit('model:updated', model)
 
     return response.json({success: true,})
   }
