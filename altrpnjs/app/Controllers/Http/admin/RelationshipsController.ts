@@ -42,6 +42,21 @@ export default class RelationshipsController {
       }
     }
 
+    let targetModel = await Model.find(relationshipData.target_model_id)
+
+
+    if (relationshipData.type == "belongsTo" && targetModel) {
+      await targetModel.load('table')
+      let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+        ${model.table.name}_${relationshipData.local_key}_foreign
+        FOREIGN KEY (${relationshipData.local_key})
+        REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
+        ON DELETE ${relationshipData.onDelete}
+        ON UPDATE ${relationshipData.onUpdate}`
+
+      await Database.rawQuery(query)
+    }
+
     relationship.fill({
       title: relationshipData.title,
       description: relationshipData.description,
@@ -61,10 +76,19 @@ export default class RelationshipsController {
     await relationship.save()
     Event.emit('model:updated', model)
 
-    let targetModel = await Model.find(relationshipData.target_model_id)
+    
     if (relationshipData.type != "belongsTo" && targetModel && relationshipData.add_belong_to) {
-      const belongsToRelationship = new Relationship()
+      
+      await targetModel.load('table')
+      let query = `ALTER TABLE ${targetModel.table.name} ADD CONSTRAINT
+        ${targetModel.table.name}_${relationshipData.foreign_key}_foreign
+        FOREIGN KEY (${relationshipData.foreign_key})
+        REFERENCES ${model.table.name}(${relationshipData.local_key})
+        ON DELETE restrict
+        ON UPDATE restrict`
+      await Database.rawQuery(query)
 
+      const belongsToRelationship = new Relationship()
       belongsToRelationship.fill({
         title: model.title,
         description: relationshipData.description,
@@ -84,29 +108,6 @@ export default class RelationshipsController {
       await belongsToRelationship.save()
       Event.emit('model:updated', targetModel)
 
-      await targetModel.load('table')
-
-
-
-      // let query = `ALTER TABLE ${targetModel.table.name} ADD CONSTRAINT
-      //   ${targetModel.table.name}_${relationshipData.foreign_key}_foreign
-      //   FOREIGN KEY (${relationshipData.foreign_key})
-      //   REFERENCES ${model.table.name}(${relationshipData.local_key})
-      //   ON DELETE restrict
-      //   ON UPDATE restrict`
-      // await Database.rawQuery(query)
-
-    } else if (relationshipData.type == "belongsTo" && targetModel) {
-
-      // let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
-      //   ${model.table.name}_${relationshipData.foreign_key}_foreign
-      //   FOREIGN KEY (${relationshipData.foreign_key})
-      //   REFERENCES ${targetModel.table.name}(${relationshipData.local_key})
-      //   ON DELETE ${relationshipData.onDelete}
-      //   ON UPDATE ${relationshipData.onUpdate}`
-
-      // await Database.rawQuery(query)
-
     }
 
     return response.json({success: true, data: relationship})
@@ -122,6 +123,7 @@ export default class RelationshipsController {
         message: 'Model not found'
       })
     }
+    await model.load('table')
 
     let relationshipData = request.all()
 
@@ -136,25 +138,42 @@ export default class RelationshipsController {
     }
 
     let targetModel = await Model.find(relationship.target_model_id)
-    if (relationship.type != "belongsTo") {
-      await Relationship.query()
-        .where('model_id', relationship.target_model_id)
-        .where('target_model_id', relationship.model_id)
-        .where('foreign_key', relationship.local_key)
-        .where('local_key', relationship.foreign_key)
-        .where('type', 'belongsTo')
-        .delete()
+    if(relationship.type != "belongsTo" && targetModel && relationship.add_belong_to){
 
-      // if(targetModel){
-      //   let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
-      //   await Database.rawQuery(deleteQuery)
-      // }
+        await targetModel.load('table')
+        let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+        await Database.rawQuery(deleteQuery)
+
+        await Relationship.query()
+          .where('model_id', relationship.target_model_id)
+          .where('target_model_id', relationship.model_id)
+          .where('foreign_key', relationship.local_key)
+          .where('local_key', relationship.foreign_key)
+          .where('type', 'belongsTo')
+          .delete()
+        Event.emit('model:updated', targetModel)
+
     }
 
-    // if (relationship.type == "belongsTo") {
-    //   let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
-    //   await Database.rawQuery(deleteQuery)
-    // }
+    if (relationship.type === "belongsTo") {
+      let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+      await Database.rawQuery(deleteQuery)
+    }
+
+    let newTargetModel = await Model.find(relationshipData.target_model_id)
+
+    if (relationshipData.type === "belongsTo" && newTargetModel) {
+      await newTargetModel.load('table')
+
+      let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+        ${model.table.name}_${relationshipData.local_key}_foreign
+        FOREIGN KEY (${relationshipData.local_key})
+        REFERENCES ${newTargetModel.table.name}(${relationshipData.foreign_key})
+        ON DELETE ${relationshipData.onDelete}
+        ON UPDATE ${relationshipData.onUpdate}`
+        
+      await Database.rawQuery(query)
+    }
 
     relationship.merge({
       title: relationshipData.title,
@@ -174,9 +193,17 @@ export default class RelationshipsController {
     })
     await relationship.save()
     Event.emit('model:updated', model)
-
-    let newTargetModel = await Model.find(relationshipData.target_model_id)
+    
     if (relationshipData.type != "belongsTo" && newTargetModel && relationshipData.add_belong_to) {
+
+      await newTargetModel.load('table')
+      let query = `ALTER TABLE ${newTargetModel.table.name} ADD CONSTRAINT
+        ${newTargetModel.table.name}_${relationshipData.foreign_key}_foreign
+        FOREIGN KEY (${relationshipData.foreign_key})
+        REFERENCES ${model.table.name}(${relationshipData.local_key})
+        ON DELETE restrict
+        ON UPDATE restrict`
+      await Database.rawQuery(query)
 
       const belongsToRelationship = new Relationship()
       belongsToRelationship.fill({
@@ -197,29 +224,6 @@ export default class RelationshipsController {
       })
       await belongsToRelationship.save()
       Event.emit('model:updated', newTargetModel)
-
-      await newTargetModel.load('table')
-
-
-
-      // let query = `ALTER TABLE ${targetModel.table.name} ADD CONSTRAINT
-      //   ${targetModel.table.name}_${relationshipData.foreign_key}_foreign
-      //   FOREIGN KEY (${relationshipData.foreign_key})
-      //   REFERENCES ${model.table.name}(${relationshipData.local_key})
-      //   ON DELETE restrict
-      //   ON UPDATE restrict`
-      // await Database.rawQuery(query)
-
-    } else if (relationshipData.type == "belongsTo" && newTargetModel) {
-
-      // let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
-      //   ${model.table.name}_${relationshipData.foreign_key}_foreign
-      //   FOREIGN KEY (${relationshipData.foreign_key})
-      //   REFERENCES ${newTargetModel.table.name}(${relationshipData.local_key})
-      //   ON DELETE ${relationshipData.onDelete}
-      //   ON UPDATE ${relationshipData.onUpdate}`
-        
-      // await Database.rawQuery(query)
 
     }
 
@@ -272,7 +276,12 @@ export default class RelationshipsController {
     await model.load('table')
 
     let targetModel = await Model.find(relationship.target_model_id)
-    if(relationship.type != "belongsTo" && targetModel){
+
+    if(relationship.type != "belongsTo" && targetModel && relationship.add_belong_to){
+
+        await targetModel.load('table')
+        let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+        await Database.rawQuery(deleteQuery)
 
         await Relationship.query()
           .where('model_id', relationship.target_model_id)
@@ -283,16 +292,12 @@ export default class RelationshipsController {
           .delete()
         Event.emit('model:updated', targetModel)
 
-        await targetModel.load('table')
-        // let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
-        // await Database.rawQuery(deleteQuery)
-     
     }
 
-    // if (relationship.type == "belongsTo") {
-    //   let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
-    //   await Database.rawQuery(deleteQuery)
-    // }
+    if (relationship.type === "belongsTo") {
+      let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+      await Database.rawQuery(deleteQuery)
+    }
 
     await relationship.delete()
     Event.emit('model:updated', model)
