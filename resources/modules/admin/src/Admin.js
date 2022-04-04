@@ -11,7 +11,6 @@ import { hot } from "react-hot-loader";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 
-import TemplateSvg from "./svgs/templates.svg";
 import Bars from "./svgs/bars-v2.svg";
 import AssetSvg from "./svgs/assets-v2.svg";
 import MainSvg from "./svgs/main-v2.svg";

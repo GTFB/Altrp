@@ -164,7 +164,10 @@ const copyPublicToAdonis = gulp.parallel(
   ]).pipe(gulp.dest('./altrpnjs/build/app/altrp-templates/styles'))
   },
   cb=>{
-    fs.writeFileSync('./altrpnjs/build/package_key', uuid())
+    if(!fs.existsSync('./altrpnjs/build/package_key')){
+      fs.mkdirSync('./altrpnjs/build/package_key')
+    }
+    fs.writeFileSync('./altrpnjs/build/package_key/package_key', uuid())
     cb()
   },
 );

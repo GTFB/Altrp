@@ -125,8 +125,13 @@ class CustomizerSettingsPanel extends React.Component {
     let Url = ''
     if (this.props.customizer.source !== null) {
       const { web_url } = this.props.customizer.source
-      let strippedDownUrl = new URL(web_url)
-      Url = strippedDownUrl.pathname
+      try{
+        let strippedDownUrl = new URL(web_url)
+        Url = strippedDownUrl.pathname
+      }catch (e){
+        alert('Error while parsing source URL')
+        console.error(e);
+      }
     }
 
     return (

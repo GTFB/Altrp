@@ -3,6 +3,16 @@
 
 ## Changelog
 
+### 1.0.4
+* Add Nodes to Visual Codes:
+  - Document
+  - CRUD
+  - API
+  - Message
+  - Customizer
+* Fix Bulk
+* Fix Some Widgets Render
+
 ### 1.0.3
 * Fix Page Roles
 * Fix Dynamic Variables in SQL-Editor
