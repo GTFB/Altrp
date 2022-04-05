@@ -47,6 +47,7 @@ export default class ModelGenerator extends BaseGenerator {
       })
       loader.load('altrp_relationships', relation => {
         relation.preload('altrp_target_model')
+        relation.preload('altrp_model')
       })
     })
 

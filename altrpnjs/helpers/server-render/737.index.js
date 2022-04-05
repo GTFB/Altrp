@@ -14363,9 +14363,10 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
             switch (_context12.prev = _context12.next) {
               case 0:
                 elementId = this.getProperty('element_id');
+                console.log(elementId);
 
                 if (elementId) {
-                  _context12.next = 3;
+                  _context12.next = 4;
                   break;
                 }
 
@@ -14373,7 +14374,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: true
                 });
 
-              case 3:
+              case 4:
                 elementId = elementId.trim();
                 element = getHTMLElementById(elementId);
                 scroller = window.mainScrollbars;
@@ -14394,7 +14395,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: true
                 });
 
-              case 10:
+              case 11:
               case "end":
                 return _context12.stop();
             }

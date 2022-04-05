@@ -5,6 +5,7 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
+import isProd from "../../../helpers/isProd";
 
 
 export default class IndicesController {
@@ -40,7 +41,7 @@ export default class IndicesController {
   }
 
   public async serviceWorker({response}) {
-    const pathToPublic = path.join(__dirname, "../", "../", "../", "../", "public", "sw.js");
+    const pathToPublic = path.join(__dirname, "../", "../", "../", "../", (isProd() ? "../" : ""), "public", "sw.js");
 
     response.header("Content-Type", "text/javascript")
 

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-export default function replaceContentWithData(content: string, context: object): string{
+export default function   replaceContentWithData(content: string, context: object): string{
 
   let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
   if (_.isArray(paths)) {

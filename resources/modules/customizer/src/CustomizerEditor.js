@@ -33,6 +33,7 @@ import {contextMenu} from "react-contexify";
 import {setCopyNode, setSelectNode} from "./js/store/copy-node/action";
 import {isJSON} from "../../front-app/src/js/helpers";
 import {io} from "socket.io-client";
+import getNodeData from "./js/components/sidebar/modules/robot/getNodeData";
 
 const mapStateToProps = state => {
   return {
@@ -99,11 +100,11 @@ class CustomizerEditor extends Component {
 
     if(currentUser.guid && !this.altrpIo) {
       this.altrpIo = io( {
+        path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-
       this.altrpIo.on("message", (data) => {
         console.log(data)
       })
@@ -191,7 +192,10 @@ class CustomizerEditor extends Component {
     event.preventDefault();
     const reactFlowBounds = this.reactFlowRef.current.getBoundingClientRect();
     const type = event.dataTransfer.getData("reactflow-type");
-    const props = this.getNodeData(type);
+    let props;
+
+    props = this.getNodeData(type);
+
     const position = this.state.reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top
@@ -262,6 +266,93 @@ class CustomizerEditor extends Component {
       case "customizer":
         data = {
           "type": "customizer",
+          "nodeData": {
+            "id": "",
+          }
+        };
+        break;
+      case "bot":
+        data = {
+          "type": "bot",
+          "nodeData": {
+            "type": "bot",
+            "data": {
+              "shortcode": "",
+              "content": [],
+            }
+          }
+        };
+        break;
+      case "documentAction":
+        data = {
+          "type": "documentAction",
+          "nodeData": {
+            "type": "document",
+            "data": {
+            }
+          },
+        };
+        break;
+      case "crudAction":
+        data = {
+          "type": "crudAction",
+          "nodeData": {
+            "type": "crud",
+            "data": {
+              "method": "",
+              "body": {},
+              "record": "",
+              "model_id": "",
+            }
+          }
+        };
+        break;
+      case "apiAction":
+        data = {
+          "type": "apiAction",
+          "nodeData": {
+            "type": "api",
+            "data": {
+              "source": "",
+              "method": "",
+              "headers": "",
+              "name": "",
+              "url": "",
+              "data": ""
+            }
+          },
+        };
+        break;
+      case "messageAction":
+        data = {
+          "type": "messageAction",
+          "nodeData": {
+            "type": "send_notification",
+            "data": {
+              "entities": "",
+              "entitiesData": {
+                "users": [],
+                "roles": [],
+                "dynamicValue": "",
+              },
+              "channel": "",
+              "content": {},
+            }
+          }
+        };
+        break;
+      case "condition":
+        data = {
+          "type": "condition",
+          "nodeData": {
+            "operator": "",
+            "body": []
+          }
+        };
+        break;
+      case "robot":
+        data = {
+          "type": "robot",
           "nodeData": {
             "id": "",
           }

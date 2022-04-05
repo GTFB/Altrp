@@ -122,12 +122,15 @@ export default class PagesController {
   public async show({ params }) {
     const page = await Page.query().preload("roles").preload('categories').where("id", parseInt(params.id)).firstOrFail();
 
-
-
+    let data = page.serialize()
+    data.roles = data.roles.map(role => ({value:role.id, label:role.display_name}))
+    if(data.for_guest){
+      data.roles.unshift({value:'guest', label: 'Guest'})
+    }
     return {
       model: null,
       model_name: "",
-      ...page.serialize()
+      ...data
     }
   }
 
@@ -204,6 +207,8 @@ export default class PagesController {
           page[input] = body[input]
         }
       })
+      await page.related('roles').detach()
+      page.parseRoles(request.input('roles'));
       await page.save()
       const pageGenerator = new PageGenerator()
       await pageGenerator.run(page)

@@ -1,6 +1,6 @@
 import objectToStylesString from "../objectToStylesString"
 import getResponsiveSetting from "../getResponsiveSetting"
-
+//@ts-ignore
 export default function renderMap(settings, device, context) {
   const height = getResponsiveSetting(settings, 'style_height', device, {size: 400, unit: 'px'})
   const margin = getResponsiveSetting(settings, 'style_margin', device, {top: 0, bottom: 0, left: 0, right: 0, unit: 'px'})
@@ -16,7 +16,7 @@ export default function renderMap(settings, device, context) {
 
   return `
     <div class="altrp-map" style="${objectToStylesString(styles)}">
-      <div class="altrp-map__container leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="height: 400px;">
+      <div class="altrp-map__container leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="height: ${styles.height};">
         <div class="leaflet-control-container">
           <div class="leaflet-top leaflet-left">
             <div class="leaflet-control-zoom leaflet-bar leaflet-control">
@@ -33,10 +33,10 @@ export default function renderMap(settings, device, context) {
               <a href="https://leafletjs.com" title="A JS library for interactive maps">
                 Leaflet
               </a>
-              | © 
+              | ©
               <a href="http://osm.org/copyright">
                 OpenStreetMap
-              </a> 
+              </a>
               contributors
             </div>
           </div>

@@ -43,13 +43,13 @@ export default class ChangeNode extends BaseNode implements NodeInterface
 
     let JSContent = ''
     let items = this.getItems()
+
     for(let item of items){
       let action = data_get( item, 'action', 'set')
       let left = data_get( item, 'left')
       let right = data_get( item, 'right')
       let rightJSProperty = this.customizer.propertyToJS( right )
       let leftJSProperty
-
       switch (action) {
         case 'set':{
           leftJSProperty = this.customizer.changePropertyToJS( left, rightJSProperty  )
@@ -67,6 +67,7 @@ export default class ChangeNode extends BaseNode implements NodeInterface
     for(const child of this.children){
       JSContent += child.getJSContent()
     }
+
     return JSContent
   }
 }

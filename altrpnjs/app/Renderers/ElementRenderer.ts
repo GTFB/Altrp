@@ -2,18 +2,17 @@ import app_path from "../../helpers/app_path";
 import fs from "fs";
 import * as mustache from 'mustache'
 import * as _ from 'lodash'
-import altrpRandomId from "../../helpers/altrpRandomId";
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import objectToStylesString from "../../helpers/objectToStylesString";
 
 export default class ElementRenderer {
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
   private elementStub: string
-  private idForAction: string;
   constructor(private element: {
     children: [],
     settingsLock: {},
     settings: {
+      advanced_element_id?: string,
       layout_html_tag?: string
       react_element?:boolean
       layout_content_width_type?:string
@@ -31,6 +30,7 @@ export default class ElementRenderer {
   async render(): Promise<string>{
     const reactElement =  this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
+    const {advanced_element_id} = this.element.settings
     let children_content = ''
     for (const child of this.element.children){
       let renderer = new ElementRenderer(child)
@@ -102,6 +102,9 @@ export default class ElementRenderer {
     `
 
     wrapper_attributes = wrapper_attributes.replace(/\s+/g, ' ');
+    if(advanced_element_id){
+      wrapper_attributes += ` id="${advanced_element_id}" `
+    }
     content = mustache.render(content, {
       settings: JSON.stringify(this.element.settings).replace(/\//g, '\\/'),
       id: this.getId(),
@@ -123,10 +126,7 @@ export default class ElementRenderer {
     return this.element.name
   }
   private getIdForAction(){
-    if(! this.idForAction){
-      this.idForAction = altrpRandomId()
-    }
-    return this.idForAction
+    return this.element.id
   }
   private isLink(){
     return ! !_.get(this, 'element.settings.link_link.url');

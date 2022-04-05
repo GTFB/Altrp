@@ -132,7 +132,6 @@ export default class ModelsController {
   }
 
   async getModelFields({response, params}: HttpContextContract) {
-
     const model = await Model.query().where('id', params.id)
       .preload('table', query => {
         // @ts-ignore

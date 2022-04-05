@@ -35,6 +35,7 @@ class WidgetsPanel extends React.Component {
     return node;
   }
 
+
   render() {
     let start = this.issetNode('start');
     let finish = this.issetNode('return');
@@ -78,7 +79,8 @@ class WidgetsPanel extends React.Component {
             {this.props.nodeState.map(item => {
               if (item.name === "start" && start) {
                 return (
-                  <div className="customizer-widget" key={item.name} onDragStart={(event) => this.onDragStart( event, item.name )} draggable>
+                  <div className="customizer-widget" key={item.name}
+                       onDragStart={(event) => this.onDragStart(event, item.name)} draggable>
                     <item.icon/>
                     <p>{item.title}</p>
                   </div>

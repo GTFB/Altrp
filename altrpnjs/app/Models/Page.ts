@@ -713,4 +713,6 @@ export default class Page extends BaseModel {
     let data = JSON.parse(template.data);
     this._extractElementsNames(data, elementNames, false);
   }
+
+
 }
