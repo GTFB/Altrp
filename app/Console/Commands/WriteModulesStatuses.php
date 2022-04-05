@@ -51,7 +51,7 @@ class WriteModulesStatuses extends Command
             $enabled = $plugin->enabled ? 'true' : 'false';
             $content .= '    "' . $plugin->name . '": ' . $enabled . ',' . PHP_EOL;
         }
-        $result = file_put_contents($modulesStatusesFile, '{' . PHP_EOL . trim($content, "," . PHP_EOL) . PHP_EOL . '}');
+        $result = file_put_contents($modulesStatusesFile, '{}');
         if ($result)
             $this->info('Modules statuses write successfully!');
     }
