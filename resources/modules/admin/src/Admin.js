@@ -55,7 +55,7 @@ import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 import {io} from "socket.io-client";
-import {editModels} from "./js/store/routes-state/action";
+import {addRoute, editModels} from "./js/store/routes-state/action";
 
 
 window.React = React;
@@ -73,6 +73,7 @@ class Admin extends Component {
       activeButton: 0,
       menu: true,
     };
+    window.altrpAdmin = this
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
@@ -558,7 +559,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
   return {
     setUserData: user => dispatch(setUserData(user)),
-    getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue))
+    getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue)),
+    addRoute: route => dispatch(addRoute(route)),
   }
 };
 
