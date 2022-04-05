@@ -5,7 +5,7 @@ export default function renderInputGallery(settings, device, ) {
 
   // const deleteText = getResponsiveSetting(settings, 'delete', device, '')
   return `
-    <div className="input-gallery-wrapper">
+    <div class="input-gallery-wrapper">
       <label class="bp3-file-input bp3-file-input_preview input-gallery__item" style="background-image: ${backgroundImageUrl}">
         <input name="[]" multiple="" type="file">
           <span class="bp3-file-upload-input">
