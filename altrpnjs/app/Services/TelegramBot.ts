@@ -12,13 +12,13 @@ export class TelegramBot {
     if(this.token) this.run()
   }
 
-  start(ctx) {
-    // for command /start
-  }
-
-  help(ctx) {
-    // for command /help
-  }
+  // start(ctx) {
+  //   // for command /start
+  // }
+  //
+  // help(ctx) {
+  //   // for command /help
+  // }
 
   run() {
     this.bot = new Telegraf(this.token)

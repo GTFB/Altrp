@@ -13328,6 +13328,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "getFormId",
     value: function getFormId() {
+      var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var formId = this.getProperty('form_id');
 
       if (!formId) {
@@ -13335,7 +13336,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
       }
 
       if (formId.indexOf('{{') !== -1) {
-        formId = replaceContentWithData(formId, this.getCurrentModel().getData());
+        formId = replaceContentWithData(formId, _objectSpread(_objectSpread({}, this.getCurrentModel().getData()), item));
       }
 
       return formId;
@@ -13949,17 +13950,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                             }
 
                             url = _this2.getProperty('form_url');
+
+                            if (!_.isObject(item)) {
+                              item = {
+                                id: item
+                              };
+                            }
+
                             url = replaceContentWithData(url, item);
                             form = formsManager.registerForm(_this2.getFormId() + idx, '', _this2.getProperty('form_method'), {
                               customRoute: url
                             });
-                            _context5.next = 6;
-                            return form.submit('', '', data, customHeaders);
+                            return _context5.abrupt("return", form.submit('', '', data, customHeaders));
 
                           case 6:
-                            return _context5.abrupt("return", _context5.sent);
-
-                          case 7:
                           case "end":
                             return _context5.stop();
                         }
@@ -14078,23 +14082,28 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
     key: "doActionRedirect",
     value: function () {
       var _doActionRedirect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee7() {
-        var URL, innerRedirect;
+        var history, URL, innerRedirect;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
+                history = window.history;
                 URL = this.getFormURL();
 
                 if (URL) {
-                  _context7.next = 3;
+                  _context7.next = 5;
                   break;
+                }
+
+                if (this.getProperty('back')) {
+                  history.back();
                 }
 
                 return _context7.abrupt("return", {
                   success: true
                 });
 
-              case 3:
+              case 5:
                 if (window.frontAppRouter) {
                   if (this.getProperty('back')) {
                     frontAppRouter.history.goBack();
@@ -14119,7 +14128,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: true
                 });
 
-              case 5:
+              case 7:
               case "end":
                 return _context7.stop();
             }

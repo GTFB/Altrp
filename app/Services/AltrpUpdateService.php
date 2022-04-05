@@ -237,6 +237,11 @@ class AltrpUpdateService
     $exitCode = Artisan::call( 'view:clear' );
     sleep( 1 );
     Artisan::call( 'storage:link' );
+    if (file_exists(base_path('/bootstrap/cache/'))) {
+      foreach (glob('/bootstrap/cache/*') as $file) {
+        unlink($file);
+      }
+    }
     File::delete( File::glob( storage_path( 'logs' ) . DIRECTORY_SEPARATOR . 'laravel*.log' ) );
   }
 
