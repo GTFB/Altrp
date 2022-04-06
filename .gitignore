@@ -80,3 +80,4 @@ dhparam.pem
 /AltrpObservers/
 /Controllers/
 /Entities/
+/test.js
