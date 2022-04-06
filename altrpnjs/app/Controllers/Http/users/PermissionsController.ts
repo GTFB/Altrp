@@ -18,8 +18,15 @@ export default class PermissionsController {
 
     const params = request.qs();
     const page = parseInt(params.page) || 1
+    const searchWord = params.s
+    let permissions
 
-    const permissions = await Permission.query().paginate(page, 20)
+    if (searchWord) {
+      permissions = await Permission.query().where('name', 'LIKE', `%${searchWord}%`).paginate(page, 20)
+    } else {
+      permissions = await Permission.query().paginate(page, 20)
+    }
+
 
     return {
       count: permissions.getMeta().total,
