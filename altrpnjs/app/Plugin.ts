@@ -73,9 +73,25 @@ export default class Plugin {
   }
 
   public name: string
+  public title: string
+  public tags: string
+  public logo: string
+  public enabled: boolean
+  public description: string
+  public version: string
+  public check_version_url: string
+  public update_url: string
 
   constructor({name}: { name: string }) {
     this.name = name
+    this.title = this.getTitleAttribute
+    this.tags = this.getTagsAttribute
+    this.logo = this.getLogoAttribute
+    this.enabled = this.getEnabledAttribute
+    this.description = this.getDescriptionAttribute
+    this.version = this.getVersionAttribute
+    this.check_version_url = this.getCheckVersionUrlAttribute
+    this.update_url = this.getUpdateUrlAttribute
   }
 
   public static async switchEnable(pluginName: string, enable: boolean) {
@@ -98,12 +114,12 @@ export default class Plugin {
       enabledPlugins = enabledPlugins.filter((_plugin) => {
         return _plugin != plugin.name
       })
-      plugin.removeStaticsFromAltrpMeta()
+      //plugin.removeStaticsFromAltrpMeta()
     }
     enabledPlugins = enabledPlugins.join(',')
-    await updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
+    //await updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
     // Artisan.call('cache:clear')todo: сбросить кэш для данных из .env
-    Plugin.updateAltrpPluginLists()
+    //Plugin.updateAltrpPluginLists()
   }
 
   /**
@@ -168,31 +184,32 @@ export default class Plugin {
     this.deletePluginFiles()
   }
 
-  public get title() {
+  public get getTitleAttribute() {
     return this.getMeta('title')
   }
 
-  public get check_version_url() {
+  public get getCheckVersionUrlAttribute() {
     return this.getMeta('check_version_url')
   }
 
-  public get update_url() {
+  public get getUpdateUrlAttribute() {
     return this.getMeta('update_url')
   }
 
-  public get version() {
+  public get getVersionAttribute() {
     return this.getMeta('version')
   }
 
-  public get logo(): string {
+  //public get logo(): string {
+  public get getLogoAttribute(): string {
     return '/altrp-plugins/' + this.name + this.getMeta('logo', '/public/logo.png')
   }
 
-  public get description() {
+  public get getDescriptionAttribute() {
     return this.getMeta('description', '')
   }
 
-  public get tags() {
+  public get getTagsAttribute() {
     let tags = this.getMeta('tags', '')
     if (!tags) {
       return []
@@ -208,6 +225,7 @@ export default class Plugin {
     if (!this.name) {
       throw  new NotFoundException('Plugin Name not Found', 404, NotFoundException.code)
     }
+    //console.log('AltrpPlugins/' + this.name + path)
     return app_path('AltrpPlugins/' + this.name + path)
   }
 
@@ -241,7 +259,7 @@ export default class Plugin {
   /**
    * @return bool
    */
-  public get enabled(): boolean {
+  public get getEnabledAttribute(): boolean {
     return Plugin.pluginEnabled(this.name)
   }
 
