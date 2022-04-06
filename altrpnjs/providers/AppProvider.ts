@@ -17,8 +17,6 @@ export default class AppProvider {
     Hash.extend('altrpHasher', () => {
       return new AltrpHashDriver()
     })
-
-
   }
 
   public async ready () {

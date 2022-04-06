@@ -1,7 +1,14 @@
 const empty = __importDefault(require("../../helpers/empty"));
+{{{imports}}}
 
 function {{{listener}}}(type, data) {
+   const functions = {{{content}}}
 
+  for(const fnString of functions) {
+      const fn = new Function(fnString.trim())()
+
+      fn(data, type)
+   }
 }
 
-export default {{{listener}}}
+module.exports = {{{listener}}}

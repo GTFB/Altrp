@@ -1,7 +1,14 @@
 import empty from "../../helpers/empty"
+{{{imports}}}
 
 function {{{listener}}}(type, data) {
+  const functions = {{{content}}}
 
+   for(let fnString of functions) {
+      const fn = new Function("return " + fnString)()
+
+      fn(data, type)
+   }
 }
 
 export default {{{listener}}}

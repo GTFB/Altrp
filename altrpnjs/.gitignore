@@ -14,6 +14,7 @@ app/AltrpModels/
 app/AltrpControllers/
 app/AltrpPlugins/
 app/AltrpListeners/
+app/AltrpOther/
 start/altrp-routes/
 /resources/views/altrp
 

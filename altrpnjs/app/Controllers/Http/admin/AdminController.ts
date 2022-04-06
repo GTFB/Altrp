@@ -11,6 +11,7 @@ import Template from "App/Models/Template";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import PageGenerator from "App/Generators/PageGenerator";
 import Page from "App/Models/Page";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class AdminController {
 
@@ -24,6 +25,9 @@ export default class AdminController {
     const controllerGenerator = new ControllerGenerator()
     const templateGenerator = new TemplateGenerator()
     const pageGenerator = new PageGenerator()
+    const listenerGenerator = new ListenerGenerator()
+
+    await listenerGenerator.hookTemplates()
 
     for (let model of models){
       if(model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media'){

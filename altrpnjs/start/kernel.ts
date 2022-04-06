@@ -14,6 +14,20 @@ import Route from "@ioc:Adonis/Core/Route"
 import './view'
 import './events'
 import "../app/Services/TelegramBot"
+import {other} from "App/Services/Other";
+import _ from "lodash";
+import Customizer from "App/Models/Customizer";
+import Timer from "App/Services/Timer";
+
+const timers = other.get("timers", {});
+
+for (const key of _.keys(timers)) {
+  Customizer.query().where("name", key).preload("altrp_model").first().then((customizer) => {
+    if(customizer) {
+      new Timer(key, timers[key], customizer)
+    }
+  });
+}
 
 /*
 |--------------------------------------------------------------------------

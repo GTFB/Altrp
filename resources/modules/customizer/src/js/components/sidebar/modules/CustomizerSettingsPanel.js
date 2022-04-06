@@ -121,6 +121,8 @@ class CustomizerSettingsPanel extends React.Component {
     const {type, model_id, settings = {}} = customizer
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
+    const time = settings?.time || "";
+    const time_type = settings?.time_type || "none";
 
     let Url = ''
     if (this.props.customizer.source !== null) {
@@ -243,6 +245,42 @@ class CustomizerSettingsPanel extends React.Component {
                       </div>
                       <input value={Url} readOnly={true} className="url-text"/>
                     </div>
+                    <div className="Customizer-time">
+                      <AltrpSelect id="time-type-fields"
+                                   className="controller-field"
+                                   isMulti={false}
+                                   value={time_type}
+                                   onChange={this.changeTimeType}
+                                   options={[
+                                     {
+                                       value: '',
+                                       label: 'None',
+                                     },
+                                     {
+                                       value: 'hour',
+                                       label: 'Hour',
+                                     },
+                                     {
+                                       value: 'day',
+                                       label: 'Day',
+                                     },
+                                     {
+                                       value: 'week',
+                                       label: 'Week',
+                                     },
+                                   ]}
+                      />
+                      {
+                        time_type !== "none" ? (
+                          <InputGroup className="form-control-blueprint customizer-time-input"
+                                      type="number"
+                                      id="customizer-time"
+                                      value={time}
+                                      onChange={this.changeTime}
+                          />
+                        ) : ""
+                      }
+                    </div>
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
 
@@ -265,6 +303,22 @@ class CustomizerSettingsPanel extends React.Component {
   changeType = (e)=> {
     let {customizer} = this.props;
     customizer = mutate.set(customizer, 'type', e.value||'')
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+  }
+  changeTimeType = (e)=> {
+    let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
+    customizer = mutate.set(customizer, 'settings.time_type', e.value||'')
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+  }
+  changeTime = (e)=> {
+    let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
+    customizer = mutate.set(customizer, 'settings.time', e.target.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   }
   changeModel = (e)=>{
