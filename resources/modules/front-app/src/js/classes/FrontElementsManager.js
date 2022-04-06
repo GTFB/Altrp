@@ -1,11 +1,11 @@
-import AppStore from "./../../js/store/store"
+import {defaultState} from "../store/front-elements-store/defaultState";
 
 
 class FrontElementsManager {
   constructor() {
     this.components = {};
     //список компонентов
-    this.ELEMENTS = AppStore.getState().frontElementsState.frontElements
+    this.ELEMENTS = defaultState
   }
 
   /**
