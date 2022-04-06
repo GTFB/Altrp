@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Font from 'App/Models/Font';
 import validGuid from '../../../../helpers/validGuid';
 import guid from "../../../../helpers/guid";
+import _ from "lodash";
 
 export default class FontsController {
 
@@ -109,7 +110,7 @@ export default class FontsController {
     const result = await fonts.select('altrp_fonts.*')
 
     return response.json({
-      'success': 
+      'success':
         true,
       'data':
       result,

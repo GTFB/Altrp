@@ -68,7 +68,7 @@ class AddNewFont extends Component {
 
     addNewFont = async (newFont) => {
         let meta = await AltrpMeta.getMetaByName("custom_fonts")
-        let fonts = this.props.metaValue
+        let fonts = (this.props.metaValue !== '') ? this.props.metaValue : null
         if (fonts === null) {
             fonts = []
         }
@@ -271,7 +271,13 @@ class AddNewFont extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    metaValue: state.customFonts.metaValue
+  }
+}
+
 export default compose(
-    connect(null, { getCustomFonts }),
+    connect(mapStateToProps, { getCustomFonts }),
     withRouter
 )(AddNewFont);

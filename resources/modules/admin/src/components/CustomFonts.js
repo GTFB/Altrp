@@ -9,9 +9,10 @@ class CustomFonts extends React.Component {
     state = {}
 
     deleteFont = async (id) => {
-        let fonts = this.props.metaValue
+        let metaValueArray = (this.props.metaValue !== '') ? this.props.metaValue : null
+        let fonts = metaValueArray
         const currentFontId = id
-        const indexCurrentFont = this.props.metaValue.findIndex(item => item.id == currentFontId)
+        const indexCurrentFont = metaValueArray.findIndex(item => item.id == currentFontId)
         fonts.splice(indexCurrentFont, 1)
         let meta = await AltrpMeta.getMetaByName("custom_fonts")
         meta.setMetaValue(fonts)
@@ -22,11 +23,12 @@ class CustomFonts extends React.Component {
     }
 
     render() {
+        let metaValueArray = (this.props.metaValue !== '') ? this.props.metaValue : null
         let fonts = null;
         let fontsCount = null;
-        if (this.props.metaValue) {
-            fontsCount = this.props.metaValue.length
-            fonts = this.props.metaValue.map(f => (
+        if (metaValueArray) {
+            fontsCount = metaValueArray.length
+            fonts = metaValueArray.map(f => (
                 <tr key={f.id} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                     <td className="custom-fonts__table-check">
                         <input type="checkbox" />
@@ -130,6 +132,12 @@ class CustomFonts extends React.Component {
     }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    metaValue: state.customFonts.metaValue
+  }
+}
+
 export default compose(
-    connect(null, { getCustomFonts })
+    connect(mapStateToProps, { getCustomFonts })
 )(CustomFonts);

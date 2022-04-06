@@ -106,7 +106,8 @@ class AddPage extends Component {
       categoryOptions: data
     }))
 
-    let models_res = await this.model_resource.getAll();
+    let [ getModels ] = await this.model_resource.getAll();
+    const models_res = getModels.options
     if (this.props.modelsState) {
       this.setState(state => {
         return {
@@ -924,7 +925,8 @@ class AddPage extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    standardModels: state.modelsState.standardModels
+    standardModels: state.modelsState.standardModels,
+    modelsState: state.modelsState.toggleModels,
   }
 }
 

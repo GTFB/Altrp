@@ -4,14 +4,12 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
   Link
 } from "react-router-dom";
 import { hot } from "react-hot-loader";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 
-import TemplateSvg from "./svgs/templates.svg";
 import Bars from "./svgs/bars-v2.svg";
 import AssetSvg from "./svgs/assets-v2.svg";
 import MainSvg from "./svgs/main-v2.svg";
@@ -28,52 +26,12 @@ import MarketPlace from "./svgs/marketplace.svg"
 import ChevronMenu from "./svgs/chevron__menu.svg"
 
 import AdminLogo from "./components/AdminLogo";
-import AllPages from "./components/AllPages";
-import AdminSettings from "./components/AdminSettings";
-import Users from "./components/users/Users";
-import Notifications from "./components/users/Notifications/Notifications";
-import EditNotification from "./components/users/Notifications/EditNotification";
-import AddUserPage from "./components/users/AddUserPage";
-import UserPage from "./components/users/UserPage";
-import UsersTools from "./components/users/UsersTools";
-import Assets from "./components/Assets";
-import Dashboard from "./components/Dashboard";
-import Plugins from "./components/Plugins";
-import Reports from "./components/Reports";
-import Tables from "./components/Tables";
-import Templates from "./components/Templates";
-import Robots from "./components/Robots";
 import AdminModal from "./components/AdminModal";
-import AddPage from "./components/AddPage";
-import AddReport from "./components/AddReport";
-import UserTopPanel from "./components/UserTopPanel";
-import Models from "./components/Models";
-import EditModel from "./components/models/EditModel";
-import EditField from "./components/models/EditField";
-import AddRelation from "./components/models/AddRelation";
-import AddAccessor from "./components/models/AddAccessor";
-import AddDataSource from "./components/models/AddDataSource";
-import SQLBuilder from "./components/SQLBuilder";
-import SqlEditor from "./components/models/SqlEditor";
-import AccessOptions from "./components/AccessOptions";
-import RolePage from "./components/access/RolePage";
-import PermissionPage from "./components/access/PermissionPage";
-import AddTable from "./components/tables/AddTable";
-import EditTable from "./components/tables/EditTable";
-import SettingTable from "./components/tables/SettingTable";
-import AddMigrationPage from "./components/tables/AddMigrationPage";
 import AdminVersion from "./components/AdminVersion";
-import SQLEditors from "./components/SQLEditors";
-import ColorSchemes from "./components/dashboard/ColorSchemes";
-import ModelPage from "./components/models/ModelPage";
-import { WithRouterAdminAssetsDropList } from "./components/AdminAssetsDropList";
 import { WithRouterAdminTablesDropList } from "./components/AdminTablesDropList";
 import { WithRouterAdminTemplatesDropList } from "./components/AdminTemplatesDropList";
 import { WithRouterAdminUsersDropList } from "./components/AdminUsersDropList";
 import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
-import CustomFonts from "./components/CustomFonts";
-import EditFont from "./components/EditFont";
-import AddNewFont from "./components/AddNewFont";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -92,21 +50,12 @@ import {
   setWebsocketsPort
 } from "./js/store/websockets-storage/actions";
 import AltrpMeta from '../../../modules/editor/src/js/classes/AltrpMeta';
-import Areas from "./components/areas/Areas";
-import AreaAdd from "./components/areas/AreaAdd";
-import AreaEdit from "./components/areas/AreaEdit";
-import MenuPage from "./components/menu-builder/MenuPage";
-import MenusList from "./components/menu-builder/MenusList";
-import Marketplace from "./components/Marketplace";
-import Customizer from "./components/Customizer";
-import ModelsPage from "./components/models/ModelsPage";
 import {modelsToggle} from "./js/store/models-state/actions";
-import AddModel from "./components/models/AddModel";
 import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
-import SearchPlugins from "./components/plugins/SearchPlugins";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 import {io} from "socket.io-client";
+import {addRoute, editModels} from "./js/store/routes-state/action";
 
 
 window.React = React;
@@ -121,10 +70,10 @@ class Admin extends Component {
         adminEnable: true
       },
       pagesMenuShow: false,
-      models: [],
       activeButton: 0,
       menu: true,
     };
+    window.altrpAdmin = this
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
@@ -132,7 +81,7 @@ class Admin extends Component {
     store.subscribe(this.updateAdminState.bind(this));
     new Resource({ route: "/admin/ajax/model_options" })
       .getAll()
-      .then(({ options }) => this.setState({ models: options }));
+      .then(({ options }) => store.dispatch(editModels(options)));
 
     this.getConnect();
     this.getMetaName();
@@ -225,7 +174,7 @@ class Admin extends Component {
   }
 
   render() {
-    const { models } = this.state;
+    const { models } = this.props;
     let adminClasses = ["admin"];
     if (!this.state.adminState.adminEnable) {
       adminClasses.push("pointer-event-none");
@@ -576,192 +525,15 @@ class Admin extends Component {
               </nav>
             )}
             <Switch>
-              <Route path="/admin/reports/add">
-                <AddReport />
-              </Route>
-              <Route path="/admin/" exact>
-                <Redirect to="/admin/dashboard" />
-              </Route>
-              <Route path="/admin/settings">
-                <AdminSettings />
-              </Route>
-              <Route path="/admin/users" exact>
-                <Users />
-              </Route>
-              <Route path="/admin/users/new" exact>
-                <AddUserPage />
-              </Route>
-              <Route path="/admin/users/user/:id" exact>
-                <UserPage />
-              </Route>
-              {/*<Route path="/admin/users/user/:id" exact>*/}
-              {/*  <Notifications />*/}
-              {/*</Route>*/}
-              {/*<Route path="/admin/users/user/:id/notification/:name" exact>*/}
-              {/*  <EditNotification />*/}
-              {/*</Route>*/}
-              {/*<Route path="/admin/users/user/:id/notification/new" exact>*/}
-              {/*  <EditNotification />*/}
-              {/*</Route>*/}
-              <Route path="/admin/tools">
-                <UsersTools />
-              </Route>
-              <Route path="/admin/assets/custom-fonts">
-                <CustomFonts metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
-              </Route>
-              <Route path="/admin/assets/add-new-font">
-                <AddNewFont metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
-              </Route>
-              <Route path="/admin/assets/edit-font/:id?">
-                <EditFont metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
-              </Route>
-              <Route path="/admin/assets">
-                <Assets />
-              </Route>
-              <Route path="/admin/dashboard">
-                <Dashboard />
-              </Route>
-              <Route path="/admin/dashboard/colors">
-                <ColorSchemes />
-              </Route>
-              <Route path="/admin/plugins">
-                <Plugins />
-              </Route>
-              <Route path="/admin/search-plugins">
-                <SearchPlugins />
-              </Route>
-              <Route path="/admin/marketplace">
-                <Marketplace />
-              </Route>
-              <Route path="/admin/reports">
-                <Reports />
-              </Route>
-              <Route path="/admin/tables" exact>
-                <Tables />
-              </Route>
-              <Route path="/admin/tables/edit/:id" component={EditTable} exact>
-                <EditTable />
-              </Route>
-              <Route
-                path="/admin/tables/edit/:id/setting"
-                component={SettingTable}
-                exact
-              />
-              <Route
-                path="/admin/tables/edit/:id/setting/migrations/add"
-                component={AddMigrationPage}
-              />
-              <Route path="/admin/tables/add">
-                <AddTable />
-              </Route>
-              <Route path="/admin/templates">
-                <Templates />
-              </Route>
-              <Route path="/admin/areas/add">
-                <AreaAdd />
-              </Route>
-              <Route path="/admin/areas/:id">
-                <AreaEdit />
-              </Route>
-              <Route path="/admin/areas">
-                <Areas />
-              </Route>
-              <Route path="/admin/menus/:id">
-                <MenuPage />
-              </Route>
-              <Route path="/admin/menus">
-                <MenusList />
-              </Route>
-              <Route path="/admin/robots">
-                <Robots />
-              </Route>
-              <Route path="/admin/customizers">
-                <Customizer />
-              </Route>
-              <Route path="/admin/pages" exact>
-                <AllPages />
-              </Route>
-              <Route path="/admin/pages/edit/:id">
-                <AddPage />
-              </Route>
-              <Route path="/admin/pages/add">
-                <AddPage modelsState={this.props.modelsState} />
-              </Route>
-              <Route path="/admin/tables/models" exact>
-                <Models updateModels={this.updateModels} />
-              </Route>
-              <Route path="/admin/tables/sql_editors" exact>
-                <SQLEditors />
-              </Route>
-              <Route path="/admin/tables/sql_editors/add">
-                <SqlEditor />
-              </Route>
-              <Route path="/admin/tables/sql_editors/edit/:id">
-                <SqlEditor />
-              </Route>
-              <Route path="/admin/tables/models/add">
-                <AddModel updateModels={this.updateModels} />
-              </Route>
-              <Route path="/admin/tables/models/edit/:id" exact>
-                <EditModel updateModels={this.updateModels}/>
-              </Route>
-              <Route path="/admin/tables/models/:modelId/fields/add">
-                <EditField />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/fields/edit/:id">
-                <EditField />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/remote-fields/add">
-                <EditField />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/remote-fields/edit/:id">
-                <EditField />
-              </Route>
-              {/*<Route path="/admin/tables/models/:modelId/relations/add">*/}
-              {/*  <AddRelation />*/}
-              {/*</Route>*/}
-              {/*<Route path="/admin/tables/models/:modelId/relations/edit/:id">*/}
-              {/*  <AddRelation />*/}
-              {/*</Route>*/}
-              <Route path="/admin/tables/models/:modelId/accessors/add">
-                <AddAccessor />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/accessors/edit/:id">
-                <AddAccessor />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/queries/add">
-                <SQLBuilder />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/queries/edit/:id">
-                <SQLBuilder />
-              </Route>
-              <Route path="/admin/tables/data-sources/add">
-                <AddDataSource />
-              </Route>
-              <Route path="/admin/tables/data-sources/edit/:id">
-                <AddDataSource />
-              </Route>
-              <Route path="/admin/access/roles/add">
-                <RolePage />
-              </Route>
-              <Route path="/admin/access/roles/edit/:id">
-                <RolePage />
-              </Route>
-              <Route path="/admin/access/permissions/add">
-                <PermissionPage />
-              </Route>
-              <Route path="/admin/access/permissions/edit/:id">
-                <PermissionPage />
-              </Route>
-              <Route path="/admin/access">
-                <AccessOptions />
-              </Route>
-              <Route path="/admin/databases">
-                <ModelsPage />
-              </Route>
-              <Route path="/admin/database/:id">
-                <ModelPage />
-              </Route>
+              {
+                this.props.routes.map(route => {
+                   return (
+                     <Route key={route.path} path={route.path} exact={route.exact}>
+                       {route.component}
+                     </Route>
+                   )
+                })
+              }
             </Switch>
           </Router>
         </div>
@@ -779,14 +551,16 @@ let _export;
 const mapStateToProps = (state) => {
   return {
     metaValue: state.customFonts.metaValue,
-    modelsState: state.modelsState.toggleModels
+    routes: state.routesState.routes,
+    models: state.routesState.models
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     setUserData: user => dispatch(setUserData(user)),
-    getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue))
+    getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue)),
+    addRoute: route => dispatch(addRoute(route)),
   }
 };
 

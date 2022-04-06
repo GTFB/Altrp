@@ -13,7 +13,7 @@ export default function AltrpImage(props: any, device: string) {
     } else {
       src = `scr="/img/nullImage.png"`
     }
-    return `<img width="${props.width}" height="${props.height}" ${src}/>`
+    return `<img class="altrp-image" width="${props.width}" height="${props.height}" ${src}/>`
   }
 
 
