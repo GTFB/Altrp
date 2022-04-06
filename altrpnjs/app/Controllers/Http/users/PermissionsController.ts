@@ -22,7 +22,7 @@ export default class PermissionsController {
     let permissions
 
     if (searchWord) {
-      permissions = await Permission.query().where('name', 'LIKE', `%${searchWord}%`).paginate(page, 20)
+      permissions = await Permission.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('display_name', 'LIKE', `%${searchWord}%`).paginate(page, 20)
     } else {
       permissions = await Permission.query().paginate(page, 20)
     }
