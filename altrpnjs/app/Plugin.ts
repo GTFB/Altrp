@@ -7,6 +7,7 @@ import public_path from '../helpers/public_path'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import app_path from '../helpers/app_path'
 import fs from 'fs-extra'
+import envWriter from '../helpers/envWriter'
 import * as _ from 'lodash'
 import is_null from "../helpers/is_null";
 import data_get from "../helpers/data_get";
@@ -105,8 +106,9 @@ export default class Plugin {
       enabledPlugins = enabledPlugins.split(',')
     }
     const plugin = new Plugin({name: pluginName})
+
     if (enable) {
-      await plugin.updatePluginSettings()
+      //await plugin.updatePluginSettings()
       if (enabledPlugins.indexOf(plugin.name) === -1) {
         enabledPlugins.push(plugin.name)
       }
@@ -115,11 +117,18 @@ export default class Plugin {
         return _plugin != plugin.name
       })
       //plugin.removeStaticsFromAltrpMeta()
-    }
+    }   
     enabledPlugins = enabledPlugins.join(',')
-    //await updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
+    envWriter([
+      {
+        key: Plugin.ALTRP_PLUGINS,
+        value: enabledPlugins.length === 0 ? '' : enabledPlugins,
+      }
+    ]);
+
+    //updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
     // Artisan.call('cache:clear')todo: сбросить кэш для данных из .env
-    //Plugin.updateAltrpPluginLists()
+    Plugin.updateAltrpPluginLists()
   }
 
   /**
@@ -138,7 +147,14 @@ export default class Plugin {
       }
     )
     new_widget_list = new_widget_list.join(',')
-    await updateDotenv({[Plugin.ALTRP_PLUGINS_WIDGET_LIST]: new_widget_list})
+    //await updateDotenv({[Plugin.ALTRP_PLUGINS_WIDGET_LIST]: new_widget_list})
+    envWriter([
+      {
+        key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
+        value: new_widget_list.length === 0 ? '' : new_widget_list,
+      }
+    ]);
+
   }
 
   static async getEnabledPlugins(): Promise<Plugin[]> {
@@ -156,8 +172,8 @@ export default class Plugin {
     enabledPlugins = _.uniqBy(enabledPlugins, (plugin) => {
       return plugin.name
     })
-    await updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins.map(plugin => plugin.name).join(',')})
-
+    //await updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins.map(plugin => plugin.name).join(',')})
+    //console.log(enabledPlugins)
     return enabledPlugins
   }
 
