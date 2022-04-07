@@ -128,7 +128,7 @@ export default class Plugin {
 
     //updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
     // Artisan.call('cache:clear')todo: сбросить кэш для данных из .env
-    Plugin.updateAltrpPluginLists()
+    //Plugin.updateAltrpPluginLists()
   }
 
   /**
