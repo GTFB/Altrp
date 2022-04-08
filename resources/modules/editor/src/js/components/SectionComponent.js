@@ -130,7 +130,7 @@ class SectionComponent extends Component {
       sectionClasses.push("altrp-pointer");
     }
     if (background_image.url || background_image_hover /*  && !isScrollEffect */) {
-      sectionBackground.push("altrp-background-image");
+      sectionBackground.push("altrp-background-image" + this.props.element.getId());
     }
 
     if (widthType === "boxed" && !isFixed) {
