@@ -13,7 +13,7 @@ import {
   hasOne,
   HasOne,
   computed,
-  afterCreate, beforeDelete
+  afterCreate, beforeDelete, beforeUpdate
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from "uuid";
 
@@ -176,10 +176,12 @@ export default class User extends BaseModel {
   public async can(value: Permission|number|number[]|Permission[]): Promise<boolean> {
 
     if(!(value instanceof Array)) {
+      //@ts-ignore
       value = [value]
     }
     let finalOut = true
 
+    //@ts-ignore
     for (let valueKey in value) {
       const userPermission = await this.hasPermission(value[valueKey])
 

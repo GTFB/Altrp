@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.0.5
+* Fix Sidebars Actions
+
 ### 1.0.4
 * Add Nodes to Visual Codes:
   - Document

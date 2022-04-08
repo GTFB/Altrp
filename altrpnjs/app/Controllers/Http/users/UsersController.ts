@@ -91,24 +91,30 @@ export default class UsersController {
     const data = request.body();
 
     if(user) {
-      keys(data).forEach((input) => {
+      await Promise.all(keys(data).map(async (input) => {
         if(input === "_permissions") {
           const permissions = user.related("permissions");
-          if(data._permissions) {
-            permissions.detach()
-            if(data._permissions.length > 0) {
-              permissions.sync(data._permissions, false)
-            }
-
+          permissions.detach()
+          if(data._permissions ) {
+            for(const permission of data._permissions)
+              await permissions.attach({
+                [permission]: {
+                  user_type: 'App\\User'
+                }
+              })
           }
         }
         if(input === "_roles") {
           const roles = user.related("roles");
-          if(data._roles) {
-            roles.detach()
-            if(data._roles.length > 0) {
-              roles.sync(data._roles, false)
-            }
+          roles.detach()
+
+          if(data._roles ) {
+            for(const role of data._roles)
+              await roles.attach({
+                [role]: {
+                  user_type: 'App\\User'
+                }
+              })
           }
         }
 
@@ -122,15 +128,12 @@ export default class UsersController {
 
           user[input] = data[input];
         }
-      })
+      }))
 
-      if(!await user.save()) {
-        response.status(500)
-        return {
-          message: "User not updated"
-        }
+      if(data.password && data.password_confirmation && (data.password_confirmation === data.password)){
+        user.password = data.password
       }
-
+      await user.save()
       return user.serialize()
     } else {
       response.status(404)
