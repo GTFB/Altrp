@@ -13,9 +13,13 @@ export default class PluginController {
    */
   public async switch({request, response}: HttpContextContract) {
 
-    await Plugin.switchEnable(request.qs().name, !!request.qs().value)
+    let data = request.all()
+    //await Plugin.switchEnable(request.qs().name, !!request.qs().value)
+    await Plugin.switchEnable(data.name, data.value)
 
-    let plugin = new Plugin({'name': request.qs().name})
+    //let plugin = new Plugin({'name': request.qs().name})
+    let plugin = new Plugin({'name': data.name})
+
     return response.json({'success': true, 'data': plugin})
   }
 

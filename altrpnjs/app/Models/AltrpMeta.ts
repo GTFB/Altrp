@@ -15,4 +15,13 @@ export default class AltrpMeta extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  static async getGlobalStyles(){
+    let meta = await AltrpMeta.query().where('meta_name', 'global_styles').first()
+    if (!meta) {
+      return {}
+    }
+    return meta.meta_value
+  }
+
 }

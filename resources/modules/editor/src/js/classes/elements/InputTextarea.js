@@ -76,7 +76,7 @@ class InputTextarea extends BaseElement {
           label: "Vertical",
           value: "vertical"
         }
-      ]
+      ],
     });
 
     const optionsRepeater = new Repeater();
@@ -98,7 +98,8 @@ class InputTextarea extends BaseElement {
 
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
+      locked: true,
     });
 
     this.addControl("content_label_position_type", {
@@ -126,12 +127,14 @@ class InputTextarea extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon"
+      label: "Label Icon",
+      locked: true,
     });
 
     this.addControl("label_icon_position", {
@@ -161,17 +164,19 @@ class InputTextarea extends BaseElement {
     this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
-      default: "Placeholder"
+      locked: true,
     });
 
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
-      label: "Required"
+      label: "Required",
+      locked: true,
     });
 
     this.addControl("content_readonly", {
       type: CONTROLLER_SWITCHER,
-      label: "Readonly"
+      label: "Readonly",
+      locked: true,
     });
 
     this.addControl("content_timestamp", {
@@ -188,8 +193,8 @@ class InputTextarea extends BaseElement {
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+      description: "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+      locked: true,
     });
 
     this.endControlSection();
@@ -214,7 +219,8 @@ class InputTextarea extends BaseElement {
       description: "/ajax/models/tests",
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_label", {
@@ -223,7 +229,8 @@ class InputTextarea extends BaseElement {
       responsive: false,
       conditions: {
         create_allowed: true
-      }
+      },
+      locked: true,
     });
 
     this.addControl("create_data", {
@@ -232,8 +239,8 @@ class InputTextarea extends BaseElement {
       conditions: {
         create_allowed: true
       },
-      description:
-        'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
+      description: 'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+      locked: true,
     });
 
     this.endControlSection();
@@ -325,6 +332,18 @@ class InputTextarea extends BaseElement {
       label: "Label"
     });
 
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "%",
+        size: null
+      },
+      units: ["%", "px", "vw"],
+      max: 100,
+      min: 0
+    });
+
     this.addControl("label_style_spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
@@ -335,16 +354,7 @@ class InputTextarea extends BaseElement {
       units: ["px", "%", "vh"],
       max: 60,
       min: 0,
-
-    });
-
-    this.addControl("label_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
+      locked: true,
     });
 
     this.addControl("label_padding", {
@@ -354,6 +364,15 @@ class InputTextarea extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
+    });
+
+    this.addControl("label_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
     });
 
     this.addControl("label_style_font_color", {
@@ -408,14 +427,10 @@ class InputTextarea extends BaseElement {
       // }
     });
 
-    this.addControl("label_width", {
+    this.addControl("icon_size", {
       type: CONTROLLER_SLIDER,
-      label: "Label Width",
-      default: {
-        unit: "%",
-        size: null
-      },
-      units: ["%", "px", "vw"],
+      label: "Icon Size",
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 0
     });
@@ -428,7 +443,7 @@ class InputTextarea extends BaseElement {
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon color"
+      label: "Icon Color"
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -440,14 +455,6 @@ class InputTextarea extends BaseElement {
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
-    });
-
-    this.addControl("icon_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Icon Size",
-      units: ["px", "%", "vh", "vw"],
-      max: 100,
-      min: 0
     });
 
     this.addControl("cross_color", {
@@ -481,30 +488,9 @@ class InputTextarea extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("font_style_section", {
-      tab: TAB_STYLE,
-      label: "Font"
-    });
-
-    this.addControl("field_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.addControl("field_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
-    this.endControlSection();
-
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: "Input Position",
     });
 
     this.addControl("field_width", {
@@ -560,12 +546,35 @@ class InputTextarea extends BaseElement {
 
     this.addControl("position_css_id", {
       type: CONTROLLER_TEXT,
-      label: "CSS ID"
+      label: "CSS ID",
+      locked: true,
     });
 
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
-      label: "CSS Classes"
+      label: "CSS Classes",
+      locked: true,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("font_style_section", {
+      tab: TAB_STYLE,
+      label: "Font"
+    });
+
+    this.addControl("field_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic"
+    });
+
+    this.addControl("field_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      }
     });
 
     this.endControlSection();
@@ -577,7 +586,7 @@ class InputTextarea extends BaseElement {
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color"
+      label: "Font Color"
     });
 
     this.addControl("placeholder_style_font_typographic", {
@@ -608,13 +617,6 @@ class InputTextarea extends BaseElement {
         family: "Open Sans",
         decoration: ""
       }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("overlay_section", {
-      tab: TAB_STYLE,
-      label: "Overlay"
     });
 
     this.endControlSection();
@@ -709,44 +711,6 @@ class InputTextarea extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("transform_section", {
-      tab: TAB_STYLE,
-      label: "Transform"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("radio_checkbox_styles", {
-      tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
-    });
-
-    this.addControl("input_position", {
-      label: "Position",
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          label: "Left",
-          value: "row"
-        },
-        {
-          label: "Top",
-          value: "column"
-        },
-        {
-          label: "Right",
-          value: "row-reverse"
-        },
-        {
-          label: "Bottom",
-          value: "column-reverse"
-        }
-      ],
-      default: "left"
     });
 
     this.endControlSection();

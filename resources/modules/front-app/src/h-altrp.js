@@ -1,3 +1,5 @@
+import documentCheckEvents from "./js/helpers/documentCheckEvents";
+
 console.log('FIRST SCRIPT: ', performance.now());
 import loadPageActions from "./js/functions/actions/load-page-actions";
 import loadDepends from "./js/functions/load-depends";
@@ -6,8 +8,8 @@ import  queryString from 'query-string';
 import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
-window.Link = 'a';
 
+window.Link = 'a';
 
 function loadDatastorageUpdater(){
   import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
@@ -15,80 +17,86 @@ function loadDatastorageUpdater(){
     dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
   });
 }
-
-/**
- * Рендерим главный компонент после загрузки основных модулей
- */
-window.loadingCallback = function loadingCallback() {
-  loadPageActions()
-  if (window.React
-    && window.Component
-    && window.ReactDOM
-    && window.frontElementsFabric
-    && window.frontElementsManager
-    && window.frontElementsManager.componentsIsLoaded()
-    && window.elementDecorator
-    && window.ElementWrapper
-    // && window.formsManager
-    && window.altrpHelpers
-    && window.altrpHelpers.replaceContentWithData
-    && window.appStore
-    && window._
-    /**
-     * Проверим подгрузку необходимых библиотек
-     */
-    && (window.altrpElementsLists &&
-      (window.libsToLoad.length
-        === window.libsLoaded.length))
-  ) {
-    console.log('h-altrp LOADED: ', performance.now());
-
-    const hAltrpLoadedEvent = new Event('h-altrp-loaded');
-    window.dispatchEvent(hAltrpLoadedEvent);
-
-    /**
-     * Загружаем все действия привязанные к загрузке страницы
-     */
-  }
-}
-
-window.sSr = false;
-
-/**
- * Параллельно загружаем все необходимые модули
- */
-
 import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
   window.currentRouterMatch = new window.AltrpModel({
     params:queryString.parseUrl(window.location.href).query
   });
-
   import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
-    console.log('LOAD appStore: ', performance.now());
-    loadingCallback();
     loadDatastorageUpdater();
-    loadFontsManager();
-    loadDepends()
-  });
-
-  import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
-    window.ElementWrapper = module.default;
-    console.log('LOAD SimpleElementWrapper: ', performance.now());
-    loadingCallback();
-  });
-
-  import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
-    window.elementDecorator = module.default;
-    console.log('LOAD elementDecorator: ', performance.now());
-    loadingCallback();
-  });
-  console.log('LOAD altrp: ', performance.now());
+  })
 })
 
+documentCheckEvents(() => {
+  /**
+   * Рендерим главный компонент после загрузки основных модулей
+   */
+  window.loadingCallback = function loadingCallback() {
+    loadPageActions()
+    if (window.React
+      && window.Component
+      && window.ReactDOM
+      && window.frontElementsFabric
+      && window.frontElementsManager
+      && window.frontElementsManager.componentsIsLoaded()
+      && window.elementDecorator
+      && window.ElementWrapper
+      // && window.formsManager
+      && window.altrpHelpers
+      && window.altrpHelpers.replaceContentWithData
+      && window.appStore
+      && window._
+      /**
+       * Проверим подгрузку необходимых библиотек
+       */
+      && (window.altrpElementsLists &&
+        (window.libsToLoad.length
+          === window.libsLoaded.length))
+    ) {
+      console.log('h-altrp LOADED: ', performance.now());
 
-import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
-  console.log('LOAD FormsManager: ', performance.now());
-});
+      const hAltrpLoadedEvent = new Event('h-altrp-loaded');
+      window.dispatchEvent(hAltrpLoadedEvent);
+
+      /**
+       * Загружаем все действия привязанные к загрузке страницы
+       */
+    }
+  }
+
+  window.sSr = false;
+
+  /**
+   * Параллельно загружаем все необходимые модули
+   */
+
+  import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+
+    import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+      console.log('LOAD appStore: ', performance.now());
+      loadingCallback();
+      loadFontsManager();
+      loadDepends()
+    });
+
+    import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
+      window.ElementWrapper = module.default;
+      console.log('LOAD SimpleElementWrapper: ', performance.now());
+      loadingCallback();
+    });
+
+    import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
+      window.elementDecorator = module.default;
+      console.log('LOAD elementDecorator: ', performance.now());
+      loadingCallback();
+    });
+    console.log('LOAD altrp: ', performance.now());
+  })
+
+
+  import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
+    console.log('LOAD FormsManager: ', performance.now());
+  });
+})
 
 window.stylesModulePromise = new Promise(function (resolve) {
   window.stylesModuleResolve = resolve;
@@ -120,17 +128,6 @@ if (process.env.NODE_ENV !== 'production') {
     window._token = _token._token;
   }
 })();
-
-/**
- * Регистрируем сервис-воркеры
- */
-
-let filename = '/front-app.sw.js';
-
-if ('serviceWorker' in navigator) {
-  // Use the window load event to keep the page load performant
-  navigator.serviceWorker.register(filename, {scope: '/'});
-}
 
 /**
  * Изменение скролла для загрузки ленивых изображений

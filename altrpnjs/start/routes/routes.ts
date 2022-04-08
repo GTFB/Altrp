@@ -24,8 +24,10 @@ import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
+import app_path from "../../helpers/app_path";
+import Customizer from "App/Models/Customizer";
+import fs from 'fs'
 // import {UserFactory} from "Database/factories";
-
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
 Route.post("/logout", "IndicesController.logout").name = 'logout'
@@ -38,6 +40,8 @@ Route.post("/sockets", "SocketsController.handle")
 //   return user.can([1, 2]);
 // })
 
+Route.get("sw.js", "IndicesController.serviceWorker")
+
 Route.get("/modules/*", async ({request, response}) => {
   const url = request.url()
 
@@ -45,7 +49,9 @@ Route.get("/modules/*", async ({request, response}) => {
 
   const file = await Drive.get(pathToModules + url)
 
-  switch (url.split(".")[1]) {
+  const splitUrl = url.split(".");
+
+  switch (splitUrl[splitUrl.length - 1]) {
     case "js":
       response.header("Content-Type", "text/javascript")
       break
@@ -57,6 +63,66 @@ Route.get("/modules/*", async ({request, response}) => {
   return file
 })
 
+Route.get("/service-worker-files", async ({}) => {
+
+  const pathToFrontApp = path.join(__dirname, "../", "../", "../", "public", "modules", "front-app");
+
+  let files = fs.readdirSync(pathToFrontApp)
+
+  const variants = [
+    ".js.map",
+    ".txt"
+  ]
+
+  files = files.filter(file => {
+
+    if("node_modules" === file) return false
+
+    for(const variant of variants) {
+      if(file.split(variant).length > 1) {
+        return false
+      }
+    }
+
+    return true
+  })
+  return files
+})
+
+Route.get("/serviceWorker.js", async ({request, response}) => {
+  const url = request.url()
+
+  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+
+  const file = await Drive.get(pathToModules + url)
+
+  response.header("Content-Type", "text/javascript")
+
+  return file
+})
+
+Route.get("/sw/*", async ({request, response}) => {
+  const url = request.url()
+
+  const pathToModules = path.join(__dirname, "../", "../", "../", "public");
+
+  const file = await Drive.get(pathToModules + url)
+
+  const splitUrl = url.split(".");
+
+  switch (splitUrl[splitUrl.length - 1]) {
+    case "js":
+      response.header("Content-Type", "text/javascript")
+      break
+    case "css":
+      response.header("Content-Type", "text/css")
+      break
+  }
+
+  return file
+})
+
+
 Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
   response.header('Content-Type', 'application/javascript')
   let user = auth.user
@@ -65,11 +131,12 @@ Route.get('/data/current-user', async ({response, auth}: HttpContextContract) =>
 window.current_user = ${JSON.stringify({is_guest: true})}
   `);
   }
+  // @ts-ignore
   await user.load('roles')
+  // @ts-ignore
   await user.load('permissions')
-  return response.send(`
-window.current_user = ${JSON.stringify(user.toObject())}
-  `);
+  // @ts-ignore
+  return response.send(`window.current_user = ${JSON.stringify(user.toObject())}`);
 })
 
 Route.group(() => {
@@ -97,9 +164,10 @@ Route.group(() => {
    * роут для обработка кастомных ajax запросов
    */
   Route.any('models/*', async (httpContext: HttpContextContract) => {
-    const segments = httpContext.request.url().split('/')
+    const segments = httpContext.request.url().split('/').filter(segment => segment)
+
     let tableName = segments[2]
-    if (['queries', 'data_sources', 'filters'].indexOf(tableName)) {
+    if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
       tableName = segments[3]
     }
     const table = await Table.query().preload('altrp_model').where('name', tableName).first()
@@ -124,7 +192,8 @@ Route.group(() => {
       })
     }
 
-    const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
+    // const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
+    const controllerName = app_path(`AltrpControllers/${model.name}Controller`)
     try {
       if(isProd()){
         Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
@@ -133,34 +202,43 @@ Route.group(() => {
         : (await import(controllerName)).default
       const controller = new ControllerClass()
       let methodName
+
       if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
         methodName = segments[4]
-      }
-      if (segments[3] === undefined && httpContext.request.method() === 'GET') {
+        const customizer = await Customizer.query().where('name', methodName).first()
+        if( !customizer ){
+          return httpContext.response.status(404).json({
+            success: false,
+            message: 'Customizer Not Found'
+          })
+        }
+
+        if(! customizer.allowMethod(httpContext.request.method())){
+          return httpContext.response.status(405).json({
+            success: false,
+            message: 'Method not Allowed'
+          })
+        }
+      }else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
         methodName = 'index'
-      }
-      if (segments[3] === undefined && httpContext.request.method() === 'POST') {
+      }else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
         methodName = 'store'
-      }
-      if (segments[4] === undefined
+      }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'GET') {
         methodName = 'show'
         httpContext.params[model.name] = Number(segments[3])
-      }
-      if (segments[4] === undefined
+      }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'DELETE') {
         methodName = 'destroy'
         httpContext.params[model.name] = Number(segments[3])
-      }
-      if (segments[4] === undefined
+      }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'PUT') {
         methodName = 'update'
         httpContext.params[model.name] = Number(segments[3])
-      }
-      if (segments[5] === undefined
+      }else if  (segments[5] === undefined
         && Number(segments[3])
         && segments[4]
       ) {

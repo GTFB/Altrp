@@ -35,16 +35,20 @@ export default function InputSliderComponent(settings) {
       ["width", "width", "slider"],
     "}",
       () => {
-        let tr_x = getResponsiveSetting(settings, "tr_x") ;
-        let tr_y = getResponsiveSetting(settings, "tr_y") ;
+        let tr_x = getResponsiveSetting(settings, "tr_x", '', 0) ;
+        let tr_y = getResponsiveSetting(settings, "tr_y", '', 0) ;
         if(! tr_x && ! tr_y){
           return ''
         }
-        return `& .bp3-slider-handle{transform:translate(${tr_x || '0px'},${tr_y || '0px'});}`
+        return `& .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
       },
     "altrp-field-slider-vertical .altrp-field-slider",
       ["height", "length", "slider"],
     "}",
+
+    "altrp-field-slider-wrapper",
+      ['padding', 'slider_padding', 'dimensions'],
+    '}',
 
     "bp3-slider-progress, & .bp3-slider-track",
       ["height", "height", "slider"],

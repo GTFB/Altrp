@@ -11,9 +11,11 @@ var metadata = (this && this.metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const luxon = require("luxon");
 const Orm = global[Symbol.for('ioc.use')]("Adonis/Lucid/Orm");
+const _ = __importStar(require("lodash"));
 {{{imports}}}
 
 class {{{classname}}} extends Orm.BaseModel {
+
   {{{properties}}}
   {{{computed}}}
   {{{relations}}}
@@ -24,5 +26,4 @@ class {{{classname}}} extends Orm.BaseModel {
 }
 {{{staticProperties}}}
 {{{columns}}}
-
 exports.default = {{{classname}}};

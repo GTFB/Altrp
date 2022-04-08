@@ -122,6 +122,22 @@ body {
         border: 3px solid $dark-purple;
     }
 }
+
+// Flow Nodes
+.flow-node-rect {
+  padding: 10px;
+  border-radius: 4px;
+  width: 150px;
+  overflow: hidden;
+  font-size: 12px;
+  color: #222;
+  text-align: center;
+  border: 1px solid $dark-purple;
+  &.selected {
+    border: 3px solid $dark-purple;
+  }
+}
+
 .flow-node-condition {
     display: inline-block;
     width: 150px;

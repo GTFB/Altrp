@@ -1,12 +1,11 @@
-import ReactDOM from "react-dom";
 import React from 'react';
 import {Form, Field} from 'react-final-form';
-import CloseModal from '../svgs/clear_black.svg';
-import ArrowImageDet from '../svgs/arrowImageDet.svg';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import CloseIcon from '@material-ui/icons/Close';
 import AutoSave from './AutoSaveDocumentDetail';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {createGlobalStyle} from "styled-components";
-import Scrollbars from "react-custom-scrollbars";
 
 const GlobalStyle = createGlobalStyle`
   #admin {
@@ -29,7 +28,7 @@ export class ImageDetail extends React.Component {
 
   getAuthorList = (id) => {
     this.props.getAuthorList().then(data => {
-      let author = data.find(item => item.id === id);
+      let author = data.find(item => item.id == id);
       this.setState({
         authorName: author.name,
       })
@@ -55,7 +54,7 @@ export class ImageDetail extends React.Component {
   }
 
   render() {
-    const {authorName, url, created_at, filename, media_type, height, width} = this.state
+    const {authorName, url, created_at, filename, media_type, height, width, filesize, mediaVariation} = this.state
 
     if (!this.props.imageId) return null;
 
@@ -80,26 +79,80 @@ export class ImageDetail extends React.Component {
                   <CloseModal />
                 </button>
               </div>
-            </div>
-            <div className="document-detail__content">
-              <div className="document-detail__display">
-                <img className="document-detail__image" width={width} height={height} src={url} draggable="false" alt=""/>
-                <button className="document-detail__btn document-detail__btn-edit-image">Edit image</button>
-              </div>
-              <div className="document-detail__editing-section">
-                <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
-                  <div className="document-detail__editing-scrolling">
-                    <div className="document-detail__data-wrap">
-                      <ul className="document-detail__data">
-                        <li>Uploaded on: <span className="document-detail__data-result">{created_at}</span></li>
-                        <li>Uploaded by: <span className="document-detail__data-result">{authorName}</span></li>
-                        <li>File name: <span className="document-detail__data-result">{filename}</span></li>
-                        <li>File type: <span className="document-detail__data-result">{media_type}</span></li>
-                        <li>File size: <span className="document-detail__data-result">7 KB</span></li>
-                        <li>Dimensions: <span className="document-detail__data-result">{height} by {width} pixels</span></li>
-                      </ul>
-                    </div>
 
+            </div>
+            <div className="document-detail__editing-section">
+              <div className="document-detail__data-wrap">
+                <ul className="document-detail__data">
+                  <li>Uploaded on: <span className="document-detail__data-result">{created_at}</span></li>
+                  <li>Uploaded by: <span className="document-detail__data-result">{authorName}</span></li>
+                  <li>File name: <span className="document-detail__data-result">{filename}</span></li>
+                  <li>File type: <span className="document-detail__data-result">{media_type}</span></li>
+                  <li>File size: <span className="document-detail__data-result">{filesize}</span></li>
+                  <li>Dimensions: <span className="document-detail__data-result">{height} by {width} pixels</span></li>
+                </ul>
+              </div>
+              <Form initialValues={this.state} onSubmit={this.save}>
+                {props => (
+                  <form onSubmit={props.handleSubmit}>
+                    <AutoSave updateAsset={this.props.updateAsset} debounce={1000} save={this.save}/>
+                    <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">Alternative Text</span><Field
+                      name="alternate_text"
+                      label="Alt"
+                      component="input"
+                      type="text"
+                      className="document-detail__input"
+                    /></div>
+                    <div className="document-detail__line-to-change"><span
+                      className="document-detail__name-of-changes">Title</span><Field
+                      name="title"
+                      label="Title"
+                      component="input"
+                      type="text"
+                      className="document-detail__input"
+                    /></div>
+                    <div className="document-detail__line-to-change"><span
+                      className="document-detail__name-of-changes">Caption</span><Field
+                      name="caption"
+                      label="Caption"
+                      component="textarea"
+                      type="text"
+                      className="document-detail__textarea"
+                    /></div>
+                    <div className="document-detail__line-to-change"><span
+                      className="document-detail__name-of-changes">Description</span><Field
+                      name="description"
+                      label="Description"
+                      component="textarea"
+                      type="text"
+                      className="document-detail__textarea"
+                    /></div>
+                    <div className="document-detail__line-to-change"><span
+                      className="document-detail__name-of-changes">Width</span><Field
+                      name="width"
+                      label="Width"
+                      component="input"
+                      type="text"
+                      className="document-detail__input"
+                    /></div>
+                    <div className="document-detail__line-to-change"><span
+                      className="document-detail__name-of-changes">Height</span><Field
+                      name="height"
+                      label="Height"
+                      component="input"
+                      type="text"
+                      className="document-detail__input"
+                    /></div>
+                    <div className="document-detail__line-to-change_uploated-by">Uploated By<span
+                      className="document-detail__name-of-changes__uploated-by">{authorName}</span></div>
+                    <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">File URL:</span><Field
+                      name="url"
+                      label="File URL"
+                      component="input"
+                      type="text"
+                      className="document-detail__input"
+                    />
+                    </div>
                     <Form initialValues={this.state} onSubmit={this.save}>
                       {props => (
                         <form onSubmit={props.handleSubmit}>
@@ -190,11 +243,11 @@ export class ImageDetail extends React.Component {
                   </div>
                 </Scrollbars>
               </div>
+
             </div>
           </div>
-        </div>,
-        document.body
-      )
+        </div>
+      </div>
     )
   }
 }

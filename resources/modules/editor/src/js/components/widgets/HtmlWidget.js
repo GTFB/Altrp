@@ -14,7 +14,7 @@ class HtmlWidget extends Component {
   }
 
   render() {
-    let data = this.getContent("data");
+    let data = this.getLockedContent("data");
     return (
       <>
         <div

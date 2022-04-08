@@ -1,0 +1,7 @@
+import empty from "../../helpers/empty"
+
+function {{{listener}}}(type, data) {
+
+}
+
+export default {{{listener}}}

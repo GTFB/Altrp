@@ -72,7 +72,7 @@ class GalleryWidget extends Component {
   }
 
   updateRepeater() {
-    const propsSimpleRepeater = this.props.element.getResponsiveSetting("repeater_simple_settings", "", []);
+    const propsSimpleRepeater = this.props.element.getResponsiveLockedSetting("repeater_simple_settings", "", []);
     const simpleRepeater = this.state.simpleRepeater;
 
     if(isEditor() && JSON.stringify(propsSimpleRepeater) !== JSON.stringify(simpleRepeater)) {
@@ -83,7 +83,7 @@ class GalleryWidget extends Component {
   _componentDidMount() {
     this.updateRepeater()
 
-    let repeater = this.props.element.getResponsiveSetting("repeater_simple_settings", "",[]);
+    let repeater = this.props.element.getResponsiveLockedSetting("repeater_simple_settings", "",[]);
     const orderBy = this.state.settings.order_by_settings || "default";
 
     if(!isEditor() && this.state.simpleRepeater.length === 0 && repeater.length !== 0) {
@@ -100,7 +100,7 @@ class GalleryWidget extends Component {
 
     this.updateRepeater();
 
-    let repeater = this.props.element.getResponsiveSetting("repeater_simple_settings", "",[]);
+    let repeater = this.props.element.getResponsiveLockedSetting("repeater_simple_settings", "",[]);
 
     if(!isEditor() && this.state.simpleRepeater.length === 0 && repeater.length !== 0) {
       if(orderBy === "random" && !this.state.shuffled) {
@@ -130,14 +130,14 @@ class GalleryWidget extends Component {
   }
 
   render() {
-    const layout = this.props.element.getResponsiveSetting("layout_settings", "", "grid");
-    const linkType = this.props.element.getResponsiveSetting("link_type_grid_settings", "","none");
-    const hoverAnimationType = this.props.element.getResponsiveSetting("image_hover_animation", "", "none");
-    const hoverAnimationDuration = this.props.element.getResponsiveSetting("image_transition", "", {size: 800});
-    const overlaySwitcher = this.props.element.getResponsiveSetting("overlay_switcher", "", false);
-    const overlayType = this.props.element.getResponsiveSetting("overlay_title_and_description", "", "none");
-    const overlayAnimationType = this.props.element.getResponsiveSetting("hover_animation_overlay", "", "none");
-    const overlayAnimationDuration = this.props.element.getResponsiveSetting("overlay_transition", "", {size: 800});
+    const layout = this.props.element.getResponsiveLockedSetting("layout_settings", "", "grid");
+    const linkType = this.props.element.getResponsiveLockedSetting("link_type_grid_settings", "","none");
+    const hoverAnimationType = this.props.element.getResponsiveLockedSetting("image_hover_animation", "", "none");
+    const hoverAnimationDuration = this.props.element.getResponsiveLockedSetting("image_transition", "", {size: 800});
+    const overlaySwitcher = this.props.element.getResponsiveLockedSetting("overlay_switcher", "", false);
+    const overlayType = this.props.element.getResponsiveLockedSetting("overlay_title_and_description", "", "none");
+    const overlayAnimationType = this.props.element.getResponsiveLockedSetting("hover_animation_overlay", "", "none");
+    const overlayAnimationDuration = this.props.element.getResponsiveLockedSetting("overlay_transition", "", {size: 800});
     let simpleRepeater = this.state.simpleRepeater;
 
     const emptyRepeater = <div className="altrp-gallery-empty-container">

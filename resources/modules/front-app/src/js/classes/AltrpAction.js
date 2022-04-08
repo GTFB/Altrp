@@ -154,11 +154,13 @@ class AltrpAction extends AltrpModel {
         return;
       }
       case 'login': {
+        console.trace(this);
         const form = formsManager.registerForm(
           this.getFormId(),
           'login',
           'POST'
         );
+        console.log(form);
         this.setProperty('_form', form);
       }
     }
@@ -935,15 +937,16 @@ class AltrpAction extends AltrpModel {
      */
     let form = this.getProperty('_form');
     let success = true;
+    console.trace(form);
     form.fields.forEach(field => {
       if (!field.fieldValidate()) {
         success = false;
       }
     });
+    console.log(success);
     if (!success) {
       return {success: false};
     }
-
     return await altrpLogin(form.getData(), this.getFormId());
   }
 
@@ -1347,7 +1350,6 @@ class AltrpAction extends AltrpModel {
       }
     } catch (e) {
       console.error(e);
-
       return {
         success: false
       };

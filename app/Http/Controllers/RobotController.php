@@ -187,7 +187,7 @@ class RobotController extends Controller
             );
         }
 
-        if (isset($data['start_condition']) && $data['start_condition'] == 'telegram_bot' && $data['start_config']['bot_token'] && $data['enabled']) {
+        if (isset($data['start_condition']) && $data['start_condition'] == 'telegram_bot' && $data['start_config']['bot_token'] && $data['enabled'] && !$robot->is_active) {
                 $result = $this->dispatch(new RunRobotsJob(
                     [$robot],
                     $this->robotsService,

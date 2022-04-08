@@ -36,6 +36,6 @@ export default class ReturnNode extends BaseNode implements NodeInterface
   {
     let property:object |null|string = this.getProperty()
     property = this.customizer.propertyToJS( property )
-    return 'return ' + property
+    return `return ${property};`
   }
 }

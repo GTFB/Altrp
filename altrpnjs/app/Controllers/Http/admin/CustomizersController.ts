@@ -6,6 +6,7 @@ import * as _ from 'lodash'
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class CustomizersController {
 
@@ -14,9 +15,10 @@ export default class CustomizersController {
 
     let customizer = new Customizer()
     customizer.fill(request.all())
+
     customizer.guid = guid()
     try {
-      const model = await Model.find(customizer.model_id)
+      const model = customizer.model_id ? await Model.find(customizer.model_id) : null
       if (customizer.model_id && model) {
         customizer.model_guid = model.guid
       }
@@ -41,8 +43,15 @@ export default class CustomizersController {
         })
         await source.save()
       }
+      if(customizer.type === "listener" && model) {
+        const generator = new ListenerGenerator()
+
+        await generator.run(model, customizer.settings.hook_type)
+      }
       //@ts-ignore
-      await Event.emit('model:updated', model)
+      if(model){
+        await Event.emit('model:updated', model)
+      }
     } catch (e) {
       return response.json({
           'success':
@@ -84,7 +93,9 @@ export default class CustomizersController {
      * @var customizer Customizer
      */
     await customizer.load('source', query => {
-      query.preload('model')
+      query.preload('model',model => {
+        model.preload('table')
+      })
     })
     return response.json({
       'success':
@@ -99,9 +110,6 @@ export default class CustomizersController {
     const oldSource = await Source.query().where('sourceable_id', params.id)
       .where('sourceable_type', Customizer.sourceable_type)
       .first()
-    if (oldSource) {
-      await oldSource.delete()
-    }
     if (!customizer) {
       return response.json({
           'success':
@@ -111,7 +119,23 @@ export default class CustomizersController {
       )
     }
 
+    if(customizer.type === "listener" && request.input("type") !== "listener") {
+      const generator = new ListenerGenerator()
+
+      const model = await Model.find(customizer.model_id);
+      if(model) {
+        await generator.delete(model, customizer.settings.hook_type)
+      }
+    }
+    const oldType = customizer.type
     customizer.merge(request.all())
+    /**
+     * Delete source if type `api` changed
+     */
+
+    if(oldType === 'api' && customizer.$dirty.type && oldSource){
+      await oldSource.delete()
+    }
     let model
     try {
       model = await Model.find(customizer.model_id)
@@ -129,8 +153,8 @@ export default class CustomizersController {
       if (customizer.type === 'api' && model) {
         await model.load('altrp_controller')
 
-        let source = new Source();
-        source.fill({
+        let source = oldSource ? oldSource : new Source
+        source.merge({
           'sourceable_type': Customizer.sourceable_type,
           'sourceable_id': customizer.id,
           'model_id': customizer.model_id,
@@ -144,6 +168,11 @@ export default class CustomizersController {
         })
         await source.save()
       }
+      if(customizer.type === "listener" && model) {
+        const generator = new ListenerGenerator()
+
+        await generator.run(model, customizer.settings.hook_type)
+      }
       Event.emit('model:updated', model)
     } catch
       (e) {
@@ -151,6 +180,7 @@ export default class CustomizersController {
       if(model){
         Event.emit('model:updated', model)
       }
+      response.status(500)
       return response.json({
           'success':
             false,
@@ -164,9 +194,10 @@ export default class CustomizersController {
       )
     }
     await customizer.load('source', query => {
-      query.preload('model')
+      query.preload('model',model => {
+        model.preload('table')
+      })
     })
-
     return response.json({
       'success':
         true, 'data':
@@ -227,7 +258,17 @@ export default class CustomizersController {
       },)
     }
     try {
+      if(customizer.type === "listener") {
+        const generator = new ListenerGenerator()
+
+        const model = await Model.find(customizer.model_id);
+        if(model) {
+          await generator.delete(model, customizer.settings.hook_type)
+        }
+      }
+
       await customizer.delete()
+
     } catch (e) {
       return response.json({
           'success':
@@ -242,5 +283,26 @@ export default class CustomizersController {
       )
     }
     return response.json({'success': true,},)
+  }
+
+
+  public async exportCustomizer( {params, response}: HttpContextContract )
+  {
+    let _customizer
+    if (validGuid(params.id)) {
+      _customizer = await Customizer.query().where('guid', params.id).first()
+    } else {
+      _customizer = await Customizer.find(params.id)
+    }
+    if (!_customizer) {
+      return response.json({
+          'success':
+            false, 'message':
+            'Customizer not found'
+        },
+      )
+    }
+    let customizer = _customizer.serialize()
+    return response.json(customizer)
   }
 }

@@ -11,12 +11,18 @@ import {
 import Model from 'App/Models/Model';
 import Controller from 'App/Models/Controller';
 import config from "../../helpers/config";
-import { string } from '@ioc:Adonis/Core/Helpers'
 import data_get from "../../helpers/data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
 import Customizer from "App/Models/Customizer";
 import SQLEditor from "App/Models/SQLEditor";
+import _ from "lodash";
+import app_path from "../../helpers/app_path";
+import isProd from "../../helpers/isProd";
+import Logger from "@ioc:Adonis/Core/Logger";
+import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
+import PageDatasource from "App/Models/PageDatasource";
+import altrpRandomId from "../../helpers/altrpRandomId";
 
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
@@ -69,7 +75,6 @@ export default class Source extends BaseModel {
   @column()
   public need_all_roles: boolean
 
-
   @belongsTo(() => Model, {
     foreignKey: 'model_id'
   })
@@ -114,6 +119,11 @@ export default class Source extends BaseModel {
   private methodBody: string = ''
 
   @computed()
+  public get notice_settings(){
+    return []
+  }
+
+  @computed()
   public get web_url(){
 
     switch ( this.sourceable_type ){
@@ -121,11 +131,11 @@ export default class Source extends BaseModel {
       case 'App\\Altrp\\Query':
         return config('app.url') + '/ajax/models/queries' + data_get( this, 'url' );
       case 'App\\Altrp\\Customizer':
-        return config('app.url') + '/ajax/models/' + string.pluralize(this?.model?.name || '') + '/customizers' + data_get( this, 'url' );
+        return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
       default:
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + data_get( this, 'url' )
-      : config('app.url') + '/ajax/models/data_sources/' + this.model.table.name + '/' + data_get( this, 'name' );
+      : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
     }
   }
 
@@ -140,6 +150,21 @@ export default class Source extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+
+  async getControllerInstance(){
+    // @ts-ignore
+    await this.load(`altrp_model`)
+    if(!this.altrp_model?.name){
+      return null
+    }
+    const path = app_path(`AltrpControllers/${this.altrp_model.name}Controller`)
+    try{
+      let controller = isProd() ? require(path).default : (await  import(path)).default
+      return new controller()
+    }catch (e) {
+      Logger.error(e.message)
+    }
+  }
 
   renderForController(modelClassName:string):string {
     this.prepareContent()
@@ -176,7 +201,7 @@ export default class Source extends BaseModel {
     }
     `
   }
-  private getMethodName():string{
+  getMethodName():string{
     if(!this.sourceable_type){
       switch ( this.type) {
         case 'get':{
@@ -193,13 +218,26 @@ export default class Source extends BaseModel {
     } else {
       switch ( this.sourceable_type) {
         case Customizer.sourceable_type:{
-          return this.customizer?.name || `_${string.generateRandom(12)}`
+          if(!this.customizer?.name){
+            Logger.trace(`Customizer Not found method name type
+             Source: ${this.name}`);
+          }
+          return this.customizer?.name || `_${altrpRandomId()}`
         }
         case SQLEditor.sourceable_type:{
-          return this.sQLEditor?.name || `_${string.generateRandom(12)}`
+
+          if(!this.sQLEditor?.name){
+            Logger.error(`SQLEditor Not found method name type
+             Source: ${this.name}`);
+          }
+          return this.sQLEditor?.name || `_${altrpRandomId()}`
         }
       }
-      return `_${string.generateRandom(12)}`
+      if(!this.sQLEditor?.name){
+        Logger.error(`Not found method name type
+             Source: ${this.name}`);
+      }
+      return `_${altrpRandomId()}`
     }
   }
 
@@ -346,13 +384,26 @@ export default class Source extends BaseModel {
       `)}
     }
 
-    if(page && limit){
-      query.offset((page - 1) * limit).limit(limit)
-    }
-
     const order = httpContext.request.qs()?.order === 'asc' ? 'asc' : 'desc';
     query.orderBy(httpContext.request.qs()?.order_by || 'id', order);
-    return await query.select('*')
+
+    if(page && limit){
+      let paginate = (await query.paginate(page, limit)).serialize()
+      let hasMore = page < paginate.meta.last_page
+      let pageCount = paginate.meta.last_page
+
+      return httpContext.response.json({
+        hasMore,
+        pageCount,
+        data: paginate.data
+      });
+    }
+
+    return httpContext.response.json({
+      hasMore:false,
+      pageCount: 0,
+      data:  await query.select('*')
+    });
     `;
   }
 
@@ -365,15 +416,15 @@ export default class Source extends BaseModel {
     switch (this.type) {
       case 'customizer': {
         this.methodBody = `
-    this.setCustomizerData('context.CurrentModel', ${this.model.name} )
-    this.setCustomizerData('context.request', httpContext.request)
-    this.setCustomizerData('httpContext', httpContext)
-    this.setCustomizerData('request', httpContext.request)
-    this.setCustomizerData('context.response', httpContext.response)
-    this.setCustomizerData('response', httpContext.response)
-    this.setCustomizerData('session', httpContext.session)
-    this.setCustomizerData('this', this)
-    this.setCustomizerData('current_user', httpContext.auth.user)
+    this.setCustomizerData('context.CurrentModel', ${this.model.name} );
+    this.setCustomizerData('context.request', httpContext.request);
+    this.setCustomizerData('httpContext', httpContext);
+    this.setCustomizerData('request', httpContext.request);
+    this.setCustomizerData('context.response', httpContext.response);
+    this.setCustomizerData('response', httpContext.response);
+    this.setCustomizerData('session', httpContext.session);
+    this.setCustomizerData('this', this);
+    this.setCustomizerData('current_user', httpContext.auth?.user);
     ${this?.customizer?.getMethodContent() || ''}
     `}
       break;
@@ -389,5 +440,26 @@ export default class Source extends BaseModel {
        'table_name' : '${this.model?.table?.name}',
      }, httpContext.request );
     `;
+  }
+
+  static async fetchDatasourcesForPage(id: number, httpContext: HttpContextContract, altrpContext: any):Promise<{}> {
+
+    const datasources:any = {}
+    if(! id){
+      return datasources
+    }
+
+    const pageDatasources:any[] = await PageDatasource.query()
+      .where('page_id', id)
+      .where('server_side', true)
+      .select('*')
+    for(const pageDatasource of pageDatasources){
+      const data = await pageDatasource.fetchControllerMethod(_.cloneDeep(httpContext), altrpContext)
+      if(data){
+        datasources[pageDatasource.alias] = data
+      }
+    }
+
+    return datasources
   }
 }

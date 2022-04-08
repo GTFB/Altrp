@@ -59,6 +59,7 @@ class Accordion extends BaseElement {
           value: 'timeout'
         },
       ],
+      locked: true,
     })
 
     this.addControl('timeout', {
@@ -66,8 +67,8 @@ class Accordion extends BaseElement {
       label: 'Timeout (ms)',
       conditions: {
         type: ['interval', 'timeout']
-      }
-      ,
+      },
+      locked: true,
     })
     this.addControl('interval', {
       type: CONTROLLER_NUMBER,
@@ -75,6 +76,7 @@ class Accordion extends BaseElement {
       conditions: {
         type: 'interval'
       },
+      locked: true,
     })
 
     actionsControllers(this, 'Actions', 'trigger_',);

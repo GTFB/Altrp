@@ -89,7 +89,8 @@ class Gallery extends BaseElement {
       type: CONTROLLER_REPEATER,
       fields: simpleRepeater.getControls(),
       default: [
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('path', {
@@ -110,6 +111,7 @@ class Gallery extends BaseElement {
           label: "Random"
         }
       ],
+      locked: true,
     });
 
     this.addControl('lazy_load_settings', {
@@ -135,6 +137,7 @@ class Gallery extends BaseElement {
           label: 'masonry'
         },
       ],
+      locked: true,
     });
 
     this.addControl('columns_grid_settings', {
@@ -180,6 +183,7 @@ class Gallery extends BaseElement {
           label: 'Custom URL'
         }
       ],
+      locked: true,
     });
 
     this.addControl('aspect_ratio_grid_settings', {
@@ -254,6 +258,7 @@ class Gallery extends BaseElement {
     this.addControl('overlay_switcher', {
       type: CONTROLLER_SWITCHER,
       label: 'Overlay',
+      locked: true,
     });
 
     this.addControl('overlay_background', {
@@ -269,25 +274,25 @@ class Gallery extends BaseElement {
       conditions: {
         'overlay_switcher': true,
       },
-        type: CONTROLLER_SELECT,
-        label: 'Title and description',
-        default: 'none',
-        options: [
-          {
-            'value': 'none',
-            'label': 'None',
-          },
-          {
-            'value': 'title',
-            'label': 'Title',
-          },
-          {
-            'value': 'titleAndDescription',
-            'label': 'Title and description',
-          },
-        ],
-      }
-    );
+      type: CONTROLLER_SELECT,
+      label: 'Title and description',
+      default: 'none',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'title',
+          'label': 'Title',
+        },
+        {
+          'value': 'titleAndDescription',
+          'label': 'Title and description',
+        },
+      ],
+      locked: true,
+    });
 
     this.endControlSection();
 
@@ -365,40 +370,40 @@ class Gallery extends BaseElement {
 
 
     this.addControl('image_hover_animation', {
-        type: CONTROLLER_SELECT,
-        label: 'Hover animation',
-        options: [
-          {
-            'value': 'none',
-            'label': 'None',
-          },
-          {
-            'value': 'zoomIn',
-            'label': 'Zoom in',
-          },
-          {
-            'value': 'zoomOut',
-            'label': 'Zoom out',
-          },
-          {
-            'value': 'moveLeft',
-            'label': 'Move left',
-          },
-          {
-            'value': 'moveRight',
-            'label': 'Move Right',
-          },
-          {
-            'value': 'moveUp',
-            'label': 'Move Up',
-          },
-          {
-            'value': 'moveDown',
-            'label': 'Move down',
-          },
-        ],
-      }
-    );
+      type: CONTROLLER_SELECT,
+      label: 'Hover animation',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'zoomIn',
+          'label': 'Zoom in',
+        },
+        {
+          'value': 'zoomOut',
+          'label': 'Zoom out',
+        },
+        {
+          'value': 'moveLeft',
+          'label': 'Move left',
+        },
+        {
+          'value': 'moveRight',
+          'label': 'Move Right',
+        },
+        {
+          'value': 'moveUp',
+          'label': 'Move Up',
+        },
+        {
+          'value': 'moveDown',
+          'label': 'Move down',
+        },
+      ],
+      locked: true,
+    });
 
     this.addControl('image_transition', {
       type: CONTROLLER_SLIDER,
@@ -414,6 +419,7 @@ class Gallery extends BaseElement {
       ],
       max: 3000,
       min: 0,
+      locked: true,
     });
 
     this.endControlSection();
@@ -562,6 +568,7 @@ class Gallery extends BaseElement {
       ],
       label: 'Hover animation',
       default: 'none',
+      locked: true,
     });
 
     this.addControl('overlay_transition', {
@@ -578,6 +585,7 @@ class Gallery extends BaseElement {
       ],
       max: 3000,
       min: 0,
+      locked: true,
     });
 
     this.addControl('overlay_content', {

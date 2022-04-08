@@ -42,7 +42,8 @@ export default function legendControllers(element) {
             label: 'Top Left',
             value: 'top-left',
             }
-        ]
+        ],
+        locked: true,
     })
 
     element.addControl("legend_direction", {
@@ -58,7 +59,8 @@ export default function legendControllers(element) {
             value: 'row'
             },
         ],
-        default: 'column'
+        default: 'column',
+        locked: true,
     });
 
     element.addControl("legend_item_direction", {
@@ -82,32 +84,38 @@ export default function legendControllers(element) {
             value: 'bottom-to-top'
             },
         ],
-        default: 'left-to-right'
+        default: 'left-to-right',
+        locked: true,
     });
     
     element.addControl("legend_translate_x", {
         type: CONTROLLER_NUMBER,
         label: "TranslateX",
+        locked: true,
     });
     
     element.addControl("legend_translate_y", {
         type: CONTROLLER_NUMBER,
         label: "TranslateY",
+        locked: true,
     });
 
     element.addControl("legend_items_spacing", {
         type: CONTROLLER_NUMBER,
         label: "Items Spacing",
+        locked: true,
     });
     
     element.addControl("legend_item_width", {
         type: CONTROLLER_NUMBER,
         label: "Item Width",
+        locked: true,
     });
 
     element.addControl("legend_item_height", {
         type: CONTROLLER_NUMBER,
         label: "Item Height",
+        locked: true,
     });
 
     element.addControl("legend_item_opacity", {
@@ -116,12 +124,14 @@ export default function legendControllers(element) {
         default: 1,
         min: 0,
         max: 1,
-        step: 0.01
+        step: 0.01,
+        locked: true,
     });
     
     element.addControl("legend_symbol_size", {
         type: CONTROLLER_NUMBER,
         label: "Symbol size",
+        locked: true,
     });
 
     element.addControl("legend_symbol_shape", {
@@ -145,6 +155,7 @@ export default function legendControllers(element) {
                 value: 'diamond'
             },
         ],
+        locked: true,
     });
 
     element.endControlSection()

@@ -45,6 +45,7 @@ export  default class BaseNode
   constructor( public data, protected customizer: Customizer ){
   }
 
+
   public static findNodeById( id,  data: BaseNode[] ):BaseNode|undefined{
     return data.find( function(  node:BaseNode ) {
       return node.getId() == id

@@ -46,12 +46,12 @@ class InputDateWidget extends Component {
       window.elementDecorator(this);
     }
 
-    this.defaultValue = this.getContent("content_default_value") || "";
+    this.defaultValue = this.getLockedContent("content_default_value") || "";
 
 
     this.timePrecision = null;
-    this.typeDate = props.element.getSettings("content_time_type", "date");
-    this.locale = this.props.element.getSettings("content_locale", "en");
+    this.typeDate = props.element.getLockedSettings("content_time_type", "date");
+    this.locale = this.props.element.getLockedSettings("content_locale", "en");
 
     switch (this.typeDate) {
       case "date":
@@ -68,7 +68,7 @@ class InputDateWidget extends Component {
     }
 
     let value = moment().locale(this.locale).toDate();
-    const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+    const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
 
     if(this.defaultValue) {
       value = moment(this.defaultValue, format)
@@ -78,7 +78,7 @@ class InputDateWidget extends Component {
     this.state = {
       settings: { ...props.element.getSettings() },
       options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
+        props.element.getLockedSettings("content_options")
       ),
       paramsForUpdate: null
     };
@@ -101,9 +101,9 @@ class InputDateWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
+    if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.props.element.getLockedSettings("content_options")
       );
 
       this.setState(state => ({ ...state, options }));
@@ -113,14 +113,14 @@ class InputDateWidget extends Component {
 
     /**
      * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
+     * то используем this.getLockedContent для получение этого динамического значения
      * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
 
     /**
@@ -131,7 +131,7 @@ class InputDateWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
 
       if(value) {
         value = moment(value).locale(this.locale).toDate()
@@ -147,7 +147,7 @@ class InputDateWidget extends Component {
         );
       }
 
-      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+      const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
       value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
       this.setState(
@@ -165,10 +165,10 @@ class InputDateWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
 
       if(value) {
-        const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+        const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
         value = moment(value, format);
         value = value.isValid() ? value.format(format) : '';
         this.setState(
@@ -182,7 +182,7 @@ class InputDateWidget extends Component {
           state => ({ ...state, contentLoaded: true }),
         );
       }
-      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+      const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
       value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
       this.setState(
@@ -214,11 +214,11 @@ class InputDateWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value",
       );
       if(value) {
-        const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+        const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
         value = moment(value, format);
         value = value.isValid() ? value.format(format) : '';
         this.setState(
@@ -232,7 +232,7 @@ class InputDateWidget extends Component {
           state => ({ ...state, contentLoaded: true }),
         );
       }
-      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+      const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
       value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
       this.setState(
@@ -256,7 +256,7 @@ class InputDateWidget extends Component {
       return;
     }
 
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -393,7 +393,7 @@ class InputDateWidget extends Component {
   async updateOptions() {
     {
       let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let paramsForUpdate = this.props.element.getLockedSettings("params_for_update");
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(
         paramsForUpdate,
@@ -406,7 +406,7 @@ class InputDateWidget extends Component {
 
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
+          if (this.props.element.getLockedSettings("params_as_filters", false)) {
             paramsForUpdate = JSON.stringify(paramsForUpdate);
             options = await new Resource({
               route: this.getRoute()
@@ -443,12 +443,12 @@ class InputDateWidget extends Component {
 
     if (val) {
       value = new Date(val);
-      let timestamp = this.props.element.getSettings("content_timestamp");
+      let timestamp = this.props.element.getLockedSettings("content_timestamp");
 
       if (timestamp) {
         value = value.getTime(); // timestamp
       } else{
-        const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+        const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
         value = moment(value, format);
         value = value.isValid() ? value.format(format) : '';
       }
@@ -477,7 +477,7 @@ class InputDateWidget extends Component {
       );
 
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -514,9 +514,9 @@ class InputDateWidget extends Component {
     let value ;
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-    const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD'
-    const timestamp = this.props.element.getSettings("content_timestamp");
-    const nullable = this.props.element.getSettings("nullable");
+    const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD'
+    const timestamp = this.props.element.getLockedSettings("content_timestamp");
+    const nullable = this.props.element.getLockedSettings("nullable");
 
     if(isEditor()){
       if(!nullable) {
@@ -542,13 +542,13 @@ class InputDateWidget extends Component {
   }
   render() {
     let label = null;
-    const settings = this.props.element.getSettings();
+    const settings = this.props.element.getLockedSettings();
     const {
       label_icon
     } = settings;
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
 
@@ -634,7 +634,7 @@ class InputDateWidget extends Component {
     }
 
     const locale = this.locale;
-    let typeDate = this.props.element.getSettings("content_time_type", "date");
+    let typeDate = this.props.element.getLockedSettings("content_time_type", "date");
     let timePrecision = this.timePrecision;
 
     const dayPickerProps = {
@@ -648,14 +648,14 @@ class InputDateWidget extends Component {
         dayPickerProps.weekdaysShort = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб',]
     }
 
-    const minimalStyle = this.props.element.getResponsiveSetting("picker_minimal", false);
+    const minimalStyle = this.props.element.getResponsiveLockedSetting("picker_minimal", false);
     const timePickerProps = {
       showArrowButtons: true,
       precision: timePrecision,
       onChange: typeDate === 'date' ? this.onChange : undefined,
       className: typeDate === 'date' ? 'altrp-hidden' : '',
     };
-    const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+    const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
     const input = (
       <div className="altrp-input-wrapper">
         <DateInput

@@ -153,7 +153,7 @@ class GlobalStylesPresets extends React.Component {
   constructor(props) {
     super(props);
     const currentElement = props.currentElement.currentElement;
-    const presets = props.globalStylesPresets.styles;
+    const presets = props.globalStylesPresets?.styles || {};
 
     let items = [];
     if(presets) {
@@ -177,7 +177,7 @@ class GlobalStylesPresets extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const currentElement = this.props.currentElement.currentElement;
-    const presets = this.props.globalStylesPresets.styles;
+    const presets = this.props.globalStylesPresets?.styles || {};
     let items = [];
     if (presets[currentElement.getName()]) {
       items = _.keys(presets[currentElement.getName()])
@@ -192,7 +192,7 @@ class GlobalStylesPresets extends React.Component {
 
     if(currentElement.getId() !== this.state.currentElementId) {
       const currentElementSettings = currentElement.getSettings("global_styles_presets", "");
-      let items = this.props.globalStylesPresets.styles[currentElement.getName()] || {};
+      let items = this.props.globalStylesPresets?.styles && this.props.globalStylesPresets?.styles[currentElement.getName()] || {};
 
       this.setState((s) => ({
         ...s,
@@ -222,7 +222,7 @@ class GlobalStylesPresets extends React.Component {
     const currentElement = this.props.currentElement.currentElement;
     let isNewPreset = this.state.items.findIndex(preset => current === preset);
 
-    const presetSettings = this.props.globalStylesPresets.styles[currentElement.getName()][current];
+    const presetSettings = this.props.globalStylesPresets?.styles && this.props.globalStylesPresets?.styles[currentElement.getName()][current];
 
     _.keys(presetSettings).forEach((controllerName) => {
       currentElement.setSettingValue(controllerName, presetSettings[controllerName])
@@ -300,7 +300,7 @@ class GlobalStylesPresets extends React.Component {
       // meta.save();
     })
 
-    if(this.props.globalStylesPresets.styles[currentElement.getName()]) {
+    if(this.props.globalStylesPresets?.styles && this.props.globalStylesPresets?.styles[currentElement.getName()]) {
       this.props.updateGlobalStylesPresets({
         widgetName: currentElement.getName(),
         name: this.state.current,

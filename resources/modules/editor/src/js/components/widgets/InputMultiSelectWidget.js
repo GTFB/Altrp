@@ -425,7 +425,7 @@ class InputMultiSelectWidget extends Component {
     this.popoverProps = {
       usePortal: true,
       position: 'bottom',
-      minimal: props.element.getResponsiveSetting('minimal'),
+      minimal: props.element.getResponsiveLockedSetting('minimal'),
       // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
@@ -442,7 +442,7 @@ class InputMultiSelectWidget extends Component {
 
 
   getContentDefaultValue(){
-    let value = this.getContent("content_default_value", true)
+    let value = this.getLockedContent("content_default_value", true)
     if(_.isString(value) && value.indexOf(',') !== -1){
       value = value.split(',')
     }
@@ -864,10 +864,10 @@ class InputMultiSelectWidget extends Component {
     const options = [...this.state.options];
     const element = this.props.element;
     if (!options.find(option => option.value == value)) {
-      const create_url = element.getResponsiveSetting('create_url');
-      if (element.getResponsiveSetting('create') && create_url) {
+      const create_url = element.getResponsiveLockedSetting('create_url');
+      if (element.getResponsiveLockedSetting('create') && create_url) {
         this.setState(state => ({...state, widgetDisabled: true}))
-        let params = element.getResponsiveSetting('create_params') || '';
+        let params = element.getResponsiveLockedSetting('create_params') || '';
         params = params.replace(/\{\{__query__\}\}/g, value);
         params = parseParamsFromString(params, element.getCurrentModel(), true)
         const resource = new Resource({route: create_url});
@@ -876,11 +876,11 @@ class InputMultiSelectWidget extends Component {
           if (res.data) {
             res = res.data
           }
-          const label_path = element.getResponsiveSetting('label_path')
+          const label_path = element.getResponsiveLockedSetting('label_path')
           if(label_path){
             res.label = _.get(res, label_path, res.id);
           }
-          const value_path = element.getResponsiveSetting('value_path')
+          const value_path = element.getResponsiveLockedSetting('value_path')
           if(value_path){
             res.value = _.get(res, value_path, res.id);
           }
@@ -926,12 +926,12 @@ class InputMultiSelectWidget extends Component {
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
-    const content_options = this.props.element.getResponsiveSetting('content_options');
-    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
+    const content_options = this.props.element.getResponsiveLockedSetting('content_options');
+    const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0
       && ! model_for_options){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
         options = [];
       }
@@ -1083,15 +1083,13 @@ class InputMultiSelectWidget extends Component {
    * @return {JSX.Element|null}
    */
 
-  createNewItemRenderer = (query,
-                           active,
-                           handleClick) => {
+  createNewItemRenderer = (query, active, handleClick) => {
     /**
      * @type {FrontElement}
      */
     const {element} = this.props;
 
-    if (!element.getResponsiveSetting('create')) {
+    if (!element.getResponsiveLockedSetting('create')) {
       return null;
     }
     const {options} = this.state;
@@ -1103,7 +1101,7 @@ class InputMultiSelectWidget extends Component {
     })) {
       return null
     }
-    let text = element.getResponsiveSetting('create_text') || ''
+    let text = element.getResponsiveLockedSetting('create_text') || ''
     text = text.replace('{{__query__}}', query)
     text = replaceContentWithData(text, element.getCurrentModel().getData())
     return (
@@ -1156,7 +1154,7 @@ class InputMultiSelectWidget extends Component {
 
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     ) || 'top';
     switch (content_label_position_type) {
@@ -1197,7 +1195,7 @@ class InputMultiSelectWidget extends Component {
         classLabel = "";
         break;
     }
-    const content_label = this.getContent('content_label')
+    const content_label = this.getLockedContent('content_label')
     if (content_label) {
       label = (
         <div
@@ -1223,9 +1221,9 @@ class InputMultiSelectWidget extends Component {
       label = null;
     }
 
-    const placeholder = element.getResponsiveSetting('content_placeholder');
-    const content_readonly = element.getResponsiveSetting('content_readonly');
-    const no_results_text = element.getResponsiveSetting('no_results_text');
+    const placeholder = element.getResponsiveLockedSetting('content_placeholder');
+    const content_readonly = element.getResponsiveLockedSetting('content_readonly');
+    const no_results_text = element.getResponsiveLockedSetting('no_results_text');
 
     const inputProps = {
     };
@@ -1233,8 +1231,8 @@ class InputMultiSelectWidget extends Component {
     let input = null;
 
     let itemsOptions = this.getOptions();
-    const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
-    const position_css_id = this.getContent('position_css_id')
+    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    const position_css_id = this.getLockedContent('position_css_id')
     const selectedItems = this.getValue()
     const clearButton =
       selectedItems.length > 0 ? <Button icon="cross" minimal={true} className="altrp-clear" onClick={this.handleClear} /> : undefined;
@@ -1246,7 +1244,7 @@ class InputMultiSelectWidget extends Component {
         itemsEqual={this.itemsEqual}
         disabled={content_readonly}
         popoverProps={this.popoverProps}
-        createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
+        createNewItemFromQuery={element.getResponsiveLockedSetting('create') ? this.createNewItemFromQuery : null}
         createNewItemRenderer={this.createNewItemRenderer}
         itemRenderer={(item, {handleClick, modifiers, query}) => {
           if (!modifiers.matchesPredicate) {

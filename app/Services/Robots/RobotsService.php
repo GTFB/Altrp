@@ -176,11 +176,16 @@ class RobotsService
                 $chat_id = null;
                 if (isset($modelData['altrpchat'])) {
                   $chat_id = $modelData['altrpchat']['from']['id'];
-                  $user = $this->robot->getUser($modelData['altrpchat']['from']['username'], $modelData['altrpchat']['from']['first_name']);
+                  $user = $this->robot->getUser($modelData['altrpchat']['from']['id'], $modelData['altrpchat']['from']['first_name']);
                   $this->data['altrpuser'] = $user;
                 }
 
-                if (isset($modelData['altrpchat']['data'])) {
+                // if (isset($modelData['altrpchat']['data'])) {
+                //   $chat = $this->robot->getChat($chat_id);
+                //   $currentAction = $this->getCurrentBlock($chat->node_id);
+                // }
+
+                if (isset($modelData['altrpchat']['data']) || (isset($modelData['altrpchat']['text']) && $modelData['altrpchat']['text'] !== "/start")) {
                   $chat = $this->robot->getChat($chat_id);
                   $currentAction = $this->getCurrentBlock($chat->node_id);
                 }

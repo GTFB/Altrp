@@ -155,7 +155,7 @@ class GlobalTemplateStylesController extends Controller
         return response()->json($color, 201);
     }
 
-    /** 
+    /**
      * @param  App\Constructor\Template $element
      * @param string $guid
      * @param * $style
@@ -168,11 +168,11 @@ class GlobalTemplateStylesController extends Controller
         $element->save();
     }
 
-    /** 
+    /**
      * @param App\Constructor\Template $element
      * @param string $guid
      * @param $style
-     * @return 
+     * @return
      */
     static public function recursiveReplaceGlobalStyles($element, $guid, $style)
     {

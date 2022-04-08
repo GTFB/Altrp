@@ -394,7 +394,7 @@ class InputTextCommonWidget extends Component {
       window.elementDecorator(this);
     }
 
-    this.defaultValue = this.getContent("content_default_value")
+    this.defaultValue = this.getLockedContent("content_default_value")
     this.popoverRef = React.createRef()
     this.inputRef = React.createRef()
     this.state = {
@@ -402,7 +402,7 @@ class InputTextCommonWidget extends Component {
       showPassword: false,
       isOpen: false,
       options: parseOptionsFromSettings(
-        props.element.getSettings("options")
+        props.element.getLockedSettings("options")
       ),
     };
     this.popoverProps = {
@@ -412,8 +412,8 @@ class InputTextCommonWidget extends Component {
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    if (this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
 
@@ -441,7 +441,7 @@ class InputTextCommonWidget extends Component {
         create_allowed,
         create_label,
         create_url
-      } = this.props.element.getSettings();
+      } = this.props.element.getLockedSettings();
       if (create_allowed && create_label && create_url) {
         this.createItem(e);
       }
@@ -464,7 +464,7 @@ class InputTextCommonWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, contentLoaded: true}),
         () => {
@@ -478,7 +478,7 @@ class InputTextCommonWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, contentLoaded: true}),
         () => {
@@ -494,16 +494,16 @@ class InputTextCommonWidget extends Component {
     }
     let options = this.state.options;
     let element = this.props.element;
-    const content_options = this.props.element.getResponsiveSetting('options');
+    const content_options = this.props.element.getResponsiveLockedSetting('options');
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0 ){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
         options = [];
       }
     }
     const value = this.getValue()
-    if(element.getResponsiveSetting('s_type') !== 'prevent_filter'){
+    if(element.getResponsiveLockedSetting('s_type') !== 'prevent_filter'){
       options = options.filter(o=>{
         if(_.isObject(o)){
           o = (o?.label ||o?.value)
@@ -554,7 +554,7 @@ class InputTextCommonWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value"
       );
       this.setState(
@@ -577,7 +577,7 @@ class InputTextCommonWidget extends Component {
     if (isEditor()) {
       return;
     }
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -718,7 +718,7 @@ class InputTextCommonWidget extends Component {
 
       this.dispatchFieldValueToStore(value, true)
 
-      const typing_actions = this.props.element.getSettings("typing_actions");
+      const typing_actions = this.props.element.getLockedSettings("typing_actions");
 
       if (typing_actions) {
         const actionsManager = (
@@ -746,7 +746,7 @@ class InputTextCommonWidget extends Component {
    */
 
   onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
+    const focus_actions = this.props.element.getLockedSettings("focus_actions");
     // this.setState(state=>({...state, isOpen: true}))
     if (focus_actions && !isEditor()) {
       const actionsManager = (
@@ -773,7 +773,7 @@ class InputTextCommonWidget extends Component {
       this.setState(state=>({...state, isOpen: false}))
     }, 200);
 
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
@@ -783,7 +783,7 @@ class InputTextCommonWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         "blur",
-        this.props.element.getSettings("actions", []),
+        this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
     }
@@ -804,7 +804,7 @@ class InputTextCommonWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -843,8 +843,8 @@ class InputTextCommonWidget extends Component {
 
   renderLeftIcon(){
     const {element} = this.props;
-    let left_icon = element.getResponsiveSetting('left_icon');
-    let password_show_left_icon = element.getResponsiveSetting('password_show_left_icon');
+    let left_icon = element.getResponsiveLockedSetting('left_icon');
+    let password_show_left_icon = element.getResponsiveLockedSetting('password_show_left_icon');
     const {content_type} = element.settings
     const leftIconProps = {}
     if(content_type === 'password' && this.state.showPassword && password_show_left_icon){
@@ -866,8 +866,8 @@ class InputTextCommonWidget extends Component {
   }
   renderRightIcon(){
     const {element} = this.props;
-    let right_icon = element.getResponsiveSetting('right_icon');
-    let password_show_right_icon = element.getResponsiveSetting('password_show_right_icon');
+    let right_icon = element.getResponsiveLockedSetting('right_icon');
+    let password_show_right_icon = element.getResponsiveLockedSetting('password_show_right_icon');
     const {content_type} = element.settings
     const rightIconProps = {}
     if(content_type === 'password' && this.state.showPassword && password_show_right_icon){
@@ -893,7 +893,7 @@ class InputTextCommonWidget extends Component {
    * @returns {Promise<void>}
    */
   onSelect = async(e)=>{
-    const select_actions = this.props.element.getSettings("select_actions");
+    const select_actions = this.props.element.getLockedSettings("select_actions");
     var len = this.getValue().length;
     let input = this.inputRef.current
 
@@ -943,7 +943,7 @@ class InputTextCommonWidget extends Component {
 
   render() {
     let label = null;
-    const settings = this.props.element.getSettings();
+    const settings = this.props.element.getLockedSettings();
     const {
       content_readonly,
       label_icon
@@ -952,11 +952,11 @@ class InputTextCommonWidget extends Component {
 
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     ) || 'top';
-    const label_icon_position = this.props.element.getResponsiveSetting('label_icon_position')
-    let label_style_spacing = this.props.element.getResponsiveSetting('label_style_spacing')
+    const label_icon_position = this.props.element.getResponsiveLockedSetting('label_icon_position')
+    let label_style_spacing = this.props.element.getResponsiveLockedSetting('label_style_spacing')
     switch (content_label_position_type) {
       case "top":
         styleLabel = {

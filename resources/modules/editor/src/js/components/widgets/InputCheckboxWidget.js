@@ -96,7 +96,6 @@ const Checkbox = window.altrpLibs.Blueprint.Checkbox;
   padding-left: 10px;
 }
 .altrp-field-label {
-  font-size: 16px;
   font-family: "Open Sans";
   line-height: 1.5;
   letter-spacing: 0;
@@ -119,6 +118,7 @@ const Checkbox = window.altrpLibs.Blueprint.Checkbox;
   border-width: 1px;
 }
 .altrp-field-container {
+  min-height: 10px;
   margin: 0;
 }
 .altrp-field::placeholder, .altrp-field-select2__placeholder {
@@ -396,7 +396,7 @@ class InputCheckboxWidget extends Component {
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
-      this.getContent("content_default_value") ||
+      this.getLockedContent("content_default_value") ||
       (this.valueMustArray() ? [] : "");
     if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
       this.defaultValue = [];
@@ -405,13 +405,13 @@ class InputCheckboxWidget extends Component {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
       options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
+        props.element.getLockedSettings("content_options")
       ),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    if (this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
 
@@ -460,7 +460,7 @@ class InputCheckboxWidget extends Component {
         create_allowed,
         create_label,
         create_url
-      } = this.props.element.getSettings();
+      } = this.props.element.getLockedSettings();
       if (create_allowed && create_label && create_url) {
         this.createItem(e);
       }
@@ -473,9 +473,9 @@ class InputCheckboxWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
+    if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.props.element.getLockedSettings("content_options")
       );
 
       this.setState(state => ({ ...state, options }));
@@ -483,14 +483,14 @@ class InputCheckboxWidget extends Component {
     let value = this.state.value;
     /**
      * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
+     * то используем this.getLockedContent для получение этого динамического значения
      * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
 
     /**
@@ -501,7 +501,7 @@ class InputCheckboxWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -515,7 +515,7 @@ class InputCheckboxWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -538,7 +538,7 @@ class InputCheckboxWidget extends Component {
    * Получить url для запросов
    */
   getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
+    let url = this.props.element.getLockedSettings("model_for_options");
 
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
@@ -558,9 +558,9 @@ class InputCheckboxWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        this.props.element.getLockedSettings("select2_multiple")
       );
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -578,7 +578,7 @@ class InputCheckboxWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
 
     /**
@@ -608,7 +608,7 @@ class InputCheckboxWidget extends Component {
     if (isEditor()) {
       return;
     }
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -734,7 +734,7 @@ class InputCheckboxWidget extends Component {
   async updateOptions() {
     {
       let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let paramsForUpdate = this.props.element.getLockedSettings("params_for_update");
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(
         paramsForUpdate,
@@ -746,7 +746,7 @@ class InputCheckboxWidget extends Component {
       let options = [...this.state.options];
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
+          if (this.props.element.getLockedSettings("params_as_filters", false)) {
             paramsForUpdate = JSON.stringify(paramsForUpdate);
             options = await new Resource({
               route: this.getRoute()
@@ -793,7 +793,6 @@ class InputCheckboxWidget extends Component {
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
-    console.log(value);
     this.setState(
       state => ({
         ...state,
@@ -818,15 +817,16 @@ class InputCheckboxWidget extends Component {
    */
   getOptions() {
     let options = [...this.state.options];
+    const element = this.props
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
-    const content_options = this.props.element.getResponsiveSetting('content_options');
-    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
+    const content_options = element.getResponsiveLockedSetting('content_options');
+    const model_for_options = element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0
       && ! model_for_options){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
         options = [];
       }
@@ -834,7 +834,7 @@ class InputCheckboxWidget extends Component {
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
-    if (!this.props.element.getSettings("sort_default")) {
+    if (!this.props.element.getLockedSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     }
     return options;
@@ -847,7 +847,7 @@ class InputCheckboxWidget extends Component {
    */
 
   onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
+    const focus_actions = this.props.element.getLockedSettings("focus_actions");
 
     if (focus_actions && !isEditor()) {
       const actionsManager = (
@@ -873,7 +873,7 @@ class InputCheckboxWidget extends Component {
     if (_.get(editor, "getData")) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
@@ -883,7 +883,7 @@ class InputCheckboxWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         "blur",
-        this.props.element.getSettings("actions", []),
+        this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
     }
@@ -904,7 +904,7 @@ class InputCheckboxWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
         if (change_actions && !isEditor()) {
           const actionsManager = (
             await import(
@@ -938,7 +938,7 @@ class InputCheckboxWidget extends Component {
       create_label,
       create_data,
       select2_multiple
-    } = this.props.element.getSettings();
+    } = this.props.element.getLockedSettings();
     if (!create_label && !create_url) {
       return;
     }
@@ -1006,8 +1006,9 @@ class InputCheckboxWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      select2_multiple: isMultiple,
-      label_icon
+      label_icon,
+      position_css_id: cssId,
+      position_css_classes: cssClasses
     } = settings;
 
     let value = this.state.value;
@@ -1016,7 +1017,7 @@ class InputCheckboxWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),
@@ -1027,7 +1028,7 @@ class InputCheckboxWidget extends Component {
     }
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
     switch (content_label_position_type) {
@@ -1096,8 +1097,6 @@ class InputCheckboxWidget extends Component {
     let autocomplete = "off";
     if (this.state.settings.content_autocomplete) {
       autocomplete = "on";
-    } else {
-      autocomplete = "off";
     }
 
     let input = null;
@@ -1107,7 +1106,8 @@ class InputCheckboxWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={`altrp-field-container ${cssClasses ? cssClasses : ''}`}
+        id={cssId ? cssId : ''}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1124,8 +1124,9 @@ class InputCheckboxWidget extends Component {
    * Выводит input type=checkbox|radio
    */
   renderRepeatedInput() {
-    const { options = [] } = this.state;
+    let { options = [] } = this.state;
     let { value = "" } = this.state;
+
     const fieldName =
       this.props.element.getFieldId() ||
       Math.random()

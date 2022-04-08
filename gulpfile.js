@@ -106,6 +106,7 @@ function altrpJSZip() {
     '!./altrpnjs/build/app/AltrpControllers/**/*',
     '!./altrpnjs/build/public/altrp-plugins/**/*',
     '!./altrpnjs/build/public/app/media/**/*',
+    '!./altrpnjs/build/resources/views/altrp/**/*',
   ], {dot: true,}).pipe(zip(filename))
     .pipe(gulp.dest('../'))
     .pipe(notify({
@@ -156,6 +157,11 @@ const copyPublicToAdonis = gulp.parallel(
     return gulp.src([
     './README.md'
   ]).pipe(gulp.dest('./altrpnjs/build/'))
+  },
+  cb=>{
+    return gulp.src([
+    './altrpnjs/app/altrp-templates/styles/**/*'
+  ]).pipe(gulp.dest('./altrpnjs/build/app/altrp-templates/styles'))
   }
 );
 async function clearJSBuild() {

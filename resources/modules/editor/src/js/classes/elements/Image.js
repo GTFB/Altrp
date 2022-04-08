@@ -49,6 +49,7 @@ class Image extends BaseElement {
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Image',
+      locked: true,
     });
 
     this.addControl('content_path', {
@@ -56,6 +57,7 @@ class Image extends BaseElement {
       dynamic: false,
       responsive: false,
       label: 'Path',
+      locked: true,
     });
 
     this.addControl('raw_url', {
@@ -63,6 +65,7 @@ class Image extends BaseElement {
       dynamic: false,
       responsive: false,
       label: 'URL',
+      locked: true,
     });
 
     this.addControl('default_url', {
@@ -70,13 +73,15 @@ class Image extends BaseElement {
       dynamic: false,
       responsive: false,
       label: 'Path to Default Image URL',
+      locked: true,
     });
 
     this.addControl('cursor_pointer', {
       hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Cursor pointer',
-      default: false
+      default: false,
+      locked: true,
     });
 
 
@@ -122,6 +127,7 @@ class Image extends BaseElement {
         tag: 'Link'
       },
       label: 'Link',
+      locked: true,
     });
 
     this.endControlSection();
@@ -229,6 +235,7 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.addControl('width_size', {
@@ -245,6 +252,7 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      locked: true,
     });
 
     this.endControlSection();

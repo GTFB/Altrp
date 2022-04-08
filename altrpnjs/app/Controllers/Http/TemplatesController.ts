@@ -1,4 +1,6 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
+import validGuid from '../../../helpers/validGuid';
 
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
@@ -7,19 +9,23 @@ import Page from "App/Models/Page";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
+import AltrpMeta from "App/Models/AltrpMeta";
+import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
+import env from "../../../helpers/env";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
+import recurseMapElements from '../../../helpers/recurseMapElements';
 
 export default class TemplatesController {
   public async index({ request }) {
     const params = request.qs();
-    const page = parseInt(params.page) || 1
+    // const page = parseInt(params.page) || 1
     // const search = params.s
 
     // const orderType = params.order || "DESC"
     // const orderBy = params.order_by || "id"
 
-    const pageSize = params.pageSize
+    // const pageSize = params.pageSize
 
     const templatesQuery = Template.query()
 
@@ -40,14 +46,11 @@ export default class TemplatesController {
         }
       })
       .orderBy('title')
-      .paginate(page, pageSize)
 
-    const modTemplates = templates.all().map( template => {
+    const modTemplates = templates.map( template => {
       return {
         categories: template.categories.map(category => {
-          return {
-            category: category
-          }
+          return category
         }),
         author: template.getAuthor(),
         area: template.getArea(),
@@ -59,7 +62,6 @@ export default class TemplatesController {
     })
 
     return {
-      pageCount: templates.lastPage,
       templates: modTemplates
     }
   }
@@ -73,7 +75,16 @@ export default class TemplatesController {
   }
 
   public async settingsSet({ params, request, response}) {
-    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail()
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
+
 
     const settingName = request.input("setting_name");
 
@@ -112,6 +123,7 @@ export default class TemplatesController {
     await auth.use('web').authenticate()
 
     const guid = uuid();
+
     const data = {
       area: parseInt(request.input("area")),
       data: JSON.stringify(request.input("data")),
@@ -164,13 +176,29 @@ export default class TemplatesController {
   }
 
   public async get({ params }) {
-    const template = await Template.find(parseInt(params.id));
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
 
     return template
   }
 
   public async delete({ params }) {
-    const template = await Template.query().where("id", parseInt(params.id)).firstOrFail();
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
 
     let templateGenerator = new TemplateGenerator()
     await templateGenerator.deleteFile(template)
@@ -181,11 +209,18 @@ export default class TemplatesController {
   }
 
   public async update({ params, request }) {
-    const template = await Template.find(parseInt(params.id));
+    const templateQuery = Template.query();
+
+    if(isNaN(params.id)) {
+      templateQuery.where("guid", params.id)
+    } else {
+      templateQuery.where("id", parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
 
     if(template) {
       //@ts-ignore
-      const prevVersions = await Template.query().where("guid", template.getGuid())
       const data = template.serialize();
 
       delete data.created_at
@@ -198,13 +233,6 @@ export default class TemplatesController {
         await prevTemplates[4].delete()
       }
 
-      const prevVersion = await Template.create({
-        ...data,
-        guid: null,
-        parent_template: template.id,
-        type: "review"
-      })
-
       template.data = JSON.stringify(request.input("data"));
       template.styles = JSON.stringify(request.input("styles"));
       template.html_content = request.input("html_content");
@@ -215,8 +243,6 @@ export default class TemplatesController {
       await templateGenerator.run(template)
       return {
         currentTemplate: template,
-        prevVersions: prevVersions,
-        prevVersion: prevVersion,
         clearData: request.input("data")
       }
     }
@@ -264,16 +290,10 @@ export default class TemplatesController {
     const templates = await Template.query().where("type", "review");
 
     if(templates.length > 0) {
-      return {
-        success: true,
-        data: templates
-      }
+      return templates
     } else {
       response.status(404)
-      return {
-        success: false,
-        data: templates
-      }
+      return templates
     }
   }
 
@@ -281,16 +301,10 @@ export default class TemplatesController {
     const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
 
     if(templates.length > 0) {
-      return {
-        success: true,
-        data: templates
-      }
+      return templates
     } else {
       response.status(404)
-      return {
-        success: false,
-        data: templates
-      }
+      return templates
     }
   }
 
@@ -302,6 +316,7 @@ export default class TemplatesController {
    */
   public async conditions({params}) {
     const id = parseInt(params.id);
+
     let res = {
       data: [],
       success: true
@@ -421,7 +436,33 @@ export default class TemplatesController {
     }
   }
 
-  public async globalTemplateStyles() {
-    return []
+
+  public async exportCustomizer( {params, response}: HttpContextContract )
+  {
+
+    let template
+    if (validGuid(params.id)) {
+      template = await Template.query().where('guid', params.id).first()
+    } else {
+      template = await Template.find(params.id)
+    }
+    if (!template) {
+      return response.json({
+          'success':
+            false, 'message':
+            'Customizer not found'
+        },
+      )
+    }
+
+    template.__exported_metas__ = {}
+    template.__exported_metas__.styles_presets = AltrpMeta.getGlobalStyles()
+    template.__exported_metas__ = {}
+    template.__exported_metas__.global_styles = GlobalStyle.all();   
+
+    let res = template.serialize()
+
+    return response.json(res)
   }
+
 }

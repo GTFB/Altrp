@@ -23,7 +23,7 @@ class PostsWidget extends Component {
    * @return {boolean}
    */
   showPosts(query = {}) {
-    if (this.props.element.getSettings('choose_datasource') === 'datasource') {
+    if (this.props.element.getLockedSettings('choose_datasource') === 'datasource') {
       return true;
     }
     if (!query.modelName && !query.dataSource) {
@@ -41,8 +41,8 @@ class PostsWidget extends Component {
       return <div children="Please Choose Source"/>
     }
     let data = query.getFromModel(this.state.modelData) || [];
-    if (this.props.element.getSettings('choose_datasource') === 'datasource') {
-      let path = this.props.element.getSettings('posts_datasource', '');
+    if (this.props.element.getLockedSettings('choose_datasource') === 'datasource') {
+      let path = this.props.element.getLockedSettings('posts_datasource', '');
       path = path.replace(/}}/g, '').replace(/{{/g, '');
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
     }

@@ -423,7 +423,7 @@ class InputSelectWidget extends Component {
       window.elementDecorator(this);
     }
     this.defaultValue =
-      this.getContent("content_default_value") ||
+      this.getLockedContent("content_default_value") ||
       (this.valueMustArray() ? [] : "");
     if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
       this.defaultValue = [];
@@ -432,7 +432,7 @@ class InputSelectWidget extends Component {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
       options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
+        props.element.getLockedSettings("content_options")
       ),
       paramsForUpdate: null,
     };
@@ -441,7 +441,7 @@ class InputSelectWidget extends Component {
       usePortal: true,
       targetClassName: "altrp-select-popover",
       position: 'bottom',
-      minimal: props.element.getResponsiveSetting('minimal'),
+      minimal: props.element.getResponsiveLockedSetting('minimal'),
       // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
@@ -450,8 +450,8 @@ class InputSelectWidget extends Component {
       // this.popoverProps.boundary = '#front-app'
     }
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    if (this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
 
     this.inputRef = React.createRef();
@@ -481,9 +481,9 @@ class InputSelectWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
+    if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.props.element.getLockedSettings("content_options")
       );
 
       this.setState(state => ({...state, options}));
@@ -507,7 +507,7 @@ class InputSelectWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
     }
 
     /**
@@ -518,7 +518,7 @@ class InputSelectWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -532,7 +532,7 @@ class InputSelectWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -555,7 +555,7 @@ class InputSelectWidget extends Component {
    * Получить url для запросов
    */
   getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
+    let url = this.props.element.getLockedSettings("model_for_options");
 
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
@@ -576,9 +576,9 @@ class InputSelectWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
+      let value = this.getLockedContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        this.props.element.getLockedSettings("select2_multiple")
       );
       this.setState(
         state => ({...state, value, contentLoaded: true}),
@@ -589,15 +589,15 @@ class InputSelectWidget extends Component {
     }
     if (
       this.props.element.getName() === "input-select" &&
-      this.props.element.getSettings("model_for_options")
+      this.props.element.getLockedSettings("model_for_options")
     ) {
       if (
         !(
           this.state.settings.model_for_options ===
-          prevProps.element.getSettings("model_for_options")
+          prevProps.element.getLockedSettings("model_for_options")
         )
       ) {
-        let model_for_options = prevProps.element.getSettings(
+        let model_for_options = prevProps.element.getLockedSettings(
           "model_for_options"
         );
         let options = await new Resource({route: this.getRoute()}).getAll();
@@ -614,7 +614,7 @@ class InputSelectWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
 
     /**
@@ -644,7 +644,7 @@ class InputSelectWidget extends Component {
     if (isEditor()) {
       return;
     }
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -770,7 +770,7 @@ class InputSelectWidget extends Component {
   async updateOptions() {
     {
       let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let paramsForUpdate = this.props.element.getLockedSettings("params_for_update");
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(
         paramsForUpdate,
@@ -782,7 +782,7 @@ class InputSelectWidget extends Component {
       let options = [...this.state.options];
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
+          if (this.props.element.getLockedSettings("params_as_filters", false)) {
             paramsForUpdate = JSON.stringify(paramsForUpdate);
             options = await new Resource({
               route: this.getRoute()
@@ -859,10 +859,10 @@ class InputSelectWidget extends Component {
     const options = this.getOptions();
     const element = this.props.element;
     if(! options.find(option => option.value == value)){
-      const create_url = element.getResponsiveSetting('create_url');
-      if(element.getResponsiveSetting('create') && create_url){
+      const create_url = element.getResponsiveLockedSetting('create_url');
+      if(element.getResponsiveLockedSetting('create') && create_url){
         this.setState(state =>({...state, widgetDisabled: true}))
-        let params = element.getResponsiveSetting('create_params') || '';
+        let params = element.getResponsiveLockedSetting('create_params') || '';
         params = params.replace(/\{\{__query__\}\}/g, value);
         params = parseParamsFromString(params, element.getCurrentModel(), true)
         const resource = new Resource({route: create_url});
@@ -871,11 +871,11 @@ class InputSelectWidget extends Component {
           if(res.data){
             res = res.data
           }
-          const label_path = element.getResponsiveSetting('label_path')
+          const label_path = element.getResponsiveLockedSetting('label_path')
           if(label_path){
             res.label = _.get(res, label_path, res.id);
           }
-          const value_path = element.getResponsiveSetting('value_path')
+          const value_path = element.getResponsiveLockedSetting('value_path')
           if(value_path){
             res.value = _.get(res, value_path, res.id);
           }
@@ -919,12 +919,15 @@ class InputSelectWidget extends Component {
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
-    const content_options = this.props.element.getResponsiveSetting('content_options');
-    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
-    if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0
-      && ! model_for_options){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+    const content_options = this.props.element.getResponsiveLockedSetting('content_options');
+    const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
+    if(_.isString(content_options)) {
+      if (content_options.indexOf('{{') === 0 && ! model_for_options) {
+        options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
+      } else {
+        options = parseOptionsFromSettings(this.props.element.getLockedSettings("content_options"));
+      }
+
       if( ! _.isArray(options)){
         options = [];
       }
@@ -934,15 +937,15 @@ class InputSelectWidget extends Component {
     } else {
       options = [...options]
     }
-    if (!this.props.element.getSettings("sort_default")) {
+    if (!this.props.element.getLockedSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-      if(this.props.element.getSettings("options_sorting") === 'desc'){
+      if(this.props.element.getLockedSettings("options_sorting") === 'desc'){
         options = _.reverse(options)
       }
     }
-    if(this.props.element.getResponsiveSetting('content_options_nullable')){
+    if(this.props.element.getResponsiveLockedSetting('content_options_nullable')){
       options.unshift({
-        label: this.props.element.getResponsiveSetting('nulled_option_title') || '',
+        label: this.props.element.getResponsiveLockedSetting('nulled_option_title') || '',
         value: '',
       })
     }
@@ -966,7 +969,7 @@ class InputSelectWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -1033,7 +1036,7 @@ class InputSelectWidget extends Component {
    * @return {JSX.Element|string}
    */
   renderRightIcon = ()=>{
-    const right_icon = this.props.element.getResponsiveSetting('right_icon')
+    const right_icon = this.props.element.getResponsiveLockedSetting('right_icon')
     if(_.isEmpty(right_icon)){
       return 'caret-down'
     }
@@ -1046,7 +1049,7 @@ class InputSelectWidget extends Component {
    * @return {JSX.Element|null}
    */
   renderLeftIcon = ()=>{
-    const left_icon = this.props.element.getResponsiveSetting('left_icon')
+    const left_icon = this.props.element.getResponsiveLockedSetting('left_icon')
     if(_.isEmpty(left_icon)){
       return null
     }
@@ -1059,7 +1062,7 @@ class InputSelectWidget extends Component {
    * @return {Promise<void>}
    */
   onClick = async ()=>{
-    if (this.props.element.getSettings("click_actions", []) && !isEditor()) {
+    if (this.props.element.getLockedSettings("click_actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
@@ -1069,7 +1072,7 @@ class InputSelectWidget extends Component {
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         "click",
-        this.props.element.getSettings("click_actions", []),
+        this.props.element.getLockedSettings("click_actions", []),
         this.props.element
       );
     }
@@ -1090,9 +1093,7 @@ class InputSelectWidget extends Component {
    * @return {JSX.Element|null}
    */
 
-  createNewItemRenderer = ( query,
-                         active,
-                         handleClick) => {
+  createNewItemRenderer = (query, active, handleClick) => {
     /**
      * @type {FrontElement}
      */
@@ -1100,7 +1101,7 @@ class InputSelectWidget extends Component {
     // console.log(query,
     //   active,
     //   handleClick);
-    if(! element.getResponsiveSetting('create')){
+    if(! element.getResponsiveLockedSetting('create')){
       return null;
     }
     const {options} = this.state;
@@ -1112,7 +1113,7 @@ class InputSelectWidget extends Component {
     })) {
       return null
     }
-    let text = element.getResponsiveSetting('create_text') || ''
+    let text = element.getResponsiveLockedSetting('create_text') || ''
     text = text.replace('{{__query__}}', query)
     text = replaceContentWithData(text, element.getCurrentModel().getData())
     return (
@@ -1125,7 +1126,7 @@ class InputSelectWidget extends Component {
       />)
   }
   onQueryChange = async (s)=>{
-    const searchActions = this.props.element.getSettings("s_actions");
+    const searchActions = this.props.element.getLockedSettings("s_actions");
     if(_.isEmpty(searchActions)){
       return
     }
@@ -1165,12 +1166,11 @@ class InputSelectWidget extends Component {
       label_icon
     } = settings;
 
-    const fullWidth = element.getSettings("full_width") || false
+    const fullWidth = element.getLockedSettings("full_width")
     this.popoverProps.onOpening = (e) => {
       if(fullWidth) {
         const inputWidth = this.inputRef.current.offsetWidth;
 
-        console.log(inputWidth, e)
         e.style.width = `${inputWidth}px`
       } else if(e.style.width) {
         e.style.width = ""
@@ -1179,7 +1179,7 @@ class InputSelectWidget extends Component {
 
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     ) || 'top';
     switch (content_label_position_type) {
@@ -1220,7 +1220,7 @@ class InputSelectWidget extends Component {
         classLabel = "";
         break;
     }
-    const content_label = this.getContent('content_label')
+    const content_label = this.getLockedContent('content_label')
     if (content_label) {
       label = (
         <div
@@ -1246,20 +1246,20 @@ class InputSelectWidget extends Component {
       label = null;
     }
 
-    const placeholder = element.getResponsiveSetting('content_placeholder');
-    const content_readonly = element.getResponsiveSetting('content_readonly');
-    const no_results_text = element.getResponsiveSetting('no_results_text');
+    const placeholder = element.getResponsiveLockedSetting('content_placeholder');
+    const content_readonly = element.getResponsiveLockedSetting('content_readonly');
+    const no_results_text = element.getResponsiveLockedSetting('no_results_text');
 
     const inputProps = {
       placeholder,
-      className: element.getResponsiveSetting('hide_search') ? 'altrp-hidden' : '',
+      className: element.getResponsiveLockedSetting('hide_search') ? 'altrp-hidden' : '',
     };
 
     let input = null;
 
     let itemsOptions = this.getOptions();
-    const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
-    const position_css_id = this.getContent('position_css_id')
+    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    const position_css_id = this.getLockedContent('position_css_id')
 
 
     input = (
@@ -1267,7 +1267,7 @@ class InputSelectWidget extends Component {
           inputProps={inputProps}
           disabled={content_readonly}
           popoverProps={this.popoverProps}
-          createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
+          createNewItemFromQuery={element.getResponsiveLockedSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}
           itemRenderer={(item, {handleClick, modifiers, query}) => {
             if (!modifiers.matchesPredicate) {
