@@ -18,7 +18,7 @@ export default function renderGallery(settings, device) {
 
   if (repeater.length > 0) {
     images = repeater.map((img, idx) => {
-      const url = img.simple_media_settings?.url ? img.simple_media_settings.url : '/img/nullImage.png';
+      const url = img.simple_media_settings?.url ? img.simple_media_settings?.url : '/img/nullImage.png';
 
       let containerClassNames = "altrp-gallery-img-container";
 

@@ -43,7 +43,7 @@ export default function renderImageLightbox(settings, device, context) {
 
   const cursorPointer = getResponsiveSetting(settings, "cursor_pointer", device, false);
   const background_image = getResponsiveSetting(settings, "background_image", device, {});
-  const media = getMedia()
+  const media = getMedia() || {}
   let classNames = "altrp-image-container";
   if (cursorPointer) {
     classNames += " cursor-pointer"
@@ -58,10 +58,10 @@ export default function renderImageLightbox(settings, device, context) {
     height = ""
   }
 
-  media.url = media.url || '/img/nullImage.png';
+  media.url = media?.url || '/img/nullImage.png';
   media.name = media.name || 'null';
   media.assetType = media.assetType || undefined;
-  
+
   let image = renderAsset(media, {
     'class': " altrp-image" + (background_image ? " altrp-background-image" : "")
   });

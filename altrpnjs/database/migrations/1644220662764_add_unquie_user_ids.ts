@@ -6,7 +6,7 @@ export default class AddUniqueUserIds extends BaseSchema {
   protected tableName = 'users'
 
   public async up () {
-    this.schema.alterTable(this.tableName, (table) => {
+    await this.schema.table(this.tableName, (table) => {
       table.uuid("guid").nullable()
       table.unique(["guid"])
 

@@ -10,7 +10,7 @@ export default function renderDropbar(settings, device) {
   const buttonMedia = getResponsiveSetting(settings,"button_icon", device, {});
 
 
-  const showIcon = buttonMedia.url;
+  const showIcon = buttonMedia?.url;
 
   const classes = ["altrp-btn", "dropbar"];
 
@@ -18,7 +18,7 @@ export default function renderDropbar(settings, device) {
     classes.push(customClasses)
   }
 
-  if (background_image.url) {
+  if (background_image?.url) {
     classes.push("altrp-background-image");
   }
   // if(this.isDisabled()){

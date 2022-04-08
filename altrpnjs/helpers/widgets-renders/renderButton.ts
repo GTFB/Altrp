@@ -14,7 +14,7 @@ export default function renderButton(settings, device, context) {
   )
 
   let classes = 'altrp-btn ' + (settings.position_css_classes || "")
-  if (background_image.url) {
+  if (background_image?.url) {
     classes += " altrp-background-image"
   }
 
@@ -24,24 +24,24 @@ export default function renderButton(settings, device, context) {
   let buttonMediaTop = { ...settings.button_icon_top }
   let buttonMediaBottom = { ...settings.button_icon_bottom }
 
-  const showIcon = buttonMediaRight.url || buttonMediaLeft.url || buttonMediaTop.url || buttonMediaBottom.url
+  const showIcon = buttonMediaRight?.url || buttonMediaLeft?.url || buttonMediaTop?.url || buttonMediaBottom?.url
 
   let existingIconsString = ''
 
   if (showIcon) {
-    if (buttonMediaRight.url) {
+    if (buttonMediaRight?.url) {
       existingIconsString += 'r'
     }
 
-    if (buttonMediaLeft.url) {
+    if (buttonMediaLeft?.url) {
       existingIconsString += 'l'
     }
 
-    if (buttonMediaTop.url) {
+    if (buttonMediaTop?.url) {
       existingIconsString += 't'
     }
 
-    if (buttonMediaBottom.url) {
+    if (buttonMediaBottom?.url) {
       existingIconsString += 'b'
     }
   }
@@ -312,8 +312,8 @@ export default function renderButton(settings, device, context) {
 
 
 
-  let url = link_link.url
-    ? link_link.url.replace(":id", context.id || "")
+  let url = link_link?.url
+    ? link_link?.url.replace(":id", context.id || "")
     : ""
   if (_.isObject(context)) {
     url = parseURLTemplate(link_link.url || "", context)
