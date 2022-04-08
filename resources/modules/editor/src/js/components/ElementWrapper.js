@@ -76,6 +76,7 @@ import InputDateRangeComponent from "./widgets/styled-components/InputDateRangeC
 import StarsComponent from "./widgets/styled-components/StarsComponent";
 import ProgressBarComponent from "./widgets/styled-components/ProgressBarComponent";
 import InputCropImageComponent from "./widgets/styled-components/InputCropImageComponent";
+import getFeedbackStyles from "../../../../front-app/src/js/components/helpers/getFeedbackStyles";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -122,7 +123,8 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "section":
       styles += `.${prefix}${elementId} {${SectionWidgetComponent(
         settings,
-        element.children.length
+        element.children.length,
+        elementId
       )}}`;
       break;
     case "column":
@@ -338,7 +340,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case 'tournament':
       styles += `.${prefix}${elementId} {${getTournamentStyles(settings, elementId)}}`
-      break
+      break;
+    case 'feedback':
+      styles += `.${prefix}${elementId} {${getFeedbackStyles(settings, elementId)}}`
+      break;
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";

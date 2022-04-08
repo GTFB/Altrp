@@ -126,6 +126,8 @@ import ProgressBarWidget from "../../components/widgets/ProgressBarWidget";
 import ActionTriggerWidget from "../../components/widgets/ActionTriggerWidget";
 import Tournament from "../../classes/elements/Tournament";
 import TournamentWidget from "../../components/widgets/TournamentWidget";
+import Feedback from "../../classes/elements/Feedback";
+import FeedbackWidget from "../../components/widgets/FeedbackWidget";
 
 const elements = {}
 const components = {}
@@ -190,6 +192,7 @@ elements[FunnelDiagram.getName()] = FunnelDiagram;
 elements[RadarDiagram.getName()] = RadarDiagram;
 
 elements[Tournament.getName()] = Tournament
+elements[Feedback.getName()] = Feedback;
 elements[Column.getName()] = Column;
 elements[Section.getName()] = Section;
 // elements[List.getName()] = List;
@@ -270,6 +273,7 @@ components[Icon.getName()] = IconWidget;
 components[Stars.getName()] = StarsWidget;
 components[ProgressBar.getName()] = ProgressBarWidget;
 components[Tournament.getName()] = TournamentWidget
+components[Feedback.getName()] = FeedbackWidget
 
 export default {
     elements: {

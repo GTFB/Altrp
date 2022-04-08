@@ -395,6 +395,12 @@ export const defaultState = [
     import: async () => {
       return await import(/* webpackChunkName: 'TournamentWidget' */ "../../../../../editor/src/js/components/widgets/TournamentWidget");
     }
+  },
+  {
+    name: "feedback",
+    import: async () => {
+      return await import(/* webpackChunkName: 'FeedbackWidget' */ "../../../../../editor/src/js/components/widgets/FeedbackWidget");
+    }
   }
 ]
 

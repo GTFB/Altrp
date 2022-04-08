@@ -659,7 +659,7 @@ function altrpSectionFullHover(settings, state=':hover') {
  * @return {string}
  */
 
-export default function SectionWidgetComponent(settings, childrenLength) {
+export default function SectionWidgetComponent(settings, childrenLength, elementId) {
 
   // console.log(`& > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}`);
   return `
@@ -676,17 +676,15 @@ export default function SectionWidgetComponent(settings, childrenLength) {
     ${altrpSectionHover(settings)}
   }
 
-  & > .altrp-section .background_section,
-  & > .altrp-section .altrp-background-image {
+  & .altrp-section .altrp-background-image${elementId} {
     ${sectionBackground(settings)}
   }
 
-  & > .altrp-section .background_section,
-  & > .altrp-section .altrp-background-image {
+  & .altrp-section .altrp-background-image${elementId} {
     ${altrpSectionFilter(settings)}
   }
-  & > .altrp-section:hover .background_section:hover,
-  & > .altrp-section:hover .altrp-background-image:hover{
+
+  & .altrp-section:hover .altrp-background-image${elementId}:hover{
     ${sectionBackgroundHover(settings)}
   }
 

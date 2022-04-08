@@ -59,6 +59,7 @@ import StarsComponent from "../../../../editor/src/js/components/widgets/styled-
 import ProgressBarComponent from "../../../../editor/src/js/components/widgets/styled-components/ProgressBarComponent";
 import MenuBlueprintCSS from "../../../../../../server/classes/components/MenuPlaceholder/MenuBlueprintCSS";
 import InputCropImageComponent from "../../../../editor/src/js/components/widgets/styled-components/InputCropImageComponent";
+import getFeedbackStyles from "./helpers/getFeedbackStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -118,10 +119,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${AccordionComponent(item.settings)}}`;
           break;
         case "section":
-          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1, id)}}`;
           break;
         case "section_widget":
-          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1, id)}}`;
           break;
         case "column":
           styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;
@@ -311,6 +312,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case 'tournament':
           styles += `.${prefix}${id} {${getTournamentStyles(item.settings)}}`
+          break;
+        case 'feedback':
+          styles += `.${prefix}${id} {${getFeedbackStyles(item.settings)}}`
+          break;
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
