@@ -13,7 +13,7 @@ import {
   hasOne,
   HasOne,
   computed,
-  afterCreate, beforeDelete
+  afterCreate, beforeDelete,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from "uuid";
 

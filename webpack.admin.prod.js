@@ -43,6 +43,15 @@ module.exports = {
         ]
       },
       {
+        test: /\.css$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+        ]
+      },
+      {
         test: /\.svg$/,
         exclude: /slick.svg$|spritesheet.svg$/,
         use: [
@@ -63,7 +72,11 @@ module.exports = {
         options: {
           name: "[path][name].[ext]"
         }
-      }
+      },
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg)$/,
+        use: ["file-loader"]
+      },
     ]
   },
   resolve: {
