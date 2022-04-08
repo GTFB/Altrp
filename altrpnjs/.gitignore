@@ -8,12 +8,13 @@ tmp
 .env-prod
 
 #bundles
-public/
+public/*
+!public/css
 storage/
 app/AltrpModels/
 app/AltrpControllers/
 app/AltrpPlugins/
-app/altrp-listeners/
+app/AltrpListeners/
 start/altrp-routes/
 /resources/views/altrp
 

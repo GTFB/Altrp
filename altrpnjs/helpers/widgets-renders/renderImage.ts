@@ -6,7 +6,7 @@ import parseURLTemplate from '../parseURLTemplate'
 import objectToAttributesString from './../objectToAttributesString'
 import AltrpImage from "./components/AltrpImage";
 
-export default function renderImage(settings, device, context) {
+export default function renderImage(settings, device, context, widgetId) {
   const link = settings.image_link || {}
   const cursorPointer = getResponsiveSetting(settings,'cursor_pointer', device,false)
 
@@ -58,8 +58,7 @@ export default function renderImage(settings, device, context) {
   if(_.get(getResponsiveSetting(settings, 'height_size', device), 'size', '100') === '0') {
     height = ''
   }
-
-  let altrpImage = AltrpImage({image: media, width, height, settings, class: 'altrp-image' })
+  let altrpImage = AltrpImage({image: media, widgetId,  width, height, settings, class: 'altrp-image' }, device)
 
   if (link.toPrevPage) {
     return `<div class='${classNames}'>${altrpImage}</div>`
@@ -72,7 +71,7 @@ export default function renderImage(settings, device, context) {
     if(link.openInNew){
       linkProps.target = '_blank'
     }
-    return `<div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}' ${objectToAttributesString(linkProps)}>${altrpImage}></a>` : altrpImage }</div>`
+    return `<div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}' ${objectToAttributesString(linkProps)}>${altrpImage}</a>` : altrpImage }</div>`
   }
 }
 

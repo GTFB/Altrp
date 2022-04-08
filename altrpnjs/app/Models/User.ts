@@ -26,6 +26,11 @@ export default class User extends BaseModel {
   public email: string
 
   @column()
+  public telegram_chat: number
+
+  @column({ serialize: (value, _attribute, model: User) => {
+    return value || model.email
+  }})
   public name: string
 
   @column()
@@ -116,22 +121,20 @@ export default class User extends BaseModel {
     if(empty(roles)){
       return  true
     }
-
     if(typeof roles === 'string' || typeof roles === 'number'){
       roles = [roles]
     }
 
     // @ts-ignore
     await this.load('roles')
-
-    return ! ! roles.filter((roleName)=>{
+    return ! ! (roles.filter((roleName)=>{
       return this.roles.map((role:Role)=>{
         if(typeof roleName === 'string'){
           return role.name
         }
         return role.id
       }).indexOf(roleName) !== -1;
-    })
+    }).length)
   }
 
   @afterCreate()
@@ -173,57 +176,36 @@ export default class User extends BaseModel {
   public async can(value: Permission|number|number[]|Permission[]): Promise<boolean> {
 
     if(!(value instanceof Array)) {
-      if(typeof value === "object" || typeof value === "number") {
-        const userPermission = await this.hasPermission(value)
-
-        if(!userPermission) {
-          //@ts-ignore
-          const roles = await this.related("roles").query()
-
-          let out = false;
-
-          for (let key in roles) {
-            // @ts-ignore
-            if(await roles[key].hasPermission(value)) {
-              out = true
-              break;
-            }
-          }
-          return out
-        }
-
-        return userPermission
-      }
-    } else {
-      let finalOut = true
-
-      for (let valueKey in value) {
-        const userPermission = await this.hasPermission(value[valueKey])
-
-        if(!userPermission) {
-          //@ts-ignore
-          const roles = await this.related("roles").query()
-
-          let out = false;
-
-          for (let key in roles) {
-            // @ts-ignore
-            if(await roles[key].hasPermission(value[valueKey])) {
-              out = true
-              break;
-            }
-          }
-
-          if(!out) {
-            finalOut = false
-            break
-          }
-        }
-        return finalOut
-      }
+      //@ts-ignore
+      value = [value]
     }
+    let finalOut = true
 
+    //@ts-ignore
+    for (let valueKey in value) {
+      const userPermission = await this.hasPermission(value[valueKey])
 
+      if(!userPermission) {
+        //@ts-ignore
+        const roles = await this.related("roles").query()
+
+        let out = false;
+
+        for (let role of roles) {
+          // @ts-ignore
+          if(await role.hasPermission(value[valueKey])) {
+            out = true
+            break;
+          }
+        }
+
+        if(!out) {
+          finalOut = false
+          break
+        }
+      }
+      return finalOut
+    }
     return false
   }
 

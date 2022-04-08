@@ -217,8 +217,10 @@ function sectionBackground(settings) {
     backgroundSize = getResponsiveSetting(settings, 'background_size');
   }
 
-  if (backgroundSize) {
+  if (backgroundSize !== "") {
     styles += simplePropertyStyled(backgroundSize, 'background-size');
+  } else {
+    styles += '';
   }
 
   if (settings !== undefined) {
@@ -233,10 +235,10 @@ function sectionBackground(settings) {
     backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width');
   }
 
-  if (backgroundSizeInUnit === undefined || backgroundSizeInUnit?.size === '0' || backgroundSizeInUnit?.size === '' ) {
-    styles += '';
-  } else {
+  if (backgroundSizeInUnit &&  backgroundSize === "") {
     styles += sizeStyled(backgroundSizeInUnit, 'background-size');
+  } else {
+    styles += '';
   }
 
   if (settings !== undefined) {
@@ -559,11 +561,9 @@ function altrpSectionBoxed(settings) {
   }
 
   if (width) {
-    if (width.size === undefined || width.size === '0' || width.size === '') {
-      styles += '';
-    } else {
-      styles += `width: ${width.size}px;`;
-    }
+    styles += sizeStyled(width, "width");
+  } else {
+    styles += ''
   }
 
   return styles;
@@ -659,7 +659,7 @@ function altrpSectionFullHover(settings, state=':hover') {
  * @return {string}
  */
 
-export default function SectionWidgetComponent(settings, childrenLength) {
+export default function SectionWidgetComponent(settings, childrenLength, elementId) {
 
   // console.log(`& > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}`);
   return `
@@ -676,17 +676,15 @@ export default function SectionWidgetComponent(settings, childrenLength) {
     ${altrpSectionHover(settings)}
   }
 
-  & > .altrp-section .background_section,
-  & > .altrp-section .altrp-background-image {
+  & .altrp-section .altrp-background-image${elementId} {
     ${sectionBackground(settings)}
   }
 
-  & > .altrp-section .background_section,
-  & > .altrp-section .altrp-background-image {
+  & .altrp-section .altrp-background-image${elementId} {
     ${altrpSectionFilter(settings)}
   }
-  & > .altrp-section:hover .background_section:hover,
-  & > .altrp-section:hover .altrp-background-image:hover{
+
+  & .altrp-section:hover .altrp-background-image${elementId}:hover{
     ${sectionBackgroundHover(settings)}
   }
 

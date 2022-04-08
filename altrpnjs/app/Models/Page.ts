@@ -184,6 +184,30 @@ export default class Page extends BaseModel {
       template: footerTemplate
     })
 
+    let _contentAreas = await Area.query().whereNotIn('name', [
+      'card', 'popup', 'reports', 'email'
+    ]).select('*')
+
+    for (let contentArea of _contentAreas) {
+
+      if (Page.FRONT_DEFAULT_AREAS.indexOf(contentArea.name) != -1) {
+        continue
+      }
+      if (data_get(await Template.getTemplate(this.id, contentArea.name), 'guid')) {
+
+        const template = await Template.getTemplate(this.id, contentArea.name)
+        if (template) {
+          data.push({
+            area_name: contentArea.name,
+            id: contentArea.name,
+            settings: mbParseJSON(contentArea.settings, []),
+            template
+          })
+        }
+      }
+
+
+    }
     let popups = await Template.getTemplates(this.id, 'popup')
 
     data.push({
@@ -446,7 +470,6 @@ export default class Page extends BaseModel {
     columnsGrid += leftSidebar ? `${leftSidebar.getSetting('sidebar_width')}` : '0px';
     columnsGrid += ` calc(100% - ${leftSidebar ? `${leftSidebar.getSetting('sidebar_width')}` : '0px'} - ${rightSidebar ? `${rightSidebar.getSetting('sidebar_width')}` : '0px'}) `;
     columnsGrid += rightSidebar ? `${rightSidebar.getSetting('sidebar_width')}` : '0px';
-
     let contentRow = '';
     contentRow = leftSidebar ? `left-sidebar content` : `content content`;
     contentRow += rightSidebar ? ` right-sidebar` : ` content`;
@@ -535,6 +558,7 @@ export default class Page extends BaseModel {
     ]).select('*')
 
     let contentAreas: Area[] = []
+    let customAreasCount = 0
     for (let contentArea of _contentAreas) {
 
       if (Page.FRONT_DEFAULT_AREAS.indexOf(contentArea.name) != -1) {
@@ -543,12 +567,14 @@ export default class Page extends BaseModel {
       }
 
       if (data_get(await Template.getTemplate(this.id, contentArea.name), 'guid')) {
+        customAreasCount ++
         contentAreas.push(contentArea)
       }
 
     }
-
-    styles += `<style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
+    if(customAreasCount){
+      styles += `<style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
+    }
 
     return styles
   }
@@ -713,4 +739,6 @@ export default class Page extends BaseModel {
     let data = JSON.parse(template.data);
     this._extractElementsNames(data, elementNames, false);
   }
+
+
 }

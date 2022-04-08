@@ -380,6 +380,56 @@ class Section extends BaseElement{
 
     this.endControlSection();
 
+    this.startControlSection("position_style", {
+      tab: TAB_STYLE,
+      label: "Position (content)"
+    });
+
+    this.addControl('position_style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default:{
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl("position_style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      // default: {
+      //   top: 0,
+      //   right: 0,
+      //   bottom: 0,
+      //   left: 0,
+      //   unit: "px"
+      // },
+      units: ["px", "%", "vh"],
+    });
+
+    this.addControl('position_style_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: "Z-index",
+    });
+
+    this.addControl("position_style_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID",
+      locked: true,
+    });
+
+    this.addControl("position_style_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes",
+      locked: true,
+    });
+
+    this.endControlSection();
+
     this.startControlSection("section_style_background", {
       tab: TAB_STYLE,
       label: "Background"
@@ -509,24 +559,6 @@ class Section extends BaseElement{
       label: 'Background Repeat',
     });
 
-    this.addControl("background_image_width", {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      default: {
-        unit: 'px',
-      },
-      conditions: {
-        'background_size': [''],
-      },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
-      max: 1000,
-      min: 0,
-    });
-
     this.addControl('background_size', {
       type: CONTROLLER_SELECT,
       options: [
@@ -547,13 +579,32 @@ class Section extends BaseElement{
           label: "set width"
         },
       ],
+      default: "unset",
       label: 'Background Size',
     });
 
-    this.addControl('isScrollEffect', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Scroll Effects',
+    this.addControl("background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        unit: 'px',
+      },
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
     });
+
+    // this.addControl('isScrollEffect', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Scroll Effects',
+    // });
 
     this.endControlSection();
 
@@ -620,59 +671,9 @@ class Section extends BaseElement{
 
     this.addControl('section_style_box_shadow', {
         type: CONTROLLER_SHADOW,
-        label: 'Shadow',
+        label: 'Box Shadow',
       }
     );
-
-    this.endControlSection();
-
-    this.startControlSection("position_style", {
-      tab: TAB_STYLE,
-      label: "Position"
-    });
-
-    this.addControl('position_style_position_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default:{
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-    });
-
-    this.addControl("position_style_position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      // default: {
-      //   top: 0,
-      //   right: 0,
-      //   bottom: 0,
-      //   left: 0,
-      //   unit: "px"
-      // },
-      units: ["px", "%", "vh"],
-    });
-
-    this.addControl('position_style_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: "Z-index",
-    });
-
-    this.addControl("position_style_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID",
-      locked: true,
-    });
-
-    this.addControl("position_style_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes",
-      locked: true,
-    });
 
     this.endControlSection();
 
@@ -685,13 +686,13 @@ class Section extends BaseElement{
       hideOnEmail: true,
       type: CONTROLLER_FILTERS,
       label: 'filters',
-      default: {
-        blur: 0,
-        brightness: 100,
-        contrast: 100,
-        saturate: 100,
-        hue: 0,
-      },
+      // default: {
+      //   blur: 0,
+      //   brightness: 100,
+      //   contrast: 100,
+      //   saturate: 100,
+      //   hue: 0,
+      // },
     });
 
     // this.addControl('isFixed', {
@@ -740,6 +741,7 @@ class Section extends BaseElement{
     // });
 
     this.endControlSection();
+
 
     this.startControlSection("background_video_tab", {
       tab: TAB_STYLE,

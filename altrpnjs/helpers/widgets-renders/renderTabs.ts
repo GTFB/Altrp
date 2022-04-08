@@ -58,7 +58,7 @@ export default function renderTabs(settings, device, context) {
           (vertical ? " altrp-tab-vertical" : " altrp-tab-horizontal")
         ,
         panel: `
-          <div class="altrp-tab ${selected === `tab-${idx + 1}` ? " active" : ""}>
+          <div class="altrp-tab ${selected === `tab-${idx + 1}` ? "active" : ""}">
             ${tab.card_template ? `
               ${Template}
             ` : `
@@ -68,9 +68,9 @@ export default function renderTabs(settings, device, context) {
         `,
         key: idx + 1,
         title: `
-          ${alignment_icon_style == "left" ? icon : null}
+          ${alignment_icon_style == "left" ? icon : ''}
           <p>${tab.title_and_content_items}</p>
-          ${alignment_icon_style == "right" ? icon : null}
+          ${alignment_icon_style == "right" ? icon : ''}
         `
       }
     })
@@ -94,9 +94,10 @@ export default function renderTabs(settings, device, context) {
           >
             ${replaceContentWithData(title, context)}
           </div>
-        `)}
+        `).join('')}
       </div>
-      ${tabs.map(({panel, id, className}) => `
+
+      ${tabs.map(({panel, id, className}) => defaultSelectedTabId === id ? `
         <div
           aria-labelledby="bp3-tab-title_${id}"
           aria-hidden="false"
@@ -106,7 +107,7 @@ export default function renderTabs(settings, device, context) {
         >
           ${replaceContentWithData(panel, context)}
         </div>
-      `)}
+      ` : '').join('')}
     </div>
   `
 }

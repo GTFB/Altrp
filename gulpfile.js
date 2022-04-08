@@ -1,9 +1,9 @@
 let gulp = require('gulp');
 let zip = require('gulp-zip');
 let notify = require("gulp-notify");
-let gulpCopy = require("gulp-copy");
 let path = require('path');
 let fs = require('fs');
+let uuid = require('uuid')
 
 const excludes = [
   './**/*',
@@ -162,7 +162,14 @@ const copyPublicToAdonis = gulp.parallel(
     return gulp.src([
     './altrpnjs/app/altrp-templates/styles/**/*'
   ]).pipe(gulp.dest('./altrpnjs/build/app/altrp-templates/styles'))
-  }
+  },
+  cb=>{
+    if(!fs.existsSync('./altrpnjs/build/package_key')){
+      fs.mkdirSync('./altrpnjs/build/package_key')
+    }
+    fs.writeFileSync('./altrpnjs/build/package_key/package_key', uuid())
+    cb()
+  },
 );
 async function clearJSBuild() {
   const _p = __dirname + `${path.sep}altrpnjs${path.sep}build`

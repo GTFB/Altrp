@@ -125,8 +125,13 @@ class CustomizerSettingsPanel extends React.Component {
     let Url = ''
     if (this.props.customizer.source !== null) {
       const { web_url } = this.props.customizer.source
-      let strippedDownUrl = new URL(web_url)
-      Url = strippedDownUrl.pathname
+      try{
+        let strippedDownUrl = new URL(web_url)
+        Url = strippedDownUrl.pathname
+      }catch (e){
+        alert('Error while parsing source URL')
+        console.error(e);
+      }
     }
 
     return (
@@ -169,7 +174,7 @@ class CustomizerSettingsPanel extends React.Component {
                                      {
                                        value: 'listener',
                                        label: 'Listener',
-                                     },
+                                     }
                                      // {
                                      //   value: 'method',
                                      //   label: 'Model Custom Method',
@@ -197,18 +202,16 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>}
-                    {type !== 'listener' && (
-                      <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                        <div className="controller-container__label control-select__label controller-label">Model:</div>
-                        <AltrpSelect id="crud-fields"
-                                     className="controller-field"
-                                     isMulti={false}
-                                     value={modelsOptions.find(o=>o.value === model_id) || {}}
-                                     onChange={this.changeModel}
-                                     options={modelsOptions.filter(item => item.value >= 5)}
-                        />
-                      </div>
-                    )}
+                    <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                      <div className="controller-container__label control-select__label controller-label">Model:</div>
+                      <AltrpSelect id="crud-fields"
+                                   className="controller-field"
+                                   isMulti={false}
+                                   value={modelsOptions.find(o=>o.value === model_id) || {}}
+                                   onChange={this.changeModel}
+                                   options={modelsOptions.filter(item => item.value >= 5)}
+                      />
+                    </div>
                     {
                       type === "listener" && (
                         <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>

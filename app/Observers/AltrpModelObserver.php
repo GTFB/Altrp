@@ -307,7 +307,7 @@ class AltrpModelObserver
             throw new CommandFailedException('Failed to update controller file', 500);
         }
         if (! $generator->writeSourceActions()) {
-            throw new ModelNotWrittenException('Failed to write source action to the database', 500);
+            throw new ModelNotWrittenException('Failed to write source action to the database (Model Observer)', 500);
         }
         if (! $generator->writeSourceRoles()) {
             throw new ModelNotWrittenException('Failed to write source roles to the database', 500);

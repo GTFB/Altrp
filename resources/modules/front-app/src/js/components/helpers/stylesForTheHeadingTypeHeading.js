@@ -10,7 +10,7 @@ import {
   gradientStyled,
   backgroundImageControllerToStyles,
   translateStyled,
-  sliderStyled
+  sliderStyled, dimensionsStyled
 } from "../../helpers/styles";
 import { getResponsiveSetting } from "../../helpers";
 
@@ -28,31 +28,31 @@ const headingTransformToStyles = (settings, state) => {
   if (rotate?.size) {
     styles += ` rotate(${rotate?.size}deg)`
   }
-  
+
   if (scaleX?.size) {
     styles += ` scaleX(${scaleX?.size})`
   }
-  
+
   if (scaleY?.size) {
     styles += ` scaleY(${scaleY?.size})`
   }
-  
+
   if (skewX?.size) {
     styles += ` skewX(${skewX?.size}deg)`
   }
-  
+
   if (skewY?.size) {
     styles += ` skewY(${skewY?.size}deg)`
   }
-  
+
   if (translateX?.size) {
     styles += ` translateX(${translateX?.size}px)`
   }
-  
+
   if (translateY?.size) {
     styles += ` translateY(${translateY?.size}px)`
   }
-  
+
   return styles == 'transform:' ? '' : styles + ';';
 }
 
@@ -202,7 +202,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   const borderRadius = getResponsiveSetting(settings, "style_border_radius");
 
   if (borderRadius) {
-    styles += sizeStyled(borderRadius, "border-radius");
+    styles += dimensionsStyled(borderRadius, "border-radius");
   }
   //fix display with <strong> and <b> tags
   styles += "display:block;";
@@ -375,19 +375,20 @@ export function getHeadingTypeHeadingStyles(settings, id) {
     styles += simplePropertyStyled(backgroundRepeat, "background-repeat");
   }
 
-  const backgroundSizeInUnits = getResponsiveSetting(
-    settings,
-    "background_image_width"
-  );
-
-  if (backgroundSizeInUnits) {
-    styles += sizeStyled(backgroundSizeInUnits, "background-size");
-  }
+  const backgroundSizeInUnits = getResponsiveSetting(settings, "background_image_width");
 
   const backgroundSize = getResponsiveSetting(settings, "background_size");
 
-  if (backgroundSize) {
+  if (backgroundSizeInUnits && backgroundSize === "") {
+    styles += sizeStyled(backgroundSizeInUnits, "background-size");
+  } else {
+    styles += ""
+  }
+
+  if (backgroundSize !== "") {
     styles += simplePropertyStyled(backgroundSize, "background-size");
+  } else {
+    styles += ""
   }
 
   styles += `} `;

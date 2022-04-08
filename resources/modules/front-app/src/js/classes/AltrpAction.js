@@ -56,13 +56,13 @@ class AltrpAction extends AltrpModel {
    * Получить id для регистрации формы
    * @return {string}
    */
-  getFormId() {
+  getFormId(item = {}) {
     let formId = this.getProperty('form_id');
     if (!formId) {
       return formId;
     }
     if (formId.indexOf('{{') !== -1) {
-      formId = replaceContentWithData(formId, this.getCurrentModel().getData());
+      formId = replaceContentWithData(formId, {...this.getCurrentModel().getData(), ...item});
     }
     return formId;
   }
@@ -154,13 +154,11 @@ class AltrpAction extends AltrpModel {
         return;
       }
       case 'login': {
-        console.trace(this);
         const form = formsManager.registerForm(
           this.getFormId(),
           'login',
           'POST'
         );
-        console.log(form);
         this.setProperty('_form', form);
       }
     }
@@ -470,6 +468,9 @@ class AltrpAction extends AltrpModel {
             );
           }
           let url = this.getProperty('form_url');
+          if(! _.isObject(item)){
+            item = {id: item}
+          }
           url = replaceContentWithData(url, item);
           const form = formsManager.registerForm(
             this.getFormId() + idx,
@@ -479,7 +480,7 @@ class AltrpAction extends AltrpModel {
               customRoute: url
             }
           );
-          return await form.submit('', '', data, customHeaders);
+          return  form.submit('', '', data, customHeaders);
         });
         try {
           let res = await Promise.all(bulkRequests);
@@ -544,8 +545,12 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionRedirect() {
+    let history = window.history
     let URL = this.getFormURL();
     if(! URL){
+      if (this.getProperty('back')) {
+        history.back()
+      }
       return {
         success: true
       }
@@ -674,6 +679,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionScrollToElement() {
     let elementId = this.getProperty('element_id');
+    console.log(elementId);
     if (!elementId) {
       return {success: true};
     }
@@ -937,13 +943,11 @@ class AltrpAction extends AltrpModel {
      */
     let form = this.getProperty('_form');
     let success = true;
-    console.trace(form);
     form.fields.forEach(field => {
       if (!field.fieldValidate()) {
         success = false;
       }
     });
-    console.log(success);
     if (!success) {
       return {success: false};
     }

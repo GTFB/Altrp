@@ -27,7 +27,7 @@ import store, {
   getCurrentScreen
 } from "../src/js/store/store";
 
-import Logo from "./svgs/logo.svg";
+import Logo from "./svgs/logotext.svg";
 import Navigation from "./svgs/navigation.svg";
 import History from "./svgs/history.svg";
 import Preview from "./svgs/preview.svg";
@@ -144,11 +144,11 @@ class Editor extends Component {
   async getConnect(currentUser) {
     if(currentUser.guid && !this.altrpIo) {
       this.altrpIo = io( {
+        path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-
       this.altrpIo.on("message", (data) => {
         console.log(data)
       })
@@ -427,7 +427,7 @@ class Editor extends Component {
                 {window.admin_logo ? (
                   renderAsset(window.admin_logo, { className: "editor__logo" })
                 ) : (
-                  <Logo viewBox="0 0 97 35" className="editor__logo" />
+                  <Logo className="editor__logo" />
                 )}
               </a>
               <button className="btn btn_dots" onClick={this.showWidgetsPanel}>

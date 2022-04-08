@@ -1011,10 +1011,6 @@ class Heading extends BaseElement {
     this.addControl("style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
     });
 
     this.addControl("style_border_radius", {

@@ -13328,6 +13328,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
   }, {
     key: "getFormId",
     value: function getFormId() {
+      var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var formId = this.getProperty('form_id');
 
       if (!formId) {
@@ -13335,7 +13336,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
       }
 
       if (formId.indexOf('{{') !== -1) {
-        formId = replaceContentWithData(formId, this.getCurrentModel().getData());
+        formId = replaceContentWithData(formId, _objectSpread(_objectSpread({}, this.getCurrentModel().getData()), item));
       }
 
       return formId;
@@ -13424,7 +13425,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.t0 = this.getType();
-                _context2.next = _context2.t0 === 'form' ? 3 : _context2.t0 === 'login' ? 7 : 11;
+                _context2.next = _context2.t0 === 'form' ? 3 : _context2.t0 === 'login' ? 7 : 9;
                 break;
 
               case 3:
@@ -13440,12 +13441,10 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                 return _context2.abrupt("return");
 
               case 7:
-                console.trace(this);
                 form = formsManager.registerForm(this.getFormId(), 'login', 'POST');
-                console.log(form);
                 this.setProperty('_form', form);
 
-              case 11:
+              case 9:
               case "end":
                 return _context2.stop();
             }
@@ -13951,17 +13950,20 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                             }
 
                             url = _this2.getProperty('form_url');
+
+                            if (!_.isObject(item)) {
+                              item = {
+                                id: item
+                              };
+                            }
+
                             url = replaceContentWithData(url, item);
                             form = formsManager.registerForm(_this2.getFormId() + idx, '', _this2.getProperty('form_method'), {
                               customRoute: url
                             });
-                            _context5.next = 6;
-                            return form.submit('', '', data, customHeaders);
+                            return _context5.abrupt("return", form.submit('', '', data, customHeaders));
 
                           case 6:
-                            return _context5.abrupt("return", _context5.sent);
-
-                          case 7:
                           case "end":
                             return _context5.stop();
                         }
@@ -14080,23 +14082,28 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
     key: "doActionRedirect",
     value: function () {
       var _doActionRedirect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee7() {
-        var URL, innerRedirect;
+        var history, URL, innerRedirect;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
+                history = window.history;
                 URL = this.getFormURL();
 
                 if (URL) {
-                  _context7.next = 3;
+                  _context7.next = 5;
                   break;
+                }
+
+                if (this.getProperty('back')) {
+                  history.back();
                 }
 
                 return _context7.abrupt("return", {
                   success: true
                 });
 
-              case 3:
+              case 5:
                 if (window.frontAppRouter) {
                   if (this.getProperty('back')) {
                     frontAppRouter.history.goBack();
@@ -14121,7 +14128,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: true
                 });
 
-              case 5:
+              case 7:
               case "end":
                 return _context7.stop();
             }
@@ -14365,9 +14372,10 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
             switch (_context12.prev = _context12.next) {
               case 0:
                 elementId = this.getProperty('element_id');
+                console.log(elementId);
 
                 if (elementId) {
-                  _context12.next = 3;
+                  _context12.next = 4;
                   break;
                 }
 
@@ -14375,7 +14383,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: true
                 });
 
-              case 3:
+              case 4:
                 elementId = elementId.trim();
                 element = getHTMLElementById(elementId);
                 scroller = window.mainScrollbars;
@@ -14396,7 +14404,7 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: true
                 });
 
-              case 10:
+              case 11:
               case "end":
                 return _context12.stop();
             }
@@ -14995,16 +15003,14 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                  */
                 form = this.getProperty('_form');
                 success = true;
-                console.trace(form);
                 form.fields.forEach(function (field) {
                   if (!field.fieldValidate()) {
                     success = false;
                   }
                 });
-                console.log(success);
 
                 if (success) {
-                  _context21.next = 7;
+                  _context21.next = 5;
                   break;
                 }
 
@@ -15012,14 +15018,14 @@ var AltrpAction = /*#__PURE__*/function (_AltrpModel) {
                   success: false
                 });
 
-              case 7:
-                _context21.next = 9;
+              case 5:
+                _context21.next = 7;
                 return altrpLogin(form.getData(), this.getFormId());
 
-              case 9:
+              case 7:
                 return _context21.abrupt("return", _context21.sent);
 
-              case 10:
+              case 8:
               case "end":
                 return _context21.stop();
             }

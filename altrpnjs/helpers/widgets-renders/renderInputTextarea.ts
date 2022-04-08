@@ -75,7 +75,7 @@ export default function renderInputTextarea(settings, device) {
     autocomplete = "on";
   }
 
-  let altrpTextarea = `<textarea id="${settings.position_css_id}" readonly="${content_readonly}" placeholder="${settings.content_placeholder}" class="${"bp3-input altrp-field " + settings.position_css_classes}" autocomplete="${autocomplete}" value=""></textarea>`
+  let altrpTextarea = `<textarea id="${settings.position_css_id || ""}" ${content_readonly ? "readonly" : ""} placeholder="${settings.content_placeholder || ""}" class="${"bp3-input altrp-field " + (settings.position_css_classes || "")}" autocomplete="${autocomplete}"></textarea>`
 
   return `<div class="altrp-field-container " style="${containerClass}">
   ${content_label_position_type === "top" ? label : ""}

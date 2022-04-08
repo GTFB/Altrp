@@ -26,6 +26,7 @@ export default class CustomizersController {
         customizer.settings = []
       }
       await customizer.save()
+
       if (customizer.type === 'api' && model) {
         let source = new Source();
         await model.load('altrp_controller')
@@ -45,7 +46,6 @@ export default class CustomizersController {
       }
       if(customizer.type === "listener" && model) {
         const generator = new ListenerGenerator()
-
         await generator.run(model, customizer.settings.hook_type)
       }
       //@ts-ignore
@@ -119,12 +119,13 @@ export default class CustomizersController {
       )
     }
 
-    if(customizer.type === "listener" && request.input("type") !== "listener") {
+    if(customizer.type === "listener" && request.input("settings.hook_type")) {
+      // @ts-ignore
       const generator = new ListenerGenerator()
 
       const model = await Model.find(customizer.model_id);
       if(model) {
-        await generator.delete(model, customizer.settings.hook_type)
+        // await generator.delete(model, customizer.settings.hook_type)
       }
     }
     const oldType = customizer.type
@@ -147,8 +148,12 @@ export default class CustomizersController {
 
       if(customizer.$dirty?.model_id && customizer.$original.model_id) {
         const oldModel = await Model.find(customizer.$original.model_id)
-        //@ts-ignore
-        await Event.emit('model:updated', oldModel)
+
+        if(oldModel) {
+          //@ts-ignore
+          await Event.emit('model:updated', oldModel)
+        }
+
       }
       if (customizer.type === 'api' && model) {
         await model.load('altrp_controller')
@@ -173,7 +178,10 @@ export default class CustomizersController {
 
         await generator.run(model, customizer.settings.hook_type)
       }
-      Event.emit('model:updated', model)
+      if(model) {
+        Event.emit('model:updated', model)
+      }
+
     } catch
       (e) {
       console.trace(e);

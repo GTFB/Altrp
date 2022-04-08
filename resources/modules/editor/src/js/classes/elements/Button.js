@@ -178,7 +178,7 @@ class Button extends BaseElement {
 
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
-      label: 'Position',
+      label: 'Position (content)',
     });
 
     this.addControl('position_padding', {
@@ -214,6 +214,19 @@ class Button extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
     });
+
+    this.addControl("position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID",
+      locked: true,
+    });
+
+    this.addControl("position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes",
+      locked: true,
+    });
+
 
     this.addControl('position_opacity', {
       type: CONTROLLER_SLIDER,
@@ -354,21 +367,6 @@ class Button extends BaseElement {
       label: 'Background Repeat',
     });
 
-    this.addControl("background_image_width", {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      conditions: {
-        'background_size': [''],
-      },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
-      max: 1000,
-      min: 0,
-    });
-
     this.addControl('background_size', {
       type: CONTROLLER_SELECT,
       options: [
@@ -390,6 +388,22 @@ class Button extends BaseElement {
         },
       ],
       label: 'Background Size',
+      default: 'unset',
+    });
+
+    this.addControl("background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
     });
 
     this.endControlSection();
@@ -467,7 +481,7 @@ class Button extends BaseElement {
 
     this.addControl('style_background_shadow', {
       type: CONTROLLER_SHADOW,
-      label: 'Shadow',
+      label: 'Box Shadow',
     });
 
 
@@ -758,29 +772,29 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('button_advanced_tooltip', {
-      tab: TAB_ADVANCED,
-      label: 'Tooltip'
-    });
-
-    this.addControl('button_advanced_tooltip_font', {
-      type: CONTROLLER_SELECT2,
-      label: 'Font',
-      placeholder: 'Lato',
-      default: '"Lato"',
-      options: [
-        {
-          value: '"Roboto"',
-          label: 'Roboto'
-        },
-        {
-          value: '"Lato"',
-          label: 'Lato'
-        },
-      ],
-    });
-
-    this.endControlSection();
+    // this.startControlSection('button_advanced_tooltip', {
+    //   tab: TAB_ADVANCED,
+    //   label: 'Tooltip'
+    // });
+    //
+    // this.addControl('button_advanced_tooltip_font', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Font',
+    //   placeholder: 'Lato',
+    //   default: '"Lato"',
+    //   options: [
+    //     {
+    //       value: '"Roboto"',
+    //       label: 'Roboto'
+    //     },
+    //     {
+    //       value: '"Lato"',
+    //       label: 'Lato'
+    //     },
+    //   ],
+    // });
+    //
+    // this.endControlSection();
 
     advancedTabControllers(this);
   }

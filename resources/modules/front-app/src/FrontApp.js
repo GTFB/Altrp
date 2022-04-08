@@ -2,11 +2,10 @@ import appStore from "./js/store/store";
 import AppContent from "./js/components/AppContent";
 import { Provider } from "react-redux";
 import {changeCurrentUser, setUserNotice, setUsersOnline} from "./js/store/current-user/actions";
-import FontsManager from "./js/components/FontsManager";
 import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
-const {getRoutes, Resource} = window.altrpHelpers;
+const { Resource} = window.altrpHelpers;
 import GlobalStyles from "./js/components/GlobalStyles";
 
 class FrontApp extends Component {
@@ -101,7 +100,6 @@ class FrontApp extends Component {
         <DndProvider backend={HTML5Backend}>
           <AppContent />
         </DndProvider>
-        <FontsManager />
         <GlobalStyles/>
       </Provider>
     );

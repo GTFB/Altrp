@@ -6,7 +6,7 @@ import fs from "fs";
 
 
 export default class ListenerGenerator extends BaseGenerator {
-  public static directory = app_path('/altrp-listeners/')
+  public static directory = app_path('/AltrpListeners/')
   public static listeners =  [
     'beforeSave',
     'beforeCreate',
@@ -32,6 +32,7 @@ export default class ListenerGenerator extends BaseGenerator {
 
     this.model = model;
 
+
     const dir = ListenerGenerator.directory + "altrp_models" + "." + this.model.name + "." + type;
 
     if (!fs.existsSync(dir)){
@@ -40,6 +41,7 @@ export default class ListenerGenerator extends BaseGenerator {
 
     const listener = type
 
+    console.log(listener + ListenerGenerator.ext)
     await this.addFile( listener + ListenerGenerator.ext)
       .destinationDir(dir)
       .stub(ListenerGenerator.template)
@@ -63,7 +65,9 @@ export default class ListenerGenerator extends BaseGenerator {
 
     const listener = type
 
-    fs.unlinkSync(dir + "\\" + listener + ListenerGenerator.ext)
+    if(fs.existsSync(dir + "\\" + listener + ListenerGenerator.ext)) {
+      fs.unlinkSync(dir + "\\" + listener + ListenerGenerator.ext)
+    }
   }
 
   public async runAll(model) {

@@ -126,23 +126,24 @@ class NavigationPanel extends Component {
       id: template.id,
       onClick: (node, e) => this.showItem(e, node.id),
       [parent != null && "parent"]: parent,
-      secondaryLabel: template.name !== "root-element" && (
-        <div>
-          <Icon
-            icon="trash"
-            style={{ cursor: "pointer" }}
-            onClick={e => this.deleteItem(e, template.id)}
-          />
-        </div>
+      secondaryLabel: (
+        template.getName() !== "root-element" && (
+          <div>
+            <Icon
+              icon="trash"
+              style={{ cursor: "pointer" }}
+              onClick={e => this.deleteItem(e, template.id)}
+            />
+          </div>
+        )
       )
     };
   }
 
   render() {
-    console.log(this.state.template)
     return (
       <Scrollbars  autoHide autoHideTimeout={500} autoHideDuration={200}>
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%', padding: '10px'}}>
           <Tree
             contents={this.state.template}
             onNodeExpand={this.handleExpand}

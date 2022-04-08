@@ -19,6 +19,34 @@ export default function AdvancedComponent(settings) {
         return ''
       }
     },
+
+    () => {
+      const value = getResponsiveSetting(settings, "positioning_width_type");
+
+      switch (value) {
+        case "default":
+          return ''
+        case "100%":
+          return `width: ${value};`
+        case "auto":
+          return `width: ${value};`
+        case "custom":
+          return ''
+        default:
+          return ''
+      }
+    },
+
+    () => {
+      const value = getResponsiveSetting(settings, "positioning_custom_width");
+      const width_type = getResponsiveSetting(settings, "positioning_width_type");
+
+      if (value && width_type === "custom") {
+        return `width: ${sliderStyled(value)};`
+      } else {
+        return ''
+      }
+    },
     // () => {
     //   let element_css_editor = getResponsiveSetting(settings, "element_css_editor");
     //   console.log(element_css_editor);
@@ -28,8 +56,8 @@ export default function AdvancedComponent(settings) {
     ["padding", "positioning_padding", "dimensions"],
     ["margin", "positioning_margin", "dimensions"],
 
-    ["width", "positioning_width_type"],
-    ["width", "positioning_custom_width", "slider"],
+    // ["width", "positioning_width_type"],
+    // ["width", "positioning_custom_width", "slider"],
 
     ["align-self", "positioning_vertical_align"],
 

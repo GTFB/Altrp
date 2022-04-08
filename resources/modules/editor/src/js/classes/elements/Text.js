@@ -57,7 +57,7 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_position", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: "Position (content)"
     });
 
     this.addControl("text_style_position_padding", {
@@ -66,6 +66,33 @@ class Text extends BaseElement {
 
       units: ["px", "%", "vh"],
       stateless: true,
+    });
+
+    this.addControl('position_z_index', {
+      hideOnEmail: true,
+      type: CONTROLLER_NUMBER,
+      label: 'Z-index',
+      default: 0,
+    });
+
+    this.addControl("position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID",
+      locked: true,
+    });
+
+    this.addControl("position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes",
+      locked: true,
+    });
+
+    this.addControl("text_style_background_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      max: 1,
+      min: 0,
+      step: 0.01,
     });
 
     this.endControlSection();
@@ -78,14 +105,6 @@ class Text extends BaseElement {
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background Color",
-    });
-
-    this.addControl("text_style_background_opacity", {
-      type: CONTROLLER_SLIDER,
-      label: "Opacity",
-      max: 1,
-      min: 0,
-      step: 0.01,
     });
 
     this.endControlSection();
@@ -139,118 +158,124 @@ class Text extends BaseElement {
       label: "Border Color",
     });
 
-    this.addControl("text_style_border_radius", {
-      type: CONTROLLER_SLIDER,
-      label: "Border Radius",
-      units: ["px", "%", "vh"],
-      max: 100,
-      min: 0,
-    });
 
-    this.endControlSection();
-
-    this.startControlSection("text_advanced_tooltip", {
-      tab: TAB_ADVANCED,
-      label: "Tooltip"
-    });
-
-    this.addControl("text_advanced_tooltip_active", {
-      type: CONTROLLER_SWITCHER,
-      label: "Tooltip Active",
-      locked: true,
-    });
-
-    this.addControl("text_advanced_tooltip_label", {
-      type: CONTROLLER_TEXT,
-      label: "Label",
-      locked: true,
-    });
-
-    this.addControl("text_advanced_tooltip_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color",
-
-    });
-
-    this.addControl("text_advanced_tooltip_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color",
-
-    });
-
-    this.addControl("text_advanced_tooltip_border_type", {
-      type: CONTROLLER_SELECT,
-      label: "Border Type",
-      units: ["px", "%", "vh"],
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "solid",
-          label: "Solid"
-        },
-        {
-          value: "double",
-          label: "Double"
-        },
-        {
-          value: "dotted",
-          label: "Dotted"
-        },
-        {
-          value: "dashed",
-          label: "Dashed"
-        },
-        {
-          value: "groove",
-          label: "Groove"
-        }
-      ],
-    });
-
-    this.addControl("text_advanced_tooltip_border_width", {
+    this.addControl('text_style_border_radius', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
-      units: ["px", "%", "vh"],
-    });
-
-    this.addControl("text_advanced_tooltip_border_color", {
-      type: CONTROLLER_COLOR,
-      label: "Border Color",
-
-    });
-
-    this.addControl("text_advanced_tooltip_border_radius", {
-      type: CONTROLLER_SLIDER,
-      label: "Border Radius",
-
-      units: ["px", "%", "vh"],
-      max: 100,
-      min: 0,
-    });
-
-    this.addControl("text_advanced_tooltip_font", {
-      type: CONTROLLER_SELECT2,
-      label: "Font",
-      placeholder: "Lato",
-      options: [
-        {
-          value: '"Roboto"',
-          label: "Roboto"
-        },
-        {
-          value: '"Open Sans"',
-          label: "Open Sans"
-        },
-        {
-          value: '"Lato"',
-          label: "Lato"
-        }
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
       ],
     });
+
     this.endControlSection();
+
+    // this.startControlSection("text_advanced_tooltip", {
+    //   tab: TAB_ADVANCED,
+    //   label: "Tooltip"
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_active", {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: "Tooltip Active",
+    //   locked: true,
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_label", {
+    //   type: CONTROLLER_TEXT,
+    //   label: "Label",
+    //   locked: true,
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_color", {
+    //   type: CONTROLLER_COLOR,
+    //   label: "Background Color",
+    //
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_font_color", {
+    //   type: CONTROLLER_COLOR,
+    //   label: "Font Color",
+    //
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_border_type", {
+    //   type: CONTROLLER_SELECT,
+    //   label: "Border Type",
+    //   units: ["px", "%", "vh"],
+    //   options: [
+    //     {
+    //       value: "none",
+    //       label: "None"
+    //     },
+    //     {
+    //       value: "solid",
+    //       label: "Solid"
+    //     },
+    //     {
+    //       value: "double",
+    //       label: "Double"
+    //     },
+    //     {
+    //       value: "dotted",
+    //       label: "Dotted"
+    //     },
+    //     {
+    //       value: "dashed",
+    //       label: "Dashed"
+    //     },
+    //     {
+    //       value: "groove",
+    //       label: "Groove"
+    //     }
+    //   ],
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_border_width", {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: "Border Width",
+    //   units: ["px", "%", "vh"],
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_border_color", {
+    //   type: CONTROLLER_COLOR,
+    //   label: "Border Color",
+    //
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_border_radius", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: "Border Radius",
+    //
+    //   units: ["px", "%", "vh"],
+    //   max: 100,
+    //   min: 0,
+    // });
+    //
+    // this.addControl("text_advanced_tooltip_font", {
+    //   type: CONTROLLER_SELECT2,
+    //   label: "Font",
+    //   placeholder: "Lato",
+    //   options: [
+    //     {
+    //       value: '"Roboto"',
+    //       label: "Roboto"
+    //     },
+    //     {
+    //       value: '"Open Sans"',
+    //       label: "Open Sans"
+    //     },
+    //     {
+    //       value: '"Lato"',
+    //       label: "Lato"
+    //     }
+    //   ],
+    // });
+    // this.endControlSection();
 
     this.startControlSection("text_paragraph_settings", {
       tab: TAB_STYLE,
@@ -357,15 +382,16 @@ class Text extends BaseElement {
     });
 
     this.addControl("text_blockquote_border_radius", {
-      type: CONTROLLER_SLIDER,
-      label: 'Radius',
-      units:[
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+      },
+      units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
     });
 
     this.addControl("text_blockquote_font_typographic", {
@@ -375,7 +401,7 @@ class Text extends BaseElement {
 
     this.addControl('text_blockquote_box_shadow', {
         type: CONTROLLER_SHADOW,
-        label: 'Block Shadow',
+        label: 'Box Shadow',
       }
     );
 

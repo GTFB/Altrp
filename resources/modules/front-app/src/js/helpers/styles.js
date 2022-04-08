@@ -137,9 +137,9 @@ export function shadowControllerToStyles(data, declaration="") {
  */
 export function textShadowControllerToStyles(data) {
   if (data) {
-    const { blur, colorPickedHex, horizontal, opacity, vertical } = data;
+    const { blur, colorPickedHex, color, horizontal, opacity, vertical } = data;
 
-    return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${colorPickedHex}; `;
+    return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${color}; `;
   }
 
   return "";

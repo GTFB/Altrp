@@ -915,6 +915,7 @@ class InputSelectWidget extends Component {
    */
   getOptions() {
     let options = this.state.options;
+    const {element} = this.props
 
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
@@ -1274,7 +1275,7 @@ class InputSelectWidget extends Component {
               return null;
             }
             return <MenuItem
-              text={item.label}
+              text={<span dangerouslySetInnerHTML={{__html: item.label}}/>}
               key={item.value}
               active={item.value === this.getValue()}
               disabled={modifiers.disabled || item.disabled}
@@ -1297,13 +1298,15 @@ class InputSelectWidget extends Component {
           className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
         >
           <Button
-            text={value}
+            // text={value}
             elementRef={this.inputRef}
             disabled={content_readonly}
             onClick={this.onClick}
             icon={this.renderLeftIcon()}
             rightIcon={this.renderRightIcon()}
-          />
+          >
+            <span dangerouslySetInnerHTML={{__html: value}}/>
+          </Button>
         </Select>
     );
 

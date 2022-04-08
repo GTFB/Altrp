@@ -106,7 +106,8 @@ class AddPage extends Component {
       categoryOptions: data
     }))
 
-    let models_res = await this.model_resource.getAll();
+    let [ getModels ] = await this.model_resource.getAll();
+    const models_res = getModels.options
     if (this.props.modelsState) {
       this.setState(state => {
         return {
@@ -459,7 +460,7 @@ class AddPage extends Component {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
     let id = this.props.match.params.id
-
+    console.log(this.state.value.rolesOptions.filter(i=>this.isItemSelectedRoles(i)));
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
       <div className="admin-pages admin-page">
@@ -676,7 +677,7 @@ class AddPage extends Component {
                                        noResults={<MenuItem disabled={true} text="No results."/>}
                                        fill={true}
                                        placeholder="All..."
-                                       selectedItems={this.state.value.roles}
+                                       selectedItems={this.state.value.rolesOptions.filter(i=>this.isItemSelectedRoles(i))}
                                        onItemSelect={this.handleItemSelectRoles}
                                        itemRenderer={(item, {handleClick, modifiers, query}) => {
                                          return (
@@ -924,7 +925,8 @@ class AddPage extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    standardModels: state.modelsState.standardModels
+    standardModels: state.modelsState.standardModels,
+    modelsState: state.modelsState.toggleModels,
   }
 }
 

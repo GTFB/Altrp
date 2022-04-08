@@ -453,7 +453,7 @@ class Assets extends Component {
             to={`${this.path}/fonts`}
             isActive={this.isActiveLink('fonts')}
             onClick={this.onFilterAssets('fonts')}
-          >Fonts</NavLink>
+          >Font Files</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"

@@ -17,12 +17,12 @@ export default function renderTabsSwitcher(settings, device, context) {
   function getContent(type, contentValue) {
     if (type === "text") {
       return `
-          <div
-              class="altrp-tabs-switcher_content-text ${contentValue.className}"}
-          >
-              ${contentValue.wysiwyg}
-          </div>
-        `
+        <div
+          class="altrp-tabs-switcher_content-text ${contentValue.className}"
+        >
+          ${contentValue.wysiwyg}
+        </div>
+      `
     } else if (type === "template") {
       if (contentValue.template) {
         // const templateLoader = TemplateLoader({

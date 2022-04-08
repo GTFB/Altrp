@@ -12,10 +12,17 @@ import {parseString} from'xml2js'
 import data_get from '../../../../helpers/data_get';
 import guid from '../../../../helpers/guid';
 import public_path from "../../../../helpers/public_path";
+import Logger from "@ioc:Adonis/Core/Logger";
 
 export default class MediaController {
   private static fileTypes: any;
   async index({response, request}: HttpContextContract) {
+    const mediaToUpdate = await Media.query().whereNull('guid').select('*')
+    await Promise.all(mediaToUpdate.map(async (m:Media) =>{
+      m.guid = guid()
+      await m.save()
+      Logger.info(`Media id ${m.id} guid write!`)
+    }))
     let query = Media.query().whereNull('deleted_at')
     let categories = request.qs().categories;
     let type = request.qs().type;
@@ -82,8 +89,9 @@ export default class MediaController {
     if(! user){
       return response.status(403).json({success: false, message:'not allowed'})
     }
-    const files = request.files('files')
+    const files = request.allFiles().files || [];
     let res:Media[] = []
+    // @ts-ignore
     for(let file of files){
       if(! file){
         continue
@@ -158,7 +166,91 @@ export default class MediaController {
     return response.json( res );
   }
 
-  async destroy({params, response}: HttpContextContract){
+  async store_from_frontend({response, request, auth}: HttpContextContract){
+    // @ts-ignore
+    const user: User|null = auth.user
+    const files = request.allFiles().files || [];
+    let res:Media[] = []
+    for(let file of files){
+      if(! file){
+        console.log(files);
+        continue
+      }
+      // @ts-ignore
+      const ext = file.extname.split('.').pop()
+      let media = new Media();
+      media.title = file.clientName;
+      media.media_type = file.type || '';
+      if(user){
+        media.author = user.id;
+      } else {
+        media.guest_token = request.csrfToken
+      }
+      media.type = MediaController.getTypeForFile( file );
+      media.guid = guid();
+      const date = new Date
+      let filename = media.guid + '.' + ext
+      let urlBase = '/media/' +
+        date.getFullYear() + '/' +
+        (date.getMonth() + 1)  +'/'
+      let dirname = public_path('/storage'+urlBase)
+      if(! fs.existsSync(dirname)){
+        fs.mkdirSync(dirname, {recursive:true})
+      }
+      media.filename = urlBase + filename
+      // @ts-ignore
+      await file.moveToDisk( dirname,{name : filename}, 'local' );
+      let content = fs.readFileSync(dirname+filename)
+
+      if (ext == 'heic') {
+        media.title = file.clientName.split('.')[0] + '.jpg';
+        media.media_type = 'image/jpeg';
+        media.type = 'image';
+        content = convert({
+          buffer: content,
+          format: 'JPEG',
+          quality: 1 })
+        fs.writeFileSync(dirname+filename, content)
+      }
+
+      if( ext === 'svg' ){
+        let svg = content
+        svg = parseString( svg );
+        media.width = data_get( svg, '$.width', 150 );
+        media.height =  data_get( svg, '$.height', 150 );
+      } else {
+        let dimensions ;
+        try{
+          dimensions = imageSize( content );
+        }catch (e) {
+
+        }
+        media.width = data_get( dimensions, 'width', 0 );
+        media.height = data_get( dimensions, 'height', 0 );
+      }
+      media.main_color = ''
+      media.url =  '/storage'+urlBase+ filename;
+      await media.save();
+
+      const categories = request.input( '_categories' );
+      if( is_array(categories) && categories.length > 0 && media.guid){
+        let insert:any[] = [];
+        for(let category of categories ){
+          insert.push( {
+            category_guid: category['value'],
+            object_guid: media.guid,
+            object_type: 'Media'
+          });
+        }
+        await CategoryObject.createMany(insert);
+      }
+      res.push(media)
+    }
+    res = res.reverse()
+    return response.json( res );
+  }
+
+  async destroy({params, response, }: HttpContextContract){
     const media = await Media.find(params.id)
     if(! media){
       return response.status(404).json({success: false, message:'Media not found'})
@@ -169,5 +261,31 @@ export default class MediaController {
     }
     await media?.delete()
     return response.json({success: true, })
+  }
+
+  async  destroy_from_frontend({params, response, request, auth}: HttpContextContract) {
+    const {id} = params
+    const media = await Media.find(parseInt(id));
+    if (!media) {
+      response.status(404)
+      return response.json({'success': false, 'message': 'Media not found'})
+    }
+    const user = auth.user;
+    if (!user && request.csrfToken !== media.guest_token) {
+      response.status(403)
+      return response.json({'success': false, 'message': 'Not Access to deleting media'});
+    }
+    //@ts-ignore
+    if (user && !user.hasRole('admin') && user.id !== media.author) {
+      response.status(403)
+      return response.json({'success': false, 'message': 'Not Access to deleting media'});
+    }
+
+    let filename = public_path('/storage' + media.filename)
+    if (fs.existsSync(filename)) {
+      fs.rmSync(filename)
+    }
+    await media.delete()
+    return response.json({'success': true})
   }
 }

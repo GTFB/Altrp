@@ -307,8 +307,8 @@ class ButtonWidget extends Component {
     if (background_image.url) {
       classes += " altrp-background-image_btn";
     }
-
-    let buttonText = this.getLockedContent("button_text");
+    let buttonText = this.state.settings.button_text === "" ? "" : (this.state.settings.button_text || "Click Me")
+    // let buttonText = this.getLockedContent("button_text");
     let buttonMediaRight = { ...this.state.settings.button_icon_right };
     let buttonMediaLeft = { ...this.state.settings.button_icon_left };
     let buttonMediaTop = { ...this.state.settings.button_icon_top };

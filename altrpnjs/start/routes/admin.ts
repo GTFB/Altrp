@@ -30,13 +30,14 @@ Route.group(() => {
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
     Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
+    Route.delete('/reviews', 'TemplatesController.deleteAllReviews')
+
 
     Route.get("/role_options", "OptionsController.roles")
+    Route.get("/users_options", "OptionsController.users")
+    Route.get("/customizers_options", "optionsController.customizers")
     Route.get("/permissions_options", "OptionsController.permissions")
-
-
     Route.get("/menus/options", "optionsController.menus")
-
 
     Route.post('/pages', 'admin/PagesController.create')
     Route.get('/pages', 'admin/PagesController.index')
@@ -206,6 +207,13 @@ Route.group(() => {
     Route.get("/page_data_sources/pages/:id", "admin/PageDatasourcesController.getByPage")
     Route.get("/page_data_sources/:id", "admin/PageDatasourcesController.show")
     Route.get("/page_data_sources", "admin/PageDatasourcesController.index")
+
+    /**
+     * Email settings
+     */
+    Route.post('/write_mail_settings', 'admin/MailController.writeSettingsToEnv');
+    Route.get('/get_mail_settings', 'admin/MailController.getSettings');
+
   }).prefix('/ajax')
   Route.get('/customizers-editor', 'IndicesController.customizer')
 
