@@ -63,7 +63,7 @@ export default function renderImage(settings, device, context, widgetId) {
   if (link.toPrevPage) {
     return `<div class='${classNames}'>${altrpImage}</div>`
   } else {
-    let linkUrl = link.url || ''
+    let linkUrl = link?.url || ''
     linkUrl = parseURLTemplate(linkUrl, context)
     const linkProps: {
       target?: string

@@ -34,7 +34,7 @@ export default function renderTabs(settings, device, context) {
 
       if (tab.icon_items) {
         if(!Array.isArray(tab.icon_items)) {
-          if(tab.icon_items.url) {
+          if(tab.icon_items?.url) {
             icon = `
               <div className="altrp-tab-btn-icon" style="${objectToStylesString(iconStyles)}">
                 ${renderAsset(tab.icon_items, {})}

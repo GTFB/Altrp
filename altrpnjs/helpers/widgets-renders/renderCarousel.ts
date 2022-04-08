@@ -42,7 +42,7 @@ export default function renderCarousel(settings, device) {
                       <div class="slick-track" style="${"opacity: 1; transform: translate3d(0px, 0px, 0px);" + (carouselItems.length > 0 ? " width: " + slickTrackSize + "px;" : "")}">
                          ${carouselItems.map((slide, idx) => {
 
-                           const url = slide.image_slides_repeater?.url ? slide.image_slides_repeater.url : '/img/nullImage.png';
+                           const url = slide.image_slides_repeater?.url ? slide.image_slides_repeater?.url : '/img/nullImage.png';
 
                            return (
                              `<div data-index="${idx}" class="${idx === 0 ? "slick-slide slick-active slick-current" : "slick-slide"}" tabindex="-1" aria-hidden="${idx === 0 ? "false" : "true"}" style="${"outline: none; width: " + sizeSlide + "px;"}">

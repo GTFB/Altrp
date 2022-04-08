@@ -5,6 +5,7 @@
 
 ### 1.0.5
 * Fix Sidebars Actions
+* Fix Users Update
 
 ### 1.0.4
 * Add Nodes to Visual Codes:

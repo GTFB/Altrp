@@ -16,7 +16,7 @@ export default function renderHeading(settings, device, context) {
       let text = getContent(settings,context,'text', device)
       let link
       const className = "altrp-heading altrp-heading--link " +
-         (background_image.url ? ' altrp-background-image' : '')
+         (background_image?.url ? ' altrp-background-image' : '')
       // @ts-ignore
       let wrapperClasses = "altrp-heading-wrapper"
 
@@ -43,7 +43,7 @@ export default function renderHeading(settings, device, context) {
 
       }
 
-      if (settings.link_link && settings.link_link.url) {
+      if (settings.link_link && settings.link_link?.url) {
         let linkProps: any = {
           rel: settings.link_link.noFollow ? "nofollow" : null,
           // href: settings.link_link.url,
@@ -58,12 +58,12 @@ export default function renderHeading(settings, device, context) {
           linkProps.target = '_black'
         }
         if ((settings.link_link.tag === 'Link')) {
-          linkProps.to = settings.link_link.url.replace(':id', context.id || '')
-          linkProps.href = settings.link_link.url.replace(':id', context.id || '')
+          linkProps.to = settings.link_link?.url.replace(':id', context.id || '')
+          linkProps.href = settings.link_link?.url.replace(':id', context.id || '')
         }
         if (_.isObject(context)) {
-          linkProps.to = parseURLTemplate(settings.link_link.url, context)
-          linkProps.href = parseURLTemplate(settings.link_link.url, context)
+          linkProps.to = parseURLTemplate(settings.link_link?.url, context)
+          linkProps.href = parseURLTemplate(settings.link_link?.url, context)
         }
         link = AltrpLink(text, linkProps)
       }
