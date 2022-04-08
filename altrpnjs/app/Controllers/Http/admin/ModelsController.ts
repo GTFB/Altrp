@@ -305,25 +305,36 @@ export default class ModelsController {
 
   async getDataSourcesAndPageCount({request}: HttpContextContract) {
 
-    const page = parseInt(request.qs().page)
+    const params = request.qs()
+    const page = parseInt(params.page) || 1
+    const pageSize = parseInt(params.pageSize) || 10
 
-    let pageSize = 10
-    if(page) {
-      const sources = await Source.query().offset((page - 1)*pageSize).limit(pageSize).select('*');
-      return {
-        data_sources: sources,
-        pageCount: 0
-      }
-    } else {
-      const sources = await Source.query().select('*')
-      return {
-        data_sources: sources,
-        pageCount: 0
-      }
+    const sources = await Source.query().paginate(page, pageSize)
+
+    return {
+      count: sources.getMeta().total,
+      pageCount: sources.getMeta().last_page,
+      data_sources: sources.all()
     }
+
+    // if(page) {
+    //   const sources = await Source.query().offset((page - 1)*pageSize).limit(pageSize).select('*');
+    //   return {
+    //     data_sources: sources,
+    //     pageCount: 0
+    //   }
+    // } else {
+    //   const sources = await Source.query().select('*')
+    //   return {
+    //     data_sources: sources,
+    //     pageCount: 0
+    //   }
+    // }
     // filtration(templatesQuery, request, [
     //   'title',
     // ])
+
+
   }
 
   async getDataSourcesOptionsByModel({response, params}: HttpContextContract) {

@@ -217,7 +217,8 @@ export default class CustomizersController {
 
     let search = request.qs().s || ''
     let categories = request.qs() || ''
-    // let page = request.qs().page || 1
+    let page = request.qs().page || 1
+    let pageSize = request.qs().pageSize || 20
     let orderColumn = request.qs().order_by || 'title'
     // let limit = request.qs().pageSize || 10
     // let offset = limit * (page - 1)
@@ -241,13 +242,12 @@ export default class CustomizersController {
       })
     }
     customizers.orderBy(orderColumn, orderType)
-    const result = await customizers.select('altrp_customizers.*')
-
+    const result = await customizers.select('altrp_customizers.*').paginate(page, pageSize)
     return response.json({
-      'success':
-        true,
-      'data':
-      result,
+      'success': true,
+      count: result.getMeta().total,
+      pageCount: result.getMeta().last_page,
+      'data': result.all(),
     })
   }
 

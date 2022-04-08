@@ -52,10 +52,20 @@ export default class UsersController {
     return user
   }
 
-  public async index() {
-    const users = await User.query().preload("roles");
+  public async index({request}) {
+    const params = request.qs()
+    const page = parseInt(params.page) || 1
+    const pageSize = params.pageSize || 20
 
-    return users
+    const users = await User.query()
+      .preload("roles")
+      .paginate(page, pageSize)
+
+    return {
+      count: users.getMeta().total,
+      pageCount: users.getMeta().last_page,
+      users: users.all(),
+    }
   }
 
   public async show({ params }) {
