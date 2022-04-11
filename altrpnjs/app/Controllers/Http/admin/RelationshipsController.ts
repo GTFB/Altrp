@@ -29,41 +29,105 @@ export default class RelationshipsController {
       return response.json({success:false, message: 'select keys'})
 
     }
-    relationship.fill({
-      title: relationshipData.title,
-      description: relationshipData.description,
-      type: relationshipData.type,
-      add_belong_to: relationshipData.add_belong_to,
-      editable: relationshipData.editable,
-      always_with: relationshipData.always_with,
-      local_key: relationshipData.local_key,
-      foreign_key: relationshipData.foreign_key,
-      onDelete: relationshipData.onDelete,
-      onUpdate: relationshipData.onUpdate,
-      target_model_id: relationshipData.target_model_id,
-      model_class: '\\App\\AltrpModels\\' + model.name,
-      model_id: model.id,
-      name: relationshipData.name,
-    })
 
-    await relationship.save()
-    let targetModel = await Model.find(relationshipData.target_model_id)
-    Event.emit('model:updated', model)
-    if(targetModel){
-      Event.emit('model:updated', targetModel)
-    }
+    try {
 
-    if (targetModel) {
-      await targetModel.load('table')
+        if (relationshipData.type === 'belongsTo') {
+          const sourceRealtion = await Relationship.query()
+              .where('model_id', relationshipData.target_model_id)
+              .where('local_key', relationshipData.foreign_key)
+              .where('foreign_key', relationshipData.local_key)
+              .first()
+          if(!sourceRealtion){
+            response.status(404)
+            return response.json({success:false, message: 'Not found reverse relation'})
+          }
+        }
 
-      let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
-        ${relationshipData.name}
-        FOREIGN KEY (${relationshipData.local_key})
-        REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
-        ON DELETE ${relationshipData.onDelete}
-        ON UPDATE ${relationshipData.onUpdate}`
+        let targetModel = await Model.find(relationshipData.target_model_id)
 
-       await Database.rawQuery(query)
+        if (relationshipData.type == "belongsTo" && targetModel) {
+          await targetModel.load('table')
+          try {
+            let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+              ${model.table.name}_${relationshipData.local_key}_foreign
+              FOREIGN KEY (${relationshipData.local_key})
+              REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
+              ON DELETE ${relationshipData.onDelete}
+              ON UPDATE ${relationshipData.onUpdate}`
+            await Database.rawQuery(query)
+          } catch (e) {
+
+          }
+        }
+
+        relationship.fill({
+          title: relationshipData.title,
+          description: relationshipData.description,
+          type: relationshipData.type,
+          add_belong_to: relationshipData.add_belong_to,
+          editable: relationshipData.editable,
+          always_with: relationshipData.always_with,
+          local_key: relationshipData.local_key,
+          foreign_key: relationshipData.foreign_key,
+          onDelete: relationshipData.onDelete,
+          onUpdate: relationshipData.onUpdate,
+          target_model_id: relationshipData.target_model_id,
+          model_class: '\\App\\AltrpModels\\' + model.name,
+          model_id: model.id,
+          name: relationshipData.name,
+        })
+        await relationship.save()
+        Event.emit('model:updated', model)
+
+        
+        if (relationshipData.type != "belongsTo" && targetModel && relationshipData.add_belong_to) {
+          
+          await targetModel.load('table')
+          try {
+            let query = `ALTER TABLE ${targetModel.table.name} ADD CONSTRAINT
+              ${targetModel.table.name}_${relationshipData.foreign_key}_foreign
+              FOREIGN KEY (${relationshipData.foreign_key})
+              REFERENCES ${model.table.name}(${relationshipData.local_key})
+              ON DELETE restrict
+              ON UPDATE restrict`
+            await Database.rawQuery(query)
+          } catch (e) {
+
+          }
+
+          const belongsToRelationship = new Relationship()
+          belongsToRelationship.fill({
+            title: model.title,
+            description: relationshipData.description,
+            type: 'belongsTo',
+            add_belong_to: false,
+            editable: false,
+            always_with: false,
+            local_key: relationshipData.foreign_key,
+            foreign_key: relationshipData.local_key,
+            onDelete: 'restrict',
+            onUpdate: 'restrict',
+            target_model_id: model.id,
+            model_class: '\\App\\AltrpModels\\' + targetModel.name,
+            model_id: relationshipData.target_model_id,
+            name: model.name,
+          })
+          await belongsToRelationship.save()
+          Event.emit('model:updated', targetModel)
+
+        }
+
+    } catch (e) {
+      return response.json({
+          'success':
+            false,
+          'message':
+            'Relationship don\'t saved',
+          'throw message': e.message,
+          'trace': e.stack.split('\n'),
+        },
+      )
     }
 
     return response.json({success: true, data: relationship})
@@ -78,55 +142,134 @@ export default class RelationshipsController {
         success: false,
         message: 'Model not found'
       })
-
     }
+    await model.load('table')
+
+    let relationshipData = request.all()
+
     //const relationship = await Relationship.find(params.field_id)
-    const relationship = await Relationship.find(params.id)
+    const relationship = await Relationship.find(relationshipData.id)
     if (!relationship) {
       response.status(404)
       return response.json({
         success: false,
         message: 'Field not found'
       })
-
     }
-    let relationshipData = request.all()
-    relationship.merge({
-      title: relationshipData.title,
-      description: relationshipData.description,
-      type: relationshipData.type,
-      add_belong_to: relationshipData.add_belong_to,
-      editable: relationshipData.editable,
-      always_with: relationshipData.always_with,
-      local_key: relationshipData.local_key,
-      foreign_key: relationshipData.foreign_key,
-      onDelete: relationshipData.onDelete,
-      onUpdate: relationshipData.onUpdate,
-      target_model_id: relationshipData.target_model_id,
-      model_class: '\\App\\AltrpModels\\' + model.name,
-      model_id: model.id,
-      name: relationshipData.name,
-    })
 
-    await relationship.save()
-    Event.emit('model:updated', model)
+    try {
+      let targetModel = await Model.find(relationship.target_model_id)
+      if(relationship.type != "belongsTo" && targetModel && relationship.add_belong_to){
 
-    let targetModel = await Model.find(relationshipData.target_model_id)
-    if (targetModel) {
-      await model.load('table')
-      let createQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${relationship.name}`
-      await Database.rawQuery(createQuery)
+          await targetModel.load('table')
 
-      await targetModel.load('table')
+          try {
+            let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+            await Database.rawQuery(deleteQuery)
+          } catch (e) {
+          }
 
-      let deleteQuery = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
-        ${relationshipData.name}
-        FOREIGN KEY (${relationshipData.local_key})
-        REFERENCES ${targetModel.table.name}(${relationshipData.foreign_key})
-        ON DELETE ${relationshipData.onDelete}
-        ON UPDATE ${relationshipData.onUpdate}`
+          await Relationship.query()
+            .where('model_id', relationship.target_model_id)
+            .where('target_model_id', relationship.model_id)
+            .where('foreign_key', relationship.local_key)
+            .where('local_key', relationship.foreign_key)
+            .where('type', 'belongsTo')
+            .delete()
+          Event.emit('model:updated', targetModel)
 
-       await Database.rawQuery(deleteQuery)
+      }
+
+      if (relationship.type === "belongsTo") {
+        try {
+          let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+          await Database.rawQuery(deleteQuery)
+        } catch (e) {
+        }
+      }
+
+      let newTargetModel = await Model.find(relationshipData.target_model_id)
+
+      if (relationshipData.type === "belongsTo" && newTargetModel) {
+        await newTargetModel.load('table')
+
+        try {
+          let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+            ${model.table.name}_${relationshipData.local_key}_foreign
+            FOREIGN KEY (${relationshipData.local_key})
+            REFERENCES ${newTargetModel.table.name}(${relationshipData.foreign_key})
+            ON DELETE ${relationshipData.onDelete}
+            ON UPDATE ${relationshipData.onUpdate}`
+          await Database.rawQuery(query)
+        } catch (e) {
+        }
+      }
+
+      relationship.merge({
+        title: relationshipData.title,
+        description: relationshipData.description,
+        type: relationshipData.type,
+        add_belong_to: relationshipData.add_belong_to,
+        editable: relationshipData.editable,
+        always_with: relationshipData.always_with,
+        local_key: relationshipData.local_key,
+        foreign_key: relationshipData.foreign_key,
+        onDelete: relationshipData.onDelete,
+        onUpdate: relationshipData.onUpdate,
+        target_model_id: relationshipData.target_model_id,
+        model_class: '\\App\\AltrpModels\\' + model.name,
+        model_id: model.id,
+        name: relationshipData.name,
+      })
+      await relationship.save()
+      Event.emit('model:updated', model)
+      
+      if (relationshipData.type != "belongsTo" && newTargetModel && relationshipData.add_belong_to) {
+
+        try {
+          await newTargetModel.load('table')
+          let query = `ALTER TABLE ${newTargetModel.table.name} ADD CONSTRAINT
+            ${newTargetModel.table.name}_${relationshipData.foreign_key}_foreign
+            FOREIGN KEY (${relationshipData.foreign_key})
+            REFERENCES ${model.table.name}(${relationshipData.local_key})
+            ON DELETE restrict
+            ON UPDATE restrict`
+          await Database.rawQuery(query)
+        } catch (e) {
+        }
+
+        const belongsToRelationship = new Relationship()
+        belongsToRelationship.fill({
+          title: model.title,
+          description: relationshipData.description,
+          type: 'belongsTo',
+          add_belong_to: false,
+          editable: false,
+          always_with: false,
+          local_key: relationshipData.foreign_key,
+          foreign_key: relationshipData.local_key,
+          onDelete: 'restrict',
+          onUpdate: 'restrict',
+          target_model_id: model.id,
+          model_class: '\\App\\AltrpModels\\' + newTargetModel.name,
+          model_id: relationshipData.target_model_id,
+          name: model.name,
+        })
+        await belongsToRelationship.save()
+        Event.emit('model:updated', newTargetModel)
+
+      }
+
+    } catch (e) {
+      return response.json({
+          'success':
+            false,
+          'message':
+            'Relationship don\'t saved',
+          'throw message': e.message,
+          'trace': e.stack.split('\n'),
+        },
+      )
     }
 
     return response.json({success: true, data: relationship})
@@ -165,8 +308,8 @@ export default class RelationshipsController {
         success: false,
         message: 'Model not found'
       })
-
     }
+
     const relationship = await Relationship.find(params.relationship_id)
     if (!relationship) {
       response.status(404)
@@ -174,19 +317,57 @@ export default class RelationshipsController {
         success: false,
         message: 'Field not found'
       })
-
     }
-    let targetModel = await Model.find(relationship.target_model_id)
-    if(targetModel){
-      Event.emit('model:updated', targetModel)
+
+    try {
+
+      await model.load('table')
+
+      let targetModel = await Model.find(relationship.target_model_id)
+
+      if(relationship.type != "belongsTo" && targetModel && relationship.add_belong_to){
+
+          try {
+            await targetModel.load('table')
+            let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+            await Database.rawQuery(deleteQuery)
+          } catch (e) {
+
+          }
+          await Relationship.query()
+            .where('model_id', relationship.target_model_id)
+            .where('target_model_id', relationship.model_id)
+            .where('foreign_key', relationship.local_key)
+            .where('local_key', relationship.foreign_key)
+            .where('type', 'belongsTo')
+            .delete()
+          Event.emit('model:updated', targetModel)
+
+      }
+
+      try {
+        if (relationship.type === "belongsTo") {
+          let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+          await Database.rawQuery(deleteQuery)
+        }
+      } catch (e) {
+
+      }
+
+      await relationship.delete()
+      Event.emit('model:updated', model)
+
+    } catch (e) {
+      return response.json({
+          'success':
+            false,
+          'message':
+            'Relationship don\'t saved',
+          'throw message': e.message,
+          'trace': e.stack.split('\n'),
+        },
+      )
     }
-    await relationship.delete()
-    Event.emit('model:updated', model)
-
-    await model.load('table')
-
-    let query = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${relationship.name}`
-    await Database.rawQuery(query)
 
     return response.json({success: true,})
   }

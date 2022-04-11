@@ -1875,7 +1875,7 @@ button {
   z-index: 100;
 }
 #editor-content .altrp-element {
-  position: relative;
+  //position: relative;
   &:not(.altrp-section_section_boxed) {
     flex-wrap: wrap;
   }

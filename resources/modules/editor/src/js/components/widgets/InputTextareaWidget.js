@@ -1074,7 +1074,7 @@ class InputTextareaWidget extends Component {
         autoComplete={autocomplete}
         placeholder={this.state.settings.content_placeholder}
         className={
-          "altrp-field " + this.state.settings.position_css_classes
+          "altrp-field " + (this.state.settings.position_css_classes || "")
         }
         onChange={this.onChange}
         onBlur={this.onBlur}

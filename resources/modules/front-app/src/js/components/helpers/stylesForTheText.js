@@ -29,7 +29,7 @@ export function getTextStyles(settings, id) {
   }
 
   const parentClass = `.altrp-element${id}`;
-  
+
   styles += `${parentClass} .altrp-text table tr {
     ${colorPropertyStyled(getResponsiveSetting(settings,"text_table_rows_color"),"background")};
   }`
@@ -52,6 +52,12 @@ export function getTextStyles(settings, id) {
 
   if (zIndex) {
     styles += simplePropertyStyled(zIndex, 'z-index');
+  }
+
+  const zIndexStyle = getResponsiveSetting(settings, 'position_z_index');
+
+  if (zIndexStyle) {
+    styles += simplePropertyStyled(zIndexStyle, 'z-index');
   }
 
   const backgroundColor = getResponsiveSetting(settings, 'text_style_background_color');
@@ -78,14 +84,14 @@ export function getTextStyles(settings, id) {
     styles += borderWidthStyled(borderWidth);
   }
 
-  const borderColor = getResponsiveSetting(settings, 'text_style_border_color', '', {color: 'rgba(0,0,0,1)'});
+  const borderColor = getResponsiveSetting(settings, 'text_style_border_color', '');
 
   styles += colorPropertyStyled(borderColor, 'border-color', ' !important')
 
   const borderRadius = getResponsiveSetting(settings, 'text_style_border_radius');
 
   if (borderRadius) {
-    styles += borderRadiusStyled(borderRadius);
+    styles += dimensionsStyled(borderRadius, "border-radius");
   }
 
   styles += `} `;
@@ -151,7 +157,7 @@ export function getTextStyles(settings, id) {
   const blockquoteBorderRadius = getResponsiveSetting(settings, 'text_blockquote_border_radius');
 
   if (blockquoteBorderRadius) {
-    styles += borderRadiusStyled(blockquoteBorderRadius);
+    styles += dimensionsStyled(blockquoteBorderRadius, "border-radius");
   }
 
   const blockquoteBoxShadow = getResponsiveSetting(
@@ -284,7 +290,7 @@ export function getTextStyles(settings, id) {
   if (linkTextShadow) {
     styles += textShadowControllerToStyles(linkTextShadow);
   }
-  
+
   styles += colorPropertyStyled(getResponsiveSetting(settings, 'text_link_color'), 'color')
 
   styles += `} `;
@@ -300,7 +306,7 @@ export function getTextStyles(settings, id) {
   const numberedListItemMargin = getResponsiveSetting(settings, 'text_numbered_list_item_margin');
 
   if (numberedListItemMargin) {
-    styles += `li{ 
+    styles += `li{
       ${dimensionsControllerToStyles(numberedListItemMargin, 'margin')};
       ${colorPropertyStyled(getResponsiveSetting(settings, 'text_numbered_list_color'), 'color')};
     }`;
@@ -325,7 +331,7 @@ export function getTextStyles(settings, id) {
   const unorderedListItemMargin = getResponsiveSetting(settings, 'text_unordered_list_item_margin');
 
   if (unorderedListItemMargin) {
-    styles += `li{ 
+    styles += `li{
       ${dimensionsControllerToStyles(unorderedListItemMargin, 'margin')};
       ${colorPropertyStyled(getResponsiveSetting(settings, 'text_unordered_list_color'), 'color')};
     }`;
@@ -354,18 +360,18 @@ export function getTextStyles(settings, id) {
   styles += `${parentClass} .altrp-text:hover {
     ${colorPropertyStyled(getResponsiveSetting(settings, 'text_style_background_color', ':hover'), 'background-color')};
     ${opacityStyled(getResponsiveSetting(settings, 'text_style_background_opacity', ':hover'), 'opacity')};
-    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_style_border_color', ':hover', {color: 'rgba(0,0,0,1)'}), 'border-color', ' !important')};
+    ${colorPropertyStyled(getResponsiveSetting(settings, 'text_style_border_color', ':hover'), 'border-color', ' !important')};
     ${borderRadiusStyled(getResponsiveSetting(settings, 'text_style_border_radius', ':hover'))};
     ${borderWidthStyled(getResponsiveSetting(settings, 'text_style_border_width', ':hover'))};
   }`
 
-  
+
   styles+=`${parentClass} .altrp-text p:hover {
     ${colorPropertyStyled(getResponsiveSetting(settings, 'text_paragraph_color', ':hover'), 'color')};
     ${typographicControllerToStyles(getResponsiveSetting(settings, 'text_paragraph_typographic', ':hover'))};
   }`
 
-  
+
   styles+=`${parentClass} .altrp-text blockquote:hover {
     ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_blockquote_margin', ':hover'), 'margin')};
     ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_blockquote_padding', ':hover'), 'padding')};
@@ -379,14 +385,14 @@ export function getTextStyles(settings, id) {
     ${textShadowControllerToStyles(getResponsiveSetting(settings, "text_blockquote_text_shadow", ':hover'))};
   }`
 
-  
+
   styles += `${parentClass} .altrp-text table:hover {
     ${dimensionsControllerToStyles(getResponsiveSetting(settings, 'text_table_margin', ':hover'), 'margin')};
     ${simplePropertyStyled(getResponsiveSetting(settings, 'text_table_border_type', ':hover'), 'border-style',"!important")};
     ${borderWidthStyled(getResponsiveSetting(settings, 'text_table_border_width', ':hover'),"!important")};
     ${colorPropertyStyled(getResponsiveSetting(settings, 'text_table_border_color', ':hover'), 'border-color',"!important")};
   }`
-  
+
   styles += `${parentClass} .altrp-text table tr:hover {
     ${colorPropertyStyled(getResponsiveSetting(settings,"text_table_rows_color", ':hover'),"background")};
   }`

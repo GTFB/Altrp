@@ -97,11 +97,7 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
       flex: 1 0 auto;
       align-content: flex-start;
     }
-    .altrp-heading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+
     .section-fit-to-content {
       height: 100vh !important;
     }

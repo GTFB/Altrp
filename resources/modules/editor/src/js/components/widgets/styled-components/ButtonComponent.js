@@ -183,14 +183,25 @@ export function btnStyles(settings) {
     ["background-repeat", "background_repeat"],
     () => {
       const backgroundSizeInUnit = getResponsiveSetting(settings, "background_image_width");
+      const backgroundSize = getResponsiveSetting(settings, "background_size");
 
-      if (backgroundSizeInUnit === null || backgroundSizeInUnit?.size === '0' || backgroundSizeInUnit?.size === '' ) {
-        return '';
-      } else {
+      if (backgroundSizeInUnit && backgroundSize === "") {
         return sizeStyled(backgroundSizeInUnit, 'background-size');
+      } else {
+        return '';
       }
     },
-    ["background-size", "background_size"],
+
+    () => {
+      const backgroundSize = getResponsiveSetting(settings, "background_size");
+
+      if (backgroundSize !== "") {
+        return simplePropertyStyled(backgroundSize, "background-size");
+      } else {
+        return '';
+      }
+    },
+    // ["background-size", "background_size"],
 
     "}",
 
@@ -200,14 +211,24 @@ export function btnStyles(settings) {
     ["background-repeat", "background_repeat", "", ":hover"],
     () => {
       const backgroundSizeInUnit = getResponsiveSetting(settings, "background_image_width", ":hover");
+      const backgroundSize = getResponsiveSetting(settings, "background_size", ":hover");
 
-      if (backgroundSizeInUnit === undefined || backgroundSizeInUnit?.size === '0' || backgroundSizeInUnit?.size === '' ) {
-        return '';
-      } else {
+      if (backgroundSizeInUnit && backgroundSize === "") {
         return sizeStyled(backgroundSizeInUnit, 'background-size');
+      } else {
+        return '';
       }
     },
-    ["background-size", "background_size", "", ":hover"],
+    () => {
+      const backgroundSize = getResponsiveSetting(settings, "background_size", ":hover");
+
+      if (backgroundSize !== "") {
+        return simplePropertyStyled(backgroundSize, "background-size");
+      } else {
+        return '';
+      }
+    },
+    // ["background-size", "background_size", "", ":hover"],
 
     "}",
 

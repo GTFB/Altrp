@@ -12,6 +12,7 @@ import TemplateGenerator from "App/Generators/TemplateGenerator";
 import PageGenerator from "App/Generators/PageGenerator";
 import Page from "App/Models/Page";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
+import Customizer from "App/Models/Customizer";
 
 export default class AdminController {
 
@@ -27,7 +28,11 @@ export default class AdminController {
     const pageGenerator = new PageGenerator()
     const listenerGenerator = new ListenerGenerator()
 
-    await listenerGenerator.hookTemplates()
+    const listeners = await Customizer.query().where('type', 'listener').select('*')
+
+    for(const _l of listeners){
+      await listenerGenerator.run(_l)
+    }
 
     for (let model of models){
       if(model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media'){

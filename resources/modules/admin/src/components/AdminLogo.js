@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import DefaultLogo from '../svgs/admin__logo.svg'
-import DefaultLogoMini from '../svgs/admin-logo-mini.svg'
+import DefaultLogo from '../svgs/altrp.com_logo_new90.svg'
+import DefaultLogoMini from '../svgs/altrp.com_logo_new_mini.svg'
 import {renderAsset} from "../../../front-app/src/js/helpers";
 
 class AdminLogo extends Component {

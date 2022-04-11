@@ -38,13 +38,22 @@ export default function DividerComponent(settings) {
           return ` padding-top: ${slider}; padding-bottom: ${slider}; `
         }
       },
+    () => {
+      const value = getResponsiveSetting(settings, "position_opacity");
+
+      if (value && value?.size) {
+        return `opacity: ${value.size};`
+      } else {
+        return ''
+      }
+    },
     "}",
 
     "altrp-divider-label",
       ["color", "text_style_color", "color"],
       ["", "text_style_typographic", "typographic"],
     "}",
-    
+
     "altrp-divider:hover",
       "altrp-divider-label",
         ["color", "text_style_color", "color", ':hover'],
@@ -89,18 +98,18 @@ export default function DividerComponent(settings) {
         if (imageSize?.size) {
           return `height: ${imageSize?.size}${imageSize?.unit || 'px'}`
         }
-        
+
         return 'height: 20px;'
       },
     '}',
-  
+
     'altrp-divider-container-label',
       () => {
         const textStylePosition = getResponsiveSetting(settings, 'label_position') || 'center'
         const textStyleSpacing = getResponsiveSetting(settings, 'label_spacing')
-        
+
         const spacing = (textStyleSpacing?.size ? textStyleSpacing?.size : 0) + (textStyleSpacing?.unit || 'px')
-        
+
         switch (textStylePosition) {
           case "left":
             return `margin-right: ${spacing};`
@@ -111,7 +120,7 @@ export default function DividerComponent(settings) {
         }
       },
     '}',
-  
+
     "altrp-divider:hover",
       'altrp-divider-container-label',
         () => {
@@ -121,9 +130,9 @@ export default function DividerComponent(settings) {
           if (!textStyleSpacing?.size) {
             return
           }
-          
+
           const spacing = (textStyleSpacing?.size ? textStyleSpacing?.size : 0) + (textStyleSpacing?.unit || 'px')
-          
+
           switch (textStylePosition) {
             case "left":
               return `margin-right: ${spacing};`

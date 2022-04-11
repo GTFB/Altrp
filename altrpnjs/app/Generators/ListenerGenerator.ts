@@ -2,6 +2,7 @@ import {BaseGenerator} from "App/Generators/BaseGenerator";
 import app_path from "../../helpers/app_path";
 import isProd from "../../helpers/isProd";
 import fs from "fs";
+import path from "path";
 import Customizer from "App/Models/Customizer";
 
 
@@ -26,96 +27,53 @@ export default class ListenerGenerator extends BaseGenerator {
   private static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpListener.stub`)
   private customizer: Customizer
 
-  public async run(customizer, type) {
-    if(!customizer || !type) {
+  public async run(customizer: Customizer) {
+
+    this.customizer  = customizer
+    if(!customizer || !customizer.settings.hook_type) {
       return
     }
 
-    this.customizer = customizer;
-
-    const dir = ListenerGenerator.directory + "altrp_models" + "." + type;
-
-    if (!fs.existsSync(ListenerGenerator.directory)){
-      fs.mkdirSync(ListenerGenerator.directory);
-    }
-
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-    }
-
-    const listener = type
 
     let imports = "";
-    let content = "";
+    let content = this.customizer.getMethodContent()
 
-    await this.addFile( listener + ListenerGenerator.ext)
-      .destinationDir(dir)
+    content = await this.applyFilters("templates", content);
+
+    imports = await this.applyFilters("listener_imports", imports);
+    await this.addFile( customizer.name + ListenerGenerator.ext)
+      .destinationDir(this.getDir())
       .stub(ListenerGenerator.template)
       .apply({
-        listener,
+        name: customizer.name,
         imports,
         content
       });
   }
 
-  public async hookTemplates() {
-    const dir = ListenerGenerator.directory + "hooks.templates";
-
-    if (!fs.existsSync(ListenerGenerator.directory)){
-      fs.mkdirSync(ListenerGenerator.directory);
+  getFilename(){
+    return  path.join(this.getDir(), this.customizer.name + ListenerGenerator.ext)
+  }
+  getDir(){
+    const dir = path.join(ListenerGenerator.directory , this.customizer.settings.hook_type )
+    if(!fs.existsSync(dir)){
+      fs.mkdirSync(dir, {recursive:true})
     }
 
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-    }
-
-    let imports = "";
-    let content = "";
-
-    content = await this.applyFilters("templates", "array");
-
-    imports = await this.applyFilters("listener_imports");
-
-    await this.addFile( "listener" + ListenerGenerator.ext)
-      .destinationDir(dir)
-      .stub(ListenerGenerator.template)
-      .apply({
-        listener: "listener",
-        imports,
-        content
-      });
+    return  dir
   }
 
-  static async getHookTemplates(template) {
-    const dir = ListenerGenerator.directory + "hooks.templates";
-    const filePath = `${dir}/listener${this.ext}`;
-
-    try {
-      const hook = isProd() ? (await require(filePath)).default
-        : (await import(filePath)).default
-
-      hook("template", template)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  public async delete(type) {
-    if(!type) {
+  public async delete(customizer: Customizer) {
+    this.customizer  = customizer
+    if(!customizer || !customizer.settings.hook_type) {
       return
     }
-
-
-    const dir = ListenerGenerator.directory + "altrp_models" + "." + type;
-
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
+    const fileName = this.getFilename()
+    if(fs.existsSync(fileName)) {
+      fs.rmSync(fileName)
     }
-
-    const listener = type
-
-    if(fs.existsSync(dir + "\\" + listener + ListenerGenerator.ext)) {
-      fs.unlinkSync(dir + "\\" + listener + ListenerGenerator.ext)
+    if(! fs.readdirSync(this.getDir()).length){
+      fs.rmdirSync(this.getDir())
     }
   }
 }

@@ -119,6 +119,7 @@ class CustomizerSettingsPanel extends React.Component {
     const {modelsOptions} = this.state;
     const {customizer} = this.props;
     const {type, model_id, settings = {}} = customizer
+
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
     const time = settings?.time || "";
@@ -127,8 +128,13 @@ class CustomizerSettingsPanel extends React.Component {
     let Url = ''
     if (this.props.customizer.source !== null) {
       const { web_url } = this.props.customizer.source
-      let strippedDownUrl = new URL(web_url)
-      Url = strippedDownUrl.pathname
+      try{
+        let strippedDownUrl = new URL(web_url)
+        Url = strippedDownUrl.pathname
+      }catch (e){
+        alert('Error while parsing source URL')
+        console.error(e);
+      }
     }
 
     return (
@@ -183,7 +189,7 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {type === 'api' && <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                    {type === 'api' && <><div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
                       <AltrpSelect id="crud-fields"
                                    className="controller-field"
@@ -198,7 +204,7 @@ class CustomizerSettingsPanel extends React.Component {
 
                                    ]}
                       />
-                    </div>}
+                    </div>
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Model:</div>
                       <AltrpSelect id="crud-fields"
@@ -209,10 +215,12 @@ class CustomizerSettingsPanel extends React.Component {
                                    options={modelsOptions.filter(item => item.value >= 5)}
                       />
                     </div>
+                    </>
+                    }
                     {
                       type === "listener" && (
                         <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                          <div className="controller-container__label control-select__label controller-label">Type:</div>
+                          <div className="controller-container__label control-select__label controller-label">Hook Type:</div>
                           <InputGroup className="form-control-blueprint"
                                       type="text"
                                       id="customizer-title"

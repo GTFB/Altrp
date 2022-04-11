@@ -26,8 +26,10 @@ export default class UsersSchema extends BaseSchema {
       })
 
     } else {
-      this.schema.table(this.tableName, (table) => {
-
+      if(await this.schema.hasColumn(this.tableName, 'remember_me_token')){
+        return
+      }
+      this.schema.alterTable(this.tableName, async (table) => {
         table.string('remember_me_token').nullable()
       })
       }

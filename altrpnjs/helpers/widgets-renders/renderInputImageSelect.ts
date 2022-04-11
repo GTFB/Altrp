@@ -8,7 +8,7 @@ const AltrpImageSelect = ({ options, isMultiple, value }) => {
       ${
         options?.map(option => `
         <div class="altrp-field altrp-field-container ${isMultiple && value.includes(option.value) || value === option.value ? "active" : ''}">
-            ${option.image && `<img src="${option.image.url}" width="100%" />`}
+            ${option.image && `<img src="${option.image?.url}" width="100%" />`}
             <div class="altrp-image-select__label">${option.label}</div>
           </div>
         `)

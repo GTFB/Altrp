@@ -12,10 +12,17 @@ import {parseString} from'xml2js'
 import data_get from '../../../../helpers/data_get';
 import guid from '../../../../helpers/guid';
 import public_path from "../../../../helpers/public_path";
+import Logger from "@ioc:Adonis/Core/Logger";
 
 export default class MediaController {
   private static fileTypes: any;
   async index({response, request}: HttpContextContract) {
+    const mediaToUpdate = await Media.query().whereNull('guid').select('*')
+    await Promise.all(mediaToUpdate.map(async (m:Media) =>{
+      m.guid = guid()
+      await m.save()
+      Logger.info(`Media id ${m.id} guid write!`)
+    }))
     let query = Media.query().whereNull('deleted_at')
     let categories = request.qs().categories;
     let type = request.qs().type;

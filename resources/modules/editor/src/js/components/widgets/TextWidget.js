@@ -111,7 +111,7 @@ class TextWidget extends Component {
 
     if (this.props.CKEditor) {
       return (
-        <div className="altrp-text">
+        <div className={"altrp-text " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
           <this.props.CKEditor
             changeText={this.changeText}
             text={textContent}

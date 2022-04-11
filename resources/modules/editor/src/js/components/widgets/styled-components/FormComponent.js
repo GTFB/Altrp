@@ -58,6 +58,7 @@ const fieldStyle = settings => {
     borderWidth,
     borderColor,
     borderRadius,
+    widthTextArea,
     boxShadow;
 
   const {
@@ -72,6 +73,9 @@ const fieldStyle = settings => {
     image_select_image_position,
     cross_size
   } = settings;
+
+  settings && (widthTextArea = getResponsiveSetting(settings, "field_width_textarea"));
+  widthTextArea && (styles += sizeStyled(widthTextArea, "width"));
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
@@ -98,7 +102,7 @@ const fieldStyle = settings => {
 
   settings &&
     (borderRadius = getResponsiveSetting(settings, 'border_radius') ||  getResponsiveSetting(settings, "global_filter_input_border_radius" ));
-  
+
   borderRadius &&
     (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
@@ -190,7 +194,7 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  
+
   styles += `&& .altrp-field:focus {`;
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ':focus'));
@@ -592,7 +596,7 @@ const fieldLabelRequired = settings => {
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
-  
+
   styles += `&& .altrp-field-container:hover .altrp-field-label--required::after {`;
 
   settings &&
@@ -703,8 +707,11 @@ function FormComponent(settings) {
   let styles = "";
   const background_section_opacity = getResponsiveSetting(settings, 'background_section_opacity');
   //for all element
-  background_section_opacity &&
-    (styles += `opacity:${background_section_opacity.size};`);
+  if (background_section_opacity && background_section_opacity?.size) {
+    styles += `opacity:${background_section_opacity.size};`
+  } else {
+    styles += "";
+  }
   //altrp-input-wrapper
   const inputWrapperStyles = inputWrapperStyle(settings);
   inputWrapperStyles && (styles += inputWrapperStyles);

@@ -3,6 +3,9 @@ import { isEditor, parseURLTemplate } from "../../../../../front-app/src/js/help
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 5px;
   margin-right: 0;
   margin-bottom: 5px;
@@ -11,15 +14,6 @@ import { isEditor, parseURLTemplate } from "../../../../../front-app/src/js/help
   padding-right: 0;
   padding-bottom: 0;
   padding-left: 0;
-  background-position: top left;
-  background-attachment: scroll;
-  background-repeat: repeat;
-}
-
-.altrp-heading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .altrp-heading a {
@@ -88,7 +82,7 @@ class HeadingTypeHeadingWidget extends Component {
       if (isEditor()) {
         linkProps.onClick = e => { e.preventDefault() }
       }
-      
+
       link = (
         <AltrpLink {...linkProps}>
           {

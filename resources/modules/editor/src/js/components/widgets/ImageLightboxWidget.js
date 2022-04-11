@@ -22,8 +22,6 @@ import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
     padding-left: 0;
     opacity: 1;
     object-fit: cover;
-    border-color: rgb(50,168,82);
-    border-radius: 0;
   }
 `)
 

@@ -1,14 +1,12 @@
-import empty from "../../helpers/empty"
+import empty from "../../../helpers/empty"
+import AltrpBaseController from "../../Controllers/AltrpBaseController";
 {{{imports}}}
 
-function {{{listener}}}(type, data) {
-  const functions = {{{content}}}
-
-   for(let fnString of functions) {
-      const fn = new Function("return " + fnString)()
-
-      fn(data, type)
-   }
+class {{{name}}} extends AltrpBaseController{
+  async run(type, data){
+    this.setCustomizerData('context.data', data);
+    {{{content}}}
+  }
 }
 
-export default {{{listener}}}
+export default {{{name}}}

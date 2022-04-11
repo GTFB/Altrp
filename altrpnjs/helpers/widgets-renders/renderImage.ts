@@ -63,7 +63,7 @@ export default function renderImage(settings, device, context, widgetId) {
   if (link.toPrevPage) {
     return `<div class='${classNames}'>${altrpImage}</div>`
   } else {
-    let linkUrl = link.url || ''
+    let linkUrl = link?.url || ''
     linkUrl = parseURLTemplate(linkUrl, context)
     const linkProps: {
       target?: string
@@ -71,7 +71,7 @@ export default function renderImage(settings, device, context, widgetId) {
     if(link.openInNew){
       linkProps.target = '_blank'
     }
-    return `<div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}' ${objectToAttributesString(linkProps)}>${altrpImage}></a>` : altrpImage }</div>`
+    return `<div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}' ${objectToAttributesString(linkProps)}>${altrpImage}</a>` : altrpImage }</div>`
   }
 }
 

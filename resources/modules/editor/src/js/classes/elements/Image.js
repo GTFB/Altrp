@@ -139,6 +139,134 @@ class Image extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('position_style_section', {
+      tab: TAB_STYLE,
+      label: 'Position (container)'
+    });
+
+    this.addControl('position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('position_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px'
+      },
+      stateless: true,
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('position_z_index', {
+      hideOnEmail: true,
+      type: CONTROLLER_NUMBER,
+      label: 'Z-index',
+      default: 0,
+    });
+
+    this.addControl("position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID",
+      locked: true,
+    });
+
+    this.addControl("position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes",
+      locked: true,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('border_section', {
+      tab: TAB_STYLE,
+      label: 'Border'
+    });
+
+    this.addControl('border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl('border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
+    this.addControl('border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
+    );
+
+    this.addControl("border_radius", {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border radius',
+      default: {
+        unit: 'px'
+      },
+      stateless: true,
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.endControlSection();
+
     this.startControlSection('size_section', {
       tab: TAB_STYLE,
       label: 'Size',
@@ -257,46 +385,6 @@ class Image extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('position_style_section', {
-      tab: TAB_STYLE,
-      label: 'Position'
-    });
-
-    this.addControl('position_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    });
-
-    this.addControl('position_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      default: {
-        unit: 'px'
-      },
-      stateless: true,
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    });
-
-    this.addControl('position_z_index', {
-      hideOnEmail: true,
-      type: CONTROLLER_NUMBER,
-      label: 'Z-index',
-      default: 0,
-    });
-
-    this.endControlSection();
 
     this.startControlSection('overlay_section', {
       hideOnEmail: true,
@@ -326,13 +414,6 @@ class Image extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_FILTERS,
       label: 'filters',
-      default: {
-        blur: 0,
-        brightness: 100,
-        contrast: 100,
-        saturate: 100,
-        hue: 0,
-      },
     });
 
     this.endControlSection();
@@ -515,80 +596,6 @@ class Image extends BaseElement {
     //
     // this.endControlSection();
 
-    this.startControlSection('border_section', {
-      tab: TAB_STYLE,
-      label: 'Border'
-    });
-
-    this.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-    }
-    );
-
-    this.addControl('border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    }
-    );
-
-    this.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-    }
-    );
-
-    this.addControl("border_radius", {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border radius',
-      default: {
-        unit: 'px'
-      },
-      stateless: true,
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-    });
-
-    this.endControlSection();
 
     this.startControlSection('creative_hover_section', {
       hideOnEmail: true,

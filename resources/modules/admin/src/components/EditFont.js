@@ -38,7 +38,7 @@ class EditFont extends Component {
     }
 
     initialFontName() {
-        let fonts = this.props.metaValue
+        let fonts = (this.props.metaValue !== '') ? this.props.metaValue : null
         if (fonts !== null) {
             const fontFamily = fonts[this.findIndexCurrentFont()].fontFamily
             this.setState({
@@ -79,7 +79,7 @@ class EditFont extends Component {
     }
 
     addFontVariation = async (fontVariation) => {
-        let fonts = this.props.metaValue
+        let fonts = (this.props.metaValue !== '') ? this.props.metaValue : null
         let currentFont = fonts[this.findIndexCurrentFont()]
         delete fontVariation.fontFamily
         delete fontVariation.editFont
@@ -89,7 +89,7 @@ class EditFont extends Component {
     }
 
     deleteFontVariation = async (id) => {
-        let fonts = this.props.metaValue
+        let fonts = (this.props.metaValue !== '') ? this.props.metaValue : null
         let currentFont = fonts[this.findIndexCurrentFont()]
         const indexCurrentFontVariation = currentFont.variations.findIndex(item => item.id == id)
         currentFont.variations.splice(indexCurrentFontVariation, 1)
@@ -97,7 +97,7 @@ class EditFont extends Component {
     }
 
     deleteFont = async () => {
-        let fonts = this.props.metaValue
+        let fonts = (this.props.metaValue !== '') ? this.props.metaValue : null
         fonts.splice(this.findIndexCurrentFont(), 1)
         this.setNewMetaValue(fonts)
         this.setState({
@@ -106,8 +106,9 @@ class EditFont extends Component {
     }
 
     findIndexCurrentFont() {
+        let metaValue = (this.props.metaValue !== '') ? this.props.metaValue : null
         const currentFontId = this.props.match.params.id
-        const indexCurrentFont = this.props.metaValue.findIndex(item => item.id == currentFontId)
+        const indexCurrentFont = metaValue.findIndex(item => item.id == currentFontId)
         return indexCurrentFont
     }
 
@@ -147,11 +148,12 @@ class EditFont extends Component {
     render() {
         const { fontFamily, fontWeight, fontStyle, woffFile, woff2File, ttfFile, svgFile, eotFile, fontsLibrary } = this.state;
         let fontVariations = null;
+        let metaValue = (this.props.metaValue !== '') ? this.props.metaValue : null
 
-        if (this.props.metaValue !== null) {
-            const indexCurrentFont = this.props.metaValue.findIndex(item => item.id == this.props.match.params.id)
+        if (metaValue !== null) {
+            const indexCurrentFont = metaValue.findIndex(item => item.id == this.props.match.params.id)
             if (indexCurrentFont !== -1) {
-                const currentFont = this.props.metaValue[indexCurrentFont]
+                const currentFont = metaValue[indexCurrentFont]
                 fontVariations = currentFont.variations.map(v => (
                     <tr key={v.id} className="edit-font__content-font-editing-line">
                         <td className="edit-font__content-font-editing-line__element"><span className="edit-font__content-font-editing-line__element_property">Weight:</span>{v.fontWeight}</td>
@@ -313,7 +315,13 @@ class EditFont extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    metaValue: state.customFonts.metaValue
+  }
+}
+
 export default compose(
-    connect(null, { getCustomFonts }),
+    connect(mapStateToProps, { getCustomFonts }),
     withRouter
 )(EditFont);

@@ -545,8 +545,12 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionRedirect() {
+    let history = window.history
     let URL = this.getFormURL();
     if(! URL){
+      if (this.getProperty('back')) {
+        history.back()
+      }
       return {
         success: true
       }

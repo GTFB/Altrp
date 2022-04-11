@@ -16,8 +16,6 @@ import AltrpImage from "../altrp-image/AltrpImage";
     padding-left: 0;
     opacity: 1;
     object-fit: cover;
-    border-color: rgb(50,168,82);
-    border-radius: 0;
   }
 
   .altrp-image-container {
@@ -132,7 +130,8 @@ class ImageWidget extends Component {
     if (link.toPrevPage && !isEditor()) {
       return (
         <div
-          className={classNames}
+          className={classNames + ` ${this.state.settings.position_css_classes || ""}`}
+          id={this.state.settings.position_css_id}
           onClick={() => {
             history.back();//todo: реализовать для h-altrp
           }}
@@ -152,7 +151,8 @@ class ImageWidget extends Component {
 
       return (
         <div
-          className={classNames}
+          className={classNames + ` ${this.state.settings.position_css_classes || ""}`}
+          id={this.state.settings.position_css_id}
         >
           {(linkUrl && ! isEditor()) ? (
             link.tag === "a" || window['h-altrp'] ? (

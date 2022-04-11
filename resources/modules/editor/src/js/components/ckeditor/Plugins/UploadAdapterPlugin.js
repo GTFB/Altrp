@@ -3,7 +3,7 @@ import Resource from "../../../classes/Resource";
 class UploadAdapter {
   constructor(props) {
     this.loader = props;
-    this.resource = new Resource({ route: "/admin/ajax/media" });
+    this.resource = new Resource({ route: "/ajax/media" });
   }
 
   upload() {

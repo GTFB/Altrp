@@ -23,6 +23,7 @@ class Templates extends Component {
       activeTemplateArea: {},
       pageCount: 1,
       currentPage: 1,
+      count: 1,
       templateSearch: '',
       sorting: {},
       categoryOptions: [],
@@ -96,11 +97,14 @@ class Templates extends Component {
         this.resource.getQueried({
           categories: urlCategories,
           s: urlS === null ? this.state.templateSearch : urlS,
-          ...this.state.sorting
+          ...this.state.sorting,
+          page: this.state.currentPage,
+          pageSize: this.itemsPerPage,
         }).then(res => {
           this.setState(state => {
             return {
               ...state,
+              count: res.count,
               pageCount: res.pageCount,
               templates: res.templates,
               activeCategory: urlCategories,
@@ -113,15 +117,18 @@ class Templates extends Component {
           area: activeTemplateArea.name,
           categories: urlCategories,
           s: urlS === null ? this.state.templateSearch : urlS,
-          ...this.state.sorting
+          ...this.state.sorting,
+          page: this.state.currentPage,
+          pageSize: this.itemsPerPage,
         }).then(res => {
           this.setState(state => {
             return {
               ...state,
+              count: res.count,
               pageCount: res.pageCount,
               templates: res.templates,
               activeCategory: urlCategories,
-              templateSearch: urlS === null ? this.state.templateSearch : urlS
+              templateSearch: urlS === null ? this.state.templateSearch : urlS,
             }
           });
         });
@@ -130,11 +137,14 @@ class Templates extends Component {
       if (activeTemplateArea.name === "all") {
         this.resource.getQueried({
           s: urlS === null ? this.state.templateSearch : urlS,
-          ...this.state.sorting
+          ...this.state.sorting,
+          page: this.state.currentPage,
+          pageSize: this.itemsPerPage,
         }).then(res => {
           this.setState(state => {
             return {
               ...state,
+              count: res.count,
               pageCount: res.pageCount,
               templates: res.templates,
               templateSearch: urlS === null ? this.state.templateSearch : urlS
@@ -145,11 +155,14 @@ class Templates extends Component {
         this.resource.getQueried({
           area: activeTemplateArea.name,
           s: urlS === null ? this.state.templateSearch : urlS,
-          ...this.state.sorting
+          ...this.state.sorting,
+          page: this.state.currentPage,
+          pageSize: this.itemsPerPage,
         }).then(res => {
           this.setState(state => {
             return {
               ...state,
+              count: res.count,
               pageCount: res.pageCount,
               templates: res.templates,
               templateSearch: urlS === null ? this.state.templateSearch : urlS
@@ -444,7 +457,7 @@ class Templates extends Component {
   }
 
   render() {
-    const {templateSearch, categoryOptions, sorting, templates} = this.state
+    const {templateSearch, categoryOptions, sorting, templates, count, pageCount, currentPage} = this.state
 
     let templatesMap = templates.map(template => {
       let categories = template.categories.map(item => {
@@ -522,10 +535,7 @@ class Templates extends Component {
             getCategories: this.getCategory,
             activeCategory: this.state.activeCategory
           }}
-          rows={templatesMap.slice(
-            this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
-            this.state.currentPage * this.itemsPerPage
-          )}
+          rows={templatesMap}
           quickActions={[{
             tag: 'a', props: {
               href: '/admin/editor?template_id=:id',
@@ -565,15 +575,15 @@ class Templates extends Component {
             change: (e) => this.changeTemplates(e)
           }}
 
-          pageCount={Math.ceil(templates.length / this.itemsPerPage) || 1}
-          currentPage={this.state.currentPage}
-          changePage={page => {
+          pageCount={pageCount || 1}
+          currentPage={currentPage}
+          changePage={async (page) => {
             if (this.state.currentPage !== page) {
-              this.setState({currentPage: page});
+              await this.setState({currentPage: page})
+              await this.updateTemplates(page, this.state.activeTemplateArea)
             }
           }}
-          itemsCount={templates.length}
-
+          itemsCount={count || 1}
           openPagination={true}
         />
       </div>

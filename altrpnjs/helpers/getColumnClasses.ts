@@ -7,6 +7,7 @@ export default function getColumnClasses(settings, device){
     device,
   )
   let classes = ''
+
   if(background_image?.url){
     classes += ' altrp-background-image-columns '
   }

@@ -17,8 +17,14 @@ export default class RolesController {
 
     const params = request.qs();
     const page = parseInt(params.page) || 1
+    const searchWord = params.s
+    let roles
 
-    const roles = await Role.query().paginate(page, 20)
+    if (searchWord) {
+      roles = await Role.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('display_name', 'LIKE', `%${searchWord}%`).paginate(page, 20)
+    } else {
+      roles = await Role.query().paginate(page, 20)
+    }
 
     return {
       count: roles.getMeta().total,

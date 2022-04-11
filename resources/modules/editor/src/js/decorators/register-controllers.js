@@ -69,10 +69,10 @@ export function advancedTabControllers(element) {
     step: 0.01,
   });
 
-  element.addControl('advanced_tooltip', {
-    type: CONTROLLER_TEXT,
-    label: "Tooltip"
-  });
+  // element.addControl('advanced_tooltip', {
+  //   type: CONTROLLER_TEXT,
+  //   label: "Tooltip"
+  // });
 
   element.endControlSection();
 
@@ -286,23 +286,23 @@ export function advancedTabControllers(element) {
 
   if (element.getType() !== 'section') {
 
-    element.startControlSection(
-      'element_size', {
-      tab: TAB_ADVANCED,
-      label: 'Size',
-    }
-    );
-
-    element.addControl('custom_width', {
-      label: 'Width',
-    });
-
-    element.endControlSection();
+    // element.startControlSection(
+    //   'element_size', {
+    //   tab: TAB_ADVANCED,
+    //   label: 'Size',
+    // }
+    // );
+    //
+    // element.addControl('custom_width', {
+    //   label: 'Width',
+    // });
+    //
+    // element.endControlSection();
 
     element.startControlSection(
       'element_positioning', {
       tab: TAB_ADVANCED,
-      label: 'Positioning',
+      label: 'Positioning (container)',
     }
     );
 
@@ -329,109 +329,120 @@ export function advancedTabControllers(element) {
       ],
     });
 
-    element.addControl('positioning_width_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Width (not for Columns)',
-      options: [
-        {
-          value: 'default',
-          label: 'default'
-        },
-        {
-          value: '100%',
-          label: 'full width(100%)'
-        },
-        {
-          value: 'auto',
-          label: 'inline(auto)'
-        },
-        {
-          value: 'custom',
-          label: 'custom'
-        }
-      ],
-    });
 
-    element.addControl('positioning_custom_width', {
-      type: CONTROLLER_SLIDER,
-      label: 'Custom width',
-      default: {
-        unit: '%'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 1000,
-      min: 0,
-      conditions: {
-        'positioning_width_type': 'custom',
-      }
-    });
+    // element.addControl('custom_width', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Custom Width',
+    // });
 
-    if (element.getType() === 'widget') {
-      element.addControl('positioning_vertical_align', {
-        type: CONTROLLER_CHOOSE,
-        label: 'Vertical Align',
+
+    if (element.getType() !== "column") {
+      element.addControl('positioning_width_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Width',
         options: [
           {
-            icon: 'block_top',
-            value: 'flex-start',
+            value: 'default',
+            label: 'default'
           },
           {
-            icon: 'block_horiz',
-            value: 'center',
+            value: '100%',
+            label: 'full width(100%)'
           },
           {
-            icon: 'block_bottom',
-            value: 'flex-end',
+            value: 'auto',
+            label: 'inline(auto)'
           },
+          {
+            value: 'custom',
+            label: 'custom'
+          }
+        ],
+      });
+
+      element.addControl('positioning_custom_width', {
+        type: CONTROLLER_SLIDER,
+        label: 'Custom width',
+        default: {
+          unit: '%'
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+        max: 1000,
+        min: 0,
+        conditions: {
+          'positioning_width_type': 'custom',
+        }
+      });
+    }
+
+    // if (element.getType() === 'widget') {
+    //   element.addControl('positioning_vertical_align', {
+    //     type: CONTROLLER_CHOOSE,
+    //     label: 'Vertical Align',
+    //     options: [
+    //       {
+    //         icon: 'block_top',
+    //         value: 'flex-start',
+    //       },
+    //       {
+    //         icon: 'block_horiz',
+    //         value: 'center',
+    //       },
+    //       {
+    //         icon: 'block_bottom',
+    //         value: 'flex-end',
+    //       },
+    //     ],
+    //   });
+    // }
+
+    if (element.getType() === "column") {
+      element.addControl('positioning_position_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Position',
+        options: [
+          {
+            value: 'relative',
+            label: 'default'
+          },
+          {
+            value: 'static',
+            label: 'static'
+          },
+          {
+            value: 'absolute',
+            label: 'absolute'
+          },
+          {
+            value: 'fixed',
+            label: 'fixed'
+          }
         ],
       });
     }
 
-    element.addControl('positioning_position_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Position',
-      options: [
-        {
-          value: 'relative',
-          label: 'default'
-        },
-        {
-          value: 'static',
-          label: 'static'
-        },
-        {
-          value: 'absolute',
-          label: 'absolute'
-        },
-        {
-          value: 'fixed',
-          label: 'fixed'
-        }
-      ],
-    });
-
-    element.addControl('positioning_horizontal_orientation', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Horizontal Align',
-      options: [
-        {
-          icon: 'block_left',
-          value: 'left',
-        },
-        {
-          icon: 'block_right',
-          value: 'right',
-        }
-      ],
-    });
+    // element.addControl('positioning_horizontal_orientation', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Horizontal Align',
+    //   options: [
+    //     {
+    //       icon: 'block_left',
+    //       value: 'left',
+    //     },
+    //     {
+    //       icon: 'block_right',
+    //       value: 'right',
+    //     }
+    //   ],
+    // });
 
     element.addControl('positioning_horizontal_offset', {
       type: CONTROLLER_SLIDER,
-      label: 'offset',
+      label: 'offset X',
       units: [
         'px',
         '%',
@@ -442,24 +453,24 @@ export function advancedTabControllers(element) {
     }
     );
 
-    element.addControl('positioning_vertical_orientation', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Vertical align',
-      options: [
-        {
-          icon: 'block_top',
-          value: 'left',
-        },
-        {
-          icon: 'block_bottom',
-          value: 'right',
-        }
-      ],
-    });
+    // element.addControl('positioning_vertical_orientation', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Vertical align',
+    //   options: [
+    //     {
+    //       icon: 'block_top',
+    //       value: 'left',
+    //     },
+    //     {
+    //       icon: 'block_bottom',
+    //       value: 'right',
+    //     }
+    //   ],
+    // });
 
     element.addControl('positioning_vertical_offset', {
       type: CONTROLLER_SLIDER,
-      label: 'offset',
+      label: 'offset Y',
       units: [
         'px',
         '%',

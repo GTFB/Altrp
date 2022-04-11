@@ -1,14 +1,13 @@
 const empty = __importDefault(require("../../helpers/empty"));
+const AltrpBaseController = require('../Controllers/AltrpBaseController').default
 {{{imports}}}
 
-function {{{listener}}}(type, data) {
-   const functions = {{{content}}}
+class {{{name}}} extends AltrpBaseController{
 
-   for(let fnString of functions) {
-      const fn = new Function("return " + fnString)()
-
-      fn(data, type)
-   }
+  async run(type, data){
+    this.setCustomizerData('context.data', data);
+    {{{content}}}
+  }
 }
 
-module.exports = {{{listener}}}
+module.exports = {{{name}}}

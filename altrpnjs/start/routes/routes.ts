@@ -27,6 +27,10 @@ import path from "path";
 import app_path from "../../helpers/app_path";
 import Customizer from "App/Models/Customizer";
 import fs from 'fs'
+import Model from "App/Models/Model";
+import Plugin from "App/Plugin"
+import _ from "lodash";
+
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -168,9 +172,19 @@ Route.group(() => {
   Route.any('models/*', async (httpContext: HttpContextContract) => {
     const segments = httpContext.request.url().split('/').filter(segment => segment)
 
+    /**
+     * delete `altrp_ajax` from request body
+     */
+    let methodName
+    if(httpContext.request.input('altrp_ajax') !== undefined){
+      const body = httpContext.request.all();
+      delete body['altrp_ajax']
+      httpContext.request.updateBody(body)
+    }
     let tableName = segments[2]
     if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
       tableName = segments[3]
+      methodName = segments[4]
     }
     let table = await Table.query().preload('altrp_model').where('name', tableName).first()
     /**
@@ -211,9 +225,9 @@ Route.group(() => {
         Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
       }
       const ControllerClass = isProd() ? (await require(controllerName)).default
+        // @ts-ignore
         : (await import(controllerName)).default
       const controller = new ControllerClass()
-      let methodName
 
       if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
         methodName = segments[4]
@@ -232,9 +246,10 @@ Route.group(() => {
           })
         }
       }else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
-        methodName = 'index'
+        methodName = segments[2].indexOf('_options') === -1 ? 'index'  : 'options'
+
       }else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
-        methodName = 'store'
+        methodName = 'add'
       }else if  (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'GET') {
@@ -254,7 +269,7 @@ Route.group(() => {
         && Number(segments[3])
         && segments[4]
       ) {
-        methodName = 'updateColumn'
+        methodName = 'update_column'
         httpContext.params[model.name] = Number(segments[3])
         httpContext.params.column = Number(segments[4])
       }
@@ -273,6 +288,52 @@ Route.group(() => {
       })
     }
   })
+  /**
+   * plugins ajax requests START
+   */
+  const methods = [
+    'get', 'post', 'put', 'delete'
+  ]
+  for(const method of methods) {
+    /**
+     * handle all 4 HTTP methods
+     */
+    Route[method]('plugins', async (httpContext: HttpContextContract) => {
+      const plugins = await Plugin.getEnabledPlugins()
+      const segments = httpContext.request.url().split('/').filter(segment => segment)
+      const plugin = plugins.find(plugin => {
+        return plugin.name === segments[2]
+      })
+      if(! plugin){
+        httpContext.response.status(404)
+        return httpContext.response.json({success: false, message: 'Not Found'})
+      }
+      const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/${method}/${segments[3]}`)
+      if(fs.existsSync(fileName)){
+        try{
+          if(isProd()){
+            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+          }
+          const module = isProd() ? await require(fileName).default : (await import(fileName)).default
+          if(_.isFunction(module)){
+            return await module(httpContext)
+          }
+        }catch (e) {
+          httpContext.response.status(500)
+          return httpContext.response.json({
+            success: false,
+            message: e.message,
+            trace: e.stack.split('\n'),
+          })
+        }
+      }
+      httpContext.response.status(404)
+      return httpContext.response.json({success: false, message: 'Not Found'})
+    })
+  }
+  /**
+   * plugins ajax requests END
+   */
 })
   .prefix("/ajax")
 

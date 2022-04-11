@@ -58,14 +58,14 @@ class DividerWidget extends Component {
   }
 
   getClasses() {
-    return `altrp-divider ${this.isActive() ? 'active' : ''}`
+    return `altrp-divider ${this.isActive() ? 'active' : ''} ${this.state.settings.position_css_classes || ""}`
   }
 
   render() {
     let style = {};
     let styleSeparator = {};
 
-    let dividerAlignment = this.props.element.getResponsiveLockedSetting("divider_alignment", null, "center");;
+    let dividerAlignment = this.props.element.getResponsiveLockedSetting("divider_alignment", null, "center");
     switch (dividerAlignment) {
       case "flex-start":
         styleSeparator = {
@@ -85,7 +85,7 @@ class DividerWidget extends Component {
         break;
     }
     const sccClasses = this.getClasses();
-    let divider = <div className={sccClasses} style={style}>
+    let divider = <div className={sccClasses} id={this.state.settings.position_css_id} style={style}>
       <span className="altrp-divider-separator" style={styleSeparator} />
     </div>
 
@@ -94,23 +94,23 @@ class DividerWidget extends Component {
 
     if (dividerText || dividerImage?.id) {
       const dividerLabel = <>
-        {dividerImage?.id 
+        {dividerImage?.id
           ? <div className="altrp-divider-image">
               {renderAsset(dividerImage)}
-            </div> 
+            </div>
           : ''
         }
-        {dividerText 
+        {dividerText
           ? <div className='altrp-divider-label'>
               {dividerText}
-            </div> 
+            </div>
           : ''
         }
       </>
 
       const labelPosition = this.state.settings.label_position || 'center'
 
-      return <div className={sccClasses} style={style}>
+      return <div className={sccClasses} id={this.state.settings.position_css_id} style={style}>
         {labelPosition != 'left' && <span className="altrp-divider-separator divider-separator-left" />}
         <div className="altrp-divider-container-label">
           {dividerLabel}

@@ -924,7 +924,7 @@ class InputTextCommonWidget extends Component {
     }
 
     let input = (
-      <div className="altrp-input-wrapper">
+      <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
         <AltrpInput
           type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
           name={this.getName()}

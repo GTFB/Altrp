@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node ace serve --watch",
-    "build": "node ace build --production",
+    "dev":   "node ace serve --watch ",
+    "build": "node --max-old-space-size=8144 ace build --production",
     "start": "node server.ts",
-    "lint": "eslint . --ext=.ts"
+    "lint":  "eslint . --ext=.ts"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.3.9",
@@ -43,6 +43,7 @@
     "css": "^3.0.0",
     "docx": "^7.3.0",
     "dotenv": "^10.0.0",
+    "envfile": "^6.17.0",
     "fs-extra": "^10.0.0",
     "heic-convert": "^1.2.4",
     "image-size": "^1.0.1",
@@ -51,7 +52,7 @@
     "luxon": "^2.2.0",
     "md5": "^2.3.0",
     "mobile-detect": "^1.4.5",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "mustache": "^4.2.0",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.7",

@@ -1,0 +1,11 @@
+.input-gallery-wrapper {
+  display: grid;
+  grid-auto-flow: row dense;
+}
+
+.bp3-file-input input {
+  display: none;
+  margin: 0;
+  min-width: 200px;
+  opacity: 0;
+}
