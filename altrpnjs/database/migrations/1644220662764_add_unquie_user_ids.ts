@@ -6,20 +6,22 @@ export default class AddUniqueUserIds extends BaseSchema {
   protected tableName = 'users'
 
   public async up () {
-    await this.schema.table(this.tableName, (table) => {
-      table.uuid("guid").nullable()
-      table.unique(["guid"])
+    if(! await this.schema.hasColumn(this.tableName, 'guid')){
+      this.schema.alterTable(this.tableName, async (table) => {
+        table.uuid("guid").nullable()
+        table.unique(["guid"])
 
-      this.defer(async () => {
-        //@ts-ignore
-        const users = await User.query().where("guid", null)
+        this.defer(async () => {
+          //@ts-ignore
+          const users = await User.query().where("guid", null)
 
-        for (const user of users) {
-          user.guid = uuid();
-          await user.save()
-        }
+          for (const user of users) {
+            user.guid = uuid();
+            await user.save()
+          }
+        })
       })
-    })
+    }
   }
 
   public async down () {

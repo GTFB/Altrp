@@ -30,6 +30,11 @@ export default class ElementRenderer {
   async render(): Promise<string>{
     const reactElement =  this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
+    this.element.settingsLock = this.element.settingsLock || {}
+    this.element.settings = {
+      ...this.element.settings,
+      ...this.element.settingsLock
+    }
     const {advanced_element_id} = this.element.settings
     let children_content = ''
     for (const child of this.element.children){
@@ -40,7 +45,17 @@ export default class ElementRenderer {
     const columns_count = this.element.children.length;
 
     if(fs.existsSync(this.elementStub)){
-      const section_background = this.getType() === 'section' ? `{{{renderSectionBG(element${this.getId()}_settings, device)}}}` : ''
+      let section_background
+      switch (this.getName()) {
+        case 'section_widget':
+        case 'section':{
+          section_background = `{{{renderSectionBG(element${this.getId()}_settings,'${this.getId()}', device)}}}`
+        }break;
+        default:{
+          section_background = ''
+
+        }break
+      }
       let styles:{}|string = {}
       const {layout_content_width_type:widthType, isFixed} = this.element.settings
       let section_classes = ''

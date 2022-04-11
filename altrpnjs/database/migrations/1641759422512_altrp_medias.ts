@@ -8,6 +8,14 @@ export default class AltrpMedias extends BaseSchema {
   public async up () {
 
     if (await this.schema.hasTable(this.tableName)) {
+      if(! await this.schema.hasColumn(this.tableName, 'guid')){
+        if(await this.schema.hasColumn(this.tableName, 'guid')){
+          return
+        }
+        this.schema.alterTable(this.tableName,  table=>{
+          table.string('guid', 36).index().nullable()
+        })
+      }
       let media = await Media.query().whereNull('guid').select('*')
       await Promise.all(media.map(async m=>{
         m.guid = uuid()

@@ -28,6 +28,9 @@ import app_path from "../../helpers/app_path";
 import Customizer from "App/Models/Customizer";
 import fs from 'fs'
 import Model from "App/Models/Model";
+import Plugin from "App/Plugin"
+import _ from "lodash";
+
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -285,6 +288,52 @@ Route.group(() => {
       })
     }
   })
+  /**
+   * plugins ajax requests START
+   */
+  const methods = [
+    'get', 'post', 'put', 'delete'
+  ]
+  for(const method of methods) {
+    /**
+     * handle all 4 HTTP methods
+     */
+    Route[method]('plugins', async (httpContext: HttpContextContract) => {
+      const plugins = await Plugin.getEnabledPlugins()
+      const segments = httpContext.request.url().split('/').filter(segment => segment)
+      const plugin = plugins.find(plugin => {
+        return plugin.name === segments[2]
+      })
+      if(! plugin){
+        httpContext.response.status(404)
+        return httpContext.response.json({success: false, message: 'Not Found'})
+      }
+      const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/${method}/${segments[3]}`)
+      if(fs.existsSync(fileName)){
+        try{
+          if(isProd()){
+            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+          }
+          const module = isProd() ? await require(fileName).default : (await import(fileName)).default
+          if(_.isFunction(module)){
+            return await module(httpContext)
+          }
+        }catch (e) {
+          httpContext.response.status(500)
+          return httpContext.response.json({
+            success: false,
+            message: e.message,
+            trace: e.stack.split('\n'),
+          })
+        }
+      }
+      httpContext.response.status(404)
+      return httpContext.response.json({success: false, message: 'Not Found'})
+    })
+  }
+  /**
+   * plugins ajax requests END
+   */
 })
   .prefix("/ajax")
 

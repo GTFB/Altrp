@@ -132,7 +132,7 @@ export default class TemplatesController {
       title: request.input("title"),
       type: "template",
       guid,
-      user_id: auth.user.id,
+      user_id: auth.user?.id,
     }
 
     const template = await Template.create(data);
