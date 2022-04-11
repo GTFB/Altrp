@@ -23,6 +23,12 @@ export default class SendTelegram extends Component{
           return item;
         });
       }
+      if (key === "listener"){
+        node.data.props.nodeData.data.content.map(item =>{
+          if(item.id === id) item.listener = e.target.value;
+          return item;
+        });
+      }
       store.dispatch(setUpdatedNode(node));
     }
 
@@ -34,6 +40,8 @@ export default class SendTelegram extends Component{
         node.data.props.nodeData.data.content.map(item =>{
           if(item.id === id) {
             if(key === 'name') item.name = value;
+            else item.data[key] = value;
+            if(key === 'listener_value') item.listener_value = value;
             else item.data[key] = value;
           }
           return item;
@@ -97,6 +105,8 @@ export default class SendTelegram extends Component{
         "id": new Date().getTime(),
         "name": `Block ${countNew}`,
         "type": "",
+        "listener": "text",
+        "listener_value": "",
         "data": {}
       };
     }
@@ -107,16 +117,23 @@ export default class SendTelegram extends Component{
       if (_.isArray(this.props.content)) block = this.props.content;
       else this.onNotice();
       const typeOptions = [
-        {label:'text', value: 'content'},
-        {label:'link', value: 'link'},
-        {label:'button', value: 'button'},
-        {label:'photo', value: 'photo'},
-        {label:'file', value: 'file'},
-        {label:'document', value: 'document'},
-        {label:'video', value: 'video'},
-        {label:'animation', value: 'animation'},
+        {label:'Text', value: 'content'},
+        {label:'Link', value: 'link'},
+        {label:'Button', value: 'button'},
+        {label:'Photo', value: 'photo'},
+        {label:'File', value: 'file'},
+        {label:'Document', value: 'document'},
+        {label:'Video', value: 'video'},
+        // {label:'animation', value: 'animation'},
         // {label:'location', value: 'location'},
       ];
+
+      const listeners = [
+        {label:'Text', value: 'text'},
+        {label:'Photo', value: 'photo'},
+        {label:'Document', value: 'document'},
+        {label:'Button', value: 'button'},
+      ]
 
       return <div className="settings-section-box">
             <div className={"settings-section " + (this.props.activeSection === "telegram" ? '' : 'open')}>
@@ -154,6 +171,35 @@ export default class SendTelegram extends Component{
                             </button>
                           </div>
                           <div className="repeater-item-content">
+                            <div className="controller-container controller-container_select">
+                              <div className="controller-container__label control-select__label controller-label" >Listener</div>
+                              <div className="control-container_select-wrapper controller-field">
+                                <select className="control-select control-field"
+                                        value={item.listener || 'text'}
+                                        onChange={e => {this.changeSelect(e, "listener", item.id)}}
+                                >
+                                  {listeners.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                                </select>
+                              </div>
+                            </div>
+                            {
+                              item.listener === "text" ? (
+                                  <div className="controller-container">
+                                    <div className="controller-container__label control-select__label controller-label" >Text</div>
+                                    <div className="control-container_select-wrapper controller-field">
+                                      <input
+                                        className="control-field"
+                                        type="text"
+                                        id={`block_${item.id}`}
+                                        name="blockListener"
+                                        style={{width: '100%'}}
+                                        value={item?.listener_value ?? ''}
+                                        onChange={(e) => { this.changeInput(e, 'listener_value', item.id) }}
+                                      />
+                                    </div>
+                                  </div>
+                              ) : ""
+                            }
                             <div className="controller-container controller-container_select">
                               <div className="controller-container__label control-select__label controller-label" >Type</div>
                               <div className="control-container_select-wrapper controller-field">

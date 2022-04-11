@@ -6,6 +6,7 @@ import path from "path";
 import isProd from "../../helpers/isProd";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
+import app_path from "../../helpers/app_path";
 
 export abstract class BaseGenerator{
   private fileName: string;
@@ -44,6 +45,45 @@ export abstract class BaseGenerator{
       Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
     }
     return
+  }
+
+  protected async applyFilters(type: string, typeData="string"): Promise<any> {
+    let content: any = "";
+
+    if(typeData === "array") {
+      content = []
+    }
+
+    if(fs.existsSync((app_path("AltrpPlugins")))) {
+      const plugins = fs.readdirSync(app_path("AltrpPlugins"));
+
+      for (const pluginDir of plugins) {
+        const hasHooks = fs.existsSync(app_path(`AltrpPlugins/${pluginDir}/hooks`))
+
+        if(hasHooks) {
+          const hasType = fs.existsSync(app_path(`AltrpPlugins/${pluginDir}/hooks/${type}`));
+
+          if(hasType) {
+            const hooks = fs.readdirSync(app_path(`AltrpPlugins/${pluginDir}/hooks/${type}`))
+
+            for(const hookName of hooks) {
+              const filePath = app_path(`AltrpPlugins/${pluginDir}/hooks/${type}/${hookName}`)
+              const hook = isProd() ? (await require(filePath)).default
+                : (await import(filePath)).default
+              if(hook) {
+                if(typeData === "array") {
+                  content.push(hook.toString())
+                } else {
+                  content += hook.toString()
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return JSON.stringify(content)
   }
 
   private getFullFileName():string{

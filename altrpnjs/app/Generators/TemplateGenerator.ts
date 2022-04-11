@@ -7,6 +7,7 @@ import Template from 'App/Models/Template';
 import path from 'path';
 import * as _ from 'lodash'
 import Logger from '@ioc:Adonis/Core/Logger'
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class TemplateGenerator extends BaseGenerator {
 
@@ -34,6 +35,8 @@ export default class TemplateGenerator extends BaseGenerator {
     }
     await template.load('currentArea')
 
+    ListenerGenerator.getHookTemplates(template)
+
     const styles = JSON.parse(template.styles || "{}")
 
     let all_styles = _.get(styles, 'all_styles', [])
@@ -55,6 +58,7 @@ export default class TemplateGenerator extends BaseGenerator {
       return
     }
     let children_content = await template.getChildrenContent()
+
     return await this.addFile(fileName)
       .destinationDir(this.getDirectory(template))
       .stub(TemplateGenerator.template)
