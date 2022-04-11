@@ -1,8 +1,9 @@
 import {BaseGenerator} from "App/Generators/BaseGenerator";
 import app_path from "../../helpers/app_path";
 import isProd from "../../helpers/isProd";
-import Model from "App/Models/Model";
 import fs from "fs";
+import path from "path";
+import Customizer from "App/Models/Customizer";
 
 
 export default class ListenerGenerator extends BaseGenerator {
@@ -21,76 +22,58 @@ export default class ListenerGenerator extends BaseGenerator {
     'afterFind',
     'afterPaginate'
   ]
+
   public static ext = isProd() ? '.js': '.ts'
   private static template = app_path(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpListener.stub`)
-  private model: Model
+  private customizer: Customizer
 
-  public async run(model, type) {
-    if(!model || !type) {
+  public async run(customizer: Customizer) {
+
+    this.customizer  = customizer
+    if(!customizer || !customizer.settings.hook_type) {
       return
     }
 
-    this.model = model;
 
+    let imports = "";
+    let content = this.customizer.getMethodContent()
 
-    const dir = ListenerGenerator.directory + "altrp_models" + "." + this.model.name + "." + type;
+    content = await this.applyFilters("templates", content);
 
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-    }
-
-    const listener = type
-
-    console.log(listener + ListenerGenerator.ext)
-    await this.addFile( listener + ListenerGenerator.ext)
-      .destinationDir(dir)
+    imports = await this.applyFilters("listener_imports", imports);
+    await this.addFile( customizer.name + ListenerGenerator.ext)
+      .destinationDir(this.getDir())
       .stub(ListenerGenerator.template)
       .apply({
-        listener,
+        name: customizer.name,
+        imports,
+        content
       });
   }
 
-  public async delete(model, type) {
-    if(!model || !type) {
-      return
+  getFilename(){
+    return  path.join(this.getDir(), this.customizer.name + ListenerGenerator.ext)
+  }
+  getDir(){
+    const dir = path.join(ListenerGenerator.directory , this.customizer.settings.hook_type )
+    if(!fs.existsSync(dir)){
+      fs.mkdirSync(dir, {recursive:true})
     }
 
-    this.model = model;
-
-    const dir = ListenerGenerator.directory + "altrp_models" + "." + this.model.name + "." + type;
-
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-    }
-
-    const listener = type
-
-    if(fs.existsSync(dir + "\\" + listener + ListenerGenerator.ext)) {
-      fs.unlinkSync(dir + "\\" + listener + ListenerGenerator.ext)
-    }
+    return  dir
   }
 
-  public async runAll(model) {
-    if(!model) {
+  public async delete(customizer: Customizer) {
+    this.customizer  = customizer
+    if(!customizer || !customizer.settings.hook_type) {
       return
     }
-
-    this.model = model;
-
-    const dir = ListenerGenerator.directory + this.model.name;
-
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
+    const fileName = this.getFilename()
+    if(fs.existsSync(fileName)) {
+      fs.rmSync(fileName)
     }
-
-    for (const listener of ListenerGenerator.listeners) {
-      await this.addFile(listener + ListenerGenerator.ext)
-        .destinationDir(dir)
-        .stub(ListenerGenerator.template)
-        .apply({
-          listener,
-        });
+    if(! fs.readdirSync(this.getDir()).length){
+      fs.rmdirSync(this.getDir())
     }
-
   }
 }

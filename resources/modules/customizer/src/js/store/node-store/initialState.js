@@ -8,7 +8,7 @@ import {CrudObj} from "../../components/sidebar/modules/nodes-obj/robot/CrudObj"
 import {ApiObj} from "../../components/sidebar/modules/nodes-obj/robot/ApiObj";
 import {MessageObj} from "../../components/sidebar/modules/nodes-obj/robot/MessageObj";
 import {RobotObj} from "../../components/sidebar/modules/nodes-obj/robot/RobotObj";
-import {BotObj} from "../../components/sidebar/modules/nodes-obj/robot/BotObj";
+// import {BotObj} from "../../components/sidebar/modules/nodes-obj/robot/BotObj";
 
 export const initialState = {
   nodes: [
@@ -22,5 +22,6 @@ export const initialState = {
     ApiObj,
     MessageObj,
     RobotObj,
+    // BotObj
   ]
 }
