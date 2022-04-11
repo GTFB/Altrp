@@ -1,6 +1,6 @@
 import getResponsiveSetting from './getResponsiveSetting';
 
-export default function renderSectionBG(settings, device){
+export default function renderSectionBG(settings, element_id, device){
 
   let sectionBackground = [
     'background_section',
@@ -10,6 +10,7 @@ export default function renderSectionBG(settings, device){
     'background_image',device,
     {}
   );
+  sectionBackground.push('altrp-background-image' + element_id);
   if (background_image.url  ) {
     sectionBackground.push('altrp-background-image');
   }
@@ -23,5 +24,5 @@ export default function renderSectionBG(settings, device){
     <source src=${background_video_url || 'none'} type="video/mp4" class="section-video-source" ></source>
       </video>`
     :
-    `<span class=${sectionBackground.join(" ")} ></span>`
+    `<span class="${sectionBackground.join(" ")}" ></span>`
 }
