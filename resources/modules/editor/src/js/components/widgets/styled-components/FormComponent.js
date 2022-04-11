@@ -412,7 +412,7 @@ const fieldLabel = settings => {
 
   styles += "}";
 
-  styles = `&& .altrp-field-container:hover .altrp-field-label {`;
+  styles += `&& .altrp-field-container:hover .altrp-field-label {`;
 
   settings &&
     (color = getResponsiveSetting(settings, "label_style_font_color", ':hover'));
