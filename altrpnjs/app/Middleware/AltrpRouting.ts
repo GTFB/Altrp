@@ -200,8 +200,9 @@ export default class AltrpRouting {
             route_args: pageMatch.params,
             datasources,
             device: getCurrentDevice(httpContext.request),
+            version: getLatestVersion(),
             _altrp: {
-              version: getLatestVersion()
+              version: getLatestVersion(),
             },
           })
         )

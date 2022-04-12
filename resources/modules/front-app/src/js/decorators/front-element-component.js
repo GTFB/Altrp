@@ -96,14 +96,10 @@ function getContent(settingName, returnRaw = false, locked = false) {
    * @member {FrontElement} element
    */
   const element = this.props.element;
- // return this.props.element.getContent(settingName);
 
   let content = this.props.element.getSettings(settingName, '', locked);
-
   if(content && content.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
-    // console.log(element.getRoot());
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
-    // console.log(model);
     content = model ? model.getProperty(content.fieldName) : ' ';
   }
   if((! isEditor())){
@@ -132,7 +128,9 @@ function getContent(settingName, returnRaw = false, locked = false) {
        content = content.trim().replace('{{', '').replace('}}', '');
        content = getDataByPath(content, '', model);
      } else {
+       // console.log(content);
        content = replaceContentWithData(content, model);
+       // console.log(content);
      }
 
     const contentDynamicSetting = this.props.element.getDynamicSetting(settingName);

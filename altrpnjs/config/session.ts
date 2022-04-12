@@ -21,8 +21,8 @@ const sessionConfig: SessionConfig = {
     //@ts-ignore
       maxAge: 7200,
       httpOnly: true,
-      secure: false,
-      sameSite: false,
+      secure: true,
+      sameSite: 'none',
     }, // see the cookie driver
   file: {
     location: Application.tmpPath('sessions'),

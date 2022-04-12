@@ -20,6 +20,7 @@ export default class SearchPlugins extends Component {
   }
 
   async componentWillMount() {
+
   }
 
   listenScrollHeader = () => {
@@ -62,7 +63,7 @@ export default class SearchPlugins extends Component {
         </div>
         <div className="admin-content">
           <div className="row">
-            <form className="admin-table-top admin-table-top__search-plugin" >
+            <form className="admin-table-top admin-table-top__search-plugin" onSubmit={(e)=>e.preventDefault()}>
               <InputGroup className="form-tables"
               onChange={this.onChange}/>
               <Search />

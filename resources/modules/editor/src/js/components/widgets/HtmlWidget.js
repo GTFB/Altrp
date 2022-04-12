@@ -5,6 +5,7 @@ class HtmlWidget extends Component {
     this.state = {
       settings: props.element.getSettings()
     };
+    props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
@@ -14,14 +15,15 @@ class HtmlWidget extends Component {
   }
 
   render() {
-    let data = this.getLockedContent("data");
+    let data = this.props.element.getResponsiveLockedSetting("data");
+
     return (
       <>
         <div
           dangerouslySetInnerHTML={{
             __html: data
           }}
-        ></div>
+        />
       </>
     );
   }

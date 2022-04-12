@@ -69,7 +69,6 @@ export default class Area extends BaseModel {
       setting.sidebar_location && CSSclasses.push(`app-area_sidebar-location-${setting.sidebar_location}`);
     }
 
-    console.log(this.settings)
 
     return CSSclasses;
   }

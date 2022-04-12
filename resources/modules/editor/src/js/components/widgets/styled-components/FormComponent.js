@@ -399,20 +399,15 @@ const fieldLabel = settings => {
   let styles = `&& .altrp-field-label {`;
   let color, typographic;
 
-  settings &&
-    (color = getResponsiveSetting(settings, "label_style_font_color"));
+  settings && (color = getResponsiveSetting(settings, "label_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings &&
-    (typographic = getResponsiveSetting(
-      settings,
-      "label_style_font_typographic"
-    ));
+  settings && (typographic = getResponsiveSetting(settings, "label_style_font_typographic"));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
 
-  styles = `&& .altrp-field-container:hover .altrp-field-label {`;
+  styles += `&& .altrp-field-container:hover .altrp-field-label {`;
 
   settings &&
     (color = getResponsiveSetting(settings, "label_style_font_color", ':hover'));
