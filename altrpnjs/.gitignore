@@ -8,7 +8,8 @@ tmp
 .env-prod
 
 #bundles
-public/
+public/*
+!public/css
 storage/
 app/AltrpModels/
 app/AltrpControllers/

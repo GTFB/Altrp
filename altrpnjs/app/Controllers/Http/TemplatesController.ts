@@ -278,7 +278,7 @@ export default class TemplatesController {
 
     if(templates.length > 0) {
       for (const template of templates) {
-        template.delete()
+        await template.delete()
       }
 
       return {

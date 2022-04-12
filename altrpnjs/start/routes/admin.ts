@@ -30,6 +30,8 @@ Route.group(() => {
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
     Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
+    Route.delete('/reviews', 'TemplatesController.deleteAllReviews')
+
 
     Route.get("/role_options", "OptionsController.roles")
     Route.get("/users_options", "OptionsController.users")
