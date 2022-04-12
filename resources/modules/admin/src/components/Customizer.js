@@ -16,6 +16,8 @@ class Customizer extends Component {
       customizers: [],
       model_id: false,
       currentPage: 1,
+      count: 1,
+      pageCount: 1,
       activeHeader: 0,
       customizersSearch: ""
     };
@@ -123,17 +125,19 @@ class Customizer extends Component {
     let url = new URL(location.href);
     let urlS = url.searchParams.get('s')
     const customizers = (await this.resource.getQueried({
-      s: urlS === null ? this.state.customizersSearch : urlS
-    })).data;
+      s: urlS === null ? this.state.customizersSearch : urlS,
+      page: this.state.currentPage,
+      pageSize: this.itemsPerPage
+    }))
 
-    if (_.isArray(customizers)) {
-      customizers.map(item =>{
+    if (_.isArray(customizers.data)) {
+      customizers.data.map(item =>{
         item.url = `/admin/customizers-editor?customizer_id=${item.id}`;
         return item;
       });
     }
 
-    this.setState(state => ({ ...state, customizers, customizersSearch: urlS === null ? this.state.customizersSearch : urlS  }));
+    this.setState(state => ({ ...state, customizers: customizers.data, count: customizers.count, pageCount: customizers.pageCount, customizersSearch: urlS === null ? this.state.customizersSearch : urlS  }));
   }
 
   goToCustomizerEditor() {
@@ -186,7 +190,7 @@ class Customizer extends Component {
   }
 
   render() {
-    const { currentPage, customizers, customizersSearch  } = this.state;
+    const { currentPage, customizers, customizersSearch, count, pageCount  } = this.state;
     return (
       <div className="admin-templates admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -232,10 +236,7 @@ class Customizer extends Component {
                 target: "_blank"
               },
             ]}
-            rows={customizers.slice(
-              currentPage * this.itemsPerPage - this.itemsPerPage,
-              currentPage * this.itemsPerPage
-            )}
+            rows={customizers}
             quickActions={[
               {
                 tag: "a",
@@ -282,14 +283,15 @@ class Customizer extends Component {
               change: this.changeValueCustomizers
             }}
 
-            pageCount={Math.ceil(customizers.length / this.itemsPerPage) || 1}
+            pageCount={pageCount || 1}
             currentPage={currentPage}
-            changePage={page => {
+            changePage={async (page) => {
               if (currentPage !== page) {
-                this.setState({ currentPage: page });
+                await this.setState({ currentPage: page })
+                await this.fetchData()
               }
             }}
-            itemsCount={customizers.length}
+            itemsCount={count || 1}
             openPagination={true}
           />
         </div>

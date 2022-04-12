@@ -38,7 +38,6 @@ export class TelegramBot {
   }
 
   send(blocks, user) {
-    console.log(blocks)
     if(user.telegram_chat) {
       this.bot.telegram.sendMessage(user.telegram_chat, "sadasda")
     }

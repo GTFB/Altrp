@@ -24,7 +24,7 @@ export default class PagesController {
       ...request.body(),
       content: request.input("content") || "",
       model_id: request.input("model_id"),
-      author: auth.user.id,
+      author: auth.user?.id,
       guid: uuid(),
       parent_page_id: request.input("parent_page_id"),
       path: request.input("path"),
@@ -101,7 +101,7 @@ export default class PagesController {
 
     const modPages = pages.map( page => {
       return {
-        author: page.user.email,
+        author: page.user?.email || '',
         id: page.id,
         title: page.title,
         path: page.path,

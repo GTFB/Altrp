@@ -7,6 +7,7 @@ export default function AltrpLink(text: string, attrs: {
   className?: string,
   link?: {},
 } = {}) {
+  attrs.children = attrs.children || text;
   let link = BasicLink(attrs);
 
 

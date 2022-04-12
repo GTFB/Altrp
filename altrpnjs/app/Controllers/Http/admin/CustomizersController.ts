@@ -7,6 +7,7 @@ import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
+import Timer, {timers} from "App/Services/Timer";
 
 export default class CustomizersController {
 
@@ -42,11 +43,20 @@ export default class CustomizersController {
           'type': 'customizer',
           'request_type': customizer.getRequestType(),
         })
+
+        customizer = await Customizer.query().preload("altrp_model").firstOrFail()
+
+        if(customizer.settings.time && customizer.settings.time_type) {
+            new Timer(customizer.name, {
+              time: customizer.settings.time,
+              type: customizer.settings.time_type
+            }, customizer)
+        }
         await source.save()
       }
       if(customizer.type === "listener" && model) {
         const generator = new ListenerGenerator()
-        await generator.run(model, customizer.settings.hook_type)
+        await generator.run(customizer)
       }
       //@ts-ignore
       if(model){
@@ -119,16 +129,15 @@ export default class CustomizersController {
       )
     }
 
-    if(customizer.type === "listener" && request.input("settings.hook_type")) {
+    if(customizer.type === "listener") {
       // @ts-ignore
       const generator = new ListenerGenerator()
 
-      const model = await Model.find(customizer.model_id);
-      if(model) {
-        // await generator.delete(model, customizer.settings.hook_type)
-      }
+      await generator.delete(customizer)
+
     }
     const oldType = customizer.type
+    const oldSettings = customizer.settings
     customizer.merge(request.all())
     /**
      * Delete source if type `api` changed
@@ -144,7 +153,6 @@ export default class CustomizersController {
         customizer.model_guid = model.guid
       }
       await customizer.save()
-
 
       if(customizer.$dirty?.model_id && customizer.$original.model_id) {
         const oldModel = await Model.find(customizer.$original.model_id)
@@ -176,10 +184,20 @@ export default class CustomizersController {
       if(customizer.type === "listener" && model) {
         const generator = new ListenerGenerator()
 
-        await generator.run(model, customizer.settings.hook_type)
+        await generator.run(customizer)
       }
       if(model) {
         Event.emit('model:updated', model)
+      }
+
+
+      if(customizer.settings.time && customizer.settings.time_type) {
+        new Timer(customizer.name, {
+          time: customizer.settings.time,
+          type: customizer.settings.time_type
+        }, customizer)
+      } else if(oldSettings.time_type !== customizer.settings.time_type || oldSettings.time !== customizer.settings.time) {
+        timers.remove(customizer.name)
       }
 
     } catch
@@ -217,7 +235,8 @@ export default class CustomizersController {
 
     let search = request.qs().s || ''
     let categories = request.qs() || ''
-    // let page = request.qs().page || 1
+    let page = request.qs().page || 1
+    let pageSize = request.qs().pageSize || 20
     let orderColumn = request.qs().order_by || 'title'
     // let limit = request.qs().pageSize || 10
     // let offset = limit * (page - 1)
@@ -241,13 +260,12 @@ export default class CustomizersController {
       })
     }
     customizers.orderBy(orderColumn, orderType)
-    const result = await customizers.select('altrp_customizers.*')
-
+    const result = await customizers.select('altrp_customizers.*').paginate(page, pageSize)
     return response.json({
-      'success':
-        true,
-      'data':
-      result,
+      'success': true,
+      count: result.getMeta().total,
+      pageCount: result.getMeta().last_page,
+      'data': result.all(),
     })
   }
 
@@ -269,10 +287,12 @@ export default class CustomizersController {
       if(customizer.type === "listener") {
         const generator = new ListenerGenerator()
 
-        const model = await Model.find(customizer.model_id);
-        if(model) {
-          await generator.delete(model, customizer.settings.hook_type)
-        }
+        await generator.delete(customizer)
+
+      }
+
+      if(customizer.settings.time && customizer.settings.time_type) {
+        timers.remove(customizer.name)
       }
 
       await customizer.delete()

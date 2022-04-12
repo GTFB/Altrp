@@ -119,8 +119,11 @@ class CustomizerSettingsPanel extends React.Component {
     const {modelsOptions} = this.state;
     const {customizer} = this.props;
     const {type, model_id, settings = {}} = customizer
+
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
+    const time = settings?.time || "";
+    const time_type = settings?.time_type || "none";
 
     let Url = ''
     if (this.props.customizer.source !== null) {
@@ -186,7 +189,7 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {type === 'api' && <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                    {type === 'api' && <><div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
                       <AltrpSelect id="crud-fields"
                                    className="controller-field"
@@ -201,7 +204,7 @@ class CustomizerSettingsPanel extends React.Component {
 
                                    ]}
                       />
-                    </div>}
+                    </div>
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Model:</div>
                       <AltrpSelect id="crud-fields"
@@ -212,10 +215,12 @@ class CustomizerSettingsPanel extends React.Component {
                                    options={modelsOptions.filter(item => item.value >= 5)}
                       />
                     </div>
+                    </>
+                    }
                     {
                       type === "listener" && (
                         <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                          <div className="controller-container__label control-select__label controller-label">Type:</div>
+                          <div className="controller-container__label control-select__label controller-label">Hook Type:</div>
                           <InputGroup className="form-control-blueprint"
                                       type="text"
                                       id="customizer-title"
@@ -248,6 +253,42 @@ class CustomizerSettingsPanel extends React.Component {
                       </div>
                       <input value={Url} readOnly={true} className="url-text"/>
                     </div>
+                    <div className="Customizer-time">
+                      <AltrpSelect id="time-type-fields"
+                                   className="controller-field"
+                                   isMulti={false}
+                                   value={time_type}
+                                   onChange={this.changeTimeType}
+                                   options={[
+                                     {
+                                       value: '',
+                                       label: 'None',
+                                     },
+                                     {
+                                       value: 'hour',
+                                       label: 'Hour',
+                                     },
+                                     {
+                                       value: 'day',
+                                       label: 'Day',
+                                     },
+                                     {
+                                       value: 'week',
+                                       label: 'Week',
+                                     },
+                                   ]}
+                      />
+                      {
+                        time_type !== "none" ? (
+                          <InputGroup className="form-control-blueprint customizer-time-input"
+                                      type="number"
+                                      id="customizer-time"
+                                      value={time}
+                                      onChange={this.changeTime}
+                          />
+                        ) : ""
+                      }
+                    </div>
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
 
@@ -270,6 +311,22 @@ class CustomizerSettingsPanel extends React.Component {
   changeType = (e)=> {
     let {customizer} = this.props;
     customizer = mutate.set(customizer, 'type', e.value||'')
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+  }
+  changeTimeType = (e)=> {
+    let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
+    customizer = mutate.set(customizer, 'settings.time_type', e.value||'')
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+  }
+  changeTime = (e)=> {
+    let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
+    customizer = mutate.set(customizer, 'settings.time', e.target.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   }
   changeModel = (e)=>{

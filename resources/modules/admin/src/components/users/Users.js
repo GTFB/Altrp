@@ -25,6 +25,8 @@ class Users extends Component {
       roleFilter: null,
       search: "",
       currentPage: 1,
+      pageCount: 1,
+      count: 1,
       activeHeader: 0,
       roles: [],
       bulkActions: 'Bulk Actions',
@@ -77,10 +79,18 @@ class Users extends Component {
     let url = new URL(location.href);
     let urlS = url.searchParams.get('s')
     let users_result = await this.resource.getQueried({
-      s:  urlS === null ? this.state.search : urlS
+      s:  urlS === null ? this.state.search : urlS,
+      page: this.state.currentPage,
+      pageSize: this.itemsPerPage
     });
     this.setState(state => {
-      return {...state, data: users_result, search: urlS === null ? this.state.search : urlS };
+      return {
+        ...state,
+        data: users_result.users,
+        count: users_result.count,
+        pageCount: users_result.pageCount,
+        search: urlS === null ? this.state.search : urlS
+      };
     });
   }
 
@@ -136,8 +146,13 @@ class Users extends Component {
     }
   }
 
+  updatePageAndLoadData = async (page) => {
+  await this.setState({currentPage: page})
+  await this.getUsers()
+}
+
   render() {
-    const {currentPage, data, search, roles, roleFilter} = this.state;
+    const {pageCount, count, currentPage, data, search, roles, roleFilter} = this.state;
     const {sortingField, order} = this.state.sorting;
     const users = roleFilter ? filterUsers(data, roleFilter) : data;
 
@@ -297,7 +312,6 @@ class Users extends Component {
             </thead>
             <tbody className="admin-table-body">
             {sortUsers(users, sortingField, order)
-              .slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage)
               .map((row, idx) => <tr className="admin-table-row" key={row.id}>
                 <td className="admin-table__td admin-table__td_check admin-table__td_check-user">
                   <input className="input-users" type="checkbox"/>
@@ -320,14 +334,15 @@ class Users extends Component {
               </tr>)}
             </tbody>
           </table>
-          <Pagination pageCount={Math.ceil(users.length / this.itemsPerPage) || 1}
+          <Pagination
+                      pageCount={pageCount}
                       currentPage={currentPage}
-                      changePage={page => {
+                      changePage={async (page) => {
                         if (currentPage !== page) {
-                          this.setState({currentPage: page})
+                          await this.updatePageAndLoadData(page)
                         }
                       }}
-                      itemsCount={users.length}
+                      itemsCount={count}
           />
         </div>
       </div>

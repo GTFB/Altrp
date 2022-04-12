@@ -16,21 +16,27 @@ import ModelGenerator from 'App/Generators/ModelGenerator'
 import Role from 'App/Models/Role'
 import SourceRole from 'App/Models/SourceRole'
 import guid from '../../../../helpers/guid'
-import SQLEditor from 'App/Models/SQLEditor';
+import SQLEditor from 'App/Models/SQLEditor'
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
-import {parseInt} from 'lodash';
+import {parseInt} from 'lodash'
+import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
+
+    const params = request.qs();
+    const page = parseInt(params.page) || 1
+    const pageSize = params.pageSize || 20
+
     let query = Model.query()
-    if (request.qs().categories) {
+    if (params.categories) {
       let categoriesQuery = request.qs().categories.split(',')
       query = query.leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
         .whereIn('altrp_category_objects.category_guid', categoriesQuery)
     }
 
-    if (request.qs().s) {
-      let searches = request.qs().s.split(' ')
+    if (params.s) {
+      let searches = params.s.split(' ')
       query = query.where(subQuery => {
         for (let s of searches) {
           if (!s.trim()) {
@@ -46,16 +52,23 @@ export default class ModelsController {
       })
     }
     let sql = query.toSQL().sql
-    let models: any[] = await query
+    let models:ModelPaginatorContract<Model> = await query
       .orderBy('title',)
       .select('altrp_models.*')
       .preload('categories')
-    models = models.map(model => {
+      .paginate(page, pageSize)
+
+    const count = models.getMeta().total
+    const pageCount = models.getMeta().last_page
+
+  //@ts-ignore
+    models = models.all().map(model => {
       return model.serialize()
     })
     return response.json({
+      count,
+      pageCount,
       models,
-      pageCount: 0,
       sql
     })
   }
@@ -292,25 +305,36 @@ export default class ModelsController {
 
   async getDataSourcesAndPageCount({request}: HttpContextContract) {
 
-    const page = parseInt(request.qs().page)
+    const params = request.qs()
+    const page = parseInt(params.page) || 1
+    const pageSize = parseInt(params.pageSize) || 10
 
-    let pageSize = 10
-    if(page) {
-      const sources = await Source.query().offset((page - 1)*pageSize).limit(pageSize).select('*');
-      return {
-        data_sources: sources,
-        pageCount: 0
-      }
-    } else {
-      const sources = await Source.query().select('*')
-      return {
-        data_sources: sources,
-        pageCount: 0
-      }
+    const sources = await Source.query().paginate(page, pageSize)
+
+    return {
+      count: sources.getMeta().total,
+      pageCount: sources.getMeta().last_page,
+      data_sources: sources.all()
     }
+
+    // if(page) {
+    //   const sources = await Source.query().offset((page - 1)*pageSize).limit(pageSize).select('*');
+    //   return {
+    //     data_sources: sources,
+    //     pageCount: 0
+    //   }
+    // } else {
+    //   const sources = await Source.query().select('*')
+    //   return {
+    //     data_sources: sources,
+    //     pageCount: 0
+    //   }
+    // }
     // filtration(templatesQuery, request, [
     //   'title',
     // ])
+
+
   }
 
   async getDataSourcesOptionsByModel({response, params}: HttpContextContract) {

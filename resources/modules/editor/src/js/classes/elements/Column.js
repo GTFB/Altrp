@@ -282,6 +282,7 @@ class Column extends BaseElement {
 
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
+      locked: true,
       label: 'Background Image',
       default: { url: "" },
     });

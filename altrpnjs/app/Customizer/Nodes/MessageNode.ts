@@ -32,7 +32,6 @@ export default class MessageNode extends BaseNode implements NodeInterface
 
     const item = this.data.data.props.nodeData;
 
-    console.log(item)
     const type = item.type;
     const entitiesData = JSON.stringify(item.data.entitiesData);
     const entities = item.data.entities;

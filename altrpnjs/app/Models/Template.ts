@@ -94,7 +94,7 @@ export default class Template extends BaseModel {
   }
 
   public getAuthor() {
-    return this.user.email
+    return this.user?.email || ''
   }
 
   public getArea() {

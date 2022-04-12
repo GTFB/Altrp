@@ -4,10 +4,11 @@ export default class AddVariationsToMediaTables extends BaseSchema {
   protected tableName = 'altrp_media'
 
   public async up () {
+
     if(await this.schema.hasColumn(this.tableName, 'media_variation')){
       return
     }
-    await this.schema.table(this.tableName, (table) => {
+    this.schema.alterTable(this.tableName,  (table) => {
 
       table.json('media_variation').nullable();
     })

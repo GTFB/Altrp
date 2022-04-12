@@ -18,13 +18,12 @@ import Area from "App/Models/Area";
 export default class TemplatesController {
   public async index({ request }) {
     const params = request.qs();
-    // const page = parseInt(params.page) || 1
+     const page = parseInt(params.page) || 1
     // const search = params.s
-
     // const orderType = params.order || "DESC"
     // const orderBy = params.order_by || "id"
 
-    // const pageSize = params.pageSize
+     const pageSize = params.pageSize || 20
 
     const templatesQuery = Template.query()
 
@@ -45,8 +44,9 @@ export default class TemplatesController {
         }
       })
       .orderBy('title')
+      .paginate(page, pageSize)
 
-    const modTemplates = templates.map( template => {
+    const modTemplates = templates.all().map( template => {
       return {
         categories: template.categories.map(category => {
           return category
@@ -61,6 +61,8 @@ export default class TemplatesController {
     })
 
     return {
+      count: templates.getMeta().total,
+      pageCount: templates.getMeta().last_page,
       templates: modTemplates
     }
   }
@@ -130,7 +132,7 @@ export default class TemplatesController {
       title: request.input("title"),
       type: "template",
       guid,
-      user_id: auth.user.id,
+      user_id: auth.user?.id,
     }
 
     const template = await Template.create(data);

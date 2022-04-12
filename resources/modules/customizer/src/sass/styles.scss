@@ -774,6 +774,13 @@ body {
   text-align: center;
 }
 
+.Customizer-time {
+  margin-top: 20px;
+  & .customizer-time-input {
+    margin-top: 20px;
+  }
+}
+
 .Customizer-title {
   margin-bottom: 20px;
   & .form-control-blueprint {
