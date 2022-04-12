@@ -116,19 +116,29 @@ export default class Plugin {
       enabledPlugins = enabledPlugins.filter((_plugin) => {
         return _plugin != plugin.name
       })
-      //plugin.removeStaticsFromAltrpMeta()
+      //await plugin.removeStaticsFromAltrpMeta()
     }   
     enabledPlugins = enabledPlugins.join(',')
+
+    //updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
+    // Artisan.call('cache:clear')todo: сбросить кэш для данных из .env
+    let new_widget_list = await Plugin.updateAltrpPluginLists()
     envWriter([
       {
         key: Plugin.ALTRP_PLUGINS,
         value: enabledPlugins.length === 0 ? '' : enabledPlugins,
+      },
+      {
+        key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
+        value: new_widget_list.length === 0 ? '' : new_widget_list,
       }
     ]);
 
-    //updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
-    // Artisan.call('cache:clear')todo: сбросить кэш для данных из .env
-    //Plugin.updateAltrpPluginLists()
+    if (enable) {
+      await plugin.updatePluginSettings()
+    } else {
+      await plugin.removeStaticsFromAltrpMeta()
+    } 
   }
 
   /**
@@ -146,15 +156,15 @@ export default class Plugin {
         }
       }
     )
-    new_widget_list = new_widget_list.join(',')
-    //await updateDotenv({[Plugin.ALTRP_PLUGINS_WIDGET_LIST]: new_widget_list})
-    envWriter([
-      {
-        key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
-        value: new_widget_list.length === 0 ? '' : new_widget_list,
-      }
-    ]);
-
+    // new_widget_list = new_widget_list.join(',')
+    // // //await updateDotenv({[Plugin.ALTRP_PLUGINS_WIDGET_LIST]: new_widget_list})
+    // envWriter([
+    //   {
+    //     key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
+    //     value: new_widget_list.length === 0 ? '' : new_widget_list,
+    //   }
+    // ]);
+    return new_widget_list.join(',')
   }
 
   static async getEnabledPlugins(): Promise<Plugin[]> {
@@ -173,7 +183,6 @@ export default class Plugin {
       return plugin.name
     })
     //await updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins.map(plugin => plugin.name).join(',')})
-    //console.log(enabledPlugins)
     return enabledPlugins
   }
 
