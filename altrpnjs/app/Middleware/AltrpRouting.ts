@@ -174,7 +174,6 @@ export default class AltrpRouting {
       }
       const datasources= await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
       altrpContext.altrpdata = datasources
-
       try {
         _.set(page, 'templates', [])
         _.set(_frontend_route, 'templates', [])
@@ -200,8 +199,9 @@ export default class AltrpRouting {
             route_args: pageMatch.params,
             datasources,
             device: getCurrentDevice(httpContext.request),
+            version: getLatestVersion(),
             _altrp: {
-              version: getLatestVersion()
+              version: getLatestVersion(),
             },
           })
         )

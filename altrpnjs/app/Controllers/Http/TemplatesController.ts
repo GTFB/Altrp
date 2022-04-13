@@ -275,22 +275,15 @@ export default class TemplatesController {
     }
   }
 
-  public async deleteAllReviews({ response }) {
+  public async deleteAllReviews({  }) {
     const templates = await Template.query().where("type", "review");
 
-    if(templates.length > 0) {
-      for (const template of templates) {
-        await template.delete()
-      }
+    for (const template of templates) {
+      await template.delete()
+    }
 
-      return {
-        success: true,
-      }
-    } else {
-      response.status(404)
-      return {
-        success: false
-      }
+    return {
+      success: true,
     }
   }
 

@@ -20,10 +20,16 @@ import SQLEditor from 'App/Models/SQLEditor'
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
+import Logger from "@ioc:Adonis/Core/Logger";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
-
+    const modelToUpdate = await Model.query().whereNull('guid').select('*')
+    await Promise.all(modelToUpdate.map(async (m:Model) =>{
+      m.guid = guid()
+      await m.save()
+      Logger.info(`Model id ${m.id} guid write!`)
+    }))
     const params = request.qs();
     const page = parseInt(params.page) || 1
     const pageSize = params.pageSize || 20

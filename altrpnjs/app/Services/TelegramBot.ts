@@ -36,7 +36,7 @@ export class TelegramBot {
 
     this.bot.launch()
   }
-
+  //@ts-ignore
   send(blocks, user) {
     if(user.telegram_chat) {
       this.bot.telegram.sendMessage(user.telegram_chat, "sadasda")
