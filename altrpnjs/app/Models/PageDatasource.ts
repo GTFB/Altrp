@@ -16,7 +16,7 @@ export default class PageDatasource extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column({ serializeAs: null })
+  @column()
   public source_id: number;
 
   @column({serializeAs: null})

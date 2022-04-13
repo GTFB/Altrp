@@ -128,11 +128,11 @@ function getContent(settingName, returnRaw = false, locked = false) {
        content = content.trim().replace('{{', '').replace('}}', '');
        content = getDataByPath(content, '', model);
      } else {
-       // console.log(content);
        content = replaceContentWithData(content, model);
-       // console.log(content);
      }
-
+    if(locked && ! content && this.getContent(settingName)){
+      content = this.getContent(settingName)
+    }
     const contentDynamicSetting = this.props.element.getDynamicSetting(settingName);
 
     if(contentDynamicSetting){

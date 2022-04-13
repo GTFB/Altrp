@@ -6,6 +6,7 @@
 ### 1.0.5
 * Fix Sidebars Actions
 * Fix Users Update
+* Fix Encrypted Settings Issue
 
 ### 1.0.4
 * Add Nodes to Visual Codes:

@@ -13,10 +13,13 @@ class HtmlWidget extends Component {
       this.render = props.baseRender(this);
     }
   }
-
+  shouldComponentUpdate(nextProps, nextState){
+    let data = this.getLockedContent("data");
+    return this.data !== data
+  }
   render() {
-    let data = this.props.element.getResponsiveLockedSetting("data");
-
+    let data = this.getLockedContent("data");
+    this.data = data
     return (
       <>
         <div
