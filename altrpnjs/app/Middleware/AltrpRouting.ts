@@ -161,6 +161,7 @@ export default class AltrpRouting {
           })
         })
       })
+
       const _frontend_route = page.serialize()
       const altrpContext = {
         ...pageMatch.params,

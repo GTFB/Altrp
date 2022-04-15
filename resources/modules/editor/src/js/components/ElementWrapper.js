@@ -77,6 +77,7 @@ import StarsComponent from "./widgets/styled-components/StarsComponent";
 import ProgressBarComponent from "./widgets/styled-components/ProgressBarComponent";
 import InputCropImageComponent from "./widgets/styled-components/InputCropImageComponent";
 import getFeedbackStyles from "../../../../front-app/src/js/components/helpers/getFeedbackStyles";
+import getInputPagintaionStyles from "../../../../front-app/src/js/components/helpers/getInputPaginationStyles";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -343,6 +344,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case 'feedback':
       styles += `.${prefix}${elementId} {${getFeedbackStyles(settings, elementId)}}`
+      break;
+    case 'input-pagination':
+      styles += `.${prefix}${elementId} {${getInputPagintaionStyles(settings)}}`
       break;
   }
 

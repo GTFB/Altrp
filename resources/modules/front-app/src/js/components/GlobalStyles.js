@@ -60,6 +60,7 @@ import ProgressBarComponent from "../../../../editor/src/js/components/widgets/s
 import MenuBlueprintCSS from "../../../../../../server/classes/components/MenuPlaceholder/MenuBlueprintCSS";
 import InputCropImageComponent from "../../../../editor/src/js/components/widgets/styled-components/InputCropImageComponent";
 import getFeedbackStyles from "./helpers/getFeedbackStyles";
+import getInputPaginationStyles from "./helpers/getInputPaginationStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -315,6 +316,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case 'feedback':
           styles += `.${prefix}${id} {${getFeedbackStyles(item.settings)}}`
+          break;
+        case 'input-pagination':
+          styles += `.${prefix}${id} {${getInputPaginationStyles(item.settings)}}`
           break;
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(

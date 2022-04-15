@@ -54,6 +54,7 @@ import renderTournament from '../helpers/widgets-renders/renderTournament';
 import renderDivider from "../helpers/widgets-renders/renderDivider";
 import renderSectionBG from "../helpers/renderSectionBG";
 import getColumnClasses from "../helpers/getColumnClasses";
+import renderInputPagination from "../helpers/widgets-renders/renderInputPagination";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -106,6 +107,7 @@ View.global('renderInputCropImage', renderInputCropImage)
 View.global('renderInputAccept', renderInputAccept)
 View.global('renderInputHidden', renderInputHidden)
 View.global('renderInputFile', renderInputFile)
+View.global('renderInputPagination', renderInputPagination)
 View.global('renderMap', renderMap)
 View.global('renderHeadingTypeAnimating', renderHeadingTypeAnimating)
 View.global('renderImageLightbox', renderImageLightbox)

@@ -25,5 +25,6 @@ const INPUT_WIDGETS = [
   'input-hidden',
   'stars',
   'input-crop-image',
+  'input-pagination'
 ];
 export default INPUT_WIDGETS;
