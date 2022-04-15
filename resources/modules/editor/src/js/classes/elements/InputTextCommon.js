@@ -550,6 +550,11 @@ class InputTextCommon extends BaseElement {
       units: ["px", "%", "vh"]
     });
 
+    this.addControl("disable_box_shadow", {
+      type: CONTROLLER_SWITCHER,
+      label: "Disable box-shadow",
+    });
+
     this.addControl("border_color", {
       type: CONTROLLER_COLOR,
       label: "Border Color"

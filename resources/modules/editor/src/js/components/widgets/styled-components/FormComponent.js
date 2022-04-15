@@ -43,6 +43,24 @@ const containerStyle = settings => {
   return styles;
 };
 
+const wysiwygStyle = settings => {
+  let padding,
+    fontColor;
+
+  let styles = `&& .ck-content {`;
+
+      settings && (padding = getResponsiveSetting(settings, "position_padding"));
+      padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+      settings && (fontColor = getResponsiveSetting(settings, "field_font_color"));
+      fontColor && (styles += colorPropertyStyled(fontColor, "color"));
+
+
+
+  styles += "}";
+  return styles;
+};
+
 /**
  * Стили для класса altrp-field
  * @param {Object} settings style settings of element
@@ -59,7 +77,8 @@ const fieldStyle = settings => {
     borderColor,
     borderRadius,
     widthTextArea,
-    boxShadow;
+    boxShadow,
+    toggle;
 
   const {
     placeholder_and_value_alignment_position_section,
@@ -79,6 +98,9 @@ const fieldStyle = settings => {
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (toggle = getResponsiveSetting(settings, "disable_box_shadow"));
+  toggle && (styles += 'box-shadow: none;');
 
   settings &&
     (typographic = getResponsiveSetting(settings, "field_font_typographic"));
@@ -713,6 +735,9 @@ function FormComponent(settings) {
   //altrp-field-container
   const containerStyles = containerStyle(settings);
   containerStyles && (styles += containerStyles);
+  //wysiwygStyle ck-content
+  const wysiwygStyles = wysiwygStyle(settings);
+  wysiwygStyles && (styles += wysiwygStyles);
   //altrp-field
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);

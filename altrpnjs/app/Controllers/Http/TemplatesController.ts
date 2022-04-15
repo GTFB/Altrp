@@ -197,6 +197,26 @@ export default class TemplatesController {
     return template
   }
 
+  public async getTemplate({ params, response }) {
+    const templateQuery = Template.query()
+
+    if(isNaN(params.template_id)) {
+      templateQuery.where("guid", params.template_id)
+    } else {
+      templateQuery.where("id", parseInt(params.template_id))
+    }
+
+    const template = await templateQuery.firstOrFail()
+
+    if (!template) {
+      response.status(404)
+      return {
+        success: false
+      }
+    }
+      return template.dataWithoutContent()
+  }
+
   public async delete({ params }) {
     const templateQuery = Template.query();
 

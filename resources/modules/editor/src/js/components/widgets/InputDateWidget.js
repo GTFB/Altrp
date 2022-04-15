@@ -660,7 +660,7 @@ class InputDateWidget extends Component {
       <div className="altrp-input-wrapper">
         <DateInput
           name={this.getName()}
-          minDate={new Date(0)}
+          minDate={new Date(1900, 1, 1)}
           maxDate={moment().add(20,'year').toDate()}
           dayPickerProps={dayPickerProps}
           popoverProps={{

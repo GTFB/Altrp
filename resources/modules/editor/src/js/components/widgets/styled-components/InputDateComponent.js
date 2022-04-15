@@ -58,7 +58,8 @@ const fieldStyle = settings => {
     borderWidth,
     borderColor,
     borderRadius,
-    boxShadow;
+    boxShadow,
+    toggle;
 
   const {
     placeholder_and_value_alignment_position_section,
@@ -75,6 +76,9 @@ const fieldStyle = settings => {
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (toggle = getResponsiveSetting(settings, "disable_box_shadow"));
+  toggle && (styles += 'box-shadow: none;');
 
   settings &&
     (typographic = getResponsiveSetting(settings, "field_font_typographic"));
