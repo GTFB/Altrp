@@ -63,7 +63,7 @@ class ElementContextMenu extends Component {
 
   // Событие вызова контекстного меню
   onSelectItem(e) {
-    console.log(e)
+   // console.log(e)
     const data = e.props.element.toObject();
     saveDataToLocalStorage("altrp_element_to_copy", data);
     contextMenu.hideAll();
