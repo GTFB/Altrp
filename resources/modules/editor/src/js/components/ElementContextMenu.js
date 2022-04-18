@@ -20,7 +20,7 @@ class ElementContextMenu extends Component {
     this.deleteElement = this.deleteElement.bind(this);
     this.duplicateElement = this.duplicateElement.bind(this);
     this.addNewColumn = this.addNewColumn.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this)
+    // this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
   // Событие вызова контекстного меню
@@ -33,33 +33,33 @@ class ElementContextMenu extends Component {
   }
 
   // component mount, add window listener
-   componentDidMount() {
-     console.log('componentDidMount')
-     window.EditorFrame.contentWindow.document.body.addEventListener('keydown', this.handleKeyDown)
-   }
-   componentWillUnmount() {
-     console.log('componentWillUnmount')
-     window.EditorFrame.contentWindow.document.body.removeEventListener('keydown', this.handleKeyDown)
-   }
-  handleKeyDown = (e) => {
+  //  componentDidMount() {
+  //    console.log('componentDidMount')
+  //    window.EditorFrame.contentWindow.document.body.addEventListener('keydown', this.handleKeyDown)
+  //  }
+  //  componentWillUnmount() {
+  //    console.log('componentWillUnmount')
+  //    window.EditorFrame.contentWindow.document.body.removeEventListener('keydown', this.handleKeyDown)
+  //  }
+  // handleKeyDown = (e) => {
    // console.log('handleKeyDown', e, 'window', window.EditorFrame.contentWindow.document.activeElement)
-    e.preventDefault()
-    let charCode = String.fromCharCode(e.which).toLowerCase()
-    if((e.ctrlKey || e.metaKey) && charCode === 's') {
-      e.preventDefault()
-      console.log("CTRL+S Pressed")
-      getEditor().modules.saveImportModule.saveTemplate()
-    }else if((e.ctrlKey || e.metaKey) && charCode === 'c') {
-      console.log("CTRL+C Pressed")
-      this.onSelectItem(e)
-      // window.EditorFrame.contentWindow -> document -> activeElement
-    }else if((e.ctrlKey || e.metaKey) && charCode === 'v') {
-      console.log("CTRL+V Pressed")
-      this.onPasteElement(e)
-    }else if((e.ctrlKey || e.metaKey) && charCode === 'z') {
-      console.log("CTRL+Z Pressed")
-    }
-  }
+   //  e.preventDefault()
+   //  let charCode = String.fromCharCode(e.which).toLowerCase()
+   //  if((e.ctrlKey || e.metaKey) && charCode === 's') {
+   //    e.preventDefault()
+   //    console.log("CTRL+S Pressed")
+   //    getEditor().modules.saveImportModule.saveTemplate()
+   //  }else if((e.ctrlKey || e.metaKey) && charCode === 'c') {
+   //    console.log("CTRL+C Pressed")
+   //    this.onSelectItem(e)
+   //    // window.EditorFrame.contentWindow -> document -> activeElement
+   //  }else if((e.ctrlKey || e.metaKey) && charCode === 'v') {
+   //    console.log("CTRL+V Pressed")
+   //    this.onPasteElement(e)
+   //  }else if((e.ctrlKey || e.metaKey) && charCode === 'z') {
+   //    console.log("CTRL+Z Pressed")
+   //  }
+   //}
 
   // Событие вызова контекстного меню
   onSelectItem(e) {
