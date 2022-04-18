@@ -8,8 +8,8 @@ export default class ConvertEmptyString {
     { request }: HttpContextContract,
     next: () => Promise<void>,
   ) {
-    if(['post', 'put', 'patch'].indexOf(request.method()) !== -1) {
-      const data = request.all()
+    const data = request.all()
+    if(['post', 'put', 'patch'].indexOf(request.method().toLowerCase()) !== -1) {
       for(const key in data){
         if(data.hasOwnProperty(key) && data[key] === ''){
           data[key] = null

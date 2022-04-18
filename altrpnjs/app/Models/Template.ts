@@ -1,7 +1,7 @@
 import {DateTime} from 'luxon'
 import {
   BaseModel,
-  column,
+  column, computed,
   HasMany,
   hasMany,
   HasOne,
@@ -107,6 +107,10 @@ export default class Template extends BaseModel {
   @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime
 
+  @computed()
+  get template_type(){
+    return this.currentArea?.name || 'content'
+  }
   static getDefaultData() {
 
     return {
@@ -244,4 +248,5 @@ export default class Template extends BaseModel {
       return ""
     }
   }
+
 }
