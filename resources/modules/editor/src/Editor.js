@@ -252,7 +252,6 @@ class Editor extends Component {
     this.getConnect(currentUser)
     appStore.dispatch(changeCurrentUser(currentUser));
     const presetColors = await AltrpMeta.getMetaByName("preset_colors");
-    console.log(presetColors)
     let presetGlobalStyles = await AltrpMeta.getMetaByName("global_styles");
     appStore.dispatch(setEditorMeta(presetColors));
     const globalStyles = await new Resource({
