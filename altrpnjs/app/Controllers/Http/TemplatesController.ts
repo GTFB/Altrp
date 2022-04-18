@@ -195,7 +195,7 @@ export default class TemplatesController {
     }
 
     const template = await templateQuery.firstOrFail()
-
+    await template.load('currentArea')
     return template
   }
 
