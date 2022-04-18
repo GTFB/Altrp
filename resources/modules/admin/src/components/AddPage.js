@@ -78,7 +78,7 @@ class AddPage extends Component {
     this.pagesOptionsResource = new Resource({
       route: "/admin/ajax/pages_options"
     });
-    this.model_resource = new Resource({route: "/admin/ajax/models_options"});
+    this.model_resource = new Resource({route: "/admin/ajax/model_options"});
     this.templateResource = new Resource({route: "/admin/ajax/templates"});
     this.dataSourceResource = new Resource({
       route: "/admin/ajax/page_data_sources/pages"
@@ -106,8 +106,8 @@ class AddPage extends Component {
       categoryOptions: data
     }))
 
-    let [ getModels ] = await this.model_resource.getAll();
-    const models_res = getModels.options
+    // let [ getModels ] = await this.model_resource.getAll();
+    const models_res = (await this.model_resource.getAll()).options
     if (this.props.modelsState) {
       this.setState(state => {
         return {
@@ -460,7 +460,6 @@ class AddPage extends Component {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
     let id = this.props.match.params.id
-    console.log(this.state.value.rolesOptions.filter(i=>this.isItemSelectedRoles(i)));
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
       <div className="admin-pages admin-page">

@@ -31,17 +31,29 @@ class FrontPopup extends Component {
     switch (this.state.rootElement.getSettings("type_popup", "popup")) {
       case "popup":
         if (popupTrigger !== prevProps.popupTrigger) {
+          let isVisible
+          let popupID = parseInt(popupTrigger.popupID)
+          if(_.isNaN(popupID)){
+            isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
+          } else {
+            isVisible = popupID == _.get(this.props, "template.id")
+          }
           this.setState({
-            isVisible:
-              popupTrigger.popupID === _.get(this.props, "template.guid")
+            isVisible
           });
         }
         break;
       case "offcanvas":
         if (popupTrigger !== prevProps.popupTrigger) {
+          let isVisible
+          let popupID = Number(popupTrigger.popupID)
+          if(_.isNaN(popupID)){
+            isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
+          } else {
+            isVisible = popupID == _.get(this.props, "template.id")
+          }
           this.setState({
-            isVisible:
-              popupTrigger.popupID === _.get(this.props, "template.guid")
+            isVisible
           });
         }
         break;
@@ -290,7 +302,6 @@ class FrontPopup extends Component {
     if(type_popup === 'popup' && timeout && animations_offcanvas === 'slide'){
       classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
     }
-
     return (
     <CSSTransition
       in={isVisible}

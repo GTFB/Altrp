@@ -45,7 +45,6 @@ class InputDateWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-
     this.defaultValue = this.getLockedContent("content_default_value") || "";
 
 

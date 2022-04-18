@@ -18,6 +18,11 @@ import {other} from "App/Services/Other";
 import _ from "lodash";
 import Customizer from "App/Models/Customizer";
 import Timer from "App/Services/Timer";
+import Env from "@ioc:Adonis/Core/Env";
+import fs from "fs";
+import base_path from "../helpers/base_path";
+import Logger from "@ioc:Adonis/Core/Logger";
+import guid from "../helpers/guid";
 
 const timers = other.get("timers", {});
 
@@ -40,6 +45,7 @@ for (const key of _.keys(timers)) {
 */
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
+  () => import('App/Middleware/ConvertEmptyString'),
   () => import('App/Middleware/SilentAuth'),
   () => import('@ioc:Adonis/Addons/Shield'),
   () => import('App/Middleware/AltrpRouting'),
@@ -71,4 +77,15 @@ Server.middleware.registerNamed({
 })
 
 
-
+/**
+ * set package key
+ */
+let packageKey
+if(fs.existsSync(base_path('.package_key'))){
+  packageKey = fs.readFileSync(base_path('.package_key'))
+  Logger.info("Setting package key by File")
+} else {
+  packageKey = guid()
+  Logger.info("Setting package key by random guid")
+}
+Env.set('PACKAGE_KEY', packageKey)

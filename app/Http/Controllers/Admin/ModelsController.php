@@ -1676,11 +1676,12 @@ class ModelsController extends HttpController
                 'message' => 'Model not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         $columns = explode(',', $model->table->columns->where('type', '!=', 'calculated')->implode('name', ','));
-        $url = config('app.url') . "/ajax/models/" . $model->table->name;
-        $response = \Curl::to($url)
-            ->withData(request()->all())
-            ->asJson()
-            ->get();
+      $classname = '\\App\\Http\\Controllers\\AltrpControllers\\' . $model->name . 'Controller';
+      $controller = new $classname;
+      $request = new ApiRequest( request()->all() );
+
+      $response = $controller->index($request);
+      $response = $response->getData();
 
         foreach ($response->data as $record) {
             foreach ($record as $key => $value) {

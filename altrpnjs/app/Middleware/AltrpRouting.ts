@@ -202,6 +202,7 @@ export default class AltrpRouting {
             version: getLatestVersion(),
             _altrp: {
               version: getLatestVersion(),
+              isNodeJS: true
             },
           })
         )
@@ -261,7 +262,7 @@ export default class AltrpRouting {
         altrp_settings,
         _frontend_route,
         route_args: pageMatch.params,
-        _altrp: {
+        _altrp:
           version: getLatestVersion()
         },
       })
