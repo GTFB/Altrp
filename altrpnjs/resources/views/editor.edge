@@ -3,15 +3,19 @@
 
 @section('head')
 
-    <script src="{{ url }}" defer></script>
+    <script src="{{ url }}?{{env('PACKAGE_KEY')}}" defer></script>
 
     @if(css)
-        <link href="{{css}}" rel="stylesheet"/>
+        <link href="{{css}}?{{env('PACKAGE_KEY')}}" rel="stylesheet"/>
     @end
 
     <script>
         let _altrpVersion = "{{ version }}";
 
+        window.altrp = {
+          version: '{{getLatestVersion()}}',
+          isNodeJS: true
+        };
         window.altrpMenus = [];
         window.container_width = {{{ get_altrp_setting( 'container_width', '1440' ) }}};
     </script>

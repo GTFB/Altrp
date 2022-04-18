@@ -15,7 +15,8 @@ import ELEMENTS_IGNORES_FORM_UPDATE from "../constants/ELEMENTS_IGNORES_FORM_UPD
  * Срабатываает перед удалением компонента элемента
  */
 function componentWillUnmount(){
-  // if(this.model){
+  console.log('beforeUnmount');
+// if(this.model){
   //   this.model.uns
   // }
   window.actionsManager && actionsManager.unregisterWidgetActions(this.props.element.getIdForAction());
@@ -33,6 +34,7 @@ function componentWillUnmount(){
     }
   });
   appStore.dispatch(addSettings(this.props.element.getId(), this.props.element.getName(), {}))
+  this.props.element.beforeUnmount()
   if(_.isFunction(this._componentWillUnmount)){
     this._componentWillUnmount();
   }

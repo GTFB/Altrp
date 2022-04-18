@@ -176,7 +176,7 @@ class Admin extends Component {
   render() {
     const { models } = this.props;
     let adminClasses = ["admin"];
-    if (!this.state.adminState.adminEnable) {
+    if (!this.props.adminEnable) {
       adminClasses.push("pointer-event-none");
     }
     if (this.state.pagesMenuShow) {
@@ -552,7 +552,8 @@ const mapStateToProps = (state) => {
   return {
     metaValue: state.customFonts.metaValue,
     routes: state.routesState.routes,
-    models: state.routesState.models
+    models: state.routesState.models,
+    adminEnable: state.adminState?.adminEnable,
   }
 }
 

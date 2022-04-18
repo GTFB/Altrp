@@ -167,7 +167,7 @@ const copyPublicToAdonis = gulp.parallel(
     if(!fs.existsSync('./altrpnjs/build/package_key')){
       fs.mkdirSync('./altrpnjs/build/package_key')
     }
-    fs.writeFileSync('./altrpnjs/build/package_key/package_key.js', uuid())
+    fs.writeFileSync('./altrpnjs/build/.package_key', uuid())
     cb()
   },
 );

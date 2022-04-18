@@ -22,7 +22,6 @@ class Templates extends ApiController
     }
 
     /**
-     * Получение права доступа по идентификатору
      * @param Request $request
      * @return type
      */

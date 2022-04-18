@@ -13,6 +13,8 @@ import PageGenerator from "App/Generators/PageGenerator";
 import Page from "App/Models/Page";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import Customizer from "App/Models/Customizer";
+import isProd from "../../../../helpers/isProd";
+import UpdateService from "App/Services/UpdateService";
 
 export default class AdminController {
 
@@ -88,5 +90,28 @@ export default class AdminController {
     return {
       success: true
     }
+  }
+
+  public async update_altrp(httpContext: HttpContextContract){
+    if(! isProd()){
+      return httpContext.response.json({
+        success: true,
+      })
+    }
+    const updateService = new UpdateService()
+    try {
+      await updateService.update()
+    }catch (e) {
+      httpContext.response.status(500);
+      return httpContext.response.json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+
+    return httpContext.response.json({
+      success: true,
+    })
   }
 }

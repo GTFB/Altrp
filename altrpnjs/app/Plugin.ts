@@ -405,7 +405,7 @@ export default class Plugin {
     fs.writeFileSync(filename, res)
     let archive = new AdmZip(filename)
 
-    archive.extractAllTo(this.getPath())
+    archive.extractAllTo(this.getPath(), true)
 
     fs.removeSync(temp_path)
     return true

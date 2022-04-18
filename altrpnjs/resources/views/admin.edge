@@ -26,10 +26,14 @@
     let altrp_version = '{{{ config( 'app.altrp_version', '0.0.1' ) }}}';
 
     window.altrpMenus = [];
+    window.altrp = {
+      version: '{{getLatestVersion()}}',
+      isNodeJS: true
+    };
 
   </script>
 
-  <script src="{{ url }}" defer></script>
+  <script src="{{ url }}?{{env('PACKAGE_KEY')}}" defer></script>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">

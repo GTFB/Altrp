@@ -77,17 +77,17 @@
         window.altrpSkeletonColor = '{{ get_altrp_setting( 'altrp_skeleton_color', '#ccc' ) }}';
         window.altrpSkeletonHighlightColor = '{{ get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) }}';
         window.model_data = {{{ JSON.stringify( model_data ) }}};
-        window.altrpPreloadedDatasources = {{{ JSON.stringify( datasources ?? '' ) }}};
+        window.altrpPreloadedDatasources = {{{ JSON.stringify( datasources ?? '' ).replace(/\//g, '\\/') }}};
         window.altrpMenus = [];
         window.route_args = {{{ JSON.stringify( route_args ) }}};
         window.currentPage = {{{ JSON.stringify( _frontend_route ) }}};
-        window.__altrp_settings__ = {{{ JSON.stringify(altrp_settings) }}};
+        window.__altrp_settings__ = {{{ JSON.stringify(altrp_settings).replace(/\//g, '\\/') }}};
         window.container_width = {{{ get_altrp_setting( 'container_width', '1440' ) }}};
         /* ]]> */
       </script>
-    <script defer src="{{ hAltrp }}"></script>
-    <script src="/serviceWorker.js"></script>
-    <link rel="stylesheet" href="/modules/front-app/front-app.css?{{version}}">
+    <script defer src="{{ hAltrp }}?{{env('PACKAGE_KEY')}}"></script>
+    <script src="/serviceWorker.js?{{env('PACKAGE_KEY')}}"></script>
+    <link rel="stylesheet" href="/modules/front-app/front-app.css??{{env('PACKAGE_KEY')}}">
     <%={{ }}=%>
     {{{extra_footer_styles}}}
   @!component('front-app-js')
