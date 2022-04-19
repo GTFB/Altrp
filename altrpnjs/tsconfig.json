@@ -8,7 +8,7 @@
     "app/AltrpModels",
     "app/AltrpControllers",
     "app/AltrpListeners",
-    "app/altrp-listeners",
+    "app/AltrpListeners",
     "resources/views/altrp",
     "build"
   ],

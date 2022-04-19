@@ -368,10 +368,6 @@ class AltrpAction extends AltrpModel {
    * @return {object}
    */
   doActionSocketReceiver() {
-    if(!window.io) {
-      window.io = io(`:${process.env.SOCKETS_KEY}`)
-      window
-    }
 
     let name = ""
 
@@ -394,8 +390,16 @@ class AltrpAction extends AltrpModel {
 
     }
 
-    console.log(name)
-    window.io.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
+    if(!window.altrpIo) {
+      window.altrpIo = io( {
+        path: '/wsaltrp',
+        auth: {
+          key: window.current_user.guid,
+        },
+      })
+    }
+
+    window.altrpIo.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
       console.log(data)
     });
 

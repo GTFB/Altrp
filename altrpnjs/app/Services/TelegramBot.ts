@@ -22,6 +22,7 @@ export class TelegramBot {
 
   run() {
     this.bot = new Telegraf(this.token)
+
     this.bot.start((ctx) => {
       const id = ctx.message.chat.id;
       const username = ctx.message.from.username;
@@ -32,18 +33,37 @@ export class TelegramBot {
       })
     })
 
-    this.bot.help((ctx) => ctx.reply('Send me a sticker'))
-
     this.bot.launch()
   }
 
   send(blocks, user) {
-    if(user.telegram_chat) {
-      this.bot.telegram.sendMessage(user.telegram_chat, "sadasda")
-    }
+    blocks.forEach(block => {
+      if(user.telegram_chat) {
+        this.sendByType(block, user)
+      }
+    })
   }
 
-  add
+  sendByType(block, user) {
+    console.log(block)
+    try {
+      switch (block.type) {
+        case "content":
+          this.bot.telegram.sendMessage(user.telegram_chat, block.data.text)
+          break
+        case "photo":
+        case "file":
+        case "document":
+        case "video":
+        case "link":
+          this.bot.telegram.sendMessage(user.telegram_chat, block.data.url)
+          break
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  }
 }
 
 export default new TelegramBot(Env.get("ALTRP_SETTING_TELEGRAM_BOT_TOKEN"))

@@ -35,6 +35,9 @@ export default class TemplateGenerator extends BaseGenerator {
     }
     await template.load('currentArea')
 
+    this.template = template
+
+    ListenerGenerator.getHookTemplates(this)
 
     const styles = JSON.parse(template.styles || "{}")
 

@@ -12,6 +12,7 @@ import UserTopPanel from "./UserTopPanel";
 import React from "react";
 import CategoryTable from "./CategoryTable";
 import ImageSettingsTable from "./ImageSettingsTable";
+import Discord from "./settings/integrations/Discord";
 const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
@@ -359,6 +360,7 @@ export default class AdminSettings extends Component {
               <div className="admin_settings_integrations">
                 <Websockets />
                 <Telegram />
+                <Discord />
               </div>
             </TabPanel>
             <TabPanel>
