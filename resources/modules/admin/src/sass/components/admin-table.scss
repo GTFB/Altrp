@@ -19,9 +19,19 @@
     }
     &__search-plugin{
       width: 100%;
+      display: flex;
+      align-items: center;
       & .bp3-input.bp3-input.bp3-input{
         width: 100%;
       }
+      & .bp3-input-group{
+        width: 100%;
+        margin-right: -28px;
+        flex-shrink: 1;
+      }
+      & > svg{
+      position: relative;
+    }
     }
   }
 

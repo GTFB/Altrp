@@ -75,7 +75,9 @@ class Ws {
         this.clients[k].sockets.forEach(s => _c.push(s))
       }
     }
-    Logger.info(_c.length);
+    if(_c.length){
+      Logger.info('WS Clients count: ' + _c.length || '0');
+    }
   }
 
   emitAdmin(type, data) {

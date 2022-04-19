@@ -1,12 +1,12 @@
-import { resolve } from 'path';
 import { readFile, writeFileSync } from 'fs';
 import * as envfile from 'envfile';
+import base_path from "./base_path";
 
 export default function writeEnvToFile (
   envVariables: { key: string; value: any }[],
 ) {
 
-  const path = resolve(__dirname, '../.env');
+  const path = base_path( '/.env');
   readFile(path, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
@@ -20,6 +20,6 @@ export default function writeEnvToFile (
       }
     });
     writeFileSync(path, envfile.stringify(parsedFile));
-    //console.log('Updated .env: ', parsedFile);
   });
 };
+

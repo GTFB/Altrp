@@ -260,6 +260,10 @@ class Template extends Model
   {
     $_element_data = $element_data;
     $_element_data['children'] = [];
+
+//    if(isset( $_element_data['settingsLock']) ?? is_array( $_element_data['settingsLock'])){
+//      $_element_data['settings']
+//    }
     foreach ( $element_data['children'] as $child ) {
       if ( self::show_element( $child['settings'] ) ) {
         $child = self::recursively_children_check_conditions( $child );

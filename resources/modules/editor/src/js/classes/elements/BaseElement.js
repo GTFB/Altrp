@@ -516,7 +516,7 @@ class BaseElement extends ControlStack {
       }
 
       this.settings[settingName] = value;
-      
+
       if (this.component) {
         (async () => {
           this.component?.changeSetting && this.component?.changeSetting(settingName, value);

@@ -35,7 +35,7 @@ export class TelegramBot {
 
     this.bot.launch()
   }
-
+  //@ts-ignore
   send(blocks, user) {
     blocks.forEach(block => {
       if(user.telegram_chat) {

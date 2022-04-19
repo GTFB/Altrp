@@ -60,7 +60,7 @@ class InputWysiwyg extends BaseElement {
 
     optionsRepeater.addControl("label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
     });
 
     optionsRepeater.addControl("value", {
@@ -104,7 +104,8 @@ class InputWysiwyg extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("label_icon", {
