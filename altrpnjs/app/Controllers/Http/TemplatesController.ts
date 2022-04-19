@@ -121,7 +121,6 @@ export default class TemplatesController {
   }
 
   public async create({ auth, request, response }) {
-    await auth.use('web').authenticate()
 
     const guid = uuid();
 
@@ -177,7 +176,6 @@ export default class TemplatesController {
       }
     }
     const key = request.qs().value || 'id'
-    console.log(key);
     const templates = await query.select('*')
     return templates.map((template) => ({
       value: template[key] || template.id,

@@ -11,7 +11,7 @@ export default class RoleUsers extends BaseSchema {
       table.bigIncrements('id')
       table.bigInteger('user_id').unsigned()
       table.bigInteger('role_id').unsigned()
-      table.string('user_type').nullable()
+      table.string('user_type').defaultTo('App\\User').nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

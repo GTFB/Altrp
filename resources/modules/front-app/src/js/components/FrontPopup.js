@@ -30,19 +30,6 @@ class FrontPopup extends Component {
     let { popupTrigger } = this.props;
     switch (this.state.rootElement.getSettings("type_popup", "popup")) {
       case "popup":
-        if (popupTrigger !== prevProps.popupTrigger) {
-          let isVisible
-          let popupID = parseInt(popupTrigger.popupID)
-          if(_.isNaN(popupID)){
-            isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
-          } else {
-            isVisible = popupID == _.get(this.props, "template.id")
-          }
-          this.setState({
-            isVisible
-          });
-        }
-        break;
       case "offcanvas":
         if (popupTrigger !== prevProps.popupTrigger) {
           let isVisible

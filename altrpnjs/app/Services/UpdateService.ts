@@ -7,14 +7,13 @@ import fs from 'fs'
 import { exec } from'child_process'
 import {promisify} from 'util'
 import public_path from "../../helpers/public_path";
-import app_path from "../../helpers/app_path";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 
 export default class UpdateService {
 
   private static UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/latest'
 
-  private static ARCHIVE_PATH = app_path('temp.zip')
+  private static ARCHIVE_PATH = base_path('temp.zip')
 
   /**
    * @return string
@@ -52,8 +51,8 @@ export default class UpdateService {
     if(! updateCommand){
       updateCommand = 'pm2 restart all'
     }
-    await promisify(exec)(updateCommand)
     await UpdateService.upgradeDatabase();
+    await promisify(exec)(updateCommand)
     // Write providers
     // Update modules statuses
     // Update the current version to last version
