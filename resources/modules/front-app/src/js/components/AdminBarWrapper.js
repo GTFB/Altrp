@@ -270,6 +270,22 @@ const AdminBarWrapper = styled.div`
     background-color: #7bb701;
   }
 
+  & .admin-bar__button-update {
+    margin-left: 9px;
+    padding: 5px 20px;
+    vertical-align: top;
+    font-size: 13px;
+    font-weight: 400;
+
+    color: #000000;
+    background-color: #87ca00;
+    border-radius: 2px;
+  }
+
+  & .admin-bar__button-update:hover {
+    background-color: #7bb701;
+  }
+
 & .admin-bar__search-content::-webkit-scrollbar {
   width: 12px;
   background: #F4F4F4;

@@ -116,7 +116,8 @@ class InputAccept extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("label_icon", {
@@ -158,7 +159,7 @@ class InputAccept extends BaseElement {
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required",
-      label: true,
+      locked: true,
     });
 
     this.addControl("content_readonly", {

@@ -17,7 +17,8 @@ class AdminBar extends React.Component {
       filteredOptions: [],
       isHttps: false,
       barIsOpened: false,
-      arrayRevisions: null
+      arrayRevisions: null,
+      update: false,
     };
     this.popupTemplateRef = React.createRef();
     this.popupHistoryRef = React.createRef();
@@ -138,22 +139,47 @@ class AdminBar extends React.Component {
   /**
    * Запрос на очистку кэша
    */
-  clearCache = async () => {
-    if(! this.props.idPage){
-      return;
-    }
-    let result  = await confirm('Are You Sure');
+  // clearCache = async () => {
+  //   if(! this.props.idPage){
+  //     return;
+  //   }
+  //   let result  = await confirm('Are You Sure');
+  //   if(! result){
+  //     return;
+  //   }
+  //   try{
+  //     let res = await new window.altrpHelpers.Resource({route:'/admin/ajax/clear_cache'}).delete(this.props.idPage);
+  //   } catch(error){
+  //     await confirm('Error');
+  //
+  //   }
+  //   await confirm('Done');
+  // };
+
+  updateAllBackendResources = async () => {
+    let result = confirm('Are You Sure');
     if(! result){
       return;
     }
-    try{
-      let res = await new window.altrpHelpers.Resource({route:'/admin/ajax/clear_cache'}).delete(this.props.idPage);
-    } catch(error){
-      await confirm('Error');
 
+    this.setState(state => ({
+      ...state,
+      update: true
+    }))
+
+    let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
+    if(res.success){
+      await alert('success');
     }
-    await confirm('Done');
-  };
+
+    this.setState(state => ({
+      ...state,
+      update: false
+    }))
+
+    window.location.reload()
+  }
+
   handleClickSearch() {
     let options = localStorage.getItem("admin-bar-search-autocomplete")
       ? JSON.parse(localStorage.getItem("admin-bar-search-autocomplete"))
@@ -425,10 +451,11 @@ class AdminBar extends React.Component {
                 test
               </button>
               <button
-                className="admin-bar__button"
-                onClick={this.clearCache}
+                disabled={this.state.update}
+                className="admin-bar__button-update"
+                onClick={this.updateAllBackendResources}
               >
-                Clear Cache
+                Update All Backend Resources
               </button>
             </div>
 

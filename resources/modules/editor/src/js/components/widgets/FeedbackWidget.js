@@ -16,6 +16,18 @@ import FeedbackWidgetHook from "./FeedbackWidgetHook";
    border-radius: 4px;
   }
 
+  .feedback__container-сustom {
+   position: fixed;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 250px !important;
+   padding: 10px;
+   background-color: #6a727c;
+   z-index: 300;
+   border-radius: 4px;
+  }
+
   .feedback__button {
     display: flex;
     align-items: center;
@@ -143,6 +155,28 @@ import FeedbackWidgetHook from "./FeedbackWidgetHook";
   .block__comment-top__close path {
     fill: #000;
   }
+
+  .container__messages {
+    max-height: 250px;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+  }
+
+  .item__message {
+    color: #4a5568;
+    padding-right: 10px;
+  }
+
+  .item__message:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  .item__message-value {
+    margin-top: 2px;
+    margin-bottom: 0;
+    font-size: 13px;
+    word-break: break-word;
+  }
 `)
 
 class FeedbackWidget extends Component {
@@ -164,7 +198,7 @@ class FeedbackWidget extends Component {
 
   render() {
     return (
-     <FeedbackWidgetHook settings={this.state.settings}/>
+     <FeedbackWidgetHook idWidget={this.props.element.getId()} settings={this.state.settings}/>
     )
   }
 }

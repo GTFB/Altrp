@@ -1001,6 +1001,7 @@ class InputAcceptWidget extends Component {
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
+
     switch (content_label_position_type) {
       case "top":
         styleLabel = {
