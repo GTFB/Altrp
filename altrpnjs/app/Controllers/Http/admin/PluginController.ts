@@ -6,7 +6,8 @@ import data_get from "../../../../helpers/data_get";
 import version_compare from "../../../../helpers/version_compare";
 import storage_path from "../../../../helpers/storage_path";
 import httpsRequest from "../../../../helpers/httpsRequest";
-import envWriter from '../../../../helpers/envWriter'
+//import envWriter from '../../../../helpers/envWriter';
+import set_plugin_setting from '../../../../helpers/set_plugin_setting';
 
 export default class PluginController {
   /**
@@ -87,13 +88,12 @@ export default class PluginController {
     }
     //await Plugin.updateAltrpPluginLists()
     let new_widget_list = await Plugin.updateAltrpPluginLists()
-    envWriter([
+    await set_plugin_setting([
       {
         key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
         value: new_widget_list.length === 0 ? '' : new_widget_list,
       }
     ]);
-
     return response.status(status).json(res)
   }
 
