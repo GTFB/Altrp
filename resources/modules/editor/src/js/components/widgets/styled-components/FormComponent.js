@@ -43,6 +43,129 @@ const containerStyle = settings => {
   return styles;
 };
 
+const wysiwygStyle = settings => {
+  let padding,
+    fontColor,
+    widthWysiwyg,
+    placeholderColor,
+    reqColor,
+    backgroundColor,
+    borderType,
+    borderWidth,
+    borderColor,
+    boxShadow,
+    borderRadius
+
+  const {
+    placeholder_and_value_alignment_position_section,
+    position_z_index,
+  } = settings
+
+  let styles = `&& .ck-content, .ck.ck-editor__editable_inline[dir=ltr], .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-rounded-corners {`
+
+      settings && (padding = getResponsiveSetting(settings, "position_padding"))
+      padding && (styles += dimensionsControllerToStyles(padding, "padding"))
+
+      settings && (fontColor = getResponsiveSetting(settings, "field_font_color"))
+      fontColor && (styles += colorPropertyStyled(fontColor, "color"))
+
+      settings && (widthWysiwyg = getResponsiveSetting(settings, "field_width"))
+      widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"))
+
+      placeholder_and_value_alignment_position_section &&
+      (styles += `text-align:${placeholder_and_value_alignment_position_section};`)
+
+      position_z_index && (styles += `z-index:${position_z_index};`)
+
+      settings &&
+      (placeholderColor = getResponsiveSetting(settings, "placeholder_style_font_color"))
+      placeholderColor && (styles += colorPropertyStyled(placeholderColor, "color"))
+
+      settings &&
+      (reqColor = getResponsiveSetting(settings, "required_style_font_color"))
+      reqColor && (styles += colorPropertyStyled(reqColor, "color"))
+
+      settings && (backgroundColor = getResponsiveSetting(settings, "background_style_background_color"))
+
+      backgroundColor &&
+      (styles += colorPropertyStyled(backgroundColor, "background-color"))
+
+      settings && (borderType = getResponsiveSetting(settings, "border_type"))
+      borderType &&
+      (styles += simplePropertyStyled(borderType, "border-style", "!important"))
+
+      settings && (borderWidth = getResponsiveSetting(settings, "border_width"))
+      borderWidth && (styles += borderWidthStyled(borderWidth))
+
+      settings && (borderColor = getResponsiveSetting(settings, "border_color"))
+      borderColor && (styles += colorPropertyStyled(borderColor, "border-color"))
+
+      settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"))
+      boxShadow && (styles += shadowControllerToStyles(boxShadow))
+
+      settings &&
+      (borderRadius = getResponsiveSetting(settings, 'border_radius') ||  getResponsiveSetting(settings, "global_filter_input_border_radius" ))
+
+      borderRadius &&
+      (styles += dimensionsControllerToStyles(borderRadius, "border-radius"))
+
+  styles += "}"
+
+  styles += `&& .ck-content:hover, .ck.ck-editor__editable_inline[dir=ltr]:hover, .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-rounded-corners:hover {`
+
+      settings && (padding = getResponsiveSetting(settings, "position_padding", ':hover'))
+      padding && (styles += dimensionsControllerToStyles(padding, "padding"))
+
+      settings && (fontColor = getResponsiveSetting(settings, "field_font_color", ':hover'))
+      fontColor && (styles += colorPropertyStyled(fontColor, "color"))
+
+      settings && (widthWysiwyg = getResponsiveSetting(settings, "field_width", ':hover'))
+      widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"))
+
+
+      // hover alignment and hover z-index
+      // placeholder_and_value_alignment_position_section &&
+      // (styles += `text-align:${placeholder_and_value_alignment_position_section};`)
+      //
+      // position_z_index && (styles += `z-index:${position_z_index};`)
+
+      settings &&
+      (placeholderColor = getResponsiveSetting(settings, "placeholder_style_font_color", ':hover'))
+      placeholderColor && (styles += colorPropertyStyled(placeholderColor, "color"))
+
+      settings &&
+      (reqColor = getResponsiveSetting(settings, "required_style_font_color", ':hover'))
+      reqColor && (styles += colorPropertyStyled(reqColor, "color"))
+
+      settings && (backgroundColor = getResponsiveSetting(settings, "background_style_background_color", ':hover'))
+
+      backgroundColor &&
+      (styles += colorPropertyStyled(backgroundColor, "background-color"))
+
+      settings && (borderType = getResponsiveSetting(settings, "border_type", ':hover'))
+      borderType &&
+      (styles += simplePropertyStyled(borderType, "border-style", "!important"))
+
+      settings && (borderWidth = getResponsiveSetting(settings, "border_width", ':hover'))
+      borderWidth && (styles += borderWidthStyled(borderWidth))
+
+      settings && (borderColor = getResponsiveSetting(settings, "border_color", ':hover'))
+      borderColor && (styles += colorPropertyStyled(borderColor, "border-color"))
+
+      settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ':hover'))
+      boxShadow && (styles += shadowControllerToStyles(boxShadow))
+
+      settings &&
+      (borderRadius = getResponsiveSetting(settings, 'border_radius', ':hover') ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ':hover' ))
+
+      borderRadius &&
+      (styles += dimensionsControllerToStyles(borderRadius, "border-radius"))
+
+  styles += "}"
+
+  return styles
+}
+
 /**
  * Стили для класса altrp-field
  * @param {Object} settings style settings of element
@@ -59,7 +182,8 @@ const fieldStyle = settings => {
     borderColor,
     borderRadius,
     widthTextArea,
-    boxShadow;
+    boxShadow,
+    toggle;
 
   const {
     placeholder_and_value_alignment_position_section,
@@ -79,6 +203,9 @@ const fieldStyle = settings => {
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (toggle = getResponsiveSetting(settings, "disable_box_shadow"));
+  toggle && (styles += 'box-shadow: none;');
 
   settings &&
     (typographic = getResponsiveSetting(settings, "field_font_typographic"));
@@ -713,6 +840,9 @@ function FormComponent(settings) {
   //altrp-field-container
   const containerStyles = containerStyle(settings);
   containerStyles && (styles += containerStyles);
+  //wysiwygStyle ck-content
+  const wysiwygStyles = wysiwygStyle(settings);
+  wysiwygStyles && (styles += wysiwygStyles);
   //altrp-field
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);

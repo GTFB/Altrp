@@ -338,7 +338,7 @@ Route.group(() => {
   /**
    * Templates for front
    */
-  Route.get('/templates/:template_id', 'TemplatesController.getTemplates')
+  Route.get('/templates/:template_id', 'TemplatesController.getTemplate')
   /**
    * media for front
    */
