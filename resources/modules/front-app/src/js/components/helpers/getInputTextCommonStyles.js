@@ -83,13 +83,19 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['border-color', 'border_color', 'color'],
       ['border-radius', 'border_radius', 'dimensions'],
       ['', 'box_shadow', 'shadow'],
+    () => {
+      const toggle = getResponsiveSetting(settings, "disable_box_shadow")
+      if (toggle) {
+        return 'box-shadow: none'
+      }
+    },
     '}',
 
     '.bp3-input.bp3-input.bp3-input.bp3-input::placeholder',
       ['', 'placeholder_style_font_typographic', 'typographic'],
       ['color', 'placeholder_style_font_color', 'color'],
     '}',
-    
+
     'bp3-input:hover',
       ['', 'field_font_typographic', 'typographic', ':hover'],
       ['color', 'field_font_color', 'color', ':hover'],

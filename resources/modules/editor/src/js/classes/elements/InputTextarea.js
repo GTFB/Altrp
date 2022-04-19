@@ -187,7 +187,8 @@ class InputTextarea extends BaseElement {
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
-      label: "Default Value"
+      label: "Default Value",
+      locked: true,
     });
 
     this.addControl("content_calculation", {
@@ -457,6 +458,11 @@ class InputTextarea extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       units: ["px", "%", "vh"]
+    });
+
+    this.addControl("disable_box_shadow", {
+      type: CONTROLLER_SWITCHER,
+      label: "Disable box-shadow",
     });
 
     this.addControl("border_color", {

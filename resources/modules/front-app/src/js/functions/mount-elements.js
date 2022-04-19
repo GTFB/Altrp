@@ -2,9 +2,11 @@ import loadGlobalStyles from "./load-global-styles";
 
 export default function mountElements(){
   loadGlobalStyles();
-  const elementContainers = document.querySelectorAll('[data-react-element]');
+  let elementContainers = document.querySelectorAll('*:not([data-react-element]) [data-react-element]');
+  elementContainers = _.filter(elementContainers, container =>{
+    return !container.parentElement.closest('[data-react-element]')
+  })
   _.each(elementContainers, container =>{
-
     if(! container?.dataset?.reactElement){
       return;
     }
@@ -19,6 +21,7 @@ export default function mountElements(){
       }
     }
     console.log('Loading Element: ', performance.now());
+    // console.log(container?.dataset?.reactElement);
     window.ReactDOM.render(<window.Provider store={window.appStore}>
       <window.ElementWrapper {...props} />
     </window.Provider>,  container, ()=>{

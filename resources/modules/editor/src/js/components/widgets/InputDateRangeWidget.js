@@ -154,6 +154,7 @@ class InputDateRangeWidget extends Component {
     }
 
     return <DateRangeInput
+      minDate={new Date(1900, 1, 1)}
       formatDate={date => moment(date).locale(locale).format(format)}
       parseDate={str => moment(str, this.typeDate).locale(locale).toDate()}
       onChange={this.handleChange}

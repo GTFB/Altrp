@@ -6,6 +6,7 @@ import store from '../js/store/store';
 import {connect} from "react-redux";
 import {pageReload} from "../js/helpers";
 import {markdown} from "markdown"
+import getAltrpLang from "../js/helpers/get-altrp-lang";
 
 /**
  * Компонент вкладки обновления админки
@@ -42,7 +43,7 @@ class Updates extends Component {
    */
   setNeedUpdate() {
     this.setState(state => {
-      return {...state, needUpdate: true};
+      return {...state, needUpdate: getAltrpLang() !== 'javascript'};
     })
   }
 
@@ -78,8 +79,12 @@ class Updates extends Component {
       let res = await (new Resource({route: '/admin/ajax/update_altrp'})).post({});
       setTimeout(() => {
           res.result ? pageReload() : this.setNeedUpdate();
+
         }
         , 1300);
+      if(! res.result) {
+        store.dispatch(setAdminEnable());
+      }
     } catch (error) {
       store.dispatch(setAdminEnable());
     }

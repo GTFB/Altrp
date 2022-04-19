@@ -173,7 +173,6 @@ export default class MediaController {
     let res:Media[] = []
     for(let file of files){
       if(! file){
-        console.log(files);
         continue
       }
       // @ts-ignore

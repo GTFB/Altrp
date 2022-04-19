@@ -12,7 +12,7 @@ import UserTopPanel from "./UserTopPanel";
 import React from "react";
 import CategoryTable from "./CategoryTable";
 import ImageSettingsTable from "./ImageSettingsTable";
-const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
+import AdvancedSettings from "./AdvancedSettings";
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
 export default class AdminSettings extends Component {
@@ -362,9 +362,7 @@ export default class AdminSettings extends Component {
               </div>
             </TabPanel>
             <TabPanel>
-              <React.Suspense fallback={"Loading"}>
-                <AdvancedSettings />
-              </React.Suspense>
+              <AdvancedSettings />
             </TabPanel>
             <TabPanel>
               <Updates attr={"attr"} />

@@ -173,6 +173,10 @@ Route.group(() => {
     Route.get('/settings/:setting_name', 'admin/SettingsController.getSettings').name = 'admin.settings.get'
     Route.put('/settings/:setting_name', 'admin/SettingsController.saveSettings').name = 'admin.settings.save'
 
+
+
+    Route.post('/update_altrp', 'admin/AdminController.update_altrp').name = 'admin.update_altrp'
+
     /**
      * Altrp Meta
      */
