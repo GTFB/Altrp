@@ -1,5 +1,5 @@
 import path from 'path'
-import AdmZip from "adm-zip"  
+import AdmZip from "adm-zip"
 import Logger from '@ioc:Adonis/Core/Logger'
 //import updateDotenv from 'update-dotenv'
 import env from '../helpers/env'
@@ -8,7 +8,7 @@ import NotFoundException from 'App/Exceptions/NotFoundException'
 import app_path from '../helpers/app_path'
 import fs from 'fs-extra'
 //import envWriter from '../helpers/envWriter'
-import set_plugin_setting from '../helpers/set_plugin_setting'
+import set_plugin_setting from '../helpers/plugins/set_plugin_setting'
 import * as _ from 'lodash'
 import is_null from "../helpers/is_null";
 import data_get from "../helpers/data_get";
@@ -19,6 +19,8 @@ import isValidUrl from "../helpers/string/isValidUrl";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import storage_path from "../helpers/storage_path";
 import httpsRequest from "../helpers/httpsRequest";
+import get_plugin_setting from "../helpers/plugins/get_plugin_setting";
+import clearRequireCache from "../helpers/node-js/clearRequireCache";
 
 export default class Plugin {
 
@@ -100,7 +102,8 @@ export default class Plugin {
     if (!pluginName) {
       return
     }
-    let enabledPlugins = env(Plugin.ALTRP_PLUGINS)
+    clearRequireCache()
+    let enabledPlugins = get_plugin_setting(Plugin.ALTRP_PLUGINS)
     if (!enabledPlugins) {
       enabledPlugins = []
     } else {
@@ -118,7 +121,7 @@ export default class Plugin {
         return _plugin != plugin.name
       })
       await plugin.removeStaticsFromAltrpMeta()
-    }   
+    }
     enabledPlugins = enabledPlugins.join(',')
 
     //updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
@@ -249,6 +252,13 @@ export default class Plugin {
     return app_path('AltrpPlugins/' + this.name + path)
   }
 
+  static getPathByName(name: string, path = ''): string {
+    if (!name) {
+      throw  new NotFoundException('Plugin Name not Found', 404, NotFoundException.code)
+    }
+    return app_path('AltrpPlugins/' + name + path)
+  }
+
   public getPublicPath(path = ''): string {
     if (!this.name) {
       throw new NotFoundException('Plugin Name not Found', 404, NotFoundException.code)
@@ -288,7 +298,7 @@ export default class Plugin {
       return false
     }
     // Artisan.call('cache:clear')todo: сбросить кэш
-    let enabledPlugins = env(Plugin.ALTRP_PLUGINS)
+    let enabledPlugins = get_plugin_setting(Plugin.ALTRP_PLUGINS)
 
     if (!enabledPlugins) {
       return false
