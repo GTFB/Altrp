@@ -11,6 +11,7 @@ import fetch from 'node-fetch';
 import User from "App/Models/User";
 import Notification from "App/Services/Notification";
 import Customizer from "App/Models/Customizer";
+import DiscordBot from "App/Services/DiscordBot";
 
 export default class AltrpBaseController {
   protected customizerData = {
@@ -81,6 +82,13 @@ export default class AltrpBaseController {
       }
     }
 
+  }
+
+  discord() {
+    const discord = _.get(this.customizerData, "discord")
+    const content = JSON.parse(replaceContentWithData(discord, this.customizerData))
+
+    DiscordBot.send(content)
   }
 
   protected async sendNotification() {

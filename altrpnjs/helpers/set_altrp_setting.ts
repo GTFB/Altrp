@@ -1,7 +1,7 @@
 import Env from "@ioc:Adonis/Core/Env";
 import {get_setting_key} from "./get_altrp_setting";
+import envWriter from "./envWriter";
 import encrypt from "./encrypt";
-import updateDotenv from "update-dotenv";
 
 export default async function  set_altrp_setting( setting_name = '', value = '', _encrypt = false){
 
@@ -14,11 +14,14 @@ export default async function  set_altrp_setting( setting_name = '', value = '',
   if( _encrypt ){
     try {
       value = encrypt( value ) || '';
-    } catch( e){
+    } catch(e){
       value = '';
     }
   }
-  await updateDotenv({[setting_key]: value})
+  await envWriter([{
+    key: setting_key,
+    value: value,
+  }])
   Env.set(setting_key, value)
   return
 }

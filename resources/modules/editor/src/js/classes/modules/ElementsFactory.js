@@ -110,6 +110,7 @@ class ElementsFactory extends BaseModule {
     // newElement.component = new
     newElement.setChildren(newChildren);
     newElement.settings = _.cloneDeep(element.settings);
+    newElement.settingsLock = _.cloneDeep(element.settingsLock);
     if (element.dynamicContentSettings) {
       newElement.dynamicContentSettings = _.cloneDeep(
         element.dynamicContentSettings

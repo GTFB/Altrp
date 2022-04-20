@@ -15,7 +15,8 @@ import ELEMENTS_IGNORES_FORM_UPDATE from "../constants/ELEMENTS_IGNORES_FORM_UPD
  * Срабатываает перед удалением компонента элемента
  */
 function componentWillUnmount(){
-  // if(this.model){
+  console.log('beforeUnmount');
+// if(this.model){
   //   this.model.uns
   // }
   window.actionsManager && actionsManager.unregisterWidgetActions(this.props.element.getIdForAction());
@@ -33,6 +34,7 @@ function componentWillUnmount(){
     }
   });
   appStore.dispatch(addSettings(this.props.element.getId(), this.props.element.getName(), {}))
+  this.props.element.beforeUnmount()
   if(_.isFunction(this._componentWillUnmount)){
     this._componentWillUnmount();
   }
@@ -96,14 +98,10 @@ function getContent(settingName, returnRaw = false, locked = false) {
    * @member {FrontElement} element
    */
   const element = this.props.element;
- // return this.props.element.getContent(settingName);
 
   let content = this.props.element.getSettings(settingName, '', locked);
-
   if(content && content.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
-    // console.log(element.getRoot());
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
-    // console.log(model);
     content = model ? model.getProperty(content.fieldName) : ' ';
   }
   if((! isEditor())){
@@ -134,7 +132,9 @@ function getContent(settingName, returnRaw = false, locked = false) {
      } else {
        content = replaceContentWithData(content, model);
      }
-
+    if(locked && ! content && this.getContent(settingName)){
+      content = this.getContent(settingName)
+    }
     const contentDynamicSetting = this.props.element.getDynamicSetting(settingName);
 
     if(contentDynamicSetting){

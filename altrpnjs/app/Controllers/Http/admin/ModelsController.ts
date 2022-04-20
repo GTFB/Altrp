@@ -20,10 +20,17 @@ import SQLEditor from 'App/Models/SQLEditor'
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
+import Logger from "@ioc:Adonis/Core/Logger";
+import User from "App/Models/User";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
-
+    const modelToUpdate = await Model.query().whereNull('guid').select('*')
+    await Promise.all(modelToUpdate.map(async (m:Model) =>{
+      m.guid = guid()
+      await m.save()
+      Logger.info(`Model id ${m.id} guid write!`)
+    }))
     const params = request.qs();
     const page = parseInt(params.page) || 1
     const pageSize = params.pageSize || 20
@@ -182,7 +189,8 @@ export default class ModelsController {
 
   public async deleteModelRow(httpContext: HttpContextContract) {
     const id = parseInt(httpContext.params.id);
-
+    let user = new User
+    await httpContext.auth.use('web').login(user)
     const rowId = parseInt(httpContext.params.row);
 
     const model = await Model.query().where('id', id).firstOrFail();
@@ -306,16 +314,25 @@ export default class ModelsController {
   async getDataSourcesAndPageCount({request}: HttpContextContract) {
 
     const params = request.qs()
-    const page = parseInt(params.page) || 1
-    const pageSize = parseInt(params.pageSize) || 10
+    const page = parseInt(params.page)
+    const pageSize = parseInt(params.pageSize)
 
-    const sources = await Source.query().paginate(page, pageSize)
+    if (page && pageSize) {
+      const sources = await Source.query().paginate(page, pageSize)
+
+      return {
+        count: sources.getMeta().total,
+        pageCount: sources.getMeta().last_page,
+        data_sources: sources.all()
+      }
+    }
+
+    const sources = await Source.query()
 
     return {
-      count: sources.getMeta().total,
-      pageCount: sources.getMeta().last_page,
-      data_sources: sources.all()
+      data_sources: sources
     }
+
 
     // if(page) {
     //   const sources = await Source.query().offset((page - 1)*pageSize).limit(pageSize).select('*');

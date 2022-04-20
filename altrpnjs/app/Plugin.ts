@@ -117,7 +117,7 @@ export default class Plugin {
         return _plugin != plugin.name
       })
       //plugin.removeStaticsFromAltrpMeta()
-    }   
+    }
     enabledPlugins = enabledPlugins.join(',')
     envWriter([
       {
@@ -173,7 +173,6 @@ export default class Plugin {
       return plugin.name
     })
     //await updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins.map(plugin => plugin.name).join(',')})
-    //console.log(enabledPlugins)
     return enabledPlugins
   }
 
@@ -241,7 +240,6 @@ export default class Plugin {
     if (!this.name) {
       throw  new NotFoundException('Plugin Name not Found', 404, NotFoundException.code)
     }
-    //console.log('AltrpPlugins/' + this.name + path)
     return app_path('AltrpPlugins/' + this.name + path)
   }
 
@@ -407,7 +405,7 @@ export default class Plugin {
     fs.writeFileSync(filename, res)
     let archive = new AdmZip(filename)
 
-    archive.extractAllTo(this.getPath())
+    archive.extractAllTo(this.getPath(), true)
 
     fs.removeSync(temp_path)
     return true

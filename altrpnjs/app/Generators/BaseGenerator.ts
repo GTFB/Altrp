@@ -7,46 +7,43 @@ import isProd from "../../helpers/isProd";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
 import app_path from "../../helpers/app_path";
-import Plugin from "App/Plugin"
-import Logger from "@ioc:Adonis/Core/Logger";
+import Plugin from "App/Plugin";
 
-export abstract class BaseGenerator {
+export abstract class BaseGenerator{
   private fileName: string;
   protected directory: string;
   private stubFilePath: string;
 
-  protected addFile(fileName: string): this {
+  protected addFile(fileName: string):this {
     this.fileName = fileName
     return this
   }
 
-  protected destinationDir(directory: string): this {
+  protected destinationDir(directory:string):this{
     this.directory = directory
     return this
   }
 
-  protected stub(stubFilePath: string): this {
+  protected stub(stubFilePath:string):this{
     this.stubFilePath = stubFilePath
     return this
   }
 
-  protected async apply(vars: object) {
+  protected async apply(vars: object){
     let content: string = ''
 
-    if (fs.existsSync(this.stubFilePath)) {
+    if(fs.existsSync(this.stubFilePath)){
       content = fs.readFileSync(this.stubFilePath, {encoding: 'utf8'})
     }
 
     content = mustache.render(content, vars)
-    if (!fs.existsSync(this.directory)) {
-      fs.mkdirSync(this.directory, {recursive: true})
+    if(! fs.existsSync(this.directory)){
+      fs.mkdirSync(this.directory, {recursive:true})
     }
     fs.writeFileSync(this.getFullFileName(), content)
-    if (isProd()) {
+    if(isProd()){
       View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
-      Object.keys(require.cache).forEach(function (key) {
-        delete require.cache[key]
-      })
+      Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
     }
     return
   }
@@ -73,7 +70,6 @@ export abstract class BaseGenerator {
             }catch (e){
               Logger.error(e)
             }
-
           }
         }
       }
@@ -83,17 +79,17 @@ export abstract class BaseGenerator {
     return content
   }
 
-  private getFullFileName(): string {
-    return path.join(this.directory, this.fileName)
+  private getFullFileName():string{
+    return path.join(this.directory,this.fileName)
   }
 
-  static async generateCssFile(fileName: string, content: string): Promise<void> {
-    if (fileName.indexOf('.css') !== fileName.length - 4) {
+  static async generateCssFile(fileName:string, content:string):Promise<void >{
+    if(fileName.indexOf('.css') !== fileName.length - 4){
       fileName += '.css'
     }
     fileName = Application.publicPath(`altrp/css/${fileName}`)
-    if (!fs.existsSync(Application.publicPath(`altrp/css/`))) {
-      fs.mkdirSync(Application.publicPath(`altrp/css/`), {recursive: true})
+    if(! fs.existsSync(Application.publicPath(`altrp/css/`))){
+      fs.mkdirSync(Application.publicPath(`altrp/css/`), {recursive:true})
     }
     fs.writeFileSync(fileName, content)
     return

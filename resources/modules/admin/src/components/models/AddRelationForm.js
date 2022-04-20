@@ -88,25 +88,11 @@ class AddRelationForm extends Component {
 
 
   ItemPredicate = (query, value) => {
+     if(!query) {
+       return true
+     }
 
-    if(!query) {
-      return true
-    }
-    const index = _.findIndex(_.split(value.label, ""), char => {
-      let similar = false;
-      _.split(query, "").forEach(queryChar => {
-        if(queryChar === char) {
-          similar = true
-        }
-      });
-      return similar
-    });
-
-    if(index !== -1) {
-      return true
-    } else {
-      return false
-    }
+     return value.label.toLowerCase().indexOf(query.toLowerCase()) >= 0
   }
 
 
@@ -403,7 +389,6 @@ class AddRelationForm extends Component {
           {/*    </option>)}*/}
           {/*</select>*/}
 
-
           <Select items={this.state.modelsOptions}
                   required
                   matchTargetWidth
@@ -411,11 +396,11 @@ class AddRelationForm extends Component {
                   noResults={<MenuItem disabled={true} text="No results." />}
                   itemRenderer={(item, {handleClick, modifiers, query}) => {
                     return <MenuItem
-                      text={item.label}
-                      key={item.value}
-                      active={item.value === this.state.value.target_model_id }
-                      onClick={handleClick}
-                    />
+                          text={item.label}
+                          key={item.value}
+                          active={item.value === this.state.value.target_model_id }
+                          onClick={handleClick}
+                        />
                   }}
                   onItemSelect={current => { this.changeValue(current.value, 'target_model_id') }}
                   fill={true}

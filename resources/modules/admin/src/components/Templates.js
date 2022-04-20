@@ -181,8 +181,10 @@ class Templates extends Component {
    */
   generateTemplateJSON(template) {
     const data = objectDeepCleaning(JSON.parse(template.data));
+    let area  = this.state.templateAreas.find(area => area.id == template.area)?.name || 'content'
+
     return JSON.stringify({
-      area: this.state.activeTemplateArea.name,
+      area,
       data,
       title: template.title,
       name: template.name,
@@ -292,7 +294,7 @@ class Templates extends Component {
           if (!areaExists) {
             importedTemplateData.area = _.filter(this.state.templateAreas, ta => {
               return ta.name === 'content';
-            });
+            })?.id || 1;
           }
           // let res = await this.templateImportModule.importTemplate(importedTemplateData)
           try {

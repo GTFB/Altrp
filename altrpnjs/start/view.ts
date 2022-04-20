@@ -54,6 +54,8 @@ import renderTournament from '../helpers/widgets-renders/renderTournament';
 import renderDivider from "../helpers/widgets-renders/renderDivider";
 import renderSectionBG from "../helpers/renderSectionBG";
 import getColumnClasses from "../helpers/getColumnClasses";
+import renderFeedback from "../helpers/widgets-renders/renderFeedback";
+import getLatestVersion from "../helpers/getLatestVersion";
 import renderInputPagination from "../helpers/widgets-renders/renderInputPagination";
 
 View.global('get_logo_url', get_logo_url)
@@ -69,6 +71,7 @@ View.global('getContent', getContent)
 View.global('renderAsset', renderAsset)
 View.global('renderSectionBG', renderSectionBG)
 View.global('getColumnClasses', getColumnClasses)
+View.global('getLatestVersion', getLatestVersion)
 /**
  * RENDERS START
  */
@@ -113,6 +116,7 @@ View.global('renderHeadingTypeAnimating', renderHeadingTypeAnimating)
 View.global('renderImageLightbox', renderImageLightbox)
 View.global('renderTree', renderTree)
 View.global('renderDivider', renderDivider)
+View.global('renderFeedback', renderFeedback)
 /**
  * RENDERS END
  */

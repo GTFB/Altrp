@@ -6,7 +6,7 @@ import {advancedTabControllers} from "../../decorators/register-controllers";
 
 class Feedback extends BaseElement {
   static getTitle() {
-    return "Feedback (в разработке)";
+    return "Feedback";
   }
 
   static getName() {

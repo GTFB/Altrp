@@ -52,8 +52,12 @@ class AltrpForm {
   /**
    * Устанавливает список полей (в случае, если егистрация после добавления какой либо формы)
    * @param {FrontElement[]}fields
+   * @param checkComponent
    */
-  setFields(fields) {
+  setFields(fields, checkComponent = true) {
+    if(checkComponent){
+      fields = fields.filter(f=>f.component)
+    }
     this.fields = fields;
   }
 

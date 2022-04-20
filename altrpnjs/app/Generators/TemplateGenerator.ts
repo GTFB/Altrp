@@ -7,7 +7,6 @@ import Template from 'App/Models/Template';
 import path from 'path';
 import * as _ from 'lodash'
 import Logger from '@ioc:Adonis/Core/Logger'
-import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class TemplateGenerator extends BaseGenerator {
 
@@ -35,6 +34,9 @@ export default class TemplateGenerator extends BaseGenerator {
     }
     await template.load('currentArea')
 
+    this.template = template
+
+    ListenerGenerator.getHookTemplates(this)
 
     const styles = JSON.parse(template.styles || "{}")
 

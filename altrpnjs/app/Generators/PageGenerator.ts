@@ -3,11 +3,13 @@ import {BaseGenerator} from "./BaseGenerator";
 import Application from "@ioc:Adonis/Core/Application";
 import app_path from "../../helpers/app_path";
 import Page from "App/Models/Page";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class PageGenerator extends BaseGenerator {
 
   public static directory = Application.resourcesPath('/views/altrp/pages')
   public static template = app_path(`altrp-templates/views/Page.stub`)
+  public page: Page;
 
 
   async deleteFile(page: Page): Promise<void> {
@@ -39,6 +41,11 @@ export default class PageGenerator extends BaseGenerator {
     elements_list = elements_list.map(e=>`'${e}'`)
     elements_list = elements_list.join(',')
     let all_styles = await page.getAllStyles()
+
+    this.page = page
+
+    ListenerGenerator.getHookPages(this)
+
     return await this.addFile(fileName)
       .destinationDir(PageGenerator.directory)
       .stub(PageGenerator.template)
@@ -64,7 +71,7 @@ export default class PageGenerator extends BaseGenerator {
       if(fs.existsSync(fileName)){
         let content = fs.readFileSync(fileName, {encoding:'utf8'})
         content = content.replace(/\n/g, '')
-        extraStyles.extra_header_styles += `<style>${content}</styles>`
+        extraStyles.extra_header_styles += `<style>${content}</style>`
       }
     }
     return extraStyles

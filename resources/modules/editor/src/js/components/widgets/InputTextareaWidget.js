@@ -362,11 +362,11 @@ class InputTextareaWidget extends Component {
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
-      this.getLockedContent("content_default_value") ||
-      (this.valueMustArray() ? [] : "");
-    if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
-      this.defaultValue = [];
-    }
+      this.getLockedContent("content_default_value")  || "";
+    // console.log(this.getLockedContent("content_default_value"));
+    // if(! this.getLockedContent("content_default_value")){
+    //   console.log(props.element.settings.content_default_value);
+    // }
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -381,13 +381,6 @@ class InputTextareaWidget extends Component {
     }
   }
 
-  /**
-   * В некоторых случаях значение поля должно быть массивом
-   * @return {boolean}
-   */
-  valueMustArray() {
-    return false;
-  }
   /**
    * Чистит значение
    */

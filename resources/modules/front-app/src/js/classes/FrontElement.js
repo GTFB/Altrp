@@ -126,23 +126,23 @@ class FrontElement {
         'button',
       ...INPUT_WIDGETS
     ];
-    let widgetsWithActions = [
-        'button',
-      ...INPUT_WIDGETS
-    ];
+    // let widgetsWithActions = [
+    //     'button',
+    //   ...INPUT_WIDGETS
+    // ];
     /**
      * Инициация событий в первую очередь
      */
-    if(widgetsWithActions.indexOf(this.getName()) >= 0 && this.getSettings('actions', []).length){
-      try{
-        // this.registerActions();
-      } catch(e){
-        console.error(e);
-      }
-      // if(this.getName() === 'button'){
-      //   return;
-      // }
-    }
+    // if(widgetsWithActions.indexOf(this.getName()) >= 0 && this.getSettings('actions', []).length){
+    //   try{
+    //     // this.registerActions();
+    //   } catch(e){
+    //     console.error(e);
+    //   }
+    //   // if(this.getName() === 'button'){
+    //   //   return;
+    //   // }
+    // }
 
     if(this.getName() === "input-date-range" &&
       this.getFormId("form_id_start") &&
@@ -869,6 +869,10 @@ class FrontElement {
         this.component.setState(state => ({...state, settings: newSettings}));
       }
     }
+  }
+  async beforeUnmount(){
+    let formsManager = await import(/* webpackChunkName: 'FormsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js');
+    formsManager.removeField(this)
   }
 }
 

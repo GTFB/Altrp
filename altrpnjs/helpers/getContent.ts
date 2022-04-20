@@ -17,6 +17,7 @@ export default function getContent(settings, context, settingName, device:string
   } else {
     content = replaceContentWithData(content, context);
   }
-
+  // console.log(content);
+  // console.log(context);
   return content === 'null' ? '' : content;
 }
