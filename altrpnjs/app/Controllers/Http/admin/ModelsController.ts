@@ -643,6 +643,8 @@ export default class ModelsController {
       })
     }
     const table = await Table.find(model.table_id)
+    await model.load('table')
+
     const controller = await Controller.query().where('model_id', model.id).first()
     if (controller) {
       const sources = await Source.query().where('controller_id', controller?.id).select('*')
@@ -665,13 +667,15 @@ export default class ModelsController {
     }
     await (new ModelGenerator).deleteFiles(model)
 
-
+    const client = Database.connection(Env.get('DB_CONNECTION'))
     if (table) {
       await Column.query().where('table_id', table.id).delete()
       await model.delete()
       await table.delete()
+      await client.schema.dropTable(model.table.name)
     } else {
       await model.delete()
+      await client.schema.dropTable(model.table.name)
     }
 
     return response.json({success: true})

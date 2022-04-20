@@ -57,7 +57,7 @@ export default class RelationshipsController {
               ON UPDATE ${relationshipData.onUpdate}`
             await Database.rawQuery(query)
           } catch (e) {
-
+            console.log(e)
           }
         }
 
@@ -80,9 +80,9 @@ export default class RelationshipsController {
         await relationship.save()
         Event.emit('model:updated', model)
 
-        
+
         if (relationshipData.type != "belongsTo" && targetModel && relationshipData.add_belong_to) {
-          
+
           await targetModel.load('table')
           try {
             let query = `ALTER TABLE ${targetModel.table.name} ADD CONSTRAINT
@@ -93,7 +93,7 @@ export default class RelationshipsController {
               ON UPDATE restrict`
             await Database.rawQuery(query)
           } catch (e) {
-
+            console.log(e)
           }
 
           const belongsToRelationship = new Relationship()
@@ -223,7 +223,7 @@ export default class RelationshipsController {
       })
       await relationship.save()
       Event.emit('model:updated', model)
-      
+
       if (relationshipData.type != "belongsTo" && newTargetModel && relationshipData.add_belong_to) {
 
         try {
@@ -318,6 +318,15 @@ export default class RelationshipsController {
         message: 'Field not found'
       })
     }
+
+    // console.log('bbb field', relationship.local_key)
+    // need to drop index
+    // model.table.name drop relationship.local_key foreign in
+    // const client = Database.connection(Env.get('DB_CONNECTION'))
+    // client.schema.alterTable(model.table.name, (table) => {
+    //   table.dropForeign(relationship.local_key)
+    // })
+    // table.dropIndex(indexname)
 
     try {
 
