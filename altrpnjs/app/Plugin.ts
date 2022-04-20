@@ -9,6 +9,7 @@ import app_path from '../helpers/app_path'
 import fs from 'fs-extra'
 //import envWriter from '../helpers/envWriter'
 import set_plugin_setting from '../helpers/set_plugin_setting'
+import read_plugin_setting from '../helpers/read_plugin_setting'
 import * as _ from 'lodash'
 import is_null from "../helpers/is_null";
 import data_get from "../helpers/data_get";
@@ -100,7 +101,9 @@ export default class Plugin {
     if (!pluginName) {
       return
     }
-    let enabledPlugins = env(Plugin.ALTRP_PLUGINS)
+    //let enabledPlugins = env(Plugin.ALTRP_PLUGINS)
+    let enabledPlugins = read_plugin_setting(Plugin.ALTRP_PLUGINS)
+
     if (!enabledPlugins) {
       enabledPlugins = []
     } else {
@@ -165,8 +168,9 @@ export default class Plugin {
 
   static async getEnabledPlugins(): Promise<Plugin[]> {
     let enabledPlugins: any[]
-    if (env(Plugin.ALTRP_PLUGINS)) {
-      enabledPlugins = env(Plugin.ALTRP_PLUGINS).split(',')
+
+    if (read_plugin_setting(Plugin.ALTRP_PLUGINS)) {
+      enabledPlugins = read_plugin_setting(Plugin.ALTRP_PLUGINS).split(',')
     } else {
       enabledPlugins = []
     }
@@ -289,7 +293,7 @@ export default class Plugin {
       return false
     }
     // Artisan.call('cache:clear')todo: сбросить кэш
-    let enabledPlugins = env(Plugin.ALTRP_PLUGINS)
+    let enabledPlugins = read_plugin_setting(Plugin.ALTRP_PLUGINS)
 
     if (!enabledPlugins) {
       return false
