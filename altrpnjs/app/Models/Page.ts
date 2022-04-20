@@ -148,7 +148,6 @@ export default class Page extends BaseModel {
   ];
 
   public async getAreas(deleteContent = false) {
-
     const data: {
       area_name: string,
       id: string,

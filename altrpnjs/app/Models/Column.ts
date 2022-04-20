@@ -139,11 +139,10 @@ decorate([
   renderForModel():string {
     if(this.type === 'calculated'){
       return `
-  @Orm.computed()
-  public get ${this.name}(): any{
-    return ''
-  }
-
+  //@Orm.computed()
+  //public get ${this.name}(): any{
+  //  return ''
+  //}
 `
     }
 

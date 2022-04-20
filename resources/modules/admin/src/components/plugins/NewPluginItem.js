@@ -16,6 +16,7 @@ class NewPluginItem extends Component {
 
   render() {
     const {plugin,} = this.props
+    console.log(plugin);
     return (
       <div className="col-4  new-plugin-item">
         <div className="border rounded">
@@ -26,7 +27,7 @@ class NewPluginItem extends Component {
                    alt={plugin.name}/>
             </div>
             <div className="col-8">
-              <div className="title">{plugin.title}</div>
+              <div className="title">{plugin.title} <pre>{plugin.version}</pre></div>
               <div className="description">{plugin.description}</div>
               <Button text="Install" onClick={this.installPlugin}/>
             </div>
