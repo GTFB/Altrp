@@ -58,6 +58,11 @@ window.addEventListener('keydown', e=>{
     e.preventDefault();
     let currentTestEnable = adminStore.getState().adminState.testEnable;
     adminStore.dispatch(setAdminProperty('testEnable', ! currentTestEnable));
+  } else if(e.keyCode === 68 && e.altKey) {
+    //alt d
+    e.preventDefault()
+    let currentResetEnable = adminStore.getState().adminState.resetEnable
+    adminStore.dispatch(setAdminProperty('resetEnable', ! currentResetEnable))
   }
 });
 window._ = lodash;
