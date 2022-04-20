@@ -2,9 +2,9 @@ import {
   createCipheriv,
   randomBytes,
 } from 'crypto';
-import Env from "@ioc:Adonis/Core/Env";
 import serialize from "./serialize";
 import {base64} from "@ioc:Adonis/Core/Helpers";
+import getAppEncryptKey from "./getAppEncryptKey";
 
 
 export default function encrypt(value: string, _serialize = true): string {
@@ -13,7 +13,7 @@ export default function encrypt(value: string, _serialize = true): string {
   try {
     // @ts-ignore
     value = _serialize ? serialize(value) : value;
-    let key = Buffer.from(Env.get('APP_KEY').replace('base64:', ''), 'base64');
+    let key = getAppEncryptKey()
     let cipher = createCipheriv('aes-256-cbc', key, iv);
     dec_data = cipher.update(value, 'utf8', 'base64');
     dec_data += cipher.final('base64');

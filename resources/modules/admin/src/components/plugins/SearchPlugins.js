@@ -15,11 +15,12 @@ export default class SearchPlugins extends Component {
       activeHeader: 4,
     };
     this.searchResource = new Resource({
-      route:'https://altrp.org/api/search_plugins'
+      route:'https://altrp.org/ajax/models/market_plugins/customizers/search_plugins_for_user_ac58fmi3g'
     });
   }
 
   async componentWillMount() {
+
   }
 
   listenScrollHeader = () => {
@@ -62,7 +63,7 @@ export default class SearchPlugins extends Component {
         </div>
         <div className="admin-content">
           <div className="row">
-            <form className="admin-table-top admin-table-top__search-plugin" >
+            <form className="admin-table-top admin-table-top__search-plugin" onSubmit={(e)=>e.preventDefault()}>
               <InputGroup className="form-tables"
               onChange={this.onChange}/>
               <Search />

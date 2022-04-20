@@ -167,7 +167,6 @@ export default class Page extends BaseModel {
       template: headerTemplate
     })
     let contentTemplate = await Template.getTemplate(this.id, 'content')
-
     data.push({
       area_name: 'content',
       id: 'content',

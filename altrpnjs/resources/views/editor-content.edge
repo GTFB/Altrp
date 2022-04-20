@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/addons/react-contexify/ReactContexify.min.css">
     @if(css)
-        <link href="{{css}}" rel="stylesheet"/>
+        <link href="{{css}}?{{env('PACKAGE_KEY')}}" rel="stylesheet"/>
     @endif
 
     <title>Builder</title>

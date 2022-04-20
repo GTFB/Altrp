@@ -40,17 +40,17 @@
              value="{{ old('email') }}"
              required
              autocomplete="email"
-             autofocus>
+             autofocus/>
     </label>
     <label>
       <span class="label mt-10">Password</span>
-      <input class="line" type="password" name="password" required autocomplete="current-password" >
+      <input class="line" type="password" name="password" required autocomplete="current-password" />
     </label>
     <div class="label mt-10">
       <label>
         <input type="checkbox"
                name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}
-               > Remember me</label>
+               /> Remember me</label>
       <button class="but">Log in</button>
     </div>
     <a href="#" class="label mt-10">Lost password?</a>

@@ -9,6 +9,7 @@
     "app/AltrpControllers",
     "app/AltrpListeners",
     "app/altrp-listeners",
+    ".env",
     "resources/views/altrp",
     "build"
   ],

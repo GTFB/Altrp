@@ -436,6 +436,7 @@ export default class Source extends BaseModel {
     this.setCustomizerData('session', httpContext.session);
     this.setCustomizerData('this', this);
     this.setCustomizerData('current_user', httpContext.auth?.user);
+    this.setCustomizerData('context.current_user', httpContext.auth?.user);
     ${this?.customizer?.getMethodContent() || ''}
     `}
       break;

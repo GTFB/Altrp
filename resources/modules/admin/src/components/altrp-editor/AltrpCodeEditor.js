@@ -38,7 +38,7 @@ class AltrpCodeEditor extends Component {
       // console.log(prevProps);
       let value = this.prepareIncomingValue(this.props.value);
       this.setState(state =>({...state, value}));
-      this.editor = <this.props.AceEditor
+      this.editor = this.props.AceEditor ? <this.props.AceEditor
           {...this.editorProps}
           // mode="json"
           // theme="textmate"
@@ -51,7 +51,7 @@ class AltrpCodeEditor extends Component {
           //   value: this.state.value || ''
           // }}
           // enableLiveAutocompletion={true}
-      />
+      /> : ''
     }
     if(this.props.AceEditor && ! prevProps.AceEditor){
       this.setState(state =>({...state, value: this.props.value}));
