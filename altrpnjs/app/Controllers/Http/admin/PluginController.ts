@@ -6,6 +6,8 @@ import data_get from "../../../../helpers/data_get";
 import version_compare from "../../../../helpers/version_compare";
 import storage_path from "../../../../helpers/storage_path";
 import httpsRequest from "../../../../helpers/httpsRequest";
+import set_plugin_setting from '../../../../helpers/set_plugin_setting';
+import axios from "axios";
 
 export default class PluginController {
   /**
@@ -84,7 +86,14 @@ export default class PluginController {
         }
       }
     }
-    await Plugin.updateAltrpPluginLists()
+    //await Plugin.updateAltrpPluginLists()
+    let new_widget_list = await Plugin.updateAltrpPluginLists()
+    await set_plugin_setting([
+      {
+        key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
+        value: new_widget_list.length === 0 ? '' : new_widget_list,
+      }
+    ]);
     return response.status(status).json(res)
   }
 
@@ -101,7 +110,8 @@ export default class PluginController {
 
     let apiResponse
     try {
-      apiResponse = await httpsRequest(request.input('update_url'), {
+      console.log(request.input('update_url'));
+      apiResponse = await axios.post(request.input('update_url'), {
         headers:
           {
             // @ts-ignore
@@ -109,6 +119,7 @@ export default class PluginController {
             'authorization': request.cookiesList().altrpMarketApiToken || ''
           }
       })
+      console.log(apiResponse);
     } catch (e) {
       res = {
         'success': false,

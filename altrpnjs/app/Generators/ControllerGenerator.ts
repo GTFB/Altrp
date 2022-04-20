@@ -41,6 +41,7 @@ export default class ControllerGenerator extends BaseGenerator {
 
 
     let custom = ''
+    let custom_end = ''
 
 
     this.controller = controller
@@ -83,8 +84,9 @@ export default class ControllerGenerator extends BaseGenerator {
       if(oldContent){
         custom = oldContent.match(/\/\/ CUSTOM_START([\s\S]+?)\/\/ CUSTOM_START/)?.pop() || ''
         custom = custom.trim()
+        custom_end = oldContent.match(/\/\/ CUSTOM_END([\s\S]+?)\/\/ CUSTOM_END/)?.pop() || ''
+        custom_end = custom_end.trim()
       }
-
     }
 
     return await this.addFile(fileName)
@@ -96,6 +98,7 @@ export default class ControllerGenerator extends BaseGenerator {
         properties: this.getPropertiesContent(),
         methods: this.getMethodsContent(this.model.name),
         custom,
+        custom_end,
       })
 
   }

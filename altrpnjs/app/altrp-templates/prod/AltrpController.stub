@@ -15,4 +15,7 @@ class {{{classname}}} extends AltrpBaseController {
   {{{custom}}}
   // CUSTOM_START
 }
+// CUSTOM_END
+{{{custom_end}}}
+// CUSTOM_END
 exports.default = {{{classname}}};

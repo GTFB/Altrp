@@ -1,13 +1,14 @@
 import path from 'path'
-import AdmZip from "adm-zip"
+import AdmZip from "adm-zip"  
 import Logger from '@ioc:Adonis/Core/Logger'
-import updateDotenv from 'update-dotenv'
+//import updateDotenv from 'update-dotenv'
 import env from '../helpers/env'
 import public_path from '../helpers/public_path'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import app_path from '../helpers/app_path'
 import fs from 'fs-extra'
-import envWriter from '../helpers/envWriter'
+//import envWriter from '../helpers/envWriter'
+import set_plugin_setting from '../helpers/set_plugin_setting'
 import * as _ from 'lodash'
 import is_null from "../helpers/is_null";
 import data_get from "../helpers/data_get";
@@ -61,7 +62,7 @@ export default class Plugin {
     'robot_head_styles',
     'robot_bottom_styles',
     'robot_head_scripts',
-    'robot_bottom_scripts ',
+    'robot_bottom_scripts',
   ]
 
   private plugin_main_file_content: string | null = null
@@ -108,7 +109,7 @@ export default class Plugin {
     const plugin = new Plugin({name: pluginName})
 
     if (enable) {
-      //await plugin.updatePluginSettings()
+      await plugin.updatePluginSettings()
       if (enabledPlugins.indexOf(plugin.name) === -1) {
         enabledPlugins.push(plugin.name)
       }
@@ -116,19 +117,24 @@ export default class Plugin {
       enabledPlugins = enabledPlugins.filter((_plugin) => {
         return _plugin != plugin.name
       })
-      //plugin.removeStaticsFromAltrpMeta()
-    }
+      await plugin.removeStaticsFromAltrpMeta()
+    }   
     enabledPlugins = enabledPlugins.join(',')
-    envWriter([
-      {
-        key: Plugin.ALTRP_PLUGINS,
-        value: enabledPlugins.length === 0 ? '' : enabledPlugins,
-      }
-    ]);
 
     //updateDotenv({[Plugin.ALTRP_PLUGINS]: enabledPlugins})
     // Artisan.call('cache:clear')todo: сбросить кэш для данных из .env
-    //Plugin.updateAltrpPluginLists()
+    let new_widget_list = await Plugin.updateAltrpPluginLists()
+    await set_plugin_setting([
+      {
+        key: Plugin.ALTRP_PLUGINS,
+        value: enabledPlugins.length === 0 ? '' : enabledPlugins,
+      },
+      {
+        key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
+        value: new_widget_list.length === 0 ? '' : new_widget_list,
+      }
+    ])
+
   }
 
   /**
@@ -146,15 +152,15 @@ export default class Plugin {
         }
       }
     )
-    new_widget_list = new_widget_list.join(',')
-    //await updateDotenv({[Plugin.ALTRP_PLUGINS_WIDGET_LIST]: new_widget_list})
-    envWriter([
-      {
-        key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
-        value: new_widget_list.length === 0 ? '' : new_widget_list,
-      }
-    ]);
-
+    // new_widget_list = new_widget_list.join(',')
+    // // //await updateDotenv({[Plugin.ALTRP_PLUGINS_WIDGET_LIST]: new_widget_list})
+    // envWriter([
+    //   {
+    //     key: Plugin.ALTRP_PLUGINS_WIDGET_LIST,
+    //     value: new_widget_list.length === 0 ? '' : new_widget_list,
+    //   }
+    // ]);
+    return new_widget_list.join(',')
   }
 
   static async getEnabledPlugins(): Promise<Plugin[]> {
@@ -292,7 +298,7 @@ export default class Plugin {
   }
 
   public async updatePluginSettings() {
-    this.copyStaticFiles()
+    //this.copyStaticFiles()
     await this.writeStaticsToAltrpMeta()
   }
 
@@ -345,9 +351,21 @@ export default class Plugin {
       }
       if (statics_string) {
         statics_string = statics_string.join(',')
-        await updateDotenv({[item.toUpperCase()]: statics_string})
+        await set_plugin_setting([
+          {
+            key: item.toUpperCase(),
+            value: statics_string,
+          }
+        ])
+        //await updateDotenv({[item.toUpperCase()]: statics_string})
       } else {
-        await updateDotenv({[item.toUpperCase()]: ''})
+        await set_plugin_setting([
+          {
+            key: item.toUpperCase(),
+            value: '',
+          }
+        ])
+        //await updateDotenv({[item.toUpperCase()]: ''})
       }
     }
   }
