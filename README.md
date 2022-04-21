@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.1.1
+* ALTRP Updates via Admin
+
 ### 1.1.0
 * Fix Some Front App Styles
 * Fix Templates Import/Export Issue
