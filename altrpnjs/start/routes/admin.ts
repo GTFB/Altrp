@@ -35,7 +35,7 @@ Route.group(() => {
 
     Route.get("/role_options", "OptionsController.roles")
     Route.get("/users_options", "OptionsController.users")
-    Route.get("/customizers_options", "optionsController.customizers")
+    Route.get("/customizers_options", "OptionsController.customizers")
     Route.get("/permissions_options", "OptionsController.permissions")
     Route.get("/menus/options", "OptionsController.menus")
 
