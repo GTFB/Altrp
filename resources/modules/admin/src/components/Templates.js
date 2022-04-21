@@ -591,7 +591,7 @@ class Templates extends Component {
       </div>
       {this.state.modal && (
         <SmallModal toggleModal={this.toggleModal} activeMode={this.state.modal}>
-          <TemplateChildrenModal toggleModal={this.toggleModal} categoryOptions={this.state.categoryOptions} templateAreas={this.state.templateAreasModal} />
+          <TemplateChildrenModal toggleModal={this.toggleModal} categoryOptions={this.state.categoryOptions} activeArea={this.state.activeTemplateArea.id} templateAreas={this.state.templateAreasModal} />
         </SmallModal>
       )}
     </div>;

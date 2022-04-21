@@ -394,13 +394,14 @@ class AltrpAction extends AltrpModel {
       window.altrpIo = io( {
         path: '/wsaltrp',
         auth: {
-          key: window.current_user.guid,
+          key: name,
         },
       })
     }
 
     window.altrpIo.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
       console.log(data)
+      this.doActionUpdateCurrentDatasources()
     });
 
     return {

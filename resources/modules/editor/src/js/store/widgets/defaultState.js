@@ -1,9 +1,7 @@
 import InputTextCommon from "../../classes/elements/InputTextCommon";
 import InputTextCommonWidget from "../../components/widgets/InputTextCommonWidget";
-
 import InputSelect from "../../classes/elements/InputSelect";
 import InputSelectWidget from "../../components/widgets/InputSelectWidget";
-
 import InputSelect2 from "../../classes/elements/InputSelect2";
 import InputSelect2Widget from "../../components/widgets/InputSelect2Widget";
 import InputRadio from "../../classes/elements/InputRadio";

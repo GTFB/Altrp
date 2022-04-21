@@ -140,7 +140,7 @@ export default class User extends BaseModel {
   @afterCreate()
   public static async createUserMeta(user: User) {
     await UserMeta.create({
-      user_id: user.id
+      user_id: user.id,
     })
   }
 

@@ -7,11 +7,13 @@ import Template from 'App/Models/Template';
 import path from 'path';
 import * as _ from 'lodash'
 import Logger from '@ioc:Adonis/Core/Logger'
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class TemplateGenerator extends BaseGenerator {
 
   public static directory = '/views/altrp/templates'
   public static template = app_path(`altrp-templates/views/Template.stub`)
+  public template: Template;
 
 
   async deleteFile(template: Template): Promise<void> {
