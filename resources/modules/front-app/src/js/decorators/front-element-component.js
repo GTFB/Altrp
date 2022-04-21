@@ -15,7 +15,6 @@ import ELEMENTS_IGNORES_FORM_UPDATE from "../constants/ELEMENTS_IGNORES_FORM_UPD
  * Срабатываает перед удалением компонента элемента
  */
 function componentWillUnmount(){
-  console.log('beforeUnmount');
 // if(this.model){
   //   this.model.uns
   // }

@@ -5,8 +5,7 @@ import Plugin from "App/Plugin"
 import data_get from "../../../../helpers/data_get";
 import version_compare from "../../../../helpers/version_compare";
 import storage_path from "../../../../helpers/storage_path";
-import httpsRequest from "../../../../helpers/httpsRequest";
-import set_plugin_setting from '../../../../helpers/set_plugin_setting';
+import set_plugin_setting from '../../../../helpers/plugins/set_plugin_setting';
 import axios from "axios";
 
 export default class PluginController {
@@ -16,7 +15,6 @@ export default class PluginController {
   public async switch({request, response}: HttpContextContract) {
 
     let data = request.all()
-    //await Plugin.switchEnable(request.qs().name, !!request.qs().value)
     await Plugin.switchEnable(data.name, data.value)
 
     //let plugin = new Plugin({'name': request.qs().name})
@@ -35,7 +33,7 @@ export default class PluginController {
 
       const params = new URLSearchParams();
       params.append('plugin_name', plugin.name);
-      let apiResponse =  await httpsRequest(plugin.check_version_url, {
+      let apiResponse =  await axios.post(plugin.check_version_url, {
         body: params,
         headers:
           {
@@ -43,18 +41,8 @@ export default class PluginController {
               request.cookie('altrpMarketApiToken'),
           }
       })
-      let version = ''
-      if (response) {
-        try {
-          // @ts-ignore
-          for await (const chunk of apiResponse.body) {
-            version += chunk
-          }
-        } catch (err) {
-          console.error(err.stack);
-        }
-      }
-      version = JSON.parse(version)
+      let version = JSON.parse(apiResponse.data)
+
       version = data_get(version, 'data.version')
       if (!version) {
         status = 404
@@ -107,11 +95,15 @@ export default class PluginController {
   public async install({request, response}: HttpContextContract) {
     let res: any = {success: true,}
     let status = 200
-
+    let name = request.input('name');
+    if(! name){
+      response.status(400)
+      return response.json({success: false, message: 'Name Required'})
+    }
     let apiResponse
     try {
-      console.log(request.input('update_url'));
-      apiResponse = await axios.post(request.input('update_url'), {
+      apiResponse = await axios.get(request.input('update_url'), {
+        responseType: 'arraybuffer',
         headers:
           {
             // @ts-ignore
@@ -119,7 +111,8 @@ export default class PluginController {
             'authorization': request.cookiesList().altrpMarketApiToken || ''
           }
       })
-      console.log(apiResponse);
+      apiResponse = apiResponse.data
+
     } catch (e) {
       res = {
         'success': false,
@@ -131,18 +124,18 @@ export default class PluginController {
     }
 
     let temp_path = storage_path('temp')
-    let plugin = new Plugin({'name': request.input('name'),})
+
+    //@ts-ignore
+    let filename = temp_path + '/' + name + '.zip'
     fs.ensureDirSync(temp_path)
-
-    let filename = temp_path + '/' + plugin.name + '.zip'
-    fs.writeFileSync(filename, apiResponse)
+    fs.writeFileSync(filename, apiResponse, )
     let archive = new AdmZip(filename)
-    archive.readAsText(apiResponse)
-    archive.extractAllTo(plugin.getPath(), true)
+    archive.extractAllTo(Plugin.getPathByName(name), true)
+    fs.rmSync(temp_path, { recursive: true, })
 
-    fs.rmdirSync(temp_path, { recursive: true, })
-
+    let plugin = new Plugin({'name': request.input('name'),})
     await plugin.updatePluginSettings()
+    plugin.copyStaticFiles()
     return response.json(res)
   }
 

@@ -8,10 +8,20 @@ class NewPluginItem extends Component {
   installPluginResource = new Resource({route: '/admin/ajax/plugins/install'})
   installPlugin = async () => {
     const {plugin,} = this.props
-    let res = await this.installPluginResource.post({
-       ...plugin
-    })
-    console.log(res);
+    let res
+    try{
+      res = await this.installPluginResource.post({
+        ...plugin
+      })
+    }catch (e) {
+      alert("Plugin failed to install: \n" + e.message)
+
+    }
+    if(res?.success) {
+      alert("Plugin successfully installed")
+    } else {
+      alert("Plugin failed to install")
+    }
   }
 
   render() {

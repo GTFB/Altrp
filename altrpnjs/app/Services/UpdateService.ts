@@ -26,7 +26,9 @@ export default class UpdateService {
 
     let file = ''
     try {
-      file = (await axios.get(UpdateService.UPDATE_DOMAIN))?.data || '';
+      file = (await axios.get(UpdateService.UPDATE_DOMAIN, {
+        responseType: 'arraybuffer',
+      }))?.data || '';
     } catch (e) {
       return false;
     }
@@ -73,8 +75,8 @@ export default class UpdateService {
       throw 'Archive no pass a test'
     }
     if (fs.existsSync(public_path('modules'))) {
-      fs.rmdirSync(public_path('modules'), {recursive: true});
-      fs.rmdirSync(base_path('database', ), {recursive: true});
+      fs.rmSync(public_path('modules'), {recursive: true});
+      fs.rmSync(base_path('database', ), {recursive: true});
     }
     archive.extractAllTo(base_path(), true);
   }

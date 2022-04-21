@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync } from 'fs';
-import base_path from './base_path';
-import file_exists from "./file_exists";
+import base_path from '../base_path';
+import file_exists from "../file_exists";
 
-export default function writeToJson (
+export default function set_plugin_setting (
  envVariables: { key: string; value: any }[],
 ) {
     //check for file exists
