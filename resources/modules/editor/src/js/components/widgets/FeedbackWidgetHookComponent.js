@@ -53,6 +53,12 @@ function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, setting
     }
   }
 
+  const shiftEnter = (e) => {
+    if (e.shiftKey && e.key === "Enter") {
+      submitMessage(e)
+    }
+  }
+
   const changeMessage = (e) => {
     let textarea = e.currentTarget
     textarea.style.height = "auto";
@@ -85,7 +91,7 @@ function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, setting
             ))}
           </div>
           <form onSubmit={submitMessage}>
-            <textarea ref={textareaRef} value={value} onChange={changeMessage} className="block__comment-textarea" placeholder="Leave a comment" rows="2"/>
+            <textarea onKeyDown={shiftEnter} ref={textareaRef} value={value} onChange={changeMessage} className="block__comment-textarea" placeholder="Leave a comment" rows="2"/>
             <div className="block__comment-bottom">
               <button type="submit">{settings.messenger_text_btn || "Add Comment"}</button>
             </div>

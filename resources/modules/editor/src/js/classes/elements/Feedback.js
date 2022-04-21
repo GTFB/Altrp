@@ -251,13 +251,19 @@ class Feedback extends BaseElement {
 
     this.addControl("get_messages_url", {
       type: CONTROLLER_TEXT,
-      label: "Get messages",
+      label: "Get comments",
       locked: true,
     });
 
     this.addControl("post_messages_url", {
       type: CONTROLLER_TEXT,
-      label: "Post messages",
+      label: "Post comment",
+      locked: true,
+    });
+
+    this.addControl("delete_messages_url", {
+      type: CONTROLLER_TEXT,
+      label: "Delete comment",
       locked: true,
     });
 
