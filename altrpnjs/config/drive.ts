@@ -8,7 +8,6 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { DriveConfig } from '@ioc:Adonis/Core/Drive'
 import public_path from "../helpers/public_path";
-import storage_path from "../helpers/storage_path";
 
 /*
 |--------------------------------------------------------------------------
@@ -79,35 +78,6 @@ const driveConfig: DriveConfig = {
       |
       */
       basePath: '/public',
-    },
-
-    storage: {
-      driver: 'local',
-      visibility: 'private',
-
-      /*
-      |--------------------------------------------------------------------------
-      | Storage root - Local driver only
-      |--------------------------------------------------------------------------
-      |
-      | Define an absolute path to the storage directory from where to read the
-      | files.
-      |
-      */
-      root: storage_path('/'),
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | Base path - Local driver only
-      |--------------------------------------------------------------------------
-      |
-      | Base path is always required when "serveFiles = true". Also make sure
-      | the `basePath` is unique across all the disks using "local" driver and
-      | you are not registering routes with this prefix.
-      |
-      */
-      basePath: '/',
     },
 
     /*

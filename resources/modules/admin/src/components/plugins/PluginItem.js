@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Button, Icon, Tooltip} from "@blueprintjs/core";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import compareVersions from "compare-versions";
+import './plugin-item.scss'
 
 class PluginItem extends Component {
   state = {};
@@ -51,11 +52,11 @@ class PluginItem extends Component {
     return (
       <div key={plugin.name} className="col-3 text-center border rounded mx-2">
         <div className="mb-2">{plugin.title} {plugin.version}</div>
-        <a href={plugin.url}><img
-          className="mb-2"
+        <img
+          className="mb-2 plugin-item__logo"
           src={plugin.logo}
           style={{maxWidth: "150px"}}
-          alt=""/></a>
+          alt=""/>
         <div className="custom-control custom-switch">
           <input
             type="checkbox"

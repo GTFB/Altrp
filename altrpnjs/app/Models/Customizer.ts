@@ -385,6 +385,6 @@ export default class Customizer extends BaseModel {
     }
     const request_type = startNode.getDataByPath('request_type') || 'get'
 
-    return request_type.toLowerCase() === method.toLowerCase()
+      return request_type.toLowerCase() === method.toLowerCase()
   }
 }
