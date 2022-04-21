@@ -227,7 +227,6 @@ Route.group(() => {
       })
     }
 
-    // const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
     const controllerName = app_path(`AltrpControllers/${model.name}Controller`)
     try {
       if(isProd()){
