@@ -306,10 +306,8 @@ export default class ListenerGenerator extends BaseGenerator {
       fs.mkdirSync(dir);
     }
 
-    const listener = type
-
-    if(fs.existsSync(dir + "\\" + listener + ListenerGenerator.ext)) {
-      fs.unlinkSync(dir + "\\" + listener + ListenerGenerator.ext)
+    if(! fs.readdirSync(this.getDir()).length){
+      fs.rmSync(this.getDir())
     }
   }
 }

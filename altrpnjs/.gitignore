@@ -21,3 +21,4 @@ start/altrp-routes/
 
 cert.pem
 key.pem
+pluginSettings.json

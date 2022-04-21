@@ -108,12 +108,15 @@ class Resource {
    * простой запрос
    * @return {Promise}
    * */
-  getAll() {
+  getAll(customHeaders = null) {
     let options = {
       method: "get",
-      headers: {
-        "Content-Type": "application/json"
-      }
+      headers: _.assign(
+        {
+          "Content-Type": "application/json"
+        },
+        customHeaders
+      )
     };
 
     let url = this.getRoute();

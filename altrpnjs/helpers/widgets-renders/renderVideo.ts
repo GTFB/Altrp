@@ -18,6 +18,7 @@ export default function renderVideo(settings, device, context) {
     if (url) dynamicID = parseIDFromYoutubeURL(url);
   }
 
-  return is_youtube ? (`<iframe class="altrp-video" allow="fullscreen" src='https://www.youtube.com/embed/${dynamicID || youtube_id}'
-  />`) : (`<video class="altrp-video" controls src='${url}' />`);
+  return is_youtube
+    ? (`<iframe class="altrp-video" allow="fullscreen" src="https://www.youtube.com/embed/${dynamicID || youtube_id}"></iframe>`)
+    : (`<video class="altrp-video" controls src='${url}'></video>`);
 }

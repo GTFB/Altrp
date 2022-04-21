@@ -7,7 +7,9 @@ import isProd from "../../helpers/isProd";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
 import app_path from "../../helpers/app_path";
-import Plugin from "App/Plugin";
+import Plugin from "App/Plugin"
+import Logger from "@ioc:Adonis/Core/Logger";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 
 export abstract class BaseGenerator{
   private fileName: string;
@@ -42,8 +44,11 @@ export abstract class BaseGenerator{
     }
     fs.writeFileSync(this.getFullFileName(), content)
     if(isProd()){
+      /**
+       * clear all view cached pages
+       */
       View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
-      Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+      clearRequireCache()
     }
     return
   }

@@ -53,6 +53,7 @@ export default class ModelGenerator extends BaseGenerator {
     })
 
     let custom = ''
+    let custom_end = ''
 
 
     this.model = model
@@ -68,7 +69,10 @@ export default class ModelGenerator extends BaseGenerator {
       if(oldContent){
         custom = oldContent.match(/\/\/ CUSTOM_START([\s\S]+?)\/\/ CUSTOM_START/)?.pop() || ''
         custom = custom.trim()
+        custom_end = oldContent.match(/\/\/ CUSTOM_END([\s\S]+?)\/\/ CUSTOM_END/)?.pop() || ''
+        custom_end = custom_end.trim()
       }
+
 
     }
 
@@ -87,6 +91,7 @@ export default class ModelGenerator extends BaseGenerator {
         relations: this.getRelationsContent(),
         methods: this.getMethodsContent(),
         custom,
+        custom_end,
       })
 
   }

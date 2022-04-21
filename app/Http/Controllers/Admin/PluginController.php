@@ -121,6 +121,12 @@ class PluginController extends Controller
           'authorization' => request()->cookie('altrpMarketApiToken'),
         ]
       ])->getBody()->getContents();
+//      dd(strlen($response),$client->get( $request->get('update_url'), [
+//        'headers' => [
+//          'altrp-domain-resource' => str_replace(['https://', 'http://'], '', $request->root()),
+//          'authorization' => request()->cookie('altrpMarketApiToken'),
+//        ]
+//      ])->getHeaders());
     } catch(\Throwable $e){
       $res = ['success' => false,
         'message' => $e->getMessage(),

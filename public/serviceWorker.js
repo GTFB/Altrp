@@ -30,18 +30,18 @@ const ServiceWorker = () => {
        if(localStorage.getItem(cachedName) !== "1" && r.controller && r.controller.state === "activated") {
           const httpRequest = new XMLHttpRequest();
 
-          httpRequest.open("GET", "/service-worker-files");
-          httpRequest.send();
-
-          httpRequest.onreadystatechange = () => {
-            // if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-            //   r.controller.postMessage({
-            //     type: "GET_FILENAMES",
-            //     filenames: JSON.parse(httpRequest.response)
-            //   })
-            //   localStorage.setItem(cachedName, "1")
-            // }
-          };
+          // httpRequest.open("GET", "/service-worker-files");
+          // httpRequest.send();
+          //
+          // httpRequest.onreadystatechange = () => {
+          //   // if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+          //   //   r.controller.postMessage({
+          //   //     type: "GET_FILENAMES",
+          //   //     filenames: JSON.parse(httpRequest.response)
+          //   //   })
+          //   //   localStorage.setItem(cachedName, "1")
+          //   // }
+          // };
         }
 
       })

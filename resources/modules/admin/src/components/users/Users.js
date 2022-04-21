@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import PluginSvg from "../../svgs/plugins.svg";
 import VectorSvg from '../../svgs/vector.svg';
 import UserSvg from '../../svgs/user.svg';
 import SearchUser from "./../../svgs/search.svg"
@@ -83,10 +82,12 @@ class Users extends Component {
       page: this.state.currentPage,
       pageSize: this.itemsPerPage
     });
+    this.set
+    const data = _.isArray(users_result) ? users_result : users_result.users
     this.setState(state => {
       return {
         ...state,
-        data: users_result.users,
+        data,
         count: users_result.count,
         pageCount: users_result.pageCount,
         search: urlS === null ? this.state.search : urlS
@@ -153,6 +154,7 @@ class Users extends Component {
 
   render() {
     const {pageCount, count, currentPage, data, search, roles, roleFilter} = this.state;
+    console.log(this.state);
     const {sortingField, order} = this.state.sorting;
     const users = roleFilter ? filterUsers(data, roleFilter) : data;
 

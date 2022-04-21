@@ -19,8 +19,16 @@ export default class SearchPlugins extends Component {
     });
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
 
+    let result = await  this.searchResource.getAll( {
+      'Authorization': window.altrpMarketApiToken || ''
+    })
+    if(_.isArray(result.data)){
+      this.setState(state=>({...state, updating: false, plugins: result.data}))
+    } else {
+      this.setState(state=>({...state, updating: false}))
+    }
   }
 
   listenScrollHeader = () => {

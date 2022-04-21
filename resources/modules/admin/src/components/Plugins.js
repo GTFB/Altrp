@@ -3,7 +3,6 @@ import axios from "axios";
 import UserTopPanel from "./UserTopPanel";
 import Resource from "../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
-import {Button, Icon} from "@blueprintjs/core";
 import PluginItem from "./plugins/PluginItem";
 
 export default class Plugins extends Component {
@@ -11,18 +10,29 @@ export default class Plugins extends Component {
     super(props);
     this.state = {
       plugins: [],
+      pending: true,
       activeHeader: 0,
     };
   }
 
   async componentDidMount() {
-    const req = await axios.get("/admin/ajax/plugins");
+    let req
+    try{
+       req = await axios.get("/admin/ajax/plugins");
+    }catch (e) {
+      console.error(e);
+      this.setState({
+        pending: false,
+      });
+      return
+    }
     let plugins = req.data
     if(! _.isArray(plugins)){
       plugins = []
     }
     this.setState({
-      plugins
+      plugins,
+      pending: false,
     });
     window.addEventListener("scroll", this.listenScrollHeader)
   }
@@ -96,6 +106,7 @@ export default class Plugins extends Component {
                             key={item.name} updateChange={this.updateChange} plugin={item}/>
               );
             })}
+            {(this.state?.plugins?.length || this.state.pending) ? '' : <h2>Plugins not found</h2>}
           </div>
         </div>
       </div>
