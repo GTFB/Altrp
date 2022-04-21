@@ -103,6 +103,9 @@ export default class Page extends BaseModel {
   @column()
   public model_id: number
 
+  @column.dateTime({autoCreate: true, autoUpdate: true})
+  public updatedAt: DateTime
+
   @belongsTo(() => User, {
     foreignKey: 'author'
   })
