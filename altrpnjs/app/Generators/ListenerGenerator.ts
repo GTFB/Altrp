@@ -73,7 +73,7 @@ export default class ListenerGenerator extends BaseGenerator {
       fs.rmSync(fileName)
     }
     if(! fs.readdirSync(this.getDir()).length){
-      fs.rmdirSync(this.getDir())
+      fs.rmSync(this.getDir())
     }
   }
 }
