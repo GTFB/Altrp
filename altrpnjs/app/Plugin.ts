@@ -468,8 +468,16 @@ export default class Plugin {
         plugins[key] = path.basename(plugin);
       }
     }
-    return plugins.map(function (plugin) {
-      return new Plugin({'name': plugin})
+    plugins = plugins.map(function (plugin) {
+      try {
+
+        return new Plugin({'name': plugin})
+      }catch (e) {
+        Logger.error(`Plugin meta file \`plugin\` not found`)
+        return null
+      }
     })
+    plugins = plugins.filter(p => p)
+    return plugins
   }
 }

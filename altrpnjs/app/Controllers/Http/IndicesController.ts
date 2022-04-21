@@ -6,6 +6,7 @@ import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
 import isProd from "../../../helpers/isProd";
+import base_path from "../../../helpers/base_path";
 
 
 export default class IndicesController {
@@ -122,7 +123,7 @@ export default class IndicesController {
   }
 
   public async changelog({ response }) {
-    const pathToPublic = path.join(__dirname, "../", "../", "../", "../", "README.md");
+    const pathToPublic = base_path( "README.md");
 
     const file = await Drive.get(pathToPublic)
 

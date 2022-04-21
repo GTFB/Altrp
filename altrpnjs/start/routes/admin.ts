@@ -101,7 +101,7 @@ Route.group(() => {
     })
 
 
-    Route.get("/changelog", "indicesController.changelog")
+    Route.get("/changelog", "IndicesController.changelog")
 
     Route.get('/pages_options', 'OptionsController.pages')
 

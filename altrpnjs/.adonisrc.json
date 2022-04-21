@@ -54,10 +54,6 @@
       "reloadServer": false
     },
     {
-      "pattern": "app/AltrpPlugins/**/*",
-      "reloadServer": false
-    },
-    {
       "pattern": "app/config/file-types.json",
       "reloadServer": false
     },
