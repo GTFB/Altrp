@@ -3,9 +3,10 @@
 
 ## Changelog
 
-### 1.0.6
+### 1.1.0
 * Fix Some Front App Styles
 * Fix Templates Import/Export Issue
+* Search and Install Plugins
 
 ### 1.0.5
 * Fix Sidebars Actions
