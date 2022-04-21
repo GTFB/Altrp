@@ -319,15 +319,6 @@ export default class RelationshipsController {
       })
     }
 
-    // console.log('bbb field', relationship.local_key)
-    // need to drop index
-    // model.table.name drop relationship.local_key foreign in
-    // const client = Database.connection(Env.get('DB_CONNECTION'))
-    // client.schema.alterTable(model.table.name, (table) => {
-    //   table.dropForeign(relationship.local_key)
-    // })
-    // table.dropIndex(indexname)
-
     try {
 
       await model.load('table')
@@ -339,6 +330,8 @@ export default class RelationshipsController {
           try {
             await targetModel.load('table')
             let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+            await Database.rawQuery(deleteQuery)
+            deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP INDEX ${targetModel.table.name}_${relationship.foreign_key}_foreign`
             await Database.rawQuery(deleteQuery)
           } catch (e) {
 
@@ -357,6 +350,8 @@ export default class RelationshipsController {
       try {
         if (relationship.type === "belongsTo") {
           let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+          await Database.rawQuery(deleteQuery)
+          deleteQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${model.table.name}_${relationship.foreign_key}_foreign`
           await Database.rawQuery(deleteQuery)
         }
       } catch (e) {
