@@ -117,7 +117,11 @@ class InputAccept extends BaseElement {
           label: "Absolute"
         }
       ],
+<<<<<<< HEAD
       locked: true,
+=======
+      locked: true
+>>>>>>> master
     });
 
     this.addControl("label_icon", {

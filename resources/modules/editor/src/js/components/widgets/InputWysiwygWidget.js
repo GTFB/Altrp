@@ -768,7 +768,9 @@ class InputWysiwygWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={"altrp-field-container " + this.state.settings.position_css_classes || ""}
+
+        id={this.state.settings.position_css_id || ""}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -790,6 +792,7 @@ class InputWysiwygWidget extends Component {
         text={this.getLockedContent("content_default_value")}
         name={this.getName()}
         readOnly={this.getLockedContent("read_only")}
+
       />
     );
   }

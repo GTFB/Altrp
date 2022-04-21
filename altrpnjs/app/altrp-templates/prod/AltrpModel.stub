@@ -27,4 +27,9 @@ class {{{classname}}} extends Orm.BaseModel {
 {{{staticProperties}}}
 {{{columns}}}
 {{{relations}}}
+
+// CUSTOM_END
+{{{custom_end}}}
+// CUSTOM_END
+
 exports.default = {{{classname}}};

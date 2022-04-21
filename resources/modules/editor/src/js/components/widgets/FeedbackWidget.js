@@ -177,6 +177,21 @@ import FeedbackWidgetHook from "./FeedbackWidgetHook";
     font-size: 13px;
     word-break: break-word;
   }
+
+  .item__message:hover .trash__comment {
+    display: block;
+    cursor: pointer;
+  }
+
+  .item__message-top {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+  }
+
+  .trash__comment {
+    display: none;
+  }
 `)
 
 class FeedbackWidget extends Component {

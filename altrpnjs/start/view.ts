@@ -55,6 +55,7 @@ import renderDivider from "../helpers/widgets-renders/renderDivider";
 import renderSectionBG from "../helpers/renderSectionBG";
 import getColumnClasses from "../helpers/getColumnClasses";
 import renderFeedback from "../helpers/widgets-renders/renderFeedback";
+import getLatestVersion from "../helpers/getLatestVersion";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -69,6 +70,7 @@ View.global('getContent', getContent)
 View.global('renderAsset', renderAsset)
 View.global('renderSectionBG', renderSectionBG)
 View.global('getColumnClasses', getColumnClasses)
+View.global('getLatestVersion', getLatestVersion)
 /**
  * RENDERS START
  */

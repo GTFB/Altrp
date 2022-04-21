@@ -15,12 +15,20 @@ export default class SearchPlugins extends Component {
       activeHeader: 4,
     };
     this.searchResource = new Resource({
-      route:'https://altrp.org/api/search_plugins'
+      route:'https://altrp.org/ajax/models/market_plugins/customizers/search_plugins_for_user_ac58fmi3g'
     });
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
 
+    let result = await  this.searchResource.getAll( {
+      'Authorization': window.altrpMarketApiToken || ''
+    })
+    if(_.isArray(result.data)){
+      this.setState(state=>({...state, updating: false, plugins: result.data}))
+    } else {
+      this.setState(state=>({...state, updating: false}))
+    }
   }
 
   listenScrollHeader = () => {

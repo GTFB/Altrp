@@ -1,4 +1,6 @@
 import AltrpForm from "../AltrpForm";
+
+
 const {Resource} = window.altrpHelpers
 /**
  * Класс менеджер форм для фронтенда/редактора
@@ -116,6 +118,16 @@ class FormsManager {
    */
   clearFormsStore(){
     this.forms = [];
+  }
+  removeField(frontElement) {
+    for(let storageKey in this.fieldsStorage){
+      if(this.fieldsStorage.hasOwnProperty(storageKey) && _.isArray(this.fieldsStorage[storageKey])){
+        this.fieldsStorage[storageKey] = this.fieldsStorage[storageKey].filter(field => field !== frontElement)
+      }
+    }
+    this.forms?.forEach(form=>{
+      form.fields = form.fields.filter(field=>field !==frontElement)
+    })
   }
 }
 window.formsManager = new FormsManager();

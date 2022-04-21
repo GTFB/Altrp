@@ -1,13 +1,15 @@
 {
   "extends": "./node_modules/adonis-preset-ts/tsconfig",
   "include": [
-    "**/*"
+    "**/*",
+    "../node_modules/laravel-echo/typings/index.d.ts"
   ],
   "exclude": [
     "node_modules",
     "app/AltrpModels",
     "app/AltrpControllers",
     "app/AltrpListeners",
+    "app/AltrpPlugins",
     "app/altrp-listeners",
     ".env",
     "resources/views/altrp",

@@ -121,7 +121,6 @@ export default class TemplatesController {
   }
 
   public async create({ auth, request, response }) {
-    await auth.use('web').authenticate()
 
     const guid = uuid();
 
@@ -176,9 +175,10 @@ export default class TemplatesController {
         query.where('area', area.id)
       }
     }
-    const templates = await query.select('id', 'title')
+    const key = request.qs().value || 'id'
+    const templates = await query.select('*')
     return templates.map((template) => ({
-      value: template.id,
+      value: template[key] || template.id,
       label: template.title
     }))
   }
@@ -193,8 +193,28 @@ export default class TemplatesController {
     }
 
     const template = await templateQuery.firstOrFail()
-
+    await template.load('currentArea')
     return template
+  }
+
+  public async getTemplate({ params, response }) {
+    const templateQuery = Template.query()
+
+    if(isNaN(params.template_id)) {
+      templateQuery.where("guid", params.template_id)
+    } else {
+      templateQuery.where("id", parseInt(params.template_id))
+    }
+
+    const template = await templateQuery.firstOrFail()
+
+    if (!template) {
+      response.status(404)
+      return {
+        success: false
+      }
+    }
+      return template.dataWithoutContent()
   }
 
   public async delete({ params }) {
@@ -315,9 +335,17 @@ export default class TemplatesController {
    * @param Request $request
    * @return JsonResponse
    */
-  public async conditions({params}) {
-    const id = parseInt(params.id);
-
+  public async conditions({params,response}) {
+    let id = parseInt(params.id);
+    if(validGuid(params.id)){
+      let template = await Template.query().where('guid', params.id).first()
+      if(template){
+        id=template.id
+      } else {
+        response.status(404)
+        return response.json({success:false, message: 'Template not found'})
+      }
+    }
     let res = {
       data: [],
       success: true
@@ -340,11 +368,22 @@ export default class TemplatesController {
    */
   public async conditionsSet({params, response, request}) {
 
-    const id = parseInt(params.id);
+    let id = parseInt(params.id);
     const data = JSON.stringify(request.input("data"));
 
-    const template = await Template.query().where("id", id).preload("currentArea").first();
+    let template
 
+    if(validGuid(params.id)){
+      template = await Template.query().where('guid', params.id).first()
+      if(template){
+        id=template.id
+      } else {
+        response.status(404)
+        return response.json({success:false, message: 'Template not found'})
+      }
+    } else {
+      template = await Template.query().where("id", id).preload("currentArea").first();
+    }
     if(!template) {
       response.status(404)
       return {

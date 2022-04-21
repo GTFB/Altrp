@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import Plus from "../../../svgs/plus.svg";
 import uuid from 'uuid';
 import {useSelector} from "react-redux";
+import Trash from "./../../../svgs/trashFB.svg"
 
 
 function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, settings}) {
@@ -45,6 +46,13 @@ function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, setting
     }
   }
 
+  const trashComment = (id) => {
+    if (confirm("Are You Sure?")) {
+      let filterMessages = messages.filter(message => message.id !== id)
+      setMessages(filterMessages)
+    }
+  }
+
   const changeMessage = (e) => {
     let textarea = e.currentTarget
     textarea.style.height = "auto";
@@ -68,7 +76,10 @@ function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, setting
           <div style={{marginBottom: "20px"}} className="container__messages">
             {messages.map(message => (
               <div key={message.id} className="item__message">
-                <strong className="item__message-name">{message.name}</strong>
+                <div className="item__message-top">
+                  <strong className="item__message-name">{message.name}</strong>
+                  <Trash onClick={() => trashComment(message.id)} className="trash__comment"/>
+                </div>
                 <p className="item__message-value">{message.text}</p>
               </div>
             ))}

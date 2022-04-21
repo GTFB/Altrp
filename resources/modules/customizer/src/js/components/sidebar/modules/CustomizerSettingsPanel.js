@@ -9,7 +9,6 @@ import {connect} from "react-redux";
 import {InputGroup} from "@blueprintjs/core";
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
-import {AutoCopyText} from "../../../../../../admin/src/js/helpers";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 

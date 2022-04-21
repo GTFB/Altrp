@@ -811,7 +811,7 @@ class InputPasswordWidget extends Component {
           onChange={this.onChange}
           onBlur={this.onBlur}
           onFocus={this.onFocus}
-          id={this.state.settings.position_css_id}
+          id={this.state.settings.position_css_id || ""}
         />
         {isClearable && (
           <button

@@ -171,7 +171,16 @@ Route.group(() => {
    */
   Route.any('models/*', async (httpContext: HttpContextContract) => {
     const segments = httpContext.request.url().split('/').filter(segment => segment)
-
+    if (httpContext.request.method() === 'OPTIONS' && segments[3] === 'customizers') {
+      httpContext.response.header( 'Access-Control-Allow-Origin', '*' )
+      httpContext.response.header( 'Access-Control-Allow-Methods', 'GET, OPTIONS' )
+      httpContext.response.header( 'Access-Control-Allow-Credentials', 'true' )
+      httpContext.response.header( 'Access-Control-Allow-Headers', 'Content-Type, Authorization' )
+      return httpContext.response.json({ success: true });
+    }
+    if (httpContext.request.method() === 'GET' && segments[3] === 'customizers') {
+      httpContext.response.header( 'Access-Control-Allow-Origin', '*' )
+    }
     /**
      * delete `altrp_ajax` from request body
      */
@@ -338,7 +347,7 @@ Route.group(() => {
   /**
    * Templates for front
    */
-  Route.get('/templates/:template_id', 'TemplatesController.getTemplates')
+  Route.get('/templates/:template_id', 'TemplatesController.getTemplate')
   /**
    * media for front
    */

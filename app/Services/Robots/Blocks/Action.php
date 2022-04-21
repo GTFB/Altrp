@@ -79,7 +79,11 @@ class Action
         $source = Source::find($this->getNodeProperties()->nodeData->data->source);
         $res = [];
         if ($source) {
-            $url = $source->url;
+            if ($source->sourceable_type === 'App\SQLEditor') {
+                $url = $_SERVER['HTTP_ORIGIN'].'/ajax/models/queries'.$source->url;
+            } else {
+                $url = $_SERVER['HTTP_ORIGIN'].'/ajax/models'.$source->url;
+            }
             $method = $source->request_type;
             $name = $source->name;
         } else {

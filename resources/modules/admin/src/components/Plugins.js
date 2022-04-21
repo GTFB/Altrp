@@ -3,7 +3,6 @@ import axios from "axios";
 import UserTopPanel from "./UserTopPanel";
 import Resource from "../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
-import {Button, Icon} from "@blueprintjs/core";
 import PluginItem from "./plugins/PluginItem";
 
 export default class Plugins extends Component {

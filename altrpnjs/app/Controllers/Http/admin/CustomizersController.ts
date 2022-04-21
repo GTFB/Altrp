@@ -46,7 +46,7 @@ export default class CustomizersController {
 
         customizer = await Customizer.query().preload("altrp_model").firstOrFail()
 
-        if(customizer.settings.time && customizer.settings.time_type) {
+        if(customizer?.settings?.time && customizer?.settings?.time_type) {
             new Timer(customizer.name, {
               time: customizer.settings.time,
               type: customizer.settings.time_type
@@ -191,12 +191,12 @@ export default class CustomizersController {
       }
 
 
-      if(customizer.settings.time && customizer.settings.time_type) {
+      if(customizer?.settings?.time && customizer.settings?.time_type) {
         new Timer(customizer.name, {
           time: customizer.settings.time,
           type: customizer.settings.time_type
         }, customizer)
-      } else if(oldSettings.time_type !== customizer.settings.time_type || oldSettings.time !== customizer.settings.time) {
+      } else if(oldSettings?.time_type !== customizer?.settings?.time_type || oldSettings?.time !== customizer?.settings?.time) {
         timers.remove(customizer.name)
       }
 
@@ -291,7 +291,7 @@ export default class CustomizersController {
 
       }
 
-      if(customizer.settings.time && customizer.settings.time_type) {
+      if(customizer?.settings?.time && customizer?.settings?.time_type) {
         timers.remove(customizer.name)
       }
 

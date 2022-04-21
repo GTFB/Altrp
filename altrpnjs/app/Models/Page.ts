@@ -148,7 +148,6 @@ export default class Page extends BaseModel {
   ];
 
   public async getAreas(deleteContent = false) {
-
     const data: {
       area_name: string,
       id: string,
@@ -167,7 +166,6 @@ export default class Page extends BaseModel {
       template: headerTemplate
     })
     let contentTemplate = await Template.getTemplate(this.id, 'content')
-
     data.push({
       area_name: 'content',
       id: 'content',

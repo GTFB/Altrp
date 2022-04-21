@@ -1,13 +1,8 @@
-// import {minify} from'html-minifier'
-// import prepareContext from "../../helpers/prepareContext";
-
 import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import Edge from '../../helpers/edge';
 import Env from '@ioc:Adonis/Core/Env';
-// @ts-ignore
-// import renderResult from '../../helpers/server-render/renderResult'
 import replaceContentWithData from "../../helpers/replaceContentWithData"
 import {matchPath} from 'react-router'
 import empty from "../../helpers/empty"
@@ -202,6 +197,7 @@ export default class AltrpRouting {
             version: getLatestVersion(),
             _altrp: {
               version: getLatestVersion(),
+              isNodeJS: true
             },
           })
         )
@@ -261,7 +257,7 @@ export default class AltrpRouting {
         altrp_settings,
         _frontend_route,
         route_args: pageMatch.params,
-        _altrp: {
+        _altrp:
           version: getLatestVersion()
         },
       })

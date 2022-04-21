@@ -84,9 +84,15 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['border-radius', 'border_radius', 'dimensions'],
       ['', 'box_shadow', 'shadow'],
     () => {
+<<<<<<< HEAD
       const toggle = getResponsiveSetting(settings, "disable_box_shadow");
       if (toggle) {
        return 'box-shadow: none'
+=======
+      const toggle = getResponsiveSetting(settings, "disable_box_shadow")
+      if (toggle) {
+        return 'box-shadow: none'
+>>>>>>> master
       }
     },
     '}',
