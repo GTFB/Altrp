@@ -314,24 +314,23 @@ export default class ModelsController {
   async getDataSourcesAndPageCount({request}: HttpContextContract) {
 
     const params = request.qs()
-    const page = parseInt(params.page)
-    const pageSize = parseInt(params.pageSize)
+    const page = parseInt(params.page) || 1
+    const pageSize = parseInt(params.pageSize) || 20
+    const searchWord = params.s
+    let sources
 
-    if (page && pageSize) {
-      const sources = await Source.query().paginate(page, pageSize)
+      if (searchWord) {
+        sources = await Source.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('title', 'LIKE', `%${searchWord}%`).paginate(page, pageSize)
+      } else {
+        sources = await Source.query().paginate(page, pageSize)
+      }
 
       return {
         count: sources.getMeta().total,
         pageCount: sources.getMeta().last_page,
         data_sources: sources.all()
       }
-    }
 
-    const sources = await Source.query()
-
-    return {
-      data_sources: sources
-    }
 
 
     // if(page) {

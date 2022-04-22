@@ -15,7 +15,9 @@ class Areas extends Component {
       activeCategory: 'All',
       activeHeader: 0,
       currentPage: 1,
-      areasSearch: ""
+      areasSearch: "",
+      pageCount: 1,
+      count: 1
     }
 
     this.resource = new Resource({route: '/admin/ajax/areas'});
@@ -26,11 +28,11 @@ class Areas extends Component {
   async componentDidMount() {
     this.updateAreas();
     const { data } = await this.categoryOptions.getAll();
-    let areas = await this.resource.getAll();
-    areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
+   // let areas = await this.resource.getAll();
+   // areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
     this.setState(state => ({
       ...state,
-      areasDidMount: areas,
+      // areasDidMount: areas,
       categoryOptions: data,
     }))
 
@@ -71,19 +73,26 @@ class Areas extends Component {
     if (urlCategories) {
       areas = await this.resource.getQueried({
         categories: urlCategories,
-        s: urlS === null ?  this.state.areasSearch : urlS
+        s: urlS === null ?  this.state.areasSearch : urlS,
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     } else {
       areas = await this.resource.getQueried({
-        s: urlS === null ?  this.state.areasSearch : urlS
+        s: urlS === null ?  this.state.areasSearch : urlS,
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     }
-    areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
+    //areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
+    let areasFiltered = areas
     this.setState(state => ({
       ...state,
-      areas: areas,
+      areas: areasFiltered,
       areasSearch: urlS === null ?  this.state.areasSearch : urlS,
-      activeCategory: urlCategories === null ? 'All' : urlCategories
+      activeCategory: urlCategories === null ? 'All' : urlCategories,
+      pageCount: areas[0].pageCount,
+      count: areas[0].count
     }))
   }
 
@@ -138,7 +147,7 @@ class Areas extends Component {
 
   render() {
 
-    const { areas, currentPage, areasDidMount, categoryOptions, areasSearch } = this.state;
+    const { areas, currentPage, areasDidMount, categoryOptions, areasSearch, count, pageCount } = this.state;
 
 
     let areasMap = areas.map(area => {
@@ -162,7 +171,7 @@ class Areas extends Component {
          <Link className="btn" to={`/admin/areas/add`}>Add New</Link>
          <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({ areas.length || "0" })
+              All ({ count || "0" })
             </span>
          </div>
        </div>
@@ -202,10 +211,7 @@ class Areas extends Component {
             getCategories: this.getCategory,
             activeCategory: this.state.activeCategory
           }}
-          rows={areasMap.slice(
-            currentPage * this.itemsPerPage - this.itemsPerPage,
-            currentPage * this.itemsPerPage
-          )}
+          rows={areasMap}
 
           searchTables={{
             submit: this.searchAreas,
@@ -213,14 +219,15 @@ class Areas extends Component {
             change: this.changeAreas
           }}
 
-          pageCount={Math.ceil(areas.length / this.itemsPerPage) || 1}
+          pageCount={pageCount}
           currentPage={currentPage}
-          changePage={page => {
+          changePage={async (page) => {
             if (currentPage !== page) {
-              this.setState({ currentPage: page });
+              await this.setState({currentPage: page})
+              await this.updateAreas()
             }
           }}
-          itemsCount={areas.length}
+          itemsCount={count}
 
           openPagination={true}
         />

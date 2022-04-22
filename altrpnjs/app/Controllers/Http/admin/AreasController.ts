@@ -6,8 +6,31 @@ import CategoryObject from "App/Models/CategoryObject";
 import { v4 as uuid } from "uuid";
 
 export default class AreasController {
-  public async index() {
-    return await Area.getAllWithNames()
+  public async index({request}) {
+    const params = request.qs()
+    const page = parseInt(params.page) || 1
+    const pageSize = parseInt(params.pageSize) || 10
+    const searchWord = params.s
+    let areas
+
+    if (searchWord) {
+      areas = await Area.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('title', 'LIKE', `%${searchWord}%`).preload("categories").paginate(page, pageSize)
+    } else {
+      areas = await Area.query().preload("categories").paginate(page, pageSize)
+    }
+
+    return areas.all().map(area => {
+      return {
+        ...area.$attributes,
+        categories: area.categories.map(category => {
+          return {
+            category: category
+          }
+        }),
+        count: areas.getMeta().total,
+        pageCount: areas.getMeta().last_page,
+      }
+    })
   }
 
   public async show({ params }) {

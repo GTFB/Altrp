@@ -484,7 +484,7 @@ class Templates extends Component {
          <button onClick={this.toggleModal} className="btn">Add New</button>
          <button onClick={this.toggleImportForm} className="btn ml-3">Import Template</button>
          <div className="admin-filters">
-           <span className="admin-filters__current">All ({this.state.templates.length || '0'})</span>
+           <span className="admin-filters__current">All ({count || '0'})</span>
          </div>
        </div>
         <UserTopPanel />
