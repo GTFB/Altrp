@@ -77,6 +77,7 @@ import StarsComponent from "./widgets/styled-components/StarsComponent";
 import ProgressBarComponent from "./widgets/styled-components/ProgressBarComponent";
 import InputCropImageComponent from "./widgets/styled-components/InputCropImageComponent";
 import getFeedbackStyles from "../../../../front-app/src/js/components/helpers/getFeedbackStyles";
+import getInputPagintaionStyles from "../../../../front-app/src/js/components/helpers/getInputPaginationStyles";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -344,6 +345,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case 'feedback':
       styles += `.${prefix}${elementId} {${getFeedbackStyles(settings, elementId)}}`
       break;
+    case 'input-pagination':
+      styles += `.${prefix}${elementId} {${getInputPagintaionStyles(settings)}}`
+      break;
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
@@ -435,6 +439,8 @@ class ElementWrapper extends Component {
     e.stopPropagation();
     return false;
   }
+
+
 
   /**
    * Срабатывает при вызывании контекстоного меню
@@ -687,8 +693,9 @@ class ElementWrapper extends Component {
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
+    if(this.state.cursorPos !== nextState.cursorPos) return true;
     if (
-      nextProps.controllerValue !== this.props.controllerValue &&
+      nextProps.controllerValue === this.props.controllerValue &&
       this.props.element !== this.props.currentElement
     ) {
       return false;

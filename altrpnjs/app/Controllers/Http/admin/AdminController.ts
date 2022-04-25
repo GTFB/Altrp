@@ -30,6 +30,11 @@ export default class AdminController {
     const pageGenerator = new PageGenerator()
     const listenerGenerator = new ListenerGenerator()
 
+    listenerGenerator.hookTemplates()
+    listenerGenerator.hookControllers()
+    listenerGenerator.hookModels()
+    listenerGenerator.hookPages()
+    listenerGenerator.hookListeners()
     const listeners = await Customizer.query().where('type', 'listener').select('*')
 
     for(const _l of listeners){

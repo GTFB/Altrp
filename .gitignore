@@ -9,6 +9,7 @@ launch.json
 /storage/document
 storage/tmp/
 
+Makefile
 /vendor
 .env
 .env.backup

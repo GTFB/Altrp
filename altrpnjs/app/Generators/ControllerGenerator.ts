@@ -8,6 +8,7 @@ import ModelGenerator from "App/Generators/ModelGenerator";
 import Customizer from "App/Models/Customizer";
 import SQLEditor from "App/Models/SQLEditor";
 import isProd from "../../helpers/isProd";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class ControllerGenerator extends BaseGenerator {
 
@@ -88,6 +89,8 @@ export default class ControllerGenerator extends BaseGenerator {
         custom_end = custom_end.trim()
       }
     }
+
+    ListenerGenerator.getHookControllers(this)
 
     return await this.addFile(fileName)
       .destinationDir(ControllerGenerator.directory)

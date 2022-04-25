@@ -8,6 +8,7 @@ import {BaseGenerator} from "./BaseGenerator";
 import * as _ from "lodash";
 import ControllerGenerator from "./ControllerGenerator";
 import isProd from "../../helpers/isProd";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class ModelGenerator extends BaseGenerator {
 
@@ -74,6 +75,9 @@ export default class ModelGenerator extends BaseGenerator {
 
 
     }
+
+    ListenerGenerator.getHookModels(this)
+
     return await this.addFile(fileName)
       .destinationDir(ModelGenerator.directory)
       .stub(ModelGenerator.template)

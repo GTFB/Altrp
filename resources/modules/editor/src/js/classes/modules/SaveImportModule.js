@@ -79,7 +79,7 @@ class SaveImportModule extends BaseModule {
    * Сохраняем шаблон
    */
   async saveTemplate() {
-    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
+
     let html_content = "";
     let stylesElements = [];
     let rootElement = null;
@@ -93,7 +93,8 @@ class SaveImportModule extends BaseModule {
       }
     }
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
-    templateData.html_content = html_content;
+
+    templateData.html_content = html_content.replace(/[\u0800-\uFFFF]/g, '');
     templateData.styles = await templateStylesModule.generateStyles();
     this.resource
       .put(this.template_id, templateData)

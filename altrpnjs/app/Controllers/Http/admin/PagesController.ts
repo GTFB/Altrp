@@ -81,7 +81,7 @@ export default class PagesController {
 
       res.success = true
       res.page = page
-      page.parseRoles(request.input('roles'));
+      await page.parseRoles(request.input('roles'));
       const pageGenerator = new PageGenerator()
       await pageGenerator.run(page)
       await page.save()
@@ -132,7 +132,13 @@ export default class PagesController {
     const page = await Page.query().preload("roles").preload('categories').where("id", parseInt(params.id)).firstOrFail();
 
     let data = page.serialize()
-    data.roles = data.roles.map(role => ({value:role.id, label:role.display_name}))
+    const roles = data.roles.map(role => {
+      return ({value:role.id, label:role.display_name})
+    })
+
+    data.roles = roles;
+
+    console.log(data)
     if(data.for_guest){
       data.roles.unshift({value:'guest', label: 'Guest'})
     }
@@ -217,7 +223,7 @@ export default class PagesController {
         }
       })
       await page.related('roles').detach()
-      page.parseRoles(request.input('roles'));
+      await page.parseRoles(request.input('roles'));
       await page.save()
       const pageGenerator = new PageGenerator()
       await pageGenerator.run(page)

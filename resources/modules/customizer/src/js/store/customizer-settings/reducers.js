@@ -16,5 +16,6 @@ export function customizerSettingsDataReducer(state, action) {
       state = action.data;
       break;
   }
+
   return state;
 }

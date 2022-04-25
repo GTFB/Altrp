@@ -12,7 +12,7 @@ class TemplateChildrenModal extends Component {
       template: {
         name: "",
         title: "",
-        area: '1',
+        area: props.activeArea || 1,
         _categories: [],
         categories: [],
         data: {
@@ -152,7 +152,7 @@ class TemplateChildrenModal extends Component {
                       return <MenuItem
                         text={item.title}
                         key={item.id}
-                        active={ `${item.id}` === this.state.template.area }
+                        active={ item.id === this.state.template.area }
                         onClick={handleClick}
                       />
                     }}
@@ -164,7 +164,7 @@ class TemplateChildrenModal extends Component {
               <Button fill
                       large
                       alignText={Alignment.LEFT}
-                      text={this.props.templateAreas.find(item => ( `${item.id}` === this.state.template.area ))?.title || 'none'}
+                      text={this.props.templateAreas.find(item => ( item.id === this.state.template.area ))?.title || 'none'}
                       rightIcon="caret-down"
               />
             </Select>

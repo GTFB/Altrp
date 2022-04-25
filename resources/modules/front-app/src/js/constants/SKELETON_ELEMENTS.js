@@ -49,6 +49,7 @@ const SKELETON_ELEMENTS = [
   'scheduler',
   'tree',
   'stars',
-  'progress-bar'
+  'progress-bar',
+  'input-pagination'
 ]
 export default SKELETON_ELEMENTS
