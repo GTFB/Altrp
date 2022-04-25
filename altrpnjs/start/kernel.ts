@@ -14,6 +14,7 @@ import Route from "@ioc:Adonis/Core/Route"
 import './view'
 import './events'
 import "../app/Services/TelegramBot"
+import "../app/Services/DiscordBot"
 import {other} from "App/Services/Other";
 import _ from "lodash";
 import Customizer from "App/Models/Customizer";

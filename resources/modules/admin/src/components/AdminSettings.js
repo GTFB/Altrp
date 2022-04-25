@@ -15,8 +15,8 @@ import ImageSettingsTable from "./ImageSettingsTable";
 import AdvancedSettings from "./AdvancedSettings";
 import {connect} from "react-redux";
 import SmallModal from "./SmallModal";
+const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
-import Cookies from 'js-cookie'
 
 class AdminSettings extends Component {
   constructor(props) {
@@ -459,7 +459,9 @@ class AdminSettings extends Component {
               </div>
             </TabPanel>
             <TabPanel>
-              <AdvancedSettings />
+              <React.Suspense fallback={"Loading"}>
+                <AdvancedSettings />
+              </React.Suspense>
             </TabPanel>
             <TabPanel>
               <Updates attr={"attr"} />

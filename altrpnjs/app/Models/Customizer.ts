@@ -18,6 +18,7 @@ import CrudNode from "App/Customizer/Nodes/crudNode";
 import ApiNode from "App/Customizer/Nodes/apiNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
+import DiscordNode from "App/Customizer/Nodes/DiscordNode";
 
 export default class Customizer extends BaseModel {
 
@@ -318,7 +319,6 @@ export default class Customizer extends BaseModel {
   public static  parseData( data, customizer ){
     data = data.map( item  => {
       const type = data_get( item, 'type' )
-
       switch( type ){
         case 'default': return new Edge( item, customizer )
         case 'switch': return new SwitchNode( item, customizer )
@@ -330,6 +330,7 @@ export default class Customizer extends BaseModel {
         case 'apiAction': return new ApiNode(item, customizer)
         case 'messageAction': return new MessageNode(item, customizer)
         case 'customizer': return new CustomizerNode(item, customizer)
+        case 'discordAction': return new DiscordNode(item, customizer)
         default: return new BaseNode( item, customizer )
       }
     })
@@ -385,6 +386,6 @@ export default class Customizer extends BaseModel {
     }
     const request_type = startNode.getDataByPath('request_type') || 'get'
 
-      return request_type.toLowerCase() === method.toLowerCase()
+    return request_type.toLowerCase() === method.toLowerCase()
   }
 }

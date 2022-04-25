@@ -109,9 +109,7 @@ export default class Page extends BaseModel {
   public user: BelongsTo<typeof User>
 
   @manyToMany(() => Role, {
-    pivotForeignKey: 'role_id',
-    localKey: 'id',
-    pivotTable: 'page_role'
+    pivotTable: 'page_role',
   })
   public roles: ManyToMany<typeof Role>
 
@@ -233,7 +231,7 @@ export default class Page extends BaseModel {
    * Перебирает массив от фронтенда и привязвает/удаляет ролиотмечает for_guest
    * @param {string | array} roles
    */
-  public parseRoles(roles) {
+  public async parseRoles(roles) {
     const rolesValues: number[] = []
     let for_guest = false
     roles.forEach(role => {
@@ -243,7 +241,7 @@ export default class Page extends BaseModel {
         for_guest = true
       }
     })
-    this.attachRoles(rolesValues)
+    await this.attachRoles(rolesValues)
     this.for_guest = for_guest
   }
 
@@ -261,17 +259,21 @@ export default class Page extends BaseModel {
   /**
    * Привязывает набор ролей к сттанице, удаляя старые связи
    */
-  public attachRoles(roles) {
+  public async attachRoles(roles) {
     if (!this.id) {
       return;
     }
 
-    roles.forEach(async role_id => {
-      await PageRole.create({
-        page_id: this.id,
-        role_id: role_id,
-      })
-    })
+    for (const role_id of roles) {
+      const duplicate = await PageRole.query().where("page_id", this.id).andWhere("role_id", role_id).first();
+
+      if(!duplicate) {
+        await PageRole.create({
+          page_id: this.id,
+          role_id: role_id,
+        })
+      }
+    }
   }
 
   @column.dateTime({autoCreate: true})

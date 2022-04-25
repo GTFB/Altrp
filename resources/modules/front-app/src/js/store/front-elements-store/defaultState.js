@@ -401,6 +401,12 @@ export const defaultState = [
     import: async () => {
       return await import(/* webpackChunkName: 'FeedbackWidget' */ "../../../../../editor/src/js/components/widgets/FeedbackWidget");
     }
+  },
+  {
+    name: "input-pagination",
+    import: async () => {
+      return await import(/* webpackChunkName: 'InputPaginationWidget' */ "../../../../../editor/src/js/components/widgets/InputPaginationWidget");
+    }
   }
 ]
 
