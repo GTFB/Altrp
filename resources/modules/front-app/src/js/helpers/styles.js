@@ -612,6 +612,9 @@ export function marginTopLeftStyled(data = {}, position) {
           break;
         case "border-width":
           styles += `border-left-width: ${left + unit + important};`
+          break;
+        case "position":
+          styles += `left: ${left + unit + important};`
       }
     }
 
@@ -628,6 +631,9 @@ export function marginTopLeftStyled(data = {}, position) {
           break;
         case "border-width":
           styles += `border-right-width: ${right + unit + important};`
+          break;
+        case "position":
+          styles += `right: ${right + unit + important};`
       }
     }
 
@@ -644,6 +650,9 @@ export function marginTopLeftStyled(data = {}, position) {
           break;
         case "border-width":
           styles += `border-top-width: ${top + unit + important};`
+          break;
+        case "position":
+          styles += `top: ${top + unit + important};`
       }
     }
 
@@ -660,6 +669,9 @@ export function marginTopLeftStyled(data = {}, position) {
           break;
         case "border-width":
           styles += `border-bottom-width: ${bottom + unit + important};`
+          break;
+        case "position":
+          styles += `bottom: ${bottom + unit + important};`
       }
     }
 
