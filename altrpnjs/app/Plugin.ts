@@ -1,12 +1,11 @@
 import path from 'path'
 import AdmZip from "adm-zip"
 import Logger from '@ioc:Adonis/Core/Logger'
-import env from '../helpers/env'
 import public_path from '../helpers/public_path'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import app_path from '../helpers/app_path'
 import fs from 'fs-extra'
-//import envWriter from '../helpers/envWriter'
+import get_plugin_setting from '../helpers/plugins/get_plugin_setting'
 import set_plugin_setting from '../helpers/plugins/set_plugin_setting'
 import * as _ from 'lodash'
 import is_null from "../helpers/is_null";
@@ -18,7 +17,6 @@ import isValidUrl from "../helpers/string/isValidUrl";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import storage_path from "../helpers/storage_path";
 import httpsRequest from "../helpers/httpsRequest";
-import get_plugin_setting from "../helpers/plugins/get_plugin_setting";
 import clearRequireCache from "../helpers/node-js/clearRequireCache";
 
 export default class Plugin {
@@ -167,8 +165,9 @@ export default class Plugin {
 
   static async getEnabledPlugins(): Promise<Plugin[]> {
     let enabledPlugins: any[]
-    if (env(Plugin.ALTRP_PLUGINS)) {
-      enabledPlugins = env(Plugin.ALTRP_PLUGINS).split(',')
+
+    if (get_plugin_setting(Plugin.ALTRP_PLUGINS)) {
+      enabledPlugins = get_plugin_setting(Plugin.ALTRP_PLUGINS).split(',')
     } else {
       enabledPlugins = []
     }
@@ -297,6 +296,7 @@ export default class Plugin {
       return false
     }
     // Artisan.call('cache:clear')todo: сбросить кэш
+
     let enabledPlugins = get_plugin_setting(Plugin.ALTRP_PLUGINS)
 
     if (!enabledPlugins) {
@@ -470,7 +470,7 @@ export default class Plugin {
     plugins = plugins.map(function (plugin) {
       try {
 
-        return new Plugin({'name': plugin})
+      return new Plugin({'name': plugin})
       }catch (e) {
         Logger.error(`Plugin meta file \`plugin\` not found`)
         return null
