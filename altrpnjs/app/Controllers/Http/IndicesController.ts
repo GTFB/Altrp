@@ -133,7 +133,7 @@ export default class IndicesController {
 
     response.header('Content-type', 'text/plain');
 
-    return file.toString()
+    return {data:file.toString()}
   }
 
   public async favicons({params, response}) {

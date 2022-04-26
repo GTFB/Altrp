@@ -7,7 +7,9 @@ import fs from 'fs'
 import { exec } from'child_process'
 import {promisify} from 'util'
 import public_path from "../../helpers/public_path";
-import get_altrp_setting from "../../helpers/get_altrp_setting";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
+import View from "@ioc:Adonis/Core/View";
+import {CacheManager} from "edge.js/build/src/CacheManager";
 
 export default class UpdateService {
 
@@ -49,18 +51,14 @@ export default class UpdateService {
     }
     UpdateService.delete_archive()
     // Upgrade the Database
-    let updateCommand:string[]|string = get_altrp_setting('update_command', '', true).trim()
-    if(! updateCommand){
-      updateCommand = `pm2 stop all
-sleep 3
-pm2 start all`
-    }
-    await UpdateService.upgradePackages();
-    await UpdateService.upgradeDatabase();
-    updateCommand = updateCommand.split('\n')
-    for(let cmd of updateCommand){
-      await promisify(exec)(cmd)
-    }
+    await UpdateService.upgradePackages()
+    await UpdateService.upgradeDatabase()
+
+    /**
+     * clear all view cached pages
+     */
+    View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
+    clearRequireCache()
     // Write providers
     // Update modules statuses
     // Update the current version to last version

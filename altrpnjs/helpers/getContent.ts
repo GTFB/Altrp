@@ -10,14 +10,11 @@ export default function getContent(settings, context, settingName, device:string
 
   let content = getResponsiveSetting(settings, settingName, device, '')
 
-
   if (returnRaw) {
     content = content.trim().replace('{{', '').replace('}}', '');
     content = _.get(context, content, '', );
   } else {
     content = replaceContentWithData(content, context);
   }
-  // console.log(content);
-  // console.log(context);
   return content === 'null' ? '' : content;
 }

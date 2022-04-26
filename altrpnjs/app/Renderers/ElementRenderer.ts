@@ -12,6 +12,8 @@ export default class ElementRenderer {
     children: [],
     settingsLock: {},
     settings: {
+      text?: string;
+      content?: string;
       advanced_element_id?: string,
       layout_html_tag?: string
       react_element?:boolean
@@ -76,6 +78,7 @@ export default class ElementRenderer {
         break;
       }
       styles = objectToStylesString(styles)
+      const text_widget_content = this.getTextWidgetContent()
       element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
       element_content = mustache.render(element_content, {
         settings: JSON.stringify(this.element.settings),
@@ -86,6 +89,7 @@ export default class ElementRenderer {
         column_classes: `{{getColumnClasses(element${this.getId()}_settings, device)}}`,
         section_background,
         layout_html_tag,
+        text_widget_content,
         link_class: this.isLink() ? 'altrp-pointer' : '',
         columns_count,
       })
@@ -145,5 +149,15 @@ export default class ElementRenderer {
   }
   private isLink(){
     return ! !_.get(this, 'element.settings.link_link.url');
+  }
+
+  private getTextWidgetContent():string {
+    if(this.getName() !== 'text'){
+      return ''
+    }
+    if(this.element.settings.content){
+      return `<div class="altrp-text ck ck-content">{{{data_get(altrpContext, '${this.element.settings.content}', '${this.element.settings.text || ''}')}}}</div>`
+    }
+    return `<div class="altrp-text ck ck-content">${this.element.settings.text || ''}</div>`
   }
 }

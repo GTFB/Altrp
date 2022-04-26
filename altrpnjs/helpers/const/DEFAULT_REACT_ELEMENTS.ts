@@ -30,7 +30,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'breadcrumbs',
   'carousel',
   'map',
-  'text',
   'map_builder',
   'menu',
   'pie-diagram',

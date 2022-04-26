@@ -25,6 +25,7 @@ import replaceContentWithData from "./functions/replaceContentWithData";
 import getDataByPath from "./functions/getDataByPath";
 import getComponentByElementId from "./functions/getComponentByElementId";
 import getDataFromLocalStorage from "./functions/getDataFromLocalStorage";
+import isEditor from "./functions/isEditor";
 export {default as replaceContentWithData} from "./functions/replaceContentWithData";
 export {default as getDataByPath} from "./functions/getDataByPath";
 export {default as getComponentByElementId} from "./functions/getComponentByElementId";
@@ -32,6 +33,7 @@ export {default as getDataFromLocalStorage} from "./functions/getDataFromLocalSt
 export {default as getTimeValue} from "./functions/getTimeValue";
 export {default as startOfMonth} from "./functions/startOfMonth";
 export {default as startOfYear} from "./functions/startOfYear";
+export {default as isEditor} from "./functions/isEditor";
 
 
 export const getResponsiveSetting = _getResponsiveSetting;
@@ -72,13 +74,6 @@ export function setTitle(title) {
   }
 }
 
-/**
- * @return {boolean}
- * */
-export function isEditor() {
-  const path = window.location?.pathname;
-  return path?.includes("/admin/editor") || false;
-}
 
 /**
  * Переменная, в которой храниться изначальный заголовок
@@ -828,6 +823,10 @@ export function getHTMLElementById(elementId = "") {
     return HTMLElement;
   }
   elementId = elementId.trim();
+  HTMLElement = document.getElementById(elementId)
+  if (HTMLElement){
+    return HTMLElement
+  }
   appStore.getState().elements.forEach(el => {
     if (!el.elementWrapperRef.current) {
       return;
@@ -990,6 +989,7 @@ export function printElements(elements, title = "") {
 export async function elementsToPdf(elements, filename = "") {
   let html2pdf = (await import(/* webpackChunkName: 'html2pdf' */"html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
+
   if (!elements) {
     return {
       success: true

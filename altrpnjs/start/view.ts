@@ -57,6 +57,7 @@ import getColumnClasses from "../helpers/getColumnClasses";
 import renderFeedback from "../helpers/widgets-renders/renderFeedback";
 import getLatestVersion from "../helpers/getLatestVersion";
 import renderInputPagination from "../helpers/widgets-renders/renderInputPagination";
+import data_get from "../helpers/data_get";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -72,6 +73,7 @@ View.global('renderAsset', renderAsset)
 View.global('renderSectionBG', renderSectionBG)
 View.global('getColumnClasses', getColumnClasses)
 View.global('getLatestVersion', getLatestVersion)
+View.global('data_get', data_get)
 /**
  * RENDERS START
  */

@@ -23,50 +23,55 @@ export default class AdminController {
   //
   // }
   public async upgradeAllResources({response}:HttpContextContract){
-    const models = await Model.query().preload('altrp_controller').select('*')
-    // const step = 10
-    const modelGenerator = new ModelGenerator()
-    const controllerGenerator = new ControllerGenerator()
-    const templateGenerator = new TemplateGenerator()
-    const pageGenerator = new PageGenerator()
-    const listenerGenerator = new ListenerGenerator()
+    try {
+      const models = await Model.query().preload('altrp_controller').select('*')
+      // const step = 10
+      const modelGenerator = new ModelGenerator()
+      const controllerGenerator = new ControllerGenerator()
+      const templateGenerator = new TemplateGenerator()
+      const pageGenerator = new PageGenerator()
+      const listenerGenerator = new ListenerGenerator()
 
-    listenerGenerator.hookTemplates()
-    listenerGenerator.hookControllers()
-    listenerGenerator.hookModels()
-    listenerGenerator.hookPages()
-    listenerGenerator.hookListeners()
-    const listeners = await Customizer.query().where('type', 'listener').select('*')
+      await listenerGenerator.hookTemplates()
+      await listenerGenerator.hookControllers()
+      await listenerGenerator.hookModels()
+      await listenerGenerator.hookPages()
+      await listenerGenerator.hookListeners()
+      const listeners = await Customizer.query().where('type', 'listener').select('*')
 
-    for(const _l of listeners){
-      await listenerGenerator.run(_l)
-    }
-
-    for (let model of models){
-      if(model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media'){
-        continue
+      for (const _l of listeners) {
+        await listenerGenerator.run(_l)
       }
-      await modelGenerator.run(model)
-      let controller:any = model.altrp_controller
-      if(! controller){
-        controller = new Controller();
-        controller.fill({
-          model_id: model.id,
-          description: model.description,
-        })
-        await controller.save()
+
+      for (let model of models) {
+        if (model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media') {
+          continue
+        }
+        await modelGenerator.run(model)
+        let controller: any = model.altrp_controller
+        if (!controller) {
+          controller = new Controller();
+          controller.fill({
+            model_id: model.id,
+            description: model.description,
+          })
+          await controller.save()
+        }
+        await controllerGenerator.run(controller)
       }
-      await controllerGenerator.run(controller)
-    }
-    const templates = await Template.query().where('type', 'template').whereNull('deleted_at').select('*')
-    for (let template of templates) {
-      await templateGenerator.run(template)
-    }
-    const pages = await Page.query().whereNull('deleted_at').select('*')
-    for (let page of pages) {
-      await pageGenerator.run(page)
-    }
+      const templates = await Template.query().where('type', 'template').whereNull('deleted_at').select('*')
+      for (let template of templates) {
+        await templateGenerator.run(template)
+      }
+      const pages = await Page.query().whereNull('deleted_at').select('*')
+      for (let page of pages) {
+        await pageGenerator.run(page)
+      }
       return response.json({success: true,})
+    }catch (e) {
+      response.status(500);
+      return response.json({success: false,message: 'Generate Error', trace: e.stack.split('\n')});
+    }
   }
 
 
@@ -98,6 +103,7 @@ export default class AdminController {
   public async update_altrp(httpContext: HttpContextContract){
     if(! isProd()){
       return httpContext.response.json({
+        result: true,
         success: true,
       })
     }
@@ -115,6 +121,7 @@ export default class AdminController {
 
     return httpContext.response.json({
       success: true,
+      result: true,
     })
   }
 

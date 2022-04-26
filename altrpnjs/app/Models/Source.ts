@@ -495,7 +495,10 @@ export default class Source extends BaseModel {
       .select('*')
     for(const pageDatasource of pageDatasources){
       const data = await pageDatasource.fetchControllerMethod(_.cloneDeep(httpContext), altrpContext)
-      if(data){
+      if(data?.data){
+        datasources[pageDatasource.alias] = data.data
+
+      } else if(data){
         datasources[pageDatasource.alias] = data
       }
     }

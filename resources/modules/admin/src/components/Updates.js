@@ -64,7 +64,7 @@ class Updates extends Component {
       setTimeout(() => {
           res.result ? pageReload() : this.setNeedUpdate();
         }
-        , 1300);
+        , 100);
     } catch (error) {
       store.dispatch(setAdminEnable());
     }
