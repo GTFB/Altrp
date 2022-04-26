@@ -42,7 +42,7 @@ class GlobalColors extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      colors: props.colors
+      colors: this.props.colors
     };
     this.toggleColorPanel = this.toggleColorPanel.bind(this);
     this.colorChange = this.colorChange.bind(this);
@@ -87,7 +87,6 @@ class GlobalColors extends Component {
   };
 
   debounceChangeColor = _.debounce((color, id) => {
-    console.log(color);
     this.globalStyleResource
       .put(id, {
         settings: { ...color },
@@ -111,7 +110,7 @@ class GlobalColors extends Component {
   updateEffectColors(color) {
     const guid = color.guid;
     this.props.effects.forEach(effect => {
-      const check = effect.globalColor == guid;
+      const check = effect.globalColor === guid;
       if (check) {
         const newEffectColor = {
           ...effect,

@@ -7,7 +7,6 @@ import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
-import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 import ArrayConverter from "./classes/converters/ArrayConverter";
 import DataConverter from "./classes/converters/DataConverter";
@@ -19,10 +18,23 @@ import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import {addSettings} from "./store/elements-settings/actions";
 import mutate from "dot-prop-immutable";
 import React from "react";
-import convertQueryParamsToObject from "./functions/convert-query-params-to-object";
 import _CONDITIONS_OPTIONS from "./constants/CONDITIONS_OPTIONS";
 import _mbParseJSON from "./functions/mb-parse-JSON";
 import _getResponsiveSetting from "./helpers/get-responsive-setting";
+import replaceContentWithData from "./functions/replaceContentWithData";
+import getDataByPath from "./functions/getDataByPath";
+import getComponentByElementId from "./functions/getComponentByElementId";
+import getDataFromLocalStorage from "./functions/getDataFromLocalStorage";
+import isEditor from "./functions/isEditor";
+export {default as replaceContentWithData} from "./functions/replaceContentWithData";
+export {default as getDataByPath} from "./functions/getDataByPath";
+export {default as getComponentByElementId} from "./functions/getComponentByElementId";
+export {default as getDataFromLocalStorage} from "./functions/getDataFromLocalStorage";
+export {default as getTimeValue} from "./functions/getTimeValue";
+export {default as startOfMonth} from "./functions/startOfMonth";
+export {default as startOfYear} from "./functions/startOfYear";
+export {default as isEditor} from "./functions/isEditor";
+
 
 export const getResponsiveSetting = _getResponsiveSetting;
 
@@ -62,13 +74,6 @@ export function setTitle(title) {
   }
 }
 
-/**
- * @return {boolean}
- * */
-export function isEditor() {
-  const path = window.location?.pathname;
-  return path?.includes("/admin/editor") || false;
-}
 
 /**
  * Переменная, в которой храниться изначальный заголовок
@@ -563,156 +568,6 @@ export function setDataByPath(path = "", value, dispatch = null) {
 }
 
 /**
- * Получить данные из окружения
- * @param {string} path
- * @param {*} _default
- * @param {{} | AltrpModel | null} context
- * @param {boolean} altrpCheck - проверять ли altrp
- * @return {*}
- */
-export function getDataByPath(
-  path = "",
-  _default = null,
-  context = null,
-  altrpCheck = false
-) {
-  if (!path) {
-    return _default;
-  }
-  if (path.indexOf("{{") !== -1) {
-    path = replaceContentWithData(path, context);
-  }
-  /**
-   * проверим путь
-   */
-  if (altrpCheck && path.trim().indexOf("altrp") !== 0) {
-    return path;
-  }
-  path = path.trim();
-  let trueValue, falseValue;
-  if (path.indexOf("?") !== -1 && path.indexOf(":") !== -1) {
-    let [_path, _right] = path.split("?");
-    [trueValue, falseValue] = _right.split(":");
-    trueValue = trueValue.trim();
-    if (trueValue.indexOf(".") !== -1) {
-      trueValue = getDataByPath(trueValue, _default, context);
-    }
-
-    falseValue = falseValue.trim();
-    if (falseValue.indexOf(".") !== -1) {
-      falseValue = getDataByPath(falseValue, _default, context);
-    }
-    path = _path.trim();
-  }
-  /**
-   * @type {AltrpModel} currentModel
-   */
-  let {
-    currentModel,
-    currentDataStorage,
-    altrpresponses,
-    formsStore,
-    altrpPageState,
-    altrpPage,
-    currentUser,
-    altrpMeta
-  } = appStore.getState();
-  if (context) {
-    currentModel =
-      context instanceof AltrpModel ? context : new AltrpModel(context);
-  }
-  let urlParams =
-    window.currentRouterMatch instanceof AltrpModel
-      ? window.currentRouterMatch.getProperty("params")
-      : {};
-
-  let queryData = queryString.parseUrl(window.location.href).query;
-
-  urlParams = _.assign(queryData, urlParams);
-
-  let value = _default;
-  if (!_.isString(path)) {
-    return value;
-  }
-  if (path.indexOf("altrpdata.") === 0) {
-    path = path.replace("altrpdata.", "");
-    value = currentDataStorage
-      ? currentDataStorage.getProperty(path, _default)
-      : "";
-  } else if (path.indexOf("altrpresponses.") === 0) {
-    path = path.replace("altrpresponses.", "");
-    value = altrpresponses ? altrpresponses.getProperty(path, _default) : "";
-  } else if (path.indexOf("altrpmeta.") === 0) {
-    path = path.replace("altrpmeta.", "");
-    value = altrpMeta ? altrpMeta.getProperty(path, _default) : "";
-  } else if (path.indexOf("altrppagestate.") === 0) {
-    path = path.replace("altrppagestate.", "");
-    value = altrpPageState ? altrpPageState.getProperty(path, _default) : "";
-  } else if (path.indexOf("altrpuser.") === 0) {
-    path = path.replace("altrpuser.", "");
-    value = currentUser ? currentUser.getProperty(path, _default) : "";
-  } else if (path === "altrpuser") {
-    value = currentUser.getData();
-  } else if (path === "altrpmodel") {
-    value = currentModel.getData();
-  } else if (path.indexOf("altrptime.") === 0) {
-    value = getTimeValue(path.replace("altrptime.", ""));
-  } else if (path.indexOf("altrpforms.") === 0) {
-    value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
-  } else if (path.indexOf("altrppage.") === 0) {
-    value = altrpPage
-      ? altrpPage.getProperty(path.replace("altrppage.", ""), _default)
-      : "";
-    if(_.isString(value) && value.match(/{{([\s\S]+?)}}/)){
-      value = replaceContentWithData(value, context.getData());
-    }
-  } else if (path.indexOf("altrpelements.") === 0) {
-    const pathElements = path.split(".");
-    const [prefix, elementId, updateType, propName] = pathElements;
-    const component = getComponentByElementId(elementId);
-    if (!component) {
-      value = "";
-    } else {
-      switch (updateType) {
-        case "settings":
-          {
-            value = component.props.element.getSettings(propName);
-          }
-          break;
-        default: {
-          value = "";
-        }
-      }
-    }
-  } else if (path.indexOf("altrpstorage.") === 0) {
-    path = path.replace("altrpstorage.", "");
-    value = getDataFromLocalStorage("altrpstorage", {});
-    value = _.get(value, path, _default);
-  } else if (path.indexOf("altrpareas.") === 0) {
-    const pathElements = path.split(".");
-    const [prefix,  areaName,  updateType, propName] = pathElements;
-    let area = window.page_areas.find(area => area.id === areaName);
-    if(area && updateType === 'settings'){
-      if(! (area instanceof Area)){
-        area = Area.areaFactory(area);
-      }
-      value = area.getSetting(propName, _default);
-    }
-  } else {
-    value = currentModel.getProperty(path) !== undefined
-      ? currentModel.getProperty(path)
-      : urlParams[path];
-    if (! value && value !== 0) {
-      value = _default;
-    }
-  }
-  if (trueValue || falseValue) {
-    value = value ? trueValue : falseValue;
-  }
-  return value;
-}
-
-/**
  * Извелкает путь из строки
  * @param {string} string
  * @return {string}
@@ -873,80 +728,6 @@ export function getTopPosition(element) {
 
   return top;
 }
-
-/**
- * Получить какое-то время по шаблону `YYYY-MM-DD`
- * @param {string} path
- * @param {string | null} defaultValue
- */
-export function getTimeValue(path, defaultValue = null) {
-  let value = defaultValue;
-
-  switch (path) {
-    case "now":
-      {
-        value = _.now();
-      }
-      break;
-    case "month_start":
-      {
-        value = startOfMonth(new Date());
-      }
-      break;
-    case "prev_month_start":
-      {
-        value = startOfMonth(new Date(), -1);
-      }
-      break;
-    case "year_start":
-      {
-        value = startOfYear(new Date());
-      }
-      break;
-    case "prev_year_start":
-      {
-        value = startOfYear(new Date(), -1);
-      }
-      break;
-    case "prev_week_start":
-      {
-        value = getPrevWeekStart();
-      }
-      break;
-    case "next_week_start":
-      {
-        value = getNextWeekStart();
-      }
-      break;
-    case "week_start":
-      {
-        value = getWeekStart();
-      }
-      break;
-  }
-  const {moment} = window.altrpHelpers;
-  value = moment(value).format("YYYY-MM-DD");
-  return value;
-}
-
-/**
- * Получить начало месяца
- * @param {Date} date
- * @param {int} monthShift
- * @return {Date}
- */
-export function startOfMonth(date, monthShift = 0) {
-  return new Date(date.getFullYear(), date.getMonth() + monthShift, 1);
-}
-/**
- * Получить начало месяца
- * @param {Date} date
- * @param {int} yearShift
- * @return {Date}
- */
-export function startOfYear(date, yearShift = 0) {
-  return new Date(date.getFullYear() + yearShift, 0, 1);
-}
 /**
  * Получить начало месяца
  * @param {Date} date
@@ -1042,6 +823,10 @@ export function getHTMLElementById(elementId = "") {
     return HTMLElement;
   }
   elementId = elementId.trim();
+  HTMLElement = document.getElementById(elementId)
+  if (HTMLElement){
+    return HTMLElement
+  }
   appStore.getState().elements.forEach(el => {
     if (!el.elementWrapperRef.current) {
       return;
@@ -1077,35 +862,6 @@ export function getWrapperHTMLElementByElement(element) {
     }
   });
   return HTMLElement;
-}
-/**
- * Вернет HTML  React компонент, у которого elementWrapperRef.current.id = elementId
- * @param {string} elementId
- * @return {null | HTMLElement}
- */
-export function getComponentByElementId(elementId = "") {
-  let component = null;
-  if (!elementId || !elementId.trim()) {
-    return component;
-  }
-  elementId = elementId.trim();
-  appStore.getState().elements.forEach(el => {
-    if (!el.elementWrapperRef.current) {
-      return;
-    }
-    if (!el.elementWrapperRef.current.id) {
-      return;
-    }
-    if (
-      el.elementWrapperRef.current.id
-        .toString()
-        .split(" ")
-        .indexOf(elementId) !== -1
-    ) {
-      component = el;
-    }
-  });
-  return component;
 }
 
 /**
@@ -1164,31 +920,6 @@ function getPrevWeekEnd() {
  */
 export function clearEmptyProps() {}
 
-/**
- * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
- * @param content
- * @param {{} | null} modelContext
- */
-
-export function replaceContentWithData(content = "", modelContext = null) {
-  if(window.SSR){
-    return  content;
-  }
-  let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
-  if (_.isArray(paths)) {
-    paths.forEach(path => {
-      path = path.replace("{{", "");
-      let value = getDataByPath(path, "", modelContext);
-
-      if (value === 0) {
-        value = "0";
-      }
-      path = escapeRegExp(path);
-      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
-    });
-  }
-  return content;
-}
 
 /**
  * Вспомогательные функции для работы с данными виджетов
@@ -1258,6 +989,7 @@ export function printElements(elements, title = "") {
 export async function elementsToPdf(elements, filename = "") {
   let html2pdf = (await import(/* webpackChunkName: 'html2pdf' */"html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
+
   if (!elements) {
     return {
       success: true
@@ -1618,30 +1350,8 @@ export function saveDataToLocalStorage(name, data) {
   }
   return true;
 }
-/**
- * Сохранить данные в localStorage
- * @param {string} name
- * @param {*} _default
- * @return {*}
- */
-export function getDataFromLocalStorage(name, _default = undefined) {
-  if (!name) {
-    return _default;
-  }
-  let value
-  try {
-    value = localStorage.getItem(name);
-    if (!value) {
-      return _default;
-    }
-    value = JSON.parse(value);
-  } catch (error) {
-  }
-  if (_.isString(value) && Number(value)) {
-    value = Number(value);
-  }
-  return value || _default;
-}
+
+
 export function scrollbarWidth() {
   // thanks too https://davidwalsh.name/detect-scrollbar-width
   const scrollDiv = document.createElement("div");
@@ -1993,10 +1703,6 @@ function parseXml(xml, arrayTags) {
 
   return result;
 }
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-}
-
 /**
  * Вернуть значение из строки
  * @param string

@@ -7,13 +7,12 @@ import AltrpCodeEditor from "./altrp-editor/AltrpCodeEditor";
 import store from '../js/store/store';
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
-const updateCommandDefault = 'pm2 restart all'
+
 class AdvancedSettings extends Component {
   constructor(props){
     super(props);
     this.state = {
       allSiteJavascript: '',
-      updateCommand: updateCommandDefault,
       debugOn: false,
       loadByUser: false,
     }
@@ -24,13 +23,11 @@ class AdvancedSettings extends Component {
    */
   async componentDidMount() {
     const allSiteJavascript = (await new Resource({route: '/admin/ajax/settings'}).get('all_site_js?decrypt=true')).all_site_js || '';
-    const updateCommand = (await new Resource({route: '/admin/ajax/settings'}).get('update_command?decrypt=true')).update_command || '';
     // let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug').altrp_debug);
     let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug')).altrp_debug;
     let loadByUser = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_user_load')).altrp_user_load;
     this.setState(state => ({...state,
       allSiteJavascript,
-      updateCommand: updateCommand || updateCommandDefault,
       debugOn,
       loadByUser,
     }));
@@ -201,24 +198,7 @@ class AdvancedSettings extends Component {
               Update
             </button>
           </div>
-          <div className="admin-styles-advanced-block no-margin mt-4">
-            <div className="advanced-text-custom">Enter Update Command:</div>
-            <AltrpCodeEditor value={this.state.updateCommand}
-                             mode="sh"
-                             fontSize={14}
-                             onChange={value => this.setState({ updateCommand: value})}
-                             height="4em"
-                             style={{
-                               width: '100%'
-                             }}
-            />
-            <button className="btn btn_success btn_advanced"
-                    onClick={this.updateCommandRequest}>
-              Update
-            </button>
-          </div>
         </div>
-
       </div>
 
 
@@ -241,9 +221,6 @@ class AdvancedSettings extends Component {
    */
    updateAllSiteJavascript = async() => {
     await new Resource({route:'/admin/ajax/settings'}).put('all_site_js', {value: this.state.allSiteJavascript, encrypt: true});
-  };
-  updateCommandRequest = async() => {
-    await new Resource({route:'/admin/ajax/settings'}).put('update_command', {value: this.state.updateCommand, encrypt: true});
   };
 }
 

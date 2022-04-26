@@ -480,3 +480,4 @@ export default class Plugin {
     return plugins
   }
 }
+

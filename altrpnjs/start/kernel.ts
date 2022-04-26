@@ -83,7 +83,7 @@ Server.middleware.registerNamed({
  */
 let packageKey
 if(fs.existsSync(base_path('.package_key'))){
-  packageKey = fs.readFileSync(base_path('.package_key'))
+  packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
   Logger.info("Setting package key by File")
 } else {
   packageKey = guid()

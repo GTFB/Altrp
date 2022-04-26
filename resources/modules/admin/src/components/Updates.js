@@ -64,7 +64,7 @@ class Updates extends Component {
       setTimeout(() => {
           res.result ? pageReload() : this.setNeedUpdate();
         }
-        , 1300);
+        , 100);
     } catch (error) {
       store.dispatch(setAdminEnable());
     }
@@ -86,6 +86,8 @@ class Updates extends Component {
         store.dispatch(setAdminEnable());
       }
     } catch (error) {
+      console.error(error);
+      window.location.reload();
       store.dispatch(setAdminEnable());
     }
   }
@@ -101,9 +103,6 @@ class Updates extends Component {
     const {changelog} = this.state;
     return <div className="admin-updates p-4">
 
-        <div className="admin-caption mt-1">
-          {data.updateMessage}
-        </div>
         {this.state.needUpdate ?
           <button className="btn_success btn" onClick={this.updateAltrp}>Update</button>
           : <button className="btn" onClick={this.updateAltrp}>Re-install Now</button>}

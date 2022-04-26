@@ -7,7 +7,9 @@ import fs from 'fs'
 import { exec } from'child_process'
 import {promisify} from 'util'
 import public_path from "../../helpers/public_path";
-import get_altrp_setting from "../../helpers/get_altrp_setting";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
+import View from "@ioc:Adonis/Core/View";
+import {CacheManager} from "edge.js/build/src/CacheManager";
 
 export default class UpdateService {
 
@@ -49,12 +51,14 @@ export default class UpdateService {
     }
     UpdateService.delete_archive()
     // Upgrade the Database
-    let updateCommand = get_altrp_setting('update_command', '', true).trim()
-    if(! updateCommand){
-      updateCommand = 'pm2 restart all'
-    }
-    await UpdateService.upgradeDatabase();
-    await promisify(exec)(updateCommand)
+    await UpdateService.upgradePackages()
+    await UpdateService.upgradeDatabase()
+
+    /**
+     * clear all view cached pages
+     */
+    View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
+    clearRequireCache()
     // Write providers
     // Update modules statuses
     // Update the current version to last version
@@ -101,6 +105,15 @@ export default class UpdateService {
    */
   private static async upgradeDatabase() {
     await promisify(exec)(`node ${base_path('ace')} migration:run --force`)
+    return true;
+  }
+
+  /**
+   * Upgrade the Database & Apply actions
+   *
+   */
+  private static async upgradePackages() {
+    await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
     return true;
   }
 }

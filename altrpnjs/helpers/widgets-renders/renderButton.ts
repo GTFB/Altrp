@@ -57,7 +57,7 @@ export default function renderButton(settings, device, context) {
         <span></span>
     ${buttonText}
     <span class="altrp-btn-icon-right ">
-      ${renderAsset(buttonMediaRight)}{" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>`
   )
@@ -67,8 +67,8 @@ export default function renderButton(settings, device, context) {
   if (existingIconsString === 'l') {
     buttonInner = (
       `<div class="btn-container-row">
-      <span class={"altrp-btn-icon-left "}>
-        ${renderAsset(buttonMediaLeft)}${" "}
+      <span class="altrp-btn-icon-left ">
+        ${renderAsset(buttonMediaLeft)}
     </span>
     ${buttonText}
     <span></span>
@@ -80,7 +80,7 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class="altrp-btn-icon-top ">
-        ${renderAsset(buttonMediaTop)}${" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     ${buttonText}
     <span></span>
@@ -94,7 +94,7 @@ export default function renderButton(settings, device, context) {
         <span></span>
     ${buttonText}
     <span class="altrp-btn-icon-bottom ">
-      ${renderAsset(buttonMediaBottom)}${" "}
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -104,19 +104,19 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class="altrp-btn-icon-top ">
-        ${renderAsset(buttonMediaTop)}${" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">
     <span class="altrp-btn-icon-left ">
-      ${renderAsset(buttonMediaLeft)}${" "}
+      ${renderAsset(buttonMediaLeft)}
     </span>
     {buttonText}
     <span class={"altrp-btn-icon-right "}>
-      ${renderAsset(buttonMediaRight)}${" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>
     <span class="altrp-btn-icon-bottom ">
-      ${renderAsset(buttonMediaBottom)}${" "}
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -126,17 +126,17 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class="altrp-btn-icon-top ">
-        ${renderAsset(buttonMediaTop)}{" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">
       <span></span>
     ${buttonText}
     <span class="altrp-btn-icon-right ">
-      ${renderAsset(buttonMediaRight)}{" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>
     <span class="altrp-btn-icon-bottom ">
-      ${renderAsset(buttonMediaBottom)}{" "}
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -146,17 +146,17 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class="altrp-btn-icon-top ">
-        ${renderAsset(buttonMediaTop)}${" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">
     <span class="altrp-btn-icon-left ">
-      ${renderAsset(buttonMediaLeft)}${" "}
+      ${renderAsset(buttonMediaLeft)}
     </span>
     ${buttonText}
     <span></span>
     </div>
     <span class="altrp-btn-icon-bottom ">
-      ${renderAsset(buttonMediaBottom)}${" "}
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -166,15 +166,15 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class="altrp-btn-icon-top ">
-        ${renderAsset(buttonMediaTop)}{" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">
     <span class="altrp-btn-icon-left ">
-      ${renderAsset(buttonMediaLeft)}${" "}
+      ${renderAsset(buttonMediaLeft)}
     </span>
     ${buttonText}
     <span class="altrp-btn-icon-right ">
-      ${renderAsset(buttonMediaRight)}${" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>
     <span></span>
@@ -188,15 +188,15 @@ export default function renderButton(settings, device, context) {
         <span></span>
         <div class="btn-container-row">
     <span class="altrp-btn-icon-left ">
-      ${renderAsset(buttonMediaLeft)}{" "}
+      ${renderAsset(buttonMediaLeft)}
     </span>
     ${buttonText}
     <span class="altrp-btn-icon-right ">
-      ${renderAsset(buttonMediaRight)}${" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>
     <span class="altrp-btn-icon-bottom ">
-      ${renderAsset(buttonMediaBottom)}${" "}
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -206,13 +206,13 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class="altrp-btn-icon-top ">
-        ${renderAsset(buttonMediaTop)}{" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">
       <span></span>
     ${buttonText}
     <span class=$"altrp-btn-icon-right ">
-      ${renderAsset(buttonMediaRight)}{" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>
     <span></span>
@@ -224,11 +224,11 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class={"altrp-btn-icon-top "}>
-        ${renderAsset(buttonMediaTop)}${" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">
     <span class="altrp-btn-icon-left ">
-      ${renderAsset(buttonMediaLeft)}${" "}
+      ${renderAsset(buttonMediaLeft)}
     </span>
     ${buttonText}
     <span></span>
@@ -242,15 +242,15 @@ export default function renderButton(settings, device, context) {
     buttonInner = (
       `<div class="btn-container-column">
       <span class="altrp-btn-icon-top ">
-        ${renderAsset(buttonMediaTop)}{" "}
+        ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">
       <span></span>
     ${buttonText}
     <span></span>
     </div>
-    <span class=${"altrp-btn-icon-bottom "}>
-      ${renderAsset(buttonMediaBottom)}{" "}
+    <span class="altrp-btn-icon-bottom ">
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -264,11 +264,11 @@ export default function renderButton(settings, device, context) {
       <span></span>
     ${buttonText}
     <span class="altrp-btn-icon-right ">
-      ${renderAsset(buttonMediaRight)}{" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>
     <span class="altrp-btn-icon-bottom ">
-      ${renderAsset(buttonMediaBottom)}{" "}
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -280,11 +280,11 @@ export default function renderButton(settings, device, context) {
         <span></span>
         <div class="btn-container-row">
     <span class="altrp-btn-icon-left ">
-      ${renderAsset(buttonMediaLeft)}{" "}
+      ${renderAsset(buttonMediaLeft)}
     </span>
     ${buttonText}
     <span class="altrp-btn-icon-right ">
-      ${renderAsset(buttonMediaRight)}{" "}
+      ${renderAsset(buttonMediaRight)}
     </span>
     </div>
     <span></span>
@@ -298,13 +298,13 @@ export default function renderButton(settings, device, context) {
         <span></span>
         <div class="btn-container-row">
     <span class="altrp-btn-icon-left">
-      ${renderAsset(buttonMediaLeft)}{" "}
+      ${renderAsset(buttonMediaLeft)}
     </span>
     ${buttonText}
     <span></span>
     </div>
     <span class="altrp-btn-icon-bottom ">
-      ${renderAsset(buttonMediaBottom)}{" "}
+      ${renderAsset(buttonMediaBottom)}
     </span>
     </div>`
   )
@@ -343,7 +343,6 @@ export default function renderButton(settings, device, context) {
       target=${target}
       title=${tooltip || null}
     >
-      ${" "}
       ${buttonInner}
       </a>`
     )

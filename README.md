@@ -5,6 +5,7 @@
 
 ### 1.1.1
 * ALTRP Updates via Admin
+* Fix Text Widget Renders
 
 ### 1.1.0
 * Fix Some Front App Styles
