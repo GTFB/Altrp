@@ -282,8 +282,6 @@ export default class Page extends BaseModel {
   @column.dateTime({autoCreate: true})
   public createdAt: DateTime
 
-  @column.dateTime({autoCreate: true, autoUpdate: true})
-  public updatedAt: DateTime
 
   @column.dateTime()
   public deleted_at: DateTime

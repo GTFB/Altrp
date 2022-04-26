@@ -220,6 +220,9 @@ Route.group(() => {
     Route.post('/write_mail_settings', 'admin/MailController.writeSettingsToEnv');
     Route.get('/get_mail_settings', 'admin/MailController.getSettings');
 
+
+    Route.get('/package_key', 'admin/AdminController.getPackageKey');
+
   }).prefix('/ajax')
   Route.get('/customizers-editor', 'IndicesController.customizer')
 

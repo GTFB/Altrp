@@ -1,5 +1,5 @@
 import queryString from "query-string";
-import { replaceContentWithData } from "../../../../front-app/src/js/helpers";
+import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 import getCookie from "../helpers/getCookie";
 window.queryString = queryString;
 /**

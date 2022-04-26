@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import {io} from "socket.io-client";
-import getCookie from "../../editor/src/js/helpers/getCookie";
-import {v4 as uuid} from "uuid";
+import checkPackageKey from "./js/functions/checkPackageKey";
 
 window.React = React;
 window.Component = Component;
@@ -15,7 +13,6 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('%cWelcome to Altrp Admin Page', 'color: #87CA00; font-size: 24px; font-weight: 900;');
 }
 
-
 import('react').then((_export) => {
   window.React = _export.default;
   window.Component = _export.Component;
@@ -24,6 +21,7 @@ import('react').then((_export) => {
   window.ReactDOM = _export.default;
   return import('./installing')
 }).then((_export) => {
+  checkPackageKey()
   return import('../../editor/src/js/classes/modules/IconsManager');
 }).then((_export) => {
   window.iconsManager = new _export.default();

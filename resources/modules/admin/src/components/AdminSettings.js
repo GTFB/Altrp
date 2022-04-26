@@ -15,7 +15,6 @@ import ImageSettingsTable from "./ImageSettingsTable";
 import AdvancedSettings from "./AdvancedSettings";
 import {connect} from "react-redux";
 import SmallModal from "./SmallModal";
-const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
 class AdminSettings extends Component {

@@ -49,12 +49,18 @@ export default class UpdateService {
     }
     UpdateService.delete_archive()
     // Upgrade the Database
-    let updateCommand = get_altrp_setting('update_command', '', true).trim()
+    let updateCommand:string[]|string = get_altrp_setting('update_command', '', true).trim()
     if(! updateCommand){
-      updateCommand = 'pm2 restart all'
+      updateCommand = `pm2 stop all
+sleep 3
+pm2 start all`
     }
+    await UpdateService.upgradePackages();
     await UpdateService.upgradeDatabase();
-    await promisify(exec)(updateCommand)
+    updateCommand = updateCommand.split('\n')
+    for(let cmd of updateCommand){
+      await promisify(exec)(cmd)
+    }
     // Write providers
     // Update modules statuses
     // Update the current version to last version
@@ -101,6 +107,15 @@ export default class UpdateService {
    */
   private static async upgradeDatabase() {
     await promisify(exec)(`node ${base_path('ace')} migration:run --force`)
+    return true;
+  }
+
+  /**
+   * Upgrade the Database & Apply actions
+   *
+   */
+  private static async upgradePackages() {
+    await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
     return true;
   }
 }

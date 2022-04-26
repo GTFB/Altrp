@@ -7,7 +7,9 @@ import AltrpCodeEditor from "./altrp-editor/AltrpCodeEditor";
 import store from '../js/store/store';
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
-const updateCommandDefault = 'pm2 restart all'
+const updateCommandDefault = `pm2 stop all
+sleep 3
+pm2 start all`
 class AdvancedSettings extends Component {
   constructor(props){
     super(props);
