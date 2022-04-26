@@ -67,15 +67,14 @@ export default class GlobalTemplateStylesController {
 
     const body = request.body();
 
-
     switch (style.type) {
       case "color":
         const data = JSON.parse(style.settings);
 
-        data.name = body.name ?? data.name;
-        data.color = body.color ?? data.color;
-        data.colorPickedHex = body.colorPickedHex ?? data.colorPickedHex;
-        data.colorRGB = body.colorRGB ?? data.colorRGB;
+        data.name = body.settings.name ?? data.name ?? body.name;
+        data.color = body.settings.color ?? data.color ?? body.color;
+        data.colorPickedHex = body.settings.colorPickedHex ?? data.colorPickedHex ?? body.colorPickedHex;
+        data.colorRGB = body.settings.colorRGB ?? data.colorRGB ?? body.colorRGB;
 
         style.settings = JSON.stringify(data);
         break
