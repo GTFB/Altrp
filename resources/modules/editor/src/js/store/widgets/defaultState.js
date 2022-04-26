@@ -1,9 +1,7 @@
 import InputTextCommon from "../../classes/elements/InputTextCommon";
 import InputTextCommonWidget from "../../components/widgets/InputTextCommonWidget";
-
 import InputSelect from "../../classes/elements/InputSelect";
 import InputSelectWidget from "../../components/widgets/InputSelectWidget";
-
 import InputSelect2 from "../../classes/elements/InputSelect2";
 import InputSelect2Widget from "../../components/widgets/InputSelect2Widget";
 import InputRadio from "../../classes/elements/InputRadio";
@@ -128,6 +126,8 @@ import Tournament from "../../classes/elements/Tournament";
 import TournamentWidget from "../../components/widgets/TournamentWidget";
 import Feedback from "../../classes/elements/Feedback";
 import FeedbackWidget from "../../components/widgets/FeedbackWidget";
+import InputPagination from "../../classes/elements/InputPagination";
+import InputPaginationWidget from "../../components/widgets/InputPaginationWidget";
 
 const elements = {}
 const components = {}
@@ -168,6 +168,7 @@ elements[InputCropImage.getName()] = InputCropImage;
 elements[InputAccept.getName()] = InputAccept;
 elements[InputHidden.getName()] = InputHidden;
 elements[InputFile.getName()] = InputFile;
+elements[InputPagination.getName()] = InputPagination;
 
 elements[Table.getName()] = Table;
 elements[Posts.getName()] = Posts;
@@ -232,6 +233,7 @@ components[InputDate.getName()] = InputDateWidget;
 components[InputDateRange.getName()] = InputDateRangeWidget;
 components[InputHidden.getName()] = InputHiddenWidget;
 components[InputFile.getName()] = InputFileWidget;
+components[InputPagination.getName()] = InputPaginationWidget;
 components[InputGallery.getName()] = InputGalleryWidget;
 components[InputCropImage.getName()] = InputCropImageWidget;
 components[Text.getName()] = TextWidget;

@@ -13,12 +13,16 @@ import React from "react";
 import CategoryTable from "./CategoryTable";
 import ImageSettingsTable from "./ImageSettingsTable";
 import AdvancedSettings from "./AdvancedSettings";
+import {connect} from "react-redux";
+import SmallModal from "./SmallModal";
+const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
-export default class AdminSettings extends Component {
+class AdminSettings extends Component {
   constructor(props) {
     super(props);
     this.switchTab = this.switchTab.bind(this);
+    this.onClickResetDatabase = this.onClickResetDatabase.bind(this)
     this.state = {
       SSREnabled: false,
       SSRPort: "",
@@ -28,7 +32,11 @@ export default class AdminSettings extends Component {
       modal: false,
       imageModal: false,
       idImageSetting: null,
-      idModal: null
+      idModal: null,
+      modalResetHidden: false,
+      emailReset: '',
+      passwordReset: '',
+      modalResetLoading: false
     };
   }
 
@@ -182,8 +190,67 @@ export default class AdminSettings extends Component {
     }))
   }
 
+  onClickToggleModal = () => {
+    this.setState(state => ({
+      ...state,
+      modalResetHidden: !state.modalResetHidden
+    }))
+  }
+
+  onClickResetDatabase = async () => {
+    const userData = { emailReset: this.state.emailReset,  passwordReset: this.state.passwordReset}
+
+    try {
+     const condition = confirm('are you sure?')
+      if (condition) {
+        const response = await new Resource({
+          route: "/admin/ajax/settings/reset"
+        }).post(userData)
+        this.setState(state => ({
+          ...state,
+          modalResetLoading: true,
+          emailReset: '',
+          passwordReset: ''
+        }))
+
+       if (response.success === true) {
+           // delete adonis-session cookies
+           window.Cookies.remove('adonis-session')
+           // redirect to altrp-login
+           window.location = '/altrp-login'
+        }
+
+      } else {
+        this.onClickToggleModal()
+      }
+
+    } catch (e) {
+      window.location = '/altrp-login'
+    } finally {
+      this.setState(state => ({
+        ...state,
+        modalResetLoading: false
+      }))
+    }
+  }
+
+  onChangeResetEmail = (e) => {
+    this.setState(state => ({
+      ...state,
+      emailReset: e.target.value
+    }))
+  }
+
+  onChangeResetPassword = (e) => {
+    this.setState(state => ({
+      ...state,
+      passwordReset: e.target.value
+    }))
+  }
+
   render() {
-    const { SSRPort, SSRAlias, SSRConf, idModal  } = this.state;
+    const { SSRPort, SSRAlias, SSRConf, idModal, modalResetHidden, emailReset, passwordReset, modalResetLoading } = this.state;
+    const {resetEnable} = this.props.adminState
 
     return (
       <div className="admin-settings admin-page">
@@ -349,9 +416,39 @@ export default class AdminSettings extends Component {
                       />
                     </td>
                   </tr>
+                  {resetEnable && <tr className="admin-settings-table-row">
+                    <td className="admin-settings-table__td row-text">
+                      Reset database
+                    </td>
+                    <td className="admin-settings-table__td ">
+                      <button
+                        className="btn btn_success btn_general"
+                        onClick={this.onClickToggleModal}
+                      >
+                        Reset
+                      </button>
+                    </td>
+                  </tr>}
                 </tbody>
               </table>
             </TabPanel>
+            <SmallModal activeMode={modalResetHidden} toggleModal={this.onClickToggleModal}>
+              <div className="admin-reset-wrapper" >
+                <div className="admin-reset-form-elements">
+                  <label htmlFor="email">New admin email</label>
+                  <input className="admin-reset-form-input" type="email" id={'email'} value={emailReset} onChange={this.onChangeResetEmail} />
+                  <label htmlFor="email">New admin password</label>
+                  <input className="admin-reset-form-input" type="password" id={'password'} value={passwordReset} onChange={this.onChangeResetPassword} />
+                </div>
+                <button
+                  className="btn btn_success btn_general"
+                  onClick={this.onClickResetDatabase}
+                  disabled={modalResetLoading}
+                >
+                  Reset database and create new admin
+                </button>
+              </div>
+            </SmallModal>
             <TabPanel>
               <StylesSettings />
             </TabPanel>
@@ -362,7 +459,9 @@ export default class AdminSettings extends Component {
               </div>
             </TabPanel>
             <TabPanel>
-              <AdvancedSettings />
+              <React.Suspense fallback={"Loading"}>
+                <AdvancedSettings />
+              </React.Suspense>
             </TabPanel>
             <TabPanel>
               <Updates attr={"attr"} />
@@ -400,3 +499,9 @@ export default class AdminSettings extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {adminState: state.adminState}
+}
+
+export default connect(mapStateToProps)(AdminSettings);

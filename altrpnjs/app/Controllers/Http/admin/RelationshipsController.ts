@@ -57,7 +57,7 @@ export default class RelationshipsController {
               ON UPDATE ${relationshipData.onUpdate}`
             await Database.rawQuery(query)
           } catch (e) {
-
+            console.log(e)
           }
         }
 
@@ -80,9 +80,9 @@ export default class RelationshipsController {
         await relationship.save()
         Event.emit('model:updated', model)
 
-        
+
         if (relationshipData.type != "belongsTo" && targetModel && relationshipData.add_belong_to) {
-          
+
           await targetModel.load('table')
           try {
             let query = `ALTER TABLE ${targetModel.table.name} ADD CONSTRAINT
@@ -93,7 +93,7 @@ export default class RelationshipsController {
               ON UPDATE restrict`
             await Database.rawQuery(query)
           } catch (e) {
-
+            console.log(e)
           }
 
           const belongsToRelationship = new Relationship()
@@ -223,7 +223,7 @@ export default class RelationshipsController {
       })
       await relationship.save()
       Event.emit('model:updated', model)
-      
+
       if (relationshipData.type != "belongsTo" && newTargetModel && relationshipData.add_belong_to) {
 
         try {
@@ -331,6 +331,8 @@ export default class RelationshipsController {
             await targetModel.load('table')
             let deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP FOREIGN KEY ${targetModel.table.name}_${relationship.foreign_key}_foreign`
             await Database.rawQuery(deleteQuery)
+            deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP INDEX ${targetModel.table.name}_${relationship.foreign_key}_foreign`
+            await Database.rawQuery(deleteQuery)
           } catch (e) {
 
           }
@@ -348,6 +350,8 @@ export default class RelationshipsController {
       try {
         if (relationship.type === "belongsTo") {
           let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship.local_key}_foreign`
+          await Database.rawQuery(deleteQuery)
+          deleteQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${model.table.name}_${relationship.foreign_key}_foreign`
           await Database.rawQuery(deleteQuery)
         }
       } catch (e) {

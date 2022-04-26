@@ -126,7 +126,6 @@ export default class PluginController {
     let temp_path = storage_path('temp')
 
     //@ts-ignore
-    // await Drive.use('storage').put('temp/' + name + '.zip', apiResponse)
     let filename = temp_path + '/' + name + '.zip'
     fs.ensureDirSync(temp_path)
     fs.writeFileSync(filename, apiResponse, )

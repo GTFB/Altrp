@@ -276,7 +276,7 @@ export function actionsControllers(
     responsive: false,
     label: 'Aliases',
     conditions: {
-      type: ['update_current_datasources']
+      type: ['update_current_datasources', "socket_receiver"]
     },
     locked: true,
   });

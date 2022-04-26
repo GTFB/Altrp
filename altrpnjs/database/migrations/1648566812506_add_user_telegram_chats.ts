@@ -8,7 +8,7 @@ export default class AddUserTelegramChats extends BaseSchema {
     if(await this.schema.hasColumn(this.tableName, 'telegram_chat')){
       return
     }
-    this.schema.table(this.tableName,    (table) => {
+    await this.schema.table(this.tableName,    (table) => {
 
         table.bigInteger("telegram_chat").nullable()
 

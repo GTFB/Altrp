@@ -1,17 +1,12 @@
-import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
-import {
-  getTemplateDataStorage,
-  getEditor,
-  getFactory,
-  editorSetCurrentElement
-} from "../../helpers";
-import { addFont } from "../../../../../front-app/src/js/store/fonts-storage/actions";
+import {TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
+import {editorSetCurrentElement, getEditor, getFactory, getTemplateDataStorage} from "../../helpers";
+import {addFont} from "../../../../../front-app/src/js/store/fonts-storage/actions";
 import CONSTANTS from "../../consts";
-import { changeTemplateStatus } from "../../store/template-status/actions";
-import store, { getCurrentScreen, getElementState } from "../../store/store";
+import {changeTemplateStatus} from "../../store/template-status/actions";
+import store, {getCurrentScreen, getElementState} from "../../store/store";
 import ControlStack from "./ControlStack";
-import { isEditor } from "../../../../../front-app/src/js/helpers";
-import { addHistoryStoreItem } from "../../store/history-store/actions";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {addHistoryStoreItem} from "../../store/history-store/actions";
 
 /**
  * Базовый класс для методов элемента для редактора
@@ -135,6 +130,34 @@ class BaseElement extends ControlStack {
     );
   }
 
+  cleaner(settings) {
+    const newSettings = {}
+
+    _.keys(settings).forEach(key => {
+      let setting = settings[key]
+
+      if(setting) {
+
+        if(!Array.isArray(setting)) {
+
+          if(typeof setting === "object") {
+            const cleaned = this.cleaner(setting);
+
+            setting = _.keys(cleaned).length > 0 && cleaned
+          }
+
+          if(setting) {
+            newSettings[key] = setting
+          }
+        } else {
+          newSettings[key] = setting
+        }
+      }
+    })
+
+    return newSettings;
+  }
+
   toObject() {
     // if(!this.component){
     //   throw 'Element Must Composites with Some Component';
@@ -142,7 +165,8 @@ class BaseElement extends ControlStack {
     let data = {};
     data.id = this.getId();
     data.name = this.getName();
-    data.settings = this.settings;
+    data.settings = this.cleaner(this.settings);
+
     data.settingsLock = this.settingsLock;
     data.type = this.getType();
     if (this.dynamicContentSettings && this.dynamicContentSettings.length) {

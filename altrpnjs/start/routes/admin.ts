@@ -35,9 +35,9 @@ Route.group(() => {
 
     Route.get("/role_options", "OptionsController.roles")
     Route.get("/users_options", "OptionsController.users")
-    Route.get("/customizers_options", "optionsController.customizers")
+    Route.get("/customizers_options", "OptionsController.customizers")
     Route.get("/permissions_options", "OptionsController.permissions")
-    Route.get("/menus/options", "optionsController.menus")
+    Route.get("/menus/options", "OptionsController.menus")
 
     Route.post('/pages', 'admin/PagesController.create')
     Route.get('/pages', 'admin/PagesController.index')
@@ -101,7 +101,7 @@ Route.group(() => {
     })
 
 
-    Route.get("/changelog", "indicesController.changelog")
+    Route.get("/changelog", "IndicesController.changelog")
 
     Route.get('/pages_options', 'OptionsController.pages')
 
@@ -173,6 +173,8 @@ Route.group(() => {
     Route.get('/settings/:setting_name', 'admin/SettingsController.getSettings').name = 'admin.settings.get'
     Route.put('/settings/:setting_name', 'admin/SettingsController.saveSettings').name = 'admin.settings.save'
 
+    //@todo: move this method to another place?
+    Route.post('/settings/reset', 'admin/SettingsController.resetSettings').name = 'admin.settings.reset'
 
 
     Route.post('/update_altrp', 'admin/AdminController.update_altrp').name = 'admin.update_altrp'

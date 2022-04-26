@@ -227,7 +227,6 @@ Route.group(() => {
       })
     }
 
-    // const controllerName = `App/AltrpControllers/${model.name}Controller.${isProd() ? 'js' : 'ts'}`
     const controllerName = app_path(`AltrpControllers/${model.name}Controller`)
     try {
       if(isProd()){
@@ -285,14 +284,17 @@ Route.group(() => {
       if(! methodName){
         return httpContext.response.status(404).json({
           success: false,
-          message: 'Method Not Found'
+          message: `Controller ${controllerName}; Method: ${methodName}
+  Method Not Found`
         })
       }
       return await controller[methodName](httpContext)
     } catch (e) {
       return httpContext.response.status(500).json({
         success: false,
-        message: e.message,
+
+        message: `Controller ${controllerName}; Method: ${methodName}
+${e.message}`,
         trace: e.stack.split('\n'),
       })
     }

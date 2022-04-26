@@ -1,8 +1,8 @@
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import base_path from "../../../../helpers/base_path";
 import fs from "fs";
-import updateDotenv from "update-dotenv";
 import env from "../../../../helpers/env";
+import envWriter from "../../../../helpers/envWriter";
 
 export default class MailController {
 
@@ -41,15 +41,20 @@ export default class MailController {
         message: 'File .env not found!'
       })
     }
-    const _data = {}
+    const _data:{key: string, value: string}[] = []
     for (let key in data) {
 
       if (data.hasOwnProperty(key)) {
         _data[key.toUpperCase()] = data[key]
+        _data.push({
+          key: key.toUpperCase(),
+          value: data[key]
+        })
       }
     }
     try {
-      await updateDotenv(_data)
+      // await updateDotenv(_data)
+      envWriter(_data)
     } catch (e) {
       response.status(500)
       return response.json({'success': false, 'message': 'Failed to write mail setting'})

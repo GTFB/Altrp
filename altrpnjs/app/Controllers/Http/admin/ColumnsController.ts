@@ -74,7 +74,7 @@ export default class ColumnsController {
       })
     }
 
-    await model.preload('table')
+    await model.load('table')
 
     const column = await Column.find(params.field_id)
     if (!column) {
@@ -219,7 +219,7 @@ export default class ColumnsController {
       })
     }
 
-    await model.preload('table')
+    await model.load('table')
 
     const column = await Column.find(params.field_id)
     if (!column) {
