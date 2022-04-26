@@ -104,7 +104,6 @@ export default class ColumnsController {
           const client = Database.connection(Env.get('DB_CONNECTION'))
           await client.schema.table(model.table.name,table=>{
             table.dropColumn(column.name)
-            console.log(column.name)
           })
         }
       } catch (e) {

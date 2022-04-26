@@ -312,13 +312,13 @@ export default class ModelsController {
   }
 
   async getDataSourcesAndPageCount({request}: HttpContextContract) {
-
     const params = request.qs()
-    const page = parseInt(params.page) || 1
-    const pageSize = parseInt(params.pageSize) || 20
+    const page = parseInt(params.page)
+    const pageSize = parseInt(params.pageSize)
     const searchWord = params.s
     let sources
 
+    if (page && pageSize) {
       if (searchWord) {
         sources = await Source.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('title', 'LIKE', `%${searchWord}%`).paginate(page, pageSize)
       } else {
@@ -330,27 +330,13 @@ export default class ModelsController {
         pageCount: sources.getMeta().last_page,
         data_sources: sources.all()
       }
+    } else {
+      sources = await Source.query()
 
-
-
-    // if(page) {
-    //   const sources = await Source.query().offset((page - 1)*pageSize).limit(pageSize).select('*');
-    //   return {
-    //     data_sources: sources,
-    //     pageCount: 0
-    //   }
-    // } else {
-    //   const sources = await Source.query().select('*')
-    //   return {
-    //     data_sources: sources,
-    //     pageCount: 0
-    //   }
-    // }
-    // filtration(templatesQuery, request, [
-    //   'title',
-    // ])
-
-
+      return {
+        data_sources: sources
+      }
+    }
   }
 
   async getDataSourcesOptionsByModel({response, params}: HttpContextContract) {

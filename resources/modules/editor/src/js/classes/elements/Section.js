@@ -270,7 +270,7 @@ class Section extends BaseElement{
       default: {
         unit: "px"
       },
-      units: ["px", "vh"],
+      units: ["px", "%", "vw", "vh"],
       max: 1440,
       min: 0,
     });
