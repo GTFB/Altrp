@@ -21,6 +21,10 @@ import controllerHistory from "./js/classes/ControllerHistory";
 
 
 window.iconsManager = new IconsManager();
+window.addEventListener("keydown", (e) => {
+  console.log("hello");
+  e.preventDefault()
+})
 
 window.stylesModulePromise = new Promise(function(resolve) {
   window.stylesModuleResolve = resolve;

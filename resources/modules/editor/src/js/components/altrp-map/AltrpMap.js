@@ -92,12 +92,13 @@ function AltrpMap({ settings }) {
       isLoading={isLoading}
       style={{
         pointerEvents: window.altrpHelpers.isEditor() ? 'none' : 'auto',
-        height: style_height.size + style_height.unit,
-        marginTop: style_margin.top + style_margin.unit,
-        marginBottom: style_margin.bottom + style_margin.unit,
-        marginLeft: style_margin.left + style_margin.unit,
-        marginRight: style_margin.right + style_margin.unit
+        height: (style_height.size + style_height.unit) || "200px",
+        marginTop: (style_margin.top + style_margin.unit) || "10px",
+        marginBottom: (style_margin.bottom + style_margin.unit) || "10px",
+        marginLeft: (style_margin.left + style_margin.unit) || "10px",
+        marginRight: (style_margin.right + style_margin.unit) || "10px"
       }}
+      settings={settings}
       isEditable={false}
       preferCanvas={canvas}
       zoom={+zoom}

@@ -12,7 +12,6 @@ import UserTopPanel from "./UserTopPanel";
 import React from "react";
 import CategoryTable from "./CategoryTable";
 import ImageSettingsTable from "./ImageSettingsTable";
-import AdvancedSettings from "./AdvancedSettings";
 import {connect} from "react-redux";
 import SmallModal from "./SmallModal";
 const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
