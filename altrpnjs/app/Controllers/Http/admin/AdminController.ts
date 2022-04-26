@@ -15,6 +15,7 @@ import ListenerGenerator from "App/Generators/ListenerGenerator";
 import Customizer from "App/Models/Customizer";
 import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
+import Env from "@ioc:Adonis/Core/Env";
 
 export default class AdminController {
 
@@ -70,10 +71,7 @@ export default class AdminController {
 
 
   public async updateFavicon({request}) {
-    const favicon = request.file("favicon", {
-      size: "2mb",
-      extnames: ['jpg', 'png'],
-    });
+    const favicon = request.allFiles().favicon || null
 
     if(favicon) {
       await favicon.move(Application.tmpPath("favicon"), {
@@ -118,5 +116,9 @@ export default class AdminController {
     return httpContext.response.json({
       success: true,
     })
+  }
+
+  async getPackageKey(){
+    return{success:true, package_key: Env.get('PACKAGE_KEY')}
   }
 }

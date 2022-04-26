@@ -124,8 +124,12 @@ export default class IndicesController {
 
   public async changelog({ response }) {
     const pathToPublic = base_path( "README.md");
+    let file:any = ''
+    try {
+       file = await Drive.get(pathToPublic)
+    } catch (e) {
 
-    const file = await Drive.get(pathToPublic)
+    }
 
     response.header('Content-type', 'text/plain');
 
