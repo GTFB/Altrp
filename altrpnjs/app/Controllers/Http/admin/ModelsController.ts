@@ -22,6 +22,8 @@ import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
 import User from "App/Models/User";
+import {promisify} from "util";
+import {exec} from "child_process";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -94,37 +96,50 @@ export default class ModelsController {
         message: 'Model not found'
       })
 
-    }
-    let modelData = request.all()
-    model.merge({
-      description: modelData.description || '',
-      title: modelData.title || '',
-      soft_deletes: modelData.soft_deletes,
-      time_stamps: modelData.time_stamps,
-      parent_model_id: modelData.parent_model_id || null,
-    })
-    Event.emit('model:updating', model)
-    await model.save()
-    Event.emit('model:updated', model)
-    modelData = await model.serialize()
-    await CategoryObject.query().where('object_guid', modelData.guid).delete()
+    } else {
+      await model.load('table')
+      let modelData = request.all()
 
-    if (!empty(request.all().categories)) {
-      await Promise.all(request.all().categories.map(async c => {
-        let newCatObj = new CategoryObject()
-        // @ts-ignore
-        newCatObj.fill(
-          {
-            category_guid: c.value,
-            // @ts-ignore
-            object_guid: model.guid,
-            object_type: 'Model'
-          }
-        )
-        return await newCatObj.save()
-      }))
+      const client = Database.connection(Env.get('DB_CONNECTION'))
+      await client.schema.renameTable(`${model.table.name}`, `${string.pluralize(modelData.name)}`)
+
+      model.table.merge({
+        name: string.pluralize(modelData.name)
+      })
+      await model.table.save()
+
+      model.merge({
+        description: modelData.description || '',
+        title: modelData.title || '',
+        name: modelData.name,
+        soft_deletes: modelData.soft_deletes,
+        time_stamps: modelData.time_stamps,
+        parent_model_id: modelData.parent_model_id || null,
+      })
+      Event.emit('model:updating', model)
+      await model.save()
+      Event.emit('model:updated', model)
+      modelData = await model.serialize()
+      await CategoryObject.query().where('object_guid', modelData.guid).delete()
+
+      if (!empty(request.all().categories)) {
+        await Promise.all(request.all().categories.map(async c => {
+          let newCatObj = new CategoryObject()
+          // @ts-ignore
+          newCatObj.fill(
+            {
+              category_guid: c.value,
+              // @ts-ignore
+              object_guid: model.guid,
+              object_type: 'Model'
+            }
+          )
+          return await newCatObj.save()
+        }))
+      }
+      return response.json({success: true, data: modelData})
     }
-    return response.json({success: true, data: modelData})
+
   }
 
   async getModel({response, params}: HttpContextContract) {
@@ -630,11 +645,68 @@ export default class ModelsController {
     const table = await Table.find(model.table_id)
     await model.load('table')
 
+
+    // delete relations when dropping table
+    const relationship = await Relationship.query().where('model_id', model.id)
+    if (relationship) {
+      const relations = []
+
+      for( let i in relationship) {
+        // @ts-ignore
+        relations.push(await Model.find(relationship[i].target_model_id))
+
+        for (let j in relations) {
+          if(relationship[i].type != "belongsTo" && relations[j] && relationship[i].add_belong_to){
+
+            try {
+              await relations[j].load('table')
+              let deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP FOREIGN KEY ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+              deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP INDEX ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+            } catch (e) {
+
+            }
+            await Relationship.query()
+              .where('model_id', relationship[i].target_model_id)
+              .where('target_model_id', relationship[i].model_id)
+              .where('foreign_key', relationship[i].local_key)
+              .where('local_key', relationship[i].foreign_key)
+              .where('type', 'belongsTo')
+              .delete()
+          }
+          try {
+            if (relationship[i].type === "belongsTo") {
+              let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship[i].local_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+              deleteQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${model.table.name}_${relationship[i].foreign_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+            }
+          } catch (e) {
+
+          }
+
+          try {
+            await relationship[i].delete()
+          } catch (e) {
+            try {
+              await relationship[i].delete()
+            } catch (e) {
+              console.log(e)
+            }
+          }
+
+        }
+
+      }
+    }
+
+
+
     const controller = await Controller.query().where('model_id', model.id).first()
     if (controller) {
       const sources = await Source.query().where('controller_id', controller?.id).select('*')
-      if (
-        sources[0]) {
+      if (sources[0]) {
         await sources[0].load('roles')
 
       }
