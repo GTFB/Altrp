@@ -647,6 +647,14 @@ class InputTextCommonWidget extends Component {
       value = e.value;
     }
 
+    const maxNumber = this.props.element.getResponsiveSetting('max_number')
+    const minNumber = this.props.element.getResponsiveSetting('min_number')
+    if (maxNumber && minNumber) {
+      if (value < minNumber) value = minNumber
+      if (value > maxNumber) value = maxNumber
+    }
+
+
 
     /**
      * Обновляем хранилище только если не текстовое поле
@@ -836,6 +844,7 @@ class InputTextCommonWidget extends Component {
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
+
     const {
       content_readonly,
       label_icon

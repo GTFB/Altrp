@@ -5,6 +5,7 @@ import {titleToName, titleToNameTwo} from "../../js/helpers";
 import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
 import {Select} from "@blueprintjs/select";
 import {connect} from "react-redux";
+import getAltrpLang from "../../js/helpers/get-altrp-lang";
 
 const relationTypeOptions = [
   {
@@ -433,12 +434,21 @@ class AddRelationForm extends Component {
 
         </div>
         <div className="form-group">
-         <input type="checkbox"
-                id="field-always_with"
-                checked={this.state.value.always_with}
-                onChange={e => { this.changeValue(e.target.checked, 'always_with') }}
-          />
-            <label className="checkbox-label" htmlFor="field-always_with">Always With</label>
+          {
+            getAltrpLang() === 'javascript'
+            ? null
+            :
+            <>
+              <input type="checkbox"
+                     id="field-always_with"
+                     checked={this.state.value.always_with}
+                     onChange={e => {
+                       this.changeValue(e.target.checked, 'always_with')
+                     }}
+              />
+              <label className="checkbox-label" htmlFor="field-always_with">Always With</label>
+            </>
+          }
         </div>
       </div>
       <div className="form-group__inline-wrapper">

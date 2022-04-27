@@ -100,13 +100,15 @@ export default class ModelsController {
       await model.load('table')
       let modelData = request.all()
 
-      const client = Database.connection(Env.get('DB_CONNECTION'))
-      await client.schema.renameTable(`${model.table.name}`, `${string.pluralize(modelData.name)}`)
+      if (model.table.name !== string.pluralize(modelData.name)) {
+        const client = Database.connection(Env.get('DB_CONNECTION'))
+        await client.schema.renameTable(`${model.table.name}`, `${string.pluralize(modelData.name)}`)
 
-      model.table.merge({
-        name: string.pluralize(modelData.name)
-      })
-      await model.table.save()
+        model.table.merge({
+          name: string.pluralize(modelData.name)
+        })
+        await model.table.save()
+      }
 
       model.merge({
         description: modelData.description || '',
