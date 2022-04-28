@@ -55,7 +55,7 @@ import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 import {io} from "socket.io-client";
-import {addRoute, editModels, setRoutes} from "./js/store/routes-state/action";
+import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-state/action";
 
 
 window.React = React;
@@ -80,6 +80,11 @@ class Admin extends Component {
   filterRoutes(filterFn){
     if(_.isFunction(filterFn)){
       this.props.setRoutes(filterFn(this.props.routes))
+    }
+  }
+  filterMainMenu(filterFn){
+    if(_.isFunction(filterFn)){
+      this.props.setMainMenu(filterFn(this.props.mainMenu))
     }
   }
 
@@ -191,7 +196,6 @@ class Admin extends Component {
     if (this.state.pagesMenuShow) {
       adminClasses.push("admin_pages-show");
     }
-    console.log(mainMenu);
     return (
       <div className={adminClasses.join(" ")}>
         <div className="admin-block">
@@ -366,6 +370,13 @@ class Admin extends Component {
                             <span>Settings</span>
                           </Link>
                         </li>
+                        {mainMenu.map( (item, idx) => <li key={item.id || 'main-menu' + idx }>
+                          <Link className="admin-nav-list__link admin-nav-list__link-top" to={item.to}>
+                            <SettingSvg className="icon" />
+
+                            <span>{item.text}</span>
+                          </Link>
+                        </li> )}
                       </ul>
                     </Scrollbars>
                   )}
@@ -574,6 +585,7 @@ const mapDispatchToProps = dispatch => {
     getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue)),
     addRoute: route => dispatch(addRoute(route)),
     setRoutes: routes => dispatch(setRoutes(routes)),
+    setMainMenu: routes => dispatch(setMainMenu(routes)),
   }
 };
 

@@ -239,17 +239,18 @@ Route.group(() => {
       /**
        * handle all 4 HTTP methods
        */
-      Route[method]('plugins-handlers', async (httpContext: HttpContextContract) => {
+      Route[method]('plugins-handlers/*', async (httpContext: HttpContextContract) => {
         const plugins = Plugin.getEnabledPlugins()
         const segments = httpContext.request.url().split('/').filter(segment => segment)
         const plugin = plugins.find(plugin => {
-          return plugin.name === segments[2]
+          return plugin.name === segments[3]
         })
         if(! plugin){
           httpContext.response.status(404)
-          return httpContext.response.json({success: false, message: 'Not Found'})
+          return httpContext.response.json({success: false, message: 'Plugin Not Found'})
         }
-        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[3]}`)
+        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js': 'ts'}`)
+        console.log(fileName);
         if(fs.existsSync(fileName)){
           try{
             if(isProd()){
