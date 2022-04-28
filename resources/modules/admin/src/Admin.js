@@ -55,7 +55,7 @@ import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 import {io} from "socket.io-client";
-import {addRoute, editModels} from "./js/store/routes-state/action";
+import {addRoute, editModels, setRoutes} from "./js/store/routes-state/action";
 
 
 window.React = React;
@@ -77,6 +77,12 @@ class Admin extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
+  filterRoutes(filterFn){
+    if(_.isFunction(filterFn)){
+      this.props.setRoutes(filterFn(this.props.routes))
+    }
+  }
+
   componentDidMount() {
     store.subscribe(this.updateAdminState.bind(this));
     new Resource({ route: "/admin/ajax/model_options" })
@@ -86,6 +92,9 @@ class Admin extends Component {
     this.getConnect();
     this.getMetaName();
     this.getStatusCheckedModels();
+    const AdminLoadedEvent = new Event('altrp-admin-loaded')
+    window.dispatchEvent(AdminLoadedEvent);
+    _.get(window, 'altrp.adminLoaded', true)
   }
 
   async getStatusCheckedModels() {
@@ -174,7 +183,7 @@ class Admin extends Component {
   }
 
   render() {
-    const { models } = this.props;
+    const { models, mainMenu } = this.props;
     let adminClasses = ["admin"];
     if (!this.props.adminEnable) {
       adminClasses.push("pointer-event-none");
@@ -182,6 +191,7 @@ class Admin extends Component {
     if (this.state.pagesMenuShow) {
       adminClasses.push("admin_pages-show");
     }
+    console.log(mainMenu);
     return (
       <div className={adminClasses.join(" ")}>
         <div className="admin-block">
@@ -552,6 +562,7 @@ const mapStateToProps = (state) => {
   return {
     metaValue: state.customFonts.metaValue,
     routes: state.routesState.routes,
+    mainMenu: state.routesState.mainMenu,
     models: state.routesState.models,
     adminEnable: state.adminState?.adminEnable,
   }
@@ -562,6 +573,7 @@ const mapDispatchToProps = dispatch => {
     setUserData: user => dispatch(setUserData(user)),
     getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue)),
     addRoute: route => dispatch(addRoute(route)),
+    setRoutes: routes => dispatch(setRoutes(routes)),
   }
 };
 
