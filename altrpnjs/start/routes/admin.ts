@@ -1,6 +1,11 @@
 import Route from '@ioc:Adonis/Core/Route';
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import env from "../../helpers/env";
+import Plugin from "App/Plugin";
+import app_path from "../../helpers/app_path";
+import fs from "fs";
+import isProd from "../../helpers/isProd";
+import _ from "lodash";
 
 Route.group(() => {
 
@@ -223,7 +228,54 @@ Route.group(() => {
 
     Route.get('/package_key', 'admin/AdminController.getPackageKey');
 
-  }).prefix('/ajax')
+
+    /**
+     * plugins ajax requests START
+     */
+    const methods = [
+      'get', 'post', 'put', 'delete'
+    ]
+    for(const method of methods) {
+      /**
+       * handle all 4 HTTP methods
+       */
+      Route[method]('plugins-handlers', async (httpContext: HttpContextContract) => {
+        const plugins = Plugin.getEnabledPlugins()
+        const segments = httpContext.request.url().split('/').filter(segment => segment)
+        const plugin = plugins.find(plugin => {
+          return plugin.name === segments[2]
+        })
+        if(! plugin){
+          httpContext.response.status(404)
+          return httpContext.response.json({success: false, message: 'Not Found'})
+        }
+        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[3]}`)
+        if(fs.existsSync(fileName)){
+          try{
+            if(isProd()){
+              Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+            }
+            const module = isProd() ? await require(fileName).default : (await import(fileName)).default
+            if(_.isFunction(module)){
+              return await module(httpContext)
+            }
+          }catch (e) {
+            httpContext.response.status(500)
+            return httpContext.response.json({
+              success: false,
+              message: e.message,
+              trace: e.stack.split('\n'),
+            })
+          }
+        }
+        httpContext.response.status(404)
+        return httpContext.response.json({success: false, message: 'Not Found'})
+      })
+    }
+    /**
+     * plugins ajax requests END
+     */
+  }).middleware('catch_unhandled_json').prefix('/ajax')
   Route.get('/customizers-editor', 'IndicesController.customizer')
 
   Route.get("/robots-editor", "IndicesController.robot")
@@ -233,6 +285,7 @@ Route.group(() => {
 
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')
+
 })
   .prefix('/admin')
   .middleware('admin')

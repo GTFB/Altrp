@@ -158,6 +158,6 @@ export default class ElementRenderer {
     if(this.element.settings.content){
       return `<div class="altrp-text ck ck-content">{{{data_get(altrpContext, '${this.element.settings.content}', '${this.element.settings.text || ''}')}}}</div>`
     }
-    return `<div class="altrp-text ck ck-content">${this.element.settings.text || ''}</div>`
+    return `<div class="altrp-text ck ck-content">{{{getResponsiveSetting(element${this.getId()}_settings, 'text', device, '')}}}</div>`
   }
 }

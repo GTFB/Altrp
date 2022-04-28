@@ -683,17 +683,12 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
-    // if(this.state.children) {
-    //   if(this.state.children.component) {
-    //     if(this.state.children.component.settings.button_text) {
-    //       console.log(this.state.children.component.settings.button_text)
-    //     }
-    //   }
-    // }
+
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
     if(this.state.cursorPos !== nextState.cursorPos) return true;
+    if(nextProps.currentScreen !== this.props.currentScreen) return true;
     if (
       nextProps.controllerValue === this.props.controllerValue &&
       this.props.element !== this.props.currentElement

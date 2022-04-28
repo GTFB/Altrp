@@ -5,13 +5,13 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
+import elementsToPdf from "../functions/elementsToPdf";
 const {
   altrpLogin,
   altrpLogout,
   dataFromTable,
   dataToCSV,
   dataToXML,
-  elementsToPdf,
   getAppContext,
   getComponentByElementId,
   getHTMLElementById,
@@ -788,7 +788,7 @@ class AltrpAction extends AltrpModel {
       getHTMLElementById(elementId.trim()) &&
       elements.push(getHTMLElementById(elementId));
     });
-    return await elementsToPdf(elements, filename);
+    return await elementsToPdf(elements, filename, this.getProperty('with_breaks'), this.getProperty('p'));
   }
 
   /**

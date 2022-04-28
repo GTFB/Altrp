@@ -1,6 +1,7 @@
 import Tooltip from "./Tooltip";
 import getDataByPath from '../../../../../front-app/src/js/functions/getDataByPath'
 import isEditor from '../../../../../front-app/src/js/functions/isEditor'
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-text {
@@ -101,6 +102,7 @@ class TextWidget extends Component {
       && _.isString(getDataByPath(content))) {
       textContent = getDataByPath(content);
     }
+    textContent = isEditor() ?textContent: replaceContentWithData(textContent)
     if (this.props.CKEditor) {
       return (
         <div className={"altrp-text " + (this.state.settings.position_css_classes || "")}

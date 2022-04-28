@@ -141,7 +141,7 @@ export default class Plugin {
    * Удалить списки виджетов и пр. для активных плагинов из .env
    */
   static async updateAltrpPluginLists() {
-    let plugins = await Plugin.getEnabledPlugins()
+    let plugins = Plugin.getEnabledPlugins()
     let new_widget_list: any = []
     plugins.forEach((plugin) => {
         try {
@@ -163,7 +163,7 @@ export default class Plugin {
     return new_widget_list.join(',')
   }
 
-  static async getEnabledPlugins(): Promise<Plugin[]> {
+  static getEnabledPlugins(): Plugin[] {
     let enabledPlugins: any[]
 
     if (get_plugin_setting(Plugin.ALTRP_PLUGINS)) {

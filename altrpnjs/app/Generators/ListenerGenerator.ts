@@ -294,13 +294,13 @@ export default class ListenerGenerator extends BaseGenerator {
     }
   }
 
-  public async delete(type) {
-    if(!type) {
+  public async delete(customizer:Customizer) {//todo: don't need listeners delete
+    if(!customizer) {
       return
     }
+    this.customizer = customizer
 
-
-    const dir = ListenerGenerator.directory + "altrp_models" + "." + type;
+    const dir = ListenerGenerator.directory + "altrp_models" + "." + customizer.settings.type;
 
     if (!fs.existsSync(dir)){
       fs.mkdirSync(dir);

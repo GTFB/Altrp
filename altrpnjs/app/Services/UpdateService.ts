@@ -10,6 +10,8 @@ import public_path from "../../helpers/public_path";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
+import guid from "../../helpers/guid";
+import Env from "@ioc:Adonis/Core/Env";
 
 export default class UpdateService {
 
@@ -53,18 +55,29 @@ export default class UpdateService {
     // Upgrade the Database
     await UpdateService.upgradePackages()
     await UpdateService.upgradeDatabase()
-
     /**
      * clear all view cached pages
      */
     View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
     clearRequireCache()
-    // Write providers
-    // Update modules statuses
-    // Update the current version to last version
+    UpdateService.setPackageKey();
     return true;
   }
+  static setPackageKey(){
 
+    /**
+     * set package key
+     */
+    let packageKey
+    if(fs.existsSync(base_path('.package_key'))){
+      packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
+      Logger.info("Setting package key by File")
+    } else {
+      packageKey = guid()
+      Logger.info("Setting package key by random guid")
+    }
+    Env.set('PACKAGE_KEY', packageKey)
+  }
   /**
    * @param {string} file_content
    * @return bool

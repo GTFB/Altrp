@@ -981,36 +981,6 @@ export function printElements(elements, title = "") {
   return true;
 }
 
-/**
- * Функция конвертирует HTML в PDF
- * @params {HTMLElement[]} element
- * @params {string} filename
- */
-export async function elementsToPdf(elements, filename = "") {
-  let html2pdf = (await import(/* webpackChunkName: 'html2pdf' */"html2pdf.js")).default;
-  elements = elements.body ? elements.body : elements;
-
-  if (!elements) {
-    return {
-      success: true
-    };
-  }
-  let myWindow = window.open("", "my div", "height=400,width=1440");
-  myWindow.document.write(`<html><head><title></title></head>`);
-  myWindow.document.write("</head><body >");
-  elements = _.isArray(elements) ? elements : [elements];
-  elements.forEach(element => {
-    myWindow.document.write(element.outerHTML);
-  });
-  myWindow.document.write("</body></html>");
-  return new Promise((resolve, reject) => {
-    html2pdf()
-      .from(myWindow.document.body)
-      .save(filename);
-    myWindow.close();
-    resolve({ success: true });
-  });
-}
 
 /**
  * Забирает данные из HTML таблицы
