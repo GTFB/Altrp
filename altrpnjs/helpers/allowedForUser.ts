@@ -23,8 +23,8 @@ export default function allowedForUser(settings: any, user:User|null|undefined):
   if ( conditional_display_choose === 'auth' ) {
     result = ! ! user;
   }
-  if ( ! ( settings['conditional_roles']
-    || settings['conditional_permissions'] ) ) {
+  if ( ! ( settings['conditional_roles']?.length
+    || settings['conditional_permissions']?.length ) ) {
     return result;
   }
   const roles = data_get( settings, 'conditional_roles', [] );
