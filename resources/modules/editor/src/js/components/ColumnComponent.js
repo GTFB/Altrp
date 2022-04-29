@@ -64,7 +64,6 @@ class ColumnComponent extends Component {
 
     const layout_html_tag = this.props.element.getLockedSettings('layout_html_tag') || 'div';
 
-
     return React.createElement(layout_html_tag,
       {
         className,

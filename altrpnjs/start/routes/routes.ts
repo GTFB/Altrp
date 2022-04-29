@@ -294,6 +294,7 @@ Route.group(() => {
         success: false,
 
         message: `Controller ${controllerName}; Method: ${methodName}
+
 ${e.message}`,
         trace: e.stack.split('\n'),
       })
@@ -310,7 +311,7 @@ ${e.message}`,
      * handle all 4 HTTP methods
      */
     Route[method]('plugins', async (httpContext: HttpContextContract) => {
-      const plugins = await Plugin.getEnabledPlugins()
+      const plugins = Plugin.getEnabledPlugins()
       const segments = httpContext.request.url().split('/').filter(segment => segment)
       const plugin = plugins.find(plugin => {
         return plugin.name === segments[2]

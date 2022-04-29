@@ -129,13 +129,13 @@ export default class CustomizersController {
       )
     }
 
-    if(customizer.type === "listener") {
-      // @ts-ignore
-      const generator = new ListenerGenerator()
-
-      await generator.delete(customizer)
-
-    }
+    // if(customizer.type === "listener") {
+    //   // @ts-ignore
+    //   const generator = new ListenerGenerator()
+    //
+    //   await generator.delete(customizer)
+    //
+    // }
     const oldType = customizer.type
     const oldSettings = customizer.settings
     customizer.merge(request.all())

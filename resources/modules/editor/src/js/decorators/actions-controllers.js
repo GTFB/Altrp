@@ -521,6 +521,29 @@ export function actionsControllers(
     },
     locked: true,
   });
+  actionsRepeater.addControl('with_breaks', {
+    label: 'With Breaks',
+    responsive: false,
+    dynamic: false,
+    type: CONTROLLER_SWITCHER,
+    conditions: {
+      type: [
+        'elements_to_pdf',
+      ]
+    },
+    locked: true,
+  });
+  actionsRepeater.addControl('p', {
+    label: 'Page Paddings',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'elements_to_pdf',
+      ]
+    },
+    locked: true,
+  });
 
   actionsRepeater.addControl('template_name', {
     label: 'Template name',

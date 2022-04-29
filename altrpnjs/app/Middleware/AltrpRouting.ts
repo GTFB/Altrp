@@ -43,6 +43,7 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
+
     if (httpContext.request.method() !== 'GET') {
       await next()
       return
