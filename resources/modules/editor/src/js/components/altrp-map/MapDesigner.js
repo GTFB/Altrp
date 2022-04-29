@@ -48,7 +48,8 @@ function MapDesigner({
   field_first_connect = null,
   field_second_connect = null,
   parameters,
-  settings
+  settings,
+  element
 }) {
   const FG = useRef(null);
   const ModalRef = useRef(null);
@@ -56,7 +57,7 @@ function MapDesigner({
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
 
-  let dynamicMarkers = settings.markers;
+  let dynamicMarkers = element.getLockedSettings("markers");
 
   if(_.isArray(dynamicMarkers)) {
     dynamicMarkers = dynamicMarkers.filter(elem => {
@@ -64,16 +65,19 @@ function MapDesigner({
       return true
     })
 
-    dynamicMarkers.map(elem => {
-      feature: {
-        geometry: {
-          coordinates: [elem.marker_lat, elem.marker_long]
+    dynamicMarkers = dynamicMarkers.map(elem => {
+      return {
+        feature: {
+          geometry: {
+            coordinates: [elem.marker_lat, elem.marker_long]
+          },
+          properties: {
+            tooltip: elem.marker_tooltip
+          }
         }
       }
     })
   }
-
-  console.log(dynamicMarkers)
 
   const [markers, setMarkers] = useState(dynamicMarkers || null);
 

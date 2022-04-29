@@ -106,6 +106,13 @@ class Map extends BaseElement {
       locked: true,
     });
 
+    repeater.addControl("marker_tooltip", {
+      type: CONTROLLER_TEXT,
+      label: "Tooltip text",
+      default: "Text",
+      locked: true,
+    });
+
     this.addControl('markers', {
       label: 'Markers',
       type: CONTROLLER_REPEATER,

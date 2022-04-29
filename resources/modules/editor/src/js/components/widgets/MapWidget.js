@@ -156,7 +156,7 @@ class MapWidget extends Component {
 
   render() {
     return (
-        <AltrpMap settings={this.state.settings} id={this.props.element.id} />
+        <AltrpMap element={this.props.element} settings={this.state.settings} id={this.props.element.id} />
     );
   }
 }

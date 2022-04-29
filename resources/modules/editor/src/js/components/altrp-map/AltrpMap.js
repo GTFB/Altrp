@@ -9,7 +9,7 @@ const defaultOptions = {
   color: "#3388ff"
 };
 
-function AltrpMap({ settings }) {
+function AltrpMap({ element, settings }) {
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
   const {
@@ -84,27 +84,26 @@ function AltrpMap({ settings }) {
     }
   }, [query]);
 
-  return (
-    <MapDesigner
-      isTransformLatLng={true}
-      data={geoJson}
-      onTap={handleClickPolygon}
-      isLoading={isLoading}
-      style={{
-        pointerEvents: window.altrpHelpers.isEditor() ? 'none' : 'auto',
-        height: (style_height.size + style_height.unit) || "200px",
-        marginTop: (style_margin.top + style_margin.unit) || "10px",
-        marginBottom: (style_margin.bottom + style_margin.unit) || "10px",
-        marginLeft: (style_margin.left + style_margin.unit) || "10px",
-        marginRight: (style_margin.right + style_margin.unit) || "10px"
-      }}
-      settings={settings}
-      isEditable={false}
-      preferCanvas={canvas}
-      zoom={+zoom}
-      center={[lat, lng]}
-    />
-  );
+  return <MapDesigner
+    element={element}
+    isTransformLatLng={true}
+    data={geoJson}
+    onTap={handleClickPolygon}
+    isLoading={isLoading}
+    style={{
+      pointerEvents: window.altrpHelpers.isEditor() ? 'none' : 'auto',
+      height: (style_height.size + style_height.unit) || "200px",
+      marginTop: (style_margin.top + style_margin.unit) || "10px",
+      marginBottom: (style_margin.bottom + style_margin.unit) || "10px",
+      marginLeft: (style_margin.left + style_margin.unit) || "10px",
+      marginRight: (style_margin.right + style_margin.unit) || "10px"
+    }}
+    settings={settings}
+    isEditable={false}
+    preferCanvas={canvas}
+    zoom={+element.getLockedSettings("zoom")}
+    center={[element.getLockedSettings("lat"), element.getLockedSettings("lng")]}
+  />
 }
 
 export default AltrpMap;

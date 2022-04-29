@@ -262,7 +262,7 @@ export default class ListenerGenerator extends BaseGenerator {
     let imports = "";
     let content = "";
 
-    content = await this.applyFilters("pages", "array");
+    content = await this.applyFilters("pages", content);
 
     imports = await this.applyFilters("listener_imports", imports);
 
