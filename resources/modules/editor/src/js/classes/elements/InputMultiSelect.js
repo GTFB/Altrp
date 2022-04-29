@@ -226,6 +226,7 @@ class InputMultiSelect extends BaseElement {
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
       label: "Default Value",
+      description: 'Enter each option in a separate line. Separate them with a pipe char ("|"). For example:  value one | value two',
       locked: true,
     });
 
@@ -626,7 +627,7 @@ class InputMultiSelect extends BaseElement {
     });
 
     this.endControlSection();
-    
+
     this.startControlSection("required_style_section", {
       tab: TAB_STYLE,
       label: "Required"
