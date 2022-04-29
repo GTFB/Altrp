@@ -1,5 +1,5 @@
 import Model from "App/Models/Model";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import Column from "App/Models/Column";
 import Table from "App/Models/Table";
 import Relationship from "App/Models/Relationship";

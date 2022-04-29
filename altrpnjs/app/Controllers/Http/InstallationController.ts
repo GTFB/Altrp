@@ -1,6 +1,6 @@
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import appInstallFilesExist from "../../../helpers/appInstallFilesExist";
-import base_path from "../../../helpers/base_path";
+import base_path from "../../../helpers/path/base_path";
 import fs from "fs";
 import Env from '@ioc:Adonis/Core/Env'
 import getLatestVersion from "../../../helpers/getLatestVersion";

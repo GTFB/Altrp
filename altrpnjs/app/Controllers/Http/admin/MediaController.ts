@@ -1,7 +1,7 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Media from 'App/Models/Media';
 import empty from '../../../../helpers/empty';
-import base_path from '../../../../helpers/base_path';
+import base_path from '../../../../helpers/path/base_path';
 import fs from 'fs'
 import User from 'App/Models/User';
 import is_array from '../../../../helpers/is_array';
@@ -11,7 +11,7 @@ import convert from 'heic-convert'
 import {parseString} from'xml2js'
 import data_get from '../../../../helpers/data_get';
 import guid from '../../../../helpers/guid';
-import public_path from "../../../../helpers/public_path";
+import public_path from "../../../../helpers/path/public_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 
 export default class MediaController {

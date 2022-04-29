@@ -2,7 +2,7 @@ import Route from '@ioc:Adonis/Core/Route';
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import env from "../../helpers/env";
 import Plugin from "App/Plugin";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import isProd from "../../helpers/isProd";
 import _ from "lodash";

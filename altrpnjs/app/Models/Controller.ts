@@ -5,7 +5,7 @@ import Source from 'App/Models/Source';
 import Model from 'App/Models/Model';
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
 import NotFoundException from 'App/Exceptions/NotFoundException';
-import base_path from '../../helpers/base_path';
+import base_path from '../../helpers/path/base_path';
 import * as _ from 'lodash';
 import isProd from "../../helpers/isProd";
 

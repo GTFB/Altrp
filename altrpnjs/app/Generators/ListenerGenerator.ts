@@ -1,5 +1,5 @@
 import {BaseGenerator} from "App/Generators/BaseGenerator";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import fs from "fs";
 import path from "path"

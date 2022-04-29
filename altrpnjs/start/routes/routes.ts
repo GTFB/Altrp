@@ -24,7 +24,7 @@ import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import Customizer from "App/Models/Customizer";
 import fs from 'fs'
 import Model from "App/Models/Model";

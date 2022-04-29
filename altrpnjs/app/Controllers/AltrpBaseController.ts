@@ -4,7 +4,7 @@ import ExportExcel from "App/Services/ExportExcel";
 import ExportWord from "App/Services/ExportWord";
 import replaceContentWithData from "../../helpers/replaceContentWithData";
 import Model from "App/Models/Model";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import Source from "App/Models/Source";
 import fetch from 'node-fetch';

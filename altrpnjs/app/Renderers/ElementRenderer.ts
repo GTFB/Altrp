@@ -1,4 +1,4 @@
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import * as mustache from 'mustache'
 import * as _ from 'lodash'

@@ -1,6 +1,6 @@
 import Plugin from "App/Plugin";
 import fs from "fs";
-import app_path from "./app_path";
+import app_path from "./path/app_path";
 import isProd from "./isProd";
 import Logger from "@ioc:Adonis/Core/Logger";
 
