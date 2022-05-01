@@ -250,7 +250,6 @@ Route.group(() => {
           return httpContext.response.json({success: false, message: 'Plugin Not Found'})
         }
         const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js': 'ts'}`)
-        console.log(fileName);
         if(fs.existsSync(fileName)){
           try{
             if(isProd()){

@@ -172,10 +172,15 @@ export default class Plugin {
       enabledPlugins = []
     }
     enabledPlugins = enabledPlugins.map(function (plugin_name) {
-      return new Plugin({
-        name: plugin_name
-      })
-    })
+      try {
+        return new Plugin({
+          name: plugin_name
+        })
+      } catch (e) {
+        Logger.error(e)
+      }
+      return null
+    }).filter(p => p)
     enabledPlugins = _.uniqBy(enabledPlugins, (plugin) => {
       return plugin.name
     })

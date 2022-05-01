@@ -7,8 +7,8 @@ import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
 import isProd from "../../../helpers/isProd";
 import base_path from "../../../helpers/path/base_path";
-import applyPluginsFiltersSync from "../../../helpers/applyPluginsFiltersSync";
-import applyPluginsFiltersAsync from "../../../helpers/applyPluginsFiltersAsync";
+import applyPluginsFiltersSync from "../../../helpers/plugins/applyPluginsFiltersSync";
+import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
 
 
 export default class IndicesController {

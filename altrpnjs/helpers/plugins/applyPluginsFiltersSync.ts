@@ -1,6 +1,6 @@
 import Plugin from "App/Plugin";
 import fs from "fs";
-import app_path from "./path/app_path";
+import app_path from "../path/app_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 
 export default  function applyPluginsFiltersSync(type: string, content,) {
