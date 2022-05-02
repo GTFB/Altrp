@@ -2,8 +2,6 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.scss";
 import Updates from "./Updates";
 import StylesSettings from "./StylesSettings";
-import Import from "./settings/Import";
-import Export from "./settings/Export";
 import Websockets from "./settings/integrations/Websockets";
 import Telegram from "./settings/integrations/Telegram";
 import Resource from "../../../editor/src/js/classes/Resource";
@@ -279,8 +277,6 @@ class AdminSettings extends Component {
               <Tab>Integrations</Tab>
               <Tab>Advanced</Tab>
               <Tab>Updates</Tab>
-              <Tab>Export</Tab>
-              <Tab>Import</Tab>
               <Tab>Mail</Tab>
               <Tab>Categories</Tab>
               <Tab>Image settings</Tab>
@@ -464,12 +460,6 @@ class AdminSettings extends Component {
             </TabPanel>
             <TabPanel>
               <Updates attr={"attr"} />
-            </TabPanel>
-            <TabPanel>
-              <Export />
-            </TabPanel>
-            <TabPanel>
-              <Import />
             </TabPanel>
             <TabPanel>
               <React.Suspense fallback={"Loading"}>

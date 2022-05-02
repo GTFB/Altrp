@@ -2,11 +2,11 @@ import AdmZip from "adm-zip"
 import env from '../../helpers/env';
 import Logger from '@ioc:Adonis/Core/Logger';
 import axios from 'axios';
-import base_path from '../../helpers/base_path';
+import base_path from '../../helpers/path/base_path';
 import fs from 'fs'
 import { exec } from'child_process'
 import {promisify} from 'util'
-import public_path from "../../helpers/public_path";
+import public_path from "../../helpers/path/public_path";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
@@ -28,6 +28,7 @@ export default class UpdateService {
       return true;
     }
 
+    Logger.info("Starting Update")
     let file = ''
     try {
       file = (await axios.get(UpdateService.UPDATE_DOMAIN, {
@@ -61,6 +62,7 @@ export default class UpdateService {
     View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
     clearRequireCache()
     UpdateService.setPackageKey();
+    Logger.info("End Update")
     return true;
   }
   static setPackageKey(){

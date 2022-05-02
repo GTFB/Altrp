@@ -1,7 +1,7 @@
 import fs from 'fs'
 import {BaseGenerator} from "./BaseGenerator";
 import Application from "@ioc:Adonis/Core/Application";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
 
 export default class PageGenerator extends BaseGenerator {

@@ -1,4 +1,4 @@
-import {Redirect} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import Resource from "../../../../../editor/src/js/classes/Resource"
 import store from "../store"
 import {editModels} from "./action"
@@ -48,6 +48,10 @@ import PermissionPage from "../../../components/access/PermissionPage"
 import AccessOptions from "../../../components/AccessOptions"
 import ModelsPage from "../../../components/models/ModelsPage"
 import ModelPage from "../../../components/models/ModelPage"
+import MainSvg from "../../../svgs/main-v2.svg";
+import DropletSvg from "../../../svgs/droplet-new.svg";
+import React from "react";
+import LayoutSvg from "../../../svgs/layout-v2.svg";
 
 const updateModels = async () => {
   let options = await new Resource({ route: "/admin/ajax/model_options" }).getAll()
@@ -113,8 +117,8 @@ const defaultState = [
   { path: "/admin/databases", component: <ModelsPage />, exact: false},
   { path: "/admin/database/:id", component: <ModelPage />, exact: false},
 ]
-
 export const initialState = {
   routes: defaultState,
+  mainMenu:[],
   models: []
 }

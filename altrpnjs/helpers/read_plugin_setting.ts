@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import base_path from './base_path';
+import base_path from './path/base_path';
 import file_exists from "./file_exists";
 
 export default function readPluginSetting (key: any) {

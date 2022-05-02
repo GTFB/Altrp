@@ -2,7 +2,7 @@ import Route from '@ioc:Adonis/Core/Route';
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import env from "../../helpers/env";
 import Plugin from "App/Plugin";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import isProd from "../../helpers/isProd";
 import _ from "lodash";
@@ -239,17 +239,17 @@ Route.group(() => {
       /**
        * handle all 4 HTTP methods
        */
-      Route[method]('plugins-handlers', async (httpContext: HttpContextContract) => {
+      Route[method]('plugins-handlers/*', async (httpContext: HttpContextContract) => {
         const plugins = Plugin.getEnabledPlugins()
         const segments = httpContext.request.url().split('/').filter(segment => segment)
         const plugin = plugins.find(plugin => {
-          return plugin.name === segments[2]
+          return plugin.name === segments[3]
         })
         if(! plugin){
           httpContext.response.status(404)
-          return httpContext.response.json({success: false, message: 'Not Found'})
+          return httpContext.response.json({success: false, message: 'Plugin Not Found'})
         }
-        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[3]}`)
+        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js': 'ts'}`)
         if(fs.existsSync(fileName)){
           try{
             if(isProd()){

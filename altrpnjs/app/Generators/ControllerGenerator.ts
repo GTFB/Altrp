@@ -1,4 +1,4 @@
-import app_path from "../../helpers/app_path"
+import app_path from "../../helpers/path/app_path"
 import fs from 'fs'
 import {BaseGenerator} from "App/Generators/BaseGenerator"
 import Controller from "App/Models/Controller"

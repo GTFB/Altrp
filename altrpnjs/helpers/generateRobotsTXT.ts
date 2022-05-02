@@ -1,5 +1,5 @@
 import { writeFileSync } from 'fs';
-import public_path from './public_path';
+import public_path from './path/public_path';
 import file_exists from "./file_exists";
 import env from './env'
 

@@ -7,7 +7,7 @@
 
 import Env from '@ioc:Adonis/Core/Env'
 import { DriveConfig } from '@ioc:Adonis/Core/Drive'
-import public_path from "../helpers/public_path";
+import public_path from "../helpers/path/public_path";
 
 /*
 |--------------------------------------------------------------------------
