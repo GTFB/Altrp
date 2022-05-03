@@ -354,7 +354,7 @@ class Models extends Component {
           <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
           <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})
+              All ({ activeTab === 0 ? modelsCount : dataSourcesCount || "0"})
             </span>
           </div>
         </div>

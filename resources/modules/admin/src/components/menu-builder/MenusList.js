@@ -15,19 +15,24 @@ class MenusList extends Component {
       activeCategory: 'All',
       activeHeader: 0,
       currentPage: 1,
-      menusSearch: ""
+      menusSearch: "",
+      pageCount: 1,
+      count: 1
     }
     this.resource = new Resource({route: '/admin/ajax/menus'})
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
-    this.itemsPerPage = 3;
+    this.itemsPerPage = 10;
   }
 
   async componentDidMount() {
     try {
       this.updateMenus()
       let {data} = await this.categoryOptions.getAll();
-      let menus = await this.resource.getAll();
-      this.setState(state => ({...state, menusDidMount: menus, categoryOptions: data }));
+      // let menus = await this.resource.getAll();
+      this.setState(state => ({...state,
+         // menusDidMount: menus,
+            categoryOptions: data
+      }));
     } catch (e) {
       console.error(e);
     }
@@ -101,11 +106,15 @@ class MenusList extends Component {
     if (urlCategories) {
       menus = await this.resource.getQueried({
         categories: urlCategories,
-        s: urlS === null ? this.state.menusSearch : urlS
+        s: urlS === null ? this.state.menusSearch : urlS,
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     } else {
       menus = await this.resource.getQueried({
-        s: urlS === null ? this.state.menusSearch : urlS
+        s: urlS === null ? this.state.menusSearch : urlS,
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     }
 
@@ -113,7 +122,9 @@ class MenusList extends Component {
       ...state,
       menus,
       menusSearch: urlS === null ? this.state.menusSearch : urlS,
-      activeCategory: urlCategories === null ? 'All' : urlCategories
+      activeCategory: urlCategories === null ? 'All' : urlCategories,
+      pageCount: menus[0].pageCount,
+      count: menus[0].count
     }))
   }
 
@@ -148,7 +159,7 @@ class MenusList extends Component {
 
   render() {
 
-    const { menus, currentPage, menusSearch, categoryOptions, menusDidMount } = this.state;
+    const { menus, currentPage, menusSearch, categoryOptions, menusDidMount, pageCount, count } = this.state;
     let menusMap = menus.map(menu => {
       let categories = menu.categories.map(item => {
         return item.category.title
@@ -169,7 +180,7 @@ class MenusList extends Component {
           <button className="btn" onClick={this.addNew} >Add New</button>
           <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({ menusDidMount.length || "0" })
+              All ({ count || "0" })
             </span>
           </div>
         </div>
@@ -215,10 +226,7 @@ class MenusList extends Component {
             getCategories: this.getCategory,
             activeCategory: this.state.activeCategory
           }}
-          rows={menusMap.slice(
-            currentPage * this.itemsPerPage - this.itemsPerPage,
-            currentPage * this.itemsPerPage
-          )}
+          rows={menusMap}
 
           searchTables={{
             submit: this.searchMenus,
@@ -226,14 +234,15 @@ class MenusList extends Component {
             change: this.changeMenus
           }}
 
-          pageCount={Math.ceil(menus.length / this.itemsPerPage) || 1}
+          pageCount={pageCount}
           currentPage={currentPage}
-          changePage={page => {
+          changePage={async (page) => {
             if (currentPage !== page) {
-              this.setState({ currentPage: page });
+               await this.setState({ currentPage: page });
+               await this.updateMenus()
             }
           }}
-          itemsCount={menus.length}
+          itemsCount={count}
 
           openPagination={true}
         />

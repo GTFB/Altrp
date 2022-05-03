@@ -10,9 +10,9 @@ import UserTopPanel from "./UserTopPanel";
 import React from "react";
 import CategoryTable from "./CategoryTable";
 import ImageSettingsTable from "./ImageSettingsTable";
-import AdvancedSettings from "./AdvancedSettings";
 import {connect} from "react-redux";
 import SmallModal from "./SmallModal";
+import AdvancedSettings from "./AdvancedSettings";
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
 class AdminSettings extends Component {

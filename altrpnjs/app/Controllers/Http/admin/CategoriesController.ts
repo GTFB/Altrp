@@ -5,15 +5,27 @@ import { v4 as uuid } from "uuid";
 export default class CategoriesController {
 
   async index({response, request}: HttpContextContract){
-    let query =  Category.query()
-    if(request.qs().categories){
+    const params = request.qs()
+    const page = parseInt(params.page) || 1
+    const pageSize = parseInt(params.pageSize) || 10
+    const searchWord = params.s
+    let categories
 
+    if (searchWord) {
+      categories = await Category.query()
+        .orWhere('name', 'LIKE', `%${searchWord}%`)
+        .orWhere('title', 'LIKE', `%${searchWord}%`)
+        .orWhere('description', 'LIKE', `%${searchWord}%`)
+        .orderBy('title').paginate(page, pageSize)
+    } else {
+      categories = await Category.query().orderBy('title').paginate(page, pageSize)
     }
-    let categories = await query
-      .orderBy('title', )
-    return response.json(
-      categories
-    )
+
+    return response.json({
+      categories: categories.all(),
+      count: categories.getMeta().total,
+      pageCount: categories.getMeta().last_page,
+    })
   }
 
   public async create({request, response}) {

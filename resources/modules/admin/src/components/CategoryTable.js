@@ -13,9 +13,11 @@ class CategoryTable extends Component {
       categories: [],
       categorySearch: '',
       currentPage: 1,
+      pageCount: 1,
+      count: 1
     }
 
-    this.itemsPerPage = 10;
+    this.itemsPerPage = 20;
     this.categories = new Resource({route: "/admin/ajax/categories"} );
   }
 
@@ -27,13 +29,17 @@ class CategoryTable extends Component {
     let url = new URL(location.href);
     let urlS = url.searchParams.get('s')
     const res = await this.categories.getQueried({
-      s: urlS === null ? this.state.categorySearch : urlS
+      s: urlS === null ? this.state.categorySearch : urlS,
+      page: this.state.currentPage,
+      pageSize: this.itemsPerPage
     })
 
     this.setState(state => ({
       ...state,
-      categories: res,
-      categorySearch: urlS === null ? this.state.categorySearch : urlS
+      categories: res.categories,
+      categorySearch: urlS === null ? this.state.categorySearch : urlS,
+      pageCount: res.pageCount,
+      count: res.count
     }))
   }
 
@@ -55,7 +61,7 @@ class CategoryTable extends Component {
   }
 
   render() {
-    const { categorySearch, categories, currentPage } = this.state
+    const { categorySearch, categories, currentPage, count, pageCount } = this.state
     return (
       <div className="category-table">
         <AdminTable
@@ -94,14 +100,15 @@ class CategoryTable extends Component {
             change: (e) => this.changeCategory(e)
           }}
 
-          pageCount={Math.ceil(categories.length / this.itemsPerPage) || 1}
+          pageCount={pageCount}
           currentPage={currentPage}
-          changePage={page => {
+          changePage={async (page) => {
             if (currentPage !== page) {
-              this.setState({ currentPage: page });
+              await this.setState({ currentPage: page })
+              await this.getCategories()
             }
           }}
-          itemsCount={categories.length}
+          itemsCount={count}
           openPagination={true}
         />
 
