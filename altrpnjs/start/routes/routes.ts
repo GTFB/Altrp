@@ -357,6 +357,9 @@ ${e.message}`,
   Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
   Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
 
+  Route.get('routes', async ({response}:HttpContextContract)=>{
+    return response.json({success: true, pages: []})
+  })
 })
   .prefix("/ajax")
 

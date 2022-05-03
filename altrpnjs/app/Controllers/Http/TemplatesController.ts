@@ -491,10 +491,11 @@ export default class TemplatesController {
       template = await Template.find(params.id)
     }
     if (!template) {
+      response.status(404)
       return response.json({
           'success':
             false, 'message':
-            'Customizer not found'
+            'Template not found'
         },
       )
     }
