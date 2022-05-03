@@ -265,7 +265,6 @@ export default class TemplatesController {
       template.data = JSON.stringify(request.input("data"));
       template.styles = JSON.stringify(request.input("styles"));
       template.html_content = request.input("html_content");
-
       await template.save()
 
       let templateGenerator = new TemplateGenerator()

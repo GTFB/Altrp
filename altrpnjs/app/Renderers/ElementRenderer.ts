@@ -19,6 +19,7 @@ export default class ElementRenderer {
       react_element?:boolean
       layout_content_width_type?:string
       isFixed?:boolean
+      default_hidden: boolean
     },
     name: string,
     type: string,
@@ -37,6 +38,7 @@ export default class ElementRenderer {
       ...this.element.settings,
       ...this.element.settingsLock
     }
+
     const {advanced_element_id} = this.element.settings
     let children_content = ''
     for (const child of this.element.children){
@@ -77,6 +79,9 @@ export default class ElementRenderer {
         }
         break;
       }
+
+
+
       styles = objectToStylesString(styles)
       const text_widget_content = this.getTextWidgetContent()
       element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
@@ -102,7 +107,8 @@ export default class ElementRenderer {
     if (this.getType() === "widget") {
       classes += ` altrp-widget_${this.getName()}`;
     }
-    let wrapper_attributes = `class="${classes}"
+
+    let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
     {{{getResponsiveSetting(element${this.getId()}_settings, 'en_an', screen)
       ? \`data-enter-animation-type="\${getResponsiveSetting(element${this.getId()}_settings, 'en_an', device)}"
       data-enter-animation-delay="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_delay', device, 0)}"

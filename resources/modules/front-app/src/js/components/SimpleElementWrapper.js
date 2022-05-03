@@ -28,6 +28,7 @@ class SimpleElementWrapper extends Component {
     this.tooltipOnMouseLeave = this.tooltipOnMouseLeave.bind(this);
     appStore.dispatch(addElement(this));
     this.elementId = props.element.getId();
+
   }
 
   /**
@@ -317,6 +318,7 @@ class SimpleElementWrapper extends Component {
       );
     }
     const styles = {};
+
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
