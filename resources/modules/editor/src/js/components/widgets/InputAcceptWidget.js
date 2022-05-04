@@ -973,6 +973,20 @@ class InputAcceptWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input accept widget
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
@@ -1038,15 +1052,16 @@ class InputAcceptWidget extends Component {
         classLabel = "";
         break;
     }
-
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
     if (this.state.settings.content_label) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
               }`}
@@ -1076,7 +1091,7 @@ class InputAcceptWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={` ${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1101,13 +1116,15 @@ class InputAcceptWidget extends Component {
     } else if (value === falseValue) {
       value = false;
     }
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
     return (
-      <div className={`altrp-field-option ${value ? "active" : ""}`}>
-        <span className="altrp-field-option-span">
+      <div className={` ${classes} altrp-field-option ${value ? "active" : ""}`}>
+        <span className={`${classes} altrp-field-option-span`}>
           <input
             type="checkbox"
             name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-            className={`altrp-field-option__input ${value ? "active" : ""}`}
+            className={` ${classes} altrp-field-option__input ${value ? "active" : ""}`}
             onChange={this.onChange}
             checked={!!value}
             id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}

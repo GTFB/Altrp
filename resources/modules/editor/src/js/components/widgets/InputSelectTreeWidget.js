@@ -1000,6 +1000,22 @@ class InputSelectTreeWidget extends Component {
   onInteraction = (isOpen)=>{
     this.setState(state=>({...state, isOpen}))
   }
+
+  /**
+   * Получить css классы для input select tree
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+
   render() {
     const element = this.props.element;
     let label = null;
@@ -1090,7 +1106,9 @@ class InputSelectTreeWidget extends Component {
 
     let input = null;
 
-    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+
     const position_css_id = this.getLockedContent('position_css_id')
 
     let body = isEditor() ?
@@ -1103,11 +1121,12 @@ class InputSelectTreeWidget extends Component {
         fill={true}
         isOpen={this.state.isOpen}
         onInteraction={this.onInteraction}
-        popoverClassName={`altrp-select-tree_popover altrp-select-tree${this.props.element.getId()}`}
+        popoverClassName={`${classes} altrp-select-tree_popover altrp-select-tree${this.props.element.getId()}`}
         renderTarget={({isOpen, ref, ...targetProps}) => {
           targetProps.className += " altrp-select-tree-btn"
           return (
             <Button
+              className={classes}
               text={buttonLabel}
               fill
               disabled={content_readonly}
@@ -1126,7 +1145,7 @@ class InputSelectTreeWidget extends Component {
         interactionKind="click"
         placement="bottom"
         content={
-          <div className={"altrp-select-tree" + (position_css_classes ? ` ${position_css_classes}` : "")} id={position_css_id}>
+          <div className={`${classes} altrp-select-tree`} id={position_css_id}>
             {
               ! s_off ? (
                 <InputGroup
@@ -1156,7 +1175,7 @@ class InputSelectTreeWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={`${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

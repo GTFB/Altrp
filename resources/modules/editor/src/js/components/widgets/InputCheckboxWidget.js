@@ -1002,6 +1002,20 @@ class InputCheckboxWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input checkbox
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
@@ -1010,6 +1024,7 @@ class InputCheckboxWidget extends Component {
       position_css_id: cssId,
       position_css_classes: cssClasses
     } = settings;
+
 
     let value = this.state.value;
 
@@ -1069,6 +1084,7 @@ class InputCheckboxWidget extends Component {
         break;
     }
 
+
     if (this.state.settings.content_label) {
       label = (
         <div
@@ -1120,12 +1136,15 @@ class InputCheckboxWidget extends Component {
     );
   }
 
+
   /**
    * Выводит input type=checkbox|radio
    */
   renderRepeatedInput() {
     let { options = [] } = this.state;
     let { value = "" } = this.state;
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "");
 
     const fieldName =
       this.props.element.getFieldId() ||
@@ -1150,7 +1169,7 @@ class InputCheckboxWidget extends Component {
 
           return (
             <div
-              className={`altrp-field-option ${checked ? "active" : ""}`}
+              className={`${classes} altrp-field-option ${checked ? "active" : ""}`}
               key={`${fieldName}-${idx}`}
             >
               <span className="altrp-field-option-span">
@@ -1160,7 +1179,7 @@ class InputCheckboxWidget extends Component {
                   id={`${formID}-${fieldName}-${idx}`}
                   onChange={this.onChange}
                   value={option.value}
-                  className={`altrp-field-checkbox${checked ? " active" : ""}`}
+                  className={`${classes} altrp-field-checkbox${checked ? " active" : ""}`}
                   checked={checked}
                 />
                 {/*<input*/}
@@ -1176,7 +1195,7 @@ class InputCheckboxWidget extends Component {
               </span>
               <label
                 htmlFor={`${formID}-${fieldName}-${idx}`}
-                className="altrp-field-option__label"
+                className={`${classes} altrp-field-option__label`}
               >
                 {option.label}
               </label>

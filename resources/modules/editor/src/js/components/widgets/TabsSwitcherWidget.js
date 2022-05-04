@@ -84,6 +84,20 @@ class TabsSwitcherWidget extends Component {
     }))
   }
 
+  /**
+   * Получить css классы для TabsSwitcherWidget
+   */
+  getClasses = ()=>{
+    let classes = `altrp-tabs-switcher_switch `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     // section 1
     const oneTitle = this.props.element.getResponsiveLockedSetting("one_title", "", "");
@@ -95,6 +109,7 @@ class TabsSwitcherWidget extends Component {
     const twoType = this.props.element.getResponsiveLockedSetting("two_type", "", "text");
     const twoWysiwyg = this.props.element.getResponsiveLockedSetting("two_wysiwyg", "", "");
     const twoTemplate = this.props.element.getResponsiveLockedSetting("two_template", "", null);
+    let classes = this.getClasses()
 
     function getContent(type, contentValue) {
       if(type === "text") {
@@ -132,7 +147,7 @@ class TabsSwitcherWidget extends Component {
           <Switch
             checked={this.state.switcher}
             onChange={this.onChange}
-            className="altrp-tabs-switcher_switch"
+            className={classes}
           />
         </div>
         <div  className="altrp-tabs-switcher_label altrp-tabs-switcher_label-two">

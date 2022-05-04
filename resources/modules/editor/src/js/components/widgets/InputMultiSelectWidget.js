@@ -1145,6 +1145,23 @@ class InputMultiSelectWidget extends Component {
   handleClear = ()=>{
     this.dispatchFieldValueToStore([], true)
   }
+
+
+  /**
+   * Получить css классы для input multiselect
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+
   render() {
     const element = this.props.element;
     let label = null;
@@ -1232,7 +1249,8 @@ class InputMultiSelectWidget extends Component {
     let input = null;
 
     let itemsOptions = this.getOptions();
-    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const position_css_id = this.getLockedContent('position_css_id')
     const selectedItems = this.getValue()
     const clearButton =
@@ -1277,7 +1295,7 @@ class InputMultiSelectWidget extends Component {
         }}
         id={position_css_id}
         tagRenderer={this.tagRender}
-        className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
+        className={classes}
       >
       </MultiSelect>
     );

@@ -1,4 +1,5 @@
 import { styledString} from "../../../../../../front-app/src/js/helpers/styles";
+import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 
 /**
  * @return {string}
@@ -6,7 +7,7 @@ import { styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
 export default function DatePickerComponent(settings, elementId) {
   const styles = [
-    `! div.altrp-date-picker${elementId}`,
+    `altrp-date-picker${elementId}`,
       ["padding", "picker_padding", "dimensions"],
       ["background-color", "picker_background", "color"],
       ["border-style", "picker_border_type"],
@@ -59,7 +60,65 @@ export default function DatePickerComponent(settings, elementId) {
       "}",
     "}",
 
-    `! div.altrp-date-picker-popover-${elementId}`,
+    `altrp-date-picker${elementId}.state-disabled`,
+    () => {
+      const value = getResponsiveSetting(settings, "position_opacity", '.state-disabled');
+
+      if (value && value?.size) {
+        return `opacity: ${value.size};`
+      } else {
+        return ''
+      }
+    },
+    ["background-color", "background_style_background_color", "color", ".state-disabled"],
+    ["border-style", "border_type", "", ".state-disabled"],
+    ["border-style", "picker_border_type", "", ".state-disabled"],
+    ["border-width", "border_width", "dimensions", ".state-disabled"],
+    ["border-color", "border_color", "color", ".state-disabled"],
+    ["border-radius", "border_radius", "dimensions", ".state-disabled"],
+    ["", "style_background_shadow", "shadow", ".state-disabled"],
+    ["", "picker_shadow", "shadow", ".state-disabled"],
+    ["color", "label_style_font_color", "color", ".state-disabled"],
+    ["color", "font_color", "color", ".state-disabled"],
+    ["color", "field_font_color", "color", ".state-disabled"],
+    ["color", "placeholder_style_font_color", "color", ".state-disabled"],
+    ["color", "required_style_font_color", "color", ".state-disabled"],
+    ["color", "date_font_color", "color", ".state-disabled"],
+    ["color", "date_outside_font_color", "color", ".state-disabled"],
+    ["color", "date_selected_font_color", "color", ".state-disabled"],
+    ["", "image", "media", ".state-disabled"],
+"}",
+
+    `altrp-date-picker${elementId}.active`,
+    () => {
+      const value = getResponsiveSetting(settings, "background_section_opacity", '.active');
+
+      if (value && value?.size) {
+        return `opacity: ${value.size};`
+      } else {
+        return ''
+      }
+    },
+    ["background-color", "background_style_background_color", "color", ".active"],
+    ["border-style", "border_type", "", ".active"],
+    ["border-style", "picker_border_type", "", ".active"],
+    ["border-width", "border_width", "dimensions", ".active"],
+    ["border-color", "border_color", "color", ".active"],
+    ["border-radius", "border_radius", "dimensions", ".active"],
+    ["", "style_background_shadow", "shadow", ".active"],
+    ["", "picker_shadow", "shadow", ".active"],
+    ["color", "label_style_font_color", "color", ".active"],
+    ["color", "font_color", "color", ".active"],
+    ["color", "field_font_color", "color", ".active"],
+    ["color", "placeholder_style_font_color", "color", ".active"],
+    ["color", "required_style_font_color", "color", ".active"],
+    ["color", "date_font_color", "color", ".active"],
+    ["color", "date_outside_font_color", "color", ".active"],
+    ["color", "date_selected_font_color", "color", ".active"],
+    ["", "image", "media", ".active"],
+    "}",
+
+    `altrp-date-picker-popover-${elementId}`,
       ["", "picker_shadow", "shadow"],
       ["border-radius", "picker_border_radius", "dimensions"],
 

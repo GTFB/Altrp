@@ -79,6 +79,133 @@ export default function TreeComponent(settings, prefix) {
       ["border-color", "border_color", "color", ".active"],
       ["", "border_shadow", "shadow", ".active"],
     "}",
+
+    //state disabled
+    "bp3-tree-node svg",
+    ["width", "icon_size", "slider", ".state-disabled"],
+    ["height", "icon_size", "slider", ".state-disabled"],
+    "}",
+
+    'bp3-tree',
+    ['background-color', 'tree_menu_background', 'color', ".state-disabled"],
+    '}',
+
+    'bp3-tree-node-list',
+    ['padding', 'tree_menu_padding', 'dimensions', ".state-disabled"],
+    '}',
+
+    'bp3-tree-node-content',
+    ['padding', 'tree_item_padding', 'dimensions', ".state-disabled"],
+    '}',
+
+    "bp3-tree-node.bp3-tree-node-selected path",
+    ["fill", "icon_fill", "color", ".state-disabled"],
+    ["stroke", "icon_stroke", "color", ".state-disabled"],
+    "}",
+
+    "bp3-tree-node path",
+    ["fill", "icon_fill", "color", ".state-disabled"],
+    ["stroke", "icon_stroke", "color", ".state-disabled"],
+    "}",
+
+    "bp3-tree-node path",
+    ["fill", "icon_fill", "color", ".state-disabled"],
+    ["stroke", "icon_stroke", "color", ".state-disabled"],
+    "}",
+
+    "bp3-tree-node-label",
+    ["", "typographic", "typographic", ".state-disabled"],
+    ["color", "typographic_color", "color", ".state-disabled"],
+    "}",
+
+    "bp3-tree-node-selected .bp3-tree-node-label",
+    ["", "typographic", "typographic", ".state-disabled"],
+    ["color", "typographic_color", "color", ".state-disabled"],
+    "}",
+
+    "bp3-tree-node-content",
+    ["height", "item_height", "slider", ".state-disabled"],
+    ["background-color", "item_background", "color", ".state-disabled"],
+    ["border-radius", "border_radius", "dimensions", ".state-disabled"],
+    ["", "border_shadow", "shadow", ".state-disabled"],
+    ["border-style", "border_type", "", ".state-disabled"],
+    ["border-width", "border_width", "dimensions", ".state-disabled"],
+    ["border-color", "border_color", "color", ".state-disabled"],
+    "}",
+
+    ("bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1).bp3-tree-node-content, " +
+      ".bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1):hover.bp3-tree-node-content:hover"),
+    ["background-color", "item_background", "color", ".state-disabled"],
+    ["border-radius", "border_radius", "dimensions", ".state-disabled"],
+    ["border-style", "border_type", "", ".state-disabled"],
+    ["border-width", "border_width", "dimensions", ".state-disabled"],
+    ["border-color", "border_color", "color", ".state-disabled"],
+    ["", "border_shadow", "shadow", ".state-disabled"],
+    "}",
+
+    //state active
+    "bp3-tree-node svg",
+    ["width", "icon_size", "slider", ".active"],
+    ["height", "icon_size", "slider", ".active"],
+    "}",
+
+    'bp3-tree',
+    ['background-color', 'tree_menu_background', 'color', ".active"],
+    '}',
+
+    'bp3-tree-node-list',
+    ['padding', 'tree_menu_padding', 'dimensions', ".active"],
+    '}',
+
+    'bp3-tree-node-content',
+    ['padding', 'tree_item_padding', 'dimensions', ".active"],
+    '}',
+
+    "bp3-tree-node.bp3-tree-node-selected path",
+    ["fill", "icon_fill", "color", ".active"],
+    ["stroke", "icon_stroke", "color", ".active"],
+    "}",
+
+    "bp3-tree-node path",
+    ["fill", "icon_fill", "color", ".active"],
+    ["stroke", "icon_stroke", "color", ".active"],
+    "}",
+
+    "bp3-tree-node path",
+    ["fill", "icon_fill", "color", ".active"],
+    ["stroke", "icon_stroke", "color", ".active"],
+    "}",
+
+    "bp3-tree-node-label",
+    ["", "typographic", "typographic", ".active"],
+    ["color", "typographic_color", "color", ".active"],
+    "}",
+
+    "bp3-tree-node-selected .bp3-tree-node-label",
+    ["", "typographic", "typographic", ".active"],
+    ["color", "typographic_color", "color", ".active"],
+    "}",
+
+    "bp3-tree-node-content",
+    ["height", "item_height", "slider", ".active"],
+    ["background-color", "item_background", "color", ".active"],
+    ["border-radius", "border_radius", "dimensions", ".active"],
+    ["", "border_shadow", "shadow", ".active"],
+    ["border-style", "border_type", "", ".active"],
+    ["border-width", "border_width", "dimensions", ".active"],
+    ["border-color", "border_color", "color", ".active"],
+    "}",
+
+    ("bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1).bp3-tree-node-content, " +
+      ".bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1):hover.bp3-tree-node-content:hover"),
+    ["background-color", "item_background", "color", ".active"],
+    ["border-radius", "border_radius", "dimensions", ".active"],
+    ["border-style", "border_type", "", ".active"],
+    ["border-width", "border_width", "dimensions", ".active"],
+    ["border-color", "border_color", "color", ".active"],
+    ["", "border_shadow", "shadow", ".active"],
+    "}",
+
   ]
 
   return styledString(styles, settings, {

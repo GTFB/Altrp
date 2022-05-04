@@ -941,6 +941,20 @@ class InputTextCommonWidget extends Component {
       text={text}/>
   }
 
+  /**
+   * Получить css классы для input text autocomplete
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getLockedSettings();
@@ -949,6 +963,9 @@ class InputTextCommonWidget extends Component {
       label_icon
     } = settings;
     let value = this.getValue()
+
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
 
     let classLabel = "";
     let styleLabel = {};
@@ -1006,7 +1023,7 @@ class InputTextCommonWidget extends Component {
               display: 'flex',
               flexDirection: label_icon_position,
             }}
-            className={`altrp-field-label altrp-field-label_text-widget ${this.state.settings.content_required
+            className={`${classes} altrp-field-label altrp-field-label_text-widget ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
             }`}
@@ -1038,6 +1055,7 @@ class InputTextCommonWidget extends Component {
           position="bottom"
           popoverRef={this.popoverRef}
           usePortal={false}
+          className={classes}
           content={<Menu>
             {options.map(this.itemRenderer)}
           </Menu>}
@@ -1059,6 +1077,7 @@ class InputTextCommonWidget extends Component {
             onFocus={this.onFocus}
             leftIcon={this.renderLeftIcon()}
             rightElement={this.renderRightIcon()}
+            className={classes}
           />
 
       </Popover2>

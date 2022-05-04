@@ -125,6 +125,98 @@ const fieldStyle = settings => {
 
   styles += "}";
 
+  //checkbox .state-disabled
+
+  settings && (size = getResponsiveSetting(settings, "field_size", ".state-disabled"));
+  size && (styles += `height:${sliderStyled(size)};width:${sliderStyled(size)};`);
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".state-disabled"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (padding = getResponsiveSetting(settings, "position_padding", ".state-disabled"));
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type", ".state-disabled"));
+  borderType &&
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color", ".state-disabled"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".state-disabled"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "border_radius", ".state-disabled"
+  ));
+  borderRadius &&
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color", ".state-disabled"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  placeholder_and_value_alignment_position_section &&
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+
+  position_z_index && (styles += `z-index:${position_z_index};`);
+  textarea_resize && (styles += `resize:${textarea_resize};`);
+
+  styles += "}";
+  // end of state disabled setting
+
+  //checkbox .active
+
+  settings && (size = getResponsiveSetting(settings, "field_size", ".active"));
+  size && (styles += `height:${sliderStyled(size)};width:${sliderStyled(size)};`);
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (padding = getResponsiveSetting(settings, "position_padding", ".active"));
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type", ".active"));
+  borderType &&
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color", ".active"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".active"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "border_radius", ".active"
+  ));
+  borderRadius &&
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color", ".active"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  placeholder_and_value_alignment_position_section &&
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+
+  position_z_index && (styles += `z-index:${position_z_index};`);
+  textarea_resize && (styles += `resize:${textarea_resize};`);
+
+  styles += "}";
+  // end of state active setting
+
   styles += `&& .altrp-field, && .altrp-field-checkbox .bp3-control-indicator:before {`;
 
 
@@ -534,7 +626,7 @@ const fieldLabelContainerStyle = settings => {
   label_position_left && (styles += `left:${label_position_left};`);
   label_icon_position && (styles += `flex-direction:${label_icon_position};`);
 
-  styles += "}";  
+  styles += "}";
 
   styles += `&& .altrp-field-container:hover .altrp-field-label-container {`
 

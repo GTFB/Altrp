@@ -1156,6 +1156,21 @@ class InputSelectWidget extends Component {
       this.searchOnPending = false;
     }
   }
+
+  /**
+   * Получить css классы для input select
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
 
     const element = this.props.element;
@@ -1259,7 +1274,9 @@ class InputSelectWidget extends Component {
     let input = null;
 
     let itemsOptions = this.getOptions();
-    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "");
+    // const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
     const position_css_id = this.getLockedContent('position_css_id')
 
 
@@ -1296,7 +1313,7 @@ class InputSelectWidget extends Component {
           name={this.getName()}
           onItemSelect={item => this.onItemSelect(item)}
           id={position_css_id}
-          className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
+          className={classes}
         >
           <Button
             // text={value}

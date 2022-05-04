@@ -665,9 +665,23 @@ class InputWysiwygWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input wysiwyg
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
-    const settings = this.props.element.getSettings();
+    const settings = this.props.element.getSettings()
     const {
       select2_multiple: isMultiple,
       label_icon
@@ -731,14 +745,17 @@ class InputWysiwygWidget extends Component {
         break;
     }
 
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
+// " + this.state.settings.position_css_classes || ""
     if (this.state.settings.content_label) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
               }`}
@@ -768,7 +785,7 @@ class InputWysiwygWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container " + this.state.settings.position_css_classes || ""}
+        className={`${classes} altrp-field-container`}
 
         id={this.state.settings.position_css_id || ""}
       >
