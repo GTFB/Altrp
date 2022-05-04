@@ -92,6 +92,7 @@ export default class CustomizersController {
       customizer = await Customizer.find(params.id)
     }
     if (!customizer) {
+      response.status(404)
       return response.json({
           'success':
             false, 'message':
@@ -121,6 +122,7 @@ export default class CustomizersController {
       .where('sourceable_type', Customizer.sourceable_type)
       .first()
     if (!customizer) {
+      response.status(404)
       return response.json({
           'success':
             false, 'message':
@@ -277,6 +279,7 @@ export default class CustomizersController {
       customizer = await Customizer.find(params.id)
     }
     if (!customizer) {
+      response.status(404)
       return response.json({
         'success':
           false, 'message':
@@ -323,6 +326,7 @@ export default class CustomizersController {
       _customizer = await Customizer.find(params.id)
     }
     if (!_customizer) {
+      response.status(404)
       return response.json({
           'success':
             false, 'message':

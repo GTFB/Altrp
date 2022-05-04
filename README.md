@@ -8,6 +8,7 @@
 * Fix Text Widget Renders
 * New Error Handler Middleware
 * Fix PDF Action
+* Fix Customizer Name Issue When Import
 
 ### 1.1.0
 * Fix Some Front App Styles
