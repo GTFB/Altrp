@@ -19,6 +19,8 @@ import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS"
 import Source from "App/Models/Source"
 import isProd from "../../helpers/isProd"
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
+import get_altrp_setting from "../../helpers/get_altrp_setting";
+import stringToObject from "../../helpers/string/stringToObject";
 
 export default class AltrpRouting {
 
@@ -208,6 +210,21 @@ export default class AltrpRouting {
         //   minifyCSS: true,
         //   minifyJS: true,
         // })
+
+        /**
+         * Add Custom Headers
+         */
+
+        let customHeaders:string|object = get_altrp_setting('altrp_custom_headers', '', true)
+        if(customHeaders){
+          customHeaders = replaceContentWithData(customHeaders, altrpContext)
+          customHeaders = stringToObject(customHeaders)
+          for(let key in customHeaders){
+            if(customHeaders.hasOwnProperty(key)){
+              httpContext.response.header(key, customHeaders[key])
+            }
+          }
+        }
         return httpContext.response.send(res)
       } catch (e) {
         console.error(`Error to View Custom Page: ${e.message}

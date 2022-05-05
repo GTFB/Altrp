@@ -45,7 +45,6 @@ export class TelegramBot {
   }
 
   sendByType(block, user) {
-    console.log(block)
     try {
       switch (block.type) {
         case "content":

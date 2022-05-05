@@ -117,7 +117,7 @@ export default class ElementRenderer {
     }
     let allow_start_tag = ''
     let allow_end_tag = ''
-    if(conditional_display_choose &&
+    if(conditional_display_choose ||
       (conditional_permissions?.length || conditional_roles?.length)){
       allow_start_tag = `@if(allowedForUser(element${this.getId()}_settings, user))~`
       allow_end_tag = `@end~`
