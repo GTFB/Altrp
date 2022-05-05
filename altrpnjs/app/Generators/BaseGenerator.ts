@@ -6,10 +6,8 @@ import path from "path";
 import isProd from "../../helpers/isProd";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
-import app_path from "../../helpers/app_path";
-import Plugin from "App/Plugin"
-import Logger from "@ioc:Adonis/Core/Logger";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export abstract class BaseGenerator{
   private fileName: string;
@@ -54,34 +52,7 @@ export abstract class BaseGenerator{
   }
 
   protected async applyFilters(type: string, content): Promise<any> {
-
-    const plugins = await Plugin.getEnabledPlugins()
-
-    for (const plugin of plugins) {
-      const hasHooks = fs.existsSync(app_path(`AltrpPlugins/${plugin.name}/hooks`))
-
-      if (hasHooks) {
-        const hasType = fs.existsSync(app_path(`AltrpPlugins/${plugin.name}/hooks/${type}`));
-
-        if (hasType) {
-          const hooks = fs.readdirSync(app_path(`AltrpPlugins/${plugin.name}/hooks/${type}`))
-
-          for (const hookName of hooks) {
-            const filePath = app_path(`AltrpPlugins/${plugin.name}/hooks/${type}/${hookName}`)
-            try{
-              const hook = isProd() ? (await require(filePath)).default
-                : (await import(filePath)).default
-              content = await hook(content)
-            }catch (e){
-              Logger.error(e)
-            }
-          }
-        }
-      }
-    }
-
-
-    return content
+    return await applyPluginsFiltersAsync(type, content)
   }
 
   private getFullFileName():string{

@@ -290,7 +290,10 @@ export default class Customizer extends BaseModel {
     return this.imports.join('\n')
   }
 
-  private getStartNode(): StartNode {
+  private getStartNode(): StartNode | null {
+    if(!this.data){
+      return null
+    }
     if (!this.parsed_data) {
       this.parsed_data = Customizer.parseData(this.data, this);
     }
@@ -313,10 +316,15 @@ export default class Customizer extends BaseModel {
    * @return string
    */
   public getRequestType(): string {
-    return this.getStartNode() ? this.getStartNode().getRequestType() : 'get';
+    const startNode = this.getStartNode()
+    if(startNode === null){
+      return  'get'
+    }
+    return startNode.getRequestType()
   }
 
   public static  parseData( data, customizer ){
+
     data = data.map( item  => {
       const type = data_get( item, 'type' )
       switch( type ){

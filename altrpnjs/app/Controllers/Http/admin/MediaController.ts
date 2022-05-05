@@ -1,7 +1,7 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Media from 'App/Models/Media';
 import empty from '../../../../helpers/empty';
-import base_path from '../../../../helpers/base_path';
+import base_path from '../../../../helpers/path/base_path';
 import fs from 'fs'
 import User from 'App/Models/User';
 import is_array from '../../../../helpers/is_array';
@@ -11,12 +11,17 @@ import convert from 'heic-convert'
 import {parseString} from'xml2js'
 import data_get from '../../../../helpers/data_get';
 import guid from '../../../../helpers/guid';
-import public_path from "../../../../helpers/public_path";
+import public_path from "../../../../helpers/path/public_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 
 export default class MediaController {
   private static fileTypes: any;
   async index({response, request}: HttpContextContract) {
+    const params = request.qs()
+    const page = parseInt(params.page) || 1
+    const pageSize = parseInt(params.pageSize) || 10
+    const searchWord = params.s
+    let media
     const mediaToUpdate = await Media.query().whereNull('guid').select('*')
     await Promise.all(mediaToUpdate.map(async (m:Media) =>{
       m.guid = guid()
@@ -24,8 +29,8 @@ export default class MediaController {
       Logger.info(`Media id ${m.id} guid write!`)
     }))
     let query = Media.query().whereNull('deleted_at')
-    let categories = request.qs().categories;
-    let type = request.qs().type;
+    let categories = params.categories;
+    let type = params.type;
 
     if (!categories) {
       categories = []
@@ -48,14 +53,24 @@ export default class MediaController {
         .whereIn('altrp_category_objects.category_guid', categories)
     }
 
-    let media:any[] = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories'))
+    if (searchWord) {
+      media = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories')).where('title', 'LIKE', `%${searchWord}%`).paginate(page, pageSize)
+    } else {
+      media = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories')).paginate(page, pageSize)
+    }
 
+    let count = media.getMeta().total
+    let pageCount = media.getMeta().last_page
 
-    media = media.map(model => {
+    media = media.all().map(model => {
       return model.serialize()
     })
 
-    return response.json(media)
+    return response.json({
+      count,
+      pageCount,
+      media
+    })
   }
 
   public static  getFileTypes() {

@@ -1,6 +1,7 @@
 import Tooltip from "./Tooltip";
-
-const {isEditor, getDataByPath} = window.altrpHelpers;
+import getDataByPath from '../../../../../front-app/src/js/functions/getDataByPath'
+import isEditor from '../../../../../front-app/src/js/functions/isEditor'
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-text {
@@ -76,6 +77,7 @@ class TextWidget extends Component {
   changeText(value) {
     let settings = this.props.element.settings;
     settings.text = value;
+    console.log(value);
     this.props.element.setSettings(settings);
     this.props.element.templateNeedUpdate();
   }
@@ -92,26 +94,20 @@ class TextWidget extends Component {
     if (this.state.settings.text_advanced_tooltip_active) {
       tooltipActive = this.tooltipActive;
     }
-    let textContent = this.props.element.getResponsiveLockedSetting('text');
+    let textContent = this.props.element.getSettings('text');
     const content = this.props.element.getLockedSettings('content')
+
     if (content
       && getDataByPath(content)
       && _.isString(getDataByPath(content))) {
       textContent = getDataByPath(content);
     }
-    let textCap = (
-      <>
-        <span className="altrp-text-drop-cap">
-          {this.state.settings.text?.slice(0, 1)}
-        </span>
-        <span>{this.state.settings.text?.slice(2)}</span> {tooltip}
-      </>
-    );
-
-
+    textContent = isEditor() ?textContent: replaceContentWithData(textContent)
     if (this.props.CKEditor) {
       return (
-        <div className={"altrp-text " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
+        <div className={"altrp-text " + (this.state.settings.position_css_classes || "")}
+             onKeyDown={e=>e.stopPropagation()}
+             id={this.state.settings.position_css_id}>
           <this.props.CKEditor
             changeText={this.changeText}
             text={textContent}

@@ -21,7 +21,7 @@ import Customizer from "App/Models/Customizer";
 import Timer from "App/Services/Timer";
 import Env from "@ioc:Adonis/Core/Env";
 import fs from "fs";
-import base_path from "../helpers/base_path";
+import base_path from "../helpers/path/base_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import guid from "../helpers/guid";
 
@@ -75,6 +75,7 @@ Server.middleware.registerNamed({
   auth: () => import("App/Middleware/Auth"),
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
+  catch_unhandled_json: () => import("App/Middleware/CatchUnhandledJson"),
 })
 
 
@@ -83,7 +84,7 @@ Server.middleware.registerNamed({
  */
 let packageKey
 if(fs.existsSync(base_path('.package_key'))){
-  packageKey = fs.readFileSync(base_path('.package_key'))
+  packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
   Logger.info("Setting package key by File")
 } else {
   packageKey = guid()

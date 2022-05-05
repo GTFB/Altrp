@@ -65,7 +65,7 @@ module.exports ={
     path: path.resolve(__dirname, "public/modules/front-app/"),
     // publicPath: "https://up.altrp.com/modules/front-app/",
     publicPath: "/modules/front-app/",
-    chunkFilename: "[name].[contenthash].bundle.js",
+    chunkFilename: "[name].[contenthash].js",
 
     filename: "[name].js"
   },

@@ -3,7 +3,7 @@
  *
  * @return bool
  */
-import base_path from "./base_path";
+import base_path from "./path/base_path";
 import file_exists from "./file_exists";
 import storage_path from "./storage_path";
 

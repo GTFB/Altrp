@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 class WidgetsPanel extends React.Component {
   constructor(props) {
     super(props);
+
   }
 
   onDragStart = (event, nodeType) => {
@@ -35,6 +36,13 @@ class WidgetsPanel extends React.Component {
     return node;
   }
 
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    if(this.props.customizerSettingsData.length !== nextProps.customizerSettingsData.length) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   render() {
     let start = this.issetNode('start');
@@ -105,6 +113,7 @@ class WidgetsPanel extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    customizerSettingsData: state.customizerSettingsData,
     customizer: state.currentCustomizer,
     nodeState: state.nodeStoreData.nodes
   }

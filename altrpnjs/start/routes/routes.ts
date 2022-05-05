@@ -24,7 +24,7 @@ import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import Customizer from "App/Models/Customizer";
 import fs from 'fs'
 import Model from "App/Models/Model";
@@ -294,6 +294,7 @@ Route.group(() => {
         success: false,
 
         message: `Controller ${controllerName}; Method: ${methodName}
+
 ${e.message}`,
         trace: e.stack.split('\n'),
       })
@@ -310,7 +311,7 @@ ${e.message}`,
      * handle all 4 HTTP methods
      */
     Route[method]('plugins', async (httpContext: HttpContextContract) => {
-      const plugins = await Plugin.getEnabledPlugins()
+      const plugins = Plugin.getEnabledPlugins()
       const segments = httpContext.request.url().split('/').filter(segment => segment)
       const plugin = plugins.find(plugin => {
         return plugin.name === segments[2]
@@ -356,6 +357,9 @@ ${e.message}`,
   Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
   Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
 
+  Route.get('routes', async ({response}:HttpContextContract)=>{
+    return response.json({success: true, pages: []})
+  })
 })
   .prefix("/ajax")
 

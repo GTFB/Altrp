@@ -1,9 +1,8 @@
 import fs from 'fs'
 import {BaseGenerator} from "./BaseGenerator";
 import Application from "@ioc:Adonis/Core/Application";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
-import ListenerGenerator from "App/Generators/ListenerGenerator";
 
 export default class PageGenerator extends BaseGenerator {
 
@@ -44,7 +43,6 @@ export default class PageGenerator extends BaseGenerator {
 
     this.page = page
 
-    ListenerGenerator.getHookPages(this)
 
     return await this.addFile(fileName)
       .destinationDir(PageGenerator.directory)

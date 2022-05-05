@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 import * as envfile from 'envfile';
-import base_path from "./base_path";
+import base_path from "./path/base_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import Env from "@ioc:Adonis/Core/Env";
 

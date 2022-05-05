@@ -1278,6 +1278,7 @@ class InputSelectWidget extends Component {
               text={<span dangerouslySetInnerHTML={{__html: item.label}}/>}
               key={item.value}
               active={item.value === this.getValue()}
+              label={item.rightLabel || ''}
               disabled={modifiers.disabled || item.disabled}
               onClick={handleClick}
             />

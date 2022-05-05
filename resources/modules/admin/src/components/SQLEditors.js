@@ -52,11 +52,6 @@ const columnsDataSource = [
     title: 'Type'
   }
 ];
-const initPaginationProps = {
-  pageCount: 1,
-  currentPage: 1,
-};
-
 
 class SQLEditors extends Component {
   constructor(props) {
@@ -66,7 +61,9 @@ class SQLEditors extends Component {
       sql_editors: [],
       activeHeader: 0,
       sqlEditorSearch: '',
-      sorting: {}
+      sorting: {},
+      count: 1,
+      pageCount: 1,
     };
     this.changePage = this.changePage.bind(this);
     this.sql_editorsResource = new Resource({ route: '/admin/ajax/sql_editors' });
@@ -88,13 +85,16 @@ class SQLEditors extends Component {
     let url = new URL(location.href);
     let urlS = url.searchParams.get('s')
     let sql_editors = await this.sql_editorsResource.getQueried({
-      s: urlS === null ? this.state.sqlEditorSearch : urlS
+      s: urlS === null ? this.state.sqlEditorSearch : urlS,
+      page: this.state.currentPage,
+      pageSize: this.itemsPerPage
     });
-    sql_editors = sql_editors.sql_editors;
     this.setState(state => ({
       ...state,
       sqlEditorSearch: urlS === null ? this.state.sqlEditorSearch : urlS,
-      sql_editors
+      sql_editors: sql_editors.sql_editors,
+      count: sql_editors.count,
+      pageCount: sql_editors.pageCount,
     }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
@@ -117,11 +117,17 @@ class SQLEditors extends Component {
   }
 
   getSqlEditors = async () => {
-    let sql_editors = await this.sql_editorsResource.getQueried({ s: this.state.sqlEditorSearch, ...this.state.sorting});
-    sql_editors = sql_editors.sql_editors;
+    let sql_editors = await this.sql_editorsResource.getQueried({
+      s: this.state.sqlEditorSearch,
+      ...this.state.sorting,
+      page: this.state.currentPage,
+      pageSize: this.itemsPerPage
+    });
     this.setState(state => ({
       ...state,
-      sql_editors,
+      sql_editors: sql_editors.sql_editors,
+      count: sql_editors.count,
+      pageCount: sql_editors.pageCount,
     }))
   }
 
@@ -147,7 +153,7 @@ class SQLEditors extends Component {
   }
 
   render() {
-    const { sql_editors, sql_editorsPagination, sqlEditorSearch, sorting, currentPage } = this.state;
+    const { sql_editors, sql_editorsPagination, sqlEditorSearch, sorting, currentPage, count, pageCount } = this.state;
 
     let sql_editorsMap = sql_editors.map(sql_editor => ({
       ...sql_editor,
@@ -165,7 +171,7 @@ class SQLEditors extends Component {
          <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
          <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({this.state.sql_editors.length || "0"})
+              All ({count || "0"})
             </span>
          </div>
        </div>
@@ -188,10 +194,7 @@ class SQLEditors extends Component {
             className: 'quick-action-menu__item_danger',
             title: 'Delete'
           }]}
-          rows={sql_editorsMap.slice(
-            currentPage * this.itemsPerPage - this.itemsPerPage,
-            currentPage * this.itemsPerPage
-          )}
+          rows={sql_editorsMap}
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
 
@@ -201,14 +204,15 @@ class SQLEditors extends Component {
             change: (e) => this.changeSQLEditors(e),
           }}
 
-          pageCount={Math.ceil(sql_editorsMap.length / this.itemsPerPage) || 1}
+          pageCount={pageCount}
           currentPage={currentPage}
-          changePage={page => {
+          changePage={async (page) => {
             if (currentPage !== page) {
-              this.setState({ currentPage: page });
+              await this.setState({ currentPage: page })
+              await this.getSqlEditors()
             }
           }}
-          itemsCount={sql_editorsMap.length}
+          itemsCount={count}
 
           openPagination={true}
         />

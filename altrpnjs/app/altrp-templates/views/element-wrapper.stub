@@ -1,5 +1,5 @@
 
 @set('element{{id}}_settings', {{{settings}}})~
-@if(allowedForUser(element{{id}}_settings, user))~
+{{{allow_start_tag}}}
 <div {{{wrapper_attributes}}}>{{{element_content}}}</div>
-@end~
+{{{allow_end_tag}}}

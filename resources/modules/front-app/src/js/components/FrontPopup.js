@@ -192,6 +192,9 @@ class FrontPopup extends Component {
 
     //height popup
     switch (rootElementSettings.height_popup_layout) {
+      case "fitToContent":
+        classes.push("app-popup-height-fit-to-content");
+        break;
       case "fitToScreen":
         classes.push("app-popup-height-fit-to-screen");
         break;
@@ -290,62 +293,71 @@ class FrontPopup extends Component {
       classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
     }
     return (
-    <CSSTransition
-      in={isVisible}
-      timeout={Number(timeout)}
-      onEnter={this.onEnter}
-      onEntering={this.onEntering}
-      onEntered={this.onEntered}
-      onExit={this.onExit}
-      onExiting={this.onExiting}
-      onExited={this.onExited}
-      unmountOnExit={true}
-      classNames="popup-transition-state">
-      <FrontPopupWrapper
-        settings={rootElementSettings}
-        className={classes.join(" ")}
-        onClick={() => {
-          if (
-            overlayCondition
-          ) {
-            this.setState({ isVisible: false });
-            this.props.closePopup();
-          }
-        }}
-      >
-        {close_context === 'window' && closeButton}
-        <div
-          className="popup-window"
-          // style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
-          onClick={e => e.stopPropagation()}
+      <CSSTransition
+        in={isVisible}
+        timeout={Number(timeout)}
+        onEnter={this.onEnter}
+        onEntering={this.onEntering}
+        onEntered={this.onEntered}
+        onExit={this.onExit}
+        onExiting={this.onExiting}
+        onExited={this.onExited}
+        unmountOnExit={true}
+        classNames="popup-transition-state">
+        <FrontPopupWrapper
+          settings={rootElementSettings}
+          className={classes.join(" ")}
+          onClick={() => {
+            if (
+              overlayCondition
+            ) {
+              this.setState({ isVisible: false });
+              this.props.closePopup();
+            }
+          }}
         >
-          {close_context !== 'window' && closeButton}
-          <Scrollbars
-            autoHide
-            renderThumbHorizontal={props => (
-              <div {...props} className="popup-scrollbar-vertical" />
-            )}
-            renderTrackHorizontal={() => (
-              <div className="popup-scrollbar-track-horizontal" />
-            )}
-            renderTrackVertical={props => (
-              <div {...props} className="popup-scrollbar-track-vertical" />
-            )}
-            className="popup-scrollbar"
-            autoHideTimeout={1000}
-            autoHideDuration={200}
+          {close_context === 'window' && closeButton}
+          <div
+            className="popup-window"
+            // style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
+            onClick={e => e.stopPropagation()}
           >
-            <div className="popup-content">
-              {React.createElement(rootElement.componentClass, {
-                element: rootElement,
-                ElementWrapper :this.ElementWrapper,
-                children: rootElement.children
-              })}
-            </div>
-          </Scrollbars>
-        </div>
-      </FrontPopupWrapper>
-    </CSSTransition>
+            {close_context !== 'window' && closeButton}
+            {rootElement.getSettings("").height_popup_layout === 'fitToContent'
+              ? <div className="popup-content">
+                {React.createElement(rootElement.componentClass, {
+                  element: rootElement,
+                  ElementWrapper :this.ElementWrapper,
+                  children: rootElement.children
+                })}
+              </div>
+              : <Scrollbars
+                autoHide
+                renderThumbHorizontal={props => (
+                  <div {...props} className="popup-scrollbar-vertical" />
+                )}
+                renderTrackHorizontal={() => (
+                  <div className="popup-scrollbar-track-horizontal" />
+                )}
+                renderTrackVertical={props => (
+                  <div {...props} className="popup-scrollbar-track-vertical" />
+                )}
+                className="popup-scrollbar"
+                autoHideTimeout={1000}
+                autoHideDuration={200}
+              >
+                <div className="popup-content">
+                  {React.createElement(rootElement.componentClass, {
+                    element: rootElement,
+                    ElementWrapper :this.ElementWrapper,
+                    children: rootElement.children
+                  })}
+                </div>
+              </Scrollbars>
+            }
+          </div>
+        </FrontPopupWrapper>
+      </CSSTransition>
   );
 
   }

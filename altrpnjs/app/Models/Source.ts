@@ -17,7 +17,7 @@ import Permission from "App/Models/Permission";
 import Customizer from "App/Models/Customizer";
 import SQLEditor from "App/Models/SQLEditor";
 import _ from "lodash";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import Logger from "@ioc:Adonis/Core/Logger";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
@@ -495,7 +495,10 @@ export default class Source extends BaseModel {
       .select('*')
     for(const pageDatasource of pageDatasources){
       const data = await pageDatasource.fetchControllerMethod(_.cloneDeep(httpContext), altrpContext)
-      if(data){
+      if(data?.data){
+        datasources[pageDatasource.alias] = data.data
+
+      } else if(data){
         datasources[pageDatasource.alias] = data
       }
     }

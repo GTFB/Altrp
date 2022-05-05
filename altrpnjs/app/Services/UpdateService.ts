@@ -2,12 +2,16 @@ import AdmZip from "adm-zip"
 import env from '../../helpers/env';
 import Logger from '@ioc:Adonis/Core/Logger';
 import axios from 'axios';
-import base_path from '../../helpers/base_path';
+import base_path from '../../helpers/path/base_path';
 import fs from 'fs'
 import { exec } from'child_process'
 import {promisify} from 'util'
-import public_path from "../../helpers/public_path";
-import get_altrp_setting from "../../helpers/get_altrp_setting";
+import public_path from "../../helpers/path/public_path";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
+import View from "@ioc:Adonis/Core/View";
+import {CacheManager} from "edge.js/build/src/CacheManager";
+import guid from "../../helpers/guid";
+import Env from "@ioc:Adonis/Core/Env";
 
 export default class UpdateService {
 
@@ -24,6 +28,7 @@ export default class UpdateService {
       return true;
     }
 
+    Logger.info("Starting Update")
     let file = ''
     try {
       file = (await axios.get(UpdateService.UPDATE_DOMAIN, {
@@ -49,18 +54,32 @@ export default class UpdateService {
     }
     UpdateService.delete_archive()
     // Upgrade the Database
-    let updateCommand = get_altrp_setting('update_command', '', true).trim()
-    if(! updateCommand){
-      updateCommand = 'pm2 restart all'
-    }
-    await UpdateService.upgradeDatabase();
-    await promisify(exec)(updateCommand)
-    // Write providers
-    // Update modules statuses
-    // Update the current version to last version
+    await UpdateService.upgradePackages()
+    await UpdateService.upgradeDatabase()
+    /**
+     * clear all view cached pages
+     */
+    View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
+    clearRequireCache()
+    UpdateService.setPackageKey();
+    Logger.info("End Update")
     return true;
   }
+  static setPackageKey(){
 
+    /**
+     * set package key
+     */
+    let packageKey
+    if(fs.existsSync(base_path('.package_key'))){
+      packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
+      Logger.info("Setting package key by File")
+    } else {
+      packageKey = guid()
+      Logger.info("Setting package key by random guid")
+    }
+    Env.set('PACKAGE_KEY', packageKey)
+  }
   /**
    * @param {string} file_content
    * @return bool
@@ -101,6 +120,15 @@ export default class UpdateService {
    */
   private static async upgradeDatabase() {
     await promisify(exec)(`node ${base_path('ace')} migration:run --force`)
+    return true;
+  }
+
+  /**
+   * Upgrade the Database & Apply actions
+   *
+   */
+  private static async upgradePackages() {
+    await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
     return true;
   }
 }

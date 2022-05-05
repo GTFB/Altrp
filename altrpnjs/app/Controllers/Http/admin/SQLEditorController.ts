@@ -6,34 +6,34 @@ import Source from "App/Models/Source";
 import Model from "App/Models/Model";
 import {string} from "@ioc:Adonis/Core/Helpers";
 import Event from "@ioc:Adonis/Core/Event";
+import {parseInt} from "lodash"
 
 export default class SQLEditorController {
   public async index({request, response}: HttpContextContract) {
-    let search = request.qs().s
-    let orderColumn = request.qs().order_by || 'title'
-    let orderType = request.qs().order ? request.qs().order : 'Asc'
-    // @ts-ignore
-    let sortType: 'asc' | 'desc' = 'sortBy' + (orderType == 'Asc' ? '' : orderType)
-    let page_count = 1
-    let sQLEditors
-    if (!request.qs().page) {
-      sQLEditors = search
-        ? await SQLEditor.query().where('title', 'like', `%${search}%`)
-          .orderBy(orderColumn, sortType).select('*')
-        : await SQLEditor.query().orderBy(orderColumn, sortType).select('*')
-    } else {
-      let page_size = request.qs().pageSize || 10
-      sQLEditors = SQLEditor.query()
-        .orderBy(orderColumn, sortType)
-        .offset(page_size * (request.qs().page - 1))
-        .limit(page_size)
-      sQLEditors = sQLEditors.select('*').values()
+     const params = request.qs()
+     const page = parseInt(params.page) || 1
+     const pageSize = parseInt(params.pageSize) || 20
+     const searchWord = params.s
+     let sQLEditors
 
-      page_count = Math.ceil(page_count / page_size)
-    }
+     const orderColumn = params.order_by || 'title'
+     const orderType = params.order ? params.order : 'Asc'
+    //@ts-ignore
+     const sortType: 'asc' | 'desc' = orderType === 'Asc' ? 'Asc' : orderType
+     if (searchWord) {
+       sQLEditors =  await SQLEditor.query()
+         .orWhere('title', 'like', `%${searchWord}%`)
+         .orWhere('name', 'like', `%${searchWord}%`)
+         .orWhere('description', 'like', `%${searchWord}%`)
+         .orderBy(orderColumn, sortType).paginate(page, pageSize)
+     } else {
+        sQLEditors = await SQLEditor.query().orderBy(orderColumn, sortType).paginate(page, pageSize)
+     }
+
     return response.json({
-      'sql_editors': sQLEditors,
-      'pageCount': page_count,
+      sql_editors: sQLEditors.all(),
+      count: sQLEditors.getMeta().total,
+      pageCount: sQLEditors.getMeta().last_page,
     })
   }
 

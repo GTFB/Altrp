@@ -1,5 +1,5 @@
 import {BaseGenerator} from "App/Generators/BaseGenerator";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import fs from "fs";
 import path from "path"
@@ -262,7 +262,7 @@ export default class ListenerGenerator extends BaseGenerator {
     let imports = "";
     let content = "";
 
-    content = await this.applyFilters("pages", "array");
+    content = await this.applyFilters("pages", content);
 
     imports = await this.applyFilters("listener_imports", imports);
 
@@ -294,13 +294,13 @@ export default class ListenerGenerator extends BaseGenerator {
     }
   }
 
-  public async delete(type) {
-    if(!type) {
+  public async delete(customizer:Customizer) {//todo: don't need listeners delete
+    if(!customizer) {
       return
     }
+    this.customizer = customizer
 
-
-    const dir = ListenerGenerator.directory + "altrp_models" + "." + type;
+    const dir = ListenerGenerator.directory + "altrp_models" + "." + customizer.settings.type;
 
     if (!fs.existsSync(dir)){
       fs.mkdirSync(dir);

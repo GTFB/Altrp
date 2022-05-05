@@ -64,7 +64,7 @@ class Updates extends Component {
       setTimeout(() => {
           res.result ? pageReload() : this.setNeedUpdate();
         }
-        , 1300);
+        , 100);
     } catch (error) {
       store.dispatch(setAdminEnable());
     }
@@ -78,6 +78,7 @@ class Updates extends Component {
     try {
       let res = await (new Resource({route: '/admin/ajax/update_altrp'})).post({});
       setTimeout(() => {
+          alert('Updates Success');
           res.result ? pageReload() : this.setNeedUpdate();
 
         }
@@ -86,6 +87,9 @@ class Updates extends Component {
         store.dispatch(setAdminEnable());
       }
     } catch (error) {
+      console.error(error);
+      alert('Updates Error: ' + error.message);
+      window.location.reload();
       store.dispatch(setAdminEnable());
     }
   }
@@ -101,9 +105,6 @@ class Updates extends Component {
     const {changelog} = this.state;
     return <div className="admin-updates p-4">
 
-        <div className="admin-caption mt-1">
-          {data.updateMessage}
-        </div>
         {this.state.needUpdate ?
           <button className="btn_success btn" onClick={this.updateAltrp}>Update</button>
           : <button className="btn" onClick={this.updateAltrp}>Re-install Now</button>}

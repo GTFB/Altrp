@@ -83,11 +83,11 @@ class Users extends Component {
       pageSize: this.itemsPerPage
     });
     this.set
-    const data = _.isArray(users_result) ? users_result : users_result.users
+   // const data = _.isArray(users_result) ? users_result : users_result.users
     this.setState(state => {
       return {
         ...state,
-        data,
+        data: users_result.users,
         count: users_result.count,
         pageCount: users_result.pageCount,
         search: urlS === null ? this.state.search : urlS
@@ -154,7 +154,6 @@ class Users extends Component {
 
   render() {
     const {pageCount, count, currentPage, data, search, roles, roleFilter} = this.state;
-    console.log(this.state);
     const {sortingField, order} = this.state.sorting;
     const users = roleFilter ? filterUsers(data, roleFilter) : data;
 
@@ -252,9 +251,7 @@ class Users extends Component {
             <SearchUser />
             {/*<button type="button" onClick={this.getUsers} className="btn btn_bare admin-users-button btn__tables-user btn__tables-user__indentRight">Search Users*/}
             {/*</button>*/}
-            <button  className="btn btn_bare admin-users-button btn__tables-user">Search
-              Email
-            </button>
+            <button  className="btn btn_bare admin-users-button btn__tables-user">Search</button>
           </form>
           <table className="table table-user">
             <thead className="admin-users-table-head">

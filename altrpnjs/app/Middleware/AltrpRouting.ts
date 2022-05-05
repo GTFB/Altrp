@@ -19,6 +19,8 @@ import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS"
 import Source from "App/Models/Source"
 import isProd from "../../helpers/isProd"
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
+import get_altrp_setting from "../../helpers/get_altrp_setting";
+import stringToObject from "../../helpers/string/stringToObject";
 
 export default class AltrpRouting {
 
@@ -43,6 +45,7 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
+
     if (httpContext.request.method() !== 'GET') {
       await next()
       return
@@ -207,6 +210,21 @@ export default class AltrpRouting {
         //   minifyCSS: true,
         //   minifyJS: true,
         // })
+
+        /**
+         * Add Custom Headers
+         */
+
+        let customHeaders:string|object = get_altrp_setting('altrp_custom_headers', '', true)
+        if(customHeaders){
+          customHeaders = replaceContentWithData(customHeaders, altrpContext)
+          customHeaders = stringToObject(customHeaders)
+          for(let key in customHeaders){
+            if(customHeaders.hasOwnProperty(key)){
+              httpContext.response.header(key, customHeaders[key])
+            }
+          }
+        }
         return httpContext.response.send(res)
       } catch (e) {
         console.error(`Error to View Custom Page: ${e.message}
@@ -274,6 +292,9 @@ export default class AltrpRouting {
   getFonts(): string {
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
+      if(font === 'Arial'){
+        return ''
+      }
       font = encodeURIComponent(font);
       font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic'
       let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
@@ -350,6 +371,15 @@ export default class AltrpRouting {
     if (element.name === 'dropbar'
       && data_get(element, 'settings.template_dropbar_section')) {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames)
+    }
+    if (element.name === 'carousel'
+      && data_get(element, 'settings.slides_repeater').length > 0) {
+
+      for (const el of data_get(element, 'settings.slides_repeater')) {
+        if(el.card_slides_repeater) {
+          await this.extractElementsNamesFromTemplate(el.card_slides_repeater, elementNames)
+        }
+      }
     }
     if (element.name === 'table'
       && data_get(element, 'settings.tables_columns')) {

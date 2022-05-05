@@ -5,13 +5,13 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
+import elementsToPdf from "../functions/elementsToPdf";
 const {
   altrpLogin,
   altrpLogout,
   dataFromTable,
   dataToCSV,
   dataToXML,
-  elementsToPdf,
   getAppContext,
   getComponentByElementId,
   getHTMLElementById,
@@ -788,7 +788,7 @@ class AltrpAction extends AltrpModel {
       getHTMLElementById(elementId.trim()) &&
       elements.push(getHTMLElementById(elementId));
     });
-    return await elementsToPdf(elements, filename);
+    return await elementsToPdf(elements, filename, this.getProperty('with_breaks'), this.getProperty('p'));
   }
 
   /**
@@ -1080,6 +1080,7 @@ class AltrpAction extends AltrpModel {
           break;
         case 'remove_items': {
           let items = path.split(/\r?\n/);
+
           items.forEach(i => {
             if (!i) {
               return;
@@ -1100,13 +1101,16 @@ class AltrpAction extends AltrpModel {
               return;
             }
             let list = getDataByPath(listPath);
-            if (!_.isArray(list)) {
-              return;
-            }
-            list = [...list];
 
-            list = list.filter(_item => _item !== item);
-            setDataByPath(listPath, list);
+            if (_.isArray(list)) {
+              list = [...list];
+
+              list = list.filter(_item => _item !== item);
+
+              setDataByPath(listPath, list);
+            } else {
+              setDataByPath(listPath, null);
+            }
           });
           result.success = true;
         }

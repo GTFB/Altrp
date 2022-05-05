@@ -14,23 +14,28 @@ const MarkerCluster = ({ markers, FG }) => {
   let markersData = markers.map(item => {
     return {
       position: {
-        lat: item.feature?.geometry?.coordinates[1],
-        lng: item.feature?.geometry?.coordinates[0]
+        lat: parseFloat(item.feature?.geometry?.coordinates[1]),
+        lng: parseFloat(item.feature?.geometry?.coordinates[0])
       },
       popup: item.feature?.properties?.popup,
       tooltip: item.feature?.properties?.tooltip,
       icon: item.feature?.properties?.icon
     };
   });
+
   useEffect(() => {
     mcg.clearLayers();
     markersData.forEach(({ position, tooltip, popup, icon }) => {
-      L.marker(new L.LatLng(position.lat, position.lng), {
+      const marker = L.marker(new L.LatLng(position.lat, position.lng), {
         icon: customIcon(icon, "#3388ff", [25, 41])
       })
         .addTo(mcg)
-        .bindPopup(popup)
-        .bindTooltip(tooltip);
+      if(popup) {
+        marker.bindPopup(popup)
+      }
+      if(tooltip) {
+        marker.bindTooltip(tooltip)
+      }
     });
     console.log(FG.current);
     FG.current.addLayer(mcg);

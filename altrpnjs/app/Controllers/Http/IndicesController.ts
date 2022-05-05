@@ -6,23 +6,31 @@ import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
 import isProd from "../../../helpers/isProd";
-import base_path from "../../../helpers/base_path";
+import base_path from "../../../helpers/path/base_path";
+import applyPluginsFiltersSync from "../../../helpers/plugins/applyPluginsFiltersSync";
+import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
 
 
 export default class IndicesController {
   async admin({view}) {
     return view.render('admin', Edge({
+      applyPluginsFiltersSync,
+      applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/bundle.js"
     }))
   }
   async customizer({view}) {
     return view.render('customizer', Edge({
+      applyPluginsFiltersSync,
+      applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ? "/modules/customizer/customizer.js" : "http://localhost:3007/src/bundle.js"
     }))
   }
 
   public editor({view}) {
     return view.render('editor', Edge({
+      applyPluginsFiltersSync,
+      applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://127.0.0.1:3000/src/bundle.js",
       css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
     }))
@@ -30,6 +38,8 @@ export default class IndicesController {
 
   public robot({ view }) {
     return view.render('robot', Edge({
+      applyPluginsFiltersSync,
+      applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ? "/modules/editor/robots.js" : "http://localhost:3006/src/bundle.js",
       css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : "/modules/editor/editor.css"
     }))
@@ -50,12 +60,6 @@ export default class IndicesController {
 
     return file
   }
-
-  // public frontApp({ view }) {
-  //   return view.render('front-app', Edge({
-  //     hAltrp: Env.get("PATH_ENV") === "production" ? "/modules/front-app/h-altrp.js" : null
-  //   }))
-  // }
 
   public async loginView({view, auth,response}: HttpContextContract,) {
     await auth.use('web').check()
@@ -124,12 +128,16 @@ export default class IndicesController {
 
   public async changelog({ response }) {
     const pathToPublic = base_path( "README.md");
+    let file:any = ''
+    try {
+       file = await Drive.get(pathToPublic)
+    } catch (e) {
 
-    const file = await Drive.get(pathToPublic)
+    }
 
     response.header('Content-type', 'text/plain');
 
-    return file.toString()
+    return {data:file.toString()}
   }
 
   public async favicons({params, response}) {

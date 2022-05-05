@@ -5,15 +5,15 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import {setAdminDisable, setAdminEnable} from "../js/store/admin-state/actions";
 import AltrpCodeEditor from "./altrp-editor/AltrpCodeEditor";
 import store from '../js/store/store';
+import {TextArea} from "@blueprintjs/core";
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
-const updateCommandDefault = 'pm2 restart all'
+
 class AdvancedSettings extends Component {
   constructor(props){
     super(props);
     this.state = {
       allSiteJavascript: '',
-      updateCommand: updateCommandDefault,
       debugOn: false,
       loadByUser: false,
     }
@@ -24,15 +24,15 @@ class AdvancedSettings extends Component {
    */
   async componentDidMount() {
     const allSiteJavascript = (await new Resource({route: '/admin/ajax/settings'}).get('all_site_js?decrypt=true')).all_site_js || '';
-    const updateCommand = (await new Resource({route: '/admin/ajax/settings'}).get('update_command?decrypt=true')).update_command || '';
     // let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug').altrp_debug);
     let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug')).altrp_debug;
     let loadByUser = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_user_load')).altrp_user_load;
+    let altrp_custom_headers = (await new Resource({route:'/admin/ajax/settings'}).get('altrp_custom_headers?decrypt=true')).altrp_custom_headers || '';
     this.setState(state => ({...state,
       allSiteJavascript,
-      updateCommand: updateCommand || updateCommandDefault,
       debugOn,
       loadByUser,
+      altrp_custom_headers,
     }));
   }
 
@@ -79,6 +79,12 @@ class AdvancedSettings extends Component {
     }))
   };
 
+
+  updateCustomHeaders = async (e)=> {
+    const value = e.target.value
+    await new Resource({route:'/admin/ajax/settings'}).put('altrp_custom_headers', {value, encrypt:true});
+
+  }
   /**
    * Удалить всю историю всех шаблонов
    * @param e
@@ -125,6 +131,7 @@ class AdvancedSettings extends Component {
     store.dispatch(setAdminEnable());
   };
   render() {
+    const {altrp_custom_headers}  = this.state
     return <div className="admin-styles-settings">
 
       <div className="advanced__settings">
@@ -162,26 +169,37 @@ class AdvancedSettings extends Component {
                 Clear
               </button>
             </div>
+
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Custom Headers for Pages:</div>
+              <TextArea name="custom_headers"
+                        className="resize-none mb-3"
+                        id="custom_headers"
+                        cols="30"
+                        defaultValue={altrp_custom_headers}
+                        onBlur={this.updateCustomHeaders}
+                        rows="10" fill={true}>
+
+              </TextArea>
+              <div>
+                Enter each Header for Page in a separate line.
+                <br/>To differentiate between label and value, separate them with a pipe char ("|").
+                <br/>For example: title | Post.<br/>
+                Or title | {'{{title}}'}
+                for Take Value from Page Data
+              </div>
+            </div>
           </div>
 
           <div className="admin-styles-advanced">
-            <div className="admin-styles-advanced-block advanced-flex">
-              <div className="advanced-text">Debug Altrp App</div>
-              <input className="admin-table__td_check"
-                     onChange={this.toggleDebug}
-                // value={this.state.debugOn}
-                     checked={this.state.debugOn}
-                     type="checkbox"/>
-            </div>
-
-            <div className="admin-styles-advanced-block advanced-flex">
-              <div className="advanced-text">Load App on User Action</div>
-              <input className="admin-table__td_check"
-                     onChange={this.toggleLoadingOption}
-                // value={this.state.debugOn}
-                     checked={this.state.loadByUser}
-                     type="checkbox"/>
-            </div>
+            {/*<div className="admin-styles-advanced-block advanced-flex">*/}
+            {/*  <div className="advanced-text">Debug Altrp App</div>*/}
+            {/*  <input className="admin-table__td_check"*/}
+            {/*         onChange={this.toggleDebug}*/}
+            {/*    // value={this.state.debugOn}*/}
+            {/*         checked={this.state.debugOn}*/}
+            {/*         type="checkbox"/>*/}
+            {/*</div>*/}
           </div>
       </div>
 
@@ -201,24 +219,7 @@ class AdvancedSettings extends Component {
               Update
             </button>
           </div>
-          <div className="admin-styles-advanced-block no-margin mt-4">
-            <div className="advanced-text-custom">Enter Update Command:</div>
-            <AltrpCodeEditor value={this.state.updateCommand}
-                             mode="sh"
-                             fontSize={14}
-                             onChange={value => this.setState({ updateCommand: value})}
-                             height="4em"
-                             style={{
-                               width: '100%'
-                             }}
-            />
-            <button className="btn btn_success btn_advanced"
-                    onClick={this.updateCommandRequest}>
-              Update
-            </button>
-          </div>
         </div>
-
       </div>
 
 
@@ -241,9 +242,6 @@ class AdvancedSettings extends Component {
    */
    updateAllSiteJavascript = async() => {
     await new Resource({route:'/admin/ajax/settings'}).put('all_site_js', {value: this.state.allSiteJavascript, encrypt: true});
-  };
-  updateCommandRequest = async() => {
-    await new Resource({route:'/admin/ajax/settings'}).put('update_command', {value: this.state.updateCommand, encrypt: true});
   };
 }
 

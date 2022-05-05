@@ -179,6 +179,7 @@ class EditModel extends Component {
     }
 
     if (this.state.id) {
+      console.log(model)
       res = await this.modelsResource.put(this.state.id, model);
     } else {
 

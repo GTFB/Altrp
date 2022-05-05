@@ -695,16 +695,19 @@ class ElementWrapper extends Component {
     //     }
     //   }
     // }
+
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
     if(this.state.cursorPos !== nextState.cursorPos) return true;
+    if(nextProps.currentScreen !== this.props.currentScreen) return true;
     if (
       nextProps.controllerValue === this.props.controllerValue &&
       this.props.element !== this.props.currentElement
     ) {
       return false;
     }
+
     return true;
   }
   render() {

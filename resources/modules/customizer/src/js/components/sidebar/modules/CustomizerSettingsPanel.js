@@ -34,7 +34,6 @@ class CustomizerSettingsPanel extends React.Component {
   }
 
 
-
   // Запись значений select в store
   changeSelect(e) {
     const sources = this.props.sources;
@@ -126,10 +125,11 @@ class CustomizerSettingsPanel extends React.Component {
 
     let Url = ''
     if (this.props.customizer.source !== null) {
-      const { web_url } = this.props.customizer.source
+      let { web_url } = this.props.customizer.source
       try{
         let strippedDownUrl = new URL(web_url)
-        Url = strippedDownUrl.pathname
+        Url = document.location.origin
+          +strippedDownUrl.pathname
       }catch (e){
         alert('Error while parsing source URL')
         console.error(e);

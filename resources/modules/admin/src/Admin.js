@@ -55,7 +55,7 @@ import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 import {io} from "socket.io-client";
-import {addRoute, editModels} from "./js/store/routes-state/action";
+import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-state/action";
 
 
 window.React = React;
@@ -77,6 +77,17 @@ class Admin extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
+  filterRoutes(filterFn){
+    if(_.isFunction(filterFn)){
+      this.props.setRoutes(filterFn(this.props.routes))
+    }
+  }
+  filterMainMenu(filterFn){
+    if(_.isFunction(filterFn)){
+      this.props.setMainMenu(filterFn(this.props.mainMenu))
+    }
+  }
+
   componentDidMount() {
     store.subscribe(this.updateAdminState.bind(this));
     new Resource({ route: "/admin/ajax/model_options" })
@@ -86,6 +97,9 @@ class Admin extends Component {
     this.getConnect();
     this.getMetaName();
     this.getStatusCheckedModels();
+    const AdminLoadedEvent = new Event('altrp-admin-loaded')
+    window.dispatchEvent(AdminLoadedEvent);
+    _.get(window, 'altrp.adminLoaded', true)
   }
 
   async getStatusCheckedModels() {
@@ -174,7 +188,8 @@ class Admin extends Component {
   }
 
   render() {
-    const { models } = this.props;
+    const { models, mainMenu } = this.props;
+    const { activeButton } = this.state;
     let adminClasses = ["admin"];
     if (!this.props.adminEnable) {
       adminClasses.push("pointer-event-none");
@@ -356,6 +371,20 @@ class Admin extends Component {
                             <span>Settings</span>
                           </Link>
                         </li>
+                        {mainMenu.map( (item, idx) => {
+                          return <li key={item.id || 'main-menu' + idx }>
+                            <Link className={`admin-nav-list__link ${
+                              activeButton === item.id ? 'active__panel' : 'admin-nav-list__link-top'}`
+                            }
+                                  onClick={() => this.setState({ activeButton: item.id })}
+                                  to={item.to}>
+                              <SettingSvg className="icon" />
+                              <DropletSvg className="icon__droplet"/>
+                              <span>{item.text}</span>
+                            </Link>
+                          </li>
+                        })
+                        }
                       </ul>
                     </Scrollbars>
                   )}
@@ -552,6 +581,7 @@ const mapStateToProps = (state) => {
   return {
     metaValue: state.customFonts.metaValue,
     routes: state.routesState.routes,
+    mainMenu: state.routesState.mainMenu,
     models: state.routesState.models,
     adminEnable: state.adminState?.adminEnable,
   }
@@ -562,6 +592,8 @@ const mapDispatchToProps = dispatch => {
     setUserData: user => dispatch(setUserData(user)),
     getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue)),
     addRoute: route => dispatch(addRoute(route)),
+    setRoutes: routes => dispatch(setRoutes(routes)),
+    setMainMenu: routes => dispatch(setMainMenu(routes)),
   }
 };
 

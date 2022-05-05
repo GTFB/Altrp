@@ -1,5 +1,5 @@
 import isProd from "../../helpers/isProd";
-import base_path from "../../helpers/base_path";
+import base_path from "../../helpers/path/base_path";
 import fs from "fs";
 import path from "path";
 
