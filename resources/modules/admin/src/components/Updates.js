@@ -78,6 +78,7 @@ class Updates extends Component {
     try {
       let res = await (new Resource({route: '/admin/ajax/update_altrp'})).post({});
       setTimeout(() => {
+          alert('Updates Success');
           res.result ? pageReload() : this.setNeedUpdate();
 
         }
@@ -87,6 +88,7 @@ class Updates extends Component {
       }
     } catch (error) {
       console.error(error);
+      alert('Updates Error: ' + error.message);
       window.location.reload();
       store.dispatch(setAdminEnable());
     }

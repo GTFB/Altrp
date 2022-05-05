@@ -12,7 +12,6 @@ import CategoryObject from "App/Models/CategoryObject";
 import AltrpMeta from "App/Models/AltrpMeta";
 import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
-import generateSitemap from "../../../helpers/generateSitemap";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
 
@@ -265,13 +264,11 @@ export default class TemplatesController {
       template.data = JSON.stringify(request.input("data"));
       template.styles = JSON.stringify(request.input("styles"));
       template.html_content = request.input("html_content");
-
       await template.save()
 
       let templateGenerator = new TemplateGenerator()
       await templateGenerator.run(template)
 
-      generateSitemap()
 
       return {
         currentTemplate: template,

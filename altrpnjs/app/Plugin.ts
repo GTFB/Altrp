@@ -113,6 +113,7 @@ export default class Plugin {
       if (enabledPlugins.indexOf(plugin.name) === -1) {
         enabledPlugins.push(plugin.name)
       }
+      plugin.copyStaticFiles()
     } else {
       enabledPlugins = enabledPlugins.filter((_plugin) => {
         return _plugin != plugin.name
