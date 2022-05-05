@@ -122,17 +122,17 @@ export default function InputRangeSliderComponent(settings) {
       ["background-color", "blank_color", "color"],
     "}",
     // .state-disabled
-    "bp3-slider-axis .bp3-slider-label",
+    ".state-disabled bp3-slider-axis .bp3-slider-label",
     ["", "label_typographic", "typographic", ".state-disabled"],
     ["color", "label_color", "color", ".state-disabled"],
     "}",
 
-    "bp3-slider-handle span.bp3-slider-label",
+    ".state-disabled bp3-slider-handle span.bp3-slider-label",
     ["", "current_label_typographic", "typographic", ".state-disabled"],
     ["color", "current_label_color", "color", ".state-disabled"],
     "}",
 
-    "altrp-field-slider-horizontal .bp3-slider-handle",
+    ".state-disabled altrp-field-slider-horizontal .bp3-slider-handle",
     () => {
       let width = getResponsiveSetting(settings, "size", ".state-disabled");
 
@@ -149,23 +149,23 @@ export default function InputRangeSliderComponent(settings) {
     "}",
 
 
-    "bp3-slider-handle",
+    ".state-disabled bp3-slider-handle",
     ["border-radius", "handle_radius", "dimensions", ".state-disabled"],
     "}",
 
-    "bp3-slider-handle.bp3-start",
+    ".state-disabled bp3-slider-handle.bp3-start",
     ["border-radius", "handle_radius", "dimensions", ".state-disabled"],
     "}",
 
-    "bp3-slider-handle.bp3-end",
+    ".state-disabled bp3-slider-handle.bp3-end",
     ["border-radius", "handle_radius_second", "dimensions", ".state-disabled"],
     "}",
 
-    "altrp-field-slider-horizontal .altrp-field-slider",
+    ".state-disabled altrp-field-slider-horizontal .altrp-field-slider",
     ["width", "width", "slider", ".state-disabled"],
     "}",
 
-    "altrp-field-slider-vertical .altrp-field-slider",
+    ".state-disabled altrp-field-slider-vertical .altrp-field-slider",
     ["height", "length", "slider", ".state-disabled"],
     "}",
 
@@ -178,15 +178,15 @@ export default function InputRangeSliderComponent(settings) {
       return `& .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
     },
 
-    "bp3-slider-progress, & .bp3-slider-track",
+    ".state-disabled bp3-slider-progress, & .bp3-slider-track",
     ["height", "height", "slider", ".state-disabled"],
     "}",
 
-    "altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
+    ".state-disabled altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
     ["width", "thickness", "slider", ".state-disabled"],
     "}",
 
-    "altrp-field-slider-horizontal .bp3-slider-label",
+    ".state-disabled altrp-field-slider-horizontal .bp3-slider-label",
     () => {
       let height = getResponsiveSetting(settings, "height", ".state-disabled", { size: 6, unit: "px" })
 
@@ -196,7 +196,7 @@ export default function InputRangeSliderComponent(settings) {
     },
     "}",
 
-    "altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
+    ".state-disabled altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
     () => {
       let thickness = getResponsiveSetting(settings, "thickness", ".state-disabled", { size: 6, unit: "px" })
 
@@ -206,35 +206,35 @@ export default function InputRangeSliderComponent(settings) {
     },
     "}",
 
-    "bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
+    ".state-disabled bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
     ["background-color", "tooltip_color", "color", ".state-disabled"],
     "}",
 
-    "bp3-slider-handle, & .bp3-slider-handle.bp3-active",
+    ".state-disabled bp3-slider-handle, & .bp3-slider-handle.bp3-active",
     ["background-color", "handle_color", "color", ".state-disabled"],
     "}",
 
-    "bp3-slider-progress.bp3-intent-primary",
+    ".state-disabled bp3-slider-progress.bp3-intent-primary",
     ["background-color", "filled_color", "color", ".state-disabled"],
     "}",
 
-    "bp3-slider-progress",
+    ".state-disabled bp3-slider-progress",
     ["background-color", "blank_color", "color", ".state-disabled"],
     "}",
 
 
     //state active
-    "bp3-slider-axis .bp3-slider-label",
+    ".active bp3-slider-axis .bp3-slider-label",
     ["", "label_typographic", "typographic", ".active"],
     ["color", "label_color", "color", ".active"],
     "}",
 
-    "bp3-slider-handle span.bp3-slider-label",
+    ".active bp3-slider-handle span.bp3-slider-label",
     ["", "current_label_typographic", "typographic", ".active"],
     ["color", "current_label_color", "color", ".active"],
     "}",
 
-    "altrp-field-slider-horizontal .bp3-slider-handle",
+    ".active altrp-field-slider-horizontal .bp3-slider-handle",
     () => {
       let width = getResponsiveSetting(settings, "size", ".active");
 
@@ -251,23 +251,23 @@ export default function InputRangeSliderComponent(settings) {
     "}",
 
 
-    "bp3-slider-handle",
+    ".active bp3-slider-handle",
     ["border-radius", "handle_radius", "dimensions", ".active"],
     "}",
 
-    "bp3-slider-handle.bp3-start",
+    ".active bp3-slider-handle.bp3-start",
     ["border-radius", "handle_radius", "dimensions", ".active"],
     "}",
 
-    "bp3-slider-handle.bp3-end",
+    ".active bp3-slider-handle.bp3-end",
     ["border-radius", "handle_radius_second", "dimensions", ".active"],
     "}",
 
-    "altrp-field-slider-horizontal .altrp-field-slider",
+    ".active altrp-field-slider-horizontal .altrp-field-slider",
     ["width", "width", "slider", ".active"],
     "}",
 
-    "altrp-field-slider-vertical .altrp-field-slider",
+    ".active altrp-field-slider-vertical .altrp-field-slider",
     ["height", "length", "slider", ".active"],
     "}",
 
@@ -277,18 +277,18 @@ export default function InputRangeSliderComponent(settings) {
       if(! tr_x && ! tr_y){
         return ''
       }
-      return `& .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
+      return `& .active .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
     },
 
-    "bp3-slider-progress, & .bp3-slider-track",
+    ".active bp3-slider-progress, & .bp3-slider-track",
     ["height", "height", "slider", ".active"],
     "}",
 
-    "altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
+    ".active altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
     ["width", "thickness", "slider", ".active"],
     "}",
 
-    "altrp-field-slider-horizontal .bp3-slider-label",
+    ".active altrp-field-slider-horizontal .bp3-slider-label",
     () => {
       let height = getResponsiveSetting(settings, "height", ".active", { size: 6, unit: "px" })
 
@@ -298,7 +298,7 @@ export default function InputRangeSliderComponent(settings) {
     },
     "}",
 
-    "altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
+    ".active altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
     () => {
       let thickness = getResponsiveSetting(settings, "thickness", ".active", { size: 6, unit: "px" })
 
@@ -308,19 +308,19 @@ export default function InputRangeSliderComponent(settings) {
     },
     "}",
 
-    "bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
+    ".active bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
     ["background-color", "tooltip_color", "color", ".active"],
     "}",
 
-    "bp3-slider-handle, & .bp3-slider-handle.bp3-active",
+    ".active bp3-slider-handle, & .bp3-slider-handle.bp3-active",
     ["background-color", "handle_color", "color", ".active"],
     "}",
 
-    "bp3-slider-progress.bp3-intent-primary",
+    ".active bp3-slider-progress.bp3-intent-primary",
     ["background-color", "filled_color", "color", ".active"],
     "}",
 
-    "bp3-slider-progress",
+    ".active bp3-slider-progress",
     ["background-color", "blank_color", "color", ".active"],
     "}",
   ];

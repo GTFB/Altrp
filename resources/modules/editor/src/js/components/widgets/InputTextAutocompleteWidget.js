@@ -1014,7 +1014,7 @@ class InputTextCommonWidget extends Component {
     if (this.state.settings.content_label || label_icon ) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container classLabel`}
           style={styleLabel}
         >
           <label
@@ -1031,7 +1031,7 @@ class InputTextCommonWidget extends Component {
             {this.state.settings.content_label}
 
             {label_icon && label_icon.type && (
-              <span className="altrp-label-icon">
+              <span className={`${classes} altrp-label-icon`}>
               {renderAsset(label_icon)}
             </span>
             )}
@@ -1044,7 +1044,7 @@ class InputTextCommonWidget extends Component {
     let options = this.getOptions();
 
     let input = (
-      <div className="altrp-input-wrapper altrp-input-wrapper_autocomplete">
+      <div className={`${classes} altrp-input-wrapper altrp-input-wrapper_autocomplete`}>
         <Popover2
           isOpen={this.state.isOpen}
           // isOpen={true}
@@ -1088,7 +1088,7 @@ class InputTextCommonWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className="altrp-field-container "
+        className={`${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

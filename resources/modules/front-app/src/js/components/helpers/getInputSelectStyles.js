@@ -213,7 +213,7 @@ export default function getInputSelectStyles(settings) {
     '}',
     //</editor-fold>
     //inputSelect .state-disabled
-    '.altrp-field-label-container',
+    '.state-disabled .altrp-field-label-container',
     ['background-color', 'label_background_color', 'color', '.state-disabled'],
     ['padding', 'label_padding', 'dimensions', '.state-disabled'],
     ['color', 'label_style_font_color', 'color', '.state-disabled'],
@@ -221,54 +221,54 @@ export default function getInputSelectStyles(settings) {
     ['left', 'label_position_left', 'slider', '.state-disabled'],
     ['width', 'label_width', 'slider', '.state-disabled'],
     '}',
-    '.altrp-field-label',
+    '.state-disabled .altrp-field-label',
     ['', 'label_style_font_typographic', 'typographic', '.state-disabled'],
     '}',
-    '.altrp-label-icon.altrp-label-icon',
+    '.state-disabled .altrp-label-icon.altrp-label-icon',
     ['padding', 'icon_padding', 'dimensions', '.state-disabled'],
     '}',
 
-    '.altrp-label-icon.altrp-label-icon svg',
+    '.state-disabled .altrp-label-icon.altrp-label-icon svg',
     ['width', 'icon_size', 'slider', '.state-disabled'],
     ['height', 'icon_size', 'slider', '.state-disabled'],
     ['background-color', 'icon_color_background', 'color', '.state-disabled'],
     ['fill', 'icon_color', 'color', '.state-disabled'],
     ['stroke', 'icon_color', 'color', '.state-disabled'],
     '}',
-    '.altrp-label-icon.altrp-label-icon svg path',
+    '.state-disabled .altrp-label-icon.altrp-label-icon svg path',
     ['fill', 'icon_color', 'color', '.state-disabled'],
     ['stroke', 'icon_color', 'color', '.state-disabled'],
     '}',
-    '.altrp-label-icon.altrp-label-icon img',
+    '.state-disabled .altrp-label-icon.altrp-label-icon img',
     ['width', 'icon_size', 'slider', '.state-disabled'],
     ['height', 'icon_size', 'slider', '.state-disabled'],
     ['background-color', 'icon_color_background', 'color', '.state-disabled'],
     '}',
     //</editor-fold>
-    '.mask-mismatch-message.mask-mismatch-message',
+    '.state-disabled .mask-mismatch-message.mask-mismatch-message',
     ['margin', 'mismatch_message_margin', 'dimensions', '.state-disabled'],
     ['padding', 'mismatch_message_padding', 'dimensions', '.state-disabled'],
     ['color', 'mismatch_message_font_color', 'color', '.state-disabled'],
     ['', 'mismatch_message_typographic', 'typographic', '.state-disabled'],
     '}',
     //<editor-fold description="стили иконок">
-    '.bp3-icon_text-widget.bp3-icon_text-widget',
+    '.state-disabled .bp3-icon_text-widget.bp3-icon_text-widget',
     ['margin', 'input_icons_margin', 'dimensions', '.state-disabled'],
     ['padding', 'input_icons_padding', 'dimensions', '.state-disabled'],
     ['border-radius', 'input_icons_radius', 'dimensions', '.state-disabled'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget',
+    '.state-disabled .bp3-icon_text-widget.bp3-icon_text-widget',
     ['background-color', 'input_icons_background', 'color', '.state-disabled'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget svg',
+    '.state-disabled .bp3-icon_text-widget.bp3-icon_text-widget svg',
     ['width', 'input_icons_size', 'slider', '.state-disabled'],
     ['height', 'input_icons_size', 'slider', '.state-disabled'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget svg,& .bp3-icon_text-widget.bp3-icon_text-widget path',
+    '.state-disabled .bp3-icon_text-widget.bp3-icon_text-widget svg,& .bp3-icon_text-widget.bp3-icon_text-widget path',
     ['fill', 'input_icons_fill', 'color', '.state-disabled'],
     ['stroke', 'input_icons_stroke', 'color', '.state-disabled'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget img',
+    '.state-disabled .bp3-icon_text-widget.bp3-icon_text-widget img',
     ['width', 'input_icons_size', 'slider', '.state-disabled'],
     ['height', 'input_icons_size', 'slider', '.state-disabled'],
     '}',
@@ -278,21 +278,21 @@ export default function getInputSelectStyles(settings) {
       const alignment = getResponsiveSetting(settings, 'alignment', '.state-disabled')
       switch (alignment){
         case 'flex-start':{
-          return '& .bp3-popover-target.bp3-popover-target{flex-grow:0}'
+          return '& .state-disabled .bp3-popover-target.bp3-popover-target{flex-grow:0}'
         }
         case 'flex-end':{
-          return '& .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:flex-end;}'
+          return '& .state-disabled .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:flex-end;}'
         }
         case 'center':{
-          return '& .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:center;}'
+          return '& .state-disabled .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:center;}'
         }
       }
     },
-    '.bp3-popover-target.bp3-popover-target.bp3-popover-target',
+    '.state-disabled .bp3-popover-target.bp3-popover-target.bp3-popover-target',
     ['width', 'field_width', 'slider', '.state-disabled'],
     ['margin', 'position_margin', 'dimensions', '.state-disabled'],
     '}',
-    '.bp3-button.bp3-button.bp3-button',
+    '.state-disabled .bp3-button.bp3-button.bp3-button',
     ['height', 'field_height', 'slider', '.state-disabled'],
     ['text-align', 'placeholder_and_value_alignment_position_section', '', '.state-disabled'],
     ['padding', 'position_padding', 'dimensions', '.state-disabled'],
@@ -306,7 +306,7 @@ export default function getInputSelectStyles(settings) {
     ['', 'box_shadow', 'shadow', '.state-disabled'],
     '}',
     ()=>{
-      let styles = '.bp3-button.bp3-button.bp3-button{';
+      let styles = '.state-disabled .bp3-button.bp3-button.bp3-button{';
       let button_gradient = getResponsiveSetting(settings, 'button_gradient', '.state-disabled')
 
       if(button_gradient?.isWithGradient){
@@ -324,15 +324,15 @@ export default function getInputSelectStyles(settings) {
 
     //</editor-fold>
     //<editor-fold description="стили иконок">
-    '.bp3-icon.bp3-icon svg',
+    '.state-disabled .bp3-icon.bp3-icon svg',
     ['height', 'i_size', 'slider', '.state-disabled'],
     ['width', 'i_size', 'slider', '.state-disabled'],
     ['margin', 'i_margin', 'dimensions', '.state-disabled'],
     '}',
-    '.bp3-icon.bp3-icon path',
+    '.state-disabled .bp3-icon.bp3-icon path',
     ['fill', 'i_color', 'color', '.state-disabled'],
     '}',
-    '.bp3-icon.bp3-icon img',
+    '.state-disabled .bp3-icon.bp3-icon img',
     ['height', 'i_size', 'slider', '.state-disabled'],
     ['width', 'i_size', 'slider', '.state-disabled'],
     ['margin', 'i_margin', 'dimensions', '.state-disabled'],
@@ -340,8 +340,8 @@ export default function getInputSelectStyles(settings) {
 
     //.active
     //</editor-fold>
-    //inputSelect .state-disabled
-    '.altrp-field-label-container',
+    //inputSelect .state active
+    '.active .altrp-field-label-container',
     ['background-color', 'label_background_color', 'color', '.active'],
     ['padding', 'label_padding', 'dimensions', '.active'],
     ['color', 'label_style_font_color', 'color', '.active'],
@@ -349,54 +349,54 @@ export default function getInputSelectStyles(settings) {
     ['left', 'label_position_left', 'slider', '.active'],
     ['width', 'label_width', 'slider', '.active'],
     '}',
-    '.altrp-field-label',
+    '.active .altrp-field-label',
     ['', 'label_style_font_typographic', 'typographic', '.active'],
     '}',
-    '.altrp-label-icon.altrp-label-icon',
+    '.active .altrp-label-icon.altrp-label-icon',
     ['padding', 'icon_padding', 'dimensions', '.active'],
     '}',
 
-    '.altrp-label-icon.altrp-label-icon svg',
+    '.active .altrp-label-icon.altrp-label-icon svg',
     ['width', 'icon_size', 'slider', '.active'],
     ['height', 'icon_size', 'slider', '.active'],
     ['background-color', 'icon_color_background', 'color', '.active'],
     ['fill', 'icon_color', 'color', '.active'],
     ['stroke', 'icon_color', 'color', '.active'],
     '}',
-    '.altrp-label-icon.altrp-label-icon svg path',
+    '.active .altrp-label-icon.altrp-label-icon svg path',
     ['fill', 'icon_color', 'color', '.active'],
     ['stroke', 'icon_color', 'color', '.active'],
     '}',
-    '.altrp-label-icon.altrp-label-icon img',
+    '.active .altrp-label-icon.altrp-label-icon img',
     ['width', 'icon_size', 'slider', '.active'],
     ['height', 'icon_size', 'slider', '.active'],
     ['background-color', 'icon_color_background', 'color', '.active'],
     '}',
     //</editor-fold>
-    '.mask-mismatch-message.mask-mismatch-message',
+    '.active .mask-mismatch-message.mask-mismatch-message',
     ['margin', 'mismatch_message_margin', 'dimensions', '.active'],
     ['padding', 'mismatch_message_padding', 'dimensions', '.active'],
     ['color', 'mismatch_message_font_color', 'color', '.active'],
     ['', 'mismatch_message_typographic', 'typographic', '.active'],
     '}',
     //<editor-fold description="стили иконок">
-    '.bp3-icon_text-widget.bp3-icon_text-widget',
+    '.active .bp3-icon_text-widget.bp3-icon_text-widget',
     ['margin', 'input_icons_margin', 'dimensions', '.active'],
     ['padding', 'input_icons_padding', 'dimensions', '.active'],
     ['border-radius', 'input_icons_radius', 'dimensions', '.active'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget',
+    '.active .bp3-icon_text-widget.bp3-icon_text-widget',
     ['background-color', 'input_icons_background', 'color', '.active'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget svg',
+    '.active .bp3-icon_text-widget.bp3-icon_text-widget svg',
     ['width', 'input_icons_size', 'slider', '.active'],
     ['height', 'input_icons_size', 'slider', '.active'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget svg,& .bp3-icon_text-widget.bp3-icon_text-widget path',
+    '.active .bp3-icon_text-widget.bp3-icon_text-widget svg,& .bp3-icon_text-widget.bp3-icon_text-widget path',
     ['fill', 'input_icons_fill', 'color', '.active'],
     ['stroke', 'input_icons_stroke', 'color', '.active'],
     '}',
-    '.bp3-icon_text-widget.bp3-icon_text-widget img',
+    '.active .bp3-icon_text-widget.bp3-icon_text-widget img',
     ['width', 'input_icons_size', 'slider', '.active'],
     ['height', 'input_icons_size', 'slider', '.active'],
     '}',
@@ -406,21 +406,21 @@ export default function getInputSelectStyles(settings) {
       const alignment = getResponsiveSetting(settings, 'alignment', '.active')
       switch (alignment){
         case 'flex-start':{
-          return '& .bp3-popover-target.bp3-popover-target{flex-grow:0}'
+          return '& .active .bp3-popover-target.bp3-popover-target{flex-grow:0}'
         }
         case 'flex-end':{
-          return '& .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:flex-end;}'
+          return '& .active .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:flex-end;}'
         }
         case 'center':{
-          return '& .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:center;}'
+          return '& .active .bp3-popover-target.bp3-popover-target{flex-grow:0}& .bp3-popover-wrapper{justify-content:center;}'
         }
       }
     },
-    '.bp3-popover-target.bp3-popover-target.bp3-popover-target',
+    '.active .bp3-popover-target.bp3-popover-target.bp3-popover-target',
     ['width', 'field_width', 'slider', '.active'],
     ['margin', 'position_margin', 'dimensions', '.active'],
     '}',
-    '.bp3-button.bp3-button.bp3-button',
+    '.active .bp3-button.bp3-button.bp3-button',
     ['height', 'field_height', 'slider', '.active'],
     ['text-align', 'placeholder_and_value_alignment_position_section', '', '.active'],
     ['padding', 'position_padding', 'dimensions', '.active'],
@@ -434,7 +434,7 @@ export default function getInputSelectStyles(settings) {
     ['', 'box_shadow', 'shadow', '.active'],
     '}',
     ()=>{
-      let styles = '.bp3-button.bp3-button.bp3-button{';
+      let styles = '.active .bp3-button.bp3-button.bp3-button{';
       let button_gradient = getResponsiveSetting(settings, 'button_gradient', '.active')
 
       if(button_gradient?.isWithGradient){
@@ -452,15 +452,15 @@ export default function getInputSelectStyles(settings) {
 
     //</editor-fold>
     //<editor-fold description="стили иконок">
-    '.bp3-icon.bp3-icon svg',
+    '.active .bp3-icon.bp3-icon svg',
     ['height', 'i_size', 'slider', '.active'],
     ['width', 'i_size', 'slider', '.active'],
     ['margin', 'i_margin', 'dimensions', '.active'],
     '}',
-    '.bp3-icon.bp3-icon path',
+    '.active .bp3-icon.bp3-icon path',
     ['fill', 'i_color', 'color', '.active'],
     '}',
-    '.bp3-icon.bp3-icon img',
+    '.active .bp3-icon.bp3-icon img',
     ['height', 'i_size', 'slider', '.active'],
     ['width', 'i_size', 'slider', '.active'],
     ['margin', 'i_margin', 'dimensions', '.active'],
@@ -537,40 +537,40 @@ export function getInputSelectPopoverStyles(settings, elementId){
     '}',
     //</editor-fold>
     //.active
-    '.bp3-menu-item',
+    '.active .bp3-menu-item',
     ['background-color', 'background_style_background_color', 'color', '.active'],
     ['color', 'items_font_color', 'color', '.active'],
     ['', 'field_font_typographic', 'typographic', '.active'],
     ['padding', 'item_padding', 'dimensions', '.active'],
     '}',
-    '.bp3-popover-content',
+    '.active .bp3-popover-content',
     () => `background-color: ${getResponsiveSetting(settings, 'drop_menu_background_color', '.active')?.color} !important;`,
     '}',
-    '.bp3-menu',
+    '.active .bp3-menu',
     ['padding', 'menu_padding', 'dimensions', '.active'],
     ['background-color', 'drop_menu_background_color', 'color', '.active'],
     '}',
-    '.bp3-input',
+    '.active .bp3-input',
     ['', 'field_font_typographic', 'typographic', '.active'],
     ['height', 'si_size', 'slider', '.active'],
     ['padding', 'si_padding', 'dimensions', '.active'],
     ['color', 'si_color', 'color', '.active'],
     ['background-color', 'si_bg_color', 'color', '.active'],
     '}',
-    '.bp3-input-group .bp3-icon svg',
+    '.active .bp3-input-group .bp3-icon svg',
     ['height', 'sii_size', 'slider', '.active'],
     ['width', 'sii_size', 'slider', '.active'],
     ['margin', 'sii_margin', 'dimensions', '.active'],
     '}',
-    '.bp3-input-group .bp3-icon path',
+    '.active .bp3-input-group .bp3-icon path',
     ['fill', 'sii_color', 'color', '.active'],
     '}',
-    '.bp3-icon-add svg',
+    '.active .bp3-icon-add svg',
     ['height', 'a_size', 'slider', '.active'],
     ['width', 'a_size', 'slider', '.active'],
     ['margin', 'a_margin', 'dimensions', '.active'],
     '}',
-    '.bp3-icon-add path',
+    '.active .bp3-icon-add path',
     ['fill', 'a_color', 'color', '.active'],
     '}',
     '}',

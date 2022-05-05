@@ -334,7 +334,7 @@ export default function TabsSwitcherComponent(settings) {
 
 
 
-    `altrp-tabs-switcher_switch.state-disabled`,
+    `.state-disabled altrp-tabs-switcher_switch`,
     ["background-color", "switch_color", "color", ".state-disabled"],
     ["background", "box_around_color_one", "", ".state-disabled"],
     ["background", "box_around_color_two", "", ".state-disabled"],
@@ -347,7 +347,7 @@ export default function TabsSwitcherComponent(settings) {
     ["outline-offset", "switch_button_outline_offset", "slider", ".state-disabled"],
     "}",
 
-    `altrp-tabs-switcher_switch.active`,
+    `.active altrp-tabs-switcher_switch`,
     ["background-color", "switch_color", "color", ".active"],
     ["background", "box_around_color_one", "", ".active"],
     ["background", "box_around_color_two", "", ".active"],

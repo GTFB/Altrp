@@ -40,6 +40,20 @@ class ImageWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для image widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const { element } = this.props;
     const link = this.state.settings.image_link || {};
@@ -48,7 +62,7 @@ class ImageWidget extends Component {
     //   "background_image",
     //   {}
     // );
-    let classNames = "altrp-image-container";
+    let classNames = this.getClasses() + (this.state.settings.position_css_classes || "") + "altrp-image-container"
     let media = this.state.settings.content_media;
 
     if(cursorPointer) {

@@ -103,24 +103,20 @@ export default function InputSliderComponent(settings) {
     "}",
 
     //state disabled
-    "bp3-slider-axis .bp3-slider-label",
+    ".state-disabled bp3-slider-axis .bp3-slider-label",
     ["", "label_typographic", "typographic", ".state-disabled"],
     ["color", "label_color", "color", ".state-disabled"],
     "}",
-
-
-    "bp3-slider-handle span.bp3-slider-label",
+    ".state-disabled bp3-slider-handle span.bp3-slider-label",
     ["", "current_label_typographic", "typographic", ".state-disabled"],
     ["color", "current_label_color", "color", ".state-disabled"],
     "}",
-
-    "bp3-slider-handle",
+    ".state-disabled bp3-slider-handle",
     ["height", "handle_size", "slider", ".state-disabled"],
     ["width", "handle_size", "slider", ".state-disabled"],
     ["border-radius", "handle_radius", "dimensions", ".state-disabled"],
     "}",
-
-    "altrp-field-slider-horizontal .altrp-field-slider",
+    ".state-disabled altrp-field-slider-horizontal .altrp-field-slider",
     ["width", "width", "slider", ".state-disabled"],
     "}",
     () => {
@@ -129,25 +125,21 @@ export default function InputSliderComponent(settings) {
       if(! tr_x && ! tr_y){
         return ''
       }
-      return `& .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
+      return `& .state-disabled .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
     },
-    "altrp-field-slider-vertical .altrp-field-slider",
+    ".state-disabled altrp-field-slider-vertical .altrp-field-slider",
     ["height", "length", "slider", ".state-disabled"],
     "}",
-
-    "altrp-field-slider-wrapper",
+    ".state-disabled altrp-field-slider-wrapper",
     ['padding', 'slider_padding', 'dimensions', ".state-disabled"],
     '}',
-
-    "bp3-slider-progress, & .bp3-slider-track",
+    ".state-disabled bp3-slider-progress, & .bp3-slider-track",
     ["height", "height", "slider", ".state-disabled"],
     "}",
-
-    "altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
+    ".state-disabled altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
     ["width", "thickness", "slider", ".state-disabled"],
     "}",
-
-    "altrp-field-slider-horizontal .bp3-slider-label",
+    ".state-disabled altrp-field-slider-horizontal .bp3-slider-label",
     () => {
       let height = getResponsiveSetting(settings, "height", ".state-disabled", { size: 6, unit: "px" })
 
@@ -156,8 +148,7 @@ export default function InputSliderComponent(settings) {
       return `transform: translate(-50%, calc(14px + ${height}));`
     },
     "}",
-
-    "altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
+    ".state-disabled altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
     () => {
       let thickness = getResponsiveSetting(settings, "thickness", ".state-disabled", { size: 6, unit: "px" })
 
@@ -166,42 +157,34 @@ export default function InputSliderComponent(settings) {
       return `transform: translate(calc(14px + ${thickness}), 50%);`
     },
     "}",
-
-    "bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
+    ".state-disabled bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
     ["background-color", "tooltip_color", "color", ".state-disabled"],
     "}",
-
-    "bp3-slider-handle, & .bp3-slider-handle.bp3-active",
+    ".state-disabled bp3-slider-handle, & .bp3-slider-handle.bp3-active",
     ["background-color", "handle_color", "color", ".state-disabled"],
     "}",
-
-    "bp3-slider-progress.bp3-intent-primary",
+    ".state-disabled bp3-slider-progress.bp3-intent-primary",
     ["background-color", "filled_color", "color", ".state-disabled"],
     "}",
-
-    "bp3-slider-progress",
+    ".state-disabled bp3-slider-progress",
     ["background-color", "blank_color", "color", ".state-disabled"],
     "}",
 
     // state active
-    "bp3-slider-axis .bp3-slider-label",
+    ".active bp3-slider-axis .bp3-slider-label",
     ["", "label_typographic", "typographic", ".active"],
     ["color", "label_color", "color", ".active"],
     "}",
-
-
-    "bp3-slider-handle span.bp3-slider-label",
+    ".active bp3-slider-handle span.bp3-slider-label",
     ["", "current_label_typographic", "typographic", ".active"],
     ["color", "current_label_color", "color", ".active"],
     "}",
-
-    "bp3-slider-handle",
+    ".active bp3-slider-handle",
     ["height", "handle_size", "slider", ".active"],
     ["width", "handle_size", "slider", ".active"],
     ["border-radius", "handle_radius", "dimensions", ".active"],
     "}",
-
-    "altrp-field-slider-horizontal .altrp-field-slider",
+    ".active altrp-field-slider-horizontal .altrp-field-slider",
     ["width", "width", "slider", ".active"],
     "}",
     () => {
@@ -210,57 +193,48 @@ export default function InputSliderComponent(settings) {
       if(! tr_x && ! tr_y){
         return ''
       }
-      return `& .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
+      return `& .active .bp3-slider-handle{transform:translate(${tr_x + 'px'},${tr_y + 'px'});}`
     },
-    "altrp-field-slider-vertical .altrp-field-slider",
+    ".active altrp-field-slider-vertical .altrp-field-slider",
     ["height", "length", "slider", ".active"],
     "}",
-
-    "altrp-field-slider-wrapper",
+    ".active altrp-field-slider-wrapper",
     ['padding', 'slider_padding', 'dimensions', ".active"],
     '}',
-
-    "bp3-slider-progress, & .bp3-slider-track",
+    ".active bp3-slider-progress, & .bp3-slider-track",
     ["height", "height", "slider", ".active"],
     "}",
-
-    "altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
+    ".active altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
     ["width", "thickness", "slider", ".active"],
     "}",
-
-    "altrp-field-slider-horizontal .bp3-slider-label",
+    ".active altrp-field-slider-horizontal .bp3-slider-label",
     () => {
       let height = getResponsiveSetting(settings, "height", ".active", { size: 6, unit: "px" })
-
       height = sliderStyled(height)
-
       return `transform: translate(-50%, calc(14px + ${height}));`
     },
     "}",
-
-    "altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
+    ".active altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
     () => {
       let thickness = getResponsiveSetting(settings, "thickness", ".active", { size: 6, unit: "px" })
-
       thickness = sliderStyled(thickness)
-
       return `transform: translate(calc(14px + ${thickness}), 50%);`
     },
     "}",
 
-    "bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
+    ".active bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
     ["background-color", "tooltip_color", "color", ".active"],
     "}",
 
-    "bp3-slider-handle, & .bp3-slider-handle.bp3-active",
+    ".active bp3-slider-handle, & .bp3-slider-handle.bp3-active",
     ["background-color", "handle_color", "color", ".active"],
     "}",
 
-    "bp3-slider-progress.bp3-intent-primary",
+    ".active bp3-slider-progress.bp3-intent-primary",
     ["background-color", "filled_color", "color", ".active"],
     "}",
 
-    "bp3-slider-progress",
+    ".active bp3-slider-progress",
     ["background-color", "blank_color", "color", ".active"],
     "}",
 
