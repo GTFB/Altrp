@@ -181,7 +181,12 @@ class Assets extends Component {
 
   filterAssets(activeLink) {
     let filterResource = new Resource({ route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}` });
-    filterResource.getQueried({s: this.state.tableSearch, page: this.state.currentPage, pageSize: this.itemsPerPage}).then(res => {
+    let params = {s: this.state.tableSearch, page: this.state.currentPage, pageSize: this.itemsPerPage}
+    if(! this.state.changeTable){
+      delete params.page
+      delete params.pageSize
+    }
+    filterResource.getQueried(params).then(res => {
       this.setState(state => {
         return {
           ...state,
