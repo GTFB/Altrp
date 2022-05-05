@@ -10,8 +10,9 @@ import {
   CONTROLLER_QUERY,
   CONTROLLER_EVENT_HANDLER,
   TAB_CONTENT,
-  TAB_STYLE,
+  TAB_STYLE, CONTROLLER_REPEATER,
 } from "../modules/ControllersManager";
+import Repeater from "../Repeater";
 
 class Map extends BaseElement {
   static getName() {
@@ -79,6 +80,44 @@ class Map extends BaseElement {
         evt: "",
         params: "",
       },
+      locked: true,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("route_section", {
+      tab: TAB_CONTENT,
+      label: "Markers",
+    });
+
+    let repeater = new Repeater();
+
+    repeater.addControl("marker_lat", {
+      type: CONTROLLER_TEXT,
+      label: "latitude",
+      default: null,
+      locked: true,
+    });
+
+    repeater.addControl("marker_long", {
+      type: CONTROLLER_TEXT,
+      label: "longitude",
+      default: null,
+      locked: true,
+    });
+
+    repeater.addControl("marker_tooltip", {
+      type: CONTROLLER_TEXT,
+      label: "Tooltip text",
+      default: "Text",
+      locked: true,
+    });
+
+    this.addControl('markers', {
+      label: 'Markers',
+      type: CONTROLLER_REPEATER,
+      fields: repeater.getControls(),
+      default: [],
       locked: true,
     });
 

@@ -2,13 +2,9 @@ import User from "App/Models/User";
 import data_get from "./data_get";
 import Role from "App/Models/Role";
 import Permission from "App/Models/Permission";
-
 export default function allowedForUser(settings: any, user:User|null|undefined):boolean{
   let result = true;
-  const {conditional_display_choose, default_hidden} = settings
-  if(default_hidden){
-    return false
-  }
+  const {conditional_display_choose} = settings
   if ( ! conditional_display_choose  ) {
     return result;
   }

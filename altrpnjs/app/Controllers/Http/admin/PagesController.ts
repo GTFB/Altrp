@@ -138,7 +138,6 @@ export default class PagesController {
 
     data.roles = roles;
 
-    console.log(data)
     if(data.for_guest){
       data.roles.unshift({value:'guest', label: 'Guest'})
     }

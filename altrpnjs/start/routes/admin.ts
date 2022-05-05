@@ -6,7 +6,6 @@ import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import isProd from "../../helpers/isProd";
 import _ from "lodash";
-
 Route.group(() => {
 
 

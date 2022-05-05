@@ -1115,7 +1115,7 @@ class InputSelectTreeWidget extends Component {
       document.body;
     input = (
       <Popover
-        usePortal={false}
+        usePortal={true}
         fill={true}
         isOpen={this.state.isOpen}
         onInteraction={this.onInteraction}

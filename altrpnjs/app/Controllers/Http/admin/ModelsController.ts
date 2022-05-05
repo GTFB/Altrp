@@ -22,8 +22,6 @@ import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
 import User from "App/Models/User";
-import {promisify} from "util";
-import {exec} from "child_process";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -661,9 +659,12 @@ export default class ModelsController {
           if(relationship[i].type != "belongsTo" && relations[j] && relationship[i].add_belong_to){
 
             try {
+              //@ts-ignore
               await relations[j].load('table')
+              //@ts-ignore
               let deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP FOREIGN KEY ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
               await Database.rawQuery(deleteQuery)
+              //@ts-ignore
               deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP INDEX ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
               await Database.rawQuery(deleteQuery)
             } catch (e) {

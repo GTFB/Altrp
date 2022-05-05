@@ -695,6 +695,7 @@ class ElementWrapper extends Component {
     ) {
       return false;
     }
+
     return true;
   }
   render() {

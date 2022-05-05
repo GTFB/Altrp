@@ -694,6 +694,15 @@ export default class Page extends BaseModel {
       && data_get(element, 'settings.template_dropbar_section')) {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames)
     }
+    if (element.name === 'carousel'
+      && data_get(element, 'settings.slides_repeater').length > 0) {
+
+      for (const el of data_get(element, 'settings.slides_repeater')) {
+        if(el.card_slides_repeater) {
+          await this.extractElementsNamesFromTemplate(el.card_slides_repeater, elementNames)
+        }
+      }
+    }
     if (element.name === 'table'
       && data_get(element, 'settings.tables_columns')) {
       let columns = data_get(element, 'settings.tables_columns', [])

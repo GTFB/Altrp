@@ -12,17 +12,25 @@ export class DiscordBot {
   }
 
   run() {
-    this.bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]});
+    try {
+      this.bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]});
 
-    this.bot.login(this.token)
+      this.bot.login(this.token)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   send(blocks) {
-    this.bot.guilds.cache.map(guild => {
-      const channel = guild.channels.cache.get(guild.systemChannelId)
+    if(this.bot) {
+      this.bot.guilds.cache.map(guild => {
+        const channel = guild.channels.cache.get(guild.systemChannelId)
 
-      blocks.forEach((block => this.sendByType(block, channel)))
-    })
+        blocks.forEach((block => this.sendByType(block, channel)))
+      })
+    } else {
+      console.log("Discord bot is null")
+    }
   }
 
   sendByType(block, channel) {
