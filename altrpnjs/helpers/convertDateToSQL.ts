@@ -1,5 +1,9 @@
 export default function convertDateToSQL(str : string){
 
+  if (!str) {
+    return null
+  }
+
   var date = new Date(str)
   
   return date.getUTCFullYear() + '-' +
