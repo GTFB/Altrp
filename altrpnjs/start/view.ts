@@ -57,6 +57,7 @@ import getColumnClasses from "../helpers/getColumnClasses";
 import renderFeedback from "../helpers/widgets-renders/renderFeedback";
 import getLatestVersion from "../helpers/getLatestVersion";
 import renderInputPagination from "../helpers/widgets-renders/renderInputPagination";
+import renderText from "../helpers/widgets-renders/renderText";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -117,6 +118,7 @@ View.global('renderImageLightbox', renderImageLightbox)
 View.global('renderTree', renderTree)
 View.global('renderDivider', renderDivider)
 View.global('renderFeedback', renderFeedback)
+View.global('renderText', renderText)
 /**
  * RENDERS END
  */

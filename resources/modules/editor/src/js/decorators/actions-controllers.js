@@ -10,6 +10,8 @@ import {
   TAB_CONTENT
 } from '../classes/modules/ControllersManager';
 import Repeater from '../classes/Repeater';
+import axios from "axios";
+import {getElementSettingsSuffix} from "../helpers";
 
 /**
  * Добавляет контроллеры действия для элемента
@@ -437,6 +439,40 @@ export function actionsControllers(
         'table_to_xml',
         'table_to_xls'
       ]
+    },
+    locked: true,
+  });
+
+  actionsRepeater.addControl('form_customizer', {
+    label: 'Customizer',
+    type: CONTROLLER_SELECT2,
+    prefetch_options: true,
+    options_resource: '/admin/ajax/customizers_options',
+    onChange: async function (value) {
+      let pathname = ""
+      try {
+        let customizers = await axios.get("/admin/ajax/customizers")
+        let findCustomizer = customizers.data.data.find(item => item.name === value.value)
+        if (findCustomizer) {
+          let getCustomizer = await axios.get("/admin/ajax/customizers/" + findCustomizer.id)
+          let url = getCustomizer.data.data.source?.web_url
+          if (url) {
+            pathname = new URL(url).pathname
+            this.repeater.changeValue(
+              this.itemindex,
+              "form_url" + getElementSettingsSuffix(this.controller, false),
+              pathname
+            );
+            console.log("jgjajgj", this)
+          }
+        }
+      } catch (error) {
+        alert("Customizer request error")
+        console.log(error)
+      }
+    },
+    conditions: {
+      type: ['form']
     },
     locked: true,
   });

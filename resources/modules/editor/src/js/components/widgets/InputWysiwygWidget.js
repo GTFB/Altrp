@@ -670,7 +670,6 @@ class InputWysiwygWidget extends Component {
     const settings = this.props.element.getSettings();
     const {
       select2_multiple: isMultiple,
-      label_icon
     } = settings;
 
     let value = this.state.value;
@@ -731,7 +730,10 @@ class InputWysiwygWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label) {
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
@@ -743,7 +745,7 @@ class InputWysiwygWidget extends Component {
               : ""
               }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
           </label>
           {label_icon && label_icon.assetType && (
             <span className="altrp-label-icon">

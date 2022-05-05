@@ -1006,7 +1006,6 @@ class InputCheckboxWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      label_icon,
       position_css_id: cssId,
       position_css_classes: cssClasses
     } = settings;
@@ -1069,7 +1068,10 @@ class InputCheckboxWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label) {
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
@@ -1081,7 +1083,7 @@ class InputCheckboxWidget extends Component {
               : ""
             }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
           </label>
           {label_icon && label_icon.assetType && (
             <span className="altrp-label-icon">

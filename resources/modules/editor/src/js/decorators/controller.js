@@ -78,9 +78,10 @@ function componentDidUpdate(prevProps, prevState) {
  * Метод получения настроек для контроллера из текущего элемента
  * с учетом текущего состояния
  * @param {string }settingName
+ * @param {boolean }locked
  * @return {*}
  */
-function getSettings(settingName) {
+function getSettings(settingName, locked= false) {
   if (!this.props.currentElement) {
     return "";
   }
@@ -122,10 +123,19 @@ function getSettings(settingName) {
     return this.props.currentElement.getSettings(settingName);
   }
   let _settingName = this.props.controller.getSettingName();
-  let value = this.props.currentElement.getResponsiveSetting(
-    settingName,
-    getElementState().value
-  );
+  let value = null
+  if (locked) {
+    value = this.props.currentElement.getResponsiveLockedSetting(
+      settingName,
+      getElementState().value
+    );
+  } else {
+    value = this.props.currentElement.getResponsiveSetting(
+      settingName,
+      getElementState().value
+    );
+  }
+
   // console.log(getElementSettingsSuffix(this.props.controller));
   // if (value === null || value === undefined) {
   //   value = this.props.currentElement.getSettings(settingName);

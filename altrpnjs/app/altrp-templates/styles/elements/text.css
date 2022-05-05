@@ -1,0 +1,53 @@
+.altrp-text {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.5;
+  letter-spacing: 0;
+  border-radius: 0;
+}
+
+.altrp-text a{
+  font-family: "Open Sans", sans-serif;
+
+}
+.altrp-text blockquote {
+  overflow: hidden;
+  padding-right: 1.5em;
+  padding-left: 1.5em;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+  border-left: solid 5px hsl(0, 0%, 80%);
+}
+.altrp-text p{
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.altrp-text img{
+  max-width: 100%;
+}
+
+.ck.ck-editor__editable_inline{
+  padding: 0;
+}
+
+.ck.ck-editor__editable_inline>:last-child {
+  margin-bottom: calc(0.6em * 1.5);
+}
+
+.ck.ck-editor__editable_inline>:first-child {
+  margin-top: calc(0.6em * 1.5);
+}
+
+.ck.ck-editor__editable_inline[dir=ltr] {
+  text-align: left;
+}
+
+.ck.ck-editor__editable_inline {
+  overflow: auto;
+  border: 1px solid transparent;
+}

@@ -1163,10 +1163,6 @@ class InputSelectWidget extends Component {
     const settings = this.props.element.getSettings();
     let value = this.getCurrentLabel();
 
-    const {
-      label_icon
-    } = settings;
-
     const fullWidth = element.getLockedSettings("full_width")
     this.popoverProps.onOpening = (e) => {
       if(fullWidth) {
@@ -1221,8 +1217,12 @@ class InputSelectWidget extends Component {
         classLabel = "";
         break;
     }
-    const content_label = this.getLockedContent('content_label')
-    if (content_label) {
+
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}

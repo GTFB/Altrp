@@ -15,7 +15,7 @@ export default function renderButton(settings, device, context) {
 
   let classes = 'altrp-btn ' + (settings.position_css_classes || "")
   if (background_image?.url) {
-    classes += " altrp-background-image"
+    classes += " altrp-background-image_btn"
   }
 
   let buttonText = getContent(settings, context,"button_text", device)
@@ -321,9 +321,9 @@ export default function renderButton(settings, device, context) {
 
   // @ts-ignore
   let button = `<button
-  class=${classes}
-  id=${settings.position_css_id}
-  title=${tooltip || ''}
+  class="${classes}"
+  id="${settings.position_css_id || ""}"
+  title="${tooltip || ''}"
 >
   ${buttonInner}
   </button>`
@@ -338,10 +338,10 @@ export default function renderButton(settings, device, context) {
         ? "blank"
         : ""
       link = (`<a
-          href=${url}
-      class=${classes}
-      target=${target}
-      title=${tooltip || null}
+          href="${url}"
+      class="${classes}"
+      target="${target}"
+      title="${tooltip || null}"
     >
       ${buttonInner}
       </a>`
@@ -352,9 +352,9 @@ export default function renderButton(settings, device, context) {
   if (_.get(settings, "link_link.toPrevPage")) {
     link = (
       `<button
-    class=${classes}
-    id=${settings.position_css_id}
-    title=${tooltip || null}
+    class="${classes}"
+    id="${settings.position_css_id || ""}"
+    title="${tooltip || null}"
   >
     ${buttonInner}
     </button>`
