@@ -17,7 +17,7 @@ import Permission from "App/Models/Permission";
 import Customizer from "App/Models/Customizer";
 import SQLEditor from "App/Models/SQLEditor";
 import _ from "lodash";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import Logger from "@ioc:Adonis/Core/Logger";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";

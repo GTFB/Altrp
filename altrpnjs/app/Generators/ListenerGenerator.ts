@@ -1,5 +1,5 @@
 import {BaseGenerator} from "App/Generators/BaseGenerator";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import fs from "fs";
 import path from "path"
@@ -262,7 +262,7 @@ export default class ListenerGenerator extends BaseGenerator {
     let imports = "";
     let content = "";
 
-    content = await this.applyFilters("pages", "array");
+    content = await this.applyFilters("pages", content);
 
     imports = await this.applyFilters("listener_imports", imports);
 

@@ -7,6 +7,7 @@ import version_compare from "../../../../helpers/version_compare";
 import storage_path from "../../../../helpers/storage_path";
 import set_plugin_setting from '../../../../helpers/plugins/set_plugin_setting';
 import axios from "axios";
+import isProd from "../../../../helpers/isProd";
 
 export default class PluginController {
   /**
@@ -93,6 +94,9 @@ export default class PluginController {
   }
 
   public async install({request, response}: HttpContextContract) {
+    if(! isProd()){
+      return response.json({'success':true})
+    }
     let res: any = {success: true,}
     let status = 200
     let name = request.input('name');

@@ -1,12 +1,13 @@
 import Plugin from "App/Plugin";
 import fs from "fs";
-import app_path from "./app_path";
-import isProd from "./isProd";
+import app_path from "../path/app_path";
+import isProd from "../isProd";
 import Logger from "@ioc:Adonis/Core/Logger";
 
 export default async function applyPluginsFiltersAsync(type: string, content,) {
 
   const base = `AltrpPlugins`
+
 
   const plugins = Plugin.getEnabledPlugins()
   for (const plugin of plugins) {

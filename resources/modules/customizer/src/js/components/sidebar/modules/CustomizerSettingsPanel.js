@@ -34,7 +34,6 @@ class CustomizerSettingsPanel extends React.Component {
   }
 
 
-
   // Запись значений select в store
   changeSelect(e) {
     const sources = this.props.sources;

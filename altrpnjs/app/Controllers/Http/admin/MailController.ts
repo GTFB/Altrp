@@ -1,5 +1,5 @@
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import base_path from "../../../../helpers/base_path";
+import base_path from "../../../../helpers/path/base_path";
 import fs from "fs";
 import env from "../../../../helpers/env";
 import envWriter from "../../../../helpers/envWriter";

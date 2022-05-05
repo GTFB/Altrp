@@ -6,8 +6,6 @@ import {InputGroup, Tree} from "@blueprintjs/core";
 import Search from "../svgs/search.svg";
 import {filterCategories} from "../js/helpers";
 import Pagination from "./Pagination";
-import DraggableScroll from "./DraggableScroll/DraggableScroll";
-import {SwiperSlide} from 'swiper/react';
 
 class AllPages extends Component {
   constructor(props) {
@@ -22,6 +20,8 @@ class AllPages extends Component {
       filter: false,
       activeCategory: 'All',
       categoryOptions: [],
+      pageCount: 1,
+      count: 1
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
@@ -38,23 +38,24 @@ class AllPages extends Component {
         categories: urlCategories,
         s: urlS === null ? this.state.pagesSearch : urlS,
         order: 'ASC',
-        order_by: 'title'
+        order_by: 'title',
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     } else {
       res = await this.resource.getQueried({
         s: urlS === null ? this.state.pagesSearch : urlS,
         order: 'ASC',
-        order_by: 'title'
+        order_by: 'title',
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     }
 
     let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
       return this.treePagesMap(page)
     })
-    let treePagesSlice = treePagesNew.slice(
-      this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
-      this.state.currentPage * this.itemsPerPage
-    )
+    let treePagesSlice = treePagesNew
     this.setState(state => {
       return {
         ...state,
@@ -62,7 +63,9 @@ class AllPages extends Component {
         activeCategory: urlCategories === null ? 'All' : urlCategories,
         pagesSearch: urlS === null ? this.state.pagesSearch : urlS,
         treePages: treePagesNew,
-        treePagesSlice
+        treePagesSlice,
+        pageCount: res[0].pageCount,
+        count: res[0].count
       };
     });
   };
@@ -231,7 +234,7 @@ class AllPages extends Component {
   }
 
   render() {
-    const {treePages, treePagesSlice, currentPage} = this.state;
+    const {treePages, treePagesSlice, currentPage, pageCount, count} = this.state;
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -324,10 +327,15 @@ class AllPages extends Component {
                 onNodeExpand={this.handleNodeExpand}
               />
               <Pagination
-                pageCount={Math.ceil(treePages.length / this.itemsPerPage) || 1}
+                pageCount={pageCount}
                 currentPage={currentPage}
-                changePage={page => this.changePageSlice(page)}
-                itemsCount={treePages.length}
+                changePage={async (page) => {
+                  if (currentPage !== page) {
+                    await this.setState({currentPage: page})
+                    await this.getPages()
+                  }
+                }}
+                itemsCount={count}
               />
             </div>
           </div>

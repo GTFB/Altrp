@@ -189,6 +189,7 @@ class Admin extends Component {
 
   render() {
     const { models, mainMenu } = this.props;
+    const { activeButton } = this.state;
     let adminClasses = ["admin"];
     if (!this.props.adminEnable) {
       adminClasses.push("pointer-event-none");
@@ -370,13 +371,20 @@ class Admin extends Component {
                             <span>Settings</span>
                           </Link>
                         </li>
-                        {mainMenu.map( (item, idx) => <li key={item.id || 'main-menu' + idx }>
-                          <Link className="admin-nav-list__link admin-nav-list__link-top" to={item.to}>
-                            <SettingSvg className="icon" />
-
-                            <span>{item.text}</span>
-                          </Link>
-                        </li> )}
+                        {mainMenu.map( (item, idx) => {
+                          return <li key={item.id || 'main-menu' + idx }>
+                            <Link className={`admin-nav-list__link ${
+                              activeButton === item.id ? 'active__panel' : 'admin-nav-list__link-top'}`
+                            }
+                                  onClick={() => this.setState({ activeButton: item.id })}
+                                  to={item.to}>
+                              <SettingSvg className="icon" />
+                              <DropletSvg className="icon__droplet"/>
+                              <span>{item.text}</span>
+                            </Link>
+                          </li>
+                        })
+                        }
                       </ul>
                     </Scrollbars>
                   )}

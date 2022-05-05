@@ -12,40 +12,39 @@ export class TelegramBot {
     if(this.token) this.run()
   }
 
-  // start(ctx) {
-  //   // for command /start
-  // }
-  //
-  // help(ctx) {
-  //   // for command /help
-  // }
-
   run() {
-    this.bot = new Telegraf(this.token)
+    try {
+      this.bot = new Telegraf(this.token)
 
-    this.bot.start((ctx) => {
-      const id = ctx.message.chat.id;
-      const username = ctx.message.from.username;
+      this.bot.start((ctx) => {
+        const id = ctx.message.chat.id;
+        const username = ctx.message.from.username;
 
-      User.query().where("telegram_user_id", username).orWhere("telegram_user_id", "@" + username).firstOrFail().then((user) => {
-        user.telegram_chat = id;
-        user.save()
+        User.query().where("telegram_user_id", username).orWhere("telegram_user_id", "@" + username).firstOrFail().then((user) => {
+          user.telegram_chat = id;
+          user.save()
+        })
       })
-    })
 
-    this.bot.launch()
+      this.bot.launch()
+    } catch (e) {
+      console.log(e)
+    }
   }
-  //@ts-ignore
+
   send(blocks, user) {
-    blocks.forEach(block => {
-      if(user.telegram_chat) {
-        this.sendByType(block, user)
-      }
-    })
+    if(this.bot) {
+      blocks.forEach(block => {
+        if(user.telegram_chat) {
+          this.sendByType(block, user)
+        }
+      })
+    } else {
+      console.log("Telegram bot is null")
+    }
   }
 
   sendByType(block, user) {
-    console.log(block)
     try {
       switch (block.type) {
         case "content":

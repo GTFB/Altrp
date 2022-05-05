@@ -6,6 +6,7 @@ import {
 import unserialize from "./unserialize";
 import {base64} from "@ioc:Adonis/Core/Helpers";
 import getAppEncryptKey from "./getAppEncryptKey";
+import Logger from "@ioc:Adonis/Core/Logger";
 
 
 
@@ -23,8 +24,7 @@ export default function decrypt(value: string, _unserialize = true): string {
       dec_data = unserialize(dec_data)
     }
   }catch (e) {
-    console.error(e);
-
+    Logger.error(e);
   }
   return dec_data
 }

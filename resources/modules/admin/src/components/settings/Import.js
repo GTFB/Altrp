@@ -1,6 +1,7 @@
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {FileInput} from "@blueprintjs/core";
 import getCookie from "../../../../editor/src/js/helpers/getCookie";
+import getAltrpLang from "../../js/helpers/get-altrp-lang";
 
 class Import extends Component {
   constructor(props) {
@@ -93,31 +94,33 @@ class Import extends Component {
         <button className="btn_success btn">Import ZIP Archive</button>
       </div>
     </form>
+      {getAltrpLang() === 'javascript' ? '' : <form
+        onSubmit={this.onCustomSubmit}
+        method="post"
+        className="admin-updates admin-import p-4">
 
-    <form
-      onSubmit={this.onCustomSubmit}
-      method="post"
-      className="admin-updates admin-import p-4">
-      <div className="admin-caption mt-1">
+        <div className="admin-caption mt-1">
         Import Filtered App Settings in Archive
-      </div>
-      <input type="hidden"
-             name="_token"
-             value={_token}/>
+        </div>
+        <input type="hidden"
+        name="_token"
+        value={_token}/>
       {/*<input type="file"*/}
       {/*       ref={this.inputCustomFile}*/}
       {/*       accept={'.zip,application/zip,application/x-zip,application/x-zip-compressed'}*/}
       {/*       name="file"*/}
       {/*       required/>*/}
-      <div className="admin-import__block">
+        <div className="admin-import__block">
         <FileInput
-          inputProps={{accept: ".zip,application/zip,application/x-zip,application/x-zip-compressed", name: "file", ref: this.inputCustomFile, onChange: this.addCustomFile}}
-          className="admin-updates__inputFile"
-          text={this.state.fileCustomName || "Choose file..."}
+        inputProps={{accept: ".zip,application/zip,application/x-zip,application/x-zip-compressed", name: "file", ref: this.inputCustomFile, onChange: this.addCustomFile}}
+        className="admin-updates__inputFile"
+        text={this.state.fileCustomName || "Choose file..."}
         />
         <button className="btn_success btn">Import ZIP Archive (JSON)</button>
-      </div>
-    </form></div>
+        </div>
+        </form>
+      }
+    </div>
   }
 }
 

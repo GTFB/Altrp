@@ -6,17 +6,33 @@ import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
 
 export default class RobotsController {
-  public async index() {
-    const robots = await Robot.query().preload("user").preload("categories");
+  public async index({request}) {
+    const params = request.qs()
+    const page = parseInt(params.page) || 1
+    const pageSize = params.pageSize || 20
+    const searchWord = params.s
+    let robots
 
-    return robots.map((robot) => {
+    if (searchWord) {
+      robots = await Robot.query()
+        .orWhere('name', 'LIKE', `%${searchWord}%`)
+        .orWhere('chart', 'LIKE', `%${searchWord}%`)
+        .preload('user')
+        .preload('categories')
+        .paginate(page, pageSize)
+    } else {
+      robots = await Robot.query().preload('user').preload('categories').paginate(page, pageSize)
+    }
 
+    return robots.all().map((robot) => {
       const data = {
         author: robot.user.name,
         ...robot.serialize(),
         categories: robot.categories.map(category => {
           return category
-        })
+        }),
+        count: robots.getMeta().total,
+        pageCount: robots.getMeta().last_page,
       }
 
       return data

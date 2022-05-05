@@ -5,6 +5,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import {setAdminDisable, setAdminEnable} from "../js/store/admin-state/actions";
 import AltrpCodeEditor from "./altrp-editor/AltrpCodeEditor";
 import store from '../js/store/store';
+import {TextArea} from "@blueprintjs/core";
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
 
@@ -26,10 +27,12 @@ class AdvancedSettings extends Component {
     // let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug').altrp_debug);
     let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug')).altrp_debug;
     let loadByUser = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_user_load')).altrp_user_load;
+    let altrp_custom_headers = (await new Resource({route:'/admin/ajax/settings'}).get('altrp_custom_headers?decrypt=true')).altrp_custom_headers || '';
     this.setState(state => ({...state,
       allSiteJavascript,
       debugOn,
       loadByUser,
+      altrp_custom_headers,
     }));
   }
 
@@ -76,6 +79,12 @@ class AdvancedSettings extends Component {
     }))
   };
 
+
+  updateCustomHeaders = async (e)=> {
+    const value = e.target.value
+    await new Resource({route:'/admin/ajax/settings'}).put('altrp_custom_headers', {value, encrypt:true});
+
+  }
   /**
    * Удалить всю историю всех шаблонов
    * @param e
@@ -122,6 +131,7 @@ class AdvancedSettings extends Component {
     store.dispatch(setAdminEnable());
   };
   render() {
+    const {altrp_custom_headers}  = this.state
     return <div className="admin-styles-settings">
 
       <div className="advanced__settings">
@@ -159,26 +169,37 @@ class AdvancedSettings extends Component {
                 Clear
               </button>
             </div>
+
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Custom Headers for Pages:</div>
+              <TextArea name="custom_headers"
+                        className="resize-none mb-3"
+                        id="custom_headers"
+                        cols="30"
+                        defaultValue={altrp_custom_headers}
+                        onBlur={this.updateCustomHeaders}
+                        rows="10" fill={true}>
+
+              </TextArea>
+              <div>
+                Enter each Header for Page in a separate line.
+                <br/>To differentiate between label and value, separate them with a pipe char ("|").
+                <br/>For example: title | Post.<br/>
+                Or title | {'{{title}}'}
+                for Take Value from Page Data
+              </div>
+            </div>
           </div>
 
           <div className="admin-styles-advanced">
-            <div className="admin-styles-advanced-block advanced-flex">
-              <div className="advanced-text">Debug Altrp App</div>
-              <input className="admin-table__td_check"
-                     onChange={this.toggleDebug}
-                // value={this.state.debugOn}
-                     checked={this.state.debugOn}
-                     type="checkbox"/>
-            </div>
-
-            <div className="admin-styles-advanced-block advanced-flex">
-              <div className="advanced-text">Load App on User Action</div>
-              <input className="admin-table__td_check"
-                     onChange={this.toggleLoadingOption}
-                // value={this.state.debugOn}
-                     checked={this.state.loadByUser}
-                     type="checkbox"/>
-            </div>
+            {/*<div className="admin-styles-advanced-block advanced-flex">*/}
+            {/*  <div className="advanced-text">Debug Altrp App</div>*/}
+            {/*  <input className="admin-table__td_check"*/}
+            {/*         onChange={this.toggleDebug}*/}
+            {/*    // value={this.state.debugOn}*/}
+            {/*         checked={this.state.debugOn}*/}
+            {/*         type="checkbox"/>*/}
+            {/*</div>*/}
           </div>
       </div>
 

@@ -84,10 +84,11 @@ function loadEditorContent(EditorContent){
   }
 
   function listenerHistory(event) {
+    let charCode = String.fromCharCode(event.which).toLowerCase()
     if (window.parent.appStore.getState().historyStore.active) {
-      if (event.ctrlKey && event.code === "KeyZ" && event.shiftKey) {
+      if ((event.ctrlKey || event.metaKey) && charCode === 'z' && event.shiftKey) {
         controllerHistory.redo();
-      } else if (event.ctrlKey && event.code === "KeyZ") {
+      } else if ((event.ctrlKey || event.metaKey) && charCode === 'z') {
         controllerHistory.undo();
       }
     }

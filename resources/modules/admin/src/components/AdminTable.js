@@ -38,6 +38,7 @@ class AdminTable extends Component {
       radiusTable, sortingField, filterPropsCategories, arrayChecked, deleteCheckedLine, tableHalf } = this.props;
     const { filter } = this.state
 
+
     return (
       /*Search всех компонент*/
       <div className={"admin-table" + (radiusTable ? " admin-table-noRadius" : "")}>
@@ -127,7 +128,6 @@ class AdminTable extends Component {
             ))}
           </tbody>
         </table>
-
         {
           this.props.openPagination && (
             <Pagination

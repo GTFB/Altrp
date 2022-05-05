@@ -48,14 +48,38 @@ function MapDesigner({
   field_first_connect = null,
   field_second_connect = null,
   parameters,
-  settings
+  settings,
+  element
 }) {
   const FG = useRef(null);
   const ModalRef = useRef(null);
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
-  const [markers, setMarkers] = useState(null);
+
+  let dynamicMarkers = element.getLockedSettings("markers");
+
+  if(_.isArray(dynamicMarkers)) {
+    dynamicMarkers = dynamicMarkers.filter(elem => {
+      if(!elem.marker_lat || !elem.marker_long) return false;
+      return true
+    })
+
+    dynamicMarkers = dynamicMarkers.map(elem => {
+      return {
+        feature: {
+          geometry: {
+            coordinates: [elem.marker_lat, elem.marker_long]
+          },
+          properties: {
+            tooltip: elem.marker_tooltip
+          }
+        }
+      }
+    })
+  }
+
+  const [markers, setMarkers] = useState(dynamicMarkers || null);
 
   const updateGeoObjectToModel = geoObject => {
     const { dbID } = geoObject;
