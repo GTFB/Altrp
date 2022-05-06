@@ -214,4 +214,121 @@ export default class Model extends BaseModel {
     await models.preload('categories').select('altrp_models.*')
     return models
   }
+
+  public async createController() {
+    const controller = new Controller()
+    controller.fill({
+      model_id: this.id,
+      description: this.description,
+    })
+    return await controller.save()
+  }
+
+  public async createStandartSources() {
+
+    const table = await this.preload('table')
+    const controller = await this.preload('altrp_controller')
+
+    let sources = [
+      (new Source()).fill({
+        url: `/filters/${table.name}/{column}`,
+        api_url: `/filters/${table.name}/{column}`,
+        type: `filters`,
+        request_type: `get`,
+        name: `Filters ${this.name}`,
+        title: `Filters ${this.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${this.name}}/{column}`,
+        api_url: `/${table.name}/{${this.name}}/{column}`,
+        type: `update_column`,
+        request_type: `put`,
+        name: `Update column ${this.name}`,
+        title: `Update column ${this.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${this.name}}`,
+        api_url: `/${table.name}/{${this.name}}`,
+        type: `delete`,
+        request_type: `delete`,
+        name: `Delete ${this.name}`,
+        title: `Delete ${this.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${this.name}}`,
+        api_url: `/${table.name}/{${this.name}}`,
+        type: `update`,
+        request_type: `put`,
+        name: `Update ${this.name}`,
+        title: `Update ${this.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}`,
+        api_url: `/${table.name}`,
+        type: `add`,
+        request_type: `post`,
+        name: `Add ${this.name}`,
+        title: `Add ${this.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}`,
+        api_url: `/${table.name}`,
+        type: `get`,
+        request_type: `get`,
+        name: `Get  ${this.name}`,
+        title: `Get  ${this.name}`,
+        auth: false,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${this.name}}`,
+        api_url: `/${table.name}/{${this.name}}`,
+        type: `show`,
+        request_type: `get`,
+        name: `Show  ${this.name}`,
+        title: `Show ${this.name}`,
+        auth: false,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+      (new Source()).fill({
+        url: `/{${this.name}}_options`,
+        api_url: `/{${this.name}}_options`,
+        type: `options`,
+        request_type: `get`,
+        name: `Get options ${this.name}`,
+        title: `Get options ${this.name}`,
+        auth: false,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: this.id,
+      }),
+    ]
+
+    await Promise.all(sources.map(s => s.save()))
+
+  }
 }
