@@ -9,8 +9,26 @@ export default function MapComponent(settings) {
 
     "altrp-btn",
     ["margin", "style_margin", "dimensions"],
+    "}",
+
+    //state disabled
+    "altrp-image",
+    ["height", "style_height", "slider", ".state-disabled"],
+    "}",
+
+    "altrp-btn",
+    ["margin", "style_margin", "dimensions", ".state-disabled"],
+    "}",
+
+    //state active
+    "altrp-image",
+    ["height", "style_height", "slider", ".active"],
+    "}",
+
+    "altrp-btn",
+    ["margin", "style_margin", "dimensions", ".active"],
     "}"
-  ];
+  ]
 
   return styledString(styles, settings)
 };

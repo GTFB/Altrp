@@ -239,11 +239,26 @@ class CarouselWidget extends Component {
     this.carousel = React.createRef();
   }
 
+  /**
+   * Получить css классы для carousel widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render(){
     const carouselProps = {
       ...this.props.element.getSettings(),
       currentScreen: this.props.currentScreen,
       elementId: this.props.element.getId(),
+      classes: this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     };
     if(! carouselProps.slides_repeater){
       carouselProps.slides_repeater = [];

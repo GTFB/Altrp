@@ -145,7 +145,7 @@ class AltrpPosts extends React.Component {
     } else if(_.get(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`)){
       HoverPostContentComponent = _.get(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`)
     }
-    return <div className="altrp-post" key={(post.id || post.altrpIndex)}>
+    return <div className={`${this.props?.className} altrp-post`} key={(post.id || post.altrpIndex)}>
         {PostContentComponent}
         {this.state.hoverSimpleTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{HoverPostContentComponent}</div>}
       </div>
@@ -306,7 +306,7 @@ class AltrpPosts extends React.Component {
       <PostsWrapper columnsCount={columnsCount}
                                         posts_columns_gap={posts_columns_gap}
                                         posts_rows_gap={posts_rows_gap}
-                                        className="altrp-posts">
+                                        className={`${this.props?.className} altrp-posts`}>
         {posts.map((p, idx)=>{
           return this.renderPost(postsStart + idx);
         })}

@@ -128,15 +128,30 @@ class ImageLightboxWidget extends Component {
     return media
   }
 
+  /**
+   * Получить css классы для image lightbox widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const {element} = this.props;
+    let classes = this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const cursorPointer = element.getResponsiveLockedSetting("cursor_pointer", false);
     const background_image = element.getResponsiveLockedSetting(
       "background_image",
       {}
     );
     const media = this.getMedia()
-    let classNames = "altrp-image-container";
+    let classNames = `${classes} altrp-image-container`;
     if (cursorPointer) {
       classNames += " cursor-pointer"
     }
@@ -157,7 +172,7 @@ class ImageLightboxWidget extends Component {
         element={this.props.element}
         height={height}
         className={
-          " altrp-image" +
+          ` altrp-image ${classes}` +
           (background_image ? " altrp-background-image" : "")
         }
       />
@@ -165,6 +180,7 @@ class ImageLightboxWidget extends Component {
 
     const lightbox = (
       <AltrpLightbox
+        classes={classes}
         images={[(media ? media.url : "")]}
         currentUrl={this.addedURL}
         lightboxID={this.props.element.getResponsiveLockedSetting('l_id')}

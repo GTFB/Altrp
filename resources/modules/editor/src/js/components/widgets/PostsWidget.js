@@ -32,7 +32,23 @@ class PostsWidget extends Component {
     return true;
   }
 
+  /**
+   * Получить css классы для posts widget ( cards widget )
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     if (!this.props.currentModel.getProperty('altrpModelUpdated')) {
       return '';
     }
@@ -47,7 +63,8 @@ class PostsWidget extends Component {
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
     }
 
-    return <PostsComponent query={query}
+    return <PostsComponent className={classes}
+                           query={query}
                            currentModel={this.props.currentModel}
                            data={data}
                            element={this.props.element}

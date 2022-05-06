@@ -376,11 +376,26 @@ class TreeWidget extends Component {
     })
   }
 
-  render() {
+  /**
+   * Получить css классы для tree widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
 
+  render() {
+  let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
       this.state.repeater.length > 0 ? (
         <TreeBlueprint
+          className={classes}
           contents={this.state.repeater}
           onNodeClick={this.handleNodeClick}
           onNodeCollapse={this.handleNodeCollapse}
@@ -392,6 +407,7 @@ class TreeWidget extends Component {
         </NullArray>
       )
     ) : this.state.repeater.length > 0 ? (<TreeBlueprint
+      className={classes}
       contents={this.state.repeater}
       onNodeClick={this.handleNodeClick}
       onNodeCollapse={this.handleNodeCollapse}
