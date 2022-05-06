@@ -98,7 +98,8 @@ export default class Model extends BaseModel {
   public user_id: number
 
   @belongsTo(() => User, {
-    foreignKey: "author"
+    //foreignKey: "author"
+    foreignKey: "user_id"
   })
   public user: BelongsTo<typeof User>
 
