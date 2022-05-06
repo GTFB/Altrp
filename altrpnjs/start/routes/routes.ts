@@ -24,7 +24,7 @@ import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
 import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import Customizer from "App/Models/Customizer";
 import fs from 'fs'
 import Model from "App/Models/Model";
@@ -357,6 +357,9 @@ ${e.message}`,
   Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
   Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
 
+  Route.get('routes', async ({response}:HttpContextContract)=>{
+    return response.json({success: true, pages: []})
+  })
 })
   .prefix("/ajax")
 

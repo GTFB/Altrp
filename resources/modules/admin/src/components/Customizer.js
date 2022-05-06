@@ -101,8 +101,6 @@ class Customizer extends Component {
         fr.onload = async (e) => {
           let importedCustomizerData = _.get(e, 'target.result', '{}');
           importedCustomizerData = JSON.parse(importedCustomizerData);
-          //importedCustomizerData.isImported = true;
-          importedCustomizerData.name = importedCustomizerData.title+generateId();
           try {
             let res = await this.resource.post(importedCustomizerData);
             if (res.redirect_route) {

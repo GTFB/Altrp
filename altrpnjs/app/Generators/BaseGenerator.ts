@@ -7,7 +7,7 @@ import isProd from "../../helpers/isProd";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
-import applyPluginsFiltersAsync from "../../helpers/applyPluginsFiltersAsync";
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export abstract class BaseGenerator{
   private fileName: string;

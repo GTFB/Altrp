@@ -24,7 +24,7 @@
 .app-popup .popup-window {
   position: absolute;
   width: 50vw;
-  height: 50vh;
+  //height: 50vh;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -99,15 +99,18 @@
 }
 
 .app-popup-vertical-bottom .popup-window {
-  bottom: 0
+  bottom: 0;
 }
 
 .app-popup-horizontal-center.app-popup-vertical-center .popup-window {
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
 }
 
 .app-popup-height-fit-to-screen .popup-window {
-  height: 100vh
+  height: 100vh;
+}
+.app-popup-height-fit-to-content .popup-window {
+  height: auto;
 }
 /**
  OFFCANVAS

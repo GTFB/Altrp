@@ -85,6 +85,23 @@ class InputTextCommon extends BaseElement {
       label: "Form ID"
     });
 
+    this.addControl("max_number", {
+      type: CONTROLLER_NUMBER,
+      label: "Max number",
+      conditions: {
+        content_type: ["number"]
+      },
+    });
+
+    this.addControl("min_number", {
+      type: CONTROLLER_NUMBER,
+      label: "Min number",
+      conditions: {
+        content_type: ["number"]
+      },
+    });
+
+
     this.addControl("field_id", {
       responsive: false,
       type: CONTROLLER_TEXT,

@@ -17,6 +17,8 @@ class Robots extends Component {
       robots: [],
       robotsDidMount: [],
       currentPage: 1,
+      pageCount: 1,
+      count: 1,
       activeHeader: 0,
       robotsSearch: "",
       model_id: false,
@@ -31,7 +33,7 @@ class Robots extends Component {
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
 
     this.addNew = this.addNew.bind(this);
-    this.itemsPerPage = 10;
+    this.itemsPerPage = 20;
   }
 
   async componentDidMount() {
@@ -78,11 +80,15 @@ class Robots extends Component {
     if (urlCategories) {
       robots = await this.resource.getQueried({
         categories: urlCategories,
-        s: urlS === null ? this.state.robotsSearch : urlS
+        s: urlS === null ? this.state.robotsSearch : urlS,
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     } else {
       robots = await this.resource.getQueried({
-        s: urlS === null ? this.state.robotsSearch : urlS
+        s: urlS === null ? this.state.robotsSearch : urlS,
+        page: this.state.currentPage,
+        pageSize: this.itemsPerPage
       });
     }
 
@@ -97,7 +103,9 @@ class Robots extends Component {
         ...state,
         robots: robots,
         robotsSearch: urlS === null ? this.state.robotsSearch : urlS,
-        activeCategory: urlCategories === null ? 'All' : urlCategories
+        activeCategory: urlCategories === null ? 'All' : urlCategories,
+        count: robots[0]?.count || 1,
+        pageCount: robots[0]?.pageCount || 1,
       }
     });
   }
@@ -198,7 +206,7 @@ class Robots extends Component {
   }
 
   render() {
-    const { currentPage, categoryOptions, robotsDidMount, robots, robotsSearch } = this.state;
+    const { currentPage, categoryOptions, robotsDidMount, robots, robotsSearch, pageCount, count } = this.state;
 
     let robotsMap = robots.map(robot => {
       let categories = robot.categories.map(item => {
@@ -228,7 +236,7 @@ class Robots extends Component {
             {/* <button className="btn ml-3">Import Robot</button> */}
             <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({ this.state.robots.length || "0"})
+              All ({ count || "0"})
             </span>
             </div>
           </div>
@@ -271,10 +279,7 @@ class Robots extends Component {
               getCategories: this.getCategory,
               activeCategory: this.state.activeCategory
             }}
-            rows={robotsMap.slice(
-              currentPage * this.itemsPerPage - this.itemsPerPage,
-              currentPage * this.itemsPerPage
-            )}
+            rows={robotsMap}
             quickActions={[
               {
                 tag: "a",
@@ -315,14 +320,15 @@ class Robots extends Component {
               change: this.changeRobots
             }}
 
-            pageCount={Math.ceil(robots.length / this.itemsPerPage) || 1}
+            pageCount={pageCount}
             currentPage={currentPage}
-            changePage={page => {
+            changePage={async (page) => {
               if (currentPage !== page) {
-                this.setState({ currentPage: page });
+                 await this.setState({ currentPage: page })
+                 await this.fetchData()
               }
             }}
-            itemsCount={robots.length}
+            itemsCount={count}
 
             openPagination={true}
           />

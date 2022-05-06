@@ -36,7 +36,9 @@ class Assets extends Component {
       changeTable: false,
       tableSearch: '',
       currentPage: 1,
-      loading: true,
+      pageCount: 1,
+      count: 1,
+      loading: false,
       lineTableCheckedIS: [],
       lineTableCheckedOthers: []
     };
@@ -178,18 +180,22 @@ class Assets extends Component {
   }
 
   filterAssets(activeLink) {
-    this.setState(state => {
-      return { ...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}`, loading: true, lineTableCheckedIS: [], lineTableCheckedOthers: [] }
-    });
     let filterResource = new Resource({ route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}` });
-    filterResource.getQueried({s: this.state.tableSearch}).then(res => {
+    filterResource.getQueried({s: this.state.tableSearch, page: this.state.currentPage, pageSize: this.itemsPerPage}).then(res => {
       this.setState(state => {
-        return { ...state, assets: res, loading: false }
+        return {
+          ...state,
+          assets: res?.media,
+          pageCount: res?.pageCount,
+          count: res?.count,
+          activeLink,
+          acceptInput: `.${this.typesFiles[activeLink].join(', .')}`,
+          loading: false,
+          lineTableCheckedIS: [],
+          lineTableCheckedOthers: []
+        }
       })
     });
-    this.setState((state => {
-      return { ...state, activeLink }
-    }));
   }
   changeUrlForTab() {
     const { location, history } = this.props;
@@ -375,7 +381,13 @@ class Assets extends Component {
     }
   }
 
+
+
   render() {
+
+
+    const {currentPage, pageCount, count} = this.state;
+
     let UploadIcon = iconsManager().getIconComponent('upload');
     let CloseIcon = iconsManager().getIconComponent('close');
     let AviIcon = iconsManager().getIconComponent('avi');
@@ -533,24 +545,22 @@ class Assets extends Component {
                            title: "Delete"
                          }
                        ]}
-                       rows={assetsMapIS.slice(
-                         this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
-                         this.state.currentPage * this.itemsPerPage)
-                       }
+                       rows={assetsMapIS}
                        searchTables={{
                          submit: this.searchValueTable,
                          value: this.state.tableSearch,
                          change: (e) => this.changeValueTable(e)
                        }}
 
-                       pageCount={Math.ceil(this.state.assets.length / this.itemsPerPage) || 1}
-                       currentPage={this.state.currentPage}
-                       changePage={page => {
-                         if (this.state.currentPage !== page) {
-                           this.setState({currentPage: page});
+                       pageCount={pageCount}
+                       currentPage={currentPage}
+                       changePage={async (page) => {
+                         if (currentPage !== page) {
+                           await this.setState({currentPage: page})
+                           await this.filterAssets(this.state.activeLink)
                          }
                        }}
-                       itemsCount={this.state.assets.length}
+                       itemsCount={count}
 
                        openPagination={true}
                      />
@@ -667,24 +677,23 @@ class Assets extends Component {
                          title: "Delete"
                        }
                      ]}
-                     rows={assetsMapOthers.slice(
-                       this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
-                       this.state.currentPage * this.itemsPerPage)
-                     }
+                     rows={assetsMapOthers}
                      searchTables={{
                        submit: this.searchValueTable,
                        value: this.state.tableSearch,
                        change: (e) => this.changeValueTable(e)
                      }}
 
-                     pageCount={Math.ceil(this.state.assets.length / this.itemsPerPage) || 1}
-                     currentPage={this.state.currentPage}
-                     changePage={page => {
-                       if (this.state.currentPage !== page) {
-                         this.setState({currentPage: page});
+                     pageCount={pageCount}
+                     currentPage={currentPage}
+                     changePage={async (page) => {
+                       if (currentPage !== page) {
+                         this.setState({currentPage: page}, () => {
+                            this.filterAssets(this.state.activeLink)
+                          })
                        }
                      }}
-                     itemsCount={this.state.assets.length}
+                     itemsCount={count}
 
                      openPagination={true}
                    />

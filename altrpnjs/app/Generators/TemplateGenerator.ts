@@ -2,7 +2,7 @@ import { parse } from 'node-html-parser'
 import fs from 'fs'
 import {BaseGenerator} from './BaseGenerator';
 import Application from '@ioc:Adonis/Core/Application';
-import app_path from '../../helpers/app_path';
+import app_path from '../../helpers/path/app_path';
 import Template from 'App/Models/Template';
 import path from 'path';
 import * as _ from 'lodash'

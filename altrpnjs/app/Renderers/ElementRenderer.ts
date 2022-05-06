@@ -1,4 +1,4 @@
-import app_path from "../../helpers/app_path";
+import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import * as mustache from 'mustache'
 import * as _ from 'lodash'
@@ -12,6 +12,9 @@ export default class ElementRenderer {
     children: [],
     settingsLock: {},
     settings: {
+      conditional_display_choose: string;
+      conditional_permissions?: [];
+      conditional_roles?: [];
       text?: string;
       content?: string;
       advanced_element_id?: string,
@@ -19,6 +22,7 @@ export default class ElementRenderer {
       react_element?:boolean
       layout_content_width_type?:string
       isFixed?:boolean
+      default_hidden: boolean
     },
     name: string,
     type: string,
@@ -37,7 +41,13 @@ export default class ElementRenderer {
       ...this.element.settings,
       ...this.element.settingsLock
     }
-    const {advanced_element_id} = this.element.settings
+
+    const {
+      advanced_element_id,
+      conditional_display_choose,
+      conditional_roles,
+      conditional_permissions,
+    } = this.element.settings
     let children_content = ''
     for (const child of this.element.children){
       let renderer = new ElementRenderer(child)
@@ -77,6 +87,9 @@ export default class ElementRenderer {
         }
         break;
       }
+
+
+
       styles = objectToStylesString(styles)
       const text_widget_content = this.getTextWidgetContent()
       element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
@@ -102,7 +115,14 @@ export default class ElementRenderer {
     if (this.getType() === "widget") {
       classes += ` altrp-widget_${this.getName()}`;
     }
-    let wrapper_attributes = `class="${classes}"
+    let allow_start_tag = ''
+    let allow_end_tag = ''
+    if(conditional_display_choose ||
+      (conditional_permissions?.length || conditional_roles?.length)){
+      allow_start_tag = `@if(allowedForUser(element${this.getId()}_settings, user))~`
+      allow_end_tag = `@end~`
+    }
+    let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
     {{{getResponsiveSetting(element${this.getId()}_settings, 'en_an', screen)
       ? \`data-enter-animation-type="\${getResponsiveSetting(element${this.getId()}_settings, 'en_an', device)}"
       data-enter-animation-delay="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_delay', device, 0)}"
@@ -129,7 +149,9 @@ export default class ElementRenderer {
       id: this.getId(),
       element_content,
       type: this.getType(),
-      wrapper_attributes
+      wrapper_attributes,
+      allow_start_tag,
+      allow_end_tag,
     })
     return content
   }

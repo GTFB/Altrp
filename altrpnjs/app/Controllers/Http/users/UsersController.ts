@@ -56,10 +56,19 @@ export default class UsersController {
     const params = request.qs()
     const page = parseInt(params.page) || 1
     const pageSize = params.pageSize || 20
+    const searchWord = params.s
+    let users
 
-    const users = await User.query()
-      .preload("roles")
-      .paginate(page, pageSize)
+    if (searchWord) {
+      users = await User.query()
+        .orWhere('email', 'LIKE', `%${searchWord}%`)
+        .orWhere('name', 'LIKE', `%${searchWord}%`)
+        .orWhere('last_name', 'LIKE', `%${searchWord}%`)
+        .preload('roles')
+        .paginate(page, pageSize)
+    } else {
+       users = await User.query().preload("roles").paginate(page, pageSize)
+    }
 
     return {
       count: users.getMeta().total,

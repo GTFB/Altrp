@@ -6,9 +6,9 @@ import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
 import isProd from "../../../helpers/isProd";
-import base_path from "../../../helpers/base_path";
-import applyPluginsFiltersSync from "../../../helpers/applyPluginsFiltersSync";
-import applyPluginsFiltersAsync from "../../../helpers/applyPluginsFiltersAsync";
+import base_path from "../../../helpers/path/base_path";
+import applyPluginsFiltersSync from "../../../helpers/plugins/applyPluginsFiltersSync";
+import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
 
 
 export default class IndicesController {

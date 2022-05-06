@@ -172,7 +172,7 @@ class EditModelForm extends Component {
                       type="text"
                       id="page-name"
                       required
-                      readOnly={this.props.paramsId}
+                     // readOnly={this.props.paramsId}
           />
         </div>
 

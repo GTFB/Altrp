@@ -1,9 +1,9 @@
 import path from 'path'
 import AdmZip from "adm-zip"
 import Logger from '@ioc:Adonis/Core/Logger'
-import public_path from '../helpers/public_path'
+import public_path from '../helpers/path/public_path'
 import NotFoundException from 'App/Exceptions/NotFoundException'
-import app_path from '../helpers/app_path'
+import app_path from '../helpers/path/app_path'
 import fs from 'fs-extra'
 import get_plugin_setting from '../helpers/plugins/get_plugin_setting'
 import set_plugin_setting from '../helpers/plugins/set_plugin_setting'
@@ -113,6 +113,7 @@ export default class Plugin {
       if (enabledPlugins.indexOf(plugin.name) === -1) {
         enabledPlugins.push(plugin.name)
       }
+      plugin.copyStaticFiles()
     } else {
       enabledPlugins = enabledPlugins.filter((_plugin) => {
         return _plugin != plugin.name
@@ -172,10 +173,15 @@ export default class Plugin {
       enabledPlugins = []
     }
     enabledPlugins = enabledPlugins.map(function (plugin_name) {
-      return new Plugin({
-        name: plugin_name
-      })
-    })
+      try {
+        return new Plugin({
+          name: plugin_name
+        })
+      } catch (e) {
+        Logger.error(e)
+      }
+      return null
+    }).filter(p => p)
     enabledPlugins = _.uniqBy(enabledPlugins, (plugin) => {
       return plugin.name
     })

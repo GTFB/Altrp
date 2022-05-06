@@ -27,7 +27,8 @@ class AltrpCarousel extends Component {
     this.state = {
       activeSlide: 0,
       openLightBox: false,
-      sliderImages: []
+      sliderImages: [],
+      updateToken: null,
     }
   }
 
@@ -230,7 +231,12 @@ class AltrpCarousel extends Component {
           });
 
           if(typeSlide === true) {
-            content = <TemplateLoader templateId={slide.card_slides_repeater}/>
+            content = <TemplateLoader
+              onLoad={() => {
+                this.setState({ updateToken: Math.random() })
+              }}
+              templateId={slide.card_slides_repeater}
+            />
           }
 
           return (
