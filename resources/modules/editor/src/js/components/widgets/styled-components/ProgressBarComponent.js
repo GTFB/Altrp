@@ -21,6 +21,40 @@ export default function ProgressBarComponent(settings) {
       },
     "}",
 
+    //state disabled
+    ".state-disabled &.altrp-element",
+    ["align-items", "alignment", "", ".state-disabled"],
+    "}",
+
+    ".state-disabled .bp3-progress-bar",
+    () => {
+      const value = getResponsiveSetting(settings, "width", ".state-disabled");
+
+      if(value) {
+        return `width: ${value};`
+      } else {
+        return ""
+      }
+    },
+    "}",
+
+    //state active
+    ".active &.altrp-element",
+    ["align-items", "alignment", "", ".active"],
+    "}",
+
+    ".active .bp3-progress-bar",
+    () => {
+      const value = getResponsiveSetting(settings, "width", ".active");
+
+      if(value) {
+        return `width: ${value};`
+      } else {
+        return ""
+      }
+    },
+    "}",
+
     "bp3-progress-meter.bp3-progress-meter.bp3-progress-meter",
       ["background-color", "color", "color"],
       () => {
@@ -36,6 +70,42 @@ export default function ProgressBarComponent(settings) {
           } else return "";
         } else return "";
       },
+    "}",
+
+    //state disabled
+    ".state-disabled .bp3-progress-meter.bp3-progress-meter.bp3-progress-meter",
+    ["background-color", "color", "color", ".state-disabled"],
+    () => {
+      const value = getResponsiveSetting(settings, "stripes_color", ".state-disabled");
+      const firstColor = getResponsiveSetting(settings, "color", ".state-disabled")?.color || "rgba(92, 112, 128, 0.8)";
+      const switcher = getResponsiveSetting(settings, "stripes", ".state-disabled", true);
+
+      if (value && switcher) {
+        if (value.color) {
+          const color = value.color;
+
+          return `background: linear-gradient(-45deg, ${firstColor}  25%, ${color} 25%, ${color} 50%, ${firstColor} 50%, ${firstColor} 75%, ${color} 75%); background-size: 30px 30px;`
+        } else return "";
+      } else return "";
+    },
+    "}",
+
+    //state active
+    ".active .bp3-progress-meter.bp3-progress-meter.bp3-progress-meter",
+    ["background-color", "color", "color", ".active"],
+    () => {
+      const value = getResponsiveSetting(settings, "stripes_color", ".active");
+      const firstColor = getResponsiveSetting(settings, "color", ".active")?.color || "rgba(92, 112, 128, 0.8)";
+      const switcher = getResponsiveSetting(settings, "stripes", ".active", true);
+
+      if (value && switcher) {
+        if (value.color) {
+          const color = value.color;
+
+          return `background: linear-gradient(-45deg, ${firstColor}  25%, ${color} 25%, ${color} 50%, ${firstColor} 50%, ${firstColor} 75%, ${color} 75%); background-size: 30px 30px;`
+        } else return "";
+      } else return "";
+    },
     "}",
 
 

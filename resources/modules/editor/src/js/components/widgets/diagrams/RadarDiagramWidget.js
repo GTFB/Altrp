@@ -19,10 +19,25 @@ class RadarDiagramWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для radar diagram widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
+    let classes = this.getClasses()
     return (
       <Suspense fallback={"Loading"}>
-        <AltrpRadarDiagram settings={this.state.settings} id={this.state.id} />
+        <AltrpRadarDiagram classes={classes} settings={this.state.settings} id={this.state.id} />
       </Suspense>
     );
   }

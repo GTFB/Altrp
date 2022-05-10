@@ -95,19 +95,19 @@ const AltrpBarDiagram = props => {
 
   if (data.length === 0) {
     return (
-      <div className={`altrp-chart ${settings.legendPosition}`}>
+      <div className={`${props.classes} altrp-chart ${settings.legendPosition}`}>
         Loading data...
       </div>
     );
   }
-  
+
   return (
     <DynamicBarChart
       margin={margin ? margin : {
         top: 30,
         bottom: 30,
         right: 30,
-        left: 30 
+        left: 30
       }}
       valueFormat={getFormatValueString(settings)}
       currency={currency}
@@ -149,7 +149,7 @@ const AltrpBarDiagram = props => {
       markers={markersRepeater?.map(el => ({
         label: '',
         value: 0,
-        axis: 'y', 
+        axis: 'y',
         legendOrientation: el.legendOrientation || 'horizontal',
         lineStyle: {stroke: el.stroke?.color || '#000'},
         ...el,

@@ -55,7 +55,8 @@ const DynamicPieChart = ({
   useCenteredMetric,
   useLinkArcLabels,
   useProcent,
-  currency
+  currency,
+  classes
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -93,7 +94,7 @@ const DynamicPieChart = ({
 
   return (
     <>
-      <div className='diagram' style={{ height, width }}>
+      <div className={`${classes} diagram`} style={{ height, width }}>
         <ResponsivePie
           data={data}
           colors={

@@ -210,10 +210,24 @@ class FeedbackWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для feedback widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
 
   render() {
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
-     <FeedbackWidgetHook idWidget={this.props.element.getId()} settings={this.state.settings}/>
+     <FeedbackWidgetHook classes={classes} idWidget={this.props.element.getId()} settings={this.state.settings}/>
     )
   }
 }

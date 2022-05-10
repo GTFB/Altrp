@@ -20,6 +20,20 @@ class ProgressBarWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для progress bar widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let value = this.props.element.getLockedContent("value") || "100";
 
@@ -31,9 +45,9 @@ class ProgressBarWidget extends Component {
       stripes: this.props.element.getResponsiveLockedSetting("stripes", "", true),
       animate: this.props.element.getResponsiveLockedSetting("animate", "", true)
     }
-
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
-      <ProgressBarInit {...settings} value={!_.isString(value) ? value : 100}/>
+      <ProgressBarInit {...settings} className={classes} value={!_.isString(value) ? value : 100}/>
     );
   }
 }

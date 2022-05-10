@@ -48,7 +48,8 @@ const DynamicLineChart = ({
   axisBottom,
   axisTop,
   axisRight,
-  axisLeft
+  axisLeft,
+  classes
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -106,8 +107,10 @@ const DynamicLineChart = ({
           width: width,
           height: height
         }}
+        className={classes}
       >
         <ResponsiveLine
+          className={classes}
           data={data}
           margin={{
             top: margin?.top || 30,

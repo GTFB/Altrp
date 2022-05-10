@@ -12,20 +12,20 @@ export default function MapComponent(settings) {
     "}",
 
     //state disabled
-    "altrp-image",
+    ".state-disabled",
     ["height", "style_height", "slider", ".state-disabled"],
     "}",
 
-    "altrp-btn",
+    ".state-disabled",
     ["margin", "style_margin", "dimensions", ".state-disabled"],
     "}",
 
     //state active
-    "altrp-image",
+    ".active",
     ["height", "style_height", "slider", ".active"],
     "}",
 
-    "altrp-btn",
+    ".active",
     ["margin", "style_margin", "dimensions", ".active"],
     "}"
   ]
