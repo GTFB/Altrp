@@ -132,6 +132,31 @@ export default class AdminController {
     })
   }
 
+  public async install_test_altrp(httpContext: HttpContextContract){
+    if(! isProd()){
+      return httpContext.response.json({
+        result: true,
+        success: true,
+      })
+    }
+    const updateService = new UpdateService()
+    try {
+      await updateService.update('test')
+    }catch (e) {
+      httpContext.response.status(500);
+      return httpContext.response.json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+
+    return httpContext.response.json({
+      success: true,
+      result: true,
+    })
+  }
+
   async getPackageKey(){
     return{success:true, package_key: Env.get('PACKAGE_KEY')}
   }

@@ -373,7 +373,7 @@ export default class AltrpRouting {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames)
     }
     if (element.name === 'carousel'
-      && data_get(element, 'settings.slides_repeater').length > 0) {
+      && data_get(element, 'settings.slides_repeater')?.length > 0) {
 
       for (const el of data_get(element, 'settings.slides_repeater')) {
         if(el.card_slides_repeater) {
