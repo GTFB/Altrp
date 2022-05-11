@@ -16,6 +16,8 @@ import Customizer from "App/Models/Customizer";
 import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
 import Env from "@ioc:Adonis/Core/Env";
+import {exec} from "child_process";
+import {promisify} from "util";
 
 export default class AdminController {
 
@@ -66,6 +68,11 @@ export default class AdminController {
       const pages = await Page.query().whereNull('deleted_at').select('*')
       for (let page of pages) {
         await pageGenerator.run(page)
+      }
+      try {
+        await promisify(exec)('pm2 restart all' )
+
+      }catch (e) {
       }
       return response.json({success: true,})
     }catch (e) {
