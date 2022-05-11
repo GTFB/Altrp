@@ -70,6 +70,9 @@ class AssetsBrowser extends Component {
         .then(videoAssets => this.setState({ videoAssets }));
 
       let resSvg = await this.svgResource.getAll();
+      if(_.isArray(resSvg.media)){
+        resSvg = resSvg.media
+      }
       this.setState(state => {
         return { ...state, svgAssets: resSvg };
       });
