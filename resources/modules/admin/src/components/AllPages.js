@@ -39,19 +39,14 @@ class AllPages extends Component {
         s: urlS === null ? this.state.pagesSearch : urlS,
         order: 'ASC',
         order_by: 'title',
-        page: this.state.currentPage,
-        pageSize: this.itemsPerPage
       });
     } else {
       res = await this.resource.getQueried({
         s: urlS === null ? this.state.pagesSearch : urlS,
         order: 'ASC',
         order_by: 'title',
-        page: this.state.currentPage,
-        pageSize: this.itemsPerPage
       });
     }
-
     let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
       return this.treePagesMap(page)
     })
@@ -196,13 +191,6 @@ class AllPages extends Component {
     }
   }
 
-  changePageSlice = (page) => {
-    if (this.state.currentPage !== page) {
-      this.setState({ currentPage: page });
-    }
-    this.getPages()
-  }
-
   treePagesMap = (page) => {
     let treePage = {}
     let childPage = []
@@ -216,7 +204,7 @@ class AllPages extends Component {
       hasCaret = false
       childPage = []
     }
-
+    console.log(page);
     treePage = {
       id: page.id,
       key: page.id,
@@ -325,17 +313,6 @@ class AllPages extends Component {
                 className="altrp-tree__pages"
                 onNodeCollapse={this.handleNodeCollapse}
                 onNodeExpand={this.handleNodeExpand}
-              />
-              <Pagination
-                pageCount={pageCount}
-                currentPage={currentPage}
-                changePage={async (page) => {
-                  if (currentPage !== page) {
-                    await this.setState({currentPage: page})
-                    await this.getPages()
-                  }
-                }}
-                itemsCount={count}
               />
             </div>
           </div>
