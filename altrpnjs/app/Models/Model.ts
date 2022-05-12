@@ -21,6 +21,8 @@ import Relationship from "App/Models/Relationship"
 import Category from "App/Models/Category"
 import Table from './Table'
 import Column from "App/Models/Column"
+import SourceRole from 'App/Models/SourceRole'
+import Role from 'App/Models/Role'
 
 
 export default class Model extends BaseModel {
@@ -330,6 +332,17 @@ export default class Model extends BaseModel {
       ]
 
       await Promise.all(sources.map(s => s.save()))
+
+      const adminRole = await Role.query().where('name', 'admin').first()
+
+      if (adminRole) {
+        await Promise.all(sources.map(s => {
+          return (new SourceRole()).fill({
+            role_id: adminRole.id,
+            source_id: s.id,
+          }).save()
+        }))
+      }
     }
   }
 }
