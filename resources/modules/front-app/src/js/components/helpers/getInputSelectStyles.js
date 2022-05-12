@@ -141,7 +141,7 @@ export default function getInputSelectStyles(settings) {
         styles += colorPropertyStyled(getResponsiveSetting(settings, 'button_background_color', ':hover'), 'background-color')
         styles += 'background-blend-mode: color-burn;'
       }
-      
+
       styles += '}'
       styles += '.bp3-button.bp3-button:active{'
       button_gradient = getResponsiveSetting(settings, 'button_gradient', '.active')
@@ -288,8 +288,24 @@ export function getInputSelectPopoverStyles(settings, elementId){
     '.bp3-icon-add path',
     ['fill', 'a_color', 'color'],
     '}',
+
     '.bp3-menu-item:hover .bp3-icon-add path',
     ['fill', 'a_color', 'color', ':hover'],
+    '}',
+    'altrp-select-delete-icon',
+    ['height', 'remove_size', 'slider'],
+    ['width', 'remove_size', 'slider'],
+    ['margin', 'remove_margin', 'dimensions'],
+    '}',
+    'altrp-select-delete-icon svg',
+    ['height', 'remove_size', 'slider'],
+    ['width', 'remove_size', 'slider'],
+    '}',
+    'altrp-select-delete-icon path',
+    ['fill', 'remove_color', 'color'],
+    '}',
+    'bp3-menu-item:hover .altrp-select-delete-icon path',
+    ['fill', 'remove_color', 'color', ":hover"],
     '}',
     '}',
   //</editor-fold>

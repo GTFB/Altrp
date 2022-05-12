@@ -24,16 +24,20 @@ export function actionsControllers(
   sectionLabel = 'Actions',
   idPrefix = '',
   tab = TAB_CONTENT,
-  showChangeEndControllers = false
+  showChangeEndControllers = false,
+  forSection = false
 ) {
   /**
    * Список произвольных действия для кнопки START
    */
-  element.startControlSection(idPrefix + 'actions_section', {
-    tab,
-    hideOnEmail: true,
-    label: sectionLabel
-  });
+  if(!forSection) {
+    element.startControlSection(idPrefix + 'actions_section', {
+      tab,
+      hideOnEmail: true,
+      label: sectionLabel
+    });
+  }
+
   if(showChangeEndControllers){
     element.addControl(idPrefix + 'change_end', {
       label: 'Make event when input end?',
@@ -197,6 +201,10 @@ export function actionsControllers(
       {
         value: "socket_emit",
         label: "Socket emit"
+      },
+      {
+        value: "set_cookie",
+        label: "Set cookie"
       }
     ],
     locked: true,
@@ -574,6 +582,27 @@ export function actionsControllers(
     description: 'altrpdata.alias',
     conditions: {
       'all_sources': true
+    },
+    locked: true,
+  });
+
+  actionsRepeater.addControl('cookie_name', {
+    label: 'Path',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['set_cookie']
+    },
+    locked: true,
+  });
+
+  actionsRepeater.addControl('cookie_value', {
+    label: 'Value',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['set_cookie']
     },
     locked: true,
   });
@@ -964,7 +993,9 @@ export function actionsControllers(
     locked: true,
   });
 
-  element.endControlSection();
+  if(!forSection) {
+    element.endControlSection();
+  }
   /**
    * Список произвольных действия для кнопки END
    */

@@ -5,7 +5,8 @@ import Plugin from "App/Plugin";
 import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import isProd from "../../helpers/isProd";
-import _ from "lodash";
+import _ from "lodash"
+
 Route.group(() => {
 
 
@@ -224,7 +225,7 @@ Route.group(() => {
     Route.post('/write_mail_settings', 'admin/MailController.writeSettingsToEnv');
     Route.get('/get_mail_settings', 'admin/MailController.getSettings');
 
-
+    Route.get('/downloads/settings', 'admin/MailController.getSettings');
     Route.get('/package_key', 'admin/AdminController.getPackageKey');
 
 
@@ -275,6 +276,8 @@ Route.group(() => {
      * plugins ajax requests END
      */
   }).middleware('catch_unhandled_json').prefix('/ajax')
+
+
   Route.get('/customizers-editor', 'IndicesController.customizer')
 
   Route.get("/robots-editor", "IndicesController.robot")
@@ -284,7 +287,6 @@ Route.group(() => {
 
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')
-
 })
   .prefix('/admin')
   .middleware('admin')

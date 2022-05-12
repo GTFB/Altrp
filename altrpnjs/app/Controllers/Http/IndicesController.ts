@@ -140,6 +140,20 @@ export default class IndicesController {
     return {data:file.toString()}
   }
 
+  public async setCookie({ request, response }) {
+    const body = request.body();
+
+    if(!body.name || !body.value) {
+      return false
+    }
+
+    response.cookie(body.name, body.value)
+
+    return {
+       success: true
+    }
+  }
+
   public async favicons({params, response}) {
     response.header('Content-type', 'image/png');
 
