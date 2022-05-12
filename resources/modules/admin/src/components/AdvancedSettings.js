@@ -6,6 +6,8 @@ import {setAdminDisable, setAdminEnable} from "../js/store/admin-state/actions";
 import AltrpCodeEditor from "./altrp-editor/AltrpCodeEditor";
 import store from '../js/store/store';
 import {TextArea} from "@blueprintjs/core";
+import {pageReload} from "../js/helpers";
+import delay from '../../../front-app/src/js/functions/delay'
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
 
@@ -124,11 +126,17 @@ class AdvancedSettings extends Component {
     }
     store.dispatch(setAdminDisable());
 
-    let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
-    if(res.success){
-      await alert('success');
+    try{
+      let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
+
+      if(res.success){
+        await alert('success');
+      }
+      store.dispatch(setAdminEnable());
+    }catch (e) {
+      await delay(5000)
+      pageReload()
     }
-    store.dispatch(setAdminEnable());
   };
   render() {
     const {altrp_custom_headers}  = this.state

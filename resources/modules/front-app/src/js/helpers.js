@@ -26,6 +26,7 @@ import getDataByPath from "./functions/getDataByPath";
 import getComponentByElementId from "./functions/getComponentByElementId";
 import getDataFromLocalStorage from "./functions/getDataFromLocalStorage";
 import isEditor from "./functions/isEditor";
+import delay from "./functions/delay";
 export {default as replaceContentWithData} from "./functions/replaceContentWithData";
 export {default as getDataByPath} from "./functions/getDataByPath";
 export {default as getComponentByElementId} from "./functions/getComponentByElementId";
@@ -34,6 +35,7 @@ export {default as getTimeValue} from "./functions/getTimeValue";
 export {default as startOfMonth} from "./functions/startOfMonth";
 export {default as startOfYear} from "./functions/startOfYear";
 export {default as isEditor} from "./functions/isEditor";
+export {default as delay} from "./functions/delay";
 
 
 export const getResponsiveSetting = _getResponsiveSetting;
@@ -1559,19 +1561,6 @@ export function valueReplacement(value) {
   return value;
 }
 
-/**
- * Задержка и с интерфейсом промиса
- * @param ms
- * @return {Promise}
- */
-export function delay(ms) {
-  if (_.isString(ms)) {
-    ms = Number(ms);
-  }
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, ms);
-  });
-}
 
 /**
  * Подготавливает URL для шаблона письма

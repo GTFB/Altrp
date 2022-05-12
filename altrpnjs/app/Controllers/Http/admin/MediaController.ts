@@ -18,8 +18,8 @@ export default class MediaController {
   private static fileTypes: any;
   async index({response, request}: HttpContextContract) {
     const params = request.qs()
-    const page = parseInt(params.page) || 1
-    const pageSize = parseInt(params.pageSize) || 10
+    const page = parseInt(params.page)
+    const pageSize = parseInt(params.pageSize)
     const searchWord = params.s
     let media
     const mediaToUpdate = await Media.query().whereNull('guid').select('*')
@@ -52,19 +52,27 @@ export default class MediaController {
       query.leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
         .whereIn('altrp_category_objects.category_guid', categories)
     }
-
-    if (searchWord) {
+    let count
+    let pageCount = 1
+    if (pageSize && page) {
       media = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories')).where('title', 'LIKE', `%${searchWord}%`).paginate(page, pageSize)
+      count = media.getMeta().total
+      pageCount = media.getMeta().last_page
+
+      media = media.all().map(model => {
+        return model.serialize()
+      })
+
     } else {
-      media = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories')).paginate(page, pageSize)
+      media = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories'))
+      count = media.length
+
+      media = media.map(model => {
+        return model.serialize()
+      })
+
     }
 
-    let count = media.getMeta().total
-    let pageCount = media.getMeta().last_page
-
-    media = media.all().map(model => {
-      return model.serialize()
-    })
 
     return response.json({
       count,
