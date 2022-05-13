@@ -95,18 +95,27 @@ export default class PagesController {
 
   public async index({ request }) {
     const params = request.qs()
-    const page = parseInt(params.page) || 1
-    const pageSize = parseInt(params.pageSize) || 10
+    const page = parseInt(params.page)
+    const pageSize = parseInt(params.pageSize)
     const searchWord = params.s
     let pages
-
+    let modPages
+    let count
+    let pageCount
     if (searchWord) {
-      pages = await Page.query().orWhere('title', 'LIKE', `%${searchWord}%`).preload("user").preload("categories").paginate(page, pageSize)
+      pages =  Page.query().orWhere('title', 'LIKE', `%${searchWord}%`).preload("user").preload("categories")
     } else {
-      pages = await Page.query().preload("user").preload("categories").paginate(page, pageSize)
+      pages = Page.query().preload("user").preload("categories")
     }
-
-    const modPages = pages.all().map( page => {
+    if(page && pageSize){
+      modPages = await pages.paginate(page, pageSize)
+      count= modPages.getMeta().total
+      pageCount= modPages.getMeta().last_page
+    } else {
+      modPages = await pages.select('*')
+      pageCount = count = modPages.length
+    }
+    modPages = modPages.map( page => {
       return {
         author: page.user?.email || '',
         id: page.id,
@@ -120,11 +129,10 @@ export default class PagesController {
         }),
         parent_page_id: page.parent_page_id,
         editUrl: `/admin/pages/edit/${page.id}`,
-        count: pages.getMeta().total,
-        pageCount: pages.getMeta().last_page,
+        count,
+        pageCount
       }
     })
-
     return modPages
   }
 
