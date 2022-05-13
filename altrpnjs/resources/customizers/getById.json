@@ -1,0 +1,97 @@
+[
+  {
+    "id": "1652434328562",
+    "type": "start",
+    "position": {
+      "x": 472,
+      "y": 189
+    },
+    "data": {
+      "type": "node",
+      "label": "start",
+      "props": {
+        "type": "start",
+        "nodeData": {
+          "operator": "",
+          "body": []
+        }
+      }
+    }
+  },
+  {
+    "id": "1652434330266",
+    "type": "change",
+    "position": {
+      "x": 450,
+      "y": 349
+    },
+    "data": {
+      "type": "node",
+      "label": "change",
+      "props": {
+        "type": "change",
+        "items": [
+          {
+            "id": "woizj11bd",
+            "left": {
+              "path": "data.data"
+            },
+            "right": {
+              "namespace": "expression",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px",
+              "JSExpression": "await require('../AltrpModels/{{model_name}}').default.find(httpContext.request.qs().id)"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "1652434334535",
+    "type": "return",
+    "position": {
+      "x": 482,
+      "y": 478
+    },
+    "data": {
+      "type": "node",
+      "label": "return",
+      "props": {
+        "type": "return"
+      },
+      "property": {
+        "namespace": "expression",
+        "method": "",
+        "methodSettings": {
+          "parameters": []
+        },
+        "size": "120px",
+        "JSExpression": "httpContext.response.json({{context_data}})"
+      }
+    }
+  },
+  {
+    "source": "1652434330266",
+    "sourceHandle": null,
+    "target": "1652434334535",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1652434330266null-1652434334535null"
+  },
+  {
+    "source": "1652434328562",
+    "sourceHandle": null,
+    "target": "1652434330266",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1652434328562null-1652434330266null"
+  }
+]
