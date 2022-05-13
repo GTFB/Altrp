@@ -20,8 +20,6 @@ class AllPages extends Component {
       filter: false,
       activeCategory: 'All',
       categoryOptions: [],
-      pageCount: 1,
-      count: 1
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
@@ -59,8 +57,6 @@ class AllPages extends Component {
         pagesSearch: urlS === null ? this.state.pagesSearch : urlS,
         treePages: treePagesNew,
         treePagesSlice,
-        pageCount: res[0].pageCount,
-        count: res[0].count
       };
     });
   };
@@ -222,7 +218,7 @@ class AllPages extends Component {
   }
 
   render() {
-    const {treePages, treePagesSlice, currentPage, pageCount, count} = this.state;
+    const {treePages, treePagesSlice, } = this.state;
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
