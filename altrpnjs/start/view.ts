@@ -42,6 +42,7 @@ import renderInputTextarea from "../helpers/widgets-renders/renderInputTextarea"
 import renderInputCheckbox from "../helpers/widgets-renders/renderInputCheckbox";
 import renderInputRadio from "../helpers/widgets-renders/renderInputRadio";
 import renderInputSelect from "../helpers/widgets-renders/renderInputSelect";
+import renderInputSelect2 from "../helpers/widgets-renders/renderInputSelect2";
 import renderInputMultiSelect from "../helpers/widgets-renders/renderInputMultiSelect";
 import renderInputSlider from "../helpers/widgets-renders/renderInputSlider";
 import renderInputRangeSlider from "../helpers/widgets-renders/renderInputRangeSlider";
@@ -94,6 +95,7 @@ View.global('renderInputTextarea', renderInputTextarea)
 View.global('renderInputCheckbox', renderInputCheckbox)
 View.global('renderInputRadio', renderInputRadio)
 View.global('renderInputSelect', renderInputSelect)
+View.global('renderInputSelect2', renderInputSelect2)
 View.global('renderInputMultiSelect', renderInputMultiSelect)
 View.global('renderInputSlider', renderInputSlider)
 View.global('renderInputRangeSlider', renderInputRangeSlider)

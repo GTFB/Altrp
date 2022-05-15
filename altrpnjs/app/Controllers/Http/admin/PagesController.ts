@@ -95,18 +95,34 @@ export default class PagesController {
 
   public async index({ request }) {
     const params = request.qs()
-    const page = parseInt(params.page) || 1
-    const pageSize = parseInt(params.pageSize) || 10
+    const page = parseInt(params.page)
+    const pageSize = parseInt(params.pageSize)
     const searchWord = params.s
     let pages
+    let pagesAll
+    let pagination: any = {}
 
-    if (searchWord) {
-      pages = await Page.query().orWhere('title', 'LIKE', `%${searchWord}%`).preload("user").preload("categories").paginate(page, pageSize)
+    if (page && pageSize) {
+      if (searchWord) {
+        pages = await Page.query().orWhere('title', 'LIKE', `%${searchWord}%`).preload("user").preload("categories").paginate(page, pageSize)
+        pagesAll = pages.all()
+        pagination = {
+          count: pages.getMeta().total,
+          pageCount: pages.getMeta().last_page,
+        }
+      } else {
+        pages = await Page.query().preload("user").preload("categories").paginate(page, pageSize)
+        pagesAll = pages.all()
+        pagination = {
+          count: pages.getMeta().total,
+          pageCount: pages.getMeta().last_page,
+        }
+      }
     } else {
-      pages = await Page.query().preload("user").preload("categories").paginate(page, pageSize)
+      pagesAll = await Page.query().preload("user").preload("categories")
     }
 
-    const modPages = pages.all().map( page => {
+    const modPages = pagesAll.map( page => {
       return {
         author: page.user?.email || '',
         id: page.id,
@@ -120,8 +136,7 @@ export default class PagesController {
         }),
         parent_page_id: page.parent_page_id,
         editUrl: `/admin/pages/edit/${page.id}`,
-        count: pages.getMeta().total,
-        pageCount: pages.getMeta().last_page,
+        ...pagination
       }
     })
 

@@ -54,7 +54,7 @@ class ElementsFactory extends BaseModule {
      * Если настройки пустыe то с сервера приходит пустой массив -- меняем на пустой объект
      * */
     let settings = object.settings.length === 0 ? {} : object.settings;
-    let locked = object.settingsLock.length === 0 ? {} : object.settingsLock
+    let locked = (object.settingsLock || []).length === 0 ? {} : object.settingsLock
     element.setSettings(settings, locked);
     let cssClassStorage =
       object.cssClassStorage && object.cssClassStorage.length === 0

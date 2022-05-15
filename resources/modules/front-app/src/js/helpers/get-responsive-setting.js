@@ -33,11 +33,6 @@ export default function getResponsiveSetting(
   //   return setting;
   // }
   let suffix = currentScreen.name;
-  // if (elementState === ":hover") {
-  //   _settingName = `${settingName}_${elementState}_`;
-  // } else {
-  //   _settingName = `${settingName}_${elementState}_${suffix}`;
-  // }
 
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];

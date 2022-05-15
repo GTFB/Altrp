@@ -62,7 +62,7 @@ class SwitcherRepeater extends Component {
             }}>
             <Button text={buttonText}/>
           </Select>
-          <div>
+          <div style={{flexGrow: 1}}>
             {SIMPLE_OPERATORS.indexOf(operator) === -1
             &&
             <PropertyComponent

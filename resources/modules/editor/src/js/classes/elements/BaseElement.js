@@ -166,7 +166,7 @@ class BaseElement extends ControlStack {
     let data = {};
     data.id = this.getId();
     data.name = this.getName();
-    data.settings = this.cleaner(this.settings);
+    data.settings = this.settings
 
     data.settingsLock = this.settingsLock;
     data.type = this.getType();

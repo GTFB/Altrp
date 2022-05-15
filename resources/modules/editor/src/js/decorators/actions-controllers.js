@@ -20,22 +20,26 @@ import {getElementSettingsSuffix} from "../helpers";
  * @param {string} idPrefix - префикс, который добавляется ко всем id секция и контроллеров
  * @param {string} tab - таб по умолчанию
  * @param {boolean} showChangeEndControllers -
+ * @param {boolean} withoutSection
  */
 export function actionsControllers(
   element,
   sectionLabel = 'Actions',
   idPrefix = '',
   tab = TAB_CONTENT,
-  showChangeEndControllers = false
+  showChangeEndControllers = false,
+  withoutSection = false
 ) {
   /**
    * Список произвольных действия для кнопки START
    */
-  element.startControlSection(idPrefix + 'actions_section', {
-    tab,
-    hideOnEmail: true,
-    label: sectionLabel
-  });
+  if (!withoutSection) {
+    element.startControlSection(idPrefix + 'actions_section', {
+      tab,
+      hideOnEmail: true,
+      label: sectionLabel
+    });
+  }
   if(showChangeEndControllers){
     element.addControl(idPrefix + 'change_end', {
       label: 'Make event when input end?',
@@ -202,6 +206,20 @@ export function actionsControllers(
       }
     ],
     locked: true,
+    onChange: function({value}) {
+      if (value === "form" || value === "redirect") {
+        this.repeater.changeValue(
+          this.itemindex,
+          "form_url" + getElementSettingsSuffix(this.controller, false),
+          ""
+        );
+        this.repeater.changeValue(
+          this.itemindex,
+          "form_url" + getElementSettingsSuffix(this.controller, false),
+          ""
+        );
+      }
+    }
   });
 
   actionsRepeater.addControl('email_template', {
@@ -443,16 +461,50 @@ export function actionsControllers(
     locked: true,
   });
 
+  actionsRepeater.addControl('form_page_select', {
+    label: 'Page',
+    type: CONTROLLER_SELECT2,
+    prefetch_options: true,
+    options_resource: '/admin/ajax/pages_options',
+    conditions: {
+      type: ['redirect']
+    },
+    locked: true,
+    onChange: async function ({label}) {
+      let pathname = ""
+      try {
+        let pages = await axios.get("/admin/ajax/pages")
+        let findPage = pages.data.find(item => item.title === label)
+        if (findPage) {
+          pathname = findPage.path
+        }
+        this.repeater.changeValue(
+          this.itemindex,
+          "form_url" + getElementSettingsSuffix(this.controller, false),
+          pathname
+        );
+        this.repeater.changeValue(
+          this.itemindex,
+          "form_url" + getElementSettingsSuffix(this.controller, false),
+          pathname
+        );
+      } catch (error) {
+        alert("Page request error")
+        console.log(error)
+      }
+    }
+  });
+
   actionsRepeater.addControl('form_customizer', {
     label: 'Customizer',
     type: CONTROLLER_SELECT2,
     prefetch_options: true,
     options_resource: '/admin/ajax/customizers_options',
-    onChange: async function (value) {
+    onChange: async function ({value}) {
       let pathname = ""
       try {
         let customizers = await axios.get("/admin/ajax/customizers")
-        let findCustomizer = customizers.data.data.find(item => item.name === value.value)
+        let findCustomizer = customizers.data.data.find(item => item.name === value)
         if (findCustomizer) {
           let getCustomizer = await axios.get("/admin/ajax/customizers/" + findCustomizer.id)
           let url = getCustomizer.data.data.source?.web_url
@@ -463,7 +515,22 @@ export function actionsControllers(
               "form_url" + getElementSettingsSuffix(this.controller, false),
               pathname
             );
-            console.log("jgjajgj", this)
+            this.repeater.changeValue(
+              this.itemindex,
+              "form_url" + getElementSettingsSuffix(this.controller, false),
+              pathname
+            );
+          } else {
+            this.repeater.changeValue(
+              this.itemindex,
+              "form_url" + getElementSettingsSuffix(this.controller, false),
+              pathname
+            );
+            this.repeater.changeValue(
+              this.itemindex,
+              "form_url" + getElementSettingsSuffix(this.controller, false),
+              pathname
+            );
           }
         }
       } catch (error) {
@@ -992,7 +1059,7 @@ export function actionsControllers(
   });
 
   element.addControl(idPrefix + 'actions', {
-    label: 'Actions',
+    label: sectionLabel,
     type: CONTROLLER_REPEATER,
     responsive: false,
     stateless: true,
@@ -1000,7 +1067,9 @@ export function actionsControllers(
     locked: true,
   });
 
-  element.endControlSection();
+  if (!withoutSection) {
+    element.endControlSection();
+  }
   /**
    * Список произвольных действия для кнопки END
    */
