@@ -599,9 +599,6 @@ class InputDateWidget extends Component {
   render() {
     let label = null;
     const settings = this.props.element.getLockedSettings();
-    const {
-      label_icon
-    } = settings;
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
@@ -645,7 +642,10 @@ class InputDateWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label) {
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
@@ -657,7 +657,7 @@ class InputDateWidget extends Component {
               : ""
               }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
           </label>
           {label_icon && label_icon.type && (
             <span className="altrp-label-icon">

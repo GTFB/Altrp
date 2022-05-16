@@ -37,6 +37,7 @@ import TableComponent from "./components/TableComponent";
 import HeaderCellComponent from "./components/HeaderCellComponent";
 import TableBody from './components/TableBody';
 import Pagination from "./components/Pagination";
+import {useSelector} from "react-redux";
 const Link = window.Link;
 
 
@@ -1139,6 +1140,10 @@ function DefaultCell(
     updateData }) {
   const { column } = cell;
   const [value, setValue] = React.useState(initialValue);
+  let elementTable = {}
+  if (!isEditor()) {
+    elementTable = useSelector(({elementTableState}) => elementTableState.elementTable)
+  }
   React.useEffect(() => {
     setValue(initialValue);
   }, [initialValue, cell]);
@@ -1280,7 +1285,7 @@ function DefaultCell(
    * Если есть actions, то надо их вывести
    */
   if (_.get(cell, 'column.actions.length')) {
-    return renderCellActions(cell, row);
+    return renderCellActions(cell, row, elementTable);
   }
   if (_.isString(cellContent)) {
     return cellContent;

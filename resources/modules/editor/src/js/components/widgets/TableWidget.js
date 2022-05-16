@@ -6,6 +6,7 @@ const {getDataByPath, getWidgetState, isEditor, storeWidgetState} = window.altrp
 // const AltrpTable = React.lazy(() => import(/* webpackChunkName: 'altrp-table' */'../altrp-table/altrp-table'));
 import AltrpTable from'../altrp-table/altrp-table';
 import AltrpTableWithoutUpdate from'../altrp-table/altrp-table-without-update';
+import {setGlobalElementTable} from "../../../../../front-app/src/js/store/element-table/actions";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-table-th {
@@ -202,6 +203,7 @@ class TableWidget extends Component {
     } else if (this.props.element.getLockedSettings('store_state')){
       storeWidgetState(this.props.element.getId(), null);
     }
+    window.appStore.dispatch(setGlobalElementTable(this.props.element))
   }
 
   /**

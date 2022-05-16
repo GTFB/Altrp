@@ -43,11 +43,12 @@ class BaseElement extends ControlStack {
   /**
    * Задать настройки
    * @param settings
+   * @param settingsLock
    */
-  setSettings(settings) {
+  setSettings(settings, settingsLock) {
     this.settings = settings || this.settings;
 
-    this.settingsLock =  this.settingsLock || {};
+    this.settingsLock =  settingsLock || {};
 
     const controls = controllersManager.getControls(this.getName())
 
@@ -165,7 +166,7 @@ class BaseElement extends ControlStack {
     let data = {};
     data.id = this.getId();
     data.name = this.getName();
-    data.settings = this.cleaner(this.settings);
+    data.settings = this.settings
 
     data.settingsLock = this.settingsLock;
     data.type = this.getType();

@@ -960,7 +960,6 @@ class InputTextCommonWidget extends Component {
     const settings = this.props.element.getLockedSettings();
     const {
       content_readonly,
-      label_icon
     } = settings;
     let value = this.getValue()
 
@@ -1011,7 +1010,10 @@ class InputTextCommonWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label || label_icon ) {
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={`${classes} altrp-field-label-container classLabel`}
@@ -1028,7 +1030,7 @@ class InputTextCommonWidget extends Component {
               : ""
             }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
 
             {label_icon && label_icon.type && (
               <span className={`${classes} altrp-label-icon`}>

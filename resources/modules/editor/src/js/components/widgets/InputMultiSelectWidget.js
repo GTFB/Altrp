@@ -1166,9 +1166,6 @@ class InputMultiSelectWidget extends Component {
     const element = this.props.element;
     let label = null;
     const settings = this.props.element.getSettings();
-    const {
-      label_icon
-    } = settings;
 
     let classLabel = "";
     let styleLabel = {};
@@ -1213,10 +1210,14 @@ class InputMultiSelectWidget extends Component {
         classLabel = "";
         break;
     }
-    const content_label = this.getLockedContent('content_label')
     let classes =
       this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
-    if (content_label) {
+
+
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={`${classes} altrp-field-label-container classLabel`}

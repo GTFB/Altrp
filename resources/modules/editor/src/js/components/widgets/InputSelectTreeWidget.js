@@ -1022,10 +1022,6 @@ class InputSelectTreeWidget extends Component {
     const settings = this.props.element.getSettings();
     let buttonLabel = this.getLabel();
 
-    const {
-      label_icon
-    } = settings;
-
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
@@ -1071,8 +1067,12 @@ class InputSelectTreeWidget extends Component {
     }
     let classes =
       this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
-    const content_label = this.getLockedContent('content_label')
-    if (content_label) {
+
+
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={`${classes} altrp-field-label-container classLabel`}

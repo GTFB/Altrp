@@ -83,12 +83,14 @@ class InputSelectTree extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon"
+      label: "Choose Icon",
+      locked: true
     });
 
     this.addControl("label_icon_position", {

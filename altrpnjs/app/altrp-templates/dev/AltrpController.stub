@@ -2,6 +2,7 @@ import selectForSQLEditor from "../../helpers/selectForSQLEditor"
 import empty from "../../helpers/empty"
 import _ from 'lodash'
 import Database from "@ioc:Adonis/Lucid/Database";
+const DB = Database?.default ? Database.default : Database;
 
 {{{imports}}}
 
