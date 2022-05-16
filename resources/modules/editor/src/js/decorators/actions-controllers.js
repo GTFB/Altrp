@@ -28,30 +28,19 @@ export function actionsControllers(
   idPrefix = '',
   tab = TAB_CONTENT,
   showChangeEndControllers = false,
-<<<<<<< HEAD
-  withoutSection = false
-=======
   forSection = false
->>>>>>> origin/dsavelyev-adonis
 ) {
   /**
    * Список произвольных действия для кнопки START
    */
-<<<<<<< HEAD
-  if (!withoutSection) {
-=======
   if(!forSection) {
->>>>>>> origin/dsavelyev-adonis
     element.startControlSection(idPrefix + 'actions_section', {
       tab,
       hideOnEmail: true,
       label: sectionLabel
     });
   }
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/dsavelyev-adonis
   if(showChangeEndControllers){
     element.addControl(idPrefix + 'change_end', {
       label: 'Make event when input end?',
@@ -1104,11 +1093,7 @@ export function actionsControllers(
     locked: true,
   });
 
-<<<<<<< HEAD
-  if (!withoutSection) {
-=======
   if(!forSection) {
->>>>>>> origin/dsavelyev-adonis
     element.endControlSection();
   }
   /**
