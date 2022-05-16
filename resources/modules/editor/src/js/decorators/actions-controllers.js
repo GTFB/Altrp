@@ -28,18 +28,30 @@ export function actionsControllers(
   idPrefix = '',
   tab = TAB_CONTENT,
   showChangeEndControllers = false,
+<<<<<<< HEAD
   withoutSection = false
+=======
+  forSection = false
+>>>>>>> origin/dsavelyev-adonis
 ) {
   /**
    * Список произвольных действия для кнопки START
    */
+<<<<<<< HEAD
   if (!withoutSection) {
+=======
+  if(!forSection) {
+>>>>>>> origin/dsavelyev-adonis
     element.startControlSection(idPrefix + 'actions_section', {
       tab,
       hideOnEmail: true,
       label: sectionLabel
     });
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/dsavelyev-adonis
   if(showChangeEndControllers){
     element.addControl(idPrefix + 'change_end', {
       label: 'Make event when input end?',
@@ -203,6 +215,10 @@ export function actionsControllers(
       {
         value: "socket_emit",
         label: "Socket emit"
+      },
+      {
+        value: "set_cookie",
+        label: "Set cookie"
       }
     ],
     locked: true,
@@ -681,6 +697,27 @@ export function actionsControllers(
     locked: true,
   });
 
+  actionsRepeater.addControl('cookie_name', {
+    label: 'Path',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['set_cookie']
+    },
+    locked: true,
+  });
+
+  actionsRepeater.addControl('cookie_value', {
+    label: 'Value',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['set_cookie']
+    },
+    locked: true,
+  });
+
   actionsRepeater.addControl('element_id', {
     label: 'Element',
     responsive: false,
@@ -1067,7 +1104,11 @@ export function actionsControllers(
     locked: true,
   });
 
+<<<<<<< HEAD
   if (!withoutSection) {
+=======
+  if(!forSection) {
+>>>>>>> origin/dsavelyev-adonis
     element.endControlSection();
   }
   /**

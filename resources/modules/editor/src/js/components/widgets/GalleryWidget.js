@@ -164,7 +164,11 @@ class GalleryWidget extends Component {
 
     if(simpleRepeater.length > 0) {
       images = simpleRepeater.map((img, idx) => {
-        const url = img?.simple_media_settings ? img?.simple_media_settings.url : '/img/nullImage.png';
+        let url = img?.simple_media_settings ? img?.simple_media_settings.url : '/img/nullImage.png';
+
+        if(url) {
+          url = "/ajax" + url;
+        }
 
         const imageProps = {
           className: `${classes} altrp-gallery-img`,

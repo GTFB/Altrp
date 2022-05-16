@@ -396,6 +396,7 @@ export default class Customizer extends BaseModel {
 
   allowMethod(method: string){
     const startNode = this.getStartNode()
+
     if (! startNode){
       return false
     }

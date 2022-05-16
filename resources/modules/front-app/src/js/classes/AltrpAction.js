@@ -327,6 +327,11 @@ class AltrpAction extends AltrpModel {
 
       }
         break;
+      case 'set_cookie': {
+        result = this.doActionSetCookie();
+
+      }
+        break;
     }
     let alertText = '';
     if (result.success) {
@@ -341,6 +346,23 @@ class AltrpAction extends AltrpModel {
     return result;
   }
 
+  async doActionSetCookie() {
+    const name = replaceContentWithData(this.getProperty("cookie_name"), this.getCurrentModel().getData())
+    const value = replaceContentWithData(this.getProperty("cookie_value"), this.getCurrentModel().getData())
+
+    const res = await axios.post("/ajax/cookie", {
+      name,
+      value
+    })
+
+    if(res.status === 200) {
+      return res.data
+    } else {
+      return {
+        success: false
+      }
+    }
+  }
   /**
    * заставляет сервер отправить сокет
    * @return {object}
@@ -356,7 +378,6 @@ class AltrpAction extends AltrpModel {
       data: replaceContentWithData(this.getProperty("socket_value"), this.getCurrentModel().getData())
     }
 
-    console.log(value)
     await axios.post("/sockets", value)
     return {
       success: true

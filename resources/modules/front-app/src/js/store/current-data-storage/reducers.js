@@ -21,6 +21,10 @@ export function currentDataStorageReducer(dataStorage, action) {
       }
       dataStorage = _.cloneDeep(dataStorage);
       dataStorage.setProperty(action.dataStorageName, data);
+
+      if(action.options) {
+        dataStorage.setProperty(`_options.${action.dataStorageName}`, action.options)
+      }
     }break;
     case CLEAR_CURRENT_DATASOURCE:{
       dataStorage = new AltrpModel({});

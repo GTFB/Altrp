@@ -13,6 +13,7 @@ import data_get from '../../../../helpers/data_get';
 import guid from '../../../../helpers/guid';
 import public_path from "../../../../helpers/path/public_path";
 import Logger from "@ioc:Adonis/Core/Logger";
+import Application from "@ioc:Adonis/Core/Application";
 
 export default class MediaController {
   private static fileTypes: any;
@@ -270,6 +271,21 @@ export default class MediaController {
     }
     res = res.reverse()
     return response.json( res );
+  }
+
+  async show({ params, response }) {
+
+    const path = `/storage/media/${params.year}/${params.month}/${params.name}`
+
+    const file = fs.readFileSync(Application.publicPath(path))
+
+    const media = await Media.query().where("url", path).first();
+
+    if(media) {
+      response.header('custom-label', media.title)
+    }
+
+    return file
   }
 
   async destroy({params, response, }: HttpContextContract){

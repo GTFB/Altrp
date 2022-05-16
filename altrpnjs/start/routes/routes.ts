@@ -294,7 +294,6 @@ Route.group(() => {
         success: false,
 
         message: `Controller ${controllerName}; Method: ${methodName}
-
 ${e.message}`,
         trace: e.stack.split('\n'),
       })
@@ -311,7 +310,7 @@ ${e.message}`,
      * handle all 4 HTTP methods
      */
     Route[method]('plugins', async (httpContext: HttpContextContract) => {
-      const plugins = Plugin.getEnabledPlugins()
+      const plugins = await Plugin.getEnabledPlugins()
       const segments = httpContext.request.url().split('/').filter(segment => segment)
       const plugin = plugins.find(plugin => {
         return plugin.name === segments[2]
@@ -356,6 +355,10 @@ ${e.message}`,
    */
   Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
   Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
+
+  Route.get("storage/media/:year/:month/:name", "admin/MediaController.show")
+
+  Route.post("cookie", "IndicesController.setCookie")
 
   Route.get('routes', async ({response}:HttpContextContract)=>{
     return response.json({success: true, pages: []})

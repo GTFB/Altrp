@@ -417,6 +417,7 @@ class Resource {
    * @return {Promise}
    * */
   async getQueried(params, customHeaders = null, cors = false) {
+    console.log(params)
     let options = {
       method: "get",
       headers: _.assign(
