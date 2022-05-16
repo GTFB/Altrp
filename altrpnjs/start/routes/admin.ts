@@ -141,8 +141,10 @@ Route.group(() => {
      * Customizers
      */
     Route.get('/customizers', 'admin/CustomizersController.index')
+    Route.get('/customizers-content/:id', 'admin/CustomizersController.content')
     Route.post('/customizers', 'admin/CustomizersController.store')
     Route.get('/customizers/:id', 'admin/CustomizersController.show')
+    Route.get('/customizers-content/:id', 'admin/CustomizersController.content')
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
     Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
