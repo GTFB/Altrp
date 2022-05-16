@@ -438,6 +438,24 @@ class InputDateWidget extends Component {
     }
   }
 
+  getFormat() {
+    let format = this.props.element.getLockedSettings('content_format');
+
+    if(!format) {
+      switch (this.typeDate) {
+        case "llll":
+          format = "MMMM Do YYYY, kk:mm"
+          break
+        case "LT":
+          format = "kk:mm"
+          break
+        default:
+          format = "MMMM Do YYYY"
+      }
+    }
+    return format
+  }
+
   /**
    * Изменение значения в виджете
    * @param val
@@ -453,7 +471,7 @@ class InputDateWidget extends Component {
       if (timestamp) {
         value = value.getTime(); // timestamp
       } else{
-        const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
+        const format = this.getFormat();
         value = moment(value, format);
         value = value.isValid() ? value.format(format) : '';
       }
