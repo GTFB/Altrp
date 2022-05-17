@@ -490,7 +490,7 @@ export default class Plugin {
     return plugins
   }
 
-  async getHooks(folderName: string) {
+  async getAndCallHooks(folderName: string) {
     const base = `AltrpPlugins`
     let hooks: any = []
 
@@ -526,15 +526,15 @@ export default class Plugin {
   }
 
   async callDeleteHooks() {
-    await this.getHooks('delete')
+    await this.getAndCallHooks('delete')
   }
 
   async callActivationHooks() {
-    await this.getHooks('activate')
+    await this.getAndCallHooks('activate')
   }
 
   async callDeactivationHooks() {
-    await this.getHooks('deactivate')
+    await this.getAndCallHooks('deactivate')
   }
 
 }

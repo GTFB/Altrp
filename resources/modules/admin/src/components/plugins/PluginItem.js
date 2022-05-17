@@ -37,13 +37,18 @@ class PluginItem extends Component {
   }
 
   deletePlugin = async () => {
-    const {plugin} = this.props
-    try {
-      const res = await (new Resource({route:`/admin/ajax/plugins/${plugin.name}`})).delete()
-      this.props.getInitialData()
-    } catch (e) {
-      console.log(e)
+    const confirmation = confirm('Are you sure?')
+
+    if (confirmation) {
+      const {plugin} = this.props
+      try {
+        const res = await (new Resource({route:`/admin/ajax/plugins/${plugin.name}`})).delete()
+        this.props.getInitialData()
+      } catch (e) {
+        console.log(e)
+      }
     }
+
   }
 
   componentDidMount() {

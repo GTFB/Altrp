@@ -125,7 +125,7 @@ class UserForm extends Component {
       }
       else {
         this.setState(state => {
-          return { ...state, redirectAfterError: true, redirect_error_url: this.state.redirect_error_url + "/user/" + res.id }
+          return { ...state, redirectAfterSave: true, redirectAfterError: true, redirect_error_url: this.state.redirect_error_url + "/user/" + res.id }
         });
       }
 

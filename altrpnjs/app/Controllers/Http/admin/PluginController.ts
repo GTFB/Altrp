@@ -86,18 +86,18 @@ export default class PluginController {
   }
 
   public async delete_plugin({request, response}: HttpContextContract) {
-    // if(! isProd()){
-    //   return response.json({'success':true})
-    // }
+    if(! isProd()){
+      return response.json({'success':true})
+    }
     let plugin = new Plugin({'name': request.params().name})
     await plugin.deletePlugin()
     return response.json({'success': true, 'data': plugin})
   }
 
   public async install({request, response}: HttpContextContract) {
-    // if(! isProd()){
-    //   return response.json({'success':true})
-    // }
+    if(! isProd()){
+      return response.json({'success':true})
+    }
     let res: any = {success: true,}
     let status = 200
     let name = request.input('name');
