@@ -699,6 +699,8 @@ class ElementWrapper extends Component {
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
+
+    if(nextProps.currentElement !== this.props.currentElement) return true
     if(this.state.cursorPos !== nextState.cursorPos) return true;
     if(nextProps.currentScreen !== this.props.currentScreen) return true;
     if (
