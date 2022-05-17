@@ -176,6 +176,7 @@ class InputEmail extends BaseElement {
 
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
+      locked: true,
       label: "Calculation",
       description:
         "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
