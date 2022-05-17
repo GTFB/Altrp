@@ -198,6 +198,7 @@ Route.group(() => {
     Route.post('/plugins/switch', "admin/PluginController.switch");
     Route.post('/plugins/install', "admin/PluginController.install");
     Route.post('/plugins/update_plugin_files', "admin/PluginController.update_plugin_files");
+    Route.delete('/plugins/:name', "admin/PluginController.delete_plugin");
 
     /**
      * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
