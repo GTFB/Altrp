@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import {BaseModel, BelongsTo, belongsTo, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import User from "App/Models/User";
+import Model from "App/Models/Model";
 import Category from "App/Models/Category";
 
 export default class Robot extends BaseModel {
@@ -50,6 +51,11 @@ export default class Robot extends BaseModel {
 
   @column({serializeAs: null})
   public model_id: number
+
+  @belongsTo(() => Model, {
+    foreignKey: "model_id"
+  })
+  public model: BelongsTo<typeof Model>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

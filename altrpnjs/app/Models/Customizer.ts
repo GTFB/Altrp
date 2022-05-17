@@ -19,6 +19,7 @@ import ApiNode from "App/Customizer/Nodes/apiNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
+import {DateTime} from 'luxon'
 
 export default class Customizer extends BaseModel {
 
@@ -42,6 +43,12 @@ export default class Customizer extends BaseModel {
 
   @column()
   public guid: string
+
+  @column.dateTime({autoCreate: true})
+  public createdAt: DateTime
+
+  @column.dateTime({autoCreate: true, autoUpdate: true})
+  public updatedAt: DateTime
 
   @column({
     consume: (data) => {
