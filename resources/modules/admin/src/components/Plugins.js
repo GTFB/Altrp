@@ -16,9 +16,14 @@ export default class Plugins extends Component {
   }
 
   async componentDidMount() {
+    await this.getInitialData()
+    window.addEventListener("scroll", this.listenScrollHeader)
+  }
+
+  getInitialData = async () => {
     let req
     try{
-       req = await axios.get("/admin/ajax/plugins");
+      req = await axios.get("/admin/ajax/plugins");
     }catch (e) {
       console.error(e);
       this.setState({
@@ -34,7 +39,6 @@ export default class Plugins extends Component {
       plugins,
       pending: false,
     });
-    window.addEventListener("scroll", this.listenScrollHeader)
   }
 
   componentWillUnmount() {
@@ -103,7 +107,11 @@ export default class Plugins extends Component {
               return (
                 <PluginItem _key={key}
                             updatePlugins={this.updatePlugins}
-                            key={item.name} updateChange={this.updateChange} plugin={item}/>
+                            key={item.name}
+                            updateChange={this.updateChange}
+                            plugin={item}
+                            getInitialData={this.getInitialData}
+                />
               );
             })}
             {(this.state?.plugins?.length || this.state.pending) ? '' : <h2>Plugins not found</h2>}
