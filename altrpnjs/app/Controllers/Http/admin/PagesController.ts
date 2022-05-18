@@ -137,8 +137,6 @@ export default class PagesController {
         }),
         parent_page_id: page.parent_page_id,
         editUrl: `/admin/pages/edit/${page.id}`,
-        count,
-        pageCount
         ...pagination
       }
     })
