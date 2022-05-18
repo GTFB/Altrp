@@ -10,7 +10,6 @@
 import AltrpAction from "../AltrpAction";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 const {isEditor, } = window.altrpHelpers;
-
 class ActionsManager extends AltrpModel{
   /**
    * Регистрирует действия для определенного виджета

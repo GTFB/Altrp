@@ -27,7 +27,8 @@ import Timer from "App/Services/Timer";
 import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
-
+import SourceRole from 'App/Models/SourceRole'
+import Role from 'App/Models/Role'
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
@@ -104,7 +105,7 @@ export default class Model extends BaseModel {
   public user_id: number
 
   @belongsTo(() => User, {
-    foreignKey: "author"
+    foreignKey: "user_id"
   })
   public user: BelongsTo<typeof User>
 
@@ -220,6 +221,7 @@ export default class Model extends BaseModel {
     return models
   }
 
+
   public static async createDefaultCustomizers(response, modelData, model) {
     const pathToFiles = 'resources/customizers/'
 
@@ -325,6 +327,136 @@ export default class Model extends BaseModel {
       }
 
 
+    }
+  }
+
+
+  public async createController() {
+    const controller = new Controller()
+    controller.fill({
+      model_id: this.id,
+      description: this.description,
+    })
+    return await controller.save()
+  }
+
+  public async createStandartSources() {
+
+    const table = await Table.find(this.table_id)
+    const controller = await this.createController()
+
+    if (table && controller) {
+      let sources = [
+        (new Source()).fill({
+          url: `/filters/${table.name}/{column}`,
+          api_url: `/filters/${table.name}/{column}`,
+          type: `filters`,
+          request_type: `get`,
+          name: `Filters ${this.name}`,
+          title: `Filters ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}/{column}`,
+          api_url: `/${table.name}/{${this.name}}/{column}`,
+          type: `update_column`,
+          request_type: `put`,
+          name: `Update column ${this.name}`,
+          title: `Update column ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}`,
+          api_url: `/${table.name}/{${this.name}}`,
+          type: `delete`,
+          request_type: `delete`,
+          name: `Delete ${this.name}`,
+          title: `Delete ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}`,
+          api_url: `/${table.name}/{${this.name}}`,
+          type: `update`,
+          request_type: `put`,
+          name: `Update ${this.name}`,
+          title: `Update ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}`,
+          api_url: `/${table.name}`,
+          type: `add`,
+          request_type: `post`,
+          name: `Add ${this.name}`,
+          title: `Add ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}`,
+          api_url: `/${table.name}`,
+          type: `get`,
+          request_type: `get`,
+          name: `Get  ${this.name}`,
+          title: `Get  ${this.name}`,
+          auth: false,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}`,
+          api_url: `/${table.name}/{${this.name}}`,
+          type: `show`,
+          request_type: `get`,
+          name: `Show  ${this.name}`,
+          title: `Show ${this.name}`,
+          auth: false,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/{${this.name}}_options`,
+          api_url: `/{${this.name}}_options`,
+          type: `options`,
+          request_type: `get`,
+          name: `Get options ${this.name}`,
+          title: `Get options ${this.name}`,
+          auth: false,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+      ]
+
+      await Promise.all(sources.map(s => s.save()))
+
+      const adminRole = await Role.query().where('name', 'admin').first()
+
+      if (adminRole) {
+        await Promise.all(sources.map(s => {
+          return (new SourceRole()).fill({
+            role_id: adminRole.id,
+            source_id: s.id,
+          }).save()
+        }))
+      }
     }
   }
 
