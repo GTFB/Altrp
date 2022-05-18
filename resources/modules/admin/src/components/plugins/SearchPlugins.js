@@ -12,10 +12,14 @@ export default class SearchPlugins extends Component {
     super(props);
     this.state = {
       plugins: [],
+      downloadedPlugins: [],
       activeHeader: 4,
     };
     this.searchResource = new Resource({
       route:'https://altrp.org/ajax/models/market_plugins/customizers/search_plugins_for_user_ac58fmi3g'
+    });
+    this.downloadedPluginsResource = new Resource({
+      route:'/admin/ajax/plugins'
     });
   }
 
@@ -29,6 +33,12 @@ export default class SearchPlugins extends Component {
     } else {
       this.setState(state=>({...state, updating: false}))
     }
+
+    result = await this.downloadedPluginsResource.getAll()
+    if(_.isArray(result)){
+      this.setState(state=>({...state, downloadedPlugins: result}))
+    }
+
   }
 
   listenScrollHeader = () => {
@@ -56,7 +66,7 @@ export default class SearchPlugins extends Component {
     }
   }
   render() {
-    const {updating, plugins} = this.state;
+    const {updating, plugins, downloadedPlugins} = this.state;
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -80,7 +90,7 @@ export default class SearchPlugins extends Component {
               {
                 updating ? '' :
                   plugins.map((plugin, idx)=>{
-                    return <NewPluginItem key={plugin.id} plugin={plugin}/>
+                    return <NewPluginItem key={plugin.id} plugin={plugin} downloadedPlugins={downloadedPlugins} />
                   })
 
               }

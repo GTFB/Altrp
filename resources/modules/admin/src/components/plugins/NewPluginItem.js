@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import {Button, Icon} from "@blueprintjs/core";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import compareVersions from "compare-versions";
+import './new-plugin-item.scss'
 
 class NewPluginItem extends Component {
   state = {};
@@ -24,9 +24,18 @@ class NewPluginItem extends Component {
     }
   }
 
+  isPluginAdded = (items, name) => {
+    return items.some((obj) => obj.name === name)
+  }
+
+  checkVersion = (plugin) => {
+    const {downloadedPlugins} = this.props
+    const currentDownloadedPlugin = downloadedPlugins.filter(downloadedPlugin => downloadedPlugin.name === plugin.name)
+    return compareVersions(`${currentDownloadedPlugin[0].version}`, `${plugin.version}`) === -1
+  }
+
   render() {
-    const {plugin,} = this.props
-    console.log(plugin);
+    const {plugin, downloadedPlugins} = this.props
     return (
       <div className="col-4  new-plugin-item">
         <div className="border rounded">
@@ -39,7 +48,16 @@ class NewPluginItem extends Component {
             <div className="col-8">
               <div className="title">{plugin.title} <pre>{plugin.version}</pre></div>
               <div className="description">{plugin.description}</div>
-              <Button text="Install" onClick={this.installPlugin}/>
+              {
+                // проверка плагина на скачанность
+                this.isPluginAdded(downloadedPlugins, plugin.name)
+                  // проверка плагина на версионность, если плагину нужен апдейт - рендерим кнопку апдейта
+                ? this.checkVersion(plugin)
+                  ? <button className="update__btn" onClick={this.installPlugin}>Update</button>
+                  : <button className="reinstall__btn" onClick={this.installPlugin}>Reinstall</button>
+
+                  : <button className="install__btn" onClick={this.installPlugin}>Install</button>
+              }
             </div>
           </div>
         </div>
