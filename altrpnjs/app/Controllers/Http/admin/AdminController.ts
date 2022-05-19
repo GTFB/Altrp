@@ -16,6 +16,8 @@ import Customizer from "App/Models/Customizer";
 import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
 import Env from "@ioc:Adonis/Core/Env";
+import {exec} from "child_process";
+import {promisify} from "util";
 
 export default class AdminController {
 
@@ -67,6 +69,11 @@ export default class AdminController {
       for (let page of pages) {
         await pageGenerator.run(page)
       }
+      try {
+        await promisify(exec)('pm2 restart all' )
+
+      }catch (e) {
+      }
       return response.json({success: true,})
     }catch (e) {
       response.status(500);
@@ -110,6 +117,31 @@ export default class AdminController {
     const updateService = new UpdateService()
     try {
       await updateService.update()
+    }catch (e) {
+      httpContext.response.status(500);
+      return httpContext.response.json({
+        success: false,
+        message: e.message,
+        trace: e.stack.split('\n'),
+      })
+    }
+
+    return httpContext.response.json({
+      success: true,
+      result: true,
+    })
+  }
+
+  public async install_test_altrp(httpContext: HttpContextContract){
+    if(! isProd()){
+      return httpContext.response.json({
+        result: true,
+        success: true,
+      })
+    }
+    const updateService = new UpdateService()
+    try {
+      await updateService.update('test')
     }catch (e) {
       httpContext.response.status(500);
       return httpContext.response.json({

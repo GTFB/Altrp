@@ -183,6 +183,7 @@ Route.group(() => {
 
 
     Route.post('/update_altrp', 'admin/AdminController.update_altrp').name = 'admin.update_altrp'
+    Route.post('/install_test_altrp', 'admin/AdminController.install_test_altrp').name = 'admin.install_test_altrp'
 
     /**
      * Altrp Meta

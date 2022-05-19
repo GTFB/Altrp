@@ -70,11 +70,17 @@ class AssetsBrowser extends Component {
         .then(videoAssets => this.setState({ videoAssets }));
 
       let resSvg = await this.svgResource.getAll();
+      if(_.isArray(resSvg.media)){
+        resSvg = resSvg.media
+      }
       this.setState(state => {
         return { ...state, svgAssets: resSvg };
       });
 
       let resMedia = await this.mediaResource.getAll();
+      if(_.isArray(resMedia.media)){
+        resMedia = resMedia.media
+      }
       this.setState(state => {
         state = { ...state, mediaAssets: resMedia };
         if (state.activeTab === "media") {
@@ -198,7 +204,7 @@ class AssetsBrowser extends Component {
     if(! this.props.active){
       return  '';
     }
-    
+
     return (
       <div className={classes}>
         <div className="assets-browser__bg" onClick={this.toggleBrowser} />

@@ -1,3 +1,4 @@
+import delay from '../functions/delay';
 import AdminBarWrapper from './AdminBarWrapper';
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Scrollbars from "react-custom-scrollbars";
@@ -168,9 +169,13 @@ class AdminBar extends React.Component {
       update: true
     }))
 
-    let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
-    if(res.success){
-      await alert('success');
+    try{
+      let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
+      if(res.success){
+        await alert('success');
+      }
+    }catch (e) {
+      await delay(4000)
     }
 
     this.setState(state => ({

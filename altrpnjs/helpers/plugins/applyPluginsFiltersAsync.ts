@@ -9,7 +9,7 @@ export default async function applyPluginsFiltersAsync(type: string, content,) {
 
   const base = `AltrpPlugins`
 
-  let hooks = []
+  let hooks:any= []
 
   const plugins = Plugin.getEnabledPlugins()
   for (const plugin of plugins) {

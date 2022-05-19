@@ -20,8 +20,6 @@ class AllPages extends Component {
       filter: false,
       activeCategory: 'All',
       categoryOptions: [],
-      pageCount: 1,
-      count: 1
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
@@ -39,19 +37,14 @@ class AllPages extends Component {
         s: urlS === null ? this.state.pagesSearch : urlS,
         order: 'ASC',
         order_by: 'title',
-        page: this.state.currentPage,
-        pageSize: this.itemsPerPage
       });
     } else {
       res = await this.resource.getQueried({
         s: urlS === null ? this.state.pagesSearch : urlS,
         order: 'ASC',
         order_by: 'title',
-        page: this.state.currentPage,
-        pageSize: this.itemsPerPage
       });
     }
-
     let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
       return this.treePagesMap(page)
     })
@@ -64,8 +57,6 @@ class AllPages extends Component {
         pagesSearch: urlS === null ? this.state.pagesSearch : urlS,
         treePages: treePagesNew,
         treePagesSlice,
-        pageCount: res[0].pageCount,
-        count: res[0].count
       };
     });
   };
@@ -196,13 +187,6 @@ class AllPages extends Component {
     }
   }
 
-  changePageSlice = (page) => {
-    if (this.state.currentPage !== page) {
-      this.setState({ currentPage: page });
-    }
-    this.getPages()
-  }
-
   treePagesMap = (page) => {
     let treePage = {}
     let childPage = []
@@ -216,7 +200,7 @@ class AllPages extends Component {
       hasCaret = false
       childPage = []
     }
-
+    console.log(page);
     treePage = {
       id: page.id,
       key: page.id,
@@ -234,7 +218,7 @@ class AllPages extends Component {
   }
 
   render() {
-    const {treePages, treePagesSlice, currentPage, pageCount, count} = this.state;
+    const {treePages, treePagesSlice, } = this.state;
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -325,17 +309,6 @@ class AllPages extends Component {
                 className="altrp-tree__pages"
                 onNodeCollapse={this.handleNodeCollapse}
                 onNodeExpand={this.handleNodeExpand}
-              />
-              <Pagination
-                pageCount={pageCount}
-                currentPage={currentPage}
-                changePage={async (page) => {
-                  if (currentPage !== page) {
-                    await this.setState({currentPage: page})
-                    await this.getPages()
-                  }
-                }}
-                itemsCount={count}
               />
             </div>
           </div>
