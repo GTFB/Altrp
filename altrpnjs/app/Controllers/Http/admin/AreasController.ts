@@ -3,7 +3,7 @@
 import Area from "App/Models/Area";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
-import { v4 as uuid } from "uuid";
+import {v4 as uuid} from "uuid";
 
 export default class AreasController {
   public async index({request}) {
@@ -19,21 +19,29 @@ export default class AreasController {
       areas = await Area.query().preload("categories").paginate(page, pageSize)
     }
 
-    return areas.all().map(area => {
-      return {
-        ...area.$attributes,
-        categories: area.categories.map(category => {
-          return {
-            category: category
-          }
-        }),
-        count: areas.getMeta().total,
-        pageCount: areas.getMeta().last_page,
-      }
-    })
+
+    return areas.all()
+      .filter(area => {
+        const parsedSettings = JSON.parse(area?.settings)
+        if (parsedSettings?.plugin || parsedSettings?.admin_hidden) return false
+        return true
+      })
+      .map(area => {
+        return {
+          ...area.$attributes,
+          categories: area.categories.map(category => {
+            return {
+              category: category
+            }
+          }),
+          count: areas.getMeta().total,
+          pageCount: areas.getMeta().last_page,
+        }
+
+      })
   }
 
-  public async show({ params }) {
+  public async show({params}) {
     const area = await Area.query().where("id", parseInt(params.id)).preload("categories").firstOrFail();
 
     return {
@@ -46,7 +54,7 @@ export default class AreasController {
     }
   }
 
-  public async update({ request, response, params }) {
+  public async update({request, response, params}) {
     const area = await Area.query().where("id", parseInt(params.id)).firstOrFail();
 
     area.name = request.input("name");
@@ -74,7 +82,7 @@ export default class AreasController {
 
   }
 
-  public async delete({ params }) {
+  public async delete({params}) {
     const area = await Area.query().where("id", parseInt(params.id)).firstOrFail();
 
     await area.delete()
@@ -85,7 +93,7 @@ export default class AreasController {
   }
 
 
-  public async create({ request, response }) {
+  public async create({request, response}) {
 
     const area = await Area.create({
       name: request.input("name"),

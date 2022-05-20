@@ -140,7 +140,11 @@ export default class CustomizersController {
     // }
     const oldType = customizer.type
     const oldSettings = customizer.settings
-    customizer.merge(request.all())
+    const all = request.all()
+    delete all.created_at
+    delete all.updated_at
+
+    customizer.merge(all)
     /**
      * Delete source if type `api` changed
      */
