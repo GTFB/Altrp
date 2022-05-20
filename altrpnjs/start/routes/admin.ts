@@ -233,7 +233,7 @@ Route.group(() => {
 
 
     /**
-     * plugins ajax requests START
+     * for installed plugins ajax requests START
      */
     const methods = [
       'get', 'post', 'put', 'delete'
@@ -254,21 +254,12 @@ Route.group(() => {
         }
         const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js': 'ts'}`)
         if(fs.existsSync(fileName)){
-          try{
-            if(isProd()){
-              Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
-            }
-            const module = isProd() ? await require(fileName).default : (await import(fileName)).default
-            if(_.isFunction(module)){
-              return await module(httpContext)
-            }
-          }catch (e) {
-            httpContext.response.status(500)
-            return httpContext.response.json({
-              success: false,
-              message: e.message,
-              trace: e.stack.split('\n'),
-            })
+          if(isProd()){
+            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+          }
+          const module = isProd() ? await require(fileName).default : (await import(fileName)).default
+          if(_.isFunction(module)){
+            return await module(httpContext)
           }
         }
         httpContext.response.status(404)

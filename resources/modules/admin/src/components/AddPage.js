@@ -15,6 +15,7 @@ import UserTopPanel from "./UserTopPanel";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import Models from "./Models";
+import getAltrpLang from "../js/helpers/get-altrp-lang";
 
 const columns = [
   {
@@ -753,8 +754,8 @@ class AddPage extends Component {
                                    this.changeValue(e.target.checked, "is_cached");
                                  }}
                                  className="addPage__bottom-checkbox"/>
-                          <label htmlFor="caching" className="addPage__bottom-label font__edit">Сaching (Only for Static
-                            Pages)</label>
+                          {getAltrpLang() === 'php' && <label htmlFor="caching" className="addPage__bottom-label font__edit">Сaching (Only for Static
+                            Pages)</label>}
                         </div>
                         <div className="addPage__bottom-block">
                           <input type="checkbox" id="404"

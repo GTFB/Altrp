@@ -33,6 +33,7 @@ import fs from "fs";
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
+  private static defaultCustomizersName: string = 'default';
 
   @afterFind()
   public static async createController(model:Model) {
@@ -401,7 +402,7 @@ export default class Model extends BaseModel {
       let customizer = new Customizer()
       customizer.fill({
         title: customizerData.prefix + modelData.name,
-        name: customizerData.prefix + modelData.customizerName,
+        name: customizerData.prefix + Model.defaultCustomizersName,
         type: 'api',
         model_guid: model.guid,
         model_id: model.id,
