@@ -4,6 +4,9 @@
 ## Changelog
 
 ### 1.1.1
+* Fix Template Render Issues 
+
+### 1.1.1
 * ALTRP Updates via Admin
 * Fix Text Widget Renders
 * New Error Handler Middleware
