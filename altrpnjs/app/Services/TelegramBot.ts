@@ -70,7 +70,7 @@ export class TelegramBot {
   }
 
   sendByType(block, user) {
-    if(block.listener) {
+    if(block.listener && block.listener !== "none") {
       try {
         switch (block.listener) {
           case "text":
