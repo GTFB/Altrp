@@ -21,6 +21,8 @@ import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
+import keys from "lodash/keys"
+
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -912,7 +914,7 @@ export default class ModelsController {
     delete dataSource.permissions
     if (sourceRoles) {
       for (let sourceRole of sourceRoles) {
-        data['access']['roles'].push(sourceRole['role']['id'])
+            data['access']['roles'].push(sourceRole['id'])
       }
     }
 
@@ -939,7 +941,9 @@ export default class ModelsController {
 
     await request.validate({schema: dataSourceSchema})
 
-    let dataSource = await Source.query().where('id', params.id).first()
+
+
+      let dataSource = await Source.query().where('id', params.id).preload("roles").first()
     if (!dataSource) {
       response.status(404)
       return response.json({
@@ -950,14 +954,41 @@ export default class ModelsController {
 
     let data = request.all()
 
+      delete data.notice_settings
+      delete data.web_url
+      delete data.bodies
+      delete data.headers
+
     if (data['access']['roles'].lenght <= 1) {
       data['need_all_roles'] = 0
     }
 
-    dataSource.merge(data)
+      for (const key of keys(data)) {
+        switch (key) {
+          case "roles":
+            continue
+          case "access":
+            if(data.access) {
+              if(data.access.roles) {
+                //@ts-ignore
+                if(dataSource.roles.length > 0) {
+                  await dataSource.related('roles').detach()
+                }
+
+                if(data.access.roles.length > 0) {
+                  await dataSource.related('roles').attach(data.access.roles.map(role => role.value))
+                }
+              }
+            }
+          default:
+            //@ts-ignore
+            dataSource[key] = data[key]
+        }
+      }
+
     await dataSource.save()
     return response.json({
-      success: true,
+        success: false,
       data: dataSource
     })
   }

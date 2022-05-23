@@ -2340,6 +2340,76 @@ button {
   margin-bottom: 10px;
 }
 
+.title__css-editor {
+  font-size: 16px;
+  font-weight: 400;
+  color: #3c455b;
+  margin-bottom: 10px;
+}
+
+.btn-css-save {
+  border: none;
+  padding: 6px 26px;
+  margin-top: 10px;
+  background-color: #1a252f;
+  color: white;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.mdce {
+  align-self: flex-start;
+}
+
+.btn-css-save:hover {
+  background-color: #3c455b;
+}
+
+.wrapper-css-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(52, 59, 76, 0.4);
+  z-index: 1000;
+}
+
+.block-css-editor {
+  width: 670px;
+  height: 500px;
+  position: relative;
+  padding: 30px;
+  background-color: #fff;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 4%);
+  border-radius: 6px;
+}
+
+.icon-css-editor {
+  position: absolute;
+  top: 13px;
+  right: 15px;
+  transform: rotate(-45deg);
+  cursor: pointer;
+}
+
+.icon-css-editor path {
+  fill: #000;
+}
+
+.container__css-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.container__css-editor .ace_editor {
+  flex-grow: 1;
+}
+
 #editor-content {
   overflow-y: hidden;
   height: 100%;

@@ -180,9 +180,11 @@ const AdminBarWrapper = styled.div`
 }
 & .admin-bar__search-result {
   position: fixed;
-  margin-top: 23px;
-  width: 315px;
-  height: 156px;
+  margin-top: 30px;
+  max-width:  600px;
+  min-width: 300px;
+  width: auto;
+  height: 250px;
   padding: 11px 3px 7px 9px;
 
   z-index: 999;
@@ -194,10 +196,14 @@ const AdminBarWrapper = styled.div`
   }
 
 & .admin-bar__search-content {
+  max-width: 600px;
   width: 100%;
   height: 100%;
   overflow: auto;
+  margin: 0;
 }
+
+
 & .admin-bar__autocomplete {
   position: fixed;
   margin-top: 21px;

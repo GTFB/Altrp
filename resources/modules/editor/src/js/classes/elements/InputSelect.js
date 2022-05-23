@@ -16,7 +16,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA, CONTROLLER_GRADIENT
+  CONTROLLER_MEDIA, CONTROLLER_GRADIENT, CONTROLLER_HEADING
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { actionsControllers } from "../../decorators/actions-controllers";
@@ -87,7 +87,8 @@ class InputSelect extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('full_width', {
@@ -301,8 +302,22 @@ class InputSelect extends BaseElement {
 
     actionsControllers(this, "On Search Actions", "s_");
 
+    this.startControlSection("remove_section", {
+      label: "Remove items"
+    });
+
+    this.addControl("removed_heading", {
+      type: CONTROLLER_HEADING,
+      label: "Removed item value = {{value}}",
+      small: true
+    });
+
+    actionsControllers(this, "", "delete_", TAB_CONTENT, false, true);
+
+    this.endControlSection()
+
     this.startControlSection("create_section", {
-      label: "Creating New Items"
+      label: "Creating New Items",
     });
 
     this.addControl("create", {
@@ -806,6 +821,32 @@ class InputSelect extends BaseElement {
     });
 
     this.addControl("a_color", {
+      type:   CONTROLLER_COLOR,
+      label: "Icon Color"
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("remove_icon", {
+      tab: TAB_STYLE,
+      label: "Remove button"
+    });
+
+    this.addControl("remove_size", {
+      type:   CONTROLLER_SLIDER,
+      units: ["px","%",  "vw"],
+      stateless: true,
+      label: "Icon Size"
+    });
+
+    this.addControl("remove_margin", {
+      type:   CONTROLLER_DIMENSIONS,
+      units: ["px","%", "vw"],
+      stateless: true,
+      label: "Icon Margin"
+    });
+
+    this.addControl("remove_color", {
       type:   CONTROLLER_COLOR,
       label: "Icon Color"
     });

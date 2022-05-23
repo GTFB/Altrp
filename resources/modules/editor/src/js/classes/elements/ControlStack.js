@@ -35,6 +35,7 @@ class ControlStack extends FrontElement {
     let defaults = {
       type: CONTROLLER_TEXT,
     };
+
     section.controls.push({...defaults, ...args, controlId});
     window.controllersManager.setControlsCache(this.getName() + controlId, {...args, controlId});
     this.controlsIds.push(controlId);

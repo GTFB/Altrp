@@ -77,7 +77,6 @@ class TextWidget extends Component {
   changeText(value) {
     let settings = this.props.element.settings;
     settings.text = value;
-    console.log(value);
     this.props.element.setSettings(settings);
     this.props.element.templateNeedUpdate();
   }

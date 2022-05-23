@@ -560,6 +560,10 @@ body {
   }
 }
 
+.element-index_top-expression .bp3-html-select {
+  flex-basis: 100%;
+}
+
 .controllers-wrapper {
     display: block;
     background-color: #fff;
@@ -936,8 +940,7 @@ body {
 }
 
 .textarea-custom {
-  flex-grow: 1;
-  flex-basis: 60%;
+  width: 100%;
   min-height: 120px;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -971,4 +974,33 @@ body {
 
 .pe-none{
   pointer-events: none;
+}
+
+.editor-code-panel {
+  width: 100%;
+
+  & .ace_scroller {
+    background-color: rgb(246, 246, 246)
+  }
+
+  & .ace-tomorrow .ace_gutter{
+    background-color: #D3D7DB;
+  }
+}
+
+.controller-bottom-code {
+  position: relative;
+  width: 100%;
+  height: 15px;
+  background-color: #343b4c;
+
+  & svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    & path {
+      stroke: white;
+    }
+  }
 }

@@ -85,7 +85,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
   elementName,
   elementId,
   settings,
-  element
+  element, globalCssEditor
 }) => {
   let styles = "";
   let prefix = "altrp-element";
@@ -349,6 +349,8 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       styles += `.${prefix}${elementId} {${getInputPagintaionStyles(settings)}}`
       break;
   }
+
+  styles += globalCssEditor.globalStylesCss
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
 
@@ -683,10 +685,22 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.globalCssEditor.globalStylesCss !== this.props.globalCssEditor.globalStylesCss) {
+      return true
+    }
+    // if(this.state.children) {
+    //   if(this.state.children.component) {
+    //     if(this.state.children.component.settings.button_text) {
+    //       console.log(this.state.children.component.settings.button_text)
+    //     }
+    //   }
+    // }
 
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
+
+    if(nextProps.currentElement !== this.props.currentElement) return true
     if(this.state.cursorPos !== nextState.cursorPos) return true;
     if(nextProps.currentScreen !== this.props.currentScreen) return true;
     if (
@@ -900,6 +914,7 @@ class ElementWrapper extends Component {
               elementName={this.props.element.getName()}
               element={this.props.element}
               elementId={this.elementId}
+              globalCssEditor={this.props.globalCssEditor}
             />
           </WrapperComponent>
         </>
@@ -950,6 +965,7 @@ function mapStateToProps(state) {
     // hideTriggers: state.hideTriggers,
     currentScreen: state.currentScreen,
     globalStyles: state.globalStyles,
+    globalCssEditor: state.globalStylesCssEditor,
     historyStore: state.historyStore
   };
 }
