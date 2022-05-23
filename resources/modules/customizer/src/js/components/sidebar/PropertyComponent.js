@@ -18,12 +18,14 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import 'ace-builds/webpack-resolver';
 import { Resizable } from "re-resizable";
 import ArrowBottom from "./../../../../../editor/src/svgs/arrow.svg"
+import ModalCustomizerCode from "../modalCustomizerCode";
 
 class PropertyComponent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      editorInstance: null
+      editorInstance: null,
+      modal: false
     };
   }
 
@@ -125,6 +127,13 @@ class PropertyComponent extends Component {
     );
   }
 
+  toggleModal = () => {
+    this.setState(state => ({
+      ...state,
+      modal: !state.modal
+    }))
+  }
+
   render() {
     let options = [];
 
@@ -161,7 +170,7 @@ class PropertyComponent extends Component {
       methodOptions = [ {value: '', label: 'None'}, ...USER_OPTIONS];
     }
     let buttonText = 'None'
-    const currentMethod = (isAltrpJS() ? NODE_JS_METHODS_OPTIONS : METHODS_OPTIONS).find(o => o.value == method);
+    const currentMethod = (isAltrpJS() ? NODE_JS_METHODS_OPTIONS : METHODS_OPTIONS).find(o => o.value === method);
     if (currentMethod?.objectInstance) {
       buttonText = `${currentMethod?.objectInstance}::${currentMethod?.label || ''} (${namespace || ''}${path ? '.' + path : ''})${expression ? ', expression' : ''}`
     }
@@ -215,7 +224,6 @@ class PropertyComponent extends Component {
                 }))
               }}
               onChange={this.onTextareaChange}
-              // onKeyDown={onKeyDown}
               width="100%"
               height="100%"
               placeholder={placeholder}
@@ -231,6 +239,7 @@ class PropertyComponent extends Component {
           <div className="controller-bottom-code">
             <ArrowBottom width={14} height={14}/>
           </div>
+          <button className="btn-code__modal" onClick={this.toggleModal} style={{marginTop: "10px"}}>Open in modal window</button>
         </div>
       )}
       {!withoutMethods && showMethod &&
@@ -276,6 +285,15 @@ class PropertyComponent extends Component {
         methodEditToggle={this.methodEditToggle}
         changeByPath={this.props.changeByPath}
         path={`${this.props.path}.methodSettings`}/>}
+      {this.state.modal && (
+        <ModalCustomizerCode
+          path={this.props.path}
+          placeholder={placeholder}
+          value={_expression}
+          onChange={this.onTextareaChange}
+          toggleModal={this.toggleModal}
+        />
+      )}
     </>;
   }
 

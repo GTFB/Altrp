@@ -141,7 +141,6 @@ Route.group(() => {
      * Customizers
      */
     Route.get('/customizers', 'admin/CustomizersController.index')
-    Route.get('/customizers-content/:id', 'admin/CustomizersController.content')
     Route.post('/customizers', 'admin/CustomizersController.store')
     Route.get('/customizers/:id', 'admin/CustomizersController.show')
     Route.get('/customizers-content/:id', 'admin/CustomizersController.content')
@@ -167,6 +166,8 @@ Route.group(() => {
      * Assets
      */
     Route.get('/media', 'admin/MediaController.index')
+    Route.get('/media/:id', 'admin/MediaController.getById')
+    Route.put('/media/:id', 'admin/MediaController.updateMedia')
     Route.post('/media', 'admin/MediaController.store')
     Route.delete('/media/:id', 'admin/MediaController.destroy')
     Route.get('media_settings', async({response})=>{

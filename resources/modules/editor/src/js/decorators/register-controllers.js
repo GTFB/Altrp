@@ -282,6 +282,13 @@ export function advancedTabControllers(element) {
     min: 0,
   })
 
+  element.addControl('en_a_switcher', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Overflow hidden container',
+    default: true,
+    responsive: false,
+  });
+
   element.endControlSection();
 
   if (element.getType() !== 'section') {

@@ -19,7 +19,7 @@ const USER_EXTENDS_MODEL = MODEL_OPTIONS.map(item => {
 const USER_OPTIONS = [
   ...USER_EXTENDS_MODEL,
   {
-    value: 'User.isAdmin',
+    value: 'user.isAdmin',
     objectInstance: 'User',
     label: 'isAdmin',
     description: 'Check User is Administrator',
@@ -28,7 +28,7 @@ const USER_OPTIONS = [
     ],
   },
   {
-    value: 'User.hasRole',
+    value: 'user.hasRole',
     objectInstance: 'User',
     label: 'hasRole',
     description: 'Checks if the user has a role by its name.',
@@ -52,7 +52,7 @@ const USER_OPTIONS = [
     ],
   },
   {
-    value: 'User.hasPermission',
+    value: 'user.hasPermission',
     objectInstance: 'User',
     label: 'hasPermission',
     description: 'Check if user has a permission by its name.',
@@ -76,7 +76,7 @@ const USER_OPTIONS = [
     ],
   },
   {
-    value: 'User.attachRole',
+    value: 'user.attachRole',
     objectInstance: 'User',
     label: 'attachRole',
     description: 'Alias to eloquent many-to-many relation\'s attach() method.',
@@ -95,7 +95,7 @@ const USER_OPTIONS = [
     ],
   },
   {
-    value: 'User.detachRole',
+    value: 'user.detachRole',
     objectInstance: 'User',
     label: 'detachRole',
     description: 'Alias to eloquent many-to-many relation\'s detach() method.',
@@ -114,7 +114,7 @@ const USER_OPTIONS = [
     ],
   },
   {
-    value: 'User.attachPermission',
+    value: 'user.attachPermission',
     objectInstance: 'User',
     label: 'attachPermission',
     description: 'Alias to eloquent many-to-many relation\'s attach() method.',
@@ -133,7 +133,7 @@ const USER_OPTIONS = [
     ],
   },
   {
-    value: 'User.detachPermission',
+    value: 'user.detachPermission',
     objectInstance: 'User',
     label: 'detachPermission',
     description: 'Alias to eloquent many-to-many relation\'s detach() method.',

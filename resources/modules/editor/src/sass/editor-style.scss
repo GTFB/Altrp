@@ -2410,6 +2410,10 @@ button {
   flex-grow: 1;
 }
 
+.ck-editor_code {
+  display: block;
+}
+
 #editor-content {
   overflow-y: hidden;
   height: 100%;

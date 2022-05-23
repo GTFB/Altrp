@@ -62,6 +62,8 @@ import InputCropImageComponent from "../../../../editor/src/js/components/widget
 import getFeedbackStyles from "./helpers/getFeedbackStyles";
 import getInputPaginationStyles from "./helpers/getInputPaginationStyles";
 
+import animationStyles from "../helpers/animations/animations-styles";
+
 const {isEditor} = window.altrpHelpers;
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {

@@ -7,6 +7,7 @@ const {getDataByPath} = window.altrpHelpers;
 import styled from "styled-components";
 import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
 import React from "react";
+import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
 
 const TransparentDiv = styled.div`
 `;
@@ -412,6 +413,16 @@ class SimpleElementWrapper extends Component {
       onMouseEnter: tooltip_show_type === "hover" ? this.tooltipOnMouseEnter : null,
       onMouseLeave: tooltip_show_type === "hover" ? this.tooltipOnMouseLeave : null,
     };
+    const entranceAnimationType = element.getResponsiveSetting('en_an');
+    if (entranceAnimationType) {
+      wrapperProps['data-enter-animation-type'] = entranceAnimationType;
+      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay')?.size || 0;
+      wrapperProps.className = 'dynamic-animation altrp-invisible'
+      content = <>
+        <EntranceAnimationsStyles settings={element.getSettings()} elementId={element.getId()}/>
+        {content}
+      </>
+    }
     if (WrapperComponent === React.Fragment) {
       wrapperProps = {};
     }

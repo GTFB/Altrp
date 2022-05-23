@@ -5,6 +5,7 @@ import ARRAY_OPTIONS from "./ARRAY_OPTIONS";
 import NUMBER_OPTIONS from "./NUMBER_OPTIONS";
 import OBJECT_OPTIONS from "./OBJECT_OPTIONS";
 import STRING_OPTIONS from "./STRING_OPTIONS";
+import USER_OPTIONS from "./../methods-options/USER_OPTIONS"
 
 
 const JS_METHODS_OPTIONS = [
@@ -19,5 +20,6 @@ const JS_METHODS_OPTIONS = [
   ...OBJECT_OPTIONS,
   ...STRING_OPTIONS,
   ...NUMBER_OPTIONS,
+  ...USER_OPTIONS,
 ]
 export default JS_METHODS_OPTIONS
