@@ -195,7 +195,7 @@ class Table extends BaseElement {
     this.addControl('posts_per_page', {
       type: CONTROLLER_NUMBER,
       label: 'Posts per Page',
-      default: 3
+      default: 3,
     });
 
     this.addControl("posts_rows_distance", {
