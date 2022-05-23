@@ -72,9 +72,11 @@ export class TelegramBot {
     }
   }
 
-  async getData(block, customizerData, ctx) {
+  async getData(block, customizerData, ctx=null) {
 
-    customizerData.context.ctx = ctx
+    if(ctx) {
+      customizerData.context.ctx = ctx
+    }
 
     switch (block.type) {
       case "content":
