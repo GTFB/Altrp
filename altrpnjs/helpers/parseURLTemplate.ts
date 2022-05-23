@@ -1,12 +1,8 @@
-import replaceContentWithData from "./replaceContentWithData";
 
-export default function parseURLTemplate(URLTemplate = "", context = {}) {
+export default function parseURLTemplate(URLTemplate = "", ) {
   let url = URLTemplate;
   let protocol = "";
   url = url.trim();
-  if (url.indexOf("{{") !== -1) {
-    url = replaceContentWithData(url, context);
-  }
   if (url.indexOf("https://") === 0) {
     protocol = "https://";
     url = url.replace("https://", "");
@@ -29,7 +25,7 @@ export default function parseURLTemplate(URLTemplate = "", context = {}) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
-    let replace = context[idTemplate.replace(/:|\//g, "")] || "";
+    let replace = `{{${idTemplate.replace(/:|\//g, "")}}}`;
     idTemplate = idTemplate.replace("/", "");
     url = url.replace(new RegExp(idTemplate, "g"), replace);
   });

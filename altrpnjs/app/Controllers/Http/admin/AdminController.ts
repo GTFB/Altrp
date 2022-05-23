@@ -22,6 +22,7 @@ import {promisify} from "util";
 import resource_path from "../../../../helpers/path/resource_path";
 import base_path from "../../../../helpers/path/base_path";
 import Logger from "@ioc:Adonis/Core/Logger";
+import public_path from "../../../../helpers/path/public_path";
 
 export default class AdminController {
 
@@ -67,6 +68,9 @@ export default class AdminController {
           await controller.save()
         }
         await controllerGenerator.run(controller)
+      }
+      if(fs.existsSync(public_path('altrp'))){
+        fs.rmSync(public_path('altrp'), {recursive: true})
       }
       const templates = await Template.query().where('type', 'template').whereNull('deleted_at').select('*')
       for (let template of templates) {

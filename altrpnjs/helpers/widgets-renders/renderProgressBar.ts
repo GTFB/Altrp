@@ -1,9 +1,8 @@
-import getContent from '../getContent'
 import getResponsiveSetting from '../getResponsiveSetting'
 
 
-export default function renderProgressBar(settings, device, context) {
-  let value = getContent(settings, context, "value", device) || "100";
+export default function renderProgressBar(settings, device) {
+  let value = getResponsiveSetting(settings, "value", device) || "100";
   let stripes = getResponsiveSetting(settings, "stripes", device, true);
   let animate = getResponsiveSetting(settings, "animate", device, true)
 

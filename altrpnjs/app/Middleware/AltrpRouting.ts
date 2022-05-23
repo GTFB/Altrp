@@ -21,7 +21,9 @@ import isProd from "../../helpers/isProd"
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
-import axios from 'axios'
+import resource_path from "../../helpers/path/resource_path";
+import fs from "fs";
+
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -177,8 +179,15 @@ export default class AltrpRouting {
       try {
         _.set(page, 'templates', [])
         _.set(_frontend_route, 'templates', [])
-        let res = await httpContext.view.render(`altrp/pages/${page.guid}`,
+        let path = `altrp/pages/${page.guid}`;
+        const device = getCurrentDevice(httpContext.request)
+        if(fs.existsSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.edge`))){
+          path = `altrp/screens/${device}/pages/${page.guid}`
+
+        }
+        let res = await httpContext.view.render(path,
           Edge({
+            ...altrpContext,
             hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
             url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
             title: replaceContentWithData(page.title || 'Altrp', altrpContext),
@@ -198,7 +207,7 @@ export default class AltrpRouting {
             _frontend_route,
             route_args: pageMatch.params,
             datasources,
-            device: getCurrentDevice(httpContext.request),
+            device ,
             version: getLatestVersion(),
             _altrp: {
               version: getLatestVersion(),

@@ -505,7 +505,7 @@ export default class Page extends BaseModel {
     return styles;
   }
 
-  async getAllStyles() {
+  async getAllStyles(screenName = '') {
 
     let styles = ''
     let contentStyles = data_get(await Template.getTemplate(this.id, 'content'), 'styles')
@@ -520,7 +520,11 @@ export default class Page extends BaseModel {
       let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
       if (customStyles) {
         customStyles = JSON.parse(customStyles)
-        customStyles = _.get(customStyles, 'all_styles', [])
+        if(screenName && _.get(customStyles, screenName, []).length ) {
+          customStyles = _.get(customStyles, screenName, [])
+        }else {
+          customStyles = _.get(customStyles, 'all_styles', [])
+        }
         customStyles = customStyles.map(s => {
           if (s.indexOf('</style>') === -1) {
             s = `<style>${s}</style>`
@@ -533,7 +537,13 @@ export default class Page extends BaseModel {
 
     if (headerStyles) {
       headerStyles = JSON.parse(headerStyles)
-      headerStyles = _.get(headerStyles, 'all_styles', [])
+
+      if(screenName && _.get(headerStyles, screenName, []).length ) {
+        headerStyles = _.get(headerStyles, screenName, [])
+      }else {
+        headerStyles = _.get(headerStyles, 'all_styles', [])
+      }
+
       headerStyles = headerStyles.map(s => {
         if (s.indexOf('</style>') === -1) {
           s = `<style>${s}</style>`
@@ -544,7 +554,13 @@ export default class Page extends BaseModel {
     }
     if (contentStyles) {
       contentStyles = JSON.parse(contentStyles)
-      contentStyles = _.get(contentStyles, 'all_styles', [])
+
+      if(screenName && _.get(contentStyles, screenName, []).length ) {
+        contentStyles = _.get(contentStyles, screenName, [])
+      }else {
+        contentStyles = _.get(contentStyles, 'all_styles', [])
+      }
+
       contentStyles = contentStyles.map(s => {
         if (s.indexOf('</style>') === -1) {
           s = `<style>${s}</style>`
@@ -580,7 +596,13 @@ export default class Page extends BaseModel {
     return styles
   }
 
-  async getChildrenContent() {
+  async getChildrenContent(screenName = '') {
+    let prefix = ''
+    let cssPrefix = ''
+    if(screenName){
+      prefix = `/screens/${screenName}`
+      cssPrefix = `/${screenName}`
+    }
     // @ts-ignore
     let footer:Template = await Template.getTemplate(this.id, 'footer')
     let contentGuid = data_get(await Template.getTemplate(this.id, 'content'), 'guid')
@@ -588,15 +610,15 @@ export default class Page extends BaseModel {
     let headerGuid = data_get(await Template.getTemplate(this.id, 'header'), 'guid')
     const footerHash = footer.html_content ?  encodeURI(md5(footer.html_content)) : ''
     let result = `<div class="app-area app-area_header">
-      ${headerGuid ? `@include('altrp/templates/header/${headerGuid}')` : ''}
+      ${headerGuid ? `@include('altrp${prefix}/templates/header/${headerGuid}')` : ''}
       </div>
       <div class="app-area app-area_content">
-      ${contentGuid ? `@include('altrp/templates/content/${contentGuid}')` : ''}
+      ${contentGuid ? `@include('altrp${prefix}/templates/content/${contentGuid}')` : ''}
       </div>
       <div class="app-area app-area_footer">
-      ${footerGuid ? `@include('altrp/templates/footer/${footerGuid}')` : ''}
+      ${footerGuid ? `@include('altrp${prefix}/templates/footer/${footerGuid}')` : ''}
       </div>
-      ${footerGuid ? `<link href="/altrp/css/${footerGuid}.css?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>` : ''}
+      ${footerGuid ? `<link href="/altrp/css${cssPrefix}/${footerGuid}.css?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>` : ''}
       `
 
     let areas = await Area.query().whereNotIn('name', [
@@ -609,7 +631,7 @@ export default class Page extends BaseModel {
       let customGuid = data_get(template, 'guid')
       if (customGuid) {
         result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
-          ${customGuid ? `@include('altrp/templates/${area.name}/${customGuid}')` : ''}
+          ${customGuid ? `@include('altrp${prefix}/templates/${area.name}/${customGuid}')` : ''}
           </div>`
       }
     }

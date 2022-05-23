@@ -229,7 +229,8 @@ export default class TemplatesController {
     const template = await templateQuery.firstOrFail()
 
     let templateGenerator = new TemplateGenerator()
-    await templateGenerator.deleteFile(template)
+    templateGenerator.deleteFile(template)
+    templateGenerator.deleteFiles(template)
     await template.delete()
     return {
       success: true

@@ -1,7 +1,6 @@
 import getResponsiveSetting from '../getResponsiveSetting';
 import objectToStylesString from "../objectToStylesString";
 import renderAsset from "../renderAsset";
-import getContent from "../getContent"
 
 const AltrpFieldContainer = (settings, child) => {
   const { content_label_position_type, className } = settings
@@ -16,12 +15,12 @@ const AltrpFieldContainer = (settings, child) => {
   `
 }
 
-export default function renderInputAccept(settings, device, context) {
+export default function renderInputAccept(settings, device) {
     let label = ``;
     // const isMultiple = getResponsiveSetting(settings, 'select2_multiple', device)
     const label_icon = getResponsiveSetting(settings, 'label_icon', device)
 
-    let value = getContent(settings, context, "content_default_value", device) ||  "";
+    let value = getResponsiveSetting(settings, "content_default_value", device) ||  "";
 
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),

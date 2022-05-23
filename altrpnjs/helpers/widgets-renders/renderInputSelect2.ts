@@ -3,9 +3,8 @@ import getResponsiveSetting from '../getResponsiveSetting'
 import objectToStylesString from "../objectToStylesString";
 import renderAsset from "../renderAsset";
 import moment from 'moment'
-import getContent from '../getContent'
 
-export default function renderInputSelect2(settings, device, context) {
+export default function renderInputSelect2(settings, device) {
   let label: string = "";
   // const form_id = getResponsiveSetting(settings, 'form_id', device) || []
   // const field_id = getResponsiveSetting(settings, 'field_id', device) || []
@@ -15,7 +14,7 @@ export default function renderInputSelect2(settings, device, context) {
     label_icon
   } = settings;
 
-  let value = getContent(settings,context,"content_default_value", device) || [];
+  let value = getResponsiveSetting(settings,"content_default_value", device) || [];
 
   // const getName = (): string => {
   //   return `${form_id}[${field_id}]`;
@@ -87,7 +86,7 @@ export default function renderInputSelect2(settings, device, context) {
   switch (settings.getName()) {
     case "input-select2":
     {
-      input = renderSelect2(settings, device, context);
+      input = renderSelect2(settings, device);
     }
       break;
     default: {
@@ -127,7 +126,7 @@ export default function renderInputSelect2(settings, device, context) {
 }
 
 
-const renderSelect2 = (settings, device, context) => {
+const renderSelect2 = (settings, device) => {
   // const {
   //   content_options_nullable,
   //   nulled_option_title,
@@ -135,7 +134,7 @@ const renderSelect2 = (settings, device, context) => {
   // } = settings;
 
   let options = [];
-  let value = getContent(settings,context,"content_default_value", device) || []
+  let value = getResponsiveSetting(settings,"content_default_value", device) || []
 
 
   if (!getResponsiveSetting(settings,"select2_multiple", device, false)) {

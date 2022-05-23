@@ -1,7 +1,7 @@
-import getContent from "../getContent"
+import getResponsiveSetting from "../getResponsiveSetting";
 
-export default function renderStars(settings, device, context) {
-  const countNumber: number = parseInt(getContent(settings, context, "count", device)?.size) || 1;
+export default function renderStars(settings, device) {
+  const countNumber: number = parseInt(getResponsiveSetting(settings, "count", device)?.size) || 1;
   const count = new Array(countNumber).fill("", 0, countNumber);
 
   return (`<ul class="altrp-stars-list" style="list-style-type: none; margin: 0; padding: 0; display: flex;">

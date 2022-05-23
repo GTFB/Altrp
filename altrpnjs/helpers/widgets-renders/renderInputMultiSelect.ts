@@ -1,10 +1,9 @@
 import getResponsiveSetting from "../getResponsiveSetting";
 import renderAsset from "../renderAsset";
-import getContent from "../getContent";
 import objectToStylesString from "../objectToStylesString";
 
 
-export default function renderInputMultiSelect(settings, device, context) {
+export default function renderInputMultiSelect(settings, device) {
   const label_icon = getResponsiveSetting(settings, 'label_icon', device)
 
   let label: string = "";
@@ -64,7 +63,7 @@ export default function renderInputMultiSelect(settings, device, context) {
     labelIcon = `<span class="altrp-label-icon">${renderAsset(label_icon)}</span>`
   }
 
-  const content_label = getContent(settings,context,'content_label', device)
+  const content_label = getResponsiveSetting(settings,'content_label', device)
   if (content_label) {
     label = `<div class="${"altrp-field-label-container " + classLabel}" style="${objectToStylesString(styleLabel)}">
     <label class="${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}">${content_label}</label>

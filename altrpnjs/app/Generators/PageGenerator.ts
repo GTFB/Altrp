@@ -3,6 +3,8 @@ import {BaseGenerator} from "./BaseGenerator";
 import Application from "@ioc:Adonis/Core/Application";
 import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
+import SCREENS from "../../helpers/const/SCREENS";
+import TemplateGenerator from "App/Generators/TemplateGenerator";
 
 export default class PageGenerator extends BaseGenerator {
 
@@ -28,33 +30,34 @@ export default class PageGenerator extends BaseGenerator {
     }
 
 
-    let fileName = this.getFilename(page)
     if (!page.guid ) {
       console.error(`Page ${page.id} render error. Need more data`);
       return
     }
-    let children_content = await page.getChildrenContent()
-
-    let elements_list:string[]|string = await page.extractElementsNames()
-    const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
-    elements_list = elements_list.map(e=>`'${e}'`)
-    elements_list = elements_list.join(',')
-    let all_styles = await page.getAllStyles()
-
     this.page = page
 
+    for(const screen of SCREENS){
+      let fileName = this.getFilename(page)
+      let children_content = await this.page.getChildrenContent(screen.name)
 
-    return await this.addFile(fileName)
-      .destinationDir(PageGenerator.directory)
-      .stub(PageGenerator.template)
-      .apply({
-        children_content,
-        elements_list,
-        extra_header_styles,
-        extra_footer_styles,
-        all_styles,
-      })
+      let elements_list:string[]|string = await page.extractElementsNames()
+      const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
+      elements_list = elements_list.map(e=>`'${e}'`)
+      elements_list = elements_list.join(',')
+      let all_styles = await this.page.getAllStyles(screen.name)
+      await this.addFile(fileName)
+        .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
+        .stub(PageGenerator.template)
+        .apply({
+          children_content,
+          elements_list,
+          extra_header_styles,
+          extra_footer_styles,
+          all_styles,
+        })
 
+    }
+    return
   }
   async getExtraStyles(elementsList):Promise<{
     extra_header_styles:string

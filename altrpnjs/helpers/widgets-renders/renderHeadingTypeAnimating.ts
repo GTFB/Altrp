@@ -1,11 +1,10 @@
-import getContent from "../getContent";
 import getResponsiveSetting from "../getResponsiveSetting"
 
-export default function renderHeadingTypeAnimating(settings, device, context) {
+export default function renderHeadingTypeAnimating(settings, device, ) {
 
   let animating = "";
-  const beforeText = getContent(settings, context, 'text_before_animating', device);
-  const afterText = getContent(settings, context, 'text_after_animating', device);
+  const beforeText = getResponsiveSetting(settings, 'text_before_animating', device);
+  const afterText = getResponsiveSetting(settings, 'text_after_animating', device);
   const htmlTag = getResponsiveSetting(settings, 'html_tag_animating', device, 'h2');
 
 

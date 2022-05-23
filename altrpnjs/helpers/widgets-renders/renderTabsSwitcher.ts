@@ -1,8 +1,7 @@
 import getResponsiveSetting from "../getResponsiveSetting"
 import Switch from "./components/Blueprint/Switch";
-import replaceContentWithData from "../replaceContentWithData";
 
-export default function renderTabsSwitcher(settings, device, context) {
+export default function renderTabsSwitcher(settings, device) {
   // section 1
   const oneTitle = getResponsiveSetting(settings, "one_title", device, "");
   const oneType = getResponsiveSetting(settings, "one_type", device, "text");
@@ -59,17 +58,17 @@ export default function renderTabsSwitcher(settings, device, context) {
     <div class="altrp-tabs-switcher">
       <div class="altrp-tabs-switcher_wrapper">
         <div class="altrp-tabs-switcher_label altrp-tabs-switcher_label-one">
-          ${replaceContentWithData(oneTitle, context)}
+          ${oneTitle}
         </div>
         <div class = "altrp-tabs-switcher_switch-wrapper">
           ${blueprintSwitch}
         </div>
         <div class="altrp-tabs-switcher_label altrp-tabs-switcher_label-two">
-          ${replaceContentWithData(twoTitle, context)}
+          ${twoTitle}
         </div>
       </div>
       <div class="altrp-tabs-switcher_content">
-        ${replaceContentWithData(content || '', context)}
+        ${content || ''}
       </div>
     </div>
   `

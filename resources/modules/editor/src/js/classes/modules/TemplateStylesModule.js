@@ -50,6 +50,9 @@ class TemplateStylesModule{
     stylesElements = stylesElements.map(style =>
       style ? style.innerHTML : ""
     );
+    styles = {
+    };
+    stylesElements = _.uniq(stylesElements)
     for(const screen of CONSTANTS.SCREENS){
       await delay(300)
       editorStore.dispatch(setCurrentScreen(screen))
@@ -66,15 +69,13 @@ class TemplateStylesModule{
         if(screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1){
           css = `${screen.fullMediaQuery}{${css}}`
         }
-        stylesElements.push(css);
+        const _stylesElements = [...stylesElements]
+        _stylesElements.push(css);
+        styles[screen.name] = _stylesElements;
       }
     }
-    stylesElements = _.uniq(stylesElements)
     editorStore.dispatch(setCurrentScreen(currentScreen))
-    styles = {
-      all_styles: stylesElements,
-      important_styles: stylesElements
-    };
+
     return styles
   }
 }

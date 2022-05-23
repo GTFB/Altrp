@@ -43,7 +43,6 @@ export default function renderDropbar(settings, device) {
   // let altrpDropbar = AltrpDropbar({
   //   className: "btn",
   //   element: settings,
-  //   getContent,
   //   showDelay: dropbarDelay,
   //   buttonTemplate
   // })

@@ -1,10 +1,9 @@
 import parseURLTemplate from "../parseURLTemplate"
 import * as _ from 'lodash'
 import getResponsiveSetting from "../getResponsiveSetting"
-import getContent from "../getContent"
 import renderAsset from "../renderAsset";
 
-export default function renderButton(settings, device, context) {
+export default function renderButton(settings, device) {
   const { link_link = {}, advanced_tooltip: tooltip } = settings
   const background_image = getResponsiveSetting(
     settings,
@@ -18,7 +17,7 @@ export default function renderButton(settings, device, context) {
     classes += " altrp-background-image_btn"
   }
 
-  let buttonText = getContent(settings, context,"button_text", device)
+  let buttonText = getResponsiveSetting(settings,"button_text", device)
   let buttonMediaRight = { ...settings.button_icon_right }
   let buttonMediaLeft = { ...settings.button_icon_left }
   let buttonMediaTop = { ...settings.button_icon_top }
@@ -312,12 +311,8 @@ export default function renderButton(settings, device, context) {
 
 
 
-  let url = link_link?.url
-    ? link_link?.url.replace(":id", context.id || "")
-    : ""
-  if (_.isObject(context)) {
-    url = parseURLTemplate(link_link.url || "", context)
-  }
+  let url = parseURLTemplate(link_link.url || "")
+
 
   // @ts-ignore
   let button = `<button

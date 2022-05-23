@@ -1,12 +1,10 @@
-
-import getContent from '../getContent'
 import getResponsiveSetting from '../getResponsiveSetting'
 import _ from 'lodash'
 import parseURLTemplate from '../parseURLTemplate'
 import objectToAttributesString from './../objectToAttributesString'
 import AltrpImage from "./components/AltrpImage";
 
-export default function renderImage(settings, device, context, widgetId) {
+export default function renderImage(settings, device, widgetId) {
   const link = settings.image_link || {}
   const cursorPointer = getResponsiveSetting(settings,'cursor_pointer', device,false)
 
@@ -17,32 +15,34 @@ export default function renderImage(settings, device, context, widgetId) {
     classNames += ' cursor-pointer'
   }
 
-  if(getContent(settings,context,'raw_url', device)){
+  if(getResponsiveSetting(settings,'raw_url', device)){
     media = {
-      url: getContent(settings,context,'raw_url', device),
+      url: getResponsiveSetting(settings,'raw_url', device),
       assetType: 'media',
     }
   } else if (
-    getContent(settings,context,'content_path', device) &&
-      _.isObject(_.get(context, getContent(settings,context,'content_path', device), null))
+    getResponsiveSetting(settings,'content_path', device, '') &&
+    getResponsiveSetting(settings,'content_path', device, '').indexOf('.url') > -1
   ) {
-    media = _.get(context, getContent(settings,context,'content_path', device), null)
-    media.assetType = 'media'
+    media ={
+      url: `{{${getResponsiveSetting(settings,'content_path', device)}}}`,
+      assetType : 'media'
+    }
   } else if (
-    getContent(settings,context,'content_path', device) &&
-      _.isString(_.get(context, getContent(settings,context,'content_path', device), null))
+    getResponsiveSetting(settings,'content_path', device, '') &&
+    getResponsiveSetting(settings,'content_path', device, '').indexOf('.url') === -1
+
   ) {
-    media = _.get(context, getContent(settings,context,'content_path', device), null)
     media = {
       assetType: 'media',
-      url: media,
+      url: `{{${getResponsiveSetting(settings,'content_path', device)+'.url'}}}`,
       name: 'null',
     }
     // eslint-disable-next-line max-len
-  } else if (getContent(settings,context,'default_url', device) && _.isString(_.get(context, getContent(settings,context,'default_url', device), null))){
+  } else if (getResponsiveSetting(settings,'default_url', device)){
     media = {
       assetType: 'media',
-      url: _.get(context, getContent(settings,context,'default_url', device), null),
+      url: `{{${getResponsiveSetting(settings,'default_url', device)}}}`,
       name: 'default',
     }
   }
@@ -64,7 +64,7 @@ export default function renderImage(settings, device, context, widgetId) {
     return `<div class='${classNames}'>${altrpImage}</div>`
   } else {
     let linkUrl = link?.url || ''
-    linkUrl = parseURLTemplate(linkUrl, context)
+    linkUrl = parseURLTemplate(linkUrl)
     const linkProps: {
       target?: string
     } = {}

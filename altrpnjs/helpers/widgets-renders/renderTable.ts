@@ -1,9 +1,9 @@
 import getResponsiveSetting from "../getResponsiveSetting"
 //@ts-ignore
-export function renderTable(settings, device, context) {
-  const columns = getResponsiveSetting(settings, 'tables_columns', device)
-  const additionalRows = getResponsiveSetting(settings, 'additional_rows', device)
-  const tableColumns = getResponsiveSetting(settings, 'tables_columns', device)
+export default function renderTable(settings, device, context) {
+  const columns = getResponsiveSetting(settings, 'tables_columns', device) || []
+  const additionalRows = getResponsiveSetting(settings, 'additional_rows', device) || []
+  const tableColumns = getResponsiveSetting(settings, 'tables_columns', device) || []
 
   return `
   <div class="altrp_table-zIndex" style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 30000px;">

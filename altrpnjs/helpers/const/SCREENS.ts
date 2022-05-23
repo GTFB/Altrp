@@ -1,5 +1,13 @@
 
-const SCREENS = [
+const SCREENS:{
+  icon:string,
+  name: string,
+  id: number,
+  width: string,
+  fullMediaQuery: string,
+  mediaQuery: string
+
+}[] = [
   {
     icon: "wide_screen",
     name: "DEFAULT_BREAKPOINT",

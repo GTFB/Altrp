@@ -237,11 +237,11 @@ export default class Template extends BaseModel {
     return data
   }
 
-  async getChildrenContent() {
+  async getChildrenContent(screenName:string) {
     try {
       const data = JSON.parse(this.data)
       const renderer = new RootElementRenderer(data)
-      return await renderer.render()
+      return await renderer.render(screenName)
     } catch (e) {
       console.log(e)
 

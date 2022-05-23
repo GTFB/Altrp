@@ -1,13 +1,12 @@
 import objectToStylesString from '../objectToStylesString';
 import getResponsiveSetting from '../getResponsiveSetting';
 import renderAsset from "../renderAsset";
-import getContent from '../getContent';
 
 const AltrpFieldContainer = (settings, child) => {
   const {content_label_position_type, className} = settings
 
   return `
-    <div 
+    <div
       style="
         ${content_label_position_type == 'left' ? 'display: flex;' : ''}
         ${content_label_position_type == 'right' ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;' : ''}
@@ -19,7 +18,7 @@ const AltrpFieldContainer = (settings, child) => {
   `
 }
 
-export default function renderInputSelectTree(settings, device, context) {
+export default function renderInputSelectTree(settings, device) {
   const renderLeftIcon = () => {
     const left_icon = getResponsiveSetting(settings, 'left_icon', device)
 
@@ -98,7 +97,7 @@ export default function renderInputSelectTree(settings, device, context) {
       break;
   }
 
-  const content_label = getContent(settings, context, 'content_label', device)
+  const content_label = getResponsiveSetting(settings, 'content_label', device)
   const content_required = getResponsiveSetting(settings, 'content_required', device)
 
   if (content_label) {
@@ -143,7 +142,7 @@ export default function renderInputSelectTree(settings, device, context) {
     {
       content_label_position_type,
       className: "altrp-field-container",
-    }, 
+    },
     `
       ${content_label_position_type !== "bottom" ? label : ''}
       ${input}

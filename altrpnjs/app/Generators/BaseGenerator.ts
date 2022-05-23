@@ -24,12 +24,12 @@ export abstract class BaseGenerator{
     return this
   }
 
-  protected stub(stubFilePath:string):this{
+  protected stub(stubFilePath:string,):this{
     this.stubFilePath = stubFilePath
     return this
   }
 
-  protected async apply(vars: object){
+  protected async apply(vars: object,  prepare = false){
     let content: string = ''
 
     if(fs.existsSync(this.stubFilePath)){
@@ -59,13 +59,17 @@ export abstract class BaseGenerator{
     return path.join(this.directory,this.fileName)
   }
 
-  static async generateCssFile(fileName:string, content:string):Promise<void >{
+  static async generateCssFile(fileName:string, content:string, screenName: string = ''):Promise<void >{
     if(fileName.indexOf('.css') !== fileName.length - 4){
       fileName += '.css'
     }
-    fileName = Application.publicPath(`altrp/css/${fileName}`)
-    if(! fs.existsSync(Application.publicPath(`altrp/css/`))){
-      fs.mkdirSync(Application.publicPath(`altrp/css/`), {recursive:true})
+    if(screenName){
+      screenName = `${screenName}/`
+    }
+    fileName = Application.publicPath(`altrp/css/${screenName}${fileName}`)
+
+    if(! fs.existsSync(Application.publicPath(`altrp/css/${screenName}`))){
+      fs.mkdirSync(Application.publicPath(`altrp/css/${screenName}`), {recursive:true})
     }
     fs.writeFileSync(fileName, content)
     return

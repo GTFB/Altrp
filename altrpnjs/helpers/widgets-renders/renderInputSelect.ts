@@ -1,9 +1,8 @@
-import getContent from '../getContent'
 import getResponsiveSetting from '../getResponsiveSetting'
 import objectToStylesString from "../objectToStylesString";
 import renderAsset from "../renderAsset";
 
-export default function renderInputSelect(settings, device, context) {
+export default function renderInputSelect(settings, device) {
   const label_icon = getResponsiveSetting(settings, 'label_icon', device)
   const content_options_nullable = getResponsiveSetting(settings, 'content_options_nullable', device)
   const nulled_option_title = getResponsiveSetting(settings, 'nulled_option_title', device)
@@ -83,7 +82,7 @@ export default function renderInputSelect(settings, device, context) {
     leftIcon = `<span class="bp3-icon bp3-icon_text-widget bp3-icon_left" >${renderAsset(left_icon)}</span>`
   }
 
-  const content_label = getContent(settings,context,'content_label', device)
+  const content_label = getResponsiveSetting(settings,'content_label', device)
   if (content_label) {
     label = `<div class="${"altrp-field-label-container " + classLabel}" style="${objectToStylesString(styleLabel)}">
     <label class="${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}">${content_label}</label>

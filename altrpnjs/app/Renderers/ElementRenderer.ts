@@ -1,3 +1,4 @@
+import { string } from '@ioc:Adonis/Core/Helpers'
 import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import * as mustache from 'mustache'
@@ -5,8 +6,15 @@ import * as _ from 'lodash'
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import objectToStylesString from "../../helpers/objectToStylesString";
 import toUnicode from "../../helpers/string/toUnicode";
+import base_path from "../../helpers/path/base_path";
+import isProd from "../../helpers/isProd";
 
 export default class ElementRenderer {
+  static straightRenderIgnore = [
+    'input-radio',
+    'input-checkbox',
+    'section_widget',
+  ]
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
   private elementStub: string
   constructor(private element: {
@@ -26,7 +34,7 @@ export default class ElementRenderer {
       default_hidden: boolean
     },
     name: string,
-    type: string,
+    type: 'widget' | 'section' | 'column',
     id: string,
   }) {
 
@@ -34,7 +42,7 @@ export default class ElementRenderer {
       this.element.type === 'widget'? '/widgets' : ''
     }/${this.element.name}.stub`)
   }
-  async render(): Promise<string>{
+  async render(screenName:string): Promise<string>{
     const reactElement =  this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
     this.element.settingsLock = this.element.settingsLock || {}
@@ -52,7 +60,7 @@ export default class ElementRenderer {
     let children_content = ''
     for (const child of this.element.children){
       let renderer = new ElementRenderer(child)
-      children_content += await renderer.render()
+      children_content += await renderer.render(screenName)
     }
     let element_content = '';
     const columns_count = this.element.children.length;
@@ -89,24 +97,35 @@ export default class ElementRenderer {
         break;
       }
 
-
-
       styles = objectToStylesString(styles)
       const text_widget_content = this.getTextWidgetContent()
-      element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
-      element_content = mustache.render(element_content, {
-        settings: JSON.stringify(this.element.settings),
-        id: this.element.id,
-        children_content,
-        element_styles:styles,
-        section_classes,
-        column_classes: `{{getColumnClasses(element${this.getId()}_settings, device)}}`,
-        section_background,
-        layout_html_tag,
-        text_widget_content,
-        link_class: this.isLink() ? 'altrp-pointer' : '',
-        columns_count,
-      })
+      if(this.getType() === 'widget'
+        && ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1){
+        const filename = string.camelCase(`render_${this.getName()}`)
+          + (isProd() ? '.js' : '.ts')
+        if(fs.existsSync(base_path(`helpers/widgets-renders/${filename}`))){
+          let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
+            : await import(base_path(`helpers/widgets-renders/${filename}`))
+          render = render.default
+          element_content =  render(this.element.settings, screenName)
+        }
+      } else {
+        element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
+        element_content = mustache.render(element_content, {
+          settings: JSON.stringify(this.element.settings),
+          id: this.element.id,
+          children_content,
+          element_styles:styles,
+          section_classes,
+          column_classes: `{{getColumnClasses(element${this.getId()}_settings, device)}}`,
+          section_background,
+          layout_html_tag,
+          text_widget_content,
+          link_class: this.isLink() ? 'altrp-pointer' : '',
+          columns_count,
+        })
+
+      }
     } else {
       console.error(`Template for ${this.element.name} not found!`);
     }
@@ -172,7 +191,7 @@ export default class ElementRenderer {
     return this.element.id
   }
 
-  private getType() {
+  private getType(): 'widget' | 'section' | 'column' {
     return this.element.type
   }
   private getName() {

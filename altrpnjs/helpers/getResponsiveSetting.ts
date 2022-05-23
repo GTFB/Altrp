@@ -1,10 +1,10 @@
 import DEFAULT_BREAKPOINT from './const/DEFAULT_BREAKPOINT';
-import SCREENS from './const/SCREEN';
+import SCREENS from './const/SCREENS';
 import * as _ from 'lodash'
 
 export default function getResponsiveSetting(settings: object, settingName:string, screenName: string, _default:any = null) {
   let elementState = ''
-  const currentScreen = SCREENS.find(s=>s.name = screenName) || SCREENS.find(s=>s.name = DEFAULT_BREAKPOINT)
+  const currentScreen = SCREENS.find(s=>s.name === screenName) || SCREENS.find(s=>s.name === DEFAULT_BREAKPOINT)
   let _settingName = `${settingName}_${elementState}_`;
   if(! currentScreen){
     console.error(`currentScreen not found`);
@@ -21,7 +21,7 @@ export default function getResponsiveSetting(settings: object, settingName:strin
     }
     return setting;
   }
-  let suffix = currentScreen;
+  let suffix = currentScreen.name;
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
   if (setting === undefined) {

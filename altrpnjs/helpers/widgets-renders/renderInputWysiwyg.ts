@@ -1,14 +1,13 @@
 import getResponsiveSetting from "../getResponsiveSetting";
 import renderAsset from "../renderAsset";
 import objectToStylesString from "../objectToStylesString";
-import getContent from '../getContent'
 
 
-export default function renderInputWysiwyg(settings, device, context) {
+export default function renderInputWysiwyg(settings, device) {
   const label_icon = getResponsiveSetting(settings, 'label_icon', device)
   const content_label_position_type = getResponsiveSetting(settings, "content_label_position_type", device);
-  const content_value = getContent(settings, context, "content_default_value", device)
-  const read_only = getContent(settings, context, "read_only", device)
+  const content_value = getResponsiveSetting(settings, "content_default_value", device)
+  const read_only = getResponsiveSetting(settings, "read_only", device)
 
   let label: string = "";
   let labelIcon: string = "";

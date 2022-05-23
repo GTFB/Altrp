@@ -1,11 +1,10 @@
 import getResponsiveSetting from "../getResponsiveSetting"
 import parseURLTemplate from "../parseURLTemplate"
 import AltrpLink from "./components/AltrpLink"
-import getContent from "../getContent"
 import objectToStylesString from "../objectToStylesString"
 import * as _ from 'lodash'
 
-export default function renderHeading(settings, device, context) {
+export default function renderHeading(settings, device) {
 
   let heading = ''
 
@@ -13,7 +12,7 @@ export default function renderHeading(settings, device, context) {
     default:
 
       const background_image = getResponsiveSetting(settings, 'background_image', device, {})
-      let text = getContent(settings,context,'text', device)
+      let text = getResponsiveSetting(settings,'text', device)
       let link
       const className = "altrp-heading altrp-heading--link " +
          (background_image?.url ? ' altrp-background-image' : '')
@@ -24,9 +23,9 @@ export default function renderHeading(settings, device, context) {
       const subTag = settings.sub_heading_settings_html_tag || "h2"
       let subHeading = ""
       if (settings.text_sub_switch) {
-        const subText = getContent(settings, context, 'text_sub', device)
+        const subText = getResponsiveSetting(settings, 'text_sub', device)
 
-        switch (getContent(settings, context, "sub_heading_settings_position", device)) {
+        switch (getResponsiveSetting(settings, "sub_heading_settings_position", device)) {
           case "top":
             wrapperClasses += " altrp-heading-wrapper-sub-top"
             break
@@ -52,19 +51,18 @@ export default function renderHeading(settings, device, context) {
         }
 
         linkProps.tag = settings.link_link.tag
-        linkProps.creativelink = getContent(settings, context, "heading_settings_html_tag", device) !== "p" ? getContent(settings, context, "creative_link_controller",device) : null
+        linkProps.creativelink = getResponsiveSetting(settings, "heading_settings_html_tag", device) !== "p" ? getResponsiveSetting(settings, "creative_link_controller",device) : null
 
         if (settings.link_link.openInNew) {
           linkProps.target = '_black'
         }
         if ((settings.link_link.tag === 'Link')) {
-          linkProps.to = settings.link_link?.url.replace(':id', context.id || '')
-          linkProps.href = settings.link_link?.url.replace(':id', context.id || '')
+          linkProps.to = settings.link_link?.url.replace(':id', '{{id}}' )
+          linkProps.href = settings.link_link?.url.replace(':id', '{{id}}' )
         }
-        if (_.isObject(context)) {
-          linkProps.to = parseURLTemplate(settings.link_link?.url, context)
-          linkProps.href = parseURLTemplate(settings.link_link?.url, context)
-        }
+        linkProps.to = parseURLTemplate(settings.link_link?.url)
+        linkProps.href = parseURLTemplate(settings.link_link?.url)
+
         link = AltrpLink(text, linkProps)
       }
 
@@ -72,10 +70,10 @@ export default function renderHeading(settings, device, context) {
       if (settings.switch_advanced_heading_content) {
         let styles = {}
 
-        let xOffset = getContent(settings, context, "horizontal_offset_advanced_heading_content", device)
-        let yOffset = getContent(settings, context, "vertical_offset_advanced_heading_content", device)
-        let rotate = getContent(settings, context, "rotate_offset_advanced_heading_content", device)
-        let transformOrigin = getContent(settings, context, "transform_origin_offset_advanced_heading_content", device)
+        let xOffset = getResponsiveSetting(settings, "horizontal_offset_advanced_heading_content", device)
+        let yOffset = getResponsiveSetting(settings, "vertical_offset_advanced_heading_content", device)
+        let rotate = getResponsiveSetting(settings, "rotate_offset_advanced_heading_content", device)
+        let transformOrigin = getResponsiveSetting(settings, "transform_origin_offset_advanced_heading_content", device)
 
         if (xOffset.size === "") {
           xOffset.size = "0"
@@ -133,13 +131,13 @@ export default function renderHeading(settings, device, context) {
         }
         advancedHeading = `<div class="altrp-heading-advanced-wrapper">
 <${settings.heading_settings_html_tag || 'h2'} class="${classes}" style="${objectToStylesString(styles)}">
-${getContent(settings, context, "text_advanced_heading_content", device)}</${settings.heading_settings_html_tag || 'h2'}></div>`
+${getResponsiveSetting(settings, "text_advanced_heading_content", device)}</${settings.heading_settings_html_tag || 'h2'}></div>`
 
         let currentBreakpoint: {
           type?: string,
           size?: number,
         } = {}
-        switch (getContent(settings, context, "hide_at_offset_advanced_heading_content", device)) {
+        switch (getResponsiveSetting(settings, "hide_at_offset_advanced_heading_content", device)) {
           case "never":
             currentBreakpoint = {
               type: "never",
@@ -161,7 +159,7 @@ ${getContent(settings, context, "text_advanced_heading_content", device)}</${set
           default:
         }
 
-        if (getContent(settings, context, "hide_at_offset_advanced_heading_content", device) !== "never") {
+        if (getResponsiveSetting(settings, "hide_at_offset_advanced_heading_content", device) !== "never") {
           let bodyWidth = document.body.offsetWidth
 
           // @ts-ignore
