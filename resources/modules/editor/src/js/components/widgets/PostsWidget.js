@@ -46,12 +46,15 @@ class PostsWidget extends Component {
       path = path.replace(/}}/g, '').replace(/{{/g, '');
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
     }
-
+    const settings = {
+      ...this.props.element.settings,
+      ...this.props.element.settingsLock || {},
+    };
     return <PostsComponent query={query}
                            currentModel={this.props.currentModel}
                            data={data}
                            element={this.props.element}
-                           settings={this.props.element.getSettings()}/>;
+                           settings={settings}/>;
   }
 }
 
