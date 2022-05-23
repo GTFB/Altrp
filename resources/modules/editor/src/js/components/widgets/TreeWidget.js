@@ -33,24 +33,24 @@ export const normalizeValues = function(branch) {
 }
 
 export const getFromDatasource = function (settings = {}, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
-  settings.path = this.props.element.getLockedSettings(settingNames[0], '');
+  settings.path = this.props.element.getSettings(settingNames[0], '');
   settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
   const data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
 
-  if(! _.isArray(data)){
+  if(!_.isArray(data)){
     return [];
   }
-  return data;
+
   let repeater = [];
 
   const keys = {
-    label: "",
-    icon: "",
-    tree_id: "",
-    parent: "",
+    label: "label",
+    icon: "icon",
+    tree_id: "parent_id",
+    parent: "tree_id",
   }
 
   if(isEditor()) {
@@ -99,22 +99,23 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
     ]
   }
 
-  settings.dataSettings.forEach((s) => {
-    switch (s.value) {
-      case "label":
-        keys[s.value] = s.label || "label"
-        break;
-      case "icon":
-        keys[s.value] = s.label || "icon"
-        break;
-      case "parent":
-        keys[s.value] = s.label || "parent_id"
-        break;
-      case "tree_id":
-        keys[s.value] = s.label || "tree_id"
-        break;
-    }
-  })
+
+  // settings.dataSettings.forEach((s) => {
+  //   switch (s.value) {
+  //     case "label":
+  //       keys[s.value] = s.label || "label"
+  //       break;
+  //     case "icon":
+  //       keys[s.value] = s.label || "icon"
+  //       break;
+  //     case "parent":
+  //       keys[s.value] = s.label || "parent_id"
+  //       break;
+  //     case "tree_id":
+  //       keys[s.value] = s.label || "tree_id"
+  //       break;
+  //   }
+  // })
 
   let allKeys = true;
 
@@ -124,8 +125,8 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
     }
   })
 
-  if(allKeys && settings.data.length > 0) {
-    settings.data.forEach((d) => {
+  if(allKeys && data.length > 0) {
+    data.forEach((d) => {
       repeater.push({
         label: d[keys.label],
         icon: d[keys.icon],
@@ -137,6 +138,7 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   }
 
   if(!defaultOptions) {
+    console.log(repeater, "sadsadsa")
     return this.updateRepeater(repeater, {
       sort: [settings.sortDefault, settings.sortOption]
     })
@@ -150,6 +152,8 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
 
 export const updateRepeater = function (repeaterSetting, other={}) {
   const repeater = [];
+
+  console.log('sadass')
 
   repeaterSetting.forEach((branch, idx) => {
     let children = [];
@@ -268,7 +272,13 @@ class TreeWidget extends Component {
         repeater: filtrationRepeater
       }))
     } else if(settings.type === "datasource") {
-      const filtrationRepeater = this.getFromDatasource(settings) || []
+      settings = {
+
+      }
+      const filtrationRepeater = this.getFromDatasource({
+        ...this.state.settings,
+        ...settings,
+      }) || []
 
       this.setState(s => ({
         ...s,
