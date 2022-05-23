@@ -91,15 +91,31 @@ export default class InputPaginationWidget extends React.Component {
     }
   };
 
+  /**
+   * Получить css классы для input pagination
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "")
     return (
-      <div className="altrp-input-pagination">
+      <div className={`${classes} altrp-input-pagination`}>
         {
           this.state.values.map(item => (
             <button
               key={item.value}
               onClick={() => this.onChange(item.value)}
-              className={"altrp-input-pagination__item" + (this.state.value === item.value ? " active" : "")}
+              className={`${classes} altrp-input-pagination__item ${this.state.value === item.value ? " active" : ""}`}
             >
               { item.label }
             </button>

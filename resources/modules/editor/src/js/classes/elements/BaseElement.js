@@ -43,11 +43,12 @@ class BaseElement extends ControlStack {
   /**
    * Задать настройки
    * @param settings
+   * @param settingsLock
    */
-  setSettings(settings) {
+  setSettings(settings, settingsLock) {
     this.settings = settings || this.settings;
 
-    this.settingsLock =  this.settingsLock || {};
+    this.settingsLock =  settingsLock || {};
 
     const controls = controllersManager.getControls(this.getName())
 

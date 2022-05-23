@@ -179,12 +179,24 @@ class TabsWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для tabs widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let buttonClasses = "";
 
     const vertical = this.props.element.getResponsiveLockedSetting("vertical", "", false);
     const animate = this.props.element.getResponsiveLockedSetting("animate");
-
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     let tabs = <div></div>;
     const spacing_icon_style = this.props.element.getResponsiveLockedSetting("spacing_icon_style") || {size: '10',unit:'px'};
     if (this.state.settings.items_tabs) {
@@ -211,7 +223,7 @@ class TabsWidget extends Component {
           if(!Array.isArray(tab.icon_items)) {
             if(tab.icon_items.url) {
               icon = (
-                <div className="altrp-tab-btn-icon" style={iconStyles}>
+                <div className={`${classes} altrp-tab-btn-icon`} style={iconStyles}>
                   {renderAssetIcon(tab.icon_items, {})}
                 </div>
               );
@@ -222,14 +234,14 @@ class TabsWidget extends Component {
           <Tab
             id={`tab-${idx + 1}`}
             className={
-              "altrp-tab-btn" +
+              `${classes} altrp-tab-btn` +
               buttonClasses +
               (this.state.selected === `tab-${idx + 1}` ? " active" : "") +
               (vertical ? " altrp-tab-vertical" : " altrp-tab-horizontal") +
               (this.state.activeTab === idx ? " active" : "")
             }
             panel={(
-              <div className={"altrp-tab" + (this.state.selected === `tab-${idx + 1}` ? " active" : "")}>
+              <div className={`${classes} altrp-tab ${(this.state.selected === `tab-${idx + 1}` ? " active" : "")}`}>
                 {tab.card_template ? (
                   <TemplateLoader templateId={tab.card_template} />
                 ) : (
@@ -250,7 +262,7 @@ class TabsWidget extends Component {
     }
     return <Tabs
       onChange={this.blueprintShow}
-      className={"altrp-tabs" +
+      className={`${classes} altrp-tabs` +
         (vertical ? " altrp-tabs-vertical" : " altrp-tabs-horizontal") +
         (animate ? "" : " altrp-tabs-without-animation")
       }

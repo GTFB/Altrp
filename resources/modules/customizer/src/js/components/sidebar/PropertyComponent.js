@@ -11,12 +11,20 @@ import USER_OPTIONS from "../../const/methods-options/USER_OPTIONS";
 import mutate from "dot-prop-immutable";
 import isAltrpJS from "../../helpers/isAltrpJS";
 import NODE_JS_METHODS_OPTIONS from "../../const/node-js/NODE_JS_METHODS_OPTIONS";
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/theme-tomorrow";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/ext-language_tools";
+import 'ace-builds/webpack-resolver';
+import { Resizable } from "re-resizable";
+import ArrowBottom from "./../../../../../editor/src/svgs/arrow.svg"
 
 class PropertyComponent extends Component {
   constructor(props) {
     super(props)
-    this.state = {};
-    this.textareaRef = React.createRef();
+    this.state = {
+      editorInstance: null
+    };
   }
 
   onChange = (e) => {
@@ -26,12 +34,12 @@ class PropertyComponent extends Component {
       this.props.onChange(e)
     }
   }
-  onTextareaChange = (e) => {
+  onTextareaChange = (value) => {
     if (this.props.changeByPath && this.props.path) {
       let path = isAltrpJS()?`${this.props.path}.JSExpression`:  `${this.props.path}.expression`
-      this.props.changeByPath(e.target.value,path)
+      this.props.changeByPath(value,path)
     } else if (this.props.onChange) {
-      this.props.onChange(e)
+      this.props.onChange(value)
     }
   }
   onSelect = (e) => {
@@ -85,22 +93,14 @@ class PropertyComponent extends Component {
       this.props.onItemSelect(v.value)
     }
   }
-  textAreaSize = () => {
-    if (this.textareaRef.current) {
-      let sizeHeight = String(this.textareaRef.current.offsetHeight) + 'px'
-      this.props.changeByPath(sizeHeight, `${this.props.path}.size`)
-    }
-  }
-
-  componentDidMount() {
-    document.body.addEventListener('mouseup', this.textAreaSize)
-    const { size } = this.props.property;
-    if (this.textareaRef.current) {
-      this.textareaRef.current.style.height = size
-    }
-    return () => {
-      document.body.removeEventListener('mouseup', this.textAreaSize)
-    }
+  editorCodeSize = (size) => {
+    let sizeHeight = String(size) + 'px'
+    this.setState(state => ({
+      ...state,
+      size: sizeHeight
+    }))
+    this.state.editorInstance.resize()
+    this.props.changeByPath(sizeHeight, `${this.props.path}.size`)
   }
 
   itemRenderer = (item, {handleClick, modifiers}) => {
@@ -167,28 +167,72 @@ class PropertyComponent extends Component {
     }
 
     return <>
-      <div className="element-index element-index_top">
+      <div className={"element-index element-index_top" + (namespace !== "expression" ? "" : " element-index_top-expression")}>
         <HTMLSelect options={options} onChange={this.onSelect} value={namespace || ''}/>
         {namespace !== 'expression' &&
         <InputGroup fill={true}
                     placeholder="property"
                     onChange={this.onChange}
                     value={path || ''}/>}
-        {namespace === 'expression' &&
-        // <TextArea fill={true}
-        //           placeholder="php expression"
-        //           inputRef={this.textareaRef}
-        //           onChange={this.onTextareaChange}
-        //           growVertically={true}
-        //           value={expression || ''}/>
-        <textarea value={_expression}
-                  onChange={this.onTextareaChange}
-                  placeholder={placeholder}
-                  ref={this.textareaRef}
-                  className="textarea-custom"
-        />
-        }
+        {/*// <TextArea fill={true}*/}
+        {/*//           placeholder="php expression"*/}
+        {/*//           inputRef={this.textareaRef}*/}
+        {/*//           onChange={this.onTextareaChange}*/}
+        {/*//           growVertically={true}*/}
+        {/*//           value={expression || ''}/>*/}
       </div>
+      {namespace === 'expression' && (
+        // <textarea
+        //   value={_expression}
+        //           onChange={this.onTextareaChange}
+        //           placeholder={placeholder}
+        //           ref={this.textareaRef}
+        //           className="textarea-custom"
+        // />
+        <div className="editor-code-panel">
+          <Resizable
+            defaultSize={{
+              width: "100%",
+              height: this.props.property.size || "200px",
+            }}
+            minHeight={200}
+            handleStyles={{bottom: {height: '15px', bottom: '-15px', zIndex: 1}}}
+            enable={{top:false, right:false, bottom:true, left:false, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false}}
+            onResizeStop={(e, direction, refToElement) => {
+              this.editorCodeSize(refToElement.offsetHeight)
+            }}
+            onResize={() => {
+              this.state.editorInstance.resize()
+            }}
+          >
+            <AceEditor
+              mode="javascript"
+              theme="tomorrow"
+              onLoad={editorInstance => {
+                this.setState(state => ({
+                  ...state,
+                  editorInstance
+                }))
+              }}
+              onChange={this.onTextareaChange}
+              // onKeyDown={onKeyDown}
+              width="100%"
+              height="100%"
+              placeholder={placeholder}
+              fontSize={14}
+              name={"aceJsCustomizerEditor_" + this.props.path}
+              value={_expression}
+              setOptions={{
+                enableLiveAutocompletion: true,
+                useWorker: false
+              }}
+            />
+          </Resizable>
+          <div className="controller-bottom-code">
+            <ArrowBottom width={14} height={14}/>
+          </div>
+        </div>
+      )}
       {!withoutMethods && showMethod &&
         <React.Fragment>
           {isAltrpJS() && method &&

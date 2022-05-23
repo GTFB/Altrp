@@ -68,7 +68,7 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['padding', 'position_margin', 'dimensions'],
     '}',
 
-    '.bp3-input.bp3-input.bp3-input.bp3-input',
+    '.bp3-input',
       ['height', 'field_height', 'slider'],
       ['text-align', 'placeholder_and_value_alignment_position_section', ],
       ['padding', 'position_padding', 'dimensions'],
@@ -85,6 +85,52 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['', 'box_shadow', 'shadow'],
     () => {
       const toggle = getResponsiveSetting(settings, "disable_box_shadow")
+      if (toggle) {
+        return 'box-shadow: none'
+      }
+    },
+    '}',
+
+    '.state-disabled .bp3-input.bp3-input.bp3-input.bp3-input.bp3-input',
+      ['height', 'field_height', 'slider', '.state-disabled'],
+      ['text-align', 'placeholder_and_value_alignment_position_section', '', '.state-disabled' ],
+      ['padding', 'position_padding', 'dimensions', '.state-disabled'],
+      ['', 'field_font_typographic', 'typographic', '.state-disabled'],
+      ['color', 'field_font_color', 'color', '.state-disabled'],
+      ['background-color', 'background_style_background_color', 'color', '.state-disabled'],
+      () => {
+        return `opacity: ${getResponsiveSetting(settings, 'background_section_opacity', '.state-disabled')?.size};`
+      },
+      ['border-style', 'border_type', '', '.state-disabled'],
+      ['border-width', 'border_width', 'dimensions', '.state-disabled'],
+      ['border-color', 'border_color', 'color', '.state-disabled'],
+      ['border-radius', 'border_radius', 'dimensions', '.state-disabled'],
+      ['', 'box_shadow', 'shadow', '.state-disabled'],
+    () => {
+      const toggle = getResponsiveSetting(settings, "disable_box_shadow", '.state-disabled')
+      if (toggle) {
+        return 'box-shadow: none'
+      }
+    },
+    '}',
+
+    '.active .bp3-input.bp3-input.bp3-input.bp3-input.bp3-input',
+    ['height', 'field_height', 'slider', '.active'],
+    ['text-align', 'placeholder_and_value_alignment_position_section', '', '.active' ],
+    ['padding', 'position_padding', 'dimensions', '.active'],
+    ['', 'field_font_typographic', 'typographic', '.active'],
+    ['color', 'field_font_color', 'color', '.active'],
+    ['background-color', 'background_style_background_color', 'color', '.active'],
+    () => {
+      return `opacity: ${getResponsiveSetting(settings, 'background_section_opacity', '.active')?.size};`
+    },
+    ['border-style', 'border_type', '', '.active'],
+    ['border-width', 'border_width', 'dimensions', '.active'],
+    ['border-color', 'border_color', 'color', '.active'],
+    ['border-radius', 'border_radius', 'dimensions', '.active'],
+    ['', 'box_shadow', 'shadow', '.active'],
+    () => {
+      const toggle = getResponsiveSetting(settings, "disable_box_shadow", '.active')
       if (toggle) {
         return 'box-shadow: none'
       }

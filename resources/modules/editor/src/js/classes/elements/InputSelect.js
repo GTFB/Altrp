@@ -87,7 +87,8 @@ class InputSelect extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true,
     });
 
     this.addControl('full_width', {

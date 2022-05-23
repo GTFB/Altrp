@@ -970,6 +970,20 @@ class InputTextareaWidget extends Component {
     return value;
   }
 
+  /**
+   * Получить css классы для textarea
+   */
+  getClasses = ()=>{
+    let classes = 'altrp-field ';
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
 
   render() {
     let label = null;
@@ -978,7 +992,6 @@ class InputTextareaWidget extends Component {
     const {
       content_readonly,
       select2_multiple: isMultiple,
-      label_icon,
     } = settings;
 
     let value = this.getValue();
@@ -1028,7 +1041,10 @@ class InputTextareaWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label) {
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
@@ -1040,7 +1056,7 @@ class InputTextareaWidget extends Component {
               : ""
               }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
           </label>
           {label_icon && label_icon.assetType && (
             <span className="altrp-label-icon">
@@ -1060,6 +1076,9 @@ class InputTextareaWidget extends Component {
       autocomplete = "off";
     }
 
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "");
+
     const input = (
       <TextArea
         value={value || ""}
@@ -1067,7 +1086,7 @@ class InputTextareaWidget extends Component {
         autoComplete={autocomplete}
         placeholder={this.state.settings.content_placeholder}
         className={
-          "altrp-field " + (this.state.settings.position_css_classes || "")
+          classes
         }
         onChange={this.onChange}
         onBlur={this.onBlur}

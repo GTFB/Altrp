@@ -36,6 +36,21 @@ class PluginItem extends Component {
     this.setState(state => ({...state, versionOnCheck: false, canUpdate}))
   }
 
+  deletePlugin = async () => {
+    const confirmation = confirm('Are you sure?')
+
+    if (confirmation) {
+      const {plugin} = this.props
+      try {
+        const res = await (new Resource({route:`/admin/ajax/plugins/${plugin.name}`})).delete()
+        this.props.getInitialData()
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+  }
+
   componentDidMount() {
     this.checkVersion()
   }
@@ -72,6 +87,13 @@ class PluginItem extends Component {
               ? "Plugin active"
               : "Plugin inactive"}
           </label>
+        </div>
+        <div className="delete__button__wrapper">
+          {
+            plugin.enabled === false
+              ? <button onClick={this.deletePlugin} className="delete__button">Delete plugin</button>
+              : null
+          }
         </div>
         {plugin.check_version_url &&
         <Tooltip content="Check New Version">

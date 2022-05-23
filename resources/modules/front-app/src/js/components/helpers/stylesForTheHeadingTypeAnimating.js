@@ -108,6 +108,54 @@ export function getHeadingTypeAnimatingStyles(settings, id) {
   }
 
   styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .state-disabled .altrp-animating-text {`;
+
+  const typographicAnimatingDisabled = getResponsiveSetting(
+    settings,
+    "animated_text_headline_animating_style", '.state-disabled'
+  );
+
+  if (typographicAnimatingDisabled) {
+    styles += typographicControllerToStyles(typographicAnimatingDisabled);
+  }
+
+  const colorAnimatingDisabled = getResponsiveSetting(
+    settings,
+    "animated_text_color_headline_animating_style", '.state-disabled'
+  );
+
+  if (colorAnimatingDisabled) {
+    styles += colorPropertyStyled(colorAnimatingDisabled, "color");
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .active .altrp-animating-text {`;
+
+  const typographicAnimatingActive = getResponsiveSetting(
+    settings,
+    "animated_text_headline_animating_style", '.active'
+  );
+
+  if (typographicAnimatingActive) {
+    styles += typographicControllerToStyles(typographicAnimatingActive);
+  }
+
+  const colorAnimatingActive = getResponsiveSetting(
+    settings,
+    "animated_text_color_headline_animating_style", '.active'
+  );
+
+  if (colorAnimatingActive) {
+    styles += colorPropertyStyled(colorAnimatingActive, "color");
+  }
+
+  styles += `} `;
+
+
   //hover
   styles += `${parentClass} .altrp-animating-text:hover {`;
 
@@ -154,6 +202,53 @@ export function getHeadingTypeAnimatingStyles(settings, id) {
   }
 
   styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .state-disabled .altrp-heading-no-animating-text {`;
+
+  const typographicNoAnimatingDisabled = getResponsiveSetting(
+    settings,
+    "text_headline_animating_style", '.state-disabled'
+  );
+
+  if (typographicNoAnimatingDisabled) {
+    styles += typographicControllerToStyles(typographicNoAnimatingDisabled);
+  }
+
+  const colorNoAnimatingDisabled = getResponsiveSetting(
+    settings,
+    "text_color_headline_animating_style", '.state-disabled'
+  );
+
+  if (colorNoAnimatingDisabled) {
+    styles += colorPropertyStyled(colorNoAnimatingDisabled, "color");
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .active .altrp-heading-no-animating-text {`;
+
+  const typographicNoAnimatingActive = getResponsiveSetting(
+    settings,
+    "text_headline_animating_style", '.active'
+  );
+
+  if (typographicNoAnimatingActive) {
+    styles += typographicControllerToStyles(typographicNoAnimatingActive);
+  }
+
+  const colorNoAnimatingActive = getResponsiveSetting(
+    settings,
+    "text_color_headline_animating_style", '.active'
+  );
+
+  if (colorNoAnimatingActive) {
+    styles += colorPropertyStyled(colorNoAnimatingActive, "color");
+  }
+
+  styles += `} `;
+
   //hover
   styles += `${parentClass} .altrp-heading-no-animating-text:hover {`;
 
@@ -200,6 +295,52 @@ export function getHeadingTypeAnimatingStyles(settings, id) {
   }
 
   styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .state-disabled .altrp-animating-highlighted-svg svg path {`;
+
+  const strokeWidthAnimatingSvgDisabled = getResponsiveSetting(
+    settings,
+    "width_shape_animating", '.state-disabled'
+  );
+
+  if (strokeWidthAnimatingSvgDisabled) {
+    styles += sizeStyled(strokeWidthAnimatingSvgDisabled, "stroke-width");
+  }
+
+  const colorAnimatingSvgDisabled = getResponsiveSetting(
+    settings,
+    "color_shape_animating", '.state-disabled'
+  );
+
+  if (colorAnimatingSvgDisabled) {
+    styles += colorPropertyStyled(colorAnimatingSvgDisabled, "stroke");
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .active .altrp-animating-highlighted-svg svg path {`;
+
+  const strokeWidthAnimatingSvgActive = getResponsiveSetting(
+    settings,
+    "width_shape_animating", '.active'
+  );
+
+  if (strokeWidthAnimatingSvgActive) {
+    styles += sizeStyled(strokeWidthAnimatingSvgActive, "stroke-width");
+  }
+
+  const colorAnimatingSvgActive = getResponsiveSetting(
+    settings,
+    "color_shape_animating", '.active'
+  );
+
+  if (colorAnimatingSvgActive) {
+    styles += colorPropertyStyled(colorAnimatingSvgActive, "stroke");
+  }
+
+  styles += `} `;
+
   //hover
   styles += `${parentClass} .altrp-animating-highlighted-svg:hover svg path {`;
 

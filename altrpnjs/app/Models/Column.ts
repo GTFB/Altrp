@@ -207,4 +207,8 @@ decorate([
     }
     return 'any'
   }
+
+  public static createIndexName(columnName, modelName):string {
+    return `${columnName}_${modelName}`
+  }
 }

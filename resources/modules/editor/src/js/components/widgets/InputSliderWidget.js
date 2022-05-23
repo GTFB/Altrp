@@ -188,6 +188,21 @@ class InputSliderWidget extends Component {
    *
    * @returns {JSX.Element}
    */
+
+  /**
+   * Получить css классы для input slider
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const min = this.props.element.getResponsiveLockedSetting("min", "", 0);
     const max = this.props.element.getResponsiveLockedSetting("max", "", 100);
@@ -196,6 +211,8 @@ class InputSliderWidget extends Component {
     const vertical = this.props.element.getResponsiveLockedSetting("vertical", "", false);
     const handleSize = this.props.element.getResponsiveLockedSetting("handle_size", "", null);
     let step = this.props.element.getResponsiveLockedSetting("step", "", 1);
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
 
     const label = this.getLabelFunction()
 
@@ -213,7 +230,7 @@ class InputSliderWidget extends Component {
         value={this.state.value}
         max={max}
         handleSize={handleSize}
-        className={"altrp-field-slider-wrapper" + (vertical ? " altrp-field-slider-vertical" : " altrp-field-slider-horizontal")}
+        className={`${classes} altrp-field-slider-wrapper" ${(vertical ? " altrp-field-slider-vertical" : " altrp-field-slider-horizontal")}`}
       >
         <Slider
           min={min}
@@ -225,7 +242,7 @@ class InputSliderWidget extends Component {
           labelRenderer={label}
           labelStepSize={labelStepSize}
           vertical={vertical}
-          className="altrp-field-slider"
+          className={`${classes} altrp-field-slider`}
         />
       </SliderWrapper>
     );

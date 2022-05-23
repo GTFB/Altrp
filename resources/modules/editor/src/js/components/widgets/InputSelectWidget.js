@@ -1243,6 +1243,20 @@ class InputSelectWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для input select
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   async deleteItem(value) {
     const deleteActions = this.props.element.getLockedSettings("delete_actions");
 
@@ -1280,10 +1294,6 @@ class InputSelectWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     let value = this.getCurrentLabel();
-
-    const {
-      label_icon
-    } = settings;
 
     const fullWidth = element.getLockedSettings("full_width")
     this.popoverProps.onOpening = (e) => {
@@ -1339,8 +1349,12 @@ class InputSelectWidget extends Component {
         classLabel = "";
         break;
     }
-    const content_label = this.getLockedContent('content_label')
-    if (content_label) {
+
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
@@ -1377,7 +1391,9 @@ class InputSelectWidget extends Component {
     let input = null;
 
     let itemsOptions = this.getOptions();
-    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "");
+    // const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
     const position_css_id = this.getLockedContent('position_css_id')
 
     const hasDeleteActions = this.props.element.getLockedSettings("delete_actions", []).length > 0
@@ -1439,7 +1455,7 @@ class InputSelectWidget extends Component {
           name={this.getName()}
           onItemSelect={(item, e) => this.onItemSelect(item, e)}
           id={position_css_id}
-          className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
+          className={classes}
         >
           <Button
             // text={value}

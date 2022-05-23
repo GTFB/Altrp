@@ -137,6 +137,7 @@ export default class Source extends BaseModel {
         return config('app.url') + '/ajax/models/queries/' + this.model?.table?.name + url;
       }
       case 'App\\Altrp\\Customizer':
+      case Customizer.sourceable_type:
         return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
       default:{
         let url = data_get( this, 'url', '' )

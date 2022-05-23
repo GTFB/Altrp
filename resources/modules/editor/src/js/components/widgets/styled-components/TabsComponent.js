@@ -9,6 +9,11 @@ import {
   shadowControllerToStyles,
 } from "../../../../../../front-app/src/js/helpers/styles";
 
+//НЕ ИСПОЛЬЗУЕТСЯ
+//НЕ ИСПОЛЬЗУЕТСЯ
+//НЕ ИСПОЛЬЗУЕТСЯ
+//НЕ ИСПОЛЬЗУЕТСЯ
+
 const TabsComponent = styled.div`
 
   && .altrp-tab-btn-container {
@@ -45,6 +50,72 @@ const TabsComponent = styled.div`
     }
     }
   }
+
+
+  && .state-disabled .altrp-tab-btn-container {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let justifyContent, backgroundColor;
+
+  //state disabled
+
+  if (settings !== undefined) {
+    justifyContent = getResponsiveSetting(settings, 'alignment_tabs', '.state-disabled');
+  }
+
+  if (justifyContent) {
+    styles += simplePropertyStyled(justifyContent, 'justify-content');
+  }
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_tab_style', '.state-disabled');
+  }
+
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+
+  return styles;
+
+}
+}
+  }
+
+ && .active .altrp-tab-btn-container {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let justifyContent, backgroundColor;
+
+  //state active
+
+  if (settings !== undefined) {
+    justifyContent = getResponsiveSetting(settings, 'alignment_tabs', '.active');
+  }
+
+  if (justifyContent) {
+    styles += simplePropertyStyled(justifyContent, 'justify-content');
+  }
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_tab_style', '.active');
+  }
+
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+
+  return styles;
+
+}
+}
+  }
+
 
   && .altrp-tab-btn-container:hover {
 
@@ -185,6 +256,153 @@ const TabsComponent = styled.div`
     }
     }
   }
+
+
+  && .state-disabled .bp3-tab {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let backgroundColor,color, boxShadow, padding, borderType, borderWidth, borderColor, borderRadius, typographic;
+
+  //state disabled
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_type_tab_style', '.state-disabled');
+  }
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+  if (settings !== undefined) {
+    color = getResponsiveSetting(settings, 'background_text_color_tab_style', '.state-disabled');
+  }
+  if (color) {
+    styles += colorPropertyStyled(color, 'color');
+  }
+  if (settings !== undefined) {
+    boxShadow = getResponsiveSetting(settings, 'box_shadow_tab_style', '.state-disabled');
+  }
+  if (boxShadow) {
+    styles += shadowControllerToStyles(boxShadow);
+  }
+  if (settings !== undefined) {
+    padding = getResponsiveSetting(settings, 'padding_tab_style', '.state-disabled');
+  }
+  if (padding) {
+    styles += dimensionsControllerToStyles(padding);
+  }
+  if (settings !== undefined) {
+    borderType = getResponsiveSetting(settings, 'border_type_tab_style', '.state-disabled');
+  }
+  if (borderType) {
+    styles += simplePropertyStyled(borderType, 'border-type');
+  }
+  if (settings !== undefined) {
+    borderWidth = getResponsiveSetting(settings, 'border_width_tab_style', '.state-disabled');
+  }
+  if (borderWidth) {
+    styles += borderWidthStyled(borderWidth);
+  }
+  if (settings !== undefined) {
+    borderColor = getResponsiveSetting(settings, 'border_color_tab_style', '.state-disabled');
+  }
+  if (borderColor) {
+    styles += colorPropertyStyled(borderColor, 'border-color');
+  }
+  if (settings !== undefined) {
+    borderRadius = getResponsiveSetting(settings, 'border_radius_tab_style', '.state-disabled');
+  }
+  if (borderRadius) {
+    styles += sizeStyled(borderRadius, 'border-radius');
+  }
+  if (settings !== undefined) {
+    typographic = getResponsiveSetting(settings, 'typographic_tab_style', '.state-disabled');
+  }
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
+
+  return styles;
+
+}
+}
+  }
+
+
+  && .active .bp3-tab {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let backgroundColor,color, boxShadow, padding, borderType, borderWidth, borderColor, borderRadius, typographic;
+
+  //state active
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_type_tab_style', '.active');
+  }
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+  if (settings !== undefined) {
+    color = getResponsiveSetting(settings, 'background_text_color_tab_style', '.active');
+  }
+  if (color) {
+    styles += colorPropertyStyled(color, 'color');
+  }
+  if (settings !== undefined) {
+    boxShadow = getResponsiveSetting(settings, 'box_shadow_tab_style', '.active');
+  }
+  if (boxShadow) {
+    styles += shadowControllerToStyles(boxShadow);
+  }
+  if (settings !== undefined) {
+    padding = getResponsiveSetting(settings, 'padding_tab_style', '.active');
+  }
+  if (padding) {
+    styles += dimensionsControllerToStyles(padding);
+  }
+  if (settings !== undefined) {
+    borderType = getResponsiveSetting(settings, 'border_type_tab_style', '.active');
+  }
+  if (borderType) {
+    styles += simplePropertyStyled(borderType, 'border-type');
+  }
+  if (settings !== undefined) {
+    borderWidth = getResponsiveSetting(settings, 'border_width_tab_style', '.active');
+  }
+  if (borderWidth) {
+    styles += borderWidthStyled(borderWidth);
+  }
+  if (settings !== undefined) {
+    borderColor = getResponsiveSetting(settings, 'border_color_tab_style', '.active');
+  }
+  if (borderColor) {
+    styles += colorPropertyStyled(borderColor, 'border-color');
+  }
+  if (settings !== undefined) {
+    borderRadius = getResponsiveSetting(settings, 'border_radius_tab_style', '.active');
+  }
+  if (borderRadius) {
+    styles += sizeStyled(borderRadius, 'border-radius');
+  }
+  if (settings !== undefined) {
+    typographic = getResponsiveSetting(settings, 'typographic_tab_style', '.active');
+  }
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
+
+  return styles;
+
+}
+}
+  }
+
 
   && .altrp-tab-btn:hover {
 
@@ -366,6 +584,115 @@ const TabsComponent = styled.div`
     }
   }
 
+   && .state-disabled .altrp-tab-content {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let backgroundColor, padding, borderType, borderWidth, borderColor, borderRadius;
+
+  //state disabled
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_content_style', '.state-disabled');
+  }
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+  if (settings !== undefined) {
+    padding = getResponsiveSetting(settings, 'padding_content_style', '.state-disabled');
+  }
+  if (padding) {
+    styles += dimensionsControllerToStyles(padding);
+  }
+  if (settings !== undefined) {
+    borderType = getResponsiveSetting(settings, 'border_type_content_style', '.state-disabled');
+  }
+  if (borderType) {
+    styles += simplePropertyStyled(borderType, 'border-style');
+  }
+  if (settings !== undefined) {
+    borderWidth = getResponsiveSetting(settings, 'border_width_content_style', '.state-disabled');
+  }
+  if (borderWidth) {
+    styles += borderWidthStyled(borderWidth);
+  }
+  if (settings !== undefined) {
+    borderColor = getResponsiveSetting(settings, 'border_color_content_style', '.state-disabled');
+  }
+  if (borderColor) {
+    styles += colorPropertyStyled(borderColor, 'border-color');
+  }
+  if (settings !== undefined) {
+    borderRadius = getResponsiveSetting(settings, 'border_radius_content_style', '.state-disabled');
+  }
+  if (borderRadius) {
+    styles += simplePropertyStyled(borderRadius, 'border-radius');
+  }
+
+  return styles;
+
+}
+}
+  }
+
+
+     && .active .altrp-tab-content {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let backgroundColor, padding, borderType, borderWidth, borderColor, borderRadius;
+
+  //state active
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_content_style', '.active');
+  }
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+  if (settings !== undefined) {
+    padding = getResponsiveSetting(settings, 'padding_content_style', '.active');
+  }
+  if (padding) {
+    styles += dimensionsControllerToStyles(padding);
+  }
+  if (settings !== undefined) {
+    borderType = getResponsiveSetting(settings, 'border_type_content_style', '.active');
+  }
+  if (borderType) {
+    styles += simplePropertyStyled(borderType, 'border-style');
+  }
+  if (settings !== undefined) {
+    borderWidth = getResponsiveSetting(settings, 'border_width_content_style', '.active');
+  }
+  if (borderWidth) {
+    styles += borderWidthStyled(borderWidth);
+  }
+  if (settings !== undefined) {
+    borderColor = getResponsiveSetting(settings, 'border_color_content_style', '.active');
+  }
+  if (borderColor) {
+    styles += colorPropertyStyled(borderColor, 'border-color');
+  }
+  if (settings !== undefined) {
+    borderRadius = getResponsiveSetting(settings, 'border_radius_content_style', '.active');
+  }
+  if (borderRadius) {
+    styles += simplePropertyStyled(borderRadius, 'border-radius');
+  }
+
+  return styles;
+
+}
+}
+  }
+
   && .altrp-tab-content:hover {
 
     ${props => {
@@ -476,6 +803,67 @@ const TabsComponent = styled.div`
     }
   }
 
+
+
+   && .state-disabled .altrp-tab-content div {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let color, typographic;
+
+  //state disabled
+
+  if (settings !== undefined) {
+    color = getResponsiveSetting(settings, 'text_color_content_style', '.state-disabled');
+  }
+  if (color) {
+    styles += colorPropertyStyled(color, 'color');
+  }
+  if (settings !== undefined) {
+    typographic = getResponsiveSetting(settings, 'typographic_content_style', '.state-disabled');
+  }
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
+  return styles;
+
+}
+}
+  }
+
+     && .active .altrp-tab-content div {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let color, typographic;
+
+  //state active
+
+  if (settings !== undefined) {
+    color = getResponsiveSetting(settings, 'text_color_content_style', '.active');
+  }
+  if (color) {
+    styles += colorPropertyStyled(color, 'color');
+  }
+  if (settings !== undefined) {
+    typographic = getResponsiveSetting(settings, 'typographic_content_style', '.active');
+  }
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
+  return styles;
+
+}
+}
+  }
+
+
   && .altrp-tab-content div:hover {
 
     ${props => {
@@ -536,6 +924,55 @@ const TabsComponent = styled.div`
     }
   }
 
+   && .state-disabled .altrp-tab-btn-icon svg path {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let fill;
+
+  //state disabled
+
+  if (settings !== undefined) {
+    fill = getResponsiveSetting(settings, 'color_icon_style', '.state-disabled');
+  }
+  if (fill) {
+    styles += colorPropertyStyled(fill, 'fill');
+  }
+
+  return styles;
+
+}
+}
+  }
+
+   && .active .altrp-tab-btn-icon svg path {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let fill;
+
+  //state active
+
+  if (settings !== undefined) {
+    fill = getResponsiveSetting(settings, 'color_icon_style', '.active');
+  }
+  if (fill) {
+    styles += colorPropertyStyled(fill, 'fill');
+  }
+
+  return styles;
+
+}
+}
+  }
+
+
   && .altrp-tab-btn-icon:hover svg path {
 
     ${props => {
@@ -584,6 +1021,56 @@ const TabsComponent = styled.div`
 
     }
     }
+  }
+
+  && .state-disabled .altrp-tabs-switcher_off {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let background;
+
+  //state disabled
+
+  if (settings !== undefined) {
+    background = getResponsiveSetting(settings, 'box_around_color_after_switch_button_style', '.state-disabled');
+  }
+
+  if (background) {
+    styles += colorPropertyStyled(background, 'background');
+  }
+
+  return styles;
+
+}
+}
+  }
+
+   && .active .altrp-tabs-switcher_off {
+
+    ${props => {
+
+  const { settings } = props;
+  let styles = '';
+
+  let background;
+
+  //state active
+
+  if (settings !== undefined) {
+    background = getResponsiveSetting(settings, 'box_around_color_after_switch_button_style', '.active');
+  }
+
+  if (background) {
+    styles += colorPropertyStyled(background, 'background');
+  }
+
+  return styles;
+
+}
+}
   }
 
   && .altrp-tabs-switcher_on  {

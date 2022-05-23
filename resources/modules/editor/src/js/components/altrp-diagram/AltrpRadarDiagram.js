@@ -91,7 +91,7 @@ const AltrpRadarDiagram = props => {
 
   if (data.length === 0) {
     return (
-      <div className={`altrp-chart ${settings.legendPosition}`}>
+      <div className={`${props.classes} altrp-chart ${settings.legendPosition}`}>
         Loading data...
       </div>
     );
@@ -99,6 +99,7 @@ const AltrpRadarDiagram = props => {
 
   return (
     <DynamicRadarChart
+      classes={props.classes}
       borderWidth={borderWidth?.size}
       blendMode={blendMode}
       margin={margin ? margin : {

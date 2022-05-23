@@ -419,6 +419,7 @@ const AltrpDiagram = props => {
 
   return (
     <DynamicLineChart
+      classes={props.classes}
       enableGradient={enableGradient}
       margin={margin ? margin : {
         top: 30,

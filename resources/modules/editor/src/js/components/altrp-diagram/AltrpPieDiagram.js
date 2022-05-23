@@ -39,7 +39,7 @@ const AltrpPieDiagram = props => {
     useProcent,
     formatCurrency
   } = settings
-  
+
   //data variable
   let data = [];
 
@@ -78,7 +78,7 @@ const AltrpPieDiagram = props => {
 
   if (data.length === 0) {
     return (
-      <div className={`altrp-chart ${settings.legendPosition}`}>
+      <div className={`${props.classes} altrp-chart ${settings.legendPosition}`}>
         Loading data...
       </div>
     );
@@ -86,12 +86,13 @@ const AltrpPieDiagram = props => {
 
   return (
     <DynamicPieChart
+      classes={props.classes}
       useProcent={useProcent}
       margin={margin ? margin : {
         top: 30,
         bottom: 30,
         right: 30,
-        left: 30 
+        left: 30
       }}
       valueFormat={getFormatValueString(settings)}
       useCustomTooltips={useCustomTooltips}

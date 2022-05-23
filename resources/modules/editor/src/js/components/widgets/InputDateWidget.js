@@ -563,12 +563,24 @@ class InputDateWidget extends Component {
 
     return value;
   }
+
+  /**
+   * Получить css классы для inputDate
+   */
+  getClasses = ()=>{
+    let classes = `altrp-date-picker${this.props.element.getId()} `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getLockedSettings();
-    const {
-      label_icon
-    } = settings;
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
@@ -612,7 +624,10 @@ class InputDateWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label) {
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
@@ -624,7 +639,7 @@ class InputDateWidget extends Component {
               : ""
               }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
           </label>
           {label_icon && label_icon.type && (
             <span className="altrp-label-icon">
@@ -678,8 +693,15 @@ class InputDateWidget extends Component {
       onChange: typeDate === 'date' ? this.onChange : undefined,
       className: typeDate === 'date' ? 'altrp-hidden' : '',
     };
-    let format = this.getFormat();
 
+    let format = ''
+    if (typeDate === 'dateTime') {
+      format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD HH:mm:ss'
+    } else {
+      format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD'
+    }
+
+    let classes = this.getClasses()
     const input = (
       <div className="altrp-input-wrapper">
         <DateInput
@@ -694,7 +716,7 @@ class InputDateWidget extends Component {
             // popoverClassName: "altrp-date-pickerpopover" + this.props.element.getId(),
           }}
           onChange={this.typeDate !== 'LT' ? this.onChange : undefined}
-          className={"altrp-date-picker" + this.props.element.getId()}
+          className={classes}
           timePrecision={timePrecision}
           canClearSelection={false}
           // showActionsBar

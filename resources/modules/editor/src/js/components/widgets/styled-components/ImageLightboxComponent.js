@@ -191,6 +191,347 @@ const ImageLightboxComponent = (settings,id)=>{
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .state-disabled .altrp-image {`;
+
+  //Получаем значения object-fit из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    objectFit = getResponsiveSetting(settings, 'image_fit_size', '.state-disabled');
+  }
+
+  if (objectFit) {
+    styles += simplePropertyStyled(objectFit, 'object-fit');
+  }
+
+  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_color', '.state-disabled');
+  }
+
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+
+  //Получаем значения gradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    gradient = getResponsiveSetting(settings, 'gradient', '.state-disabled');
+  }
+
+  if (gradient) {
+    styles += gradientStyled(gradient);
+  }
+
+  //Получаем значения filters из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    filters = getResponsiveSetting(settings, 'image_style_text_shadow', '.state-disabled');
+  }
+
+  if (filters) {
+    styles += filtersControllerToStyles(filters);
+  }
+
+  //Получаем значения height из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    height = getResponsiveSetting(settings, 'height_size', '.state-disabled');
+  }
+
+  if (height) {
+    if(height.size !== "0") {
+      styles += sizeStyled(height, 'height');
+    } else {
+
+    }
+  }
+
+  //Получаем значения width из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    width = getResponsiveSetting(settings, 'width_size', '.state-disabled');
+  }
+
+  if (width) {
+    styles += sizeStyled(width, 'width');
+  }
+
+  //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+  //Свойство margin было убрано из Контроллера у виджета Image. Перенес сюда на всякий случай, так как были активные rules в Image.js
+
+  if (settings !== undefined) {
+    margin = getResponsiveSetting(settings, 'position_margin', '.state-disabled');
+  }
+
+  if (margin) {
+    styles += dimensionsControllerToStyles(margin, 'margin');
+  }
+
+  //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    padding = getResponsiveSetting(settings, 'position_padding', '.state-disabled');
+  }
+
+  if (padding) {
+    styles += dimensionsControllerToStyles(padding);
+  }
+
+  //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    zIndex = getResponsiveSetting(settings, 'position_z_index', '.state-disabled');
+  }
+
+  if (zIndex) {
+    styles += simplePropertyStyled(zIndex, 'z-index');
+  }
+
+  //Получаем значения opacity из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    opacity = getResponsiveSetting(settings, 'opacity_overlay', '.state-disabled');
+  }
+
+  if (opacity) {
+    styles += opacityStyled(opacity);
+  }
+
+  //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderType = getResponsiveSetting(settings, 'border_type', '.state-disabled');
+  }
+
+  if (borderType) {
+    styles += simplePropertyStyled(borderType, 'border-style');
+  }
+
+  //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderWidth = getResponsiveSetting(settings, 'border_width', '.state-disabled');
+  }
+
+  if (borderWidth) {
+    styles += borderWidthStyled(borderWidth);
+  }
+
+  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderColor = getResponsiveSetting(settings, 'border_color', '.state-disabled');
+  }
+
+  if (borderColor) {
+    styles += colorPropertyStyled(borderColor, 'border-color');
+  }
+
+  //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderRadius = getResponsiveSetting(settings, 'border_radius', '.state-disabled');
+  }
+
+  if (borderRadius) {
+    styles += sizeStyled(borderRadius, 'border-radius');
+  }
+
+  //Получаем значения transition-duration в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    transitionDuration = getResponsiveSetting(settings, 'creative_hover_controller', '.state-disabled');
+  }
+
+  if (transitionDuration) {
+    styles += sizeStyled(transitionDuration, 'transition-duration');
+  }
+
+  //Получаем значения animation-duration в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    animationDuration = getResponsiveSetting(settings, 'creative_hover_controller', '.state-disabled');
+  }
+
+  if (animationDuration) {
+    styles += sizeStyled(animationDuration, 'animation-duration');
+  }
+
+  styles += `} `;
+
+
+  //state active
+  styles += `${parentClass} .active .altrp-image {`;
+
+  //Получаем значения object-fit из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    objectFit = getResponsiveSetting(settings, 'image_fit_size', '.active');
+  }
+
+  if (objectFit) {
+    styles += simplePropertyStyled(objectFit, 'object-fit');
+  }
+
+  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'background_color', '.active');
+  }
+
+  if (backgroundColor) {
+    styles += colorPropertyStyled(backgroundColor, 'background-color');
+  }
+
+  //Получаем значения gradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    gradient = getResponsiveSetting(settings, 'gradient', '.active');
+  }
+
+  if (gradient) {
+    styles += gradientStyled(gradient);
+  }
+
+  //Получаем значения filters из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    filters = getResponsiveSetting(settings, 'image_style_text_shadow', '.active');
+  }
+
+  if (filters) {
+    styles += filtersControllerToStyles(filters);
+  }
+
+  //Получаем значения height из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    height = getResponsiveSetting(settings, 'height_size', '.active');
+  }
+
+  if (height) {
+    if(height.size !== "0") {
+      styles += sizeStyled(height, 'height');
+    } else {
+
+    }
+  }
+
+  //Получаем значения width из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    width = getResponsiveSetting(settings, 'width_size', '.active');
+  }
+
+  if (width) {
+    styles += sizeStyled(width, 'width');
+  }
+
+  //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+  //Свойство margin было убрано из Контроллера у виджета Image. Перенес сюда на всякий случай, так как были активные rules в Image.js
+
+  if (settings !== undefined) {
+    margin = getResponsiveSetting(settings, 'position_margin', '.active');
+  }
+
+  if (margin) {
+    styles += dimensionsControllerToStyles(margin, 'margin');
+  }
+
+  //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    padding = getResponsiveSetting(settings, 'position_padding', '.active');
+  }
+
+  if (padding) {
+    styles += dimensionsControllerToStyles(padding);
+  }
+
+  //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    zIndex = getResponsiveSetting(settings, 'position_z_index', '.active');
+  }
+
+  if (zIndex) {
+    styles += simplePropertyStyled(zIndex, 'z-index');
+  }
+
+  //Получаем значения opacity из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    opacity = getResponsiveSetting(settings, 'opacity_overlay', '.active');
+  }
+
+  if (opacity) {
+    styles += opacityStyled(opacity);
+  }
+
+  //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderType = getResponsiveSetting(settings, 'border_type', '.active');
+  }
+
+  if (borderType) {
+    styles += simplePropertyStyled(borderType, 'border-style');
+  }
+
+  //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderWidth = getResponsiveSetting(settings, 'border_width', '.active');
+  }
+
+  if (borderWidth) {
+    styles += borderWidthStyled(borderWidth);
+  }
+
+  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderColor = getResponsiveSetting(settings, 'border_color', '.active');
+  }
+
+  if (borderColor) {
+    styles += colorPropertyStyled(borderColor, 'border-color');
+  }
+
+  //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderRadius = getResponsiveSetting(settings, 'border_radius', '.active');
+  }
+
+  if (borderRadius) {
+    styles += sizeStyled(borderRadius, 'border-radius');
+  }
+
+  //Получаем значения transition-duration в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    transitionDuration = getResponsiveSetting(settings, 'creative_hover_controller', '.active');
+  }
+
+  if (transitionDuration) {
+    styles += sizeStyled(transitionDuration, 'transition-duration');
+  }
+
+  //Получаем значения animation-duration в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    animationDuration = getResponsiveSetting(settings, 'creative_hover_controller', '.active');
+  }
+
+  if (animationDuration) {
+    styles += sizeStyled(animationDuration, 'animation-duration');
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-image:hover {`;
 
   //Получаем значения object-fit из контроллера, обрабатываем и добавляем в styles
@@ -372,6 +713,36 @@ const ImageLightboxComponent = (settings,id)=>{
 
   styles+="} ";
 
+  //state disabled
+  styles+=`${parentClass} .state-disabled .altrp-image-container {`;
+
+  //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    justifyContent = getResponsiveSetting(settings, 'image_style_alignment', '.state-disabled');
+  }
+
+  if (justifyContent) {
+    styles += simplePropertyStyled(justifyContent, 'justify-content');
+  }
+
+  styles+="} ";
+
+  //state active
+  styles+=`${parentClass} .active .altrp-image-container {`;
+
+  //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    justifyContent = getResponsiveSetting(settings, 'image_style_alignment', '.active');
+  }
+
+  if (justifyContent) {
+    styles += simplePropertyStyled(justifyContent, 'justify-content');
+  }
+
+  styles+="} ";
+
   styles+=`${parentClass} .altrp-image-container:hover {`;
 
   //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
@@ -442,6 +813,136 @@ const ImageLightboxComponent = (settings,id)=>{
 
   if (settings !== undefined) {
     backgroundSize = getResponsiveSetting(settings, 'background_size');
+  }
+
+  if (backgroundSize) {
+    styles += simplePropertyStyled(backgroundSize, 'background-size');
+  }
+
+  styles+="} ";
+
+  //state disabled
+  styles+=`${parentClass} .state-disabled .altrp-background-image {`;
+
+  //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundImage = getResponsiveSetting(settings, 'background_image', '.state-disabled');
+  }
+
+  if (backgroundImage) {
+    styles += backgroundImageControllerToStyles(backgroundImage);
+  }
+
+  //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundPosition = getResponsiveSetting(settings, 'background_position', '.state-disabled');
+  }
+
+  if (backgroundPosition) {
+    styles += simplePropertyStyled(backgroundPosition, 'background-position');
+  }
+
+  //Получаем значения background-attachment из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundAttachment = getResponsiveSetting(settings, 'background_attachment', '.state-disabled');
+  }
+
+  if (backgroundAttachment) {
+    styles += simplePropertyStyled(backgroundAttachment, 'background-attachment');
+  }
+
+  //Получаем значения background-repeat из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundRepeat = getResponsiveSetting(settings, 'background_repeat', '.state-disabled');
+  }
+
+  if (backgroundRepeat) {
+    styles += simplePropertyStyled(backgroundRepeat, 'background-repeat');
+  }
+
+  //Получаем значения background-size в конкретных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width', '.state-disabled');
+  }
+
+  if (backgroundSizeInUnit) {
+    styles += sizeStyled(backgroundSizeInUnit, 'background-size');
+  }
+
+  //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundSize = getResponsiveSetting(settings, 'background_size', '.state-disabled');
+  }
+
+  if (backgroundSize) {
+    styles += simplePropertyStyled(backgroundSize, 'background-size');
+  }
+
+  styles+="} ";
+
+  //state active
+  styles+=`${parentClass} .active .altrp-background-image {`;
+
+  //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundImage = getResponsiveSetting(settings, 'background_image', '.active');
+  }
+
+  if (backgroundImage) {
+    styles += backgroundImageControllerToStyles(backgroundImage);
+  }
+
+  //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundPosition = getResponsiveSetting(settings, 'background_position', '.active');
+  }
+
+  if (backgroundPosition) {
+    styles += simplePropertyStyled(backgroundPosition, 'background-position');
+  }
+
+  //Получаем значения background-attachment из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundAttachment = getResponsiveSetting(settings, 'background_attachment', '.active');
+  }
+
+  if (backgroundAttachment) {
+    styles += simplePropertyStyled(backgroundAttachment, 'background-attachment');
+  }
+
+  //Получаем значения background-repeat из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundRepeat = getResponsiveSetting(settings, 'background_repeat', '.active');
+  }
+
+  if (backgroundRepeat) {
+    styles += simplePropertyStyled(backgroundRepeat, 'background-repeat');
+  }
+
+  //Получаем значения background-size в конкретных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundSizeInUnit = getResponsiveSetting(settings, 'background_image_width', '.active');
+  }
+
+  if (backgroundSizeInUnit) {
+    styles += sizeStyled(backgroundSizeInUnit, 'background-size');
+  }
+
+  //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundSize = getResponsiveSetting(settings, 'background_size', '.active');
   }
 
   if (backgroundSize) {

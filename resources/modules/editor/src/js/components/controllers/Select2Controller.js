@@ -131,6 +131,7 @@ class Select2Controller extends Component {
       } else {
         this._changeValue(value.value);
       }
+      if (typeof this.props.onChange === "function") this.props.onChange(value)
     }
     if (action.action === "clear") {
       if (this.props.isMulti) {

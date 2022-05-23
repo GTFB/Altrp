@@ -106,7 +106,7 @@ export default function TabsSwitcherComponent(settings) {
     "altrp-tabs-switcher_switch:hover input:checked ~ .bp3-control-indicator",
       ["background", "box_around_color_two", "color", ":hover"],
     "}",
-    
+
     "altrp-tabs-switcher_switch:hover .bp3-control-indicator",
       () => {
         const value = getResponsiveSetting(settings, "size", ':hover');
@@ -124,7 +124,7 @@ export default function TabsSwitcherComponent(settings) {
             }
           `
         }
-        
+
         return ""
       },
 
@@ -213,7 +213,7 @@ export default function TabsSwitcherComponent(settings) {
             }
           `
         }
-        
+
         return ''
       },
 
@@ -259,7 +259,7 @@ export default function TabsSwitcherComponent(settings) {
     '}',
 
     // Active
-    
+
     'altrp-tabs-switcher_switch input:active + .bp3-control-indicator::before',
     () => {
       const switchBorderRadius = getResponsiveSetting(settings, 'switch_border_radius', '.active')
@@ -300,7 +300,7 @@ export default function TabsSwitcherComponent(settings) {
             }
           `
         }
-        
+
         return ''
       },
 
@@ -331,6 +331,37 @@ export default function TabsSwitcherComponent(settings) {
         return ''
       },
     '}',
+
+
+
+    `.state-disabled altrp-tabs-switcher_switch`,
+    ["background-color", "switch_color", "color", ".state-disabled"],
+    ["background", "box_around_color_one", "", ".state-disabled"],
+    ["background", "box_around_color_two", "", ".state-disabled"],
+    ["", "size", "slider", ".state-disabled"],
+    ["border-radius", "box_border_radius", "", ".state-disabled"],
+    ["border-radius", "switch_border_radius", "", ".state-disabled"],
+    ["outline-style", "switch_button_outline_style", "", ".state-disabled"],
+    ["outline-color", "switch_button_outline_color", "color", ".state-disabled"],
+    ["outline-width", "switch_button_outline_width", "slider", ".state-disabled"],
+    ["outline-offset", "switch_button_outline_offset", "slider", ".state-disabled"],
+    "}",
+
+    `.active altrp-tabs-switcher_switch`,
+    ["background-color", "switch_color", "color", ".active"],
+    ["background", "box_around_color_one", "", ".active"],
+    ["background", "box_around_color_two", "", ".active"],
+    ["", "size", "slider", ".active"],
+    ["border-radius", "box_border_radius", "", ".active"],
+    ["border-radius", "switch_border_radius", "", ".active"],
+    ["outline-style", "switch_button_outline_style", "", ".active"],
+    ["outline-color", "switch_button_outline_color", "color", ".active"],
+    ["outline-width", "switch_button_outline_width", "slider", ".active"],
+    ["outline-offset", "switch_button_outline_offset", "slider", ".active"],
+    "}",
+
+
+
   ];
 
   return styledString(styles, settings)

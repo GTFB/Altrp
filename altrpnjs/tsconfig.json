@@ -10,6 +10,7 @@
     "app/AltrpControllers",
     "app/AltrpListeners",
     "app/AltrpPlugins",
+    "public",
     "app/altrp-listeners",
     ".env",
     "resources/views/altrp",
@@ -21,7 +22,7 @@
     "outDir": "build",
     "module": "commonjs",
     "rootDir": "./",
-    "sourceMap": true,
+    "sourceMap": false,
     "esModuleInterop": true,
     "paths": {
       "App/*": [

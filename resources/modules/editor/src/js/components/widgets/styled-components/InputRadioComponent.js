@@ -452,6 +452,82 @@ const fieldStyleActive = settings => {
   return styles
 };
 
+const fieldStyleDisabled = settings => {
+  let styles = `.altrp-field-container .altrp-field-radio.state-disabled .bp3-control-indicator.bp3-control-indicator.bp3-control-indicator {`;
+  let padding,
+    color,
+    typographic,
+    backgroundColor,
+    borderType,
+    borderWidth,
+    borderColor,
+    borderRadius,
+    boxShadow,
+    size
+  ;
+
+  const {
+    placeholder_and_value_alignment_position_section,
+    position_z_index,
+    input_position,
+    textarea_resize,
+    justify_options,
+    image_select_item_width,
+    image_select_item_height,
+    image_select_image_fit,
+    image_select_image_position,
+    cross_size
+  } = settings;
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".state-disabled"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  // settings &&
+  // (typographic = getResponsiveSetting(settings, "field_font_typographic"));
+  // typographic && (styles += typographicControllerToStyles(typographic));
+
+  // settings && (color = getResponsiveSetting(settings, "field_font_color"));
+  // color && (styles += colorPropertyStyled(color, "color"));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type", ".state-disabled"));
+  borderType &&
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color", ".state-disabled"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".state-disabled"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "border_radius",
+    ".state-disabled"
+  ));
+  borderRadius &&
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color",
+    ".state-disabled"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  placeholder_and_value_alignment_position_section &&
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+
+  position_z_index && (styles += `z-index:${position_z_index};`);
+  textarea_resize && (styles += `resize:${textarea_resize};`);
+
+  styles += "}";
+
+  return styles
+};
+
 /**
  * Стили для класса altrp-field:hover
  * @param {Object} settings style settings of element
@@ -912,7 +988,11 @@ function InputCheckboxComponent(settings, elementId, prefix) {
   const fieldStylesActive = fieldStyleActive(settings);
   fieldStylesActive && (styles += fieldStylesActive);
   styles += `}`;
-
+  //altrp-field-radio.state-disabled
+  styles += `.${prefix}${elementId} {`;
+  const fieldStylesDisabled = fieldStyleDisabled(settings);
+  fieldStylesDisabled && (styles += fieldStylesDisabled);
+  styles += `}`;
   //altrp-field:focus
   styles += `.${prefix}${elementId} {`;
   const fieldStylesFocus = fieldStyleFocus(settings);

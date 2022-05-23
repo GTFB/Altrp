@@ -59,6 +59,10 @@ import ConditionsPopup from "./js/components/ConditionsPopup";
 import {Rnd} from "react-rnd";
 import { Resizable } from "re-resizable";
 import {io} from "socket.io-client";
+import CssEditor from "./js/components/cssEditor/CssEditor";
+import {setGlobalStylesCss} from "./js/store/global-css-editor/actions";
+import ReactDOM from "react-dom";
+import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
 
 /**
  * Главный класс редактора.<br/>
@@ -87,6 +91,7 @@ class Editor extends Component {
       hidePanel: false,
       navigator: false,
       resizeNavigator: false,
+      cssEditor: false
     };
     this.effectRef = React.createRef();
     this.openPageSettings = this.openPageSettings.bind(this);
@@ -243,6 +248,8 @@ class Editor extends Component {
    * */
   async componentDidMount() {
     this.initModules();
+    let stylesCssEditor = await AltrpMeta.getMetaByName("global_styles_editor");
+    appStore.dispatch(setGlobalStylesCss(stylesCssEditor.getMetaValue("")))
 
     let currentUser = await new Resource({
       route: "/ajax/current-user"
@@ -378,6 +385,13 @@ class Editor extends Component {
     });
   }
 
+  toggleCssEditor = () => {
+    this.setState(state => ({
+      ...state,
+      cssEditor: !state.cssEditor
+    }))
+  }
+
   /**
    * Отрисовка Компонента
    */
@@ -440,11 +454,19 @@ class Editor extends Component {
               {this.state.activePanel === "history" && <HistoryPanel />}
               {this.state.activePanel === "navigation" &&  <SettingsPanel />}
               {this.state.activePanel === "common" && (
-                <CommonPanel
-                  showGlobalColorsPanel={this.showGlobalColorsPanel}
-                  showGlobalFontsPanel={this.showGlobalFontsPanel}
-                  showGlobalEffectsPanel={this.showGlobalEffectsPanel}
-                />
+               <div style={{width: "100%"}}>
+                 <CommonPanel
+                   showGlobalColorsPanel={this.showGlobalColorsPanel}
+                   showGlobalFontsPanel={this.showGlobalFontsPanel}
+                   showGlobalEffectsPanel={this.showGlobalEffectsPanel}
+                 />
+                 {this.state.cssEditor && (
+                   ReactDOM.createPortal(<CssEditorModal toggleCssEditor={this.toggleCssEditor}/>, document.body)
+                 )}
+                 <div style={{textAlign: 'center'}}>
+                   <button onClick={this.toggleCssEditor} className="btn-css-save">Open css editor</button>
+                 </div>
+               </div>
               )}
               {this.state.activePanel === "global_colors" && <GlobalColors />}
               {this.state.activePanel === "global_fonts" && <GlobalFonts />}

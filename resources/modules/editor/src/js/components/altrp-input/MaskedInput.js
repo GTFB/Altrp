@@ -10,7 +10,7 @@ class MaskedInput extends React.Component {
 
     this.state = {
       previewValue: defaultValue ? defaultValue : '',
-      value: defaultValue,
+      value: defaultValue || '',
       defaultValue,
       max: 0,
       type: [],
@@ -169,7 +169,7 @@ class MaskedInput extends React.Component {
         defaultValue,
       }))
     }
-    
+
     if(this.state.mask !== maskSetting) {
       this.setState((s) => ({
         ...s,

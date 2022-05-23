@@ -410,6 +410,7 @@ export default class ModelsController {
       table_id: table.id,
     })
     await model.save()
+
     const id_column = new Column()
     id_column.fill({
       name: 'id',
@@ -473,6 +474,8 @@ export default class ModelsController {
     })
 
     await controller.save()
+
+    await Model.createDefaultCustomizers(response, modelData, model)
 
     let sources = [
       (new Source()).fill({

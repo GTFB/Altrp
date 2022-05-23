@@ -140,7 +140,14 @@ export default class CustomizersController {
     // }
     const oldType = customizer.type
     const oldSettings = customizer.settings
-    customizer.merge(request.all())
+    customizer.merge({
+      name: request.all().name,
+      title: request.all().title,
+      type: request.all().type,
+      data: request.all().data,
+      model_id: request.all().model_id,
+    })
+
     /**
      * Delete source if type `api` changed
      */
@@ -336,5 +343,29 @@ export default class CustomizersController {
     }
     let customizer = _customizer.serialize()
     return response.json(customizer)
+  }
+
+  async content({params, response}:HttpContextContract){
+
+    let customizer
+    if (validGuid(params.id)) {
+      customizer = await Customizer.query().where('guid', params.id).first()
+    } else {
+      customizer = await Customizer.find(params.id)
+    }
+    if (!customizer) {
+      response.status(404)
+      return response.json({
+          'success':
+            false, 'message':
+            'Customizer not found'
+        },
+      )
+    }
+    const content = customizer.getMethodContent()
+    return response.json({
+      success: true,
+      data:content
+    })
   }
 }

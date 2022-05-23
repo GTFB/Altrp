@@ -23,6 +23,40 @@ export default function AccordionComponent(settings) {
 
     "}",
 
+    //state disabled
+    ".state-disabled .altrp-accordion-item-label",
+
+    ["", "font_typographic_title_style", "typographic", ".state-disabled"],
+    ["text-align", "alignment_item_style", ".state-disabled"],
+    ["color", "color_title_style", "color", ".state-disabled"],
+    () => {
+      const value = getResponsiveSetting(settings, "spacing_icon_style", ".state-disabled");
+      const slider = sliderStyled(value);
+
+      if(slider) {
+        return `margin-left: ${slider}; margin-right: ${slider};`
+      }
+    },
+
+    "}",
+
+    //state active
+    ".active .altrp-accordion-item-label",
+
+    ["", "font_typographic_title_style", "typographic", ".active"],
+    ["text-align", "alignment_item_style", ".active"],
+    ["color", "color_title_style", "color", ".active"],
+    () => {
+      const value = getResponsiveSetting(settings, "spacing_icon_style", ".active");
+      const slider = sliderStyled(value);
+
+      if(slider) {
+        return `margin-left: ${slider}; margin-right: ${slider};`
+      }
+    },
+
+    "}",
+
     "altrp-accordion-item-label:hover",
 
     ["color", "color_title_style", "color", ":hover"],
@@ -44,6 +78,36 @@ export default function AccordionComponent(settings) {
 
     "}",
 
+    //state disabled
+    ".state-disabled .altrp-accordion-item-content",
+
+    ["background-color", "background_color_content_style", "color", ".state-disabled"],
+    ["color", "color_content_style", "color", ".state-disabled"],
+    ["border-radius", "border_radius_content_style", "dimensions", ".state-disabled"],
+    ["text-align", "alignment_item_style", "", ".state-disabled"],
+    ["margin-top", "spacing_content_style", "slider", ".state-disabled"],
+    ["", "typographic_content_style", "typographic", ".state-disabled"],
+    ["border-color", "border_color_content_style", "color", ".state-disabled"],
+    ["border-style", "border_type_content_style", "", ".state-disabled" ],
+    ["border-width", "border_width_content_style", "dimensions", ".state-disabled"],
+
+    "}",
+
+    //state active
+    ".active .altrp-accordion-item-content",
+
+    ["background-color", "background_color_content_style", "color", ".active"],
+    ["color", "color_content_style", "color", ".active"],
+    ["border-radius", "border_radius_content_style", "dimensions", ".active"],
+    ["text-align", "alignment_item_style", "", ".active"],
+    ["margin-top", "spacing_content_style", "slider", ".active"],
+    ["", "typographic_content_style", "typographic", ".active"],
+    ["border-color", "border_color_content_style", "color", ".active"],
+    ["border-style", "border_type_content_style", "", ".active" ],
+    ["border-width", "border_width_content_style", "dimensions", ".active"],
+
+    "}",
+
     "altrp-accordion-item-content:hover",
 
     ["background-color", "background_color_content_style", "color", ":hover"],
@@ -60,6 +124,22 @@ export default function AccordionComponent(settings) {
 
     "}",
 
+    //state disabled
+    ".state-disabled .altrp-accordion-item-content-text",
+
+    ["padding", "padding_content_style", "dimensions", ".state-disabled"],
+    ["", "typographic_content_style", "typographic", ".state-disabled"],
+
+    "}",
+
+    //state active
+    ".active .altrp-accordion-item-content-text",
+
+    ["padding", "padding_content_style", "dimensions", ".active"],
+    ["", "typographic_content_style", "typographic", ".active"],
+
+    "}",
+
     "altrp-accordion-item-content-text:hover",
 
     ["padding", "padding_content_style", "dimensions", ":hover"],
@@ -73,6 +153,20 @@ export default function AccordionComponent(settings) {
 
     "}",
 
+    //state disabled
+    ".state-disabled .altrp-accordion-item",
+
+    ["margin-top", "spacing_item_style", "slider", ".state-disabled"],
+
+    "}",
+
+    //state active
+    ".active .altrp-accordion-item",
+
+    ["margin-top", "spacing_item_style", "slider", ".active"],
+
+    "}",
+
     "altrp-accordion-item-button",
 
     ["flex-direction", "alignment_icon_style"],
@@ -83,6 +177,34 @@ export default function AccordionComponent(settings) {
     ["border-radius", "border_radius_title_style", "dimensions"],
     ["padding", "padding_title_style", "dimensions"],
     ["", "box_shadow_title_style", "shadow"],
+
+    "}",
+
+    //state disabled
+    ".state-disabled .altrp-accordion-item-button",
+
+    ["flex-direction", "alignment_icon_style", "", ".state-disabled"],
+    ["background-color", "background_color_title_style", "color", ".state-disabled"],
+    ["border-style", "border_type_title_style", "", ".state-disabled"],
+    ["border-width", "border_width_title_style", "dimensions", ".state-disabled"],
+    ["border-color", "border_color_title_style", "color", ".state-disabled"],
+    ["border-radius", "border_radius_title_style", "dimensions", ".state-disabled"],
+    ["padding", "padding_title_style", "dimensions", ".state-disabled"],
+    ["", "box_shadow_title_style", "shadow", ".state-disabled"],
+
+    "}",
+
+    //state active
+    ".active .altrp-accordion-item-button",
+
+    ["flex-direction", "alignment_icon_style", "", ".active"],
+    ["background-color", "background_color_title_style", "color", ".active"],
+    ["border-style", "border_type_title_style", "", ".active"],
+    ["border-width", "border_width_title_style", "dimensions", ".active"],
+    ["border-color", "border_color_title_style", "color", ".active"],
+    ["border-radius", "border_radius_title_style", "dimensions", ".active"],
+    ["padding", "padding_title_style", "dimensions", ".active"],
+    ["", "box_shadow_title_style", "shadow", ".active"],
 
     "}",
 
@@ -115,11 +237,49 @@ export default function AccordionComponent(settings) {
     },
     "}",
 
+    //state disabled
+    ".state-disabled .altrp-accordion-item-icon svg",
+    () => {
+      const value = getResponsiveSetting(settings, "spacing_icon_size", ".state-disabled");
+      const slider = sliderStyled(value);
+
+      if(slider) {
+        return `width: ${slider}; height: ${slider};`
+      }
+    },
+    "}",
+
+    //state active
+    ".active .altrp-accordion-item-icon svg",
+    () => {
+      const value = getResponsiveSetting(settings, "spacing_icon_size", ".active");
+      const slider = sliderStyled(value);
+
+      if(slider) {
+        return `width: ${slider}; height: ${slider};`
+      }
+    },
+    "}",
+
     "altrp-accordion-item-icon svg path",
 
     ["fill", "color_icon_style", "color"],
 
     "}",
+
+    //state disabled
+    ".state-disabled .altrp-accordion-item-icon svg path",
+
+    ["fill", "color_icon_style", "color", ".state-disabled"],
+
+    "}",
+    //state active
+    ".active .altrp-accordion-item-icon svg path",
+
+    ["fill", "color_icon_style", "color", ".active"],
+
+    "}",
+
     "altrp-accordion-item.active .altrp-accordion-item-icon path",
 
     ["fill", "color_icon_style", "color", '.active'],

@@ -18,10 +18,26 @@ class FunnelDiagramWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для funnel diagram widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+
   render() {
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
       <Suspense fallback={"Loading"}>
-        <AltrpFunnelDiagram settings={this.state.settings} id={this.state.id} />
+        <AltrpFunnelDiagram classes={classes} settings={this.state.settings} id={this.state.id} />
       </Suspense>
     );
   }

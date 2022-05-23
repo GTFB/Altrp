@@ -49,7 +49,8 @@ function MapDesigner({
   field_second_connect = null,
   parameters,
   settings,
-  element
+  element,
+  classes
 }) {
   const FG = useRef(null);
   const ModalRef = useRef(null);
@@ -397,13 +398,13 @@ function MapDesigner({
   }, []);
 
   return (
-    <div className="altrp-map" style={style}>
+    <div className={`${classes} altrp-map`} style={style}>
       {isLoading && <Loader />}
       <MapContainer
         center={center}
         zoom={zoom}
         onclick={handleMapClick}
-        className={`altrp-map__container ${className}`}
+        className={`altrp-map__container ${className} ${classes}`}
         whenReady={whenReady}
         scrollWheelZoom={true}
         touchZoom={true}
@@ -441,7 +442,7 @@ function MapDesigner({
           />
         </FeatureGroup>
         {isEditable && selected && (
-          <Control position="topleft" className="altrp-map__paint">
+          <Control position="topleft" className={`${classes} altrp-map__paint`}>
             <button type="button" onClick={() => setOpen(!open)}>
               <MemoPaintIcon width="15" height="15" fill="#464646" />
             </button>

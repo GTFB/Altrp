@@ -17,7 +17,11 @@ import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
 import Env from "@ioc:Adonis/Core/Env";
 import {exec} from "child_process";
+import fs from "fs";
 import {promisify} from "util";
+import resource_path from "../../../../helpers/path/resource_path";
+import base_path from "../../../../helpers/path/base_path";
+import Logger from "@ioc:Adonis/Core/Logger";
 
 export default class AdminController {
 
@@ -26,6 +30,9 @@ export default class AdminController {
   // }
   public async upgradeAllResources({response}:HttpContextContract){
     try {
+      if(fs.existsSync(resource_path('views/altrp'))){
+        fs.rmSync(resource_path('views/altrp'), { recursive: true, })
+      }
       const models = await Model.query().preload('altrp_controller').select('*')
       // const step = 10
       const modelGenerator = new ModelGenerator()
@@ -70,9 +77,13 @@ export default class AdminController {
         await pageGenerator.run(page)
       }
       try {
-        await promisify(exec)('pm2 restart all' )
+        if(isProd()){
+          await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
+          await promisify(exec)('pm2 restart all' )
+        }
 
       }catch (e) {
+        Logger.error(e.message, e.stack.split('\n'))
       }
       return response.json({success: true,})
     }catch (e) {

@@ -24,6 +24,7 @@ import {elementsSettingsReducer} from "./elements-settings/reducers";
 import {areasReducer} from "./areas/reducers";
 import {lightboxImagesReducer} from "./ligtbox-images-storage/reducers";
 import {frontElementsReducer} from "./front-elements-store/reducers";
+import {elementTableReducer} from "./element-table/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -50,5 +51,6 @@ export default combineReducers({
   elementsSettings: elementsSettingsReducer,
   areas: areasReducer,
   lightboxImages: lightboxImagesReducer,
-  frontElementsState: frontElementsReducer
+  frontElementsState: frontElementsReducer,
+  elementTableState: elementTableReducer
 });

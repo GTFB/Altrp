@@ -9,7 +9,7 @@ const defaultOptions = {
   color: "#3388ff"
 };
 
-function AltrpMap({ element, settings }) {
+function AltrpMap({ element, settings, classes }) {
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
   const {
@@ -85,6 +85,7 @@ function AltrpMap({ element, settings }) {
   }, [query]);
 
   return <MapDesigner
+    classes={classes}
     element={element}
     isTransformLatLng={true}
     data={geoJson}

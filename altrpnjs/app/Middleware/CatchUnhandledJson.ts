@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Logger from "@ioc:Adonis/Core/Logger";
 
 /**
  * Auth middleware is meant to restrict un-authenticated access to a given route
@@ -21,6 +22,7 @@ export default class CatchUnhandledJson {
       await next()
     }catch (e) {
       response.status(500)
+      Logger.error(e)
       return response.json({
         success: false,
         message: 'Unhandled Exception: ' + e.message,

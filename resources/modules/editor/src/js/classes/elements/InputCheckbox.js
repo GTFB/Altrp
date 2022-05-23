@@ -76,7 +76,8 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
+      locked: true
     });
 
     this.addControl("content_label_position_type", {
@@ -104,7 +105,8 @@ class InputCheckbox extends BaseElement {
           value: "absolute",
           label: "Absolute"
         }
-      ]
+      ],
+      locked: true
     });
 
     this.addControl("label_icon", {
