@@ -146,9 +146,14 @@ export default class ElementRenderer {
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
     let settings = {...this.element.settings}
-    for(let s in settings){
-      if(settings.hasOwnProperty(s) && _.isString(settings[s])){
-        settings[s] = toUnicode(settings[s], ['(',')']);
+    /**
+     * for widget with text content must replace )
+     */
+    if(['text','heading'].indexOf(this.getName()) !== -1){
+      for(let s in settings){
+        if(settings.hasOwnProperty(s) && _.isString(settings[s])){
+          settings[s] = toUnicode(settings[s], ['(',')']);
+        }
       }
     }
     content = mustache.render(content, {

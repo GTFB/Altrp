@@ -30,6 +30,7 @@ import {menusReducer} from "../../../../front-app/src/js/store/menus-storage/red
 import {elementsSettingsReducer} from "../../../../front-app/src/js/store/elements-settings/reducers";
 import {globalStylesPresetsReducer} from "./altrp-global-styles/reducers";
 import { widgetsReducer } from "./widgets/reducers";
+import {globalStylesCssReducer} from "./global-css-editor/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -60,6 +61,7 @@ export default combineReducers({
   altrpPage: currentPageReducer,
   globalStyles: globalStyleReducer,
   globalStylesPresets: globalStylesPresetsReducer,
+  globalStylesCssEditor: globalStylesCssReducer,
   altrpMenus: menusReducer,
   elementsSettings: elementsSettingsReducer,
   widgetsManager: widgetsReducer

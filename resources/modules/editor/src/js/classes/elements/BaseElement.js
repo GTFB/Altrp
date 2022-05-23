@@ -43,11 +43,12 @@ class BaseElement extends ControlStack {
   /**
    * Задать настройки
    * @param settings
+   * @param settingsLock
    */
-  setSettings(settings) {
+  setSettings(settings, settingsLock) {
     this.settings = settings || this.settings;
 
-    this.settingsLock =  this.settingsLock || {};
+    this.settingsLock =  settingsLock || {};
 
     const controls = controllersManager.getControls(this.getName())
 
@@ -165,7 +166,7 @@ class BaseElement extends ControlStack {
     let data = {};
     data.id = this.getId();
     data.name = this.getName();
-    data.settings = this.cleaner(this.settings);
+    data.settings = this.settings;
 
     data.settingsLock = this.settingsLock;
     data.type = this.getType();
@@ -460,12 +461,16 @@ class BaseElement extends ControlStack {
     if (!settingName) {
       return _.cloneDeep(settings);
     }
+
     if (settings[settingName] === undefined) {
       let control = window.controllersManager.getElementControl(
         this.getName(),
         settingName
       );
 
+      if(settingName === "button_text") {
+        console.log(control, settings[settingName]);
+      }
       if (!control || !control.default) {
         if (_.isString(_default)) {
           return _default;
@@ -473,7 +478,11 @@ class BaseElement extends ControlStack {
         return _default || null;
       }
       settings[settingName] = control.default;
+      if(settingName === "button_text") {
+        console.log(control, settings[settingName]);
+      }
     }
+
     return settings[settingName] || _default;
   }
 

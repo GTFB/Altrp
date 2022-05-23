@@ -592,14 +592,13 @@ class SectionWidget extends BaseElement {
     });
 
     this.addControl("section_style_border_radius", {
-      type: CONTROLLER_SLIDER,
-      label: "Border radius",
-      default: {
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      max: 100,
-      min: 0,
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border radius',
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
     });
 
     this.addControl("section_style_box_shadow", {

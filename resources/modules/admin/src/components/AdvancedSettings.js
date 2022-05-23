@@ -105,17 +105,6 @@ class AdvancedSettings extends Component {
   };
 
   /**
-   * Запрос на очистку кэша
-   */
-  clearAllCache = async (e) =>{
-    let result  = await confirm('Are You Sure');
-    if(! result){
-      return;
-    }
-    let res = await new Resource({route:'/admin/ajax/clear_cache'}).delete();
-
-  };
-  /**
    * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
    * @param e
    */
@@ -170,13 +159,6 @@ class AdvancedSettings extends Component {
               </button>
             </div>
 
-            <div className="admin-styles-advanced-block">
-              <div className="advanced-text-custom">Clear All Cache:</div>
-              <button className="btn btn_success btn_advanced"
-                      onClick={this.clearAllCache}>
-                Clear
-              </button>
-            </div>
 
             <div className="admin-styles-advanced-block">
               <div className="advanced-text-custom">Custom Headers for Pages:</div>

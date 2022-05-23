@@ -2,6 +2,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'action-trigger',
   'input',
   'input-select',
+  'input-select2',
   'input-date-range',
   'input-select-tree',
   'input-multi-select',

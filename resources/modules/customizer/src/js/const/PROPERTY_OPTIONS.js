@@ -32,10 +32,5 @@ if(isAltrpJS()){
       label: 'httpContext.',
       value: 'httpContext',
     },)
-  PROPERTY_OPTIONS.push(
-    {
-      label: 'current_user.',
-      value: 'current_user',
-    },)
 }
 export default PROPERTY_OPTIONS;
