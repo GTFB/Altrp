@@ -199,6 +199,7 @@ class AltrpPosts extends React.Component {
       return null;
     }
 
+
     if(getResponsiveSetting(this.props.settings,'posts_per_page') >= posts?.length
       || getResponsiveSetting(this.props.settings,'posts_per_page') <= 0){
       return null;
@@ -206,7 +207,6 @@ class AltrpPosts extends React.Component {
     let prev_text = element.getResponsiveLockedSetting('prev_text', '', 'Previous Page')
     let next_text = element.getResponsiveLockedSetting('next_text', '', 'Next Page')
     let posts_pagination_type = getResponsiveSetting(this.props.settings, 'posts_pagination_type') || '';
-
     if(posts_pagination_type){
       const {currentPage} = this.state;
       const pageCount = this.getPageCount();
