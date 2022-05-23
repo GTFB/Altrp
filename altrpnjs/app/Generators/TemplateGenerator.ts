@@ -103,10 +103,8 @@ export default class TemplateGenerator extends BaseGenerator {
           return
         }
         let replace = path + "|| ''";
-        console.log(replace);
         replace = replace.replace(/\./g, '?.')
         replace = `{{{${replace}}}}`
-        console.log(replace);
         path = escapeRegExp(path);
         content = content.replace(new RegExp(`{{${path}}}`, "g"), replace);
       });

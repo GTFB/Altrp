@@ -5,9 +5,12 @@ import * as mustache from 'mustache'
 import * as _ from 'lodash'
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import objectToStylesString from "../../helpers/objectToStylesString";
-import toUnicode from "../../helpers/string/toUnicode";
 import base_path from "../../helpers/path/base_path";
 import isProd from "../../helpers/isProd";
+import getResponsiveSetting from "../../helpers/getResponsiveSetting";
+import getColumnClasses from "../../helpers/getColumnClasses";
+import renderSectionBG from "../../helpers/renderSectionBG";
+import getAddingClasses from "../../helpers/getAddingClasses";
 
 export default class ElementRenderer {
   static straightRenderIgnore = [
@@ -43,6 +46,7 @@ export default class ElementRenderer {
     }/${this.element.name}.stub`)
   }
   async render(screenName:string): Promise<string>{
+    const settings = this.element.settings
     const reactElement =  this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
     this.element.settingsLock = this.element.settingsLock || {}
@@ -70,7 +74,7 @@ export default class ElementRenderer {
       switch (this.getName()) {
         case 'section_widget':
         case 'section':{
-          section_background = `{{{renderSectionBG(element${this.getId()}_settings,'${this.getId()}', device)}}}`
+          section_background = renderSectionBG(settings,this.getId(), screenName)
         }break;
         default:{
           section_background = ''
@@ -98,7 +102,7 @@ export default class ElementRenderer {
       }
 
       styles = objectToStylesString(styles)
-      const text_widget_content = this.getTextWidgetContent()
+      const text_widget_content = this.getTextWidgetContent(screenName)
       if(this.getType() === 'widget'
         && ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1){
         const filename = string.camelCase(`render_${this.getName()}`)
@@ -117,7 +121,7 @@ export default class ElementRenderer {
           children_content,
           element_styles:styles,
           section_classes,
-          column_classes: `{{getColumnClasses(element${this.getId()}_settings, device)}}`,
+          column_classes: getColumnClasses(settings, screenName),
           section_background,
           layout_html_tag,
           text_widget_content,
@@ -131,7 +135,7 @@ export default class ElementRenderer {
     }
 
     let content = fs.readFileSync(ElementRenderer.wrapperStub, {encoding: 'utf8'});
-    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} {{{getAddingClasses(element${this.getId()}_settings)}}} `;
+    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} ${getAddingClasses(settings)} `;
     if (this.getType() === "widget") {
       classes += ` altrp-widget_${this.getName()}`;
     }
@@ -142,21 +146,22 @@ export default class ElementRenderer {
       allow_start_tag = `@if(allowedForUser(element${this.getId()}_settings, user))~`
       allow_end_tag = `@end~`
     }
+
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
-    {{{getResponsiveSetting(element${this.getId()}_settings, 'en_an', screen)
-      ? \`data-enter-animation-type="\${getResponsiveSetting(element${this.getId()}_settings, 'en_an', device)}"
-      data-enter-animation-delay="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_delay', device, 0)}"
-      \`
-      : ''}}}
+    ${getResponsiveSetting(settings, 'en_an', screenName)
+      ? `data-enter-animation-type="${getResponsiveSetting(settings, 'en_an', screenName)}"
+      data-enter-animation-delay="${getResponsiveSetting(settings, 'en_a_delay', screenName, 0)}"
+      `
+      : ''}
       ${reactElement ? `data-react-element="${this.getId()}"` : ''}
-    {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'wrapper_click_actions', device)) ? '' : 'data-altrp-wrapper-click-actions="${this.getIdForAction()}"' }}}
-    {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'wrapper_appearB_actions', device)) ? '' : 'data-altrp-wrapper-appear-bottom-actions="${this.getIdForAction()}"' }}}
-    {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'wrapper_appearT_actions', device)) ? '' : 'data-altrp-wrapper-appear-top-actions="${this.getIdForAction()}"' }}}
-    {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'sticky', device)) ?
+    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_click_actions', screenName)) ? '' : `data-altrp-wrapper-click-actions="${this.getIdForAction()}"` }
+    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearB_actions', screenName)) ? '' : `data-altrp-wrapper-appear-bottom-actions="${this.getIdForAction()}"` }
+    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearT_actions', screenName)) ? '' : `data-altrp-wrapper-appear-top-actions="${this.getIdForAction()}"` }
+    ${_.isEmpty(getResponsiveSetting(settings, 'sticky', screenName)) ?
     '' :
-    \`data-altrp-sticky="\${getResponsiveSetting(element${this.getId()}_settings, 'sticky', device)}"
-    data-altrp-sticky-spacing="\${getResponsiveSetting(element${this.getId()}_settings, 'st_spacing', device)}"
-    data-margin-top="\${getResponsiveSetting(element${this.getId()}_settings, 'st_spacing', device, 0)}"\` }}}
+    `data-altrp-sticky="${getResponsiveSetting(settings, 'sticky', screenName)}"
+    data-altrp-sticky-spacing="${getResponsiveSetting(settings, 'st_spacing', screenName)}"
+    data-margin-top="${getResponsiveSetting(settings, 'st_spacing', screenName, 0)}"` }
     data-altrp-id="${this.getId()}"
     `
 
@@ -164,21 +169,10 @@ export default class ElementRenderer {
     if(advanced_element_id){
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
-    let settings = {...this.element.settings}
-    /**
-     * for widget with text content must replace )
-     */
-    if(['text','heading'].indexOf(this.getName()) !== -1){
-      for(let s in settings){
-        if(settings.hasOwnProperty(s) && _.isString(settings[s])){
-          settings[s] = toUnicode(settings[s], ['(',')']);
-        }
-      }
-    }
     content = mustache.render(content, {
-      settings: JSON.stringify(settings).replace(/\//g, '\\/'),
       id: this.getId(),
       element_content,
+      set_content:this.getEdgeSetContent(!!allow_start_tag),
       type: this.getType(),
       wrapper_attributes,
       allow_start_tag,
@@ -204,13 +198,23 @@ export default class ElementRenderer {
     return ! !_.get(this, 'element.settings.link_link.url');
   }
 
-  private getTextWidgetContent():string {
+  private getTextWidgetContent(screenName):string {
     if(this.getName() !== 'text'){
       return ''
     }
     if(this.element.settings.content){
       return `<div class="altrp-text ck ck-content">{{{data_get(altrpContext, '${this.element.settings.content}', '${this.element.settings.text || ''}')}}}</div>`
     }
-    return `<div class="altrp-text ck ck-content">{{{getResponsiveSetting(element${this.getId()}_settings, 'text', device, '')}}}</div>`
+    return `<div class="altrp-text ck ck-content">${getResponsiveSetting(this.element.settings, 'text', screenName, '')}</div>`
+  }
+
+  private getEdgeSetContent(allow_start_tag: boolean = false):string{
+    if(ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1 && ! allow_start_tag){
+      return ''
+    }
+
+    let settings = {...this.element.settings}
+
+    return `@set('element${this.getId()}_settings', ${JSON.stringify(settings).replace(/\//g, '\\/')})~`
   }
 }

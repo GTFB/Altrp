@@ -34,6 +34,7 @@ import mbParseJSON from '../../helpers/mbParseJSON';
 import DEFAULT_REACT_ELEMENTS from '../../helpers/const/DEFAULT_REACT_ELEMENTS';
 import is_array from '../../helpers/is_array';
 import validGuid from '../../helpers/validGuid';
+import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -148,7 +149,13 @@ export default class Page extends BaseModel {
     'content', 'footer', 'header', 'popups',
   ];
 
-  public async getAreas(deleteContent = false) {
+  public async getAreas(deleteContent = false):Promise< {
+    area_name: string,
+    id: string,
+    settings: []
+    template?: any
+    templates?: Template[]
+  }[]> {
     const data: {
       area_name: string,
       id: string,
@@ -773,4 +780,76 @@ export default class Page extends BaseModel {
   }
 
 
+  async renderPageAreas():Promise<string> {
+    const areas = await this.getAreas(true)
+    let json = '['
+    for(const area of areas){
+      if(_.isArray(area.templates)){
+        for(const {} of area.templates){
+          json += JSON.stringify(area).replace(/\//g, '\\/')
+          json += ','
+        }
+        continue
+      }
+      if(area?.template?.data){
+        const _area = {...area}
+        delete _area.template
+        json += '{'
+        for(const key in _area){
+          if(_area.hasOwnProperty(key)){
+            json += `"${key}":${JSONStringifyEscape(_area[key])},`
+          }
+        }
+        const _template = {...area.template}
+        delete _template.data
+        json += `"template":{`
+
+        for(const key in _template){
+          if(_template.hasOwnProperty(key)){
+            json += `"${key}":${JSONStringifyEscape(_template[key])},`
+          }
+        }
+        json +=`"data": ${Page._renderJsonFromElement(area.template.data, '') || '{}'}`
+        json += `}},`
+      }
+
+    }
+    json +=']'
+    return json
+  }
+
+  private static _renderJsonFromElement(element, json){
+
+    const settings = {
+      ...element.settings,
+      ...element.settingsLock
+    }
+    const {
+      conditional_display_choose,
+      conditional_roles,
+      conditional_permissions,
+      react_element,
+    } = settings
+    if(DEFAULT_REACT_ELEMENTS.indexOf(element.name) === -1 && ! react_element){
+      if(_.isArray(element.children)){
+        for(const child of element.children){
+          json = Page._renderJsonFromElement(child, json)
+          json += ','
+        }
+      }
+      console.log(json);
+      return json
+    }
+    if(conditional_display_choose ||
+      (conditional_permissions?.length || conditional_roles?.length)){
+      json += `
+      @if(allowedForUser(${JSON.stringify(settings).replace(/\//g, '\\/')}, user))~
+      `
+      json += JSON.stringify(element).replace(/\//g, '\\/')
+      json += `
+      @end~
+      `
+    }
+    return json
+  }
 }

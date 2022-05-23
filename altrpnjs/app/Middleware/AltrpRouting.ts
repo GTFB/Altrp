@@ -39,7 +39,7 @@ export default class AltrpRouting {
     _.set(this.__altrp_global__, path, value)
   }
 
-  getGlobal(path, _default:any = null): any {
+  getGlobal(path, _default: any = null): any {
     return _.get(this.__altrp_global__, path, _default)
   }
 
@@ -57,8 +57,8 @@ export default class AltrpRouting {
     /**
      * Игнорим логинизацию
      */
-    for(const route of IGNORED_ROUTES) {
-      if(route === url) {
+    for (const route of IGNORED_ROUTES) {
+      if (route === url) {
         await next()
         return
       }
@@ -66,7 +66,7 @@ export default class AltrpRouting {
 
     const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
 
-    if(httpContext.request.completeUrl().split(modulesUrl).length > 1) {
+    if (httpContext.request.completeUrl().split(modulesUrl).length > 1) {
       await next()
       return
     }
@@ -83,7 +83,7 @@ export default class AltrpRouting {
      * init global object
      */
     this.setGlobal('currentUser', httpContext.auth.user)
-    if(httpContext.auth.user){
+    if (httpContext.auth.user) {
 
       // @ts-ignore
       await httpContext.auth.user.load('permissions')
@@ -100,209 +100,157 @@ export default class AltrpRouting {
 
     }
     this.setGlobal('altrpSettings', altrpSettings)
-    let pageMatch:any = {}
-    const page: Page | undefined = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
+    let pageMatch: any = {}
+    let page: Page | undefined | null = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
       if (matchPath(url, page.path,)?.isExact) {
         pageMatch = matchPath(url, page.path,)
       }
       return matchPath(url, page.path,)?.isExact
     });
     httpContext.params = pageMatch.params
-    if (page) {
-      const pages = await page.getPagesForFrontend();
 
+    if(! page){
+      page = await Page.query().where('not_found', true).first()
+    }
 
-      if (!await page.allowedForUser(this)) {
-        return httpContext.response.redirect(page.redirect || '/')
-      }
+    if(! page){
+      httpContext.response.status(404)
+      return httpContext.response.send('page not found')
+    }
+    const pages = await page.getPagesForFrontend();
 
-      await page.load('templates');
-      await page.load('model');
+    if (!await page.allowedForUser(this)) {
+      return httpContext.response.redirect(page.redirect || '/')
+    }
 
-      const altrp_settings = await page.getPageSettings(this)
-      const pageAreas = await page.getAreas(true);
+    await page.load('templates');
+    await page.load('model');
 
-      // @ts-ignore
-      const user: User = httpContext.auth.user
-      let is_admin = user && await user.isAdmin();
-      const altrpElementsLists = await this.extractElementsNames(pageAreas);
+    const altrp_settings = await page.getPageSettings(this)
 
-      let model_data = {}
-      if (page.model) {
-        try {
-          const ModelClass = (await import(`../AltrpModels/${page.model.name}`)).default
-          let classInstance
-          if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
-            classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
-          } else if(pageMatch.params?.id){
-            classInstance = await ModelClass.find(pageMatch.params.id)
-          }
-          model_data = classInstance ? classInstance.serialize() : {}
-        } catch (e) {
-          console.error(e);
+    // @ts-ignore
+    const user: User = httpContext.auth.user
+    let is_admin = user && await user.isAdmin();
+
+    let model_data = {}
+    if (page.model) {
+      try {
+        const ModelClass = (await import(`../AltrpModels/${page.model.name}`)).default
+        let classInstance
+        if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
+          classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
+        } else if (pageMatch.params?.id) {
+          classInstance = await ModelClass.find(pageMatch.params.id)
         }
-        if (empty(model_data)) {
-          httpContext.response.status(404)
-          return httpContext.response.send('Not Found')
+        model_data = classInstance ? classInstance.serialize() : {}
+      } catch (e) {
+        console.error(e);
+      }
+      if (empty(model_data)) {
+        httpContext.response.status(404)
+        page = await Page.query().where('not_found', true).first()
+        if(! page){
+          return httpContext.response.send('page not found')
         }
       }
-      let title = replaceContentWithData(page.title, model_data)
+    }
 
-      // const datasources= {}
-      let altrpuser:any = {
-        is_guest: true,
-      }
-      if(user){
-        altrpuser = user.toObject()
-      }
-      await page.load('data_sources', data_source=>{
-        data_source.preload('source', source=>{
-          source.preload('model', model=>{
-            model.preload('table')
-          })
+    let title = replaceContentWithData(page.title, model_data)
+
+    // const datasources= {}
+    let altrpuser: any = {
+      is_guest: true,
+    }
+    if (user) {
+      altrpuser = user.toObject()
+    }
+    await page.load('data_sources', data_source => {
+      data_source.preload('source', source => {
+        source.preload('model', model => {
+          model.preload('table')
         })
       })
+    })
 
-      const _frontend_route = page.serialize()
-      const altrpContext = {
-        ...pageMatch.params,
-        ...model_data,
-        altrpuser,
-        altrppage:{
-          title,
-          url,
-          params: httpContext.request.qs()
-        }
+    const _frontend_route = page.serialize()
+    const altrpContext = {
+      ...pageMatch.params,
+      ...model_data,
+      altrpuser,
+      altrppage: {
+        title,
+        url,
+        params: httpContext.request.qs()
       }
-      const datasources= await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
-      altrpContext.altrpdata = datasources
-      try {
-        _.set(page, 'templates', [])
-        _.set(_frontend_route, 'templates', [])
-        let path = `altrp/pages/${page.guid}`;
-        const device = getCurrentDevice(httpContext.request)
-        if(fs.existsSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.edge`))){
-          path = `altrp/screens/${device}/pages/${page.guid}`
+    }
+    const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
+    altrpContext.altrpdata = datasources
+    try {
+      _.set(page, 'templates', [])
+      _.set(_frontend_route, 'templates', [])
+      let path = `altrp/pages/${page.guid}`;
+      const device = getCurrentDevice(httpContext.request)
+      if (fs.existsSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.edge`))) {
+        path = `altrp/screens/${device}/pages/${page.guid}`
 
-        }
-        let res = await httpContext.view.render(path,
-          Edge({
-            ...altrpContext,
-            hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
-            url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
-            title: replaceContentWithData(page.title || 'Altrp', altrpContext),
-            altrpContext,
-            is_admin,
-            pages,
-            user,
-            csrfToken: httpContext.request.csrfToken,
-            isProd: isProd(),
-            page_areas: pageAreas,
-            page_id: page.id,
-            altrpElementsLists,
-            elements_list: altrpElementsLists,
-            model_data,
-            fonts: this.getFonts(),
-            altrp_settings,
-            _frontend_route,
-            route_args: pageMatch.params,
-            datasources,
-            device ,
+      }
+      let res = await httpContext.view.render(path,
+        Edge({
+          ...altrpContext,
+          hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
+          url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+          title: replaceContentWithData(page.title || 'Altrp', altrpContext),
+          altrpContext,
+          is_admin,
+          pages,
+          user,
+          csrfToken: httpContext.request.csrfToken,
+          isProd: isProd(),
+          page_id: page.id,
+          model_data,
+          fonts: this.getFonts(),
+          altrp_settings,
+          _frontend_route,
+          route_args: pageMatch.params,
+          datasources,
+          device,
+          version: getLatestVersion(),
+          _altrp: {
             version: getLatestVersion(),
-            _altrp: {
-              version: getLatestVersion(),
-              isNodeJS: true
-            },
-          })
-        )
-        // res = minify(res, {
-        //   collapseWhitespace:true,
-        //   minifyCSS: true,
-        //   minifyJS: true,
-        // })
+            isNodeJS: true
+          },
+        })
+      )
+      /**
+       * Add Custom Headers
+       */
 
-        /**
-         * Add Custom Headers
-         */
-
-        let customHeaders:string|object = get_altrp_setting('altrp_custom_headers', '', true)
-        if(customHeaders){
-          customHeaders = replaceContentWithData(customHeaders, altrpContext)
-          customHeaders = stringToObject(customHeaders)
-          for(let key in customHeaders){
-            if(customHeaders.hasOwnProperty(key)){
-              httpContext.response.header(key, customHeaders[key])
-            }
+      let customHeaders: string | object = get_altrp_setting('altrp_custom_headers', '', true)
+      if (customHeaders) {
+        customHeaders = replaceContentWithData(customHeaders, altrpContext)
+        customHeaders = stringToObject(customHeaders)
+        for (let key in customHeaders) {
+          if (customHeaders.hasOwnProperty(key)) {
+            httpContext.response.header(key, customHeaders[key])
           }
         }
-        return httpContext.response.send(res)
-      } catch (e) {
-        console.error(`Error to View Custom Page: ${e.message}
+      }
+      return httpContext.response.send(res)
+    } catch (e) {
+      console.error(`Error to View Custom Page: ${e.message}
          ${e.stack}
          `);
-        httpContext.response.status(500)
-        return httpContext.response.send(`500 Internal Server Error to View Custom Page: ${e.message}
+      httpContext.response.status(500)
+      return httpContext.response.send(`500 Internal Server Error to View Custom Page: ${e.message}
          ${e.stack}
          `)
-      }
-      /*
-      const preload_content:any = renderResult({
-        protocol: httpContext.request.protocol(),
-        host: httpContext.request.host(),
-        originalUrl: url,
-        json: {
-          altrp_settings,
-          page: pageAreas,
-          altrpImageLazy: get_altrp_setting('altrp_image_lazy', 'none'),
-          altrpSkeletonColor: get_altrp_setting('altrp_skeleton_color', '#ccc'),
-          altrpSkeletonHighlightColor: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
-          current_user: httpContext.auth.user || {is_guest: true}
-        }
-      })
-
-      preload_content.content = replaceContentWithData(preload_content.content, altrpContext)
-
-
-
-      _frontend_route.title = title
-      const v = await httpContext.view.render('front-app',
-        Edge({
-        hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
-        url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
-        page: pageAreas,
-        title: replaceContentWithData(page.title || 'Altrp', altrpContext),
-        is_admin,
-        pages,
-        csrfToken: httpContext.request.csrfToken,
-        isProd: isProd(),
-        preload_content,
-        page_areas: pageAreas,
-        page_id: page.id,
-        altrpElementsLists,
-        device: getCurrentDevice(httpContext.request),
-        elements_list: altrpElementsLists,
-        model_data,
-        fonts: this.getFonts(),
-        altrp_settings,
-        _frontend_route,
-        route_args: pageMatch.params,
-        _altrp:
-          version: getLatestVersion()
-        },
-      })
-      )
-      return httpContext.response.send(v)
-
-     */
     }
-    httpContext.response.status(404)
-    return httpContext.response.send('Not Found')
   }
 
   getFonts(): string {
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
-      if(font === 'Arial'){
+      if (font === 'Arial') {
         return ''
       }
       font = encodeURIComponent(font);
@@ -313,22 +261,23 @@ export default class AltrpRouting {
     }).join('')
   }
 
-  async  extractElementsNamesFromTemplate( template_id, elementNames ){
+  async extractElementsNamesFromTemplate(template_id, elementNames) {
     const altrpSettings: any = this.getGlobal('altrpSettings')
     let template
-    if( validGuid( template_id ) ){
-      template = await Template.query().where( 'guid', template_id ).first();
+    if (validGuid(template_id)) {
+      template = await Template.query().where('guid', template_id).first();
     } else {
-      template = await Template.find( template_id );
+      template = await Template.find(template_id);
     }
-    if( ! template ){
+    if (!template) {
       return;
     }
-    data_set(altrpSettings, 'templates_data.' + template_id,  template.dataWithoutContent());
+    data_set(altrpSettings, 'templates_data.' + template_id, template.dataWithoutContent());
 
-    let data = JSON.parse( template.data );
-    this._extractElementsNames( data, elementNames, false );
+    let data = JSON.parse(template.data);
+    this._extractElementsNames(data, elementNames, false);
   }
+
   async _extractElementsNames(element, elementNames, only_react_elements) {
     let plugins_widget_list: any = ''
     if (!plugins_widget_list) {
@@ -359,8 +308,7 @@ export default class AltrpRouting {
       }
     }
     if (element.children && is_array(element.children)) {
-      for(const child of element.children)
-      {
+      for (const child of element.children) {
         await this._extractElementsNames(child, elementNames, only_react_elements)
       }
     }
@@ -386,7 +334,7 @@ export default class AltrpRouting {
       && data_get(element, 'settings.slides_repeater')?.length > 0) {
 
       for (const el of data_get(element, 'settings.slides_repeater')) {
-        if(el.card_slides_repeater) {
+        if (el.card_slides_repeater) {
           await this.extractElementsNamesFromTemplate(el.card_slides_repeater, elementNames)
         }
       }
@@ -394,8 +342,7 @@ export default class AltrpRouting {
     if (element.name === 'table'
       && data_get(element, 'settings.tables_columns')) {
       let columns = data_get(element, 'settings.tables_columns', [])
-      for(let column of columns)
-      {
+      for (let column of columns) {
         if (data_get(column, 'column_template')) {
           await this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
         }
@@ -404,8 +351,7 @@ export default class AltrpRouting {
     if (element.name === 'tabs'
       && data_get(element, 'settings.items_tabs')) {
       let tabs = data_get(element, 'settings.items_tabs', [])
-      for(let tab of tabs)
-      {
+      for (let tab of tabs) {
         if (data_get(tab, 'card_template')) {
           this.extractElementsNamesFromTemplate(data_get(tab, 'card_template'), elementNames)
         }
@@ -416,8 +362,7 @@ export default class AltrpRouting {
       && data_get(element, 'settings.tables_columns')
       && is_array(data_get(element, 'settings.tables_columns'))) {
       let columns = data_get(element, 'settings.tables_columns')
-      for(let column of columns)
-      {
+      for (let column of columns) {
         if (data_get(column, 'column_template')) {
           this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
         }
@@ -425,17 +370,18 @@ export default class AltrpRouting {
     }
 
   }
-  async  extractElementsNames(areas: any[] = [], _only_react_elements = true){
+
+  async extractElementsNames(areas: any[] = [], _only_react_elements = true) {
     let elementNames = [];
 
     await Promise.all(areas.map(async area => {
-      if(area?.template?.data) {
+      if (area?.template?.data) {
         let data = area.template.data
-        if(_.isString(data)){
-          data= JSON.parse(data)
-          area.template.data=data
+        if (_.isString(data)) {
+          data = JSON.parse(data)
+          area.template.data = data
         }
-        await this._extractElementsNames( data, elementNames, _only_react_elements );
+        await this._extractElementsNames(data, elementNames, _only_react_elements);
       } else {
       }
     }))

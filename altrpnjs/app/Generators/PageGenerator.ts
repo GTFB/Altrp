@@ -51,6 +51,7 @@ export default class PageGenerator extends BaseGenerator {
         .apply({
           children_content,
           elements_list,
+          page_areas: await page.renderPageAreas(),
           extra_header_styles,
           extra_footer_styles,
           all_styles,
@@ -77,4 +78,5 @@ export default class PageGenerator extends BaseGenerator {
     }
     return extraStyles
   }
+
 }

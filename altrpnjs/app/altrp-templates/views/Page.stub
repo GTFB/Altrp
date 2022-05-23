@@ -62,13 +62,13 @@
         window.altrpPages = {{{ JSON.stringify( pages) }}};
         window.altrp = {{{JSON.stringify(_altrp)}}};
 <%={{ }}=%>
+        window.page_areas = {{{page_areas}}};
         window.altrpElementsLists = [{{{elements_list}}}];
 {{=<% %>=}}
         window.pageStorage = {};
         window.ALTRP_DEBUG = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_debug', false ) ) }}};
         window.ALTRP_LOAD_BY_USER = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_user_load', false ) ) }}};
         window.page_id = {{ page_id }};
-        window.page_areas = {{{ JSON.stringify(page_areas).replace(/\//g, '\\/') }}};
         window.lazySections = [];
         if (typeof window.page_id !== 'undefined' && typeof page_areas !== 'undefined') {
           window.pageStorage[window.page_id] = {areas:page_areas};

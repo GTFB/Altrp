@@ -92,6 +92,7 @@ export default class AdminController {
       return response.json({success: true,})
     }catch (e) {
       response.status(500);
+      Logger.error(e)
       return response.json({success: false,message: 'Generate Error', trace: e.stack.split('\n')});
     }
   }
