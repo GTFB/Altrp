@@ -27,7 +27,7 @@ import keys from "lodash/keys"
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
     const modelToUpdate = await Model.query().whereNull('guid').select('*')
-    await Promise.all(modelToUpdate.map(async (m:Model) =>{
+    await Promise.all(modelToUpdate.map(async (m: Model) => {
       m.guid = guid()
       await m.save()
       Logger.info(`Model id ${m.id} guid write!`)
@@ -60,7 +60,7 @@ export default class ModelsController {
       })
     }
     let sql = query.toSQL().sql
-    let models:ModelPaginatorContract<Model> = await query
+    let models: ModelPaginatorContract<Model> = await query
       .orderBy('title',)
       .select('altrp_models.*')
       .preload('categories')
@@ -69,7 +69,7 @@ export default class ModelsController {
     const count = models.getMeta().total
     const pageCount = models.getMeta().last_page
 
-  //@ts-ignore
+    //@ts-ignore
     models = models.all().map(model => {
       return model.serialize()
     })
@@ -85,7 +85,7 @@ export default class ModelsController {
     title: schema.string({trim: true},),
   })
 
-  async updateModel({response, params, request}: HttpContextContract) {
+  async updateModel({response, params, request, auth}: HttpContextContract) {
 
     let model = await Model.find(params.id)
     if (!model) {
@@ -117,6 +117,64 @@ export default class ModelsController {
         time_stamps: modelData.time_stamps,
         parent_model_id: modelData.parent_model_id || null,
       })
+
+      if (modelData.time_stamps) {
+        const created_at_column_exists = await Column.query().where('name', '=', 'created_at').andWhere('model_id', '=', model.id)
+        const updated_at_column_exists = await Column.query().where('name', '=', 'updated_at').andWhere('model_id', '=', model.id)
+
+        if (!created_at_column_exists?.length) {
+          const created_at_column = new Column()
+          created_at_column.fill({
+            name: 'created_at',
+            title: 'created_at',
+            description: 'created_at',
+            null: true,
+            type: 'timestamp',
+            table_id: model.table.id,
+            model_id: model.id,
+            user_id: auth?.user?.id,
+          })
+          await created_at_column.save()
+        }
+
+        if (!updated_at_column_exists?.length) {
+          const updated_at_column = new Column()
+          updated_at_column.fill({
+            name: 'updated_at',
+            title: 'updated_at',
+            description: 'updated_at',
+            null: true,
+            type: 'timestamp',
+            model_id: model.id,
+            table_id: model.table.id,
+            user_id: auth?.user?.id,
+          })
+          await updated_at_column.save()
+        }
+
+      } else {
+        await Column.query().where('name', '=', 'created_at').andWhere('model_id', '=', model.id).delete()
+        await Column.query().where('name', '=', 'updated_at').andWhere('model_id', '=', model.id).delete()
+      }
+      if (modelData.soft_deletes) {
+        const deleted_at_column_exists = await Column.query().where('name', '=', 'deleted_at').andWhere('model_id', '=', model.id)
+        if (!deleted_at_column_exists?.length) {
+          const deleted_at_column = new Column()
+          deleted_at_column.fill({
+            name: 'deleted_at',
+            title: 'deleted_at',
+            description: 'deleted_at',
+            type: 'timestamp',
+            null: true,
+            model_id: model.id,
+            table_id: model.table.id,
+            user_id: auth?.user?.id,
+          })
+          await deleted_at_column.save()
+        }
+      } else {
+        await Column.query().where('name', '=', 'deleted_at').andWhere('model_id', '=', model.id).delete()
+      }
       Event.emit('model:updating', model)
       await model.save()
       Event.emit('model:updated', model)
@@ -655,12 +713,12 @@ export default class ModelsController {
     if (relationship) {
       const relations = []
 
-      for( let i in relationship) {
+      for (let i in relationship) {
         // @ts-ignore
         relations.push(await Model.find(relationship[i].target_model_id))
 
         for (let j in relations) {
-          if(relationship[i].type != "belongsTo" && relations[j] && relationship[i].add_belong_to){
+          if (relationship[i].type != "belongsTo" && relations[j] && relationship[i].add_belong_to) {
 
             try {
               //@ts-ignore
@@ -707,7 +765,6 @@ export default class ModelsController {
 
       }
     }
-
 
 
     const controller = await Controller.query().where('model_id', model.id).first()
@@ -768,14 +825,14 @@ export default class ModelsController {
     if (request.qs().with_sql_queries == 0) {
       return response.json(
         await Model.getModelsOptions(
-          request.qs().with_names!=0,
+          request.qs().with_names != 0,
           request.qs().not_plural,
           search_text
         ))
     } else {
       let model_data_sources: any[] = []
       for (let modelsOption of await Model.getModelsOptions(
-        request.qs().with_names !=0,
+        request.qs().with_names != 0,
         request.qs().not_plural,
         search_text
       )) {
@@ -807,9 +864,9 @@ export default class ModelsController {
        */
       let sql_editors_data_sources: any[] = []
 
-      let _sqls:any = SQLEditor.query().where('title', 'LIKE', '%' + search_text + '%')
+      let _sqls: any = SQLEditor.query().where('title', 'LIKE', '%' + search_text + '%')
 
-      await  _sqls.preload('model', query=>{
+      await _sqls.preload('model', query => {
         query.preload('altrp_table')
       })
       _sqls = await _sqls.select('*')
@@ -835,77 +892,77 @@ export default class ModelsController {
   }
 
 
-  async showDataSource({response, params}:HttpContextContract){
-      let dataSource = await Source.query().where('id', params.id)
-          .preload('roles').preload('permissions')
-          .first()
-      if(!dataSource) {
-        response.status(404)
-        return response.json({
-          success: false,
-          message: 'Datasource not found'
-        })
-      }
+  async showDataSource({response, params}: HttpContextContract) {
+    let dataSource = await Source.query().where('id', params.id)
+      .preload('roles').preload('permissions')
+      .first()
+    if (!dataSource) {
+      response.status(404)
+      return response.json({
+        success: false,
+        message: 'Datasource not found'
+      })
+    }
 
-      let data = dataSource.toJSON()
+    let data = dataSource.toJSON()
 
-      data['access'] = {'roles' : [], 'permissions' : []}
-      let sourceRoles = dataSource['roles']
-      let sourcePermissions = dataSource['permissions']
-      // @ts-ignore
-      delete dataSource.roles
-      // @ts-ignore
-      delete dataSource.permissions
-      if (sourceRoles) {
-          for (let sourceRole of sourceRoles) {
+    data['access'] = {'roles': [], 'permissions': []}
+    let sourceRoles = dataSource['roles']
+    let sourcePermissions = dataSource['permissions']
+    // @ts-ignore
+    delete dataSource.roles
+    // @ts-ignore
+    delete dataSource.permissions
+    if (sourceRoles) {
+      for (let sourceRole of sourceRoles) {
             data['access']['roles'].push(sourceRole['id'])
-          }
       }
+    }
 
-      if (sourcePermissions) {
-          for (let sourcePermission of sourcePermissions) {
-            data['access']['permissions'].push(sourcePermission['permission']['id'])
-          }
+    if (sourcePermissions) {
+      for (let sourcePermission of sourcePermissions) {
+        data['access']['permissions'].push(sourcePermission['permission']['id'])
       }
+    }
 
-      return response.json(data)
+    return response.json(data)
   }
 
 
-  async updateDataSource({response, request, params}:HttpContextContract){
+  async updateDataSource({response, request, params}: HttpContextContract) {
 
-      const dataSourceSchema = schema.create({
-        title: schema.string({trim: true}, [
-          rules.maxLength(32)
-        ]),
-        name: schema.string({trim: true}, [
-          rules.maxLength(32)
-        ]),
-      })
+    const dataSourceSchema = schema.create({
+      title: schema.string({trim: true}, [
+        rules.maxLength(32)
+      ]),
+      name: schema.string({trim: true}, [
+        rules.maxLength(32)
+      ]),
+    })
 
-      await request.validate({schema: dataSourceSchema})
+    await request.validate({schema: dataSourceSchema})
 
 
 
       let dataSource = await Source.query().where('id', params.id).preload("roles").first()
-      if(!dataSource) {
-        response.status(404)
-        return response.json({
-          success: false,
-          message: 'Datasource not found'
-        })
-      }
+    if (!dataSource) {
+      response.status(404)
+      return response.json({
+        success: false,
+        message: 'Datasource not found'
+      })
+    }
 
-      let data = request.all()
+    let data = request.all()
 
       delete data.notice_settings
       delete data.web_url
       delete data.bodies
       delete data.headers
 
-      if (data['access']['roles'].lenght <= 1) {
-          data['need_all_roles'] = 0
-      }
+    if (data['access']['roles'].lenght <= 1) {
+      data['need_all_roles'] = 0
+    }
 
       for (const key of keys(data)) {
         switch (key) {
@@ -930,76 +987,72 @@ export default class ModelsController {
         }
       }
 
-      await dataSource.save()
-      return response.json({
+    await dataSource.save()
+    return response.json({
         success: false,
-        data: dataSource
+      data: dataSource
+    })
+  }
+
+  async storeDataSource({response, request}: HttpContextContract) {
+    const dataSourceSchema = schema.create({
+      title: schema.string({trim: true}, [
+        rules.maxLength(32)
+      ]),
+      name: schema.string({trim: true}, [
+        rules.maxLength(32)
+      ]),
+    })
+
+    await request.validate({schema: dataSourceSchema})
+
+    let dataSource = await Source.create(request.all())
+
+    return response.json({
+      success: true,
+      data: dataSource
+    })
+  }
+
+
+  async getDataSourceOptions(contract: HttpContextContract) {
+    let result = await this.getDataSourcesAndPageCount(contract)
+    let options: any = []
+    for (let source of result['data_sources']) {
+      options.push({
+        value: source.id,
+        label: source.name,
       })
     }
-
-    async storeDataSource({response, request}:HttpContextContract)
-    {
-        const dataSourceSchema = schema.create({
-          title: schema.string({trim: true}, [
-            rules.maxLength(32)
-          ]),
-          name: schema.string({trim: true}, [
-            rules.maxLength(32)
-          ]),
-        })
-
-        await request.validate({schema: dataSourceSchema})
-
-        let dataSource = await Source.create(request.all())
-
-        return response.json({
-          success: true,
-          data: dataSource
-        })
+    options = {
+      options: options,
+      pageCount: result['pageCount']
     }
+    return contract.response.json(options)
+  }
 
 
-    async getDataSourceOptions(contract: HttpContextContract)
-    {
-        let result = await this.getDataSourcesAndPageCount(contract)
-        let options : any = []
-        for (let source of result['data_sources']) {
-            options.push({
-              value : source.id,
-              label : source.name,
-            })
-        }
-        options = {
-            options : options,
-            pageCount : result['pageCount']
-        }
-        return contract.response.json(options)
+  async destroyDataSource({response, params}: HttpContextContract) {
+    let dataSource = await Source.find(params.id)
+    if (!dataSource) {
+      response.status(404)
+      return response.json({
+        success: false,
+        message: 'Datasource not found'
+      })
     }
+    await dataSource.delete()
+
+    return response.json({
+      success: true
+    })
+
+  }
 
 
-    async destroyDataSource({response, params}:HttpContextContract)
-    {
-        let dataSource = await Source.find(params.id)
-        if(!dataSource) {
-          response.status(404)
-          return response.json({
-            success: false,
-            message: 'Datasource not found'
-          })
-        }
-        await dataSource.delete()
-
-        return response.json({
-            success: true
-          })
-
-    }
-
-
-    async getDataSourcesByModel({response, params}:HttpContextContract)
-    {
-        let data_sources = await Source.query().where('model_id',params.model_id).select(['title as label', 'id as value'])
-        return response.json(data_sources)
-    }
+  async getDataSourcesByModel({response, params}: HttpContextContract) {
+    let data_sources = await Source.query().where('model_id', params.model_id).select(['title as label', 'id as value'])
+    return response.json(data_sources)
+  }
 
 }

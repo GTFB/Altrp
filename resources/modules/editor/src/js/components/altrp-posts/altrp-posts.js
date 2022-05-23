@@ -195,11 +195,13 @@ class AltrpPosts extends React.Component {
     const settings = {...this.props.settings};
     const element = this.props.element;
     let {data: posts} = this.props;
-    if(! posts.length && ! isEditor()){
+    if(! posts.length && !isEditor()){
       return null;
     }
 
-    if(element.getResponsiveLockedSetting('posts_per_page') >= posts?.length || element.getResponsiveLockedSetting('posts_per_page') <= 0){
+
+    if(getResponsiveSetting(this.props.settings,'posts_per_page') >= posts?.length
+      || getResponsiveSetting(this.props.settings,'posts_per_page') <= 0){
       return null;
     }
     let prev_text = element.getResponsiveLockedSetting('prev_text', '', 'Previous Page')
@@ -282,6 +284,7 @@ class AltrpPosts extends React.Component {
   }
 
   render() {
+    console.log("sadsadasd", this.renderPagination())
     const {currentPage} = this.state;
     const posts_per_page = Number(getResponsiveSetting(this.props.settings,'posts_per_page')) || 12;
     let {data: posts} = this.props;

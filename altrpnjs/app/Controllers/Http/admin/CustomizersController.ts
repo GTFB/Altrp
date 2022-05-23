@@ -140,6 +140,7 @@ export default class CustomizersController {
     // }
     const oldType = customizer.type
     const oldSettings = customizer.settings
+
     customizer.merge({
       name: request.all().name,
       title: request.all().title,
