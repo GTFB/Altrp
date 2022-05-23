@@ -46,6 +46,8 @@ export default class SendTelegram extends Component{
           }
           return item;
         });
+      } else if(key) {
+        node.data.props.nodeData.data[key] = value
       }
       store.dispatch(setUpdatedNode(node));
     }
@@ -119,7 +121,6 @@ export default class SendTelegram extends Component{
       const typeOptions = [
         {label:'Text', value: 'content'},
         {label:'Link', value: 'link'},
-        {label:'Button', value: 'button'},
         {label:'Photo', value: 'photo'},
         {label:'File', value: 'file'},
         {label:'Document', value: 'document'},
@@ -129,10 +130,10 @@ export default class SendTelegram extends Component{
       ];
 
       const listeners = [
+        {label:'None', value: "none"},
         {label:'Text', value: 'text'},
         {label:'Photo', value: 'photo'},
         {label:'Document', value: 'document'},
-        {label:'Button', value: 'button'},
       ]
 
       return <div className="settings-section-box">
@@ -145,6 +146,15 @@ export default class SendTelegram extends Component{
                 </div>
 
                 <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                  {/*<input*/}
+                  {/*  className="control-field"*/}
+                  {/*  type="text"*/}
+                  {/*  id={`startText`}*/}
+                  {/*  name="startText"*/}
+                  {/*  style={{width: '100%'}}*/}
+                  {/*  value={this.props.selectNode.data.props.nodeData.data.start_text ?? ''}*/}
+                  {/*  onChange={(e) => { this.changeInput(e, 'start_text') }}*/}
+                  {/*/>*/}
                   <div className="controller-container controller-container_repeater repeater">
                     <div className="control-header">
                       <div className="controller-container__label mt-10">

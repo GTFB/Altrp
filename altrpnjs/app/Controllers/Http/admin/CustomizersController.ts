@@ -145,6 +145,14 @@ export default class CustomizersController {
     delete all.updated_at
 
     customizer.merge(all)
+    customizer.merge({
+      name: request.all().name,
+      title: request.all().title,
+      type: request.all().type,
+      data: request.all().data,
+      model_id: request.all().model_id,
+    })
+
     /**
      * Delete source if type `api` changed
      */
