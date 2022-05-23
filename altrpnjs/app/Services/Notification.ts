@@ -12,14 +12,14 @@ export default class Notification {
     this.data = messageData;
   }
 
-  send(users: User[]) {
+  send(users: User[], customizerData) {
     users.forEach((user) => {
       switch (this.data.channel) {
         case "broadcast":
           Ws.sendMessage("notification", this.message, user.guid)
           break
         case "telegram":
-          TelegramBot.send(this.message, user)
+          TelegramBot.send(this.message, user, customizerData)
           break
       }
     })

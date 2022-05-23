@@ -120,6 +120,7 @@ export default class SendTelegram extends Component{
       else this.onNotice();
       const typeOptions = [
         {label:'Text', value: 'content'},
+        {label: 'Customizer', value: 'customizer'},
         {label:'Link', value: 'link'},
         {label:'Photo', value: 'photo'},
         {label:'File', value: 'file'},
@@ -134,6 +135,7 @@ export default class SendTelegram extends Component{
         {label:'Text', value: 'text'},
         {label:'Photo', value: 'photo'},
         {label:'Document', value: 'document'},
+        {label:'Button', value: 'button'},
       ]
 
       return <div className="settings-section-box">
@@ -185,7 +187,7 @@ export default class SendTelegram extends Component{
                               <div className="controller-container__label control-select__label controller-label" >Listener</div>
                               <div className="control-container_select-wrapper controller-field">
                                 <select className="control-select control-field"
-                                        value={item.listener || 'text'}
+                                        value={item.listener || 'none'}
                                         onChange={e => {this.changeSelect(e, "listener", item.id)}}
                                 >
                                   {listeners.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
@@ -193,7 +195,7 @@ export default class SendTelegram extends Component{
                               </div>
                             </div>
                             {
-                              item.listener === "text" ? (
+                              item.listener === "text" || item.listener === "button" ? (
                                   <div className="controller-container">
                                     <div className="controller-container__label control-select__label controller-label" >Text</div>
                                     <div className="control-container_select-wrapper controller-field">
@@ -222,7 +224,7 @@ export default class SendTelegram extends Component{
                                 </select>
                               </div>
                             </div>
-                            {item.type && <div className="controller-container controller-container_textarea">
+                            {item.type === "content" && <div className="controller-container controller-container_textarea">
                               <div className="controller-container__label textcontroller-responsive controller-label">
                                 {this.getLabel(item.type)}
                               </div>
@@ -233,7 +235,7 @@ export default class SendTelegram extends Component{
                                 }}/>
                               </div>
                             </div>}
-                            {(item.type !== "content" && item.type != '') && <div className="controller-container controller-container_textarea">
+                            {(item.type !== "content" && item.type !== "customizer" && item.type !== '') && <div className="controller-container controller-container_textarea">
                               <div className="controller-container__label textcontroller-responsive controller-label">
                                 URL
                               </div>
@@ -242,6 +244,20 @@ export default class SendTelegram extends Component{
                                        value={item?.data?.url ?? ''} onChange={(e) => {
                                   this.changeInput(e, "url", item.id)
                                 }}/>
+                              </div>
+                            </div>}
+                            {(item.type === "customizer" && item.type !== '') && <div className="controller-container controller-container_textarea">
+                              <div className="controller-container__label textcontroller-responsive controller-label">
+                                Customizer
+                              </div>
+                              <div className='controller-field'>
+                                <select className="control-select control-field"
+                                        value={item?.data?.customizer || ''}
+                                        onChange={e => {this.changeInput(e, "customizer", item.id)}}
+                                >
+                                  <option disabled value="" />
+                                  {this.props.customizerOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                                </select>
                               </div>
                             </div>}
                             {(item.type == "button") && <div className="controller-container controller-container_textarea">
