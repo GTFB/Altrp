@@ -29,7 +29,11 @@ export abstract class BaseGenerator{
     return this
   }
 
-  protected async apply(vars: object,  prepare = false){
+  async prepareContent(content:string):Promise<string>{
+    return content
+  }
+
+  protected async apply(vars: object,  prepareContent = false){
     let content: string = ''
 
     if(fs.existsSync(this.stubFilePath)){
@@ -37,6 +41,9 @@ export abstract class BaseGenerator{
     }
 
     content = mustache.render(content, vars)
+    if(prepareContent){
+      content = await this.prepareContent(content)
+    }
     if(! fs.existsSync(this.directory)){
       fs.mkdirSync(this.directory, {recursive:true})
     }

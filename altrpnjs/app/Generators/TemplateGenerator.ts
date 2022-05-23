@@ -9,6 +9,7 @@ import * as _ from 'lodash'
 import Logger from '@ioc:Adonis/Core/Logger'
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import SCREENS from "../../helpers/const/SCREENS";
+import escapeRegExp from "../../helpers/escapeRegExp";
 
 export default class TemplateGenerator extends BaseGenerator {
 
@@ -89,5 +90,28 @@ export default class TemplateGenerator extends BaseGenerator {
         }, true)
     }
 
+  }
+
+  async prepareContent(content:string):Promise<string>{
+
+    let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
+    if (_.isArray(paths)) {
+      // @ts-ignore
+      paths.forEach(path => {
+        path = path.replace("{{", "");
+        if(path.indexOf('(') !== -1){
+          return
+        }
+        let replace = path + "|| ''";
+        console.log(replace);
+        replace = replace.replace(/\./g, '?.')
+        replace = `{{{${replace}}}}`
+        console.log(replace);
+        path = escapeRegExp(path);
+        content = content.replace(new RegExp(`{{${path}}}`, "g"), replace);
+      });
+    }
+
+    return content
   }
 }
