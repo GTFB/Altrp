@@ -21,7 +21,6 @@ import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
-import User from "App/Models/User";
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -262,8 +261,7 @@ export default class ModelsController {
 
   public async deleteModelRow(httpContext: HttpContextContract) {
     const id = parseInt(httpContext.params.id);
-    let user = new User
-    await httpContext.auth.use('web').login(user)
+
     const rowId = parseInt(httpContext.params.row);
 
     const model = await Model.query().where('id', id).firstOrFail();
