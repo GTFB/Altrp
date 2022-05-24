@@ -95,6 +95,12 @@ class SaveImportModule extends BaseModule {
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
 
     templateData.styles = await templateStylesModule.generateStyles();
+    this.resource.post({
+      ...templateData,
+      type: "review",
+      parent_template: this.template_id
+    })
+
 
     this.resource
       .put(this.template_id, templateData)

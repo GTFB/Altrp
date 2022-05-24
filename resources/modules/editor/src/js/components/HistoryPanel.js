@@ -66,7 +66,7 @@ class HistoryPanel extends Component {
             <span>REVISION</span>
           </button>
         </div>
-        <div className="history-panel__tab-content">
+        <div className="history-panel__tab-content" style={{height: '100vh'}}>
           {this.renderTabContent()}
         </div>
       </div>
@@ -199,7 +199,7 @@ const RevisionTabContent = () => {
         new: _.cloneDeep(getTemplateDataStorage().rootElement)
       })
     );
-    
+
     window.parent.appStore.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     getEditor().showWidgetsPanel();
   };
@@ -209,7 +209,8 @@ const RevisionTabContent = () => {
     let response = await new Resource({
       route: `/admin/ajax/templates/${item.parent_template}/reviews/${item.id}`
     }).getAll();
-    let revisionRootElement = JSON.parse(response.data[0].data);
+
+    let revisionRootElement = JSON.parse(response[0].data);
 
     let parsedData = getFactory().parseData(revisionRootElement);
     getTemplateDataStorage().replaceAll(parsedData);
