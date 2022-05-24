@@ -99,7 +99,7 @@ export default class AltrpBaseController {
     const users = await this.getRequiredUsers(messageData.entities, entitiesData)
 
     const notification = new Notification(content, messageData);
-    notification.send(users)
+    await notification.send(users, this.customizerData)
   }
 
   protected async execCustomizer(name) {
