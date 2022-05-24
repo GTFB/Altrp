@@ -194,7 +194,11 @@ export default class Plugin {
 
   public copyStaticFiles() {
     let publicPath = this.getPath('/public')
-    fs.copySync(publicPath, this.getPublicPath('/public'))
+
+    if (fs.existsSync(publicPath) ) {
+      fs.copySync(publicPath, this.getPublicPath('/public'))
+    }
+
   }
 
   public deleteStaticFiles() {

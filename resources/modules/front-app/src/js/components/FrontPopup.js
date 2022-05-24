@@ -292,6 +292,8 @@ class FrontPopup extends Component {
     if(type_popup === 'popup' && timeout && animations_offcanvas === 'slide'){
       classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
     }
+
+    const content_height = rootElement.getResponsiveSetting('content_height_custom_popup_layout')
     return (
       <CSSTransition
         in={isVisible}
@@ -324,7 +326,7 @@ class FrontPopup extends Component {
           >
             {close_context !== 'window' && closeButton}
             {rootElement.getSettings("").height_popup_layout === 'fitToContent'
-              ? <div className="popup-content">
+              ? <div className="popup-content" style={{height: content_height.size+content_height.unit}}>
                 {React.createElement(rootElement.componentClass, {
                   element: rootElement,
                   ElementWrapper :this.ElementWrapper,
@@ -346,7 +348,7 @@ class FrontPopup extends Component {
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
-                <div className="popup-content">
+                <div className="popup-content" style={{height: content_height.size+content_height.unit}}>
                   {React.createElement(rootElement.componentClass, {
                     element: rootElement,
                     ElementWrapper :this.ElementWrapper,
