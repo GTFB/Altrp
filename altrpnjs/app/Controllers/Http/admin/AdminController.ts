@@ -20,7 +20,6 @@ import {exec} from "child_process";
 import fs from "fs";
 import {promisify} from "util";
 import resource_path from "../../../../helpers/path/resource_path";
-import base_path from "../../../../helpers/path/base_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import public_path from "../../../../helpers/path/public_path";
 
@@ -82,7 +81,6 @@ export default class AdminController {
       }
       try {
         if(isProd()){
-          await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
           await promisify(exec)('pm2 restart all' )
         }
 
