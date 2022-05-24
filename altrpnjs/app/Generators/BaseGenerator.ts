@@ -8,6 +8,7 @@ import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
+import TemplateGenerator from "App/Generators/TemplateGenerator";
 
 export abstract class BaseGenerator{
   private fileName: string;
@@ -29,10 +30,6 @@ export abstract class BaseGenerator{
     return this
   }
 
-  async prepareContent(content:string):Promise<string>{
-    return content
-  }
-
   protected async apply(vars: object,  prepareContent = false){
     let content: string = ''
 
@@ -42,7 +39,7 @@ export abstract class BaseGenerator{
 
     content = mustache.render(content, vars)
     if(prepareContent){
-      content = await this.prepareContent(content)
+      content = await TemplateGenerator.prepareContent(content)
     }
     if(! fs.existsSync(this.directory)){
       fs.mkdirSync(this.directory, {recursive:true})

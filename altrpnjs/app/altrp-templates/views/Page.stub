@@ -4,23 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     @include('favicons')
-
+    <title>{{title}}</title>
     <meta property="og:title" content="{{title}}">
- {{=<% %>=}}
-   <title>{{ title }}</title>
-  <!-- Style -->
-  @!component('front-app-css')
 
- <%={{ }}=%>
-    <script src="/data/current-user" defer></script>
-{{=<% %>=}}
+<script src="/data/current-user" defer></script>
 {{{fonts}}}
-<%={{ }}=%>
 {{{extra_header_styles}}}
 {{{all_styles}}}
-
     <script>
         /* <![CDATA[ */
         console.log('START: ',performance.now());
@@ -52,23 +43,23 @@
             {{{children_content}}}
         </div>
     </div>
-
-
       <script>
         /* <![CDATA[ */
         {{=<% %>=}}
         window['h-altrp'] = true;
         window.isProd = {{{ isProd }}}
-        window.altrpPages = {{{ JSON.stringify( pages) }}};
-        window.altrp = {{{JSON.stringify(_altrp)}}};
 <%={{ }}=%>
+        window.page_id = {{ page_id }};
+        window.altrp = {{{_altrp}}};
+        window.__altrp_settings__ = {{{altrp_settings}}};
         window.page_areas = {{{page_areas}}};
+        window.altrpPages = {{{pages}}};
         window.altrpElementsLists = [{{{elements_list}}}];
+        window.currentPage = {{{_frontend_route}}};
 {{=<% %>=}}
         window.pageStorage = {};
         window.ALTRP_DEBUG = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_debug', false ) ) }}};
         window.ALTRP_LOAD_BY_USER = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_user_load', false ) ) }}};
-        window.page_id = {{ page_id }};
         window.lazySections = [];
         if (typeof window.page_id !== 'undefined' && typeof page_areas !== 'undefined') {
           window.pageStorage[window.page_id] = {areas:page_areas};
@@ -80,15 +71,13 @@
         window.altrpPreloadedDatasources = {{{ JSON.stringify( datasources ?? '' ).replace(/\//g, '\\/') }}};
         window.altrpMenus = [];
         window.route_args = {{{ JSON.stringify( route_args ) }}};
-        window.currentPage = {{{ JSON.stringify( _frontend_route ) }}};
-        window.__altrp_settings__ = {{{ JSON.stringify(altrp_settings).replace(/\//g, '\\/') }}};
         window.container_width = {{{ get_altrp_setting( 'container_width', '1440' ) }}};
         /* ]]> */
       </script>
-    <script defer src="{{ hAltrp }}?{{env('PACKAGE_KEY')}}"></script>
     <script src="/serviceWorker.js?{{env('PACKAGE_KEY')}}"></script>
     <link rel="stylesheet" href="/modules/front-app/front-app.css??{{env('PACKAGE_KEY')}}">
     <%={{ }}=%>
+    <script defer src="{{ hAltrp }}"></script>
     {{{extra_footer_styles}}}
   @!component('front-app-js')
 </body>

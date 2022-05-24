@@ -92,7 +92,7 @@ export default class TemplateGenerator extends BaseGenerator {
 
   }
 
-  async prepareContent(content:string):Promise<string>{
+  static async prepareContent(content:string):Promise<string>{
 
     let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
     if (_.isArray(paths)) {

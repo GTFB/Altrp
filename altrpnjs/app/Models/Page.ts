@@ -21,7 +21,6 @@ import * as _ from 'lodash'
 import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Logger from '@ioc:Adonis/Core/Logger'
-import AltrpRouting from 'App/Middleware/AltrpRouting'
 import User from 'App/Models/User';
 import {isString} from 'lodash';
 import PageRole from 'App/Models/PageRole';
@@ -35,6 +34,9 @@ import DEFAULT_REACT_ELEMENTS from '../../helpers/const/DEFAULT_REACT_ELEMENTS';
 import is_array from '../../helpers/is_array';
 import validGuid from '../../helpers/validGuid';
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
+import TemplateGenerator from "App/Generators/TemplateGenerator";
+import AltrpRouting from "App/Middleware/AltrpRouting";
+import PageGenerator from 'App/Generators/PageGenerator'
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -293,8 +295,8 @@ export default class Page extends BaseModel {
   @column.dateTime()
   public deleted_at: DateTime
 
-  async getPageSettings(altrpRouting: AltrpRouting): Promise<object> {
-    const altrpSettings: any = altrpRouting.__altrp_global__.altrpSettings
+  async getPageSettings(pageGenerator: PageGenerator): Promise<object> {
+    const altrpSettings: any = pageGenerator.__altrp_global__.altrpSettings
     altrpSettings.action_components = []
     altrpSettings.libsToLoad = []
     altrpSettings.altrpMenus = []
@@ -385,13 +387,13 @@ export default class Page extends BaseModel {
       (await Promise.all(altrpSettings.altrpMenus
         .map(async (menuGuid) => await Menu.query().where('guid', menuGuid).select('*').first()
         ))).filter(menu => menu)
-    altrpRouting.setGlobal('fonts', fonts)
+    pageGenerator.setGlobal('fonts', fonts)
 
     return altrpSettings
   }
 
 
-  async allowedForUser(altrpRouting: AltrpRouting) {
+  async allowedForUser(altrpRouting: AltrpRouting): Promise<boolean> {
     const currentUser: User | null = data_get(altrpRouting, '__altrp_global__.currentUser')
 
 
@@ -793,6 +795,7 @@ export default class Page extends BaseModel {
     for(const area of areas){
       if(_.isArray(area.templates)){
         for(const {} of area.templates){
+
           json += JSON.stringify(area).replace(/\//g, '\\/')
           json += ','
         }
@@ -816,12 +819,18 @@ export default class Page extends BaseModel {
             json += `"${key}":${JSONStringifyEscape(_template[key])},`
           }
         }
-        json +=`"data": ${Page._renderJsonFromElement(area.template.data, '') || '{}'}`
-        json += `}},`
+        console.log(_.isString(area.template.data));
+        let  data = area.template.data
+        if(_.isString(area.template.data)){
+          data = JSON.parse(data)
+        }
+        json +=`"data": ${Page._renderJsonFromElement(data, '') || '{}'}`
+        json += `} },`
       }
 
     }
     json +=']'
+    json  = await TemplateGenerator.prepareContent(json)
     return json
   }
 
@@ -841,10 +850,11 @@ export default class Page extends BaseModel {
       if(_.isArray(element.children)){
         for(const child of element.children){
           json = Page._renderJsonFromElement(child, json)
-          json += ','
+          if(json){
+            json += ','
+          }
         }
       }
-      console.log(json);
       return json
     }
     if(conditional_display_choose ||
@@ -859,4 +869,5 @@ export default class Page extends BaseModel {
     }
     return json
   }
+
 }

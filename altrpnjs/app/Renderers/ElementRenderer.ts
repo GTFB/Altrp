@@ -143,8 +143,10 @@ export default class ElementRenderer {
     let allow_end_tag = ''
     if(conditional_display_choose ||
       (conditional_permissions?.length || conditional_roles?.length)){
-      allow_start_tag = `@if(allowedForUser(element${this.getId()}_settings, user))~`
-      allow_end_tag = `@end~`
+      allow_start_tag = `@if(allowedForUser(element${this.getId()}_settings, user))~
+`
+      allow_end_tag = `@end~
+`
     }
 
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
@@ -215,6 +217,8 @@ export default class ElementRenderer {
 
     let settings = {...this.element.settings}
 
-    return `@set('element${this.getId()}_settings', ${JSON.stringify(settings).replace(/\//g, '\\/')})~`
+    return `
+@set('element${this.getId()}_settings', ${JSON.stringify(settings).replace(/\//g, '\\/')})~
+`
   }
 }
