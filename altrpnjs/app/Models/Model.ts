@@ -30,7 +30,6 @@ import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
 
-
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
   private static defaultCustomizersName: string = 'default';
@@ -351,6 +350,7 @@ export default class Model extends BaseModel {
       }
     }
   }
+
   public static async createDefaultCustomizers(response, modelData, model) {
     const pathToFiles = 'resources/customizers/'
 

@@ -49,7 +49,7 @@ export default class ColumnsController {
           }
         })
         //query = query.index()
-        await this.indexCreator(column.indexed, columnData, model)
+        await this.indexCreator(column.indexed, columnData, model, true)
       }
     } catch (e) {
       response.status(500)
@@ -62,12 +62,12 @@ export default class ColumnsController {
     return response.json({success:true, data:column})
   }
 
-  async indexCreator(indexed, columnData, model) {
+  async indexCreator(indexed, columnData, model, newColumn = false) {
     const indexName = Column.createIndexName(columnData.name, model.table.name)
     if(indexed) {
       let indexQuery = `CREATE INDEX ${indexName} ON ${model.table.name}(${columnData.name})`
       await Database.rawQuery(indexQuery)
-    } else {
+    } else if(! newColumn){
       let indexQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${indexName}`
       await Database.rawQuery(indexQuery)
     }

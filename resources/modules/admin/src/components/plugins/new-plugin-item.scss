@@ -1,0 +1,26 @@
+.update__btn, .reinstall__btn, .install__btn {
+  color: white;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  margin-top: 10px;
+}
+
+.update__btn {
+  background: #315EFB;
+}
+
+.reinstall__btn {
+  background: #787c82;
+}
+
+.install__btn {
+  background: #87CA00;
+}
