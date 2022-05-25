@@ -45,13 +45,6 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
 
   let repeater = [];
 
-  const keys = {
-    label: "label",
-    icon: "icon",
-    tree_id: "tree_id",
-    parent: "parent_id",
-  }
-
   if(isEditor()) {
     settings.data = [
       {
@@ -99,60 +92,25 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   }
 
 
-  settings.dataSettings.forEach((s) => {
-    switch (s.value) {
-      case "label":
-        keys[s.value] = s.label || "label"
-        break;
-      case "icon":
-        keys[s.value] = s.label || "icon"
-        break;
-      case "parent":
-        keys[s.value] = s.label || "parent_id"
-        break;
-      case "tree_id":
-        keys[s.value] = s.label || "tree_id"
-        break;
-    }
-  })
+  return data.map((branch) => replaceChildrenToChildNode(branch))
+}
 
-  let allKeys = true;
+const replaceChildrenToChildNode = (branch) => {
+  branch.childNodes = branch.children
 
-  Object.values(keys).forEach((k) => {
-    if(!k) {
-      allKeys = false
-    }
-  })
+  delete branch.children
 
-  if(allKeys && data.length > 0) {
-    data.forEach((d) => {
-      repeater.push({
-        label: d[keys.label],
-        icon: d[keys.icon],
-        tree_id: d[keys.tree_id],
-        parent: d[keys.parent],
-        value: d.value ? d.value : -1
-      })
-    })
+  branch.childNodes = branch.childNodes.map((branch) => replaceChildrenToChildNode(branch))
+
+  if(branch.childNodes.length === 0) {
+    branch.hasCaret = false
   }
 
-  if(!defaultOptions) {
-    console.log(repeater, "sadsadsa")
-    return this.updateRepeater(repeater, {
-      sort: [settings.sortDefault, settings.sortOption]
-    })
-  } else {
-    if(! _.isArray(settings?.data)){
-      return  [];
-    }
-    return settings?.data?.map(branch => this.normalizeValues(branch)) || []
-  }
+  return branch
 }
 
 export const updateRepeater = function (repeaterSetting, other={}) {
   const repeater = [];
-
-  console.log('sadass')
 
   repeaterSetting.forEach((branch, idx) => {
     let children = [];
@@ -203,8 +161,18 @@ export const updateRepeater = function (repeaterSetting, other={}) {
     }
   }
 
-  return newRepeater
-  return newRepeater.filter((branch) => branch.parentId === -1);
+  return newRepeater.map((branch => removeEmpty(branch))).filter((branch) => branch.parentId === -1);
+}
+
+export const removeEmpty = function (branch) {
+  if(branch.childNodes.length > 0) {
+    branch.childNodes = branch.childNodes.map(childNode => removeEmpty(childNode))
+    return branch
+  } else {
+    branch.parent = -1
+    branch.parentId = -1
+    return branch
+  }
 }
 
 export const childrenInChildren = function(children, repeater) {
@@ -235,10 +203,12 @@ class TreeWidget extends Component {
     super(props);
     let settings = props.element.getSettings();
 
+    const filtrationRepeater = this.getFromDatasource(settings) || []
+
     this.state = {
       settings,
       type: settings.select_type || "repeater",
-      repeater: [],
+      repeater: filtrationRepeater,
     };
 
     props.element.component = this;
@@ -280,15 +250,11 @@ class TreeWidget extends Component {
       settings = {
 
       }
-      const filtrationRepeater = this.getFromDatasource({
-        ...this.state.settings,
-        ...settings,
-      }) || []
-
-      this.setState(s => ({
-        ...s,
-        repeater: filtrationRepeater
-      }))
+      //
+      // this.setState(s => ({
+      //   ...s,
+      //   repeater: filtrationRepeater
+      // }))
     }
   }
 
