@@ -24,7 +24,6 @@ class Controller {
           this.rules.push(newRule);
           let value = currentElement.getSettings(this.getSettingName());
           if (value) {
-            // console.log(this.getSettingName(), value)
             newRule.insertValue(value);
           }
         }
@@ -44,7 +43,6 @@ class Controller {
   }
 
   changeTemplateName(value){
-    console.log(getTemplateDataStorage());
     getTemplateDataStorage().title = value;
     setTitle(value)
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));

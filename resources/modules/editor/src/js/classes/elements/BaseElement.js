@@ -526,7 +526,6 @@ class BaseElement extends ControlStack {
 
   setSettingValue(settingName, value, dispatchToHistory = true, locked = false) {
     const settings = locked ? this.settingsLock : this.settings
-
     //check change value
     if (settings[settingName] !== value) {
       if (

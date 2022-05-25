@@ -363,7 +363,6 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      locked: true,
     });
 
     this.addControl('width_size', {
@@ -380,7 +379,6 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      locked: true,
     });
 
     this.endControlSection();

@@ -114,8 +114,8 @@ class ImageWidget extends Component {
         name: "default"
       };
     }
-    let width = this.props.element.getResponsiveLockedSetting('width_size');
-    let height = this.props.element.getResponsiveLockedSetting('height_size');
+    let width = this.props.element.getResponsiveSetting('width_size');
+    let height = this.props.element.getResponsiveSetting('height_size');
     width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
     if(_.get(height, 'size')){
       height = _.get(height, 'size') + _.get(height, 'unit', '%');
