@@ -1,11 +1,8 @@
 import AltrpFile from "../../../../../front-app/src/js/classes/AltrpFile";
-
-const {
-  isEditor,
-  parseOptionsFromSettings,
-  replaceContentWithData,
-  getDataFromLocalStorage
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 const {ImageCrop} = window.altrpLibs
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 
@@ -82,10 +79,10 @@ const getCroppedImg = (image, crop, fileName) => {
     crop.width,
     crop.height
   );
- 
+
   // As Base64 string
   // const base64Image = canvas.toDataURL('image/jpeg');
- 
+
   // As a blob
   return new Promise((resolve, reject) => {
     canvas.toBlob(file => {
@@ -399,8 +396,8 @@ class InputCropImageWidget extends Component {
    */
   onChange = async (e) => {
     this.setState(state => ({
-      ...state, 
-      notActive: true, 
+      ...state,
+      notActive: true,
     }))
 
     const {filesStorage} = this.state;
@@ -533,7 +530,7 @@ class InputCropImageWidget extends Component {
     } catch (e) {
       console.error(e);
     }
-    
+
     this.selectOtherInput.current.click();
   }
 
@@ -548,7 +545,7 @@ class InputCropImageWidget extends Component {
     const img = await getCroppedImg(this.imageToCrop.current, this.state.crop, this.state.filesStorage[0].data.file.name)
 
     let value = new AltrpFile(img)
-    
+
     try {
       const storedFile = await value.storeFile()
 

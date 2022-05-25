@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-const {getResponsiveSetting} = window.altrpHelpers;
+import {getResponsiveSetting} from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
 
 const TableComponent = styled.div`${({settings, rows})=>{
   if(! getResponsiveSetting(settings, 'table_transpose')){

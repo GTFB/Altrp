@@ -1,9 +1,7 @@
-const {
-  isEditor,
-  replaceContentWithData,
-  renderAsset,
-  getDataFromLocalStorage,
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpInput from "../altrp-input/AltrpInput";
 

@@ -1,10 +1,8 @@
 import React from "react";
-const {
-  getDataByPath,
-  isEditor,
-  parseOptionsFromSettings, renderAsset,
-  renderAssetIcon
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 
 import {NullArray} from "./styled-components/TreeComponent";
 

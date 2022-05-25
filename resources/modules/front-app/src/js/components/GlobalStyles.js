@@ -61,10 +61,8 @@ import MenuBlueprintCSS from "../../../../../../server/classes/components/MenuPl
 import InputCropImageComponent from "../../../../editor/src/js/components/widgets/styled-components/InputCropImageComponent";
 import getFeedbackStyles from "./helpers/getFeedbackStyles";
 import getInputPaginationStyles from "./helpers/getInputPaginationStyles";
-
 import animationStyles from "../helpers/animations/animations-styles";
-
-const {isEditor} = window.altrpHelpers;
+import isEditor from "../functions/isEditor";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   let styles = "";

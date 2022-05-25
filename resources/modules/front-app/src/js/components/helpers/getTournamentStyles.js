@@ -1,4 +1,4 @@
-import getResponsiveSetting from "../../helpers/get-responsive-setting";
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 import {styledString} from "../../helpers/styles";
 
 export default function getTournamentStyles(settings, elementId) {
@@ -12,7 +12,7 @@ export default function getTournamentStyles(settings, elementId) {
     'reacket-player-image',
         ['padding', 'image_padding', 'dimensions'],
     '}',
-    
+
     '.reacket-player',
         ['padding', 'players_padding', 'dimensions'],
         ['background-color', 'players_background_color', 'color'],
@@ -59,7 +59,7 @@ export default function getTournamentStyles(settings, elementId) {
         ['color', 'players_winners_label_color', 'color'],
         ['', 'players_winners_label_typographic', 'typographic'],
     '}',
-    
+
     '.reacket-highlighted',
         () => `background-color: ${getResponsiveSetting(settings, 'players_highlighted_background_color')?.color} !important;`,
         ['padding', 'players_highlighted_padding', 'dimensions'],

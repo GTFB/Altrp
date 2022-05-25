@@ -1,7 +1,5 @@
-const {
-  isEditor,
-  isSSR,
-} = window.altrpHelpers
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import isSSR from "../../../../../front-app/src/js/functions/isSSR";
 
 class ActionTriggerWidget extends React.Component {
   constructor(props) {

@@ -5,7 +5,8 @@ import {changeCurrentUser, setUserNotice, setUsersOnline} from "./js/store/curre
 import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
-const { Resource} = window.altrpHelpers;
+import Resource from "../../editor/src/js/classes/Resource";
+import getRoutes from "../src/js/functions/getRoutes";
 import GlobalStyles from "./js/components/GlobalStyles";
 
 class FrontApp extends Component {
@@ -17,7 +18,7 @@ class FrontApp extends Component {
     console.log('FRONT APP: ',performance.now());
   }
   getRoutes() {
-    return window.altrpHelpers.getRoutes().then(res => {
+    return getRoutes().then(res => {
       this.routes = res.default;
     });
   }

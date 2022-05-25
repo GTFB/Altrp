@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
 
 const PaginationComponent = styled.div`
 & .altrp-pagination-pages__item{

@@ -6,14 +6,12 @@ import ArrowIcon from "../../../svgs/arrow.svg"
 import ("slick-carousel/slick/slick.scss");
 import ("slick-carousel/slick/slick-theme.scss");
 import ('./altrp-carousel.scss');
-const {
-  getComponentByElementId,
-  getDataByPath,
-  getResponsiveSetting,
-  isEditor,
-  renderAsset
-} = window.altrpHelpers;
-const {TemplateLoader} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
+import getComponentByElementId from "../../../../../front-app/src/js/functions/getComponentByElementId";
+import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
+import TemplateLoader from "../../../../src/js/components/template-loader/TemplateLoader";
 import AltrpCarouselWrapper from "./AltrpCarouselWrapper";
 
 /**

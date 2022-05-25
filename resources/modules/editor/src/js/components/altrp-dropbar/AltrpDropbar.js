@@ -1,8 +1,6 @@
 import React, {Component} from "react";
 import AltrpPopper from "../altrp-popper/AltrpPopper";
-const {
-  TemplateLoader,
-} = window.altrpHelpers;
+import TemplateLoader from "../../../js/components/template-loader/TemplateLoader";
 
 import DropbarComponent from "../widgets/styled-components/DropbarComponent";
 

@@ -5,7 +5,7 @@ import CSSRule from "../classes/CSSRule";
 import { changeTemplateStatus } from "../store/template-status/actions";
 import { controllerValue } from "../store/controller-value/actions";
 import RepeaterController from "../components/controllers/RepeaterController";
-const {setTitle} = window.altrpHelpers
+import setTitle from "../../../../front-app/src/js/functions/setTitle";
 
 /**
  * Класс-контроллер

@@ -1,4 +1,4 @@
-import { getResponsiveSetting } from '../../helpers';
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 import { borderWidthStyled, sizeStyled, colorPropertyStyled, simplePropertyStyled, dimensionsControllerToStyles, typographicControllerToStyles } from '../../helpers/styles';
 
 const getSchedulerStyles = (settings, id) => {
@@ -52,7 +52,7 @@ const getSchedulerStyles = (settings, id) => {
     styles += `.popup__textarea {
         height: 80px;
     }`
-    
+
     styles += `.popup__actions .button {
         border: solid #ddd 1px;
         background-color: #fff;
@@ -235,7 +235,7 @@ const getSchedulerStyles = (settings, id) => {
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'active_cell_typography', ':hover') )}
     }`
 
-    
+
     styles += `.fc-day-other {
         ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_color', '', {
             color: "rgba(34,25,77,100)",
@@ -339,7 +339,7 @@ const getSchedulerStyles = (settings, id) => {
             unit: 'px',
         }) , "border-radius")}
     }`
-    
+
     return styles;
 }
 

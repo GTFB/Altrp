@@ -1,5 +1,6 @@
 import AltrpLink from "../altrp-link/AltrpLink";
-import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import React, {Component} from 'react';
 
 class LinkMenu extends Component {

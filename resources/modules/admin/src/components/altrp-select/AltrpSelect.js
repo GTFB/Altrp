@@ -3,7 +3,7 @@ import AsyncSelect from "react-select/async";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Select from "react-select";
 import { Scrollbars } from "react-custom-scrollbars";
-import {parseParamsFromString, parseURLTemplate} from "../../../../front-app/src/js/helpers";
+
 
 export const renderScrollbar = (props) => {
   return <Scrollbars autoHeight >{props.children}</Scrollbars>;
@@ -50,6 +50,12 @@ class AltrpSelect extends Component {
   };
 
   render(){
+    const customWidth = {}
+    if (this.props.type === "table-select" && this.props.settingsTableWidth.switcher) {
+      if (this.props.settingsTableWidth.widthCustom) {
+        customWidth.width = this.props.settingsTableWidth.widthCustom.size + this.props.settingsTableWidth.widthCustom.unit
+      }
+    }
     const customStyles = {
       control: (base, state) => ({
         ...base,
@@ -59,7 +65,7 @@ class AltrpSelect extends Component {
           borderColor: "hsl(0,0%,80%)"
         }
       }),
-      menuPortal: base => ({ ...base, zIndex: 99999 }),
+      menuPortal: base => ({ ...base, ...customWidth, zIndex: 99999 }),
       // option: (provided, state) => ({
       //   ...provided,
       //   backgroundColor: state.isSelected ?
@@ -71,6 +77,11 @@ class AltrpSelect extends Component {
     let selectProps = {
       onChange: this.onChange,
       options: this.state.options || [],
+      formatOptionLabel: ({label}) => {
+        return (
+          <div dangerouslySetInnerHTML={{ __html: label }}/>
+        )
+      },
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
       noOptionsMessage: this.props.noOptionsMessage || (() => "not found"),

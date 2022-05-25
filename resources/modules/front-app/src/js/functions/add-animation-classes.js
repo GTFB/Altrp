@@ -1,5 +1,5 @@
 import elementInViewport from "../helpers/functions/element-in-viewport";
-const {delay} = window.altrpHelpers
+import delay from "../functions/delay";
 
 /**
  *

@@ -1,4 +1,5 @@
-import {generateButtonsArray, renderAssetIcon} from "../../../../../../front-app/src/js/helpers";
+import renderAssetIcon from "../../../../../../front-app/src/js/functions/renderAssetIcon";
+import generateButtonsArray from "../../../../../../front-app/src/js/functions/generateButtonsArray";
 import PageButton from "./PageButton";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 import PaginationComponent from "./PaginationComponent";

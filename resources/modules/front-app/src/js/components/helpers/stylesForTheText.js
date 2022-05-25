@@ -12,7 +12,7 @@ import {
   textShadowControllerToStyles,
   dimensionsStyled,
 } from '../../helpers/styles';
-import { getResponsiveSetting } from '../../helpers';
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 
 /**
  * Преобразует объект стилей, который задается в виджете Text в строку css для вставки в GlobalStyles

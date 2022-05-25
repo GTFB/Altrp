@@ -10,14 +10,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import React from "react";
 import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
-const {
-  altrpCompare,
-  altrpRandomId,
-  conditionsChecker,
-  isEditor,
-  replaceContentWithData,
-  setTitle
-} = window.altrpHelpers;
+import isEditor from "../functions/isEditor";
+import setTitle from "../functions/setTitle";
+import altrpRandomId from "../functions/altrpRandomId";
+import altrpCompare from "../functions/altrpCompare";
+import conditionsChecker from "../functions/conditionsChecker";
+import replaceContentWithData from "../functions/replaceContentWithData";
 
 class ElementWrapper extends Component {
   constructor(props) {

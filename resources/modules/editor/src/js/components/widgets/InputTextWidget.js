@@ -1,13 +1,11 @@
-const {
-  convertData,
-  isEditor,
-  parseOptionsFromSettings,
-  parseParamsFromString,
-  parseURLTemplate,
-  replaceContentWithData,
-  renderAssetIcon,
-  getDataFromLocalStorage
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import convertData from "../../../../../front-app/src/js/functions/convertData";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
+import parseParamsFromString from "../../../../../front-app/src/js/functions/parseParamsFromString";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";

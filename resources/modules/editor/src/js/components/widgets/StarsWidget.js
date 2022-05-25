@@ -2,6 +2,8 @@ import React from "react";
 import EmptyStarInitial from "../../../svgs/empty-star.svg";
 import StarInitial from "../../../svgs/star.svg";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 
 const StarsList = styled.ul`
   list-style-type: none;
@@ -26,7 +28,7 @@ const EmptyStarIcon = styled(EmptyStarInitial)`
 const StarIcon = styled(StarInitial)`
 `;
 
-const {isEditor, getDataByPath, replaceContentWithData} = window.altrpHelpers
+
 
 class StarsWidget extends Component {
   constructor(props) {

@@ -1,5 +1,4 @@
 import Resource from '../../classes/Resource';
-const {isEditor} = window.altrpHelpers
 const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction, locales} = window.altrpLibs.fullCalendar
 const {InputGroup, TextArea} = window.altrpLibs.Blueprint
 
@@ -73,11 +72,7 @@ class SchedulerWidget extends Component {
     return formattedData
   }
 
-  // _componentDidUpdate = async () => {
-  //   if(isEditor()) {
-  //     window.dispatchEvent(new Event('resize'))
-  //   }
-  // }
+
   _componentDidMount = async () => {
 
     const formattedData = await this.getFormattedEvents()

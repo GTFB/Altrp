@@ -1,5 +1,5 @@
 import {gradientStyled, styledString} from "../../helpers/styles";
-const {getResponsiveSetting} = window.altrpHelpers;
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 
 /**
  *

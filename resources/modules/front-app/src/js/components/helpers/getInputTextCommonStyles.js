@@ -1,5 +1,5 @@
 import {colorPropertyStyled, styledString, typographicControllerToStyles} from "../../helpers/styles";
-import {getResponsiveSetting} from '../../helpers';
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 
 /**
  *

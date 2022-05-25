@@ -2,13 +2,14 @@ import SliderRangeFilter from "./components/filters/SliderRangeFilter";
 import ('../altrp-posts/altrp-posts.scss');
 import update from 'immutability-helper'
 import ('../../../sass/altrp-pagination.scss');
-import {
-  setDataByPath,
-  storeWidgetState,
-  isEditor, parseURLTemplate,
-  renderAssetIcon,
-  renderIcon, setAltrpIndex, getResponsiveSetting
-} from "../../../../../front-app/src/js/helpers";
+import setDataByPath from "../../../../../front-app/src/js/functions/setDataByPath";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import setAltrpIndex from "../../../../../front-app/src/js/functions/setAltrpIndex";
+import storeWidgetState from "../../../../../front-app/src/js/functions/setAltrpIndex";
+import renderIcon from "../../../../../front-app/src/js/functions/renderIcon";
+import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import { renderAdditionalRows, renderCellActions, } from "./altrp-table";
 import {
   useSortBy,
@@ -734,6 +735,8 @@ function DefaultColumnFilter({
 /**
  * Селект для фильтрации по значениям в колонке
  * @param filterValue
+ * @param column_switcher_custom_width_list
+ * @param column_custom_setWidth_list
  * @param setFilter
  * @param preFilteredRows
  * @param id
@@ -745,8 +748,8 @@ function DefaultColumnFilter({
  * @constructor
  */
 function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id, filter_placeholder, null_placeholder },
-  widgetId,
+  column: { filterValue, column_switcher_custom_width_list, column_custom_setWidth_list, setFilter, preFilteredRows, id, filter_placeholder, null_placeholder },
+  widgetId
 }) {
   const options = React.useMemo(() => {
     let _options = new Set();
@@ -766,7 +769,7 @@ function SelectColumnFilter({
   }, [id, preFilteredRows]);
 
   // Render a multi-select box
-  return (<AltrpSelect options={options}
+  return (<AltrpSelect options={options} settingsTableWidth={{switcher: column_switcher_custom_width_list, widthCustom: column_custom_setWidth_list}} type="table-select"
     isMulti={true}
     placeholder={filter_placeholder || 'Select some...'}
     className="altrp-table__filter-select"

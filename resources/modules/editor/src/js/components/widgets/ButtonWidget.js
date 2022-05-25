@@ -1,12 +1,10 @@
-const {
-  getComponentByElementId,
-  getHTMLElementById,
-  isEditor,
-  parseURLTemplate,
-  printElements,
-  renderAsset,
-  scrollToElement
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import getComponentByElementId from "../../../../../front-app/src/js/functions/getComponentByElementId";
+import getHTMLElementById from "../../../../../front-app/src/js/functions/getHTMLElementById";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import printElements from "../../../../../front-app/src/js/functions/printElements";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import scrollToElement from "../../../../../front-app/src/js/functions/scrollToElement";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-btn-wrapper {

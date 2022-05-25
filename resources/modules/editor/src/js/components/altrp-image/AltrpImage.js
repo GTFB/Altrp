@@ -1,7 +1,9 @@
 import Skeleton from './Skeleton';
 import ImagePlaceholder from "./ImagePlaceholder";
 import {checkElementInViewBox} from "../../../../../front-app/src/js/helpers/elements";
-const {isEditor, isSSR, renderAsset} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import isSSR from "../../../../../front-app/src/js/functions/isSSR";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 
 class AltrpImage extends Component {
   constructor(props) {

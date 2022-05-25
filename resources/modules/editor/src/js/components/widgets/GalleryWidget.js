@@ -1,6 +1,6 @@
 import GalleryIcon from "../../../svgs/widget_gallery.svg";
 import ("../../../sass/altrp-gallery.scss");
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 import HoverImage from "../animations/image/HoverImage";
 import Overlay from "../altrp-gallery/Overlay";

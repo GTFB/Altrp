@@ -1,7 +1,5 @@
 import DefaultIcon from '../../../svgs/icon.svg'
-const {
-  renderAsset,
-} = window.altrpHelpers;
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 
 class IconWidget extends Component {
   constructor(props) {

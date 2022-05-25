@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { getDataByPath } from "../../../../../front-app/src/js/helpers";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 
 import MapDesigner from "./MapDesigner";
 

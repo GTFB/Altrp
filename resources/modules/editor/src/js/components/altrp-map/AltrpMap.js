@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 import MapDesigner from "./MapDesigner";
 
@@ -91,7 +92,7 @@ function AltrpMap({ element, settings }) {
     onTap={handleClickPolygon}
     isLoading={isLoading}
     style={{
-      pointerEvents: window.altrpHelpers.isEditor() ? 'none' : 'auto',
+      pointerEvents: isEditor() ? 'none' : 'auto',
       height: (style_height.size + style_height.unit) || "200px",
       marginTop: (style_margin.top + style_margin.unit) || "10px",
       marginBottom: (style_margin.bottom + style_margin.unit) || "10px",

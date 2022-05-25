@@ -1,5 +1,5 @@
 import {colorPropertyStyled, gradientStyled, styledString} from "../../helpers/styles";
-const {getResponsiveSetting} = window.altrpHelpers;
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 
 /**
  *
@@ -141,7 +141,7 @@ export default function getInputSelectStyles(settings) {
         styles += colorPropertyStyled(getResponsiveSetting(settings, 'button_background_color', ':hover'), 'background-color')
         styles += 'background-blend-mode: color-burn;'
       }
-      
+
       styles += '}'
       styles += '.bp3-button.bp3-button:active{'
       button_gradient = getResponsiveSetting(settings, 'button_gradient', '.active')

@@ -80,7 +80,7 @@ import getFeedbackStyles from "../../../../front-app/src/js/components/helpers/g
 import getInputPagintaionStyles from "../../../../front-app/src/js/components/helpers/getInputPaginationStyles";
 
 const { connect } = window.reactRedux;
-const { replaceContentWithData } = window.altrpHelpers;
+import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
   elementName,
   elementId,

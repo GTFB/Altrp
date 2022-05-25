@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import AltrpLink from "../../altrp-link/AltrpLink";
 import AltrpImage from "../../altrp-image/AltrpImage";
 import LinkMenu from "../LinkMenu";
 

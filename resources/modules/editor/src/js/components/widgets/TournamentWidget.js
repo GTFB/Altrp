@@ -1,5 +1,6 @@
 const { Reacket } = window.altrpLibs
-const { isEditor, getDataByPath } = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .reacket-round-header {  width: 20rem;  margin-right: 8rem;  padding: 0.2rem 0;  font-size: 120%;  font-weight: bold;  margin-left: 2rem; }  .reacket-round-header.reacket-last-round {    margin-right: 0; }

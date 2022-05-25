@@ -1,10 +1,8 @@
 import React from "react";
-const {
-  moment
-} = window.altrpHelpers;
+import moment from 'moment';
 import { DateRangeInput, TimePrecision } from "@blueprintjs/datetime";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 class InputDateRangeWidget extends Component {
   constructor(props){

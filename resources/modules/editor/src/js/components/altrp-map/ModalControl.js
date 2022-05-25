@@ -3,8 +3,7 @@ import React, {
   useLayoutEffect,
   useEffect,
   useCallback,
-  useMemo,
-  forwardRef
+  useMemo
 } from "react";
 import Select from "react-select";
 import L from "leaflet";
@@ -13,8 +12,7 @@ import { iconTypes, customIcon } from "./DivIcon";
 import tooltipOptions from "./helpers/tooltipOptions";
 import axios from "axios";
 import Slider from "@material-ui/core/Slider";
-import { getDataByPath } from "../../../../../front-app/src/js/helpers";
-import { useGetLatest } from "react-table";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import ModalComponent from "./ModalComponent";
 
 const ModalControl = (

@@ -1,6 +1,5 @@
 import AccordionItem from "./AccordionItem";
-
-const {renderAssetIcon} = window.altrpHelpers;
+import renderAssetIcon from "../../../../../../front-app/src/js/functions/renderAssetIcon";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-accordion-item-button {
@@ -161,7 +160,7 @@ class AccordionWidget extends Component {
     return <div className="altrp-accordion">
       {
         items.map((item, idx) => (
-          <AccordionItem 
+          <AccordionItem
             idArray={this.state.activeItem.id}
             idx={idx}
             open={(e) => this.open(e)}

@@ -1,7 +1,7 @@
 import animationStyles from "../helpers/animations/animations-styles";
 
 
-const {getResponsiveSetting} = window.altrpHelpers
+import {getResponsiveSetting} from "../functions/getResponsiveSetting";
 /**
  * Render styles to animations via styled component
  * @param {{}} settings

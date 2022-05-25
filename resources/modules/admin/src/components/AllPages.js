@@ -52,7 +52,7 @@ class AllPages extends Component {
       });
     }
 
-    let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
+    let treePagesNew = res.map(page => {
       return this.treePagesMap(page)
     })
     let treePagesSlice = treePagesNew

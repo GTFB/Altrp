@@ -1,6 +1,6 @@
 import {CSSTransition} from "react-transition-group";
 
-const {iconsManager} = window.altrpHelpers
+import iconsManager from "../functions/iconsManager";
 import { Scrollbars } from "react-custom-scrollbars";
 import { togglePopup } from "../store/popup-trigger/actions";
 import AltrpImage from "../../../../editor/src/js/components/altrp-image/AltrpImage";

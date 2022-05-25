@@ -1,11 +1,9 @@
-const {
-  isEditor,
-  parseOptionsFromSettings,
-  replaceContentWithData,
-  renderAssetIcon,
-  moment,
-  getDataFromLocalStorage
-} = window.altrpHelpers;
+import moment from 'moment';
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 const { DateInput, TimePrecision } = window.altrpLibs.BlueprintDatetime;
 (window.globalDefaults = window.globalDefaults || []).push(`

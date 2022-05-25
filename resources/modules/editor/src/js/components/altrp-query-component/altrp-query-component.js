@@ -1,7 +1,6 @@
 import React, {useState, useCallback, useEffect} from "react";
-import Query from "../../classes/Query";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
-import {setAltrpIndex} from "../../../../../front-app/src/js/helpers";
+import setAltrpIndex from "../../../../../front-app/src/js/functions/setAltrpIndex";
 
 /**
  * Компонент для получения данных при помощи запросов
