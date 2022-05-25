@@ -1,10 +1,4 @@
-import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
-import Resource from "../../../editor/src/js/classes/Resource";
-import { changeCurrentUser } from "./store/current-user/actions";
-import { changeAppRoutes } from "./store/routes/actions";
-import Route from "./classes/Route";
-import { addResponseData } from "./store/responses-storage/actions";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import React from "react";
 import _CONDITIONS_OPTIONS from "./constants/CONDITIONS_OPTIONS";
@@ -48,6 +42,24 @@ export {default as setDataByPath} from "./functions/setDataByPath";
 export {default as renderIcon} from "./functions/renderIcon";
 export {default as scrollbarWidth} from "./functions/scrollbarWidth";
 export {default as redirect} from "./functions/redirect";
+export {default as parseStringValue} from "./functions/parseStringValue";
+export {default as getMediaQueryByName} from "./functions/getMediaQueryByName";
+export {default as getMediaSettingsByName} from "./functions/getMediaSettingsByName";
+export {default as getObjectByPrefix} from "./functions/getObjectByPrefix";
+export {default as isElementTopInViewport} from "./functions/isElementTopInViewport";
+export {default as getTopPosition} from "./functions/getTopPosition";
+export {default as startOfWeek} from "./functions/startOfWeek";
+export {default as getCurrentStoreState} from "./functions/getCurrentStoreState";
+export {default as getWrapperHTMLElementByElement} from "./functions/getWrapperHTMLElementByElement";
+export {default as getNextWeekStart} from "./functions/getNextWeekStart";
+export {default as getWeekStart} from "./functions/getWeekStart";
+export {default as getNextWeekEnd} from "./functions/getNextWeekEnd";
+export {default as getPrevWeekStart} from "./functions/getPrevWeekStart";
+export {default as getPrevWeekEnd} from "./functions/getPrevWeekEnd";
+export {default as isJSON} from "./functions/isJSON";
+export {default as altrpLogin} from "./functions/altrpLogin";
+export {default as prepareURLForEmail} from "./functions/prepareURLForEmail";
+export {default as altrpLogout} from "./functions/altrpLogout";
 export {default as getDataFromLocalStorage} from "./functions/getDataFromLocalStorage";
 export {default as getTimeValue} from "./functions/getTimeValue";
 export {default as startOfMonth} from "./functions/startOfMonth";
@@ -55,172 +67,8 @@ export {default as startOfYear} from "./functions/startOfYear";
 export {default as isEditor} from "./functions/isEditor";
 export {getResponsiveSetting} from "./functions/getResponsiveSetting";
 
-/**
- * Получает медиа запрос для css по имени настройки
- * @param {string} screenSettingName
- * @return {string}
- */
-export function getMediaQueryByName(screenSettingName) {
-  let mediaQuery = "";
-  CONSTANTS.SCREENS.forEach(screen => {
-    if (screen.name === screenSettingName) {
-      mediaQuery = screen.mediaQuery;
-    }
-  });
-  return mediaQuery;
-}
-/**
- * Получает медиа запрос для css по имени настройки
- * @param {string} screenSettingName
- * @return {string}
- */
-export function getMediaSettingsByName(screenSettingName) {
-  let screen = CONSTANTS.SCREENS[0];
-  CONSTANTS.SCREENS.forEach(_screen => {
-    if (_screen.name === screenSettingName) {
-      screen = _screen;
-    }
-  });
-  return screen;
-}
-
-/**
- * Возвращает новый объект из свояств объекта, в именах которых присутствует префикс prefix
- * @param {string} prefix - строка для поиска (например 'test')
- * @param {{}} object - если в объекте есть свойство test__test то вернет {test: test__test_value}
- * @return {{}}
- */
-export function getObjectByPrefix(prefix = "", object = {}) {
-  let result = {};
-  if (!prefix) {
-    return result;
-  }
-  _.forEach(object, (value, key) => {
-    if (key.indexOf(`${prefix}__`, "") === 0) {
-      result[key.replace(`${prefix}__`, "")] = value;
-    }
-  });
-  return result;
-}
-
 
 export const CONDITIONS_OPTIONS = _CONDITIONS_OPTIONS
-
-export function isElementTopInViewport(top, scrollTop, clientHeight) {
-  return top > scrollTop && top < scrollTop + clientHeight;
-}
-
-export function getTopPosition(element) {
-  let top = element.offsetTop;
-
-  while (element.offsetParent) {
-    element = element.offsetParent;
-    top += element.offsetTop;
-  }
-
-  return top;
-}
-/**
- * Получить начало месяца
- * @param {Date} date
- * @param {int} weekShift
- * @return {Date}
- */
-export function startOfWeek(date, weekShift = 0) {
-  const {moment} = window.altrpHelpers;
-  return moment(
-    new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() + weekShift * 7
-    )
-  ).firstDayOfWeek();
-}
-
-/**
- * Получить ссылку на состояние хранилища
- * @return {*}
- */
-export function getCurrentStoreState() {
-  return appStore.getState();
-}
-
-
-
-
-/**
- * Вернет HTML  React компонента, у которого props.element = element
- * @param {FrontElement} element
- * @return {null | HTMLElement}
- */
-export function getWrapperHTMLElementByElement(element) {
-  if (!element) {
-    return null;
-  }
-  let HTMLElement = null;
-  appStore.getState().elements.forEach(el => {
-    if (element === el.props.element) {
-      HTMLElement = el.elementWrapperRef.current;
-    }
-  });
-  return HTMLElement;
-}
-
-/**
- * Начало следующей недели
- * @return {moment.Moment}
- */
-function getNextWeekStart() {
-  const {moment} = window.altrpHelpers;
-  let today = moment();
-  let daystoMonday = 7 - (today.isoWeekday() - 1);
-  return today.add(daystoMonday, "days");
-}
-
-/**
- * Начало текущей недели
- * @return {moment.Moment}
- */
-function getWeekStart() {
-  const {moment} = window.altrpHelpers;
-  let today = moment();
-  let daystoMonday = today.isoWeekday() - 1;
-  return today.subtract(daystoMonday, "days");
-}
-
-/**
- * Конец Следующей недели
- * @return {moment.Moment}
- */
-function getNextWeekEnd() {
-  let nextMonday = getNextWeekStart();
-  return nextMonday.add("days", 6);
-}
-
-/**
- * Начало предыдущей недели
- * @return {moment.Moment}
- */
-function getPrevWeekStart() {
-  const {moment} = window.altrpHelpers;
-  let today = moment();
-  let daystoLastMonday = today.isoWeekday() - 1 + 7;
-  return today.subtract(daystoLastMonday, "days");
-}
-
-/**
- * Конец предыдущей недели
- * @return {moment.Moment}
- */
-function getPrevWeekEnd() {
-  let lastMonday = getPrevWeekStart();
-  return lastMonday.add("days", 6);
-}
-
-/**
- * Удаляет пустые свойства в объектах
- */
-export function clearEmptyProps() {}
 
 
 /**
@@ -377,93 +225,6 @@ export async function dataToXML(data, filename = "table") {
   return await response.blob();
 }
 
-/**
- * Логиним пользователя
- * @param {{}} data
- * @param {string} formId
- * @return {Promise<{}>}
- */
-export async function altrpLogin(data = {}, formId = "login") {
-  data.altrpLogin = true;
-  let res;
-  try {
-    res = await new Resource({ route: "/login" }).post(data);
-  } catch (error) {
-    let status = error.status;
-    if (error.res instanceof Promise) {
-      res = await error.res;
-    }
-    if (error instanceof Promise) {
-      res = await error;
-    }
-    res = mbParseJSON(res, {});
-    status && (res.__status = status);
-  }
-  appStore.dispatch(addResponseData(formId, res));
-  if (!(res.success || res._token)) {
-    return {
-      success: false
-    };
-  }
-  _token = res._token;
-
-  let currentUser = await new Resource({
-    route: "/ajax/current-user"
-  }).getAll();
-  currentUser = currentUser.data;
-  appStore.dispatch(changeCurrentUser(currentUser));
-  /*let routes = [];
-  try {
-    let routesData = await new Resource({
-      route: "/ajax/routes"
-    }).getAll();
-
-    for (let _data of routesData.pages) {
-      routes.push(Route.routeFabric(_data));
-    }
-    appStore.dispatch(changeAppRoutes(routes));
-  } catch (err) {
-    console.error(err);
-    return { success: false };
-  }*/
-  return { success: true };
-}
-
-/**
- * Выход
- * @return {Promise<{}>}
- */
-export async function altrpLogout() {
-  let res = await new Resource({ route: "/logout" }).post();
-  if (!(res.success || res._token)) {
-    return {
-      success: false
-    };
-  }
-  _token = res._token;
-
-  let currentUser = await new Resource({
-    route: "/ajax/current-user"
-  }).getAll();
-  currentUser = currentUser.data;
-  appStore.dispatch(changeCurrentUser(currentUser));
-  let routes = [];
-  try {
-    let routesData = await new Resource({
-      route: "/ajax/routes"
-    }).getAll();
-
-    for (let _data of routesData.pages) {
-      routes.push(Route.routeFabric(_data));
-    }
-    appStore.dispatch(changeAppRoutes(routes));
-  } catch (err) {
-    console.error(err);
-    return { success: false };
-  }
-  return { success: true };
-}
-
 export function cutString(string, maxLength = 80) {
   if (string.length <= maxLength) return string;
   return string.slice(0, maxLength) + "...";
@@ -572,23 +333,6 @@ export function isValueMatchMask(value, mask) {
 }
 
 /**
- * Подготавливает URL для шаблона письма
- * @param {string} url
- * @param {{} | null} context
- * @return {string}
- */
-export function prepareURLForEmail(url, context = null) {
-  if (!_.isString(url) || !url) {
-    return url;
-  }
-  url = url.trim();
-  if (url.indexOf("http") !== 0) {
-    url = location.origin + url;
-  }
-  return parseURLTemplate(url, context);
-}
-
-/**
  *
  * @param {{}} context
  * @return {{}}
@@ -601,21 +345,6 @@ export function prepareContext(context) {
   context.altrpresponses = appStore.getState().altrpresponses.getData();
   context.altrpmeta = appStore.getState().altrpMeta.getData();
   return context;
-}
-
-/**
- *
- * Определеят явлется ли строка валидным JSON
- * @param {string} JSONString
- * @return {boolean}
- */
-export function isJSON(JSONString = "") {
-  try {
-    JSON.parse(JSONString);
-    return true;
-  } catch (error) {
-    return false;
-  }
 }
 
 /**
@@ -663,34 +392,5 @@ function parseXml(xml, arrayTags) {
   for (let node of dom.childNodes) parseNode(node, result);
 
   return result;
-}
-/**
- * Вернуть значение из строки
- * @param string
- */
-export function parseStringValue(string) {
-  let value = string;
-
-  if (Number(value)) {
-    return Number(value);
-  }
-  switch (value) {
-    case "true": {
-      return true;
-    }
-    case "false": {
-      return false;
-    }
-    case "null": {
-      return null;
-    }
-    case "undefined": {
-      return undefined;
-    }
-    case "0": {
-      return 0;
-    }
-  }
-  return value;
 }
 

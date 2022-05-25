@@ -5,8 +5,10 @@ import {
 } from "../../store/current-data-storage/actions";
 import {changeCurrentUser} from "../../store/current-user/actions";
 import Datasource from "../Datasource";
-import {getDataByPath} from "../../helpers";
-const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHelpers;
+import Resource from "../../../../../editor/src/js/classes/Resource";
+import isJSON from "../../functions/isJSON";
+import mbParseJSON from "../../functions/mb-parse-JSON";
+import replaceContentWithData from "../../functions/replaceContentWithData";
 
 /**
  * @class DataStorageUpdater

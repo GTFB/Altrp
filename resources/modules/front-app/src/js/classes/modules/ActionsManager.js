@@ -9,7 +9,7 @@
  */
 import AltrpAction from "../AltrpAction";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-const {isEditor, } = window.altrpHelpers;
+import isEditor from "../../functions/isEditor"
 
 class ActionsManager extends AltrpModel{
   /**
