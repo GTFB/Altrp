@@ -10,6 +10,21 @@ export default function TreeComponent(settings, prefix) {
       ["height", "icon_size", "slider"],
     "}",
 
+    "bp3-tree-node img",
+    ["width", "icon_size", "slider"],
+    ["height", "icon_size", "slider"],
+    "}",
+
+    "bp3-tree-node-caret-none",
+      () => "position: absolute",
+    "}",
+
+    "bp3-tree-node-caret-none",
+      ["width", "icon_size", "slider"],
+      ["height", "icon_size", "slider"],
+      () => "z-index: 99",
+    "}",
+
     'bp3-tree',
       ['background-color', 'tree_menu_background', 'color'],
     '}',
