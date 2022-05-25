@@ -20,6 +20,7 @@ export class TelegramBot {
 
   async send(message, user, customizerData) {
     const blocks = message.content
+    console.log(blocks)
 
     if(this.token && !this.bot) {
       try {

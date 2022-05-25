@@ -5,6 +5,7 @@ import ArrowImageDet from '../svgs/arrowImageDet.svg';
 import AutoSave from './AutoSaveDocumentDetail';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {createGlobalStyle} from "styled-components";
+import { Scrollbars } from "react-custom-scrollbars";
 
 const GlobalStyle = createGlobalStyle`
   #admin {
@@ -17,11 +18,13 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 export class ImageDetail extends React.Component {
   state = {}
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.imageId !== this.props.imageId && this.props.imageId !== null) {
-      this.props.getAsset(this.props.imageId).then(data => this.setState(data, () => {
+      const source = await this.props.getAsset(this.props.imageId)
+
+      this.setState(source, () => {
         this.getAuthorList(this.state.author)
-      }))
+      })
     }
   }
 
@@ -55,6 +58,7 @@ export class ImageDetail extends React.Component {
   render() {
     const {authorName, url, created_at, filename, media_type, height, width, filesize, mediaVariation} = this.state
 
+    console.log(this.state)
     if (!this.props.imageId) return null;
 
     return (

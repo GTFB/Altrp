@@ -832,6 +832,10 @@ export function actionsControllers(
       {
         label: 'Remove Items',
         value: 'remove_items'
+      },
+      {
+        label: 'Delete',
+        value: 'delete'
       }
     ],
     conditions: {

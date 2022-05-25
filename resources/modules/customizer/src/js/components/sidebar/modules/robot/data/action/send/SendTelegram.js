@@ -148,6 +148,17 @@ export default class SendTelegram extends Component{
                 </div>
 
                 <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                  <div className="controller-container controller-container_textarea">
+                    <div className="controller-container__label textcontroller-responsive controller-label">
+                      Start text
+                    </div>
+                    <div className='controller-field'>
+                                <textarea className="control-field" id={`telegram_start_text`} name="url"
+                                          value={this.props.selectNode.data.props?.nodeData?.data?.start_text ?? ''} onChange={(e) => {
+                                  this.changeInput(e, "start_text")
+                                }}/>
+                    </div>
+                  </div>
                   {/*<input*/}
                   {/*  className="control-field"*/}
                   {/*  type="text"*/}

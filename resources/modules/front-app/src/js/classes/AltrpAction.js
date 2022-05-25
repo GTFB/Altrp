@@ -1136,6 +1136,11 @@ class AltrpAction extends AltrpModel {
           result.success = true;
         }
           break;
+        case 'delete': {
+          setDataByPath(path, null);
+          result.success = true;
+        }
+          break;
       }
     }
     return result;
