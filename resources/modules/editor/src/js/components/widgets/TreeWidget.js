@@ -137,6 +137,7 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   }
 
   if(!defaultOptions) {
+    console.log(repeater, "sadsadsa")
     return this.updateRepeater(repeater, {
       sort: [settings.sortDefault, settings.sortOption]
     })
@@ -150,6 +151,8 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
 
 export const updateRepeater = function (repeaterSetting, other={}) {
   const repeater = [];
+
+  console.log('sadass')
 
   repeaterSetting.forEach((branch, idx) => {
     let children = [];

@@ -515,7 +515,10 @@ export default class Page extends BaseModel {
       'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
     ])
       .select('name')
-
+    areas = areas.filter((area:Area) => {
+      const settings = mbParseJSON(area.settings, {})
+      return ! _.get(settings, 'not_content')
+    })
     for (let area of areas) {
       let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
       if (customStyles) {
@@ -523,7 +526,8 @@ export default class Page extends BaseModel {
         customStyles = _.get(customStyles, 'all_styles', [])
         customStyles = customStyles.map(s => {
           if (s.indexOf('</style>') === -1) {
-            s = `<style>${s}</style>`
+            s = `
+<style id="custom_area_styles_${area.name}">${s}</style>`
             return s
           }
         })
@@ -536,7 +540,8 @@ export default class Page extends BaseModel {
       headerStyles = _.get(headerStyles, 'all_styles', [])
       headerStyles = headerStyles.map(s => {
         if (s.indexOf('</style>') === -1) {
-          s = `<style>${s}</style>`
+          s = `
+<style id="header_style">${s}</style>`
           return s
         }
       })
@@ -547,7 +552,8 @@ export default class Page extends BaseModel {
       contentStyles = _.get(contentStyles, 'all_styles', [])
       contentStyles = contentStyles.map(s => {
         if (s.indexOf('</style>') === -1) {
-          s = `<style>${s}</style>`
+          s = `
+<style id="content_style">${s}</style>`
           return s
         }
       })
@@ -574,7 +580,8 @@ export default class Page extends BaseModel {
 
     }
     if(customAreasCount){
-      styles += `<style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
+      styles += `
+<style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
     }
 
     return styles
