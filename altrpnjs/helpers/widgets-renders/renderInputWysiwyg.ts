@@ -81,12 +81,7 @@ export default function renderInputWysiwyg(settings, device) {
   `
 
   return `
-    <div class="altrp-field-container " style="${containerClass}">
-      ${content_label_position_type === "top" ? label : ""}
-      ${content_label_position_type === "left" ? label : ""}
-      ${content_label_position_type === "right" ? label : ""}
-      ${content_label_position_type === "absolute" ? label : ""}
-      ${altrpWysiwyg}
+    <div class="altrp-field-container " style="${containerClass}">${content_label_position_type === "top" ? label : ""}${content_label_position_type === "left" ? label : ""}${content_label_position_type === "right" ? label : ""}${content_label_position_type === "absolute" ? label : ""}${altrpWysiwyg}
       ${content_label_position_type === "bottom" ? label : ""}
     </div>
   `

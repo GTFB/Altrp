@@ -1,3 +1,4 @@
+import CleanCSS from 'clean-css';
 import View from '@ioc:Adonis/Core/View'
 import * as mustache from 'mustache'
 import fs from 'fs'
@@ -74,6 +75,10 @@ export abstract class BaseGenerator{
 
     if(! fs.existsSync(Application.publicPath(`altrp/css/${screenName}`))){
       fs.mkdirSync(Application.publicPath(`altrp/css/${screenName}`), {recursive:true})
+    }
+    let res = await new CleanCSS().minify(content)
+    if(res.styles){
+      content = res.styles
     }
     fs.writeFileSync(fileName, content)
     return

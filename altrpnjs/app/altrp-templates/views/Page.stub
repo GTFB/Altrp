@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @include('favicons')
+    @!component('front-app-css')
     <title>{{title}}</title>
     <meta property="og:title" content="{{title}}">
 
@@ -75,7 +76,6 @@
         /* ]]> */
       </script>
     <script src="/serviceWorker.js?{{env('PACKAGE_KEY')}}"></script>
-    <link rel="stylesheet" href="/modules/front-app/front-app.css??{{env('PACKAGE_KEY')}}">
     <%={{ }}=%>
     <script defer src="{{ hAltrp }}"></script>
     {{{extra_footer_styles}}}

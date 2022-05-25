@@ -3,9 +3,7 @@ import EditIcon from "../../svgs/edit.svg";
 import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
 import AddIcon from "../../svgs/add.svg";
-import DuplicateIcon from "../../svgs/duplicate.svg";
-import CloseIcon from "../../svgs/close.svg";
-import store from "../store/store";
+import store, {getCurrentElement} from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
@@ -78,6 +76,7 @@ import ProgressBarComponent from "./widgets/styled-components/ProgressBarCompone
 import InputCropImageComponent from "./widgets/styled-components/InputCropImageComponent";
 import getFeedbackStyles from "../../../../front-app/src/js/components/helpers/getFeedbackStyles";
 import getInputPagintaionStyles from "../../../../front-app/src/js/components/helpers/getInputPaginationStyles";
+import Overlay from "./Overlay";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -377,8 +376,6 @@ class ElementWrapper extends Component {
   constructor(props) {
     super(props);
     this.chooseElement = this.chooseElement.bind(this);
-    this.deleteElement = this.deleteElement.bind(this);
-    this.duplicateElement = this.duplicateElement.bind(this);
     this.state = {
       children: this.props.element.getChildren(),
       dragOver: false,
@@ -393,6 +390,7 @@ class ElementWrapper extends Component {
     this.handleContext = this.handleContext.bind(this);
     this.wrapper = React.createRef();
     this.elementId = this.props.element.getId();
+    this.element = this.props.element
     this.onClickTooltip = this.onClickTooltip.bind(this);
     this.closeTooltip = this.closeTooltip.bind(this);
     this.tooltipOnMouseEnter = this.tooltipOnMouseEnter.bind(this);
@@ -685,6 +683,31 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
+    if(this.props.ignoreUpdate){
+      return false
+    }
+    let element = getCurrentElement()
+    let needUpdate = false;
+    while(element){
+      needUpdate = element === this.element
+
+      if(needUpdate){
+        break;
+      }
+      element = element?.parent
+    }
+    element = this.element
+    while(element){
+      needUpdate = element === getCurrentElement()
+
+      if(needUpdate){
+        break;
+      }
+      element = element?.parent
+    }
+    if(!needUpdate){
+      return false;
+    }
     if (nextProps.globalCssEditor.globalStylesCss !== this.props.globalCssEditor.globalStylesCss) {
       return true
     }
@@ -758,29 +781,11 @@ class ElementWrapper extends Component {
         this.props.element.getCurrentModel().getData()
       )} `;
     }
-    let overlayClasses = `overlay`;
-    let overlayStyles = { width: "100%" };
     if (this.props.currentElement === this.props.element) {
       classes += " altrp-element_current";
     }
-    let editText = `Edit ${this.props.element.getTitle()}`;
-    let duplicateText = `Duplicate ${this.props.element.getTitle()}`;
-    let deleteText = `Delete ${this.props.element.getTitle()}`;
-    let _EditIcon = EditIcon;
     classes += this.getClasses();
 
-    switch (this.props.element.getType()) {
-      case "section":
-        {
-          _EditIcon = DotsIcon;
-        }
-        break;
-      case "column":
-        {
-          _EditIcon = ColumnIcon;
-        }
-        break;
-    }
     let emptyColumn = "";
     if (
       this.props.element.getType() === "column" &&
@@ -868,43 +873,7 @@ class ElementWrapper extends Component {
             onMouseEnter={tooltip_show_type === "hover" ? this.tooltipOnMouseEnter : null}
             onMouseLeave={tooltip_show_type === "hover" ? this.tooltipOnMouseLeave : null}
           >
-            <div
-              className={overlayClasses}
-              id={"overlay" + this.props.element.getId()}
-              style={overlayStyles}
-            >
-              <div className="overlay-settings">
-                <button
-                  className="overlay-settings__button overlay-settings__button_add "
-                  title="Add Section"
-                >
-                  <AddIcon className="icon" />
-                </button>
-                <button
-                  className="overlay-settings__button overlay-settings__button_edit "
-                  onClick={this.chooseElement}
-                  draggable="true"
-                  onDragStart={this.onDragStart}
-                  title={editText}
-                >
-                  <_EditIcon className="icon" />
-                </button>
-                <button
-                  className="overlay-settings__button overlay-settings__button_duplicate "
-                  onClick={this.duplicateElement}
-                  title={duplicateText}
-                >
-                  <DuplicateIcon className="icon" />
-                </button>
-                <button
-                  className="overlay-settings__button overlay-settings__button_delete "
-                  onClick={this.deleteElement}
-                  title={deleteText}
-                >
-                  <CloseIcon className="icon" width="35" height="35" />
-                </button>
-              </div>
-            </div>
+            <Overlay element={this.element}/>
             {
               errorContent || React.createElement(this.props.component, elementProps)
             }
@@ -937,25 +906,11 @@ class ElementWrapper extends Component {
     }
   }
 
-  deleteElement(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.props.element.parent.deleteChild(this.props.element);
-  }
-  duplicateElement(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.props.element.duplicate();
-  }
-  showWidgetsPanel(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    getEditor().showWidgetsPanel();
-  }
 }
 
 function mapStateToProps(state) {
   return {
+    ignoreUpdate: state.editorState.ignoreUpdate,
     currentElement: state.currentElement.currentElement,
     dragState: state.elementDrag.dragState,
     currentModel: state.currentModel,

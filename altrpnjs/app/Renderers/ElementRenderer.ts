@@ -1,4 +1,4 @@
-import { string } from '@ioc:Adonis/Core/Helpers'
+import {string} from '@ioc:Adonis/Core/Helpers'
 import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import * as mustache from 'mustache'
@@ -11,15 +11,17 @@ import getResponsiveSetting from "../../helpers/getResponsiveSetting";
 import getColumnClasses from "../../helpers/getColumnClasses";
 import renderSectionBG from "../../helpers/renderSectionBG";
 import getAddingClasses from "../../helpers/getAddingClasses";
+import renderSection from "../../helpers/widgets-renders/renderSection";
 
 export default class ElementRenderer {
   static straightRenderIgnore = [
     'input-radio',
     'input-checkbox',
-    'section_widget',
+    // 'section_widget',
   ]
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
   private elementStub: string
+
   constructor(private element: {
     children: [],
     settingsLock: {},
@@ -31,9 +33,9 @@ export default class ElementRenderer {
       content?: string;
       advanced_element_id?: string,
       layout_html_tag?: string
-      react_element?:boolean
-      layout_content_width_type?:string
-      isFixed?:boolean
+      react_element?: boolean
+      layout_content_width_type?: string
+      isFixed?: boolean
       default_hidden: boolean
     },
     name: string,
@@ -42,12 +44,13 @@ export default class ElementRenderer {
   }) {
 
     this.elementStub = app_path(`altrp-templates/views/elements${
-      this.element.type === 'widget'? '/widgets' : ''
+      this.element.type === 'widget' ? '/widgets' : ''
     }/${this.element.name}.stub`)
   }
-  async render(screenName:string): Promise<string>{
+
+  async render(screenName: string): Promise<string> {
     const settings = this.element.settings
-    const reactElement =  this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
+    const reactElement = this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
     this.element.settingsLock = this.element.settingsLock || {}
     this.element.settings = {
@@ -62,30 +65,32 @@ export default class ElementRenderer {
       conditional_permissions,
     } = this.element.settings
     let children_content = ''
-    for (const child of this.element.children){
+    for (const child of this.element.children) {
       let renderer = new ElementRenderer(child)
       children_content += await renderer.render(screenName)
     }
     let element_content = '';
     const columns_count = this.element.children.length;
 
-    if(fs.existsSync(this.elementStub)){
+    if (fs.existsSync(this.elementStub)) {
       let section_background
       switch (this.getName()) {
         case 'section_widget':
-        case 'section':{
-          section_background = renderSectionBG(settings,this.getId(), screenName)
-        }break;
-        default:{
+        case 'section': {
+          section_background = renderSectionBG(settings, this.getId(), screenName)
+        }
+          break;
+        default: {
           section_background = ''
 
-        }break
+        }
+          break
       }
-      let styles:{}|string = {}
-      const {layout_content_width_type:widthType, isFixed} = this.element.settings
+      let styles: {} | string = {}
+      const {layout_content_width_type: widthType, isFixed} = this.element.settings
       let section_classes = ''
-      switch (this.getName() ){
-        case 'section':{
+      switch (this.getName()) {
+        case 'section': {
           if (widthType === "boxed" && !isFixed) {
             section_classes = " altrp-section_boxed ";
             styles['max-width'] = '100%'
@@ -98,20 +103,31 @@ export default class ElementRenderer {
             section_classes = " altrp-section--full-width "
           }
         }
-        break;
+          break;
       }
 
       styles = objectToStylesString(styles)
       const text_widget_content = this.getTextWidgetContent(screenName)
-      if(this.getType() === 'widget'
-        && ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1){
+      if (this.getType() === 'widget'
+        && ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1) {
         const filename = string.camelCase(`render_${this.getName()}`)
           + (isProd() ? '.js' : '.ts')
-        if(fs.existsSync(base_path(`helpers/widgets-renders/${filename}`))){
+        if (fs.existsSync(base_path(`helpers/widgets-renders/${filename}`))) {
           let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
             : await import(base_path(`helpers/widgets-renders/${filename}`))
           render = render.default
-          element_content =  render(this.element.settings, screenName)
+          element_content = render(this.element.settings, screenName)
+        }
+        if (this.getName() === 'section_widget') {
+          element_content =
+            renderSection(
+              settings,
+              screenName,
+              this.element.children.length,
+              this.isLink() ? 'altrp-pointer' : '',
+              children_content
+            );
+          console.log(element_content);
         }
       } else {
         element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
@@ -119,7 +135,7 @@ export default class ElementRenderer {
           settings: JSON.stringify(this.element.settings),
           id: this.element.id,
           children_content,
-          element_styles:styles,
+          element_styles: styles,
           section_classes,
           column_classes: getColumnClasses(settings, screenName),
           section_background,
@@ -141,8 +157,8 @@ export default class ElementRenderer {
     }
     let allow_start_tag = ''
     let allow_end_tag = ''
-    if(conditional_display_choose ||
-      (conditional_permissions?.length || conditional_roles?.length)){
+    if (conditional_display_choose ||
+      (conditional_permissions?.length || conditional_roles?.length)) {
       allow_start_tag = `@if(allowedForUser(element${this.getId()}_settings, user))~
 `
       allow_end_tag = `@end~
@@ -156,25 +172,25 @@ export default class ElementRenderer {
       `
       : ''}
       ${reactElement ? `data-react-element="${this.getId()}"` : ''}
-    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_click_actions', screenName)) ? '' : `data-altrp-wrapper-click-actions="${this.getIdForAction()}"` }
-    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearB_actions', screenName)) ? '' : `data-altrp-wrapper-appear-bottom-actions="${this.getIdForAction()}"` }
-    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearT_actions', screenName)) ? '' : `data-altrp-wrapper-appear-top-actions="${this.getIdForAction()}"` }
+    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_click_actions', screenName)) ? '' : `data-altrp-wrapper-click-actions="${this.getIdForAction()}"`}
+    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearB_actions', screenName)) ? '' : `data-altrp-wrapper-appear-bottom-actions="${this.getIdForAction()}"`}
+    ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearT_actions', screenName)) ? '' : `data-altrp-wrapper-appear-top-actions="${this.getIdForAction()}"`}
     ${_.isEmpty(getResponsiveSetting(settings, 'sticky', screenName)) ?
-    '' :
-    `data-altrp-sticky="${getResponsiveSetting(settings, 'sticky', screenName)}"
+      '' :
+      `data-altrp-sticky="${getResponsiveSetting(settings, 'sticky', screenName)}"
     data-altrp-sticky-spacing="${getResponsiveSetting(settings, 'st_spacing', screenName)}"
-    data-margin-top="${getResponsiveSetting(settings, 'st_spacing', screenName, 0)}"` }
+    data-margin-top="${getResponsiveSetting(settings, 'st_spacing', screenName, 0)}"`}
     data-altrp-id="${this.getId()}"
     `
 
     wrapper_attributes = wrapper_attributes.replace(/\s+/g, ' ');
-    if(advanced_element_id){
+    if (advanced_element_id) {
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
     content = mustache.render(content, {
       id: this.getId(),
       element_content,
-      set_content:this.getEdgeSetContent(!!allow_start_tag),
+      set_content: this.getEdgeSetContent(!!allow_start_tag),
       type: this.getType(),
       wrapper_attributes,
       allow_start_tag,
@@ -190,28 +206,31 @@ export default class ElementRenderer {
   private getType(): 'widget' | 'section' | 'column' {
     return this.element.type
   }
+
   private getName() {
     return this.element.name
   }
-  private getIdForAction(){
+
+  private getIdForAction() {
     return this.element.id
   }
-  private isLink(){
-    return ! !_.get(this, 'element.settings.link_link.url');
+
+  private isLink() {
+    return !!_.get(this, 'element.settings.link_link.url');
   }
 
-  private getTextWidgetContent(screenName):string {
-    if(this.getName() !== 'text'){
+  private getTextWidgetContent(screenName): string {
+    if (this.getName() !== 'text') {
       return ''
     }
-    if(this.element.settings.content){
+    if (this.element.settings.content) {
       return `<div class="altrp-text ck ck-content">{{{data_get(altrpContext, '${this.element.settings.content}', '${this.element.settings.text || ''}')}}}</div>`
     }
     return `<div class="altrp-text ck ck-content">${getResponsiveSetting(this.element.settings, 'text', screenName, '')}</div>`
   }
 
-  private getEdgeSetContent(allow_start_tag: boolean = false):string{
-    if(ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1 && ! allow_start_tag){
+  private getEdgeSetContent(allow_start_tag: boolean = false): string {
+    if (ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1 && !allow_start_tag) {
       return ''
     }
 

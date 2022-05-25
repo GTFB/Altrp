@@ -819,7 +819,6 @@ export default class Page extends BaseModel {
             json += `"${key}":${JSONStringifyEscape(_template[key])},`
           }
         }
-        console.log(_.isString(area.template.data));
         let  data = area.template.data
         if(_.isString(area.template.data)){
           data = JSON.parse(data)
