@@ -216,6 +216,7 @@ export const childrenInChildren = function(children, repeater) {
             if(repBranch.childNodes?.length > 0) {
               repBranch.childNodes = this.childrenInChildren(repBranch.childNodes, repeater)
             }
+
             replacedChildren.push(repBranch)
           }
         })
@@ -424,7 +425,7 @@ class TreeWidget extends Component {
       onNodeClick={this.handleNodeClick}
       onNodeCollapse={this.handleNodeCollapse}
       onNodeExpand={this.handleNodeExpand}
-    />) : isEditor ? (
+    />) : isEditor() ? (
       <NullArray>
         Datasource is null
       </NullArray>
