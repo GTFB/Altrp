@@ -93,6 +93,7 @@ class Tree extends BaseElement {
       locked: true,
     });
 
+
     this.addControl('tree_from_datasource', {
       label: 'Datasource path',
       type: CONTROLLER_TEXTAREA,
@@ -101,6 +102,33 @@ class Tree extends BaseElement {
       },
     });
 
+    let repeaterColumns = new Repeater();
+
+    repeater.addControl('repeater_column_label', {
+      type: CONTROLLER_TEXT,
+      label: "Label",
+    });
+
+    repeater.addControl('repeater_column_value', {
+      type: CONTROLLER_TEXT,
+      label: "Value",
+    });
+
+    this.addControl("column_repeater", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeaterColumns.getControls(),
+      conditions: {
+        'select_type': "datasource",
+      },
+      label: "Add columns",
+      locked: true,
+    });
+
+    // this.addControl('icon', {
+    //   type: CONTROLLER_MEDIA,
+    //   label: 'Icon',
+    // });
 
     this.addControl('cursor', {
       type: CONTROLLER_SWITCHER,
