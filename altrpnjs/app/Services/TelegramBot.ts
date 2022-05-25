@@ -1,5 +1,5 @@
 import Env from "@ioc:Adonis/Core/Env";
-import {Telegraf, Markup} from "telegraf";
+import {Telegraf, } from "telegraf";
 import User from "App/Models/User";
 import Customizer from "App/Models/Customizer";
 import app_path from "../../helpers/path/app_path";
