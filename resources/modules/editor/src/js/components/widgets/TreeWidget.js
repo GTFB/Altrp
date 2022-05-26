@@ -146,7 +146,7 @@ const replaceChildrenToChildNode = (branch, columns) => {
 const getColumns = (columns, branch) => {
   const filteredColumns = columns.filter(c => {
 
-    return branch[c.value]
+    return branch[c.value] !== null && branch[c.value] !== undefined
   })
 
   return <div className="altrp-tree-columns">
@@ -161,6 +161,7 @@ const getColumns = (columns, branch) => {
     }
   </div>
 }
+
 
 export const updateRepeater = function (repeaterSetting, other={}) {
   const repeater = [];
@@ -309,42 +310,28 @@ class TreeWidget extends Component {
       //   repeater: filtrationRepeater
       // }))
     }
+
+    this.setState((s) => s)
   }
 
 
 
-  // _componentDidUpdate(prevProps, prevState) {
-  //   let settings = {
-  //     type: this.state.type,
-  //   }
-  //
-  //   if(isEditor()) {
-  //     if(settings.type === "repeater") {
-  //       settings.repeater = this.props.element.getResponsiveLockedSetting("tree_repeater", "", []);
-  //       settings.prevRepeater = prevState.settings.tree_repeater || [];
-  //
-  //       if(settings.type === "repeater") {
-  //
-  //         const filtrationRepeater = this.updateRepeater(settings.repeater)
-  //
-  //         if(!_.isEqual(settings.prevRepeater, this.state.settings.tree_repeater)) {
-  //           this.setState(s => ({
-  //             ...s,
-  //             repeater: filtrationRepeater
-  //           }))
-  //         }
-  //       }
-  //     }
-  //
-  //     if(this.state.settings.select_type !== prevState.settings.select_type) {
-  //       this.setState(s => ({
-  //         ...s,
-  //         type: this.state.settings.select_type
-  //       }))
-  //     }
-  //   }
-  // }
-  //
+  _componentDidUpdate(prevProps) {
+    let path = this.props.element.getLockedSettings("tree_from_datasource", '');
+    path = path.replace(/}}/g, '').replace(/{{/g, '');
+    let data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
+    let prevData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
+
+    if(data.length !== prevData.length) {
+      const data = this.getFromDatasource(settings) || [];
+
+      this.setState((s) => ({
+        ...s,
+        repeater: data
+      }))
+    }
+  }
+
   handleNodeClick(node, path) {
     const originallySelected = node.isSelected;
 
