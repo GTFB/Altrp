@@ -65,7 +65,7 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
-  let data = [...getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData())];
+  let data = _.cloneDeep(getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData()));
   settings.columns = this.props.element.getLockedSettings("column_repeater", []);
 
 
