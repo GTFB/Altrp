@@ -529,7 +529,7 @@ function AltrpTableWithoutUpdate(
    * Настройки пагинации
    */
 
-  let path = table_datasource.replace(/{{/g, '').replace(/}}/g, '');
+  let path = table_datasource?.replace(/{{/g, '')?.replace(/}}/g, '') || '';
   const splittedPath = path.split("altrpdata.");
 
   const [pageIndex, setPageIndex] = React.useState(0);

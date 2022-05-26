@@ -284,7 +284,6 @@ class AltrpPosts extends React.Component {
   }
 
   render() {
-    console.log("sadsadasd", this.renderPagination())
     const {currentPage} = this.state;
     const posts_per_page = Number(getResponsiveSetting(this.props.settings,'posts_per_page')) || 12;
     let {data: posts} = this.props;

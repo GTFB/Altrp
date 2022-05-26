@@ -95,6 +95,7 @@ class Tree extends BaseElement {
 
 
     this.addControl('tree_from_datasource', {
+      locked: true,
       label: 'Datasource path',
       type: CONTROLLER_TEXTAREA,
       conditions: {
