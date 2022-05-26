@@ -323,10 +323,13 @@ class TreeWidget extends Component {
   _componentDidUpdate(prevProps) {
     let path = this.props.element.getLockedSettings("tree_from_datasource", '');
     path = path.replace(/}}/g, '').replace(/{{/g, '');
-    let data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
-    let prevData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
+    let rawData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
 
-    if(data.length !== prevData.length) {
+    if(this.rawData !== rawData) {
+      this.rawData = rawData
+      if(! rawData?.length){
+        return
+      }
       let settings = this.props.element.getSettings();
 
       const data = this.getFromDatasource(settings) || [];
