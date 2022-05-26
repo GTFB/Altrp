@@ -76,14 +76,17 @@ export default class ElementRenderer {
         case 'section':{
           if (widthType === "boxed" && !isFixed) {
             section_classes = " altrp-section_boxed ";
-            styles['max-width'] = '100%'
           }
           if (widthType === "section_boxed" && !isFixed) {
             section_classes = " altrp-section_section-boxed "
           }
 
           if (widthType === "full" && !isFixed) {
-            section_classes = " altrp-section--full-width "
+          }
+          section_classes = ` {{getSectionWidthClass(element${this.getId()}_settings)}} `
+          if(this.getId() === '_j197hsngs'){
+            console.log(section_classes);
+
           }
         }
         break;

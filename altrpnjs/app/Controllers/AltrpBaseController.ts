@@ -102,7 +102,7 @@ export default class AltrpBaseController {
       start_text: messageData.start_text,
       content
     }, messageData);
-    console.log(users)
+
     await notification.send(users, this.customizerData)
   }
 

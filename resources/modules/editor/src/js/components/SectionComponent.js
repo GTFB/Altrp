@@ -115,8 +115,7 @@ class SectionComponent extends Component {
       {},
     );
     const {  isFixed } = this.props.element.getLockedSettings();
-    const widthType = this.props.element.getLockedSettings()
-      .layout_content_width_type;
+    const widthType = this.props.element.getResponsiveSetting('layout_content_width_type')
 
 
     let sectionClasses = [
