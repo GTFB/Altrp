@@ -32,7 +32,7 @@ export const normalizeValues = function(branch, iconValue=this.props.element.get
 }
 
 export const getFromDatasource = function (settings = {}, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
-  settings.path = this.props.element.getSettings(settingNames[0], '');
+  settings.path = this.props.element.getLockedSettings(settingNames[0], '');
   settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
