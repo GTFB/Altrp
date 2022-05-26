@@ -273,7 +273,7 @@ export default class MediaController {
     return response.json( res );
   }
 
-  async showFull({ params, response }) {
+  async showFull({ params,  }) {
     const media = await Media.query().where("id", parseInt(params.id)).firstOrFail()
 
     const serialized = media.serialize()
