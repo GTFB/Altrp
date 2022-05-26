@@ -100,6 +100,7 @@ class Tree extends BaseElement {
       conditions: {
         'select_type': "datasource",
       },
+      locked: true
     });
 
     let repeaterColumns = new Repeater();
