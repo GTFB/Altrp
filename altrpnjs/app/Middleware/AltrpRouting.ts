@@ -153,13 +153,13 @@ export default class AltrpRouting {
     if (user) {
       altrpuser = user.toObject()
     }
-    await page.load('data_sources', data_source => {
-      data_source.preload('source', source => {
-        source.preload('model', model => {
-          model.preload('table')
-        })
-      })
-    })
+    // await page.load('data_sources', data_source => {
+    //   data_source.preload('source', source => {
+    //     source.preload('model', model => {
+    //       model.preload('table')
+    //     })
+    //   })
+    // })
 
     const altrpContext = {
       ...pageMatch.params,
