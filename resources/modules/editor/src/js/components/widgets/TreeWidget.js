@@ -10,6 +10,34 @@ import {NullArray} from "./styled-components/TreeComponent";
 
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-tree-columns {
+    display: flex;
+  }
+
+  .altrp-tree-columns__column {
+    margin-right: 20px;
+  }
+
+  .altrp-tree-columns__column:last-child {
+    margin-right: 0;
+  }
+
+  .altrp-tree-heading {
+    display: flex;
+    padding-left: 60px;
+  }
+
+  .altrp-tree-heading__column {
+    margin-right: 20px;
+  }
+
+  .altrp-tree-heading__column:last-child {
+    margin-right: 0;
+  }
+`)
+
+
 export const normalizeValues = function(branch, iconValue=this.props.element.getSettings("icon")) {
   const folderIcon = "folder-close";
 
@@ -37,7 +65,9 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
-  const data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
+  let data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
+  settings.columns = this.props.element.getLockedSettings("column_repeater", []);
+
 
   if(!_.isArray(data)){
     return [];
@@ -45,68 +75,91 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
 
   let repeater = [];
 
-  if(isEditor()) {
-    settings.data = [
-      {
-        label: "label 1",
-        tree_id: 1,
-        value: 1,
-      },
-      {
-        label: "child 1",
-        parent_id: 1,
-        value: 2,
-      },
-      {
-        label: "child 2",
-        parent_id: 1,
-        tree_id: 2,
-        value: 3,
-      },
-      {
-        label: "child 1",
-        parent_id: 2,
-        tree_id: 2,
-        value: 4,
-      },
-      {
-        label: "label 2",
-        tree_id: 3,
-        value: 5,
-      },
-      {
-        label: "child 1",
-        parent_id: 3,
-        value: 6,
-      },
-      {
-        label: "child 2",
-        parent_id: 3,
-        value: 7,
-      },
-      {
-        label: "label 3",
-        value: 8,
-      },
-    ]
-  }
+  // if(isEditor()) {
+  //   data = [
+  //     {
+  //       label: "label 1",
+  //       id: 1,
+  //       children: [
+  //         {
+  //           label: "child 1",
+  //           id: 2,
+  //           children: []
+  //         },
+  //         {
+  //           label: "child 2",
+  //           id: 3,
+  //           children: [
+  //             {
+  //               label: "child 1",
+  //               id: 4,
+  //               children: []
+  //             },
+  //           ]
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       label: "label 2",
+  //       id: 5,
+  //       children: [
+  //         {
+  //           label: "child 1",
+  //           id: 6,
+  //           children: []
+  //         },
+  //         {
+  //           label: "child 2",
+  //           id: 7,
+  //           children: []
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       label: "label 3",
+  //       id: 8,
+  //       children: []
+  //     },
+  //   ]
+  // }
 
 
-  return data.map((branch) => replaceChildrenToChildNode(branch))
+  return data.map((branch) => replaceChildrenToChildNode(branch, settings.columns))
 }
 
-const replaceChildrenToChildNode = (branch) => {
+const replaceChildrenToChildNode = (branch, columns) => {
   branch.childNodes = branch.children
 
   delete branch.children
 
-  branch.childNodes = branch.childNodes.map((branch) => replaceChildrenToChildNode(branch))
+  branch.label = getColumns(columns, branch)
+
+  branch.childNodes = branch.childNodes.map((branch) => replaceChildrenToChildNode(branch, columns))
 
   if(branch.childNodes.length === 0) {
     branch.hasCaret = false
   }
 
   return branch
+}
+
+const getColumns = (columns, branch) => {
+  const filteredColumns = columns.filter(c => {
+
+    return branch[c.value]
+  })
+
+  return <div className="altrp-tree-columns">
+    {
+      filteredColumns.map((column, idx) => (
+        <div className="altrp-tree-columns__column" key={idx}>
+          {
+            branch[column.value]
+          }
+        </div>
+      ))
+    }
+  </div>
 }
 
 export const updateRepeater = function (repeaterSetting, other={}) {
@@ -372,29 +425,62 @@ class TreeWidget extends Component {
     return classes;
   }
 
+  getTreeHeading() {
+    const column_repeater = this.props.element.getLockedSettings("column_repeater");
+    const activated = this.props.element.getLockedContent("columns_heading_activator")
+
+    return activated ? (
+      <div className="altrp-tree-heading">
+        {
+          column_repeater.map((column, idx) => (
+            <div className="altrp-tree-heading__column" key={idx}>
+              {
+                column.label
+              }
+            </div>
+          ))
+        }
+      </div>
+    ) : ""
+  }
+
   render() {
+
+
   let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
       this.state.repeater.length > 0 ? (
+        <>
+          {
+            this.getTreeHeading()
+          }
+          <TreeBlueprint
+            className={classes}
+            contents={this.state.repeater}
+            onNodeClick={this.handleNodeClick}
+            onNodeCollapse={this.handleNodeCollapse}
+            onNodeExpand={this.handleNodeExpand}
+          />
+        </>
+      ) : (
+        <NullArray>
+          Add a branch
+        </NullArray>
+      )
+    ) : this.state.repeater.length > 0 ? (
+      <>
+        {
+          this.getTreeHeading()
+        }
         <TreeBlueprint
           className={classes}
           contents={this.state.repeater}
           onNodeClick={this.handleNodeClick}
           onNodeCollapse={this.handleNodeCollapse}
           onNodeExpand={this.handleNodeExpand}
-          />
-      ) : (
-        <NullArray>
-          Add a branch
-        </NullArray>
-      )
-    ) : this.state.repeater.length > 0 ? (<TreeBlueprint
-      className={classes}
-      contents={this.state.repeater}
-      onNodeClick={this.handleNodeClick}
-      onNodeCollapse={this.handleNodeCollapse}
-      onNodeExpand={this.handleNodeExpand}
-    />) : isEditor() ? (
+        />
+      </>
+    ) : isEditor() ? (
       <NullArray>
         Datasource is null
       </NullArray>
