@@ -1,4 +1,4 @@
-import {styledString} from "../../../../../../front-app/src/js/helpers/styles";
+import {sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import AltrpImage from "../../altrp-image/AltrpImage";
@@ -57,6 +57,31 @@ export default function TreeComponent(settings, prefix) {
       ["color", "typographic_color", "color"],
     "}",
 
+    "altrp-tree-heading",
+      ["padding", "heading_padding", "dimensions"],
+      ["margin", "heading_margin", "dimensions"],
+      ["background-color", "heading_background", "color"],
+    "}",
+
+    "altrp-tree-heading__column",
+      ["padding", "heading_column_padding", "dimensions"],
+      ["margin-right", "heading_gap", "slider"],
+      ["", "heading_typographic", "typographic"],
+      ["color", "heading_color", "color"],
+      ["background-color", "heading_column_background", "color"],
+      ["border-radius", "heading_border_radius", "dimensions"],
+      ["border-style", "heading_border_type", "", ":hover"],
+      ["border-width", "heading_border_width", "dimensions"],
+      ["border-color", "heading_border_color", "color"],
+      ["", "heading_border_shadow", "shadow"],
+    "}",
+
+    "altrp-tree-columns__column",
+      ["margin-right", "column_gap", "slider"],
+      ["", "column_typographic", "typographic"],
+      ["color", "column_color", "color"],
+    "}",
+
     "bp3-tree-node-selected .bp3-tree-node-label",
       ["", "typographic", "typographic", ".active"],
       ["color", "typographic_color", "color", ".active"],
@@ -66,9 +91,8 @@ export default function TreeComponent(settings, prefix) {
       ["height", "item_height", "slider"],
       ["background-color", "item_background", "color"],
       ["border-radius", "border_radius", "dimensions"],
-      ["", "border_shadow", "shadow"],
-      ["border-style", "border_type", ""],
       ["border-width", "border_width", "dimensions"],
+      ["border-style", "border_type", ""],
       ["border-color", "border_color", "color"],
     "}",
 

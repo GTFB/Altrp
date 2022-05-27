@@ -16,7 +16,7 @@ export default class Notification {
     users.forEach((user) => {
       switch (this.data.channel) {
         case "broadcast":
-          Ws.sendMessage("notification", this.message, user.guid)
+          Ws.sendMessage("notification", this.message.content, user.guid)
           break
         case "telegram":
           TelegramBot.send(this.message, user, customizerData)

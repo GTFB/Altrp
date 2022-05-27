@@ -126,13 +126,13 @@ class Admin extends Component {
     store.dispatch(changeCurrentUser(currentUser));
 
     if(currentUser.guid && !this.altrpIo) {
-      this.altrpIo = io( {
+      window.altrpIo = io( {
         path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-      this.altrpIo.on("message", (data) => {
+      window.altrpIo.on("message", (data) => {
         console.log(data)
       })
     }
