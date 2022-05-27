@@ -130,6 +130,7 @@ class Tree extends BaseElement {
       label: "Value",
     });
 
+
     repeaterColumns.addControl("width", {
       type: CONTROLLER_SLIDER,
       label: 'Value width',
@@ -143,6 +144,11 @@ class Tree extends BaseElement {
       ],
       max: 300,
       min: 1,
+    });
+
+    repeaterColumns.addControl('divider', {
+      type: CONTROLLER_SWITCHER,
+      label: "Divider",
     });
 
     this.addControl("column_repeater", {

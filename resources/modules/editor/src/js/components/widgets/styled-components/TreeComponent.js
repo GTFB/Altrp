@@ -68,7 +68,7 @@ export default function TreeComponent(settings, prefix) {
       ["", "heading_border_shadow", "shadow"],
     "}",
 
-    "bp3-tree-node__border > .bp3-tree-node-content",
+    "bp3-tree-node__border > .bp3-tree-node-content .altrp-tree-columns__column_divider",
       ["border-bottom-style", "divider_type"],
       ["border-bottom-width", "divider_size", "slider"],
       ["border-bottom-color", "divider_color", "color"],

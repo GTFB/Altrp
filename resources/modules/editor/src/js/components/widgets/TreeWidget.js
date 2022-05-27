@@ -33,7 +33,7 @@ const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
     padding-left: 0;
   }
 
-  .bp3-tree-node__border_last > .bp3-tree-node-content {
+  .bp3-tree-node__border_last > .bp3-tree-node-content .altrp-tree-columns__column_divider {
      border-bottom: none;
   }
 
@@ -45,8 +45,8 @@ const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
       padding: 0;
   }
 
-  .bp3-tree-node-expanded > .bp3-tree-node-content {
-    border-bottom: 0
+  .bp3-tree-node-expanded > .bp3-tree-node-content .altrp-tree-columns__column_divider {
+    border-bottom: none;
   }
 
   .bp3-tree-node-list > .bp3-tree-node__border_last {
@@ -185,13 +185,21 @@ const getColumns = (columns, branch) => {
     gridTemplateColumns: widths.join(" ")
   }}>
     {
-      filteredColumns.map((column, idx) => (
-        <div className="altrp-tree-columns__column" key={idx}>
-          {
-            branch[column.value]
-          }
-        </div>
-      ))
+      filteredColumns.map((column, idx) => {
+        let classNames = "altrp-tree-columns__column";
+
+        if(column.divider) {
+          classNames += " altrp-tree-columns__column_divider"
+        }
+
+        return (
+          <div className={classNames} key={idx}>
+            {
+              branch[column.value]
+            }
+          </div>
+        )
+      })
     }
   </div>
 }
