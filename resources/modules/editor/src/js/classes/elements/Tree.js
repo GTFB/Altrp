@@ -101,7 +101,6 @@ class Tree extends BaseElement {
       conditions: {
         'select_type': "datasource",
       },
-      locked: true
     });
 
     let repeaterColumns = new Repeater();
@@ -111,9 +110,39 @@ class Tree extends BaseElement {
       label: "Label",
     });
 
+    repeaterColumns.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Heading width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'fr',
+        'px',
+        '%',
+      ],
+      max: 300,
+      min: 1,
+    });
+
     repeaterColumns.addControl('value', {
       type: CONTROLLER_TEXT,
       label: "Value",
+    });
+
+    repeaterColumns.addControl("width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Value width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'fr',
+        'px',
+        '%',
+      ],
+      max: 300,
+      min: 1,
     });
 
     this.addControl("column_repeater", {
@@ -245,24 +274,6 @@ class Tree extends BaseElement {
     this.addControl('border_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-    });
-
-    this.endControlSection();
-
-    this.startControlSection('typographic_section', {
-      tab: TAB_STYLE,
-      label: 'Typographic',
-    });
-
-    this.addControl('typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-      }
-    );
-
-    this.addControl('typographic_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Color',
     });
 
     this.endControlSection();

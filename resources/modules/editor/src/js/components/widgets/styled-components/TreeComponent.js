@@ -61,11 +61,11 @@ export default function TreeComponent(settings, prefix) {
       ["padding", "heading_padding", "dimensions"],
       ["margin", "heading_margin", "dimensions"],
       ["background-color", "heading_background", "color"],
+      ["grid-gap", "heading_gap", "slider"],
     "}",
 
-    "altrp-tree-heading__column",
+    "altrp-tree-heading__text",
       ["padding", "heading_column_padding", "dimensions"],
-      ["margin-right", "heading_gap", "slider"],
       ["", "heading_typographic", "typographic"],
       ["color", "heading_color", "color"],
       ["background-color", "heading_column_background", "color"],
@@ -76,8 +76,11 @@ export default function TreeComponent(settings, prefix) {
       ["", "heading_border_shadow", "shadow"],
     "}",
 
+    "altrp-tree-columns__columns",
+    ["grid-gap", "column_gap", "slider"],
+    "}",
+
     "altrp-tree-columns__column",
-      ["margin-right", "column_gap", "slider"],
       ["", "column_typographic", "typographic"],
       ["color", "column_color", "color"],
     "}",

@@ -12,28 +12,17 @@ const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-tree-columns {
-    display: flex;
-  }
-
-  .altrp-tree-columns__column {
-    margin-right: 20px;
-  }
-
-  .altrp-tree-columns__column:last-child {
-    margin-right: 0;
+    display: grid;
   }
 
   .altrp-tree-heading {
-    display: flex;
+    display: grid;
     padding-left: 60px;
+    align-items: center;
   }
 
-  .altrp-tree-heading__column {
-    margin-right: 20px;
-  }
-
-  .altrp-tree-heading__column:last-child {
-    margin-right: 0;
+  .altrp-tree-heading__text {
+    display: inline-block;
   }
 `)
 
@@ -148,7 +137,17 @@ const getColumns = (columns, branch) => {
     return branch[c.value] !== null && branch[c.value] !== undefined
   })
 
-  return <div className="altrp-tree-columns">
+  const widths = filteredColumns.map(column => {
+    if(column.width) {
+      return `${(column.width.size || "1") + column.width.unit || "fr"}`
+    } else {
+      return "1fr"
+    }
+  })
+
+  return <div className="altrp-tree-columns" style={{
+    gridTemplateColumns: widths.join(" ")
+  }}>
     {
       filteredColumns.map((column, idx) => (
         <div className="altrp-tree-columns__column" key={idx}>
@@ -314,8 +313,6 @@ class TreeWidget extends Component {
       //   repeater: filtrationRepeater
       // }))
     }
-
-    this.setState((s) => s)
   }
 
 
@@ -422,17 +419,29 @@ class TreeWidget extends Component {
   }
 
   getTreeHeading() {
-    const column_repeater = this.props.element.getLockedSettings("column_repeater");
+    const columns_repeater = this.props.element.getLockedSettings("column_repeater");
     const activated = this.props.element.getLockedContent("columns_heading_activator")
 
+    const widths = columns_repeater.map(column => {
+      if(column.label_width) {
+        return `${(column.label_width.size || "1") + column.label_width.unit || "fr"}`
+      } else {
+        return "1fr"
+      }
+    })
+
     return activated ? (
-      <div className="altrp-tree-heading">
+      <div className="altrp-tree-heading" style={{
+        gridTemplateColumns: widths.join(" ")
+      }}>
         {
-          column_repeater.map((column, idx) => (
+          columns_repeater.map((column, idx) => (
             <div className="altrp-tree-heading__column" key={idx}>
-              {
-                column.label
-              }
+              <div className="altrp-tree-heading__text">
+                {
+                  column.label
+                }
+              </div>
             </div>
           ))
         }
