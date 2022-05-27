@@ -68,10 +68,16 @@ export default function TreeComponent(settings, prefix) {
       ["", "heading_border_shadow", "shadow"],
     "}",
 
-    "bp3-tree-node__border > .bp3-tree-node-content",
+    "bp3-tree-node__border > .bp3-tree-node-content .altrp-tree-columns__column_divider",
       ["border-bottom-style", "divider_type"],
       ["border-bottom-width", "divider_size", "slider"],
       ["border-bottom-color", "divider_color", "color"],
+    "}",
+
+    "bp3-tree-node__border > .bp3-tree-node-content .altrp-tree-columns_flat",
+    ["border-bottom-style", "divider_type"],
+    ["border-bottom-width", "divider_size", "slider"],
+    ["border-bottom-color", "divider_color", "color"],
     "}",
 
     "bp3-tree-node-list",
@@ -116,6 +122,10 @@ export default function TreeComponent(settings, prefix) {
       ["border-width", "border_width", "dimensions", ":hover"],
       ["border-color", "border_color", "color", ":hover"],
       ["", "border_shadow", "shadow", ":hover"],
+    "}",
+
+    "altrp-tree-columns__column",
+      ["height", "item_height", "slider"],
     "}",
 
     ("bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1).bp3-tree-node-content, " +
