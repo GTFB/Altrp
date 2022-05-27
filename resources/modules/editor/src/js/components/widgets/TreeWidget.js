@@ -12,28 +12,45 @@ const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-tree-columns {
-    display: flex;
-  }
-
-  .altrp-tree-columns__column {
-    margin-right: 20px;
-  }
-
-  .altrp-tree-columns__column:last-child {
-    margin-right: 0;
+    display: grid;
   }
 
   .altrp-tree-heading {
-    display: flex;
+    display: grid;
     padding-left: 60px;
+    align-items: center;
   }
 
-  .altrp-tree-heading__column {
-    margin-right: 20px;
+  .altrp-tree-heading__text {
+    display: inline-block;
   }
 
-  .altrp-tree-heading__column:last-child {
-    margin-right: 0;
+  .altrp-tree {
+    overflow-x: auto;
+  }
+
+  .bp3-tree-root > .bp3-tree-node {
+    padding-left: 0;
+  }
+
+  .bp3-tree-node__border_last > .bp3-tree-node-content {
+     border-bottom: none;
+  }
+
+  .bp3-tree-node {
+    padding-left: 20px
+  }
+
+  .bp3-collapse .bp3-tree-node-content {
+      padding: 0;
+  }
+
+  .bp3-tree-node-expanded > .bp3-tree-node-content {
+    border-bottom: 0
+  }
+
+  .bp3-tree-node-list > .bp3-tree-node__border_last {
+    margin-bottom: 10px
   }
 `)
 
@@ -65,7 +82,7 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
-  let data = [...getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData())];
+  let data = _.cloneDeep(getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData()));
   settings.columns = this.props.element.getLockedSettings("column_repeater", []);
 
 
@@ -124,16 +141,24 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   // }
 
 
-  return data.map((branch) => replaceChildrenToChildNode(branch, settings.columns))
+  return data.map((branch, idx) => replaceChildrenToChildNode(branch, settings.columns, data.length - 1 === idx))
 }
 
-const replaceChildrenToChildNode = (branch, columns) => {
+const replaceChildrenToChildNode = (branch, columns, last=false) => {
   branch.childNodes = branch.children || []
 
   delete branch.children
 
   branch.label = getColumns(columns, branch)
-  branch.childNodes = branch.childNodes.map((branch) => replaceChildrenToChildNode(branch, columns))
+  branch.childNodes = branch.childNodes.map((childBranch, idx) => {
+    return  replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx)
+  })
+
+  if(!last) {
+    branch.className = "bp3-tree-node__border"
+  } else {
+    branch.className = "bp3-tree-node__border_last"
+  }
 
   if(branch.childNodes.length === 0) {
     branch.hasCaret = false
@@ -148,7 +173,17 @@ const getColumns = (columns, branch) => {
     return branch[c.value] !== null && branch[c.value] !== undefined
   })
 
-  return <div className="altrp-tree-columns">
+  const widths = filteredColumns.map(column => {
+    if(column.width) {
+      return `${(column.width.size || "1") + column.width.unit || "fr"}`
+    } else {
+      return "1fr"
+    }
+  })
+
+  return <div className="altrp-tree-columns" style={{
+    gridTemplateColumns: widths.join(" ")
+  }}>
     {
       filteredColumns.map((column, idx) => (
         <div className="altrp-tree-columns__column" key={idx}>
@@ -314,8 +349,6 @@ class TreeWidget extends Component {
       //   repeater: filtrationRepeater
       // }))
     }
-
-    this.setState((s) => s)
   }
 
 
@@ -422,17 +455,29 @@ class TreeWidget extends Component {
   }
 
   getTreeHeading() {
-    const column_repeater = this.props.element.getLockedSettings("column_repeater");
+    const columns_repeater = this.props.element.getLockedSettings("column_repeater");
     const activated = this.props.element.getLockedContent("columns_heading_activator")
 
+    const widths = columns_repeater.map(column => {
+      if(column.label_width) {
+        return `${(column.label_width.size || "1") + column.label_width.unit || "fr"}`
+      } else {
+        return "1fr"
+      }
+    })
+
     return activated ? (
-      <div className="altrp-tree-heading">
+      <div className="altrp-tree-heading" style={{
+        gridTemplateColumns: widths.join(" ")
+      }}>
         {
-          column_repeater.map((column, idx) => (
+          columns_repeater.map((column, idx) => (
             <div className="altrp-tree-heading__column" key={idx}>
-              {
-                column.label
-              }
+              <div className="altrp-tree-heading__text">
+                {
+                  column.label
+                }
+              </div>
             </div>
           ))
         }
@@ -446,7 +491,7 @@ class TreeWidget extends Component {
   let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
       this.state.repeater.length > 0 ? (
-        <>
+        <div className="altrp-tree">
           {
             this.getTreeHeading()
           }
@@ -457,14 +502,14 @@ class TreeWidget extends Component {
             onNodeCollapse={this.handleNodeCollapse}
             onNodeExpand={this.handleNodeExpand}
           />
-        </>
+        </div>
       ) : (
         <NullArray>
           Add a branch
         </NullArray>
       )
     ) : this.state.repeater.length > 0 ? (
-      <>
+      <div className="altrp-tree">
         {
           this.getTreeHeading()
         }
@@ -475,7 +520,7 @@ class TreeWidget extends Component {
           onNodeCollapse={this.handleNodeCollapse}
           onNodeExpand={this.handleNodeExpand}
         />
-      </>
+      </div>
     ) : isEditor() ? (
       <NullArray>
         Datasource is null
