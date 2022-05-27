@@ -24,19 +24,9 @@ export function widgetsReducer (state = defaultState, action) {
                 }
             }
         case FILTER_WIDGETS:
-            const components = state.allComponents
-            const elements = Object.values(state.allElements).filter((...params) => {
-                if (action.payload(...params)) {
-                    return true
-                }
-                
-                delete components[params[0].getName()]
-            })
-            return {
-                ...state,
-                elements,
-                components
-            }
+
+            return action.payload(state)
+
         default:
             return state
     }

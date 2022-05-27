@@ -298,6 +298,9 @@ class Editor extends Component {
         })) || []
       )
     );
+    _.set(window, 'altrp.editorLoaded', true)
+    const EditorLoadedEvent = new Event('altrp-editor-loaded')
+    window.dispatchEvent(EditorLoadedEvent);
   }
 
   /**
@@ -361,6 +364,7 @@ class Editor extends Component {
    */
   filterWidgets(fn) {
     window.appStore.dispatch(filterWidgets(fn))
+    window.controllersManager.init()
   }
 
   toggleHidePanel = () => {
