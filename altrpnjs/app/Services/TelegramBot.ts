@@ -29,6 +29,8 @@ export class TelegramBot {
       try {
 
         global.telegramBot = new Telegraf(this.token)
+        console.log(global.telegramBot, "bot started")
+
 
         await global.telegramBot.launch()
 
@@ -41,20 +43,6 @@ export class TelegramBot {
         await this.sendByType(block, user, customizerData)
       }
 
-      global.telegramKeyboard = global.telegramMarkup.map((block: {
-        listener_value: string | undefined
-      }) => {
-        if(block.listener_value) {
-          return {
-            text: block.listener_value
-          }
-        } else {
-          return {
-            text: "Listener value is null"
-          }
-        }
-      })
-
       global.telegramBot.start((ctx) => {
         const id = ctx.message.chat.id;
         const username = ctx.message.from.username;
@@ -63,6 +51,22 @@ export class TelegramBot {
           if(user) {
             user.telegram_chat = id;
             user.save()
+
+            global.telegramKeyboard = global.telegramMarkup.map((block: {
+              listener_value: string | undefined
+            }) => {
+              if(block.listener_value) {
+                return {
+                  text: block.listener_value
+                }
+              } else {
+                return {
+                  text: "Listener value is null"
+                }
+              }
+            })
+
+            global.telegramKeyboard = global.telegramKeyboard.filter((v, i, a) => a.indexOf(v) === i);
 
             ctx.telegram.sendMessage(ctx.message.chat.id, message.start_text || "start text is null", {
               reply_markup: JSON.stringify({
@@ -115,6 +119,9 @@ export class TelegramBot {
           customizerData.current_user = user
           await customizerData.httpContext.auth.use('web').login(user)
 
+          console.log(chat, "chat_id")
+
+
           const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
 
           const ControllerClass = isProd() ? (await require(controllerName)).default
@@ -126,6 +133,7 @@ export class TelegramBot {
           if(controller[customizer.name]) {
             const val = await controller[customizer.name](httpContext);
 
+            console.log(val, "customizer")
             return val || "message is null"
           } else {
             return "error"
