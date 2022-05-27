@@ -5,6 +5,7 @@ import Customizer from "App/Models/Customizer";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import * as _ from "lodash";
+import HttpContext from "@ioc:Adonis/Core/HttpContext";
 
 global.telegramMarkup = []
 global.telegramKeyboard = []
@@ -115,28 +116,35 @@ export class TelegramBot {
 
           const user = await User.query().where("telegram_chat", chat).firstOrFail();
 
-          customizerData.context.current_user = user;
-          customizerData.current_user = user
-          await customizerData.httpContext.auth.use('web').login(user)
+          const httpContext = HttpContext
+          console.log(httpContext)
+          if(httpContext) {
+            //@ts-ignore
+            httpContext.auth = {
+              user: user
+            }
 
-          console.log(chat, "chat_id")
+            console.log(chat, "chat_id")
 
 
-          const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
+            const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
 
-          const ControllerClass = isProd() ? (await require(controllerName)).default
-            : (await import(controllerName)).default
-          const controller = new ControllerClass()
+            const ControllerClass = isProd() ? (await require(controllerName)).default
+              : (await import(controllerName)).default
+            const controller = new ControllerClass()
 
-          const httpContext = _.get(customizerData, "httpContext");
+            // const httpContext = _.get(customizerData, "httpContext");
 
-          if(controller[customizer.name]) {
-            const val = await controller[customizer.name](httpContext);
+            if(controller[customizer.name]) {
+              const val = await controller[customizer.name](httpContext);
 
-            console.log(val, "customizer")
-            return val || "message is null"
+              console.log(val, "customizer")
+              return val || "message is null"
+            } else {
+              return "error"
+            }
           } else {
-            return "error"
+            return "httpContext is null"
           }
         } else {
           return "error ctx is null"
