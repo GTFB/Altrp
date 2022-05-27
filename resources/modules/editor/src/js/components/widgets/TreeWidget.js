@@ -48,6 +48,10 @@ const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
   .bp3-tree-node-expanded > .bp3-tree-node-content {
     border-bottom: 0
   }
+
+  .bp3-tree-node-list > .bp3-tree-node__border_last {
+    margin-bottom: 10px
+  }
 `)
 
 
