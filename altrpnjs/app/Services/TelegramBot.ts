@@ -109,6 +109,14 @@ export class TelegramBot {
       case "customizer":
         const customizer = await Customizer.query().where("name", block.data.customizer).preload("altrp_model").firstOrFail();
 
+        const chat = ctx.message.chat.id;
+
+        const user = await User.query().where("telegram_chat", chat).firstOrFail();
+
+        customizerData.context.current_user = user;
+        customizerData.current_user = user
+        await customizerData.httpContext.auth.use('web').login(user)
+
         const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
 
         const ControllerClass = isProd() ? (await require(controllerName)).default
@@ -129,9 +137,6 @@ export class TelegramBot {
   }
 
   async sendByType(block, user, customizerData) {
-    customizerData.context.current_user = user;
-    customizerData.current_user = user
-    await customizerData.httpContext.auth.use('web').login(user)
 
     if (block.listener && block.listener !== "none") {
       try {
