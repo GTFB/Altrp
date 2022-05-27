@@ -379,9 +379,6 @@ class InputAcceptWidget extends Component {
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getLockedSettings("content_options")
-      ),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
@@ -434,13 +431,6 @@ class InputAcceptWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getLockedSettings("content_options")) {
-      let options = parseOptionsFromSettings(
-        this.props.element.getLockedSettings("content_options")
-      );
-
-      this.setState(state => ({ ...state, options }));
-    }
 
     let value = this.state.value;
     /**
@@ -514,7 +504,7 @@ class InputAcceptWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const { content_options, model_for_options } = this.state.settings;
+    const {  model_for_options } = this.state.settings;
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
@@ -553,12 +543,7 @@ class InputAcceptWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
-      if (!_.isEqual(options, this.state.options)) {
-        this.setState(state => ({ ...state, options }));
-      }
-    }
+
     this.updateValue(prevProps);
   }
 
@@ -790,24 +775,6 @@ class InputAcceptWidget extends Component {
 
       }
     );
-  }
-
-
-  /**
-   * получить опции
-   */
-  getOptions() {
-    let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
-    if (!this.props.element.getLockedSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-    }
-    return options;
   }
 
   /**
