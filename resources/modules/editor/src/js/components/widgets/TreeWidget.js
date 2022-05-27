@@ -65,7 +65,7 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
-  let data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
+  let data = [...getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData())];
   settings.columns = this.props.element.getLockedSettings("column_repeater", []);
 
 
@@ -128,12 +128,11 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
 }
 
 const replaceChildrenToChildNode = (branch, columns) => {
-  branch.childNodes = branch.children
+  branch.childNodes = branch.children || []
 
   delete branch.children
 
   branch.label = getColumns(columns, branch)
-
   branch.childNodes = branch.childNodes.map((branch) => replaceChildrenToChildNode(branch, columns))
 
   if(branch.childNodes.length === 0) {
@@ -301,9 +300,14 @@ class TreeWidget extends Component {
         repeater: filtrationRepeater
       }))
     } else if(settings.type === "datasource") {
-      settings = {
+      let settings = this.props.element.getSettings();
 
-      }
+      const data = this.getFromDatasource(settings) || [];
+
+      this.setState((s) => ({
+        ...s,
+        repeater: data
+      }))
       //
       // this.setState(s => ({
       //   ...s,
@@ -319,10 +323,15 @@ class TreeWidget extends Component {
   _componentDidUpdate(prevProps) {
     let path = this.props.element.getLockedSettings("tree_from_datasource", '');
     path = path.replace(/}}/g, '').replace(/{{/g, '');
-    let data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
-    let prevData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
+    let rawData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
 
-    if(data.length !== prevData.length) {
+    if(this.rawData !== rawData) {
+      this.rawData = rawData
+      if(! rawData?.length){
+        return
+      }
+      let settings = this.props.element.getSettings();
+
       const data = this.getFromDatasource(settings) || [];
 
       this.setState((s) => ({
