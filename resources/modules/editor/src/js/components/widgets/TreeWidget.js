@@ -24,6 +24,30 @@ const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
   .altrp-tree-heading__text {
     display: inline-block;
   }
+
+  .altrp-tree {
+    overflow-x: auto;
+  }
+
+  .bp3-tree-root > .bp3-tree-node {
+    padding-left: 0;
+  }
+
+  .bp3-tree-node__border_last > .bp3-tree-node-content {
+     border-bottom: none;
+  }
+
+  .bp3-tree-node {
+    padding-left: 20px
+  }
+
+  .bp3-collapse .bp3-tree-node-content {
+      padding: 0;
+  }
+
+  .bp3-tree-node-expanded > .bp3-tree-node-content {
+    border-bottom: 0
+  }
 `)
 
 
@@ -113,16 +137,24 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   // }
 
 
-  return data.map((branch) => replaceChildrenToChildNode(branch, settings.columns))
+  return data.map((branch, idx) => replaceChildrenToChildNode(branch, settings.columns, data.length - 1 === idx))
 }
 
-const replaceChildrenToChildNode = (branch, columns) => {
+const replaceChildrenToChildNode = (branch, columns, last=false) => {
   branch.childNodes = branch.children || []
 
   delete branch.children
 
   branch.label = getColumns(columns, branch)
-  branch.childNodes = branch.childNodes.map((branch) => replaceChildrenToChildNode(branch, columns))
+  branch.childNodes = branch.childNodes.map((childBranch, idx) => {
+    return  replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx)
+  })
+
+  if(!last) {
+    branch.className = "bp3-tree-node__border"
+  } else {
+    branch.className = "bp3-tree-node__border_last"
+  }
 
   if(branch.childNodes.length === 0) {
     branch.hasCaret = false
@@ -455,7 +487,7 @@ class TreeWidget extends Component {
   let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
       this.state.repeater.length > 0 ? (
-        <>
+        <div className="altrp-tree">
           {
             this.getTreeHeading()
           }
@@ -466,14 +498,14 @@ class TreeWidget extends Component {
             onNodeCollapse={this.handleNodeCollapse}
             onNodeExpand={this.handleNodeExpand}
           />
-        </>
+        </div>
       ) : (
         <NullArray>
           Add a branch
         </NullArray>
       )
     ) : this.state.repeater.length > 0 ? (
-      <>
+      <div className="altrp-tree">
         {
           this.getTreeHeading()
         }
@@ -484,7 +516,7 @@ class TreeWidget extends Component {
           onNodeCollapse={this.handleNodeCollapse}
           onNodeExpand={this.handleNodeExpand}
         />
-      </>
+      </div>
     ) : isEditor() ? (
       <NullArray>
         Datasource is null

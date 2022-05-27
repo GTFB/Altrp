@@ -69,11 +69,21 @@ export default function TreeComponent(settings, prefix) {
       ["", "heading_typographic", "typographic"],
       ["color", "heading_color", "color"],
       ["background-color", "heading_column_background", "color"],
-      ["border-radius", "heading_border_radius", "dimensions"],
-      ["border-style", "heading_border_type", "", ":hover"],
-      ["border-width", "heading_border_width", "dimensions"],
-      ["border-color", "heading_border_color", "color"],
       ["", "heading_border_shadow", "shadow"],
+    "}",
+
+    "bp3-tree-node__border > .bp3-tree-node-content",
+      ["border-bottom-style", "divider_type"],
+      ["border-bottom-width", "divider_size", "slider"],
+      ["border-bottom-color", "divider_color", "color"],
+    "}",
+
+    "bp3-tree-node-list",
+      ["padding-top", "divider_gap", "slider"],
+    "}",
+
+    "bp3-tree",
+      ["width", "width", "slider"],
     "}",
 
     "altrp-tree-columns__columns",

@@ -174,6 +174,28 @@ class Tree extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('content_style', {
+      tab: TAB_STYLE,
+      label: 'Content',
+    });
+
+    this.addControl("width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 2000,
+      min: 100,
+    });
+
+    this.endControlSection();
+
     this.startControlSection('item_section', {
       tab: TAB_STYLE,
       label: 'Item',
@@ -274,6 +296,78 @@ class Tree extends BaseElement {
     this.addControl('border_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('divider_section', {
+      tab: TAB_STYLE,
+      label: 'Divider',
+    });
+
+    this.addControl('divider_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl("divider_size", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('divider_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+    });
+
+    this.addControl("divider_gap", {
+      type: CONTROLLER_SLIDER,
+      label: 'Gap',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
     });
 
     this.endControlSection();
