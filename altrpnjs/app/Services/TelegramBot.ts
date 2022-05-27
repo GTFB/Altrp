@@ -109,30 +109,33 @@ export class TelegramBot {
       case "customizer":
         const customizer = await Customizer.query().where("name", block.data.customizer).preload("altrp_model").firstOrFail();
 
-        const chat = ctx.message.chat.id;
+        if(ctx) {
+          const chat = ctx.message.chat.id;
 
-        const user = await User.query().where("telegram_chat", chat).firstOrFail();
+          const user = await User.query().where("telegram_chat", chat).firstOrFail();
 
-        customizerData.context.current_user = user;
-        customizerData.current_user = user
-        await customizerData.httpContext.auth.use('web').login(user)
+          customizerData.context.current_user = user;
+          customizerData.current_user = user
+          await customizerData.httpContext.auth.use('web').login(user)
 
-        const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
+          const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
 
-        const ControllerClass = isProd() ? (await require(controllerName)).default
-          : (await import(controllerName)).default
-        const controller = new ControllerClass()
+          const ControllerClass = isProd() ? (await require(controllerName)).default
+            : (await import(controllerName)).default
+          const controller = new ControllerClass()
 
-        const httpContext = _.get(customizerData, "httpContext");
+          const httpContext = _.get(customizerData, "httpContext");
 
-        if(controller[customizer.name]) {
-          const val = await controller[customizer.name](httpContext);
+          if(controller[customizer.name]) {
+            const val = await controller[customizer.name](httpContext);
 
-          return val || "message is null"
+            return val || "message is null"
+          } else {
+            return "error"
+          }
         } else {
-          return "error"
+          return "error ctx is null"
         }
-
     }
   }
 
