@@ -94,15 +94,30 @@ class TournamentWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для tournament widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const {data, headers} = this.state
 
     if (!data){
       return 'No data'
     }
-
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
       <Reacket
+        className={classes}
         matches={data}
         playerComponent={PlayerComponent}
         headers={headers}

@@ -841,13 +841,26 @@ class InputTextCommonWidget extends Component {
     </span>
   }
 
+  /**
+   * Получить css классы для InputTextCommonWidget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
-
+    let classes = this.getClasses()
     const {
       content_readonly,
-      label_icon
     } = settings;
     let value = this.getValue()
 
@@ -894,8 +907,10 @@ class InputTextCommonWidget extends Component {
         classLabel = "";
         break;
     }
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
 
-    if (this.state.settings.content_label || label_icon ) {
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
@@ -912,7 +927,7 @@ class InputTextCommonWidget extends Component {
               : ""
             }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
 
             {label_icon && label_icon.type && (
               <span className="altrp-label-icon">
@@ -938,6 +953,7 @@ class InputTextCommonWidget extends Component {
           type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
           name={this.getName()}
           id={this.getName()}
+          className={classes}
           value={value || ""}
           popoverProps={this.popoverProps}
           element={this.props.element}

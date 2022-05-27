@@ -58,6 +58,7 @@ const DynamicFunnelChart = ({
   valueFormat,
   currentPartSizeExtension,
   borderColor,
+  classes
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -101,10 +102,10 @@ const DynamicFunnelChart = ({
   ]
 
   const layers = [
-    'separators', 
-    'parts', 
-    'labels', 
-    'annotations', 
+    'separators',
+    'parts',
+    'labels',
+    'annotations',
   ]
 
   const pieMargin = {
@@ -121,15 +122,17 @@ const DynamicFunnelChart = ({
           width: width,
           height: height
         }}
+        className={classes}
       >
         <ResponsiveWrapper>
+          className={classes}
           {sizes => {
             const dimensions = getSizes(
               sizes.width,
               sizes.height,
               pieMargin
             )
-            
+
             if (legends?.length) {
               layers.push(() => legends?.map((_legend, i) => (
                 <BoxLegendSvg
@@ -143,6 +146,7 @@ const DynamicFunnelChart = ({
             }
 
             return <Funnel
+              className={classes}
               data={data}
               width={sizes.width}
               height={sizes.height}

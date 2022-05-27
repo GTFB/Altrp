@@ -844,7 +844,7 @@ class InputImageSelectWidget extends Component {
     const content_options = this.props.element.getResponsiveLockedSetting('content_options');
     const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0
+      && content_options?.indexOf('{{') === 0
       && ! model_for_options){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
@@ -1024,6 +1024,20 @@ class InputImageSelectWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input select image
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
@@ -1032,7 +1046,6 @@ class InputImageSelectWidget extends Component {
       content_readonly,
       image_select_options,
       select2_multiple: isMultiple,
-      label_icon
     } = settings;  //??здесь нет таких свойств, которые мы деструктуризируем
 
     let value = this.state.value;
@@ -1055,6 +1068,8 @@ class InputImageSelectWidget extends Component {
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "")
     switch (content_label_position_type) {
       case "top":
         styleLabel = {
@@ -1063,7 +1078,7 @@ class InputImageSelectWidget extends Component {
             this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
-        classLabel = "";
+        classLabel = ` ${classes} `;
         break;
       case "bottom":
         styleLabel = {
@@ -1072,7 +1087,7 @@ class InputImageSelectWidget extends Component {
             this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
-        classLabel = "";
+        classLabel = ` ${classes} `
         break;
       case "left":
         styleLabel = {
@@ -1081,7 +1096,7 @@ class InputImageSelectWidget extends Component {
             this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
-        classLabel = "altrp-field-label-container-left";
+        classLabel = ` ${classes} altrp-field-label-container-left`
 
         break;
       case "absolute":
@@ -1089,26 +1104,30 @@ class InputImageSelectWidget extends Component {
           position: "absolute",
           zIndex: 2
         };
-        classLabel = "";
+        classLabel = ` ${classes} `
         break;
     }
 
-    if (this.state.settings.content_label) {
+
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
-              ? "altrp-field-label--required"
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
+              ? `${classes} altrp-field-label--required`
               : ""
               }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
           </label>
           {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
+            <span className={`${classes} altrp-label-icon`}>
               {renderAssetIcon(label_icon)}
             </span>
           )}
@@ -1127,6 +1146,7 @@ class InputImageSelectWidget extends Component {
 
     let input = (
       <AltrpImageSelect
+        className={classes}
         options={image_select_options}
         value={this.state.value}
         changeHandler={value => this.setState({ value })}
@@ -1137,7 +1157,7 @@ class InputImageSelectWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"" + classLabel}
+        className={`${classes} ${classLabel}`}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

@@ -5,6 +5,7 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import AltrpSelect from "../altrp-select/AltrpSelect";
 import {InputGroup, MenuItem} from "@blueprintjs/core";
 import {MultiSelect} from "@blueprintjs/select";
+import {altrpRandomId} from "../../../../front-app/src/js/helpers";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -84,6 +85,7 @@ class EditModelForm extends Component {
     if(_.isFunction(this.props.onSubmit)){
       delete this.state.value.created_at;
       delete this.state.value.updated_at;
+      this.state.value.customizerName = this.state.value.name + `_${altrpRandomId()}`
       this.props.onSubmit(this.state.value);
     } else {
       console.log(this.state.value);

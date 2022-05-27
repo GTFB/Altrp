@@ -1,5 +1,5 @@
 import Env from "@ioc:Adonis/Core/Env";
-import {Telegraf, Markup} from "telegraf";
+import {Telegraf, } from "telegraf";
 import User from "App/Models/User";
 import Customizer from "App/Models/Customizer";
 import app_path from "../../helpers/path/app_path";
@@ -9,63 +9,76 @@ import * as _ from "lodash";
 export class TelegramBot {
   token
   bot
-  started = false
   markup = []
+  keyboard
 
   constructor(token) {
-    this.token = token
+    if(!this.token) {
+      this.token = token
+    }
+  }
 
-    if(this.token) {
+  async send(message, user, customizerData) {
+    const blocks = message.content
+    console.log(blocks)
+
+    if(this.token && !this.bot) {
       try {
+
         this.bot = new Telegraf(this.token)
-        this.bot.launch()
+
+        await this.bot.launch()
+
       } catch (e) {
 
       }
-
-      this.run()
     }
-  }
-
-  run() {
-    try {
-      if(!this.started) {
-
-        this.bot.start((ctx) => {
-          const id = ctx.message.chat.id;
-          const username = ctx.message.from.username;
-
-          User.query().where("telegram_user_id", username).orWhere("telegram_user_id", "@" + username).firstOrFail().then((user) => {
-            user.telegram_chat = id;
-            user.save()
-          })
-        })
-        this.started = true
-      }
-
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  async send(blocks, user, customizerData) {
     if(this.bot) {
-
       for (const block of blocks) {
         if(user.telegram_chat) {
           await this.sendByType(block, user, customizerData)
 
           if(this.markup.length > 0) {
-            const markup = this.markup.map((block) => {
-              //@ts-ignore
-              return Markup.button.text(block.data.listener_value)
+            this.keyboard = this.markup.map((block: {
+              listener_value: string | undefined
+            }) => {
+              if(block.listener_value) {
+                return {
+                  text: block.listener_value
+                }
+              } else {
+                return {
+                  text: "Listener value is null"
+                }
+              }
             })
-
-            //@ts-ignore
-            Markup.inlineKeyboard(markup)
           }
         }
       }
+
+      this.bot.start((ctx) => {
+        const id = ctx.message.chat.id;
+        const username = ctx.message.from.username;
+
+        User.query().where("telegram_user_id", username).orWhere("telegram_user_id", "@" + username).first().then((user) => {
+          if(user) {
+            user.telegram_chat = id;
+            user.save()
+
+            ctx.telegram.sendMessage(ctx.message.chat.id, message.start_text || "start text is null", {
+              hide_keyboard: true,
+              reply_markup: JSON.stringify({
+                keyboard: [
+                  this.keyboard,
+                ],
+                resize_keyboard: true
+              })
+            })
+          } else {
+            ctx.reply(`${Env.get("APP_URL")}/telegram/login?chat=${ctx.message.chat.id}`)
+          }
+        })
+      })
 
     } else {
       console.log("Telegram bot is null")
@@ -73,7 +86,6 @@ export class TelegramBot {
   }
 
   async getData(block, customizerData, ctx=null) {
-
     if(ctx) {
       customizerData.context.ctx = ctx
     }
@@ -81,7 +93,7 @@ export class TelegramBot {
     switch (block.type) {
       case "content":
 
-        return block.data.text
+        return block.data.text || "message is null"
 
       case "photo":
       case "file":
@@ -89,7 +101,7 @@ export class TelegramBot {
       case "video":
       case "link":
 
-        return block.data.url
+        return block.data.url || "message is null"
 
       case "customizer":
         const customizer = await Customizer.query().where("name", block.data.customizer).preload("altrp_model").firstOrFail();
@@ -103,7 +115,9 @@ export class TelegramBot {
         const httpContext = _.get(customizerData, "httpContext");
 
         if(controller[customizer.name]) {
-          return await controller[customizer.name](httpContext)
+          const val = await controller[customizer.name](httpContext);
+
+          return val || "message is null"
         } else {
           return "error"
         }

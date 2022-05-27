@@ -10,7 +10,7 @@ class TextareaController extends Component {
     super(props);
     controllerDecorate(this);
     this.changeValue = this.changeValue.bind(this);
-    let value = this.getSettings(this.props.controlId);
+    let value = this.getSettings(this.props.controlId, true);
     if (value === null && this.props.default) {
       value = this.props.default;
     }

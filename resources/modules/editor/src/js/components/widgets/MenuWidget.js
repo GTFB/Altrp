@@ -102,11 +102,32 @@ class MenuWidget extends Component {
     </Menu>
   }
 
+
+  /**
+   * Получить css классы для menu widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   /**
    * @return {string}
    */
   getMenuClasses = () => {
-    let classes = ['altrp-menu'];
+    let classes = ['altrp-menu']
+    if(this.isActive()){
+      classes.push('active')
+    }
+    if(this.isDisabled()){
+      classes.push('state-disabled')
+    }
 
     return classes.join(' ');
   }
@@ -121,10 +142,12 @@ class MenuWidget extends Component {
       return null;
     }
     const {element} = this.props;
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const popoverProps = {
       usePortal: true,
       // isOpen:true ,
-      portalClassName: `altrp-portal altrp-portal${this.elementId}`,
+      portalClassName: `${classes} altrp-portal altrp-portal${this.elementId}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     let renderButton = this.props.element.getResponsiveLockedSetting('button');
@@ -162,7 +185,7 @@ class MenuWidget extends Component {
           depth={depth}
           href={item.url}
           width={100}
-          className={`altrp-menu-item altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
+          className={`${classes} altrp-menu-item altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
@@ -175,7 +198,7 @@ class MenuWidget extends Component {
             }
             this.props.history.push(item.url);
           }}
-          icon={<span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: item.icon}}/>}
+          icon={<span className={`${classes} altrp-menu-item__icon`} dangerouslySetInnerHTML={{__html: item.icon}}/>}
           // text={<Link className="altrp-menu-item__link" to={item.url}>{item.label}</Link>}>
           text={item.label}>
           {this.renderSubItems(item.children, depth + 1)}
@@ -242,17 +265,19 @@ class MenuWidget extends Component {
     }
     let toggle_icon = _.get(menuData, 'settings.toggle_icon', '')
     const position = this.props.element.getResponsiveLockedSetting("popover_position_toggle", "", "auto")
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
       <Popover2 content={this.renderVerticalMenu()}
-        className="altrp-popover"
+        className={`${classes} altrp-popover`}
         position={position}
         portalContainer={window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
         portalClassName={`altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
         minimal={true}
       >
-        <Button 
-          className="altrp-menu-toggle" 
-          text={toggle_icon ? <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''}
+        <Button
+          className={`${classes} altrp-menu-toggle`}
+          text={toggle_icon ? <span className={`${classes} altrp-menu-item__icon`} dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''}
         />
       </Popover2>
     )

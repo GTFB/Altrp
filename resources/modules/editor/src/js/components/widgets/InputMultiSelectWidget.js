@@ -930,7 +930,7 @@ class InputMultiSelectWidget extends Component {
     const content_options = this.props.element.getResponsiveLockedSetting('content_options');
     const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0
+      && content_options?.indexOf('{{') === 0
       && ! model_for_options){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
@@ -1145,13 +1145,27 @@ class InputMultiSelectWidget extends Component {
   handleClear = ()=>{
     this.dispatchFieldValueToStore([], true)
   }
+
+
+  /**
+   * Получить css классы для input multiselect
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+
   render() {
     const element = this.props.element;
     let label = null;
     const settings = this.props.element.getSettings();
-    const {
-      label_icon
-    } = settings;
 
     let classLabel = "";
     let styleLabel = {};
@@ -1196,23 +1210,29 @@ class InputMultiSelectWidget extends Component {
         classLabel = "";
         break;
     }
-    const content_label = this.getLockedContent('content_label')
-    if (content_label) {
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+
+
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container classLabel`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
-              ? "altrp-field-label--required"
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
+              ? `${classes} altrp-field-label--required`
               : ""
             }`}
           >
             {content_label}
           </label>
           {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
+            <span className={`${classes} altrp-label-icon`}>
               {renderAssetIcon(label_icon)}
             </span>
           )}
@@ -1232,11 +1252,11 @@ class InputMultiSelectWidget extends Component {
     let input = null;
 
     let itemsOptions = this.getOptions();
-    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+
     const position_css_id = this.getLockedContent('position_css_id')
     const selectedItems = this.getValue()
     const clearButton =
-      selectedItems.length > 0 ? <Button icon="cross" minimal={true} className="altrp-clear" onClick={this.handleClear} /> : undefined;
+      selectedItems.length > 0 ? <Button icon="cross" minimal={true} className={`${classes} altrp-clear`} onClick={this.handleClear} /> : undefined;
     input = (
       <MultiSelect
         placeholder={placeholder}
@@ -1256,6 +1276,7 @@ class InputMultiSelectWidget extends Component {
             key={item.value}
             disabled={modifiers.disabled || item.disabled}
             onClick={handleClick}
+            className={`${classes}`}
           />
         }}
         itemPredicate={(query, item) => {
@@ -1277,7 +1298,7 @@ class InputMultiSelectWidget extends Component {
         }}
         id={position_css_id}
         tagRenderer={this.tagRender}
-        className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
+        className={classes}
       >
       </MultiSelect>
     );
@@ -1285,7 +1306,7 @@ class InputMultiSelectWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={`${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

@@ -72,6 +72,8 @@ class AltrpLightbox extends Component {
       prevSrc = images[(current + images.length - 1) % images.length];
     }
 
+    let classes = this.props.classes
+
     return (
       <Lightbox
         {...settings}
@@ -88,7 +90,7 @@ class AltrpLightbox extends Component {
         }}
 
         prevSrc={prevSrc} nextSrc={nextSrc}
-        wrapperClassName="altrp-lightbox"
+        wrapperClassName={`altrp-lightbox ${classes}`}
       />
     )
   }

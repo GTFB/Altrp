@@ -101,8 +101,9 @@ class AdminBar extends React.Component {
   }
 
   renderResultSearch(resultSearch = null) {
-    return JSON.stringify(getDataByPath(this.state.valueInput), null, "\t");
+    return JSON.stringify(getDataByPath(this.state.valueInput), null, 2);
   }
+
 
   handleOutsideClick(event) {
     const path = event.path || (event.composedPath && event.composedPath());
@@ -257,6 +258,13 @@ class AdminBar extends React.Component {
     })
   }
 
+  htmlDecode(content) {
+    let e = document.createElement('div');
+    e.innerHTML = content;
+    console.log(content)
+    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+  }
+
   toggleVisiblePopupHistory = () => {
     this.setState({
       visiblePopupHistory: !this.state.visiblePopupHistory
@@ -289,6 +297,7 @@ class AdminBar extends React.Component {
       return '';
     }
 
+    console.log(this.state.contentResult)
     return (
       <AdminBarWrapper>
         <div className={"admin-bar bvi-hide " + (this.state.barIsOpened ? '' : 'closed')}>
@@ -408,12 +417,11 @@ class AdminBar extends React.Component {
             <div className="admin-bar__search-bar" ref={this.searchContentResult}>
               {this.state.visibleContentResult && (
                 <div className="admin-bar__search-result">
-                  <div
+                  <pre
                     className="admin-bar__search-content"
                     style={this.state.isHttps ? { paddingBottom: "22px" } : {}}
-                  >
-                    {this.state.contentResult}
-                  </div>
+                    dangerouslySetInnerHTML={{ __html: this.state.contentResult }}
+                  />
                   { this.state.isHttps && (
                     <div
                       className="admin-bar__search-button"

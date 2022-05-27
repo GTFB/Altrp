@@ -22,30 +22,36 @@ export default function getResponsiveSetting(
     currentScreen = window.appStore.getState().currentScreen
   }
   let _settingName = `${settingName}_${elementState}_`;
-  if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
-    let setting = settings[_settingName];
-
-    if (setting === undefined) {
-      if(elementState){
-        return undefined
-      }
-      setting = _.get(settings, settingName, _default);
-    }
-    return setting;
-  }
+  // if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
+  //   let setting = settings[_settingName];
+  //   if (setting === undefined) {
+  //     if(elementState){
+  //       return undefined
+  //     }
+  //     setting = _.get(settings, settingName, _default);
+  //   }
+  //   return setting;
+  // }
   let suffix = currentScreen.name;
+
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
   if (setting === undefined) {
     for (let screen of [...CONSTANTS.SCREENS].reverse()) {
       if (
-        currentScreen.id < screen.id ||
-        screen.name === CONSTANTS.DEFAULT_BREAKPOINT
+        currentScreen.id < screen.id
+        // ||
+        // screen.name === CONSTANTS.DEFAULT_BREAKPOINT
       ) {
         continue;
       }
 
-      _settingName = `${settingName}_${elementState}_${screen.name}`;
+      if (screen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
+        _settingName = `${settingName}_${elementState}_`;
+      } else {
+        _settingName = `${settingName}_${elementState}_${screen.name}`;
+      }
+
 
       if (settings[_settingName] !== undefined) {
         setting = settings[_settingName];

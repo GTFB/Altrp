@@ -531,6 +531,20 @@ class InputGalleryWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input gallery
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const {element} = this.props
 
@@ -543,6 +557,10 @@ class InputGalleryWidget extends Component {
     const value = this.getValue()
 
     const limit = element.getResponsiveSetting('limit')
+
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+
     const fileInputProps = {
       key: this.state.key,
       inputProps,
@@ -551,23 +569,24 @@ class InputGalleryWidget extends Component {
         backgroundImage: `url(${element.getResponsiveSetting('placeholder')?.url || "data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDY0IDY0IiB3aWR0aD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIj48cGF0aCBkPSJNMjMuNDE0IDIxLjQxNEwzMCAxNC44MjhWNDRhMiAyIDAgMDA0IDBWMTQuODI4bDYuNTg2IDYuNTg2Yy4zOS4zOTEuOTAyLjU4NiAxLjQxNC41ODZzMS4wMjQtLjE5NSAxLjQxNC0uNTg2YTIgMiAwIDAwMC0yLjgyOGwtMTAtMTBhMiAyIDAgMDAtMi44MjggMGwtMTAgMTBhMiAyIDAgMTAyLjgyOCAyLjgyOHoiPjwvcGF0aD48cGF0aCBkPSJNNTAgNDBhMiAyIDAgMDAtMiAydjhjMCAxLjEwMy0uODk3IDItMiAySDE4Yy0xLjEwMyAwLTItLjg5Ny0yLTJ2LThhMiAyIDAgMDAtNCAwdjhjMCAzLjMwOSAyLjY5MSA2IDYgNmgyOGMzLjMwOSAwIDYtMi42OTEgNi02di04YTIgMiAwIDAwLTItMnoiPjwvcGF0aD48L3N2Zz4K"})`
       },
       onInputChange: this.addElements,
-      className: `bp3-file-input_preview input-gallery__item`,
+      className: `${classes} bp3-file-input_preview input-gallery__item`,
     }
     if (limit && value.length >= limit) {
       fileInputProps.style.display = 'none'
     }
     const deleteText = element.getResponsiveSetting('delete', '')
+
     return (
-      <div className="input-gallery-wrapper">
+      <div className={`${classes} input-gallery-wrapper`}>
         {value.map((item, idx) => {
           return <div
-            className="input-gallery__item"
+            className={`${classes} input-gallery__item`}
             title={deleteText}
             style={{
               backgroundImage: `url(${this.state[`imageUrls_${idx}`]})`
             }}
             key={item}>
-            {<CloseIcon className="input-gallery__delete" onClick={(e) => {
+            {<CloseIcon className={`${classes} input-gallery__delete`} onClick={(e) => {
               this.deleteItem(e, item)
             }}/>}
           </div>

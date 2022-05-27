@@ -82,10 +82,10 @@ const getCroppedImg = (image, crop, fileName) => {
     crop.width,
     crop.height
   );
- 
+
   // As Base64 string
   // const base64Image = canvas.toDataURL('image/jpeg');
- 
+
   // As a blob
   return new Promise((resolve, reject) => {
     canvas.toBlob(file => {
@@ -399,8 +399,8 @@ class InputCropImageWidget extends Component {
    */
   onChange = async (e) => {
     this.setState(state => ({
-      ...state, 
-      notActive: true, 
+      ...state,
+      notActive: true,
     }))
 
     const {filesStorage} = this.state;
@@ -533,7 +533,7 @@ class InputCropImageWidget extends Component {
     } catch (e) {
       console.error(e);
     }
-    
+
     this.selectOtherInput.current.click();
   }
 
@@ -548,7 +548,7 @@ class InputCropImageWidget extends Component {
     const img = await getCroppedImg(this.imageToCrop.current, this.state.crop, this.state.filesStorage[0].data.file.name)
 
     let value = new AltrpFile(img)
-    
+
     try {
       const storedFile = await value.storeFile()
 
@@ -588,21 +588,37 @@ class InputCropImageWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input crop
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const {element} = this.props
     const text = element.getResponsiveSetting('text')
     const required = element.getResponsiveSetting('required')
 
     const renderComponent = <img src={this.state.imageUrl} ref={this.imageToCrop} className="ReactCrop__image" />
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
 
     if (!this.state.imageUrl) {
       return (
         <div style={{display: 'flex', justifyContent: 'center'}}>
-          <div className="image-to-crop-container">
-            {!isEditor() && <input type="file" accept="image/png, image/jpeg, image/jpg" className="hidden" id={this.getName()} onChange={this.onChange} required={required} />}
-            <label htmlFor={this.getName()}>
-              <div className="crop-image-text">{text}</div>
-              <div className="crop-image-background" />
+          <div className={`${classes} image-to-crop-container`}>
+            {!isEditor() && <input type="file" accept="image/png, image/jpeg, image/jpg" className={`${classes} hidden`} id={this.getName()} onChange={this.onChange} required={required} />}
+            <label className={`${classes}`} htmlFor={this.getName()}>
+              <div className={`${classes} crop-image-text`}>{text}</div>
+              <div className={`${classes} crop-image-background`} />
             </label>
           </div>
         </div>
@@ -621,13 +637,14 @@ class InputCropImageWidget extends Component {
     }
 
     return (
-      <div className="image-crop-container" ref={this.imageCropContainer}>
+      <div className={`${classes} image-crop-container`} ref={this.imageCropContainer}>
         <div
           style={styles}
         >
-          <input type="file" accept="image/png, image/jpeg, image/jpg" className="hidden" onChange={this.onChange} ref={this.selectOtherInput} />
+          <input type="file" accept="image/png, image/jpeg, image/jpg" className={`${classes} hidden`} onChange={this.onChange} ref={this.selectOtherInput} />
           <ImageCrop
             crop={this.state.crop}
+            className={classes}
             onChange={newCrop => this.setState(state => ({...state, crop: newCrop}))}
             renderComponent={renderComponent}
           />

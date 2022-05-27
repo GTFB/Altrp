@@ -129,6 +129,20 @@ class GalleryWidget extends Component {
     this.setState({ lightbox: false });
   }
 
+  /**
+   * Получить css классы для gallery widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const layout = this.props.element.getResponsiveLockedSetting("layout_settings", "", "grid");
     const linkType = this.props.element.getResponsiveLockedSetting("link_type_grid_settings", "","none");
@@ -139,30 +153,36 @@ class GalleryWidget extends Component {
     const overlayAnimationType = this.props.element.getResponsiveLockedSetting("hover_animation_overlay", "", "none");
     const overlayAnimationDuration = this.props.element.getResponsiveLockedSetting("overlay_transition", "", {size: 800});
     let simpleRepeater = this.state.simpleRepeater;
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
 
-    const emptyRepeater = <div className="altrp-gallery-empty-container">
-      <GalleryIcon className="altrp-gallery-icon"/>
+    const emptyRepeater = <div className={`${classes} altrp-gallery-empty-container`}>
+      <GalleryIcon className={`${classes} altrp-gallery-icon`}/>
     </div>;
 
     let images = "";
 
     if(simpleRepeater.length > 0) {
       images = simpleRepeater.map((img, idx) => {
-        const url = img?.simple_media_settings ? img?.simple_media_settings.url : '/img/nullImage.png';
+        let url = img?.simple_media_settings ? img?.simple_media_settings.url : '/img/nullImage.png';
+
+        if(url) {
+          url = "/ajax" + url;
+        }
 
         const imageProps = {
-          className: "altrp-gallery-img",
+          className: `${classes} altrp-gallery-img`,
           style: { backgroundImage: `url(${url})` }
         };
 
-        let containerClassNames = "altrp-gallery-img-container";
+        let containerClassNames = `${classes} altrp-gallery-img-container`;
 
         if(hoverAnimationType && hoverAnimationType !== "none" ) {
-          containerClassNames += " altrp-hover-parent-image";
+          containerClassNames += `${classes} altrp-hover-parent-image`;
         };
 
         if(overlayAnimationType && overlayAnimationType !== "none" ) {
-          containerClassNames += " altrp-hover-parent-overlay";
+          containerClassNames += `${classes} altrp-hover-parent-overlay`;
         };
 
         const containerProps = {
@@ -206,7 +226,7 @@ class GalleryWidget extends Component {
     }
 
     let layoutContainer =
-      <div className="altrp-gallery-grid">
+      <div className={`${classes} altrp-gallery-grid`}>
         { images }
       </div>
     ;

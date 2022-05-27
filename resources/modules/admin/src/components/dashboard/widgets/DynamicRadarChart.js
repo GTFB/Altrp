@@ -32,7 +32,8 @@ const RadarChart = ({
   gridLevels,
   gridShape,
   enableDots,
-  dotSize
+  dotSize,
+  classes
 }) => {
   if (legends) {
     Object.keys(legends).forEach(key => legends[key] === undefined && delete legends[key])
@@ -68,8 +69,10 @@ const RadarChart = ({
           width: width,
           height: height
         }}
+        className={classes}
       >
         <ResponsiveRadar
+          className={classes}
           data={data}
           keys={keys}
           indexBy={indexBy}

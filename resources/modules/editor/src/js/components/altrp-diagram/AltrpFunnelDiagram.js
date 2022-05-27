@@ -88,6 +88,7 @@ const AltrpFunnelDiagram = props => {
 
   return (
     <DynamicFunnelChart
+      classes={props.classes}
       margin={margin ? margin : {
         top: 30,
         bottom: 30,

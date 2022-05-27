@@ -379,9 +379,6 @@ class InputAcceptWidget extends Component {
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getLockedSettings("content_options")
-      ),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
@@ -434,13 +431,6 @@ class InputAcceptWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getLockedSettings("content_options")) {
-      let options = parseOptionsFromSettings(
-        this.props.element.getLockedSettings("content_options")
-      );
-
-      this.setState(state => ({ ...state, options }));
-    }
 
     let value = this.state.value;
     /**
@@ -514,7 +504,7 @@ class InputAcceptWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const { content_options, model_for_options } = this.state.settings;
+    const {  model_for_options } = this.state.settings;
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
@@ -553,12 +543,7 @@ class InputAcceptWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
-      if (!_.isEqual(options, this.state.options)) {
-        this.setState(state => ({ ...state, options }));
-      }
-    }
+
     this.updateValue(prevProps);
   }
 
@@ -792,24 +777,6 @@ class InputAcceptWidget extends Component {
     );
   }
 
-
-  /**
-   * получить опции
-   */
-  getOptions() {
-    let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
-    if (!this.props.element.getLockedSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-    }
-    return options;
-  }
-
   /**
    * Для действие по фокусу
    * @param e
@@ -973,12 +940,25 @@ class InputAcceptWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input accept widget
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
       select2_multiple: isMultiple,
-      label_icon
     } = settings;
 
     let value = this.state.value;
@@ -1038,20 +1018,26 @@ class InputAcceptWidget extends Component {
         classLabel = "";
         break;
     }
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
 
-    if (this.state.settings.content_label) {
+
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
               }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
           </label>
           {label_icon && label_icon.assetType && (
             <span className="altrp-label-icon">
@@ -1076,7 +1062,7 @@ class InputAcceptWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={` ${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1101,13 +1087,15 @@ class InputAcceptWidget extends Component {
     } else if (value === falseValue) {
       value = false;
     }
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
     return (
-      <div className={`altrp-field-option ${value ? "active" : ""}`}>
-        <span className="altrp-field-option-span">
+      <div className={` ${classes} altrp-field-option ${value ? "active" : ""}`}>
+        <span className={`${classes} altrp-field-option-span`}>
           <input
             type="checkbox"
             name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-            className={`altrp-field-option__input ${value ? "active" : ""}`}
+            className={` ${classes} altrp-field-option__input ${value ? "active" : ""}`}
             onChange={this.onChange}
             checked={!!value}
             id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}

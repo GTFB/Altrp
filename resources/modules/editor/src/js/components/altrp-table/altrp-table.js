@@ -8,7 +8,6 @@ import {
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
-const Link = window.Link
 
 /**
  *
@@ -545,17 +544,32 @@ function renderFooter(settings, data){
   </tfoot>
 }
 
-
+async function ActionTableClick(e, action, elementTable) {
+  e.preventDefault();
+  e.stopPropagation();
+  const actionsManager = (
+    await import(/* webpackChunkName: 'ActionsManager' */
+      "../../../../../front-app/src/js/classes/modules/ActionsManager"
+      )
+  ).default;
+  await actionsManager.callAllWidgetActions(
+    elementTable.getIdForAction(),
+    'click',
+    action.action__buttonactions || [],
+    elementTable
+  )
+}
 /**
  * Выводит список элементов соответствующих настройкам Actions для колнки
  * @param cell
  * @param row
+ * @param elementTable
  */
-export function renderCellActions(cell, row = {}) {
+export function renderCellActions(cell, row = {}, elementTable) {
   let actions = _.get(cell,'column.actions', []);
-  return <div className="altrp-actions">
+  return <div className="altrp-actions" style={{justifyContent: cell.column.column_body_alignment}}>
     {actions.map(action =>{
-      let tag = action.type || 'Link';
+      let tag = action.type || "Link";
       let actionContent = replaceContentWithData(action.text || '');
       let link = parseURLTemplate(action.link, row.original);
       const actionProps = {
@@ -576,8 +590,8 @@ export function renderCellActions(cell, row = {}) {
       actionProps.style.marginBottom = _.get(action, 'spacing.bottom')
           ? _.get(action, 'spacing.bottom') + _.get(action, 'spacing.unit')
           : null;
-      if(tag === 'Link'){
-        tag = Link;
+      if(tag === "Link"){
+        tag = window.Link;
         actionProps.to = link;
       }
 
@@ -586,6 +600,14 @@ export function renderCellActions(cell, row = {}) {
       }
       if(tag === 'a') {
         actionProps.href = parseURLTemplate(action.link, row.original);
+        if (action.action__buttonactions?.length && !isEditor()) {
+          actionProps.onClick = (e) => ActionTableClick(e, action, elementTable)
+        }
+      }
+      if (tag === "button") {
+        if (action.action__buttonactions?.length && !isEditor()) {
+          actionProps.onClick = (e) => ActionTableClick(e, action, elementTable)
+        }
       }
       if(_.get(action, 'icon.assetType')){
         let iconSize = _.get(action, 'size.size') ? _.get(action, 'size.size') + _.get(action, 'size.unit', 'px') : null;

@@ -18,6 +18,7 @@ import {RequestContract} from "@ioc:Adonis/Core/Request";
 import storage_path from "../helpers/storage_path";
 import httpsRequest from "../helpers/httpsRequest";
 import clearRequireCache from "../helpers/node-js/clearRequireCache";
+import isProd from "../helpers/isProd";
 
 export default class Plugin {
 
@@ -114,11 +115,13 @@ export default class Plugin {
         enabledPlugins.push(plugin.name)
       }
       plugin.copyStaticFiles()
+      await plugin.callActivationHooks()
     } else {
       enabledPlugins = enabledPlugins.filter((_plugin) => {
         return _plugin != plugin.name
       })
       await plugin.removeStaticsFromAltrpMeta()
+      await plugin.callDeactivationHooks()
     }
     enabledPlugins = enabledPlugins.join(',')
 
@@ -208,6 +211,7 @@ export default class Plugin {
 
   public async deletePlugin() {
     await Plugin.switchEnable(this.name, false)
+    await this.callDeleteHooks()
     this.deleteStaticFiles()
     this.deletePluginFiles()
   }
@@ -417,7 +421,7 @@ export default class Plugin {
     }
     let res
     try {
-      res =  await httpsRequest(this.update_url, {
+      res = await httpsRequest(this.update_url, {
         'headers':
           {
             'authorization': request.cookie('altrpMarketApiToken'),
@@ -476,8 +480,8 @@ export default class Plugin {
     plugins = plugins.map(function (plugin) {
       try {
 
-      return new Plugin({'name': plugin})
-      }catch (e) {
+        return new Plugin({'name': plugin})
+      } catch (e) {
         Logger.error(`Plugin meta file \`plugin\` not found`)
         return null
       }
@@ -485,5 +489,53 @@ export default class Plugin {
     plugins = plugins.filter(p => p)
     return plugins
   }
+
+  async getAndCallHooks(folderName: string) {
+    const base = `AltrpPlugins`
+    let hooks: any = []
+
+    const hasType = fs.existsSync(app_path(`${base}/${this.name}/hooks/${folderName}`));
+    if (hasType) {
+      const hookNames = fs.readdirSync(app_path(`${base}/${this.name}/hooks/${folderName}`))
+      for (const hookName of hookNames) {
+        const filePath = app_path(`${base}/${this.name}/hooks/${folderName}/${hookName}`)
+        try {
+          const hook = isProd() ? (require(filePath)).default
+            : (await import(filePath)).default
+          hooks.push({
+            fn: hook,
+            hookName
+          })
+        } catch (e) {
+          Logger.error(e)
+        }
+      }
+    }
+
+    hooks = _.sortBy(hooks, [
+      hook => {
+        return parseInt(hook.hookName)
+      },
+      hook => {
+        return hook.hookName
+      },])
+
+    for (const hook of hooks) {
+      await hook.fn()
+    }
+  }
+
+  async callDeleteHooks() {
+    await this.getAndCallHooks('delete')
+  }
+
+  async callActivationHooks() {
+    await this.getAndCallHooks('activate')
+  }
+
+  async callDeactivationHooks() {
+    await this.getAndCallHooks('deactivate')
+  }
+
 }
 

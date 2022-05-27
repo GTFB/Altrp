@@ -37,6 +37,7 @@ import TableComponent from "./components/TableComponent";
 import HeaderCellComponent from "./components/HeaderCellComponent";
 import TableBody from './components/TableBody';
 import Pagination from "./components/Pagination";
+import {useSelector} from "react-redux";
 const Link = window.Link;
 
 
@@ -150,7 +151,8 @@ function AltrpTableWithoutUpdate(
     filterSetting,
     _latestData,
     widgetState,
-    sortSetting
+    sortSetting,
+    options={}
   }) {
 
   const stateRef = React.useRef(widgetState);
@@ -178,11 +180,11 @@ function AltrpTableWithoutUpdate(
     not_grouped_column_icon,
     checkbox_checked_icon: checkedIcon = {},
     checkbox_unchecked_icon: uncheckedIcon = {},
-    checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
+    checkbox_indeterminate_icon: indeterminateIcon = {},
+    table_datasource,
+    choose_datasource,
+    table_data_settings_pagination } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
-  const showPagination = React.useMemo(()=>{
-    return inner_page_size < data?.length
-  }, [data, inner_page_size]);
   /**
    * Для перетаскивания
    */
@@ -471,7 +473,6 @@ function AltrpTableWithoutUpdate(
     state: reactTableState,
   } = ReactTable;
   const {
-    pageIndex,
     globalFilter,
     groupBy,
     selectedRowIds,
@@ -527,28 +528,75 @@ function AltrpTableWithoutUpdate(
   /**
    * Настройки пагинации
    */
+
+  let path = table_datasource?.replace(/{{/g, '')?.replace(/}}/g, '') || '';
+  const splittedPath = path.split("altrpdata.");
+
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const isInitialMount = React.useRef(true);
+
+  React.useEffect(() => {
+    if(isInitialMount.current) {
+      isInitialMount.current = false
+    } else {
+      const updateDatasource = async () => {
+        if(splittedPath.length > 1) {
+          const allDataSources = window.dataStorageUpdater.getProperty(
+              'currentDataSources'
+          );
+          console.log(allDataSources)
+          const dataSourcesToUpdate = allDataSources.filter(dataSource => {
+            return dataSource.getProperty('alias') === splittedPath[1];
+          });
+          console.log(pageIndex)
+          await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false, {
+            pageSize,
+            page: pageIndex
+          });
+        }
+      }
+      updateDatasource()
+    }
+  }, [pageIndex])
+
   const paginationProps =
     React.useMemo(() => {
       let paginationProps = null;
       if (inner_page_size && (inner_page_size >= 1)) {
         paginationProps = {
           settings,
-          nextPage,
-          previousPage,
+          nextPage() {
+            setPageIndex((index) => {
+              const value = index+1
+
+              if(value <= pageCount) {
+                return value
+              }
+            })
+          },
+          previousPage() {
+            setPageIndex((index) => {
+              let value = index-1;
+
+              if(value >= 1) {
+                return value
+              }
+            })
+          },
           pageIndex,
-          pageCount,
+          pageCount: options.pageCount || 1,
           pageSize,
           setPageSize,
           widgetId,
-          gotoPage,
-        };
+          gotoPage(value) {
+            setPageIndex(value+1)
+          },
+        }
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
 
   let tableElement = React.useRef(null);
-
-
   return  <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
@@ -690,7 +738,7 @@ function AltrpTableWithoutUpdate(
           {(_status === 'loading' ? (loading_text || null) : null)}
         </div></div></div>}
     </TableComponent>
-    {showPagination && paginationProps && <Pagination {...paginationProps} />}
+    {options.pageCount > 1 && paginationProps && <Pagination {...paginationProps} />}
   </React.Fragment>
 }
 
@@ -1139,6 +1187,10 @@ function DefaultCell(
     updateData }) {
   const { column } = cell;
   const [value, setValue] = React.useState(initialValue);
+  let elementTable = {}
+  if (!isEditor()) {
+    elementTable = useSelector(({elementTableState}) => elementTableState.elementTable)
+  }
   React.useEffect(() => {
     setValue(initialValue);
   }, [initialValue, cell]);
@@ -1280,7 +1332,7 @@ function DefaultCell(
    * Если есть actions, то надо их вывести
    */
   if (_.get(cell, 'column.actions.length')) {
-    return renderCellActions(cell, row);
+    return renderCellActions(cell, row, elementTable);
   }
   if (_.isString(cellContent)) {
     return cellContent;

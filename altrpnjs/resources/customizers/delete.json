@@ -1,0 +1,100 @@
+[
+  {
+    "id": "1652434695005",
+    "type": "start",
+    "position": {
+      "x": 523,
+      "y": 158
+    },
+    "targetPosition": "top",
+    "sourcePosition": "bottom",
+    "data": {
+      "type": "node",
+      "label": "start",
+      "props": {
+        "type": "start",
+        "nodeData": {
+          "operator": "",
+          "body": []
+        }
+      },
+      "request_type": "delete"
+    }
+  },
+  {
+    "id": "1652434696772",
+    "type": "change",
+    "position": {
+      "x": 508,
+      "y": 333
+    },
+    "data": {
+      "type": "node",
+      "label": "change",
+      "props": {
+        "type": "change",
+        "items": [
+          {
+            "id": "hioh1g5qr",
+            "left": {
+              "path": "data.data"
+            },
+            "right": {
+              "namespace": "expression",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px",
+              "JSExpression": "await require('../AltrpModels/{{model_name}}').default.query().where(\"id\", httpContext.request.qs().id).delete()"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "1652434700022",
+    "type": "return",
+    "position": {
+      "x": 539,
+      "y": 462
+    },
+    "data": {
+      "type": "node",
+      "label": "return",
+      "props": {
+        "type": "return"
+      },
+      "property": {
+        "namespace": "expression",
+        "method": "",
+        "methodSettings": {
+          "parameters": []
+        },
+        "size": "120px",
+        "JSExpression": "httpContext.response.json({{context_data}})"
+      }
+    }
+  },
+  {
+    "source": "1652434696772",
+    "sourceHandle": null,
+    "target": "1652434700022",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1652434696772null-1652434700022null"
+  },
+  {
+    "source": "1652434695005",
+    "sourceHandle": null,
+    "target": "1652434696772",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1652434695005null-1652434696772null"
+  }
+]

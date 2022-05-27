@@ -496,7 +496,7 @@ class InputTextCommonWidget extends Component {
     let element = this.props.element;
     const content_options = this.props.element.getResponsiveLockedSetting('options');
     if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0 ){
+      && content_options?.indexOf('{{') === 0 ){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
         options = [];
@@ -941,14 +941,30 @@ class InputTextCommonWidget extends Component {
       text={text}/>
   }
 
+  /**
+   * Получить css классы для input text autocomplete
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getLockedSettings();
     const {
       content_readonly,
-      label_icon
     } = settings;
     let value = this.getValue()
+
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
 
     let classLabel = "";
     let styleLabel = {};
@@ -994,10 +1010,13 @@ class InputTextCommonWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label || label_icon ) {
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
+
+    if (content_label || label_icon) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container classLabel`}
           style={styleLabel}
         >
           <label
@@ -1006,15 +1025,15 @@ class InputTextCommonWidget extends Component {
               display: 'flex',
               flexDirection: label_icon_position,
             }}
-            className={`altrp-field-label altrp-field-label_text-widget ${this.state.settings.content_required
+            className={`${classes} altrp-field-label altrp-field-label_text-widget ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
             }`}
           >
-            {this.state.settings.content_label}
+            {content_label}
 
             {label_icon && label_icon.type && (
-              <span className="altrp-label-icon">
+              <span className={`${classes} altrp-label-icon`}>
               {renderAsset(label_icon)}
             </span>
             )}
@@ -1027,7 +1046,7 @@ class InputTextCommonWidget extends Component {
     let options = this.getOptions();
 
     let input = (
-      <div className="altrp-input-wrapper altrp-input-wrapper_autocomplete">
+      <div className={`${classes} altrp-input-wrapper altrp-input-wrapper_autocomplete`}>
         <Popover2
           isOpen={this.state.isOpen}
           // isOpen={true}
@@ -1038,6 +1057,7 @@ class InputTextCommonWidget extends Component {
           position="bottom"
           popoverRef={this.popoverRef}
           usePortal={false}
+          className={classes}
           content={<Menu>
             {options.map(this.itemRenderer)}
           </Menu>}
@@ -1059,6 +1079,7 @@ class InputTextCommonWidget extends Component {
             onFocus={this.onFocus}
             leftIcon={this.renderLeftIcon()}
             rightElement={this.renderRightIcon()}
+            className={classes}
           />
 
       </Popover2>
@@ -1069,7 +1090,7 @@ class InputTextCommonWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className="altrp-field-container "
+        className={`${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

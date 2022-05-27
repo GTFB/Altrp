@@ -10,12 +10,18 @@ import MessageIcon from "../../../../svgs/message.svg";
 import CustomizerIcon from "../../../../svgs/customizer.svg";
 import FinishIcon from "../../../../svgs/finish.svg";
 import {connect} from "react-redux";
+import Search from "../../../../../../editor/src/svgs/search-editor.svg";
 
 
 class WidgetsPanel extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      searchNodes: ''
+    }
+
+    this.changeSearchField = this.changeSearchField.bind(this)
   }
 
   onDragStart = (event, nodeType) => {
@@ -36,8 +42,15 @@ class WidgetsPanel extends React.Component {
     return node;
   }
 
+  changeSearchField(e) {
+    this.setState(state => ({
+      ...state,
+      searchNodes: e.target.value
+    }))
+  }
+
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if(this.props.customizerSettingsData.length !== nextProps.customizerSettingsData.length) {
+    if(this.props.customizerSettingsData.length !== nextProps.customizerSettingsData.length || this.state.searchNodes !== nextState.searchNodes) {
       return true
     } else {
       return false
@@ -47,9 +60,20 @@ class WidgetsPanel extends React.Component {
   render() {
     let start = this.issetNode('start');
     let finish = this.issetNode('return');
+    let nodesFilter = this.props.nodeState.filter(item => item.name.includes(this.state.searchNodes.toLowerCase()))
 
   return <div className="widget-panel-wrapper">
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+        <div className="nodes-panel__search">
+          <input
+            onChange={this.changeSearchField}
+            value={this.state.searchNodes}
+            type="text"
+            placeholder="Search Node..."
+            className="input-search__nodes"
+          />
+          <Search className='search-icon'/>
+        </div>
         {this.props.customizer.type ? (
           <div className="widget-panel">
             {/*{start && <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'start' )} draggable>*/}
@@ -84,7 +108,10 @@ class WidgetsPanel extends React.Component {
             {/*  <FinishIcon/>*/}
             {/*  <p>Return</p>*/}
             {/*</div>}*/}
-            {this.props.nodeState.map(item => {
+
+            {
+              nodesFilter?.length ?
+              nodesFilter.map(item => {
               if (item.name === "start" && start) {
                 return (
                   <div className="customizer-widget" key={item.name}
@@ -101,7 +128,9 @@ class WidgetsPanel extends React.Component {
                   </div>
                 )
               }
-            })}
+            })
+                : <h2 className="widget-panel__text">Not found</h2>
+            }
           </div>
         ) : (
           <h2 className="widget-panel__text">Choose Type in settings</h2>

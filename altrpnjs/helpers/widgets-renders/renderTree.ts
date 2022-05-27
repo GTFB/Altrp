@@ -21,7 +21,7 @@ export default function renderTree(settings, device, context) {
     if (type === 'repeater') {
       return `<div style="height: 75px; display: flex; justify-content: center; align-items: center; background-color: #C4C4C4;">Add a branch</div>`
     }
-    return `<div style="height: 75px; display: flex; justify-content: center; align-items: center; background-color: #C4C4C4;">Datasource is null</div>`
+    return ``
   }
 
   return `

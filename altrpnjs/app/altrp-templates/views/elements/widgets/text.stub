@@ -1,2 +1,3 @@
+
 {{{text_widget_content}}}
 <div class="altrp-text ck ck-content">{{{getResponsiveSetting(element${this.getId()}_settings, 'st_spacing', device, 0)}}}</div>

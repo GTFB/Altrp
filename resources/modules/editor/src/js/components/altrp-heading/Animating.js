@@ -29,7 +29,7 @@ class Animating extends Component {
       />
     }
 
-    return <div className="altrp-heading-animating">
+    return <div className={`${this.props.classes} altrp-heading-animating`}>
       {
         React.createElement(htmlTag, {
           className: "altrp-heading-animating-tag"
@@ -39,7 +39,7 @@ class Animating extends Component {
               {
                 beforeText ? (
                   <span
-                    className="altrp-heading-no-animating-text"
+                    className={`${this.props.classes} altrp-heading-no-animating-text`}
                     dangerouslySetInnerHTML={{ __html: beforeText }}
                   />
                 ) : null
@@ -52,7 +52,7 @@ class Animating extends Component {
               {
                 afterText ? (
                   <span
-                    className="altrp-heading-no-animating-text"
+                    className={`${this.props.classes} altrp-heading-no-animating-text`}
                     dangerouslySetInnerHTML={{ __html: afterText }}
                   />
                 ) : null

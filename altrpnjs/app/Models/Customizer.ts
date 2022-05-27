@@ -324,7 +324,7 @@ export default class Customizer extends BaseModel {
    */
   public getRequestType(): string {
     const startNode = this.getStartNode()
-    if(startNode === null){
+    if(startNode === null || startNode === undefined){
       return  'get'
     }
     return startNode.getRequestType()
@@ -396,6 +396,7 @@ export default class Customizer extends BaseModel {
 
   allowMethod(method: string){
     const startNode = this.getStartNode()
+
     if (! startNode){
       return false
     }

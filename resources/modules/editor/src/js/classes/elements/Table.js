@@ -23,6 +23,7 @@ import {
 } from '../modules/ControllersManager';
 import { advancedTabControllers } from '../../decorators/register-controllers';
 import Repeater from '../Repeater';
+import {actionsControllers} from "../../decorators/actions-controllers";
 
 class Table extends BaseElement {
   static getName() {
@@ -808,6 +809,8 @@ class Table extends BaseElement {
       hideOnEmail: true,
       fields: actionsRepeater.getControls(),
     });
+
+    actionsControllers(actionsRepeater, 'Actions Button', 'action__button', TAB_CONTENT, false, true);
 
     this.addControl('tables_columns', {
       label: 'Columns',

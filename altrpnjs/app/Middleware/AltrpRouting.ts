@@ -21,7 +21,6 @@ import isProd from "../../helpers/isProd"
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
-
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -45,6 +44,7 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
+
 
     if (httpContext.request.method() !== 'GET') {
       await next()

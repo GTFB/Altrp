@@ -84,7 +84,6 @@ class Ws {
     this.emitToRole(type, data, "admin")
   }
 
-
   async emitToRole(type, data, role: string) {
     const roleValue = await Role.query().where("name", role).preload("users").firstOrFail();
 

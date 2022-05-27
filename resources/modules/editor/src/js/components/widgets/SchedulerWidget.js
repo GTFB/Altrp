@@ -217,11 +217,26 @@ class SchedulerWidget extends Component {
     })
   }
 
+  /**
+   * Получить css классы для scheduler widget
+   */
+  getClasses = ()=>{
+    let classesState = ``;
+    if(this.isActive()){
+      classesState += 'active '
+    }
+    if(this.isDisabled()){
+      classesState += 'state-disabled '
+    }
+    return classesState;
+  }
+
   render() {
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const lang = this.props.element.getResponsiveLockedSetting('lang', '', 'en-gb')
     const popupText = this.popupLocalization[lang]
     return (
-      <div className="popup-wrapper">
+      <div className={`${classes} popup-wrapper`}>
         <FullCalendar
           locale={locales[lang]}
           plugins={[dayGridPlugin, interaction, timeGridPlugin]}
@@ -239,33 +254,33 @@ class SchedulerWidget extends Component {
           ref={this.calendar}
         />
 
-        {!!this.state.popup.status && <div className='popup'>
+        {!!this.state.popup.status && <div className={`${classes} popup`}>
             <form onSubmit={() => {this.state.popup.status === 'create' ? this.createEvent() : this.editEvent()}}>
-              <div className="popup__body">
-                <div className="popup__field-title">
+              <div className={`${classes} popup__body`}>
+                <div className={`${classes} popup__field-title`}>
                   {popupText?.title}
                 </div>
-                <InputGroup type="text" name="title" onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData.title || ''} />
+                <InputGroup type="text" name="title" onChange={this.eventInputHandler} className={`${classes} popup__text-field`} value={this.state.popup.formData.title || ''} />
 
                 {this.state.settings.repeater_fields_section?.map(el => <div key={el.field_name_repeater}>
-                  <div className="popup__field-title">
+                  <div className={`${classes} popup__field-title`}>
                     {el.label_repeater}
                   </div>
                   {(el.input_type_repeater === 'text' || !el.input_type_repeater) && (
-                    <InputGroup type="text" name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData[el.field_name_repeater] || ''} />
+                    <InputGroup type="text" name={el.field_name_repeater} onChange={this.eventInputHandler} className={`${classes} popup__text-field`} value={this.state.popup.formData[el.field_name_repeater] || ''} />
                   )}
                   {el.input_type_repeater ==='textarea' && (
-                    <TextArea name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field popup__textarea' value={this.state.popup.formData[el.field_name_repeater] || ''}></TextArea>
+                    <TextArea name={el.field_name_repeater} onChange={this.eventInputHandler} className={`${classes} popup__text-field popup__textarea`} value={this.state.popup.formData[el.field_name_repeater] || ''}></TextArea>
                   )}
                 </div>)}
               </div>
-              <div className="popup__actions">
+              <div className={`${classes} popup__actions`}>
                 {this.state.popup.status == 'create'
-                  ? <input type="button" className="button" value={popupText.create} onClick={this.createEvent} />
-                  : <input type="button" className="button" value={popupText.done} onClick={this.editEvent} />
+                  ? <input type="button" className={`${classes} button`} value={popupText.create} onClick={this.createEvent} />
+                  : <input type="button" className={`${classes} button`} value={popupText.done} onClick={this.editEvent} />
                 }
-                <input type="button" className="button" value={popupText.cancel} onClick={this.closePopup} />
-                {this.state.popup.status == 'edit' && <input type="button" className="button button-danger" value={popupText.delete} onClick={this.deleteEvent} />}
+                <input type="button" className={`${classes} button`} value={popupText.cancel} onClick={this.closePopup} />
+                {this.state.popup.status == 'edit' && <input type="button" className={`${classes} button button-danger`} value={popupText.delete} onClick={this.deleteEvent} />}
               </div>
             </form>
           </div>
