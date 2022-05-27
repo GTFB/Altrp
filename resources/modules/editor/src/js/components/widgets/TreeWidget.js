@@ -1,12 +1,12 @@
 import React from "react";
+import {NullArray} from "./styled-components/TreeComponent";
+
 const {
   getDataByPath,
   isEditor,
   parseOptionsFromSettings, renderAsset,
   renderAssetIcon
 } = window.altrpHelpers;
-
-import {NullArray} from "./styled-components/TreeComponent";
 
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
 
@@ -45,12 +45,25 @@ const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
       padding: 0;
   }
 
+  .altrp-tree-columns__column {
+    display: flex;
+    align-items: center;
+  }
+
   .bp3-tree-node-expanded > .bp3-tree-node-content .altrp-tree-columns__column_divider {
     border-bottom: none;
   }
 
   .bp3-tree-node-list > .bp3-tree-node__border_last {
     margin-bottom: 10px
+  }
+
+  .altrp-tree-columns__column {
+    position-relative
+  }
+
+  .altrp-tree-container {
+    display: flex;
   }
 `)
 
@@ -84,7 +97,7 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
   let data = _.cloneDeep(getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData()));
   settings.columns = this.props.element.getLockedSettings("column_repeater", []);
-
+  settings.flat = this.props.element.getLockedSettings("flat_col", false);
 
   if(!_.isArray(data)){
     return [];
@@ -140,19 +153,40 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   //   ]
   // }
 
+  settings.maxDepth = getMaxDepth(data, settings.maxDepth)
 
-  return data.map((branch, idx) => replaceChildrenToChildNode(branch, settings.columns, data.length - 1 === idx))
+  return data.map((branch, idx) => replaceChildrenToChildNode(branch, settings.columns, data.length - 1 === idx, 0, settings.flat, settings.maxDepth))
 }
 
-const replaceChildrenToChildNode = (branch, columns, last=false) => {
+const getMaxDepth = (data, maxDepth=0, depth=0) => {
+  if(depth > maxDepth) {
+    maxDepth = depth
+  }
+
+  for(const branch of data) {
+    if(branch.children.length > 0) {
+      maxDepth = getMaxDepth(branch.children, maxDepth, depth+1)
+    }
+  }
+
+  return maxDepth
+}
+
+const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=false, maxDepth) => {
   branch.childNodes = branch.children || []
 
   delete branch.children
 
-  branch.label = getColumns(columns, branch)
+  branch.depth = depth
+
+  branch.label = getColumns(columns, branch, flat, maxDepth)
+
+
   branch.childNodes = branch.childNodes.map((childBranch, idx) => {
-    return  replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx)
+    return  replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx, depth+1, flat, maxDepth)
   })
+
+
 
   if(!last) {
     branch.className = "bp3-tree-node__border"
@@ -167,13 +201,14 @@ const replaceChildrenToChildNode = (branch, columns, last=false) => {
   return branch
 }
 
-const getColumns = (columns, branch) => {
+const getColumns = (columns, branch, flat, maxDepth) => {
   const filteredColumns = columns.filter(c => {
 
     return branch[c.value] !== null && branch[c.value] !== undefined
   })
 
-  const widths = filteredColumns.map(column => {
+  const firstElementWidth = filteredColumns[0].size || "1" + filteredColumns[0].unit || "px"
+  const widths = filteredColumns.slice(1).map(column => {
     if(column.width) {
       return `${(column.width.size || "1") + column.width.unit || "fr"}`
     } else {
@@ -181,27 +216,108 @@ const getColumns = (columns, branch) => {
     }
   })
 
-  return <div className="altrp-tree-columns" style={{
-    gridTemplateColumns: widths.join(" ")
-  }}>
+  const values = {
+    classNames: "altrp-tree-columns__column",
+    marginRight: 0,
+    translateX: 0
+  }
+
+  if(flat) {
+    if(maxDepth > 0) {
+      values.marginRight = 20 + (20 * maxDepth) - (branch.depth * 20)
+    }
+
+    if(columns[0].divider) {
+      values.classNames += " altrp-tree-columns__column_divider"
+    }
+  }
+
+  console.log(values.translateX)
+
+  return <>
     {
-      filteredColumns.map((column, idx) => {
-        let classNames = "altrp-tree-columns__column";
+      !flat ? (
+        <div className="altrp-tree-columns" style={{
+          gridTemplateColumns: widths.join(" ")
+        }}>
+          {
+            filteredColumns.map((column, idx) => {
+              let classNames = "altrp-tree-columns__column";
+              let translateX = 0;
+              let marginRight = 0;
 
-        if(column.divider) {
-          classNames += " altrp-tree-columns__column_divider"
-        }
+              // if(idx > 0 && branch.depth > 0) {
+              //   translateX = (15 * branch.depth)
+              // }
+              //
+              // if(idx === 0 && branch.depth > 0 && maxDepth > 0) {
+              //   marginRight = 20 + (20 * maxDepth)
+              // }
 
-        return (
-          <div className={classNames} key={idx}>
+              if(column.divider) {
+                classNames += " altrp-tree-columns__column_divider"
+              }
+
+              // console.log(marginRight)
+
+              return (
+                <div
+                  className={classNames}
+                  key={idx}
+                >
+                  {
+                    branch[column.value]
+                  }
+                </div>
+              )
+            })
+          }
+        </div>
+      ) : (
+        <>
+          {
+            <div
+              className={values.classNames}
+              style={{
+                width: firstElementWidth,
+                marginRight: values.marginRight,
+                float: "left"
+              }}
+            >
+              {
+                branch[columns[0].value]
+              }
+            </div>
+          }
+          <div className="altrp-tree-columns_flat altrp-tree-columns" style={{
+            transform: `translateX(-${values.translateX}px)`,
+            gridTemplateColumns: widths.join(" ")
+          }}>
             {
-              branch[column.value]
+              filteredColumns.map((column, idx) => {
+                if(idx === 0) return "";
+
+                let classNames = "altrp-tree-columns__column";
+
+                // console.log(marginRight)
+
+                return (
+                  <div
+                    className={classNames}
+                    key={idx}
+                  >
+                    {
+                      branch[column.value]
+                    }
+                  </div>
+                )
+              })
             }
           </div>
-        )
-      })
+        </>
+      )
     }
-  </div>
+  </>
 }
 
 

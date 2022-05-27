@@ -178,6 +178,12 @@ class Tree extends BaseElement {
       locked: true
     });
 
+    this.addControl('flat_col', {
+      type: CONTROLLER_SWITCHER,
+      label: "Flat column",
+      locked: true
+    });
+
     this.endControlSection();
 
     this.startControlSection('content_style', {

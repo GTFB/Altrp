@@ -118,6 +118,10 @@ export default function TreeComponent(settings, prefix) {
       ["", "border_shadow", "shadow", ":hover"],
     "}",
 
+    "altrp-tree-columns__column",
+      ["height", "item_height", "slider"],
+    "}",
+
     ("bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1).bp3-tree-node-content, " +
     ".bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1):hover.bp3-tree-node-content:hover"),
       ["background-color", "item_background", "color", ".active"],
