@@ -16,11 +16,12 @@ export class TelegramBot {
     if(!this.token) {
       this.token = token
     }
+
+    console.log("sadsadsa")
   }
 
   async send(message, user, customizerData) {
     const blocks = message.content
-    console.log(blocks)
 
     if(this.token && !this.bot) {
       try {
@@ -39,6 +40,7 @@ export class TelegramBot {
           await this.sendByType(block, user, customizerData)
 
           if(this.markup.length > 0) {
+            this.keyboard = []
             this.keyboard = this.markup.map((block: {
               listener_value: string | undefined
             }) => {
@@ -69,11 +71,12 @@ export class TelegramBot {
               hide_keyboard: true,
               reply_markup: JSON.stringify({
                 keyboard: [
-                  this.keyboard,
+                  this.keyboard || [],
                 ],
                 resize_keyboard: true
               })
             })
+
           } else {
             ctx.reply(`${Env.get("APP_URL")}/telegram/login?chat=${ctx.message.chat.id}`)
           }
