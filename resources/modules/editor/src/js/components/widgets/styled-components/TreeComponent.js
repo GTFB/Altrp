@@ -74,6 +74,12 @@ export default function TreeComponent(settings, prefix) {
       ["border-bottom-color", "divider_color", "color"],
     "}",
 
+    "bp3-tree-node__border > .bp3-tree-node-content .altrp-tree-columns_flat",
+    ["border-bottom-style", "divider_type"],
+    ["border-bottom-width", "divider_size", "slider"],
+    ["border-bottom-color", "divider_color", "color"],
+    "}",
+
     "bp3-tree-node-list",
       ["padding-top", "divider_gap", "slider"],
     "}",

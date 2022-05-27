@@ -232,8 +232,6 @@ const getColumns = (columns, branch, flat, maxDepth) => {
     }
   }
 
-  console.log(values.translateX)
-
   return <>
     {
       !flat ? (
