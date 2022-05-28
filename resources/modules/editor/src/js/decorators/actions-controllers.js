@@ -1104,3 +1104,4 @@ export function actionsControllers(
    * Список произвольных действия для кнопки END
    */
 }
+window.actionsControllers = actionsControllers

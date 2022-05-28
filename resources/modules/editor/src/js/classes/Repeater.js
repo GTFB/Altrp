@@ -19,5 +19,6 @@ class Repeater extends ControlStack{
     return this.section.controls;
   }
 }
-
+window.CONTROLLERS = window.CONTROLLERS || {}
+window.CONTROLLERS.Repeater = Repeater
 export default Repeater

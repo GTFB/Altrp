@@ -51,7 +51,6 @@ class BaseElement extends ControlStack {
     this.settingsLock =  settingsLock || {};
 
     const controls = controllersManager.getControls(this.getName())
-
     // Выбираем locked настройки
     Object.keys(controls).map(key => {
       controls[key].map(tab => {
@@ -959,5 +958,5 @@ class BaseElement extends ControlStack {
     }
   }
 }
-
+window.BaseElement = BaseElement
 export default BaseElement;
