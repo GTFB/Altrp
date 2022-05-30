@@ -219,7 +219,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/pages"
-                            className={location.pathname.includes('pages') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/pages') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 8 })}
                           >
                             <PagesSvg className="icon" />
@@ -230,7 +230,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/assets"
-                            className={location.pathname.includes('assets') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/assets') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 1 })}
                           >
                             <AssetSvg className="icon" />
@@ -241,7 +241,7 @@ class Admin extends Component {
                         </li>
                         <li>
                           <Link to="/admin/databases"
-                                className={location.pathname.includes('databases') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                                className={location.pathname.includes('/databases') || location.pathname.includes('/database') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                                 onClick={() => this.setState({ activeButton: 9 })}
                           >
                             <DatabaseSvg className="icon" />
@@ -262,7 +262,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/dashboard"
-                            className={location.pathname.includes('dashboard') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/dashboard') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 0 })}
                           >
                             <MainSvg className="icon" />
@@ -274,7 +274,7 @@ class Admin extends Component {
                           <Link
                             to="/admin/templates"
                             className={
-                              location.pathname.includes('templates') || location.pathname.includes('areas') || location.pathname.includes('menus') ?
+                              location.pathname.includes('/templates') || location.pathname.includes('/areas') || location.pathname.includes('/menus') ?
                                 "admin-nav-list__link active__panel" :
                                 "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 2 })}
@@ -293,7 +293,7 @@ class Admin extends Component {
 
                           <Link
                             to="/admin/tables/models"
-                            className={location.pathname.includes('tables') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/tables') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 3 })}
                           >
                             <TablesSvg className="icon" />
@@ -306,7 +306,7 @@ class Admin extends Component {
                           <li>
                             <Link to="/admin/customizers"
                                   className={
-                                     location.pathname.includes('customizers') ?
+                                     location.pathname.includes('/customizers') ?
                                       "admin-nav-list__link active__panel" :
                                       "admin-nav-list__link admin-nav-list__link-top"
                                   }
@@ -321,7 +321,7 @@ class Admin extends Component {
                           <li>
                             <Link to="/admin/robots"
                                   className={
-                                    location.pathname.includes('robots') || location.pathname.includes('customizers') ?
+                                    location.pathname.includes('/robots') || location.pathname.includes('/customizers') ?
                                       "admin-nav-list__link active__panel" :
                                       "admin-nav-list__link admin-nav-list__link-top"
                                   }
@@ -343,7 +343,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/plugins"
-                            className={location.pathname.includes('plugins')  ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/plugins')  ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 5 })}
                           >
                             <PluginSvg className="icon" />
@@ -356,7 +356,7 @@ class Admin extends Component {
                           <Link
                             to="/admin/users"
                             className={
-                              location.pathname.includes('users') || location.pathname.includes('access') ?
+                              location.pathname.includes('/users') || location.pathname.includes('/access') ?
                                 "admin-nav-list__link active__panel" :
                                 "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 6 })}
@@ -370,7 +370,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/marketplace"
-                            className={location.pathname.includes('marketplace') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/marketplace') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 10 })}
                           >
                             <MarketPlace className="icon" />
@@ -381,7 +381,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/settings"
-                            className={location.pathname.includes('settings') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/settings') ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 7 })}
                           >
                             <SettingSvg className="icon" />
@@ -392,7 +392,7 @@ class Admin extends Component {
                         {mainMenu.map( (item, idx) => {
                           return <li key={item.id || 'main-menu' + idx }>
                             <Link className={`admin-nav-list__link ${
-                              activeButton === item.id ? 'active__panel' : 'admin-nav-list__link-top'}`
+                              activeButton === item.id || location.pathname.includes("/" + item.id) ? 'active__panel' : 'admin-nav-list__link-top'}`
                             }
                                   onClick={() => this.setState({ activeButton: item.id })}
                                   to={item.to}>
@@ -428,7 +428,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/pages"
-                            className={location.pathname.includes('pages') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/pages') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 8 })}
                           >
                             <PagesSvg className="icon-mini" />
@@ -437,7 +437,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/assets"
-                            className={location.pathname.includes('assets') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/assets') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 1 })}
                           >
                             <AssetSvg className="icon-mini" />
@@ -446,7 +446,7 @@ class Admin extends Component {
                         </li>
                         <li>
                           <Link to="/admin/databases"
-                                className={location.pathname.includes('databases') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                                className={location.pathname.includes('/databases') || location.pathname.includes('/database') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                                 onClick={() => this.setState({ activeButton: 9 })}
                           >
                             <DatabaseSvg className="icon-mini" />
@@ -465,7 +465,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/dashboard"
-                            className={location.pathname.includes('dashboard') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/dashboard') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 0 })}
                           >
                             <MainSvg className="icon-mini" />
@@ -475,7 +475,7 @@ class Admin extends Component {
                           <Link
                             to="/admin/templates"
                             className={
-                              location.pathname.includes('templates') || location.pathname.includes('areas') || location.pathname.includes('menus') ?
+                              location.pathname.includes('/templates') || location.pathname.includes('/areas') || location.pathname.includes('/menus') ?
                               "admin-nav-list__link-mini active__panel" :
                               "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 2 })
@@ -493,7 +493,7 @@ class Admin extends Component {
 
                           <Link
                             to="/admin/tables/models"
-                            className={location.pathname.includes('tables') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/tables') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 3 })}
                           >
                             <TablesSvg className="icon-mini" />
@@ -504,7 +504,7 @@ class Admin extends Component {
                           <li>
                             <Link to="/admin/customizers"
                                   className={
-                                     location.pathname.includes('customizers') ?
+                                     location.pathname.includes('/customizers') ?
                                       "admin-nav-list__link-mini active__panel" :
                                       "admin-nav-list__link-mini admin-nav-list__link-top"}
                                   onClick={() => this.setState({ activeButton: 4 })}
@@ -516,7 +516,7 @@ class Admin extends Component {
                           <li>
                             <Link to="/admin/robots"
                                   className={
-                                    location.pathname.includes('robots') || location.pathname.includes('customizers') ?
+                                    location.pathname.includes('/robots') || location.pathname.includes('/customizers') ?
                                       "admin-nav-list__link-mini active__panel" :
                                       "admin-nav-list__link-mini admin-nav-list__link-top"}
                                   onClick={() => this.setState({ activeButton: 4 })}
@@ -536,7 +536,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/plugins"
-                            className={location.pathname.includes('plugins') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/plugins') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 5 })}
                           >
                             <PluginSvg className="icon-mini" />
@@ -547,7 +547,7 @@ class Admin extends Component {
                           <Link
                             to="/admin/users"
                             className={
-                              location.pathname.includes('users') || location.pathname.includes('access') ?
+                              location.pathname.includes('/users') || location.pathname.includes('/access') ?
                                 "admin-nav-list__link-mini active__panel" :
                                 "admin-nav-list__link-mini admin-nav-list__link-top"
                             }
@@ -560,7 +560,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/marketplace"
-                            className={location.pathname.includes('marketplace') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/marketplace') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 10 })}
                           >
                             <MarketPlace className="icon-mini" />
@@ -569,7 +569,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/settings"
-                            className={location.pathname.includes('settings') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/settings') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 7 })}
                           >
                             <SettingSvg className="icon-mini" />
