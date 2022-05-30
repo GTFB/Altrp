@@ -15,25 +15,11 @@ import './view'
 import './events'
 import "../app/Services/TelegramBot"
 import "../app/Services/DiscordBot"
-import {other} from "App/Services/Other";
-import _ from "lodash";
-import Customizer from "App/Models/Customizer";
-import Timer from "App/Services/Timer";
 import Env from "@ioc:Adonis/Core/Env";
 import fs from "fs";
 import base_path from "../helpers/path/base_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import guid from "../helpers/guid";
-
-const timers = other.get("timers", {});
-
-for (const key of _.keys(timers)) {
-  Customizer.query().where("name", key).preload("altrp_model").first().then((customizer) => {
-    if(customizer) {
-      new Timer(key, timers[key], customizer)
-    }
-  });
-}
 
 /*
 |--------------------------------------------------------------------------

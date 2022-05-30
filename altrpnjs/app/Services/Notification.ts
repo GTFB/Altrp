@@ -20,7 +20,7 @@ export default class Notification {
         })
         break
       case "telegram":
-        TelegramBot.send(this.message, users, customizerData)
+        // TelegramBot.init(null)
         break
     }
   }
