@@ -525,7 +525,7 @@ export default class Plugin {
       },])
 
     for (const hook of hooks) {
-      await hook.fn()
+      await hook.fn(this)
     }
   }
 
