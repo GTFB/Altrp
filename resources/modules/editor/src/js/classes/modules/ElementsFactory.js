@@ -60,6 +60,8 @@ class ElementsFactory extends BaseModule {
       object.cssClassStorage && object.cssClassStorage.length === 0
         ? {}
         : object.cssClassStorage;
+    console.log(cssClassStorage);
+    console.log(element.getName());
     element.setCSSStorage(cssClassStorage);
     if (object.dynamicContentSettings) {
       element.dynamicContentSettings =
