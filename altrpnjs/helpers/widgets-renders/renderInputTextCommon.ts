@@ -86,7 +86,6 @@ export default function renderInputTextCommon(settings, device) {
   if (settings.content_autocomplete) {
     autocomplete = "on";
   }
-
   let altrpInput = AltrpInput({
     type: settings.content_type === 'password' ? (showPassword ? "text" : "password") : settings.content_type,
     placeholder: settings.content_placeholder || "",

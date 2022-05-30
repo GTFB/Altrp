@@ -15,7 +15,7 @@ import Env from "@ioc:Adonis/Core/Env";
 
 export default class UpdateService {
 
-  private static UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/latest'
+  private static UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/'
 
   private static ARCHIVE_PATH = base_path('temp.zip')
 
@@ -23,7 +23,7 @@ export default class UpdateService {
    * @return string
    * @throws HttpException
    */
-  public async update() {
+  public async update(version = 'latest') {
     if (env('APP_ENV', 'development') !== 'production') {
       return true;
     }
@@ -31,7 +31,7 @@ export default class UpdateService {
     Logger.info("Starting Update")
     let file = ''
     try {
-      file = (await axios.get(UpdateService.UPDATE_DOMAIN, {
+      file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
         responseType: 'arraybuffer',
       }))?.data || '';
     } catch (e) {

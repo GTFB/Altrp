@@ -50,6 +50,20 @@ class HeadingTypeHeadingWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для heading widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let heading;
 
@@ -57,13 +71,13 @@ class HeadingTypeHeadingWidget extends Component {
     const background_image = this.props.element.getLockedSettings('background_image', {});
     let text = this.getLockedContent('text');
     let link;
-    const className = "altrp-heading altrp-heading--link " + (this.state.settings.position_css_classes || ' ') + (background_image.url ? ' altrp-background-image' : '');
+    const className = this.getClasses() + (this.state.settings.position_css_classes || "") + " altrp-heading altrp-heading--link " + (background_image.url ? ' altrp-background-image' : '');
 
     if (this.state.settings.link_link && this.state.settings.link_link.url) {
       let linkProps = {
         rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
         href: `mailto:mail@gmail.com`,
-        className: 'altrp-inherit altrp-inherit_wo-border',
+        className: `${className} altrp-inherit altrp-inherit_wo-border`,
       };
 
       linkProps.tag = this.state.settings.link_link.tag;

@@ -9,6 +9,7 @@
  */
 import AltrpAction from "../AltrpAction";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
+
 import isEditor from "../../functions/isEditor"
 
 class ActionsManager extends AltrpModel{

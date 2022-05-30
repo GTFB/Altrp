@@ -130,6 +130,20 @@ class InputDateRangeWidget extends Component {
     return value
   }
 
+  /**
+   * Получить css классы для input Date range
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render(){
 
     const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
@@ -150,8 +164,11 @@ class InputDateRangeWidget extends Component {
     if (isEditor()) {
       frame = document.getElementById("editorContent").contentWindow.document.body
     }
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
 
     return <DateRangeInput
+      className={classes}
       minDate={new Date(1900, 1, 1)}
       formatDate={date => moment(date).locale(locale).format(format)}
       parseDate={str => moment(str, this.typeDate).locale(locale).toDate()}

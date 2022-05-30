@@ -1,7 +1,7 @@
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import React from "react";
-import _CONDITIONS_OPTIONS from "./constants/CONDITIONS_OPTIONS";
+import replaceContentWithData from "./functions/replaceContentWithData";
 export {default as replaceContentWithData} from "./functions/replaceContentWithData";
 export {default as getDataByPath} from "./functions/getDataByPath";
 export {default as getComponentByElementId} from "./functions/getComponentByElementId";
@@ -65,10 +65,10 @@ export {default as getTimeValue} from "./functions/getTimeValue";
 export {default as startOfMonth} from "./functions/startOfMonth";
 export {default as startOfYear} from "./functions/startOfYear";
 export {default as isEditor} from "./functions/isEditor";
+export {default as CONDITIONS_OPTIONS} from "./constants/CONDITIONS_OPTIONS";
 export {getResponsiveSetting} from "./functions/getResponsiveSetting";
 
 
-export const CONDITIONS_OPTIONS = _CONDITIONS_OPTIONS
 
 
 /**
@@ -331,6 +331,7 @@ export function isValueMatchMask(value, mask) {
       .every((char, index) => char === mask[index] || char.match(mask[index]))
   );
 }
+
 
 /**
  *

@@ -92,6 +92,136 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__previous {`;
+
+  const flexDirectionPaginPrevDisabled = getResponsiveSetting(settings, 'prev_icon_position', '.state-disabled');
+
+  if (flexDirectionPaginPrevDisabled && flexDirectionPaginPrevDisabled !== 'default') {
+    styles += simplePropertyStyled(flexDirectionPaginPrevDisabled, 'flex-direction');
+  }
+
+  const marginPaginPrevDisabled = getResponsiveSetting(settings, 'posts_prev_margin', '.state-disabled');
+
+  if (marginPaginPrevDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginPrevDisabled, 'margin');
+  }
+
+  const paddingPaginPrevDisabled = getResponsiveSetting(settings, 'posts_prev_padding', '.state-disabled');
+
+  if (paddingPaginPrevDisabled) {
+    styles += dimensionsControllerToStyles(paddingPaginPrevDisabled);
+  }
+
+  const colorPaginPrevDisabled = getResponsiveSetting(settings, 'posts_prev_color', '.state-disabled');
+
+  if (colorPaginPrevDisabled) {
+    styles += colorPropertyStyled(colorPaginPrevDisabled, 'color');
+  }
+
+  const typographicPaginPrevDisabled = getResponsiveSetting(settings, 'posts_prev_typographic', '.state-disabled');
+
+  if (typographicPaginPrevDisabled) {
+    styles += typographicControllerToStyles(typographicPaginPrevDisabled);
+  }
+
+  const borderTypePaginPrevDisabled = getResponsiveSetting(settings, 'posts_prev_border_type', '.state-disabled');
+
+  if (borderTypePaginPrevDisabled) {
+    styles += simplePropertyStyled(borderTypePaginPrevDisabled, 'border-style');
+  }
+
+  const borderWidthPaginPrevDisabled = getResponsiveSetting(settings, 'posts_prev_border_width', '.state-disabled');
+
+  if (borderWidthPaginPrevDisabled) {
+    styles += borderWidthStyled(borderWidthPaginPrevDisabled);
+  }
+
+  const borderColorPaginPrevDisabled = getResponsiveSetting(settings, 'posts_prev_border_color', '.state-disabled');
+
+  if (borderColorPaginPrevDisabled) {
+    styles += colorPropertyStyled(borderColorPaginPrevDisabled, 'border-color');
+  }
+
+  const borderRadiusPaginPrevDisabled = getResponsiveSetting(settings, 'border_prev_radius', '.state-disabled');
+
+  if (borderRadiusPaginPrevDisabled) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginPrevDisabled, 'border-radius');
+  }
+
+  const boxShadowPaginPrevDisabled = getResponsiveSetting(settings, 'style_prev_background_shadow', '.state-disabled');
+
+  if (boxShadowPaginPrevDisabled) {
+    styles += shadowControllerToStyles(boxShadowPaginPrevDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__previous {`;
+
+  const flexDirectionPaginPrevActive = getResponsiveSetting(settings, 'prev_icon_position', '.active');
+
+  if (flexDirectionPaginPrevActive && flexDirectionPaginPrevActive !== 'default') {
+    styles += simplePropertyStyled(flexDirectionPaginPrevActive, 'flex-direction');
+  }
+
+  const marginPaginPrevActive = getResponsiveSetting(settings, 'posts_prev_margin', '.active');
+
+  if (marginPaginPrevActive) {
+    styles += dimensionsControllerToStyles(marginPaginPrevActive, 'margin');
+  }
+
+  const paddingPaginPrevActive = getResponsiveSetting(settings, 'posts_prev_padding', '.active');
+
+  if (paddingPaginPrevActive) {
+    styles += dimensionsControllerToStyles(paddingPaginPrevActive);
+  }
+
+  const colorPaginPrevActive = getResponsiveSetting(settings, 'posts_prev_color', '.active');
+
+  if (colorPaginPrevActive) {
+    styles += colorPropertyStyled(colorPaginPrevActive, 'color');
+  }
+
+  const typographicPaginPrevActive = getResponsiveSetting(settings, 'posts_prev_typographic', '.active');
+
+  if (typographicPaginPrevActive) {
+    styles += typographicControllerToStyles(typographicPaginPrevActive);
+  }
+
+  const borderTypePaginPrevActive = getResponsiveSetting(settings, 'posts_prev_border_type', '.active');
+
+  if (borderTypePaginPrevActive) {
+    styles += simplePropertyStyled(borderTypePaginPrevActive, 'border-style');
+  }
+
+  const borderWidthPaginPrevActive = getResponsiveSetting(settings, 'posts_prev_border_width', '.active');
+
+  if (borderWidthPaginPrevActive) {
+    styles += borderWidthStyled(borderWidthPaginPrevActive);
+  }
+
+  const borderColorPaginPrevActive = getResponsiveSetting(settings, 'posts_prev_border_color', '.active');
+
+  if (borderColorPaginPrevActive) {
+    styles += colorPropertyStyled(borderColorPaginPrevActive, 'border-color');
+  }
+
+  const borderRadiusPaginPrevActive = getResponsiveSetting(settings, 'border_prev_radius', '.active');
+
+  if (borderRadiusPaginPrevActive) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginPrevActive, 'border-radius');
+  }
+
+  const boxShadowPaginPrevActive = getResponsiveSetting(settings, 'style_prev_background_shadow', '.active');
+
+  if (boxShadowPaginPrevActive) {
+    styles += shadowControllerToStyles(boxShadowPaginPrevActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__previous:hover {`;
 
   const flexDirectionPaginPrevHover = getResponsiveSetting(settings, 'prev_icon_position', ':hover');
@@ -166,6 +296,27 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__previous svg, ${parentClass} .altrp-pagination__previous img {`;
+
+  const marginPaginPrevSvgImgDisabled = getResponsiveSetting(settings, 'prev_icon_padding', '.state-disabled');
+
+  if (marginPaginPrevSvgImgDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginPrevSvgImgDisabled, 'margin');
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .altrp-pagination__previous svg, ${parentClass} .altrp-pagination__previous img {`;
+
+  const marginPaginPrevSvgImgActive = getResponsiveSetting(settings, 'prev_icon_padding', '.active');
+
+  if (marginPaginPrevSvgImgActive) {
+    styles += dimensionsControllerToStyles(marginPaginPrevSvgImgActive, 'margin');
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__previous:hover svg, ${parentClass} .altrp-pagination__previous:hover img {`;
 
   const marginPaginPrevSvgImgHover = getResponsiveSetting(settings, 'prev_icon_padding', ':hover');
@@ -182,6 +333,28 @@ export function getPostsStyles(settings, id) {
 
   if (sizePaginPrevSvg) {
     styles += iconSizeStyled(sizePaginPrevSvg);
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__previous svg {`;
+
+  const sizePaginPrevSvgDisabled = getResponsiveSetting(settings, 'prev_icon_size', '.state-disabled');
+
+  if (sizePaginPrevSvgDisabled) {
+    styles += iconSizeStyled(sizePaginPrevSvgDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__previous svg {`;
+
+  const sizePaginPrevSvgActive = getResponsiveSetting(settings, 'prev_icon_size', '.active');
+
+  if (sizePaginPrevSvgActive) {
+    styles += iconSizeStyled(sizePaginPrevSvgActive);
   }
 
   styles += `} `;
@@ -206,6 +379,28 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__previous img {`;
+
+  const heightPaginPrevImgDisabled = getResponsiveSetting(settings, 'prev_icon_size', '.state-disabled');
+
+  if (heightPaginPrevImgDisabled) {
+    styles += sizeStyled(heightPaginPrevImgDisabled, 'height');
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__previous img {`;
+
+  const heightPaginPrevImgActive = getResponsiveSetting(settings, 'prev_icon_size', '.active');
+
+  if (heightPaginPrevImgActive) {
+    styles += sizeStyled(heightPaginPrevImgActive, 'height');
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__previous:hover img {`;
 
   const heightPaginPrevImgHover = getResponsiveSetting(settings, 'prev_icon_size', ':hover');
@@ -222,6 +417,28 @@ export function getPostsStyles(settings, id) {
 
   if (fillPaginPrevPath) {
     styles += colorPropertyStyled(fillPaginPrevPath, 'fill');
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__previous path {`;
+
+  const fillPaginPrevPathDisabled = getResponsiveSetting(settings, 'prev_icon_color', '.state-disabled');
+
+  if (fillPaginPrevPathDisabled) {
+    styles += colorPropertyStyled(fillPaginPrevPathDisabled, 'fill');
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__previous path {`;
+
+  const fillPaginPrevPathActive = getResponsiveSetting(settings, 'prev_icon_color', '.active');
+
+  if (fillPaginPrevPathActive) {
+    styles += colorPropertyStyled(fillPaginPrevPathActive, 'fill');
   }
 
   styles += `} `;
@@ -300,6 +517,135 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__next {`;
+
+  const flexDirectionPaginNextDisabled = getResponsiveSetting(settings, 'next_icon_position', '.state-disabled');
+
+  if (flexDirectionPaginNextDisabled && flexDirectionPaginNextDisabled !== 'default') {
+    styles += simplePropertyStyled(flexDirectionPaginNextDisabled, 'flex-direction');
+  }
+
+  const marginPaginNextDisabled = getResponsiveSetting(settings, 'posts_next_margin', '.state-disabled');
+
+  if (marginPaginNextDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginNextDisabled, 'margin');
+  }
+
+  const paddingPaginNextDisabled = getResponsiveSetting(settings, 'posts_next_padding', '.state-disabled');
+
+  if (paddingPaginNextDisabled) {
+    styles += dimensionsControllerToStyles(paddingPaginNextDisabled);
+  }
+
+  const colorPaginNextDisabled = getResponsiveSetting(settings, 'posts_next_color', '.state-disabled');
+
+  if (colorPaginNextDisabled) {
+    styles += colorPropertyStyled(colorPaginNextDisabled, 'color');
+  }
+
+  const typographicPaginNextDisabled = getResponsiveSetting(settings, 'posts_next_typographic', '.state-disabled');
+
+  if (typographicPaginNextDisabled) {
+    styles += typographicControllerToStyles(typographicPaginNextDisabled);
+  }
+
+  const borderTypePaginNextDisabled = getResponsiveSetting(settings, 'posts_next_border_type', '.state-disabled');
+
+  if (borderTypePaginNextDisabled) {
+    styles += simplePropertyStyled(borderTypePaginNextDisabled, 'border-style');
+  }
+
+  const borderWidthPaginNextDisabled = getResponsiveSetting(settings, 'posts_next_border_width', '.state-disabled');
+
+  if (borderWidthPaginNextDisabled) {
+    styles += borderWidthStyled(borderWidthPaginNextDisabled);
+  }
+
+  const borderColorPaginNextDisabled = getResponsiveSetting(settings, 'posts_next_border_color', '.state-disabled');
+
+  if (borderColorPaginNextDisabled) {
+    styles += colorPropertyStyled(borderColorPaginNextDisabled, 'border-color');
+  }
+
+  const borderRadiusPaginNextDisabled = getResponsiveSetting(settings, 'border_next_radius', '.state-disabled');
+
+  if (borderRadiusPaginNextDisabled) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginNextDisabled, 'border-radius');
+  }
+
+  const boxShadowPaginNextDisabled = getResponsiveSetting(settings, 'style_next_background_shadow', '.state-disabled');
+
+  if (boxShadowPaginNextDisabled) {
+    styles += shadowControllerToStyles(boxShadowPaginNextDisabled);
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .altrp-pagination__next {`;
+
+  const flexDirectionPaginNextActive = getResponsiveSetting(settings, 'next_icon_position', '.active');
+
+  if (flexDirectionPaginNextActive && flexDirectionPaginNextActive !== 'default') {
+    styles += simplePropertyStyled(flexDirectionPaginNextActive, 'flex-direction');
+  }
+
+  const marginPaginNextActive = getResponsiveSetting(settings, 'posts_next_margin', '.active');
+
+  if (marginPaginNextActive) {
+    styles += dimensionsControllerToStyles(marginPaginNextActive, 'margin');
+  }
+
+  const paddingPaginNextActive = getResponsiveSetting(settings, 'posts_next_padding', '.active');
+
+  if (paddingPaginNextActive) {
+    styles += dimensionsControllerToStyles(paddingPaginNextActive);
+  }
+
+  const colorPaginNextActive = getResponsiveSetting(settings, 'posts_next_color', '.active');
+
+  if (colorPaginNextActive) {
+    styles += colorPropertyStyled(colorPaginNextActive, 'color');
+  }
+
+  const typographicPaginNextActive = getResponsiveSetting(settings, 'posts_next_typographic', '.active');
+
+  if (typographicPaginNextActive) {
+    styles += typographicControllerToStyles(typographicPaginNextActive);
+  }
+
+  const borderTypePaginNextActive = getResponsiveSetting(settings, 'posts_next_border_type', '.active');
+
+  if (borderTypePaginNextActive) {
+    styles += simplePropertyStyled(borderTypePaginNextActive, 'border-style');
+  }
+
+  const borderWidthPaginNextActive = getResponsiveSetting(settings, 'posts_next_border_width', '.active');
+
+  if (borderWidthPaginNextActive) {
+    styles += borderWidthStyled(borderWidthPaginNextActive);
+  }
+
+  const borderColorPaginNextActive = getResponsiveSetting(settings, 'posts_next_border_color', '.active');
+
+  if (borderColorPaginNextActive) {
+    styles += colorPropertyStyled(borderColorPaginNextActive, 'border-color');
+  }
+
+  const borderRadiusPaginNextActive = getResponsiveSetting(settings, 'border_next_radius', '.active');
+
+  if (borderRadiusPaginNextActive) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginNextActive, 'border-radius');
+  }
+
+  const boxShadowPaginNextActive = getResponsiveSetting(settings, 'style_next_background_shadow', '.active');
+
+  if (boxShadowPaginNextActive) {
+    styles += shadowControllerToStyles(boxShadowPaginNextActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__next:hover {`;
 
   const flexDirectionPaginNextHover = getResponsiveSetting(settings, 'next_icon_position', ':hover');
@@ -374,6 +720,28 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__next svg, ${parentClass} .altrp-pagination__next img {`;
+
+  const marginPaginNextSvgImgDisabled = getResponsiveSetting(settings, 'next_icon_margin', '.state-disabled');
+
+  if (marginPaginNextSvgImgDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginNextSvgImgDisabled, 'margin');
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__next svg, ${parentClass} .altrp-pagination__next img {`;
+
+  const marginPaginNextSvgImgActive = getResponsiveSetting(settings, 'next_icon_margin', '.active');
+
+  if (marginPaginNextSvgImgActive) {
+    styles += dimensionsControllerToStyles(marginPaginNextSvgImgActive, 'margin');
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__next:hover svg, ${parentClass} .altrp-pagination__next:hover img {`;
 
   const marginPaginNextSvgImgHover = getResponsiveSetting(settings, 'next_icon_margin', ':hover');
@@ -390,6 +758,27 @@ export function getPostsStyles(settings, id) {
 
   if (sizePaginNextSvg) {
     styles += iconSizeStyled(sizePaginNextSvg);
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__next svg {`;
+
+  const sizePaginNextSvgDisabled = getResponsiveSetting(settings, 'next_icon_size', '.state-disabled');
+
+  if (sizePaginNextSvgDisabled) {
+    styles += iconSizeStyled(sizePaginNextSvgDisabled);
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .altrp-pagination__next svg {`;
+
+  const sizePaginNextSvgActive = getResponsiveSetting(settings, 'next_icon_size', '.active');
+
+  if (sizePaginNextSvgActive) {
+    styles += iconSizeStyled(sizePaginNextSvgActive);
   }
 
   styles += `} `;
@@ -414,6 +803,27 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__next img {`;
+
+  const heightPaginNextImgDisabled = getResponsiveSetting(settings, 'next_icon_size', '.state-disabled');
+
+  if (heightPaginNextImgDisabled) {
+    styles += sizeStyled(heightPaginNextImgDisabled, 'height');
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .altrp-pagination__next img {`;
+
+  const heightPaginNextImgActive = getResponsiveSetting(settings, 'next_icon_size', '.active');
+
+  if (heightPaginNextImgActive) {
+    styles += sizeStyled(heightPaginNextImgActive, 'height');
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__next:hover img {`;
 
   const heightPaginNextImgHover = getResponsiveSetting(settings, 'next_icon_size', ':hover');
@@ -430,6 +840,28 @@ export function getPostsStyles(settings, id) {
 
   if (fillPaginNextPath) {
     styles += colorPropertyStyled(fillPaginNextPath, 'fill');
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__next path {`;
+
+  const fillPaginNextPathDisabled = getResponsiveSetting(settings, 'next_icon_color', '.state-disabled');
+
+  if (fillPaginNextPathDisabled) {
+    styles += colorPropertyStyled(fillPaginNextPathDisabled, 'fill');
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__next path {`;
+
+  const fillPaginNextPathActive = getResponsiveSetting(settings, 'next_icon_color', '.active');
+
+  if (fillPaginNextPathActive) {
+    styles += colorPropertyStyled(fillPaginNextPathActive, 'fill');
   }
 
   styles += `} `;
@@ -466,6 +898,52 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__count {`;
+
+  const marginPaginCountDisabled = getResponsiveSetting(settings, 'count_buttons_margin', '.state-disabled');
+
+  if (marginPaginCountDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginCountDisabled, 'margin');
+  }
+
+  const backgroundColorPaginCountDisabled = getResponsiveSetting(settings, 'table_style_pagination_count_background_color', '.state-disabled');
+
+  if (backgroundColorPaginCountDisabled) {
+    styles += colorPropertyStyled(backgroundColorPaginCountDisabled, 'background-color');
+  }
+
+  const paddingPaginCountDisabled = getResponsiveSetting(settings, 'table_style_pagination_padding_count', '.state-disabled');
+
+  if (paddingPaginCountDisabled) {
+    styles += dimensionsControllerToStyles(paddingPaginCountDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__count {`;
+
+  const marginPaginCountActive = getResponsiveSetting(settings, 'count_buttons_margin', '.active');
+
+  if (marginPaginCountActive) {
+    styles += dimensionsControllerToStyles(marginPaginCountActive, 'margin');
+  }
+
+  const backgroundColorPaginCountActive = getResponsiveSetting(settings, 'table_style_pagination_count_background_color', '.active');
+
+  if (backgroundColorPaginCountActive) {
+    styles += colorPropertyStyled(backgroundColorPaginCountActive, 'background-color');
+  }
+
+  const paddingPaginCountActive = getResponsiveSetting(settings, 'table_style_pagination_padding_count', '.active');
+
+  if (paddingPaginCountActive) {
+    styles += dimensionsControllerToStyles(paddingPaginCountActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__count:hover {`;
 
   const marginPaginCountHover = getResponsiveSetting(settings, 'count_buttons_margin', ':hover');
@@ -494,6 +972,28 @@ export function getPostsStyles(settings, id) {
 
   if (colorPaginCountPagesItem) {
     styles += colorPropertyStyled(colorPaginCountPagesItem, 'color');
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__count, ${parentClass} .altrp-pagination-pages__item {`;
+
+  const colorPaginCountPagesItemDisabled = getResponsiveSetting(settings, 'table_style_pagination_count_text_color', '.state-disabled');
+
+  if (colorPaginCountPagesItemDisabled) {
+    styles += colorPropertyStyled(colorPaginCountPagesItemDisabled, 'color');
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__count, ${parentClass} .altrp-pagination-pages__item {`;
+
+  const colorPaginCountPagesItemActive = getResponsiveSetting(settings, 'table_style_pagination_count_text_color', '.active');
+
+  if (colorPaginCountPagesItemActive) {
+    styles += colorPropertyStyled(colorPaginCountPagesItemActive, 'color');
   }
 
   styles += `} `;
@@ -550,6 +1050,100 @@ export function getPostsStyles(settings, id) {
 
   if (boxShadowPaginPagesItem) {
     styles += shadowControllerToStyles(boxShadowPaginPagesItem);
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination-pages__item {`;
+
+  const marginPaginPagesItemDisabled = getResponsiveSetting(settings, 'count_button_item_margin', '.state-disabled');
+
+  if (marginPaginPagesItemDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginPagesItemDisabled, 'margin');
+  }
+
+  const backgroundColorPaginPagesItemDisabled = getResponsiveSetting(settings, 'table_style_pagination_count_item_background_color', '.state-disabled');
+
+  if (backgroundColorPaginPagesItemDisabled) {
+    styles += colorPropertyStyled(backgroundColorPaginPagesItemDisabled, 'background-color');
+  }
+
+  const borderTypePaginPagesItemDisabled = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_type', '.state-disabled');
+
+  if (borderTypePaginPagesItemDisabled) {
+    styles += simplePropertyStyled(borderTypePaginPagesItemDisabled, 'border-style');
+  }
+
+  const borderWidthPaginPagesItemDisabled = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_width', '.state-disabled');
+
+  if (borderWidthPaginPagesItemDisabled) {
+    styles += borderWidthStyled(borderWidthPaginPagesItemDisabled);
+  }
+
+  const borderRadiusPaginPagesItemDisabled = getResponsiveSetting(settings, 'table_style_count_item_border_radius', '.state-disabled');
+
+  if (borderRadiusPaginPagesItemDisabled) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginPagesItemDisabled, 'border-radius');
+  }
+
+  const borderColorPaginPagesItemDisabled = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_color', '.state-disabled');
+
+  if (borderColorPaginPagesItemDisabled) {
+    styles += colorPropertyStyled(borderColorPaginPagesItemDisabled, 'border-color', '!important');
+  }
+
+  const boxShadowPaginPagesItemDisabled = getResponsiveSetting(settings, 'pagination_count_item_shadow', '.state-disabled');
+
+  if (boxShadowPaginPagesItemDisabled) {
+    styles += shadowControllerToStyles(boxShadowPaginPagesItemDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination-pages__item {`;
+
+  const marginPaginPagesItemActive = getResponsiveSetting(settings, 'count_button_item_margin', '.active');
+
+  if (marginPaginPagesItemActive) {
+    styles += dimensionsControllerToStyles(marginPaginPagesItemActive, 'margin');
+  }
+
+  const backgroundColorPaginPagesItemActive = getResponsiveSetting(settings, 'table_style_pagination_count_item_background_color', '.active');
+
+  if (backgroundColorPaginPagesItemActive) {
+    styles += colorPropertyStyled(backgroundColorPaginPagesItemActive, 'background-color');
+  }
+
+  const borderTypePaginPagesItemActive = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_type', '.active');
+
+  if (borderTypePaginPagesItemActive) {
+    styles += simplePropertyStyled(borderTypePaginPagesItemActive, 'border-style');
+  }
+
+  const borderWidthPaginPagesItemActive = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_width', '.active');
+
+  if (borderWidthPaginPagesItemActive) {
+    styles += borderWidthStyled(borderWidthPaginPagesItemActive);
+  }
+
+  const borderRadiusPaginPagesItemActive = getResponsiveSetting(settings, 'table_style_count_item_border_radius', '.active');
+
+  if (borderRadiusPaginPagesItemActive) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginPagesItemActive, 'border-radius');
+  }
+
+  const borderColorPaginPagesItemActive = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_color', '.active');
+
+  if (borderColorPaginPagesItemActive) {
+    styles += colorPropertyStyled(borderColorPaginPagesItemActive, 'border-color', '!important');
+  }
+
+  const boxShadowPaginPagesItemActive = getResponsiveSetting(settings, 'pagination_count_item_shadow', '.active');
+
+  if (boxShadowPaginPagesItemActive) {
+    styles += shadowControllerToStyles(boxShadowPaginPagesItemActive);
   }
 
   styles += `} `;
@@ -654,6 +1248,27 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination .altrp-pagination-pages__item {`;
+
+  const typographicPaginPaginPagesItemDisabled = getResponsiveSetting(settings, 'table_style_item_count_pagination_typographic', '.state-disabled');
+
+  if (typographicPaginPaginPagesItemDisabled) {
+    styles += typographicControllerToStyles(typographicPaginPaginPagesItemDisabled);
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .altrp-pagination .altrp-pagination-pages__item {`;
+
+  const typographicPaginPaginPagesItemActive = getResponsiveSetting(settings, 'table_style_item_count_pagination_typographic', '.active');
+
+  if (typographicPaginPaginPagesItemActive) {
+    styles += typographicControllerToStyles(typographicPaginPaginPagesItemActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination .altrp-pagination-pages__item:hover {`;
 
   const typographicPaginPaginPagesItemHover = getResponsiveSetting(settings, 'table_style_item_count_pagination_typographic', ':hover');
@@ -682,6 +1297,51 @@ export function getPostsStyles(settings, id) {
 
   if (typographicPaginEllipsis) {
     styles += typographicControllerToStyles(typographicPaginEllipsis);
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__ellipsis {`;
+
+  const marginPaginEllipsisDisabled = getResponsiveSetting(settings, 'ellipsis_margin', '.state-disabled');
+
+  if (marginPaginEllipsisDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginEllipsisDisabled, 'margin');
+  }
+
+  const colorPaginEllipsisDisabled = getResponsiveSetting(settings, 'ellipsis_color', '.state-disabled');
+
+  if (colorPaginEllipsisDisabled) {
+    styles += colorPropertyStyled(colorPaginEllipsisDisabled, 'color');
+  }
+
+  const typographicPaginEllipsisDisabled = getResponsiveSetting(settings, 'ellipsis_typographic', '.state-disabled');
+
+  if (typographicPaginEllipsisDisabled) {
+    styles += typographicControllerToStyles(typographicPaginEllipsisDisabled);
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .altrp-pagination__ellipsis {`;
+
+  const marginPaginEllipsisActive = getResponsiveSetting(settings, 'ellipsis_margin', '.active');
+
+  if (marginPaginEllipsisActive) {
+    styles += dimensionsControllerToStyles(marginPaginEllipsisActive, 'margin');
+  }
+
+  const colorPaginEllipsisActive = getResponsiveSetting(settings, 'ellipsis_color', '.active');
+
+  if (colorPaginEllipsisActive) {
+    styles += colorPropertyStyled(colorPaginEllipsisActive, 'color');
+  }
+
+  const typographicPaginEllipsisActive = getResponsiveSetting(settings, 'ellipsis_typographic', '.active');
+
+  if (typographicPaginEllipsisActive) {
+    styles += typographicControllerToStyles(typographicPaginEllipsisActive);
   }
 
   styles += `} `;
@@ -766,6 +1426,124 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__goto-page {`;
+
+  const marginPaginGotoPageDisabled = getResponsiveSetting(settings, 'goto-page_margin', '.state-disabled');
+
+  if (marginPaginGotoPageDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginGotoPageDisabled, 'margin');
+  }
+
+  const paddingPaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_padding', '.state-disabled');
+
+  if (paddingPaginGotoPageDisabled) {
+    styles += dimensionsControllerToStyles(paddingPaginGotoPageDisabled);
+  }
+
+  const colorPaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_text_color', '.state-disabled');
+
+  if (colorPaginGotoPageDisabled) {
+    styles += colorPropertyStyled(colorPaginGotoPageDisabled, 'color');
+  }
+
+  const backgroundColorPaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_background_color', '.state-disabled');
+
+  if (backgroundColorPaginGotoPageDisabled) {
+    styles += colorPropertyStyled(backgroundColorPaginGotoPageDisabled, 'background-color');
+  }
+
+  const borderTypePaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_border_type', '.state-disabled');
+
+  if (borderTypePaginGotoPageDisabled) {
+    styles += simplePropertyStyled(borderTypePaginGotoPageDisabled, 'border-style');
+  }
+
+  const borderWidthPaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_border_width', '.state-disabled');
+
+  if (borderWidthPaginGotoPageDisabled) {
+    styles += borderWidthStyled(borderWidthPaginGotoPageDisabled);
+  }
+
+  const borderColorPaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_border_color', '.state-disabled');
+
+  if (borderColorPaginGotoPageDisabled) {
+    styles += colorPropertyStyled(borderColorPaginGotoPageDisabled, 'border-color');
+  }
+
+  const borderRadiusPaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_border_radius', '.state-disabled');
+
+  if (borderRadiusPaginGotoPageDisabled) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginGotoPageDisabled, 'border-radius');
+  }
+
+  const boxShadowPaginGotoPageDisabled = getResponsiveSetting(settings, 'page_input_shadow', '.state-disabled');
+
+  if (boxShadowPaginGotoPageDisabled) {
+    styles += shadowControllerToStyles(boxShadowPaginGotoPageDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__goto-page {`;
+
+  const marginPaginGotoPageActive = getResponsiveSetting(settings, 'goto-page_margin', '.active');
+
+  if (marginPaginGotoPageActive) {
+    styles += dimensionsControllerToStyles(marginPaginGotoPageActive, 'margin');
+  }
+
+  const paddingPaginGotoPageActive = getResponsiveSetting(settings, 'page_input_padding', '.active');
+
+  if (paddingPaginGotoPageActive) {
+    styles += dimensionsControllerToStyles(paddingPaginGotoPageActive);
+  }
+
+  const colorPaginGotoPageActive = getResponsiveSetting(settings, 'page_input_text_color', '.active');
+
+  if (colorPaginGotoPageActive) {
+    styles += colorPropertyStyled(colorPaginGotoPageActive, 'color');
+  }
+
+  const backgroundColorPaginGotoPageActive = getResponsiveSetting(settings, 'page_input_background_color', '.active');
+
+  if (backgroundColorPaginGotoPageActive) {
+    styles += colorPropertyStyled(backgroundColorPaginGotoPageActive, 'background-color');
+  }
+
+  const borderTypePaginGotoPageActive = getResponsiveSetting(settings, 'page_input_border_type', '.active');
+
+  if (borderTypePaginGotoPageActive) {
+    styles += simplePropertyStyled(borderTypePaginGotoPageActive, 'border-style');
+  }
+
+  const borderWidthPaginGotoPageActive = getResponsiveSetting(settings, 'page_input_border_width', '.active');
+
+  if (borderWidthPaginGotoPageActive) {
+    styles += borderWidthStyled(borderWidthPaginGotoPageActive);
+  }
+
+  const borderColorPaginGotoPageActive = getResponsiveSetting(settings, 'page_input_border_color', '.active');
+
+  if (borderColorPaginGotoPageActive) {
+    styles += colorPropertyStyled(borderColorPaginGotoPageActive, 'border-color');
+  }
+
+  const borderRadiusPaginGotoPageActive = getResponsiveSetting(settings, 'page_input_border_radius', '.active');
+
+  if (borderRadiusPaginGotoPageActive) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginGotoPageActive, 'border-radius');
+  }
+
+  const boxShadowPaginGotoPageActive = getResponsiveSetting(settings, 'page_input_shadow', '.active');
+
+  if (boxShadowPaginGotoPageActive) {
+    styles += shadowControllerToStyles(boxShadowPaginGotoPageActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__goto-page:hover {`;
 
   const marginPaginGotoPageHover = getResponsiveSetting(settings, 'goto-page_margin', ':hover');
@@ -834,6 +1612,28 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-posts {`;
+
+  const paddingPostsDisabled = getResponsiveSetting(settings, 'position_padding', '.state-disabled');
+
+  if (paddingPostsDisabled) {
+    styles += dimensionsControllerToStyles(paddingPostsDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-posts {`;
+
+  const paddingPostsActive = getResponsiveSetting(settings, 'position_padding', '.active');
+
+  if (paddingPostsActive) {
+    styles += dimensionsControllerToStyles(paddingPostsActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-posts:hover {`;
 
   const paddingPostsHover = getResponsiveSetting(settings, 'position_padding', ':hover');
@@ -850,6 +1650,28 @@ export function getPostsStyles(settings, id) {
 
   if (paddingPaginPages) {
     styles += dimensionsControllerToStyles(paddingPaginPages);
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} > .altrp-pagination-pages {`;
+
+  const paddingPaginPagesDisabled = getResponsiveSetting(settings, 'posts_pagination_padding', '.state-disabled');
+
+  if (paddingPaginPagesDisabled) {
+    styles += dimensionsControllerToStyles(paddingPaginPagesDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} > .altrp-pagination-pages {`;
+
+  const paddingPaginPagesActive = getResponsiveSetting(settings, 'posts_pagination_padding', '.active');
+
+  if (paddingPaginPagesActive) {
+    styles += dimensionsControllerToStyles(paddingPaginPagesActive);
   }
 
   styles += `} `;
@@ -874,6 +1696,28 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination .altrp-pagination__goto-page {`;
+
+  const typographicPaginPaginGotoPagesDisabled = getResponsiveSetting(settings, '.altrp-pagination .altrp-pagination__goto-page', '.state-disabled');
+
+  if (typographicPaginPaginGotoPagesDisabled) {
+    styles += typographicControllerToStyles(typographicPaginPaginGotoPagesDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination .altrp-pagination__goto-page {`;
+
+  const typographicPaginPaginGotoPagesActive = getResponsiveSetting(settings, '.altrp-pagination .altrp-pagination__goto-page', '.active');
+
+  if (typographicPaginPaginGotoPagesActive) {
+    styles += typographicControllerToStyles(typographicPaginPaginGotoPagesActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination .altrp-pagination__goto-page:hover {`;
 
   const typographicPaginPaginGotoPagesHover = getResponsiveSetting(settings, '.altrp-pagination .altrp-pagination__goto-page', ':hover');
@@ -890,6 +1734,27 @@ export function getPostsStyles(settings, id) {
 
   if (typographicPaginPaginPagesItemCountPrev) {
     styles += typographicControllerToStyles(typographicPaginPaginPagesItemCountPrev);
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__next, ${parentClass} .altrp-pagination-pages__item, ${parentClass} .altrp-pagination__count, ${parentClass} .altrp-pagination__previous {`;
+
+  const typographicPaginPaginPagesItemCountPrevDisabled = getResponsiveSetting(settings, 'table_style_pagination_typographic', '.state-disabled');
+
+  if (typographicPaginPaginPagesItemCountPrevDisabled) {
+    styles += typographicControllerToStyles(typographicPaginPaginPagesItemCountPrevDisabled);
+  }
+
+  styles += `} `;
+  //state active
+  styles += `${parentClass} .altrp-pagination__next, ${parentClass} .altrp-pagination-pages__item, ${parentClass} .altrp-pagination__count, ${parentClass} .altrp-pagination__previous {`;
+
+  const typographicPaginPaginPagesItemCountPrevActive = getResponsiveSetting(settings, 'table_style_pagination_typographic', '.active');
+
+  if (typographicPaginPaginPagesItemCountPrevActive) {
+    styles += typographicControllerToStyles(typographicPaginPaginPagesItemCountPrevActive);
   }
 
   styles += `} `;
@@ -914,6 +1779,28 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__select-size {`;
+
+  const marginPaginSelectSizeDisabled = getResponsiveSetting(settings, 'pagination_select_margin', '.state-disabled');
+
+  if (marginPaginSelectSizeDisabled) {
+    styles += dimensionsControllerToStyles(marginPaginSelectSizeDisabled, 'margin');
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__select-size {`;
+
+  const marginPaginSelectSizeActive = getResponsiveSetting(settings, 'pagination_select_margin', '.active');
+
+  if (marginPaginSelectSizeActive) {
+    styles += dimensionsControllerToStyles(marginPaginSelectSizeActive, 'margin');
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__select-size:hover {`;
 
   const marginPaginSelectSizeHover = getResponsiveSetting(settings, 'pagination_select_margin', ':hover');
@@ -934,6 +1821,28 @@ export function getPostsStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__select-size .altrp-field-select2__control {`;
+
+  const paddingPaginSelectSizeControlDisabled = getResponsiveSetting(settings, 'pagination_select_padding', '.state-disabled');
+
+  if (paddingPaginSelectSizeControlDisabled) {
+    styles += dimensionsControllerToStyles(paddingPaginSelectSizeControlDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__select-size .altrp-field-select2__control {`;
+
+  const paddingPaginSelectSizeControlActive = getResponsiveSetting(settings, 'pagination_select_padding', '.active');
+
+  if (paddingPaginSelectSizeControlActive) {
+    styles += dimensionsControllerToStyles(paddingPaginSelectSizeControlActive);
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-pagination__select-size .altrp-field-select2__control:hover {`;
 
   const paddingPaginSelectSizeControlHover = getResponsiveSetting(settings, 'pagination_select_padding', ':hover');
@@ -950,6 +1859,28 @@ export function getPostsStyles(settings, id) {
 
   if (typographicPaginPaginSelectSize) {
     styles += typographicControllerToStyles(typographicPaginPaginSelectSize);
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination .altrp-pagination__select-size {`;
+
+  const typographicPaginPaginSelectSizeDisabled = getResponsiveSetting(settings, 'table_style_pagination_select__pagination_typographic', '.state-disabled');
+
+  if (typographicPaginPaginSelectSizeDisabled) {
+    styles += typographicControllerToStyles(typographicPaginPaginSelectSizeDisabled);
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination .altrp-pagination__select-size {`;
+
+  const typographicPaginPaginSelectSizeActive = getResponsiveSetting(settings, 'table_style_pagination_select__pagination_typographic', '.active');
+
+  if (typographicPaginPaginSelectSizeActive) {
+    styles += typographicControllerToStyles(typographicPaginPaginSelectSizeActive);
   }
 
   styles += `} `;
@@ -1006,6 +1937,100 @@ export function getPostsStyles(settings, id) {
 
   if (backgroundColorPaginSelect2Control) {
     styles += colorPropertyStyled(backgroundColorPaginSelect2Control, 'background-color');
+  }
+
+  styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .altrp-pagination__select-size .altrp-field-select2__control {`;
+
+  const borderTypePaginSelect2ControlDisabled = getResponsiveSetting(settings, 'pagination_select_border_type', '.state-disabled');
+
+  if (borderTypePaginSelect2ControlDisabled) {
+    styles += simplePropertyStyled(borderTypePaginSelect2ControlDisabled, 'border-style');
+  }
+
+  const borderWidthPaginSelect2ControlDisabled = getResponsiveSetting(settings, 'pagination_select_border_width', '.state-disabled');
+
+  if (borderWidthPaginSelect2ControlDisabled) {
+    styles += borderWidthStyled(borderWidthPaginSelect2ControlDisabled);
+  }
+
+  const borderRadiusPaginSelect2ControlDisabled = getResponsiveSetting(settings, 'pagination_select_border_radius', '.state-disabled');
+
+  if (borderRadiusPaginSelect2ControlDisabled) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginSelect2ControlDisabled, 'border-radius');
+  }
+
+  const borderColorPaginSelect2ControlDisabled = getResponsiveSetting(settings, 'pagination_select_border_color', '.state-disabled');
+
+  if (borderColorPaginSelect2ControlDisabled) {
+    styles += colorPropertyStyled(borderColorPaginSelect2ControlDisabled, 'border-color');
+  }
+
+  const boxShadowPaginSelect2ControlDisabled = getResponsiveSetting(settings, 'pagination_select_shadow', '.state-disabled');
+
+  if (boxShadowPaginSelect2ControlDisabled) {
+    styles += shadowControllerToStyles(boxShadowPaginSelect2ControlDisabled);
+  }
+
+  const colorPaginSelect2ControlDisabled = getResponsiveSetting(settings, 'pagination_select_text_color', '.state-disabled');
+
+  if (colorPaginSelect2ControlDisabled) {
+    styles += colorPropertyStyled(colorPaginSelect2ControlDisabled, 'color');
+  }
+
+  const backgroundColorPaginSelect2ControlDisabled = getResponsiveSetting(settings, 'pagination_select_background_color', '.state-disabled');
+
+  if (backgroundColorPaginSelect2ControlDisabled) {
+    styles += colorPropertyStyled(backgroundColorPaginSelect2ControlDisabled, 'background-color');
+  }
+
+  styles += `} `;
+
+  //state active
+  styles += `${parentClass} .altrp-pagination__select-size .altrp-field-select2__control {`;
+
+  const borderTypePaginSelect2ControlActive = getResponsiveSetting(settings, 'pagination_select_border_type', '.active');
+
+  if (borderTypePaginSelect2ControlActive) {
+    styles += simplePropertyStyled(borderTypePaginSelect2ControlActive, 'border-style');
+  }
+
+  const borderWidthPaginSelect2ControlActive = getResponsiveSetting(settings, 'pagination_select_border_width', '.active');
+
+  if (borderWidthPaginSelect2ControlActive) {
+    styles += borderWidthStyled(borderWidthPaginSelect2ControlActive);
+  }
+
+  const borderRadiusPaginSelect2ControlActive = getResponsiveSetting(settings, 'pagination_select_border_radius', '.active');
+
+  if (borderRadiusPaginSelect2ControlActive) {
+    styles += dimensionsControllerToStyles(borderRadiusPaginSelect2ControlActive, 'border-radius');
+  }
+
+  const borderColorPaginSelect2ControlActive = getResponsiveSetting(settings, 'pagination_select_border_color', '.active');
+
+  if (borderColorPaginSelect2ControlActive) {
+    styles += colorPropertyStyled(borderColorPaginSelect2ControlActive, 'border-color');
+  }
+
+  const boxShadowPaginSelect2ControlActive = getResponsiveSetting(settings, 'pagination_select_shadow', '.active');
+
+  if (boxShadowPaginSelect2ControlActive) {
+    styles += shadowControllerToStyles(boxShadowPaginSelect2ControlActive);
+  }
+
+  const colorPaginSelect2ControlActive = getResponsiveSetting(settings, 'pagination_select_text_color', '.active');
+
+  if (colorPaginSelect2ControlActive) {
+    styles += colorPropertyStyled(colorPaginSelect2ControlActive, 'color');
+  }
+
+  const backgroundColorPaginSelect2ControlActive = getResponsiveSetting(settings, 'pagination_select_background_color', '.active');
+
+  if (backgroundColorPaginSelect2ControlActive) {
+    styles += colorPropertyStyled(backgroundColorPaginSelect2ControlActive, 'background-color');
   }
 
   styles += `} `;

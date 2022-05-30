@@ -24,6 +24,7 @@ class UploadAdapter {
  * @param editor
  */
 export default function UploadAdapterPlugin(editor) {
+  console.log(editor)
   editor.plugins.get("FileRepository").createUploadAdapter = loader => {
     return new UploadAdapter(loader);
   };

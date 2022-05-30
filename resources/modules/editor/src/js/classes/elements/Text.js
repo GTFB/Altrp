@@ -653,6 +653,12 @@ class Text extends BaseElement {
 
     });
 
+    this.addControl('start_number', {
+      type: CONTROLLER_NUMBER,
+      label: 'Start number',
+      default: 0
+    });
+
 
     this.endControlSection();
 

@@ -1030,7 +1030,24 @@ class InputTextWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input text widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+
   render() {
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "")
     let label = null;
     const settings = this.props.element.getSettings();
     const {
@@ -1100,22 +1117,23 @@ class InputTextWidget extends Component {
         break;
     }
 
+
     if (this.state.settings.content_label) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
-              ? "altrp-field-label--required"
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
+              ? `${classes} altrp-field-label--required`
               : ""
               }`}
           >
             {this.state.settings.content_label}
           </label>
           {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
+            <span className={`${classes} altrp-label-icon`}>
               {renderAssetIcon(label_icon)}
             </span>
           )}
@@ -1135,7 +1153,7 @@ class InputTextWidget extends Component {
     const isClearable = this.state.settings.content_clearable;
 
     const input = (
-      <div className="altrp-input-wrapper">
+      <div className={`${classes} altrp-input-wrapper`}>
         <AltrpInput
           type="text"
           name={this.getName()}
@@ -1145,7 +1163,7 @@ class InputTextWidget extends Component {
           autoComplete={autocomplete}
           placeholder={this.state.settings.content_placeholder}
           className={
-            "altrp-field " + this.state.settings.position_css_classes
+            `altrp-field ${classes}`
           }
           settings={this.props.element.getSettings()}
           onKeyDown={this.handleEnter}
@@ -1156,7 +1174,7 @@ class InputTextWidget extends Component {
         />
         {isClearable && (
           <button
-            className="input-clear-btn"
+            className={`${classes} input-clear-btn`}
             onClick={() => this.setState({ value: this.defaultValue })}
           >
             ✖
@@ -1168,7 +1186,7 @@ class InputTextWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className="altrp-field-container "
+        className={`${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

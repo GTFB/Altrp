@@ -4,6 +4,7 @@ import * as mustache from 'mustache'
 import * as _ from 'lodash'
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import objectToStylesString from "../../helpers/objectToStylesString";
+import toUnicode from "../../helpers/string/toUnicode";
 
 export default class ElementRenderer {
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
@@ -140,8 +141,19 @@ export default class ElementRenderer {
     if(advanced_element_id){
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
+    let settings = {...this.element.settings}
+    /**
+     * for widget with text content must replace )
+     */
+    if(['text','heading'].indexOf(this.getName()) !== -1){
+      for(let s in settings){
+        if(settings.hasOwnProperty(s) && _.isString(settings[s])){
+          settings[s] = toUnicode(settings[s], ['(',')']);
+        }
+      }
+    }
     content = mustache.render(content, {
-      settings: JSON.stringify(this.element.settings).replace(/\//g, '\\/'),
+      settings: JSON.stringify(settings).replace(/\//g, '\\/'),
       id: this.getId(),
       element_content,
       type: this.getType(),

@@ -1,0 +1,298 @@
+[
+  {
+    "id": "1650370274883",
+    "type": "start",
+    "position": {
+      "x": 352,
+      "y": 199
+    },
+    "data": {
+      "type": "node",
+      "label": "start",
+      "props": {
+        "type": "start",
+        "nodeData": {
+          "operator": "",
+          "body": []
+        }
+      },
+      "request_type": "put"
+    }
+  },
+  {
+    "id": "1650370276632",
+    "type": "switch",
+    "position": {
+      "x": 335,
+      "y": 532
+    },
+    "data": {
+      "type": "node",
+      "label": "switch",
+      "props": {
+        "type": "switch",
+        "items": [
+          {
+            "id": "k50av7eql",
+            "operator": "null"
+          },
+          {
+            "id": "df8z8dmka",
+            "operator": "not_null"
+          }
+        ]
+      },
+      "property": {
+        "path": "data.data"
+      }
+    }
+  },
+  {
+    "id": "1650370278000",
+    "type": "change",
+    "position": {
+      "x": 303,
+      "y": 375
+    },
+    "data": {
+      "type": "node",
+      "label": "put",
+      "props": {
+        "type": "change",
+        "items": [
+          {
+            "id": "rjc2vmp0l",
+            "action": "set",
+            "right": {
+              "namespace": "expression",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px",
+              "JSExpression":"await require('../AltrpModels/{{model_name}}').default.find(httpContext.request.qs().id)"
+            },
+            "left": {
+              "path": "data.data"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "1650370281418",
+    "type": "change",
+    "position": {
+      "x": 255,
+      "y": 854
+    },
+    "data": {
+      "type": "node",
+      "label": "update",
+      "props": {
+        "type": "change",
+        "items": [
+          {
+            "id": "pqyvkr372",
+            "left": {
+              "path": "order"
+            },
+            "action": "set",
+            "right": {
+              "namespace": "expression",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px",
+              "JSExpression": "httpContext.request.all()"
+            }
+          },
+          {
+            "id": "0co8jat45",
+            "left": {
+              "path": "order.altrp_ajax"
+            },
+            "action": "delete"
+          },
+          {
+            "id": "qg12ezgca",
+            "action": "set",
+            "left": {
+              "path": "data.data"
+            },
+            "right": {
+              "namespace": "expression",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px",
+              "JSExpression": "await {{context_data_data}}.merge({{context_order}}).save()"
+            }
+          },
+          {
+            "id": "9uxmfp4d2",
+            "left": {
+              "path": "data.success"
+            },
+            "right": {
+              "path": "true",
+              "namespace": "string",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              }
+            },
+            "action": "set"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "1650370282468",
+    "type": "change",
+    "position": {
+      "x": 561,
+      "y": 850
+    },
+    "data": {
+      "type": "node",
+      "label": "error",
+      "props": {
+        "type": "change",
+        "items": [
+          {
+            "id": "0q1dt2tcw",
+            "left": {
+              "path": "data.success"
+            },
+            "right": {
+              "path": "Нет в БД",
+              "namespace": "string",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px"
+            },
+            "action": "set"
+          },
+          {
+            "id": "gt917paq7",
+            "action": "set",
+            "left": {
+              "path": "_"
+            },
+            "right": {
+              "path": "response",
+              "method": "response.status",
+              "methodSettings": {
+                "parameters": [
+                  {
+                    "id": "2k1ik1ckx",
+                    "value": {
+                      "namespace": "string",
+                      "method": "",
+                      "methodSettings": {
+                        "parameters": []
+                      },
+                      "path": "405"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "1650370287949",
+    "type": "return",
+    "position": {
+      "x": 521,
+      "y": 1075
+    },
+    "data": {
+      "type": "node",
+      "label": "return",
+      "props": {
+        "type": "return"
+      },
+      "property": {
+        "path": "",
+        "namespace": "expression",
+        "method": "",
+        "methodSettings": {
+          "parameters": []
+        },
+        "size": "120px",
+        "JSExpression": "httpContext.response.json({{context_data}})"
+      }
+    }
+  },
+  {
+    "source": "1650370276632",
+    "sourceHandle": "yes-0",
+    "target": "1650370282468",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1650370276632yes-0-1650370282468null"
+  },
+  {
+    "source": "1650370276632",
+    "sourceHandle": "yes-1",
+    "target": "1650370281418",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1650370276632yes-1-1650370281418null"
+  },
+  {
+    "source": "1650370281418",
+    "sourceHandle": null,
+    "target": "1650370287949",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1650370281418null-1650370287949null"
+  },
+  {
+    "source": "1650370282468",
+    "sourceHandle": null,
+    "target": "1650370287949",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1650370282468null-1650370287949null"
+  },
+  {
+    "source": "1650370278000",
+    "sourceHandle": null,
+    "target": "1650370276632",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1650370278000null-1650370276632null"
+  },
+  {
+    "source": "1650370274883",
+    "sourceHandle": null,
+    "target": "1650370278000",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflow__edge-1650370274883null-1650370278000null"
+  }
+]

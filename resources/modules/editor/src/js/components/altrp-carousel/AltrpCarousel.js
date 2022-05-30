@@ -116,7 +116,8 @@ class AltrpCarousel extends Component {
   }
 
   render(){
-    let carouselContainerClasses = "altrp-carousel-container";
+    let classes = this.props.classes
+    let carouselContainerClasses = `${classes} altrp-carousel-container`;
 
     carouselContainerClasses += (!this.props.arrows_navigation_content ? " altrp-carousel-container-no-arrow" : "");
 
@@ -130,9 +131,9 @@ class AltrpCarousel extends Component {
       }
     }
 
-    let dotsClasses = "altrp-carousel-dots";
+    let dotsClasses = `${classes} altrp-carousel-dots`;
 
-    let sliderClasses = "altrp-carousel-slides";
+    let sliderClasses = `${classes} altrp-carousel-slides`;
 
     //позиция точек
     if(this.props.dots_navigation_content) {
@@ -185,7 +186,7 @@ class AltrpCarousel extends Component {
         }
         return (
             <a>
-              <div className={'altrp-carousel-paging ' + (active ? 'active' : '')}/>
+              <div className={`${classes} altrp-carousel-paging ` + (active ? 'active' : '')}/>
             </a>
         )},
       dotsClass: dotsClasses,
@@ -225,7 +226,7 @@ class AltrpCarousel extends Component {
             media.assetType = 'image';
           }
           let content = renderAsset(media, {
-            className: 'altrp-carousel-slide-img',
+            className: `${classes} altrp-carousel-slide-img`,
           });
 
           if(typeSlide === true) {
@@ -238,7 +239,7 @@ class AltrpCarousel extends Component {
           }
 
           return (
-              <div className="altrp-carousel-slide" key={slide.id}
+              <div className={`${classes} altrp-carousel-slide`} key={slide.id}
                    onClick={()=>{
                      this.slider.slickGoTo(slide.id);
                      if(this.props.lightbox_slides_content && getResponsiveSetting(this.props, 'lightbox_s_click')) {
@@ -265,8 +266,8 @@ class AltrpCarousel extends Component {
                 }
                 {
                   this.props.overlay_select_heading_additional_content === "text" ? (
-                      <div className="altrp-carousel-slide-overlay">
-                        <p className="altrp-carousel-slide-overlay-text">{slide.overlay_text_repeater}</p>
+                      <div className={`${classes} altrp-carousel-slide-overlay`}>
+                        <p className={`${classes} altrp-carousel-slide-overlay-text`}>{slide.overlay_text_repeater}</p>
                       </div>
                   ) : null
                 }
@@ -278,68 +279,68 @@ class AltrpCarousel extends Component {
         if(isEditor()){
           slidesMap = [
             (
-              <div className="altrp-carousel-slide" key={1}>{
+              <div className={`${classes} altrp-carousel-slide`} key={1}>{
                 renderAsset({
                   url: '/img/nullImage.png',
                   assetType: 'mediaBackground',
                 }, {
                   key: 1,
-                  className: 'altrp-carousel-slide-img',
+                  className: `${classes} altrp-carousel-slide-img`,
                 })
               }</div>
             ),
             (
-              <div className="altrp-carousel-slide" key={2}>{
+              <div className={`${classes} altrp-carousel-slide`} key={2}>{
                 renderAsset({
                   url: '/img/nullImage.png',
                   assetType: 'mediaBackground',
                 }, {
                   key: 1,
-                  className: 'altrp-carousel-slide-img',
+                  className: `${classes} altrp-carousel-slide-img`,
                 })
               }</div>
             ),
             (
-              <div className="altrp-carousel-slide" key={3}>{
+              <div className={`${classes} altrp-carousel-slide`} key={3}>{
                 renderAsset({
                   url: '/img/nullImage.png',
                   assetType: 'mediaBackground',
                 }, {
                   key: 1,
-                  className: 'altrp-carousel-slide-img',
+                  className: `${classes} altrp-carousel-slide-img`,
                 })
               }</div>
             ),
             (
-              <div className="altrp-carousel-slide" key={4}>{
+              <div className={`${classes} altrp-carousel-slide`} key={4}>{
                 renderAsset({
                   url: '/img/nullImage.png',
                   assetType: 'mediaBackground',
                 }, {
                   key: 1,
-                  className: 'altrp-carousel-slide-img',
+                  className: `${classes} altrp-carousel-slide-img`,
                 })
               }</div>
             ),
             (
-              <div className="altrp-carousel-slide" key={5}>{
+              <div className={`${classes} altrp-carousel-slide`} key={5}>{
                 renderAsset({
                   url: '/img/nullImage.png',
                   assetType: 'mediaBackground',
                 }, {
                   key: 1,
-                  className: 'altrp-carousel-slide-img',
+                  className: `${classes} altrp-carousel-slide-img`,
                 })
               }</div>
             ),
             (
-              <div className="altrp-carousel-slide" key={6}>{
+              <div className={`${classes} altrp-carousel-slide`} key={6}>{
                 renderAsset({
                   url: '/img/nullImage.png',
                   assetType: 'mediaBackground',
                 }, {
                   key: 1,
-                  className: 'altrp-carousel-slide-img',
+                  className: `${classes} altrp-carousel-slide-img`,
                 })
               }</div>
             ),
@@ -365,11 +366,11 @@ class AltrpCarousel extends Component {
             }
 
             let content = renderAsset(media, {
-              className: 'altrp-carousel-slide-img',
+              className: `${classes} altrp-carousel-slide-img`,
             });
 
             return (
-                <div className="altrp-carousel-slide" key={idx}
+                <div className={`${classes} altrp-carousel-slide`} key={idx}
                      onClick={()=>{
                        this.slider.slickGoTo(idx);
                        if(this.props.lightbox_slides_content) {
@@ -400,10 +401,10 @@ class AltrpCarousel extends Component {
     }
 
     //позиция стрелок
-    let prevArrow = "";
-    let nextArrow = "";
+    let prevArrow = ` ${classes} `;
+    let nextArrow = ` ${classes} `;
 
-    let arrowsClasses = "";
+    let arrowsClasses = ` ${classes} `;
 
     switch (this.props.arrows_position_navigation_content) {
       case "topLeft":
@@ -428,13 +429,13 @@ class AltrpCarousel extends Component {
 
     //стрелки
     prevArrow = this.props.arrows_navigation_content ? (
-        <div className="altrp-carousel-arrow-prev altrp-carousel-arrow" onClick={this.previous}>
+        <div className={`${classes} altrp-carousel-arrow-prev altrp-carousel-arrow`} onClick={this.previous}>
           <ArrowIcon/>
         </div>
       ) : "";
 
     nextArrow = this.props.arrows_navigation_content ? (
-      <div className="altrp-carousel-arrow-next altrp-carousel-arrow" onClick={this.next}>
+      <div className={`${classes} altrp-carousel-arrow-next altrp-carousel-arrow`} onClick={this.next}>
         <ArrowIcon/>
       </div>
     ) : "";
@@ -458,7 +459,7 @@ class AltrpCarousel extends Component {
 
     }
     slidesMap
-    return <AltrpCarouselWrapper settings={{...this.props}} className="altrp-carousel">
+    return <AltrpCarouselWrapper settings={{...this.props}} className={`${classes} altrp-carousel`}>
       {
         this.props.lightbox_slides_content ? lightbox : ""
       }

@@ -140,7 +140,15 @@ export default class CustomizersController {
     // }
     const oldType = customizer.type
     const oldSettings = customizer.settings
-    customizer.merge(request.all())
+
+    customizer.merge({
+      name: request.all().name,
+      title: request.all().title,
+      type: request.all().type,
+      data: request.all().data,
+      model_id: request.all().model_id,
+    })
+
     /**
      * Delete source if type `api` changed
      */

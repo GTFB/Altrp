@@ -61,6 +61,7 @@ import getAltrpLang from "./js/helpers/get-altrp-lang";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
+window.Link = Link;
 window.Component = React.Component;
 getAPiToken();
 class Admin extends Component {
@@ -127,13 +128,13 @@ class Admin extends Component {
     store.dispatch(changeCurrentUser(currentUser));
 
     if(currentUser.guid && !this.altrpIo) {
-      this.altrpIo = io( {
+      window.altrpIo = io( {
         path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-      this.altrpIo.on("message", (data) => {
+      window.altrpIo.on("message", (data) => {
         console.log(data)
       })
     }
@@ -318,6 +319,7 @@ class Admin extends Component {
                             </Link>
                           </li>
                         ) : (
+<<<<<<< HEAD
                           <li>
                             <Link to="/admin/robots"
                                   className={
@@ -333,6 +335,23 @@ class Admin extends Component {
                             </Link>
                             <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                           </li>
+=======
+                        <li>
+                          <Link to="/admin/robots"
+                                className={
+                                  location.pathname.includes('robots') || location.pathname.includes('customizers') ?
+                                    "admin-nav-list__link active__panel" :
+                                    "admin-nav-list__link admin-nav-list__link-top"
+                                }
+                                onClick={() => this.setState({ activeButton: 4 })}
+                          >
+                            <RobotsSvg className="icon" />
+                            <DropletSvg className="icon__droplet"/>
+                            <span>Robots</span>
+                          </Link>
+                          <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
+                        </li>
+>>>>>>> dc8567b543bb89e254c372f76f2c576e584ee235
                         )}
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
@@ -513,6 +532,7 @@ class Admin extends Component {
                             </Link>
                           </li>
                         ) : (
+<<<<<<< HEAD
                           <li>
                             <Link to="/admin/robots"
                                   className={
@@ -525,6 +545,20 @@ class Admin extends Component {
                             </Link>
                             <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                           </li>
+=======
+                        <li>
+                          <Link to="/admin/robots"
+                                className={
+                                  location.pathname.includes('robots') || location.pathname.includes('customizers') ?
+                                    "admin-nav-list__link-mini active__panel" :
+                                    "admin-nav-list__link-mini admin-nav-list__link-top"}
+                                onClick={() => this.setState({ activeButton: 4 })}
+                          >
+                            <RobotsSvg className="icon-mini" />
+                          </Link>
+                          <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
+                        </li>
+>>>>>>> dc8567b543bb89e254c372f76f2c576e584ee235
                         )}
 
                         {/* <li>

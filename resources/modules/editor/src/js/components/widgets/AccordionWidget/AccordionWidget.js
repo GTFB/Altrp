@@ -139,25 +139,42 @@ class AccordionWidget extends Component {
     }
   };
 
+
+  /**
+   * Получить css классы для accordion widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render(){
     let items = this.state.settings.repeater_meta_data_section || [];
     let icon = "";
     let active_icon = "";
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "")
 
     if(this.state.settings.icon_accordion_content) {
       icon = renderAssetIcon(this.state.settings.icon_accordion_content,
-        {className: "altrp-accordion-item-icon-svg"}
+        {className: `${classes} altrp-accordion-item-icon-svg`}
         );
     }
 
     if(this.state.settings.active_icon_accordion_content) {
       active_icon = renderAssetIcon(this.state.settings.active_icon_accordion_content,
-        {className: "altrp-accordion-item-active-icon-svg"}
+        {className: `${classes} altrp-accordion-item-active-icon-svg`}
       );
     }
     const title_html_tag_accordion_content = this.props.element.getLockedSettings('title_html_tag_accordion_content') || 'div'
 
-    return <div className="altrp-accordion">
+    return <div className={`${classes} altrp-accordion`}>
       {
         items.map((item, idx) => (
           <AccordionItem

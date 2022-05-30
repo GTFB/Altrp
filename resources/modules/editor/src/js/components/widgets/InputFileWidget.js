@@ -30,7 +30,7 @@ class InputFileWidget extends Component {
       window.elementDecorator(this);
     }
     this.wrapperRef = React.createRef()
-    this.defaultValue = this.getLockedContent("content_default_value");
+    this.defaultValue = this.getLockedContent("default_value");
 
     this.state = {
       settings: {...props.element.getSettings()},
@@ -38,8 +38,8 @@ class InputFileWidget extends Component {
       imageUrls_0: _.get(props.element.getResponsiveLockedSetting('preview_placeholder'), 'url'),
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getLockedContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.defaultValue);
+    if (this.defaultValue) {
+      this.dispatchFieldValueToStore(this.getLockedContent("default_value"), true);
     }
   }
 
@@ -85,7 +85,6 @@ class InputFileWidget extends Component {
     }
 
     let value = this.state.value;
-
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getLockedContent для получение этого динамического значения
@@ -95,7 +94,7 @@ class InputFileWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getLockedContent("default_value");
     }
 
     /**
@@ -106,7 +105,7 @@ class InputFileWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getLockedContent("default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -121,7 +120,7 @@ class InputFileWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getLockedContent("default_value");
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -157,7 +156,7 @@ class InputFileWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getLockedContent(
-        "content_default_value",
+        "default_value",
         this.props.element.getLockedSettings("select2_multiple")
       );
       this.setState(
@@ -176,7 +175,7 @@ class InputFileWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("default_value"));
     }
 
     if (content_options && !model_for_options) {
@@ -315,6 +314,7 @@ class InputFileWidget extends Component {
       if (value === this.state.value) {
         return;
       }
+
       this.setState(
         state => ({...state, value}),
         () => {
@@ -446,10 +446,25 @@ class InputFileWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input file
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const {element} = this.props
     let disabled = element.getResponsiveLockedSetting('readonly');
-
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const inputProps = {
       name: this.getName(),
       accept: element.getResponsiveLockedSetting('accept'),
@@ -469,7 +484,7 @@ class InputFileWidget extends Component {
       key: this.state.key,
       inputProps,
       text,
-      className: `${notActive ? 'pointer-event-none' : ''}`,
+      className: `${classes} ${notActive ? 'pointer-event-none' : ''}`,
       buttonText: replaceContentWithData(element.getResponsiveLockedSetting('button_text'), element.getCurrentModel().getData()),
       onInputChange: this.onChange
     }
@@ -478,7 +493,7 @@ class InputFileWidget extends Component {
         backgroundImage: `url(${this.state.imageUrls_0})`,
         pointerEvents : notActive ? 'none' : '',
       }
-      fileInputProps.className = 'bp3-file-input_preview'
+      fileInputProps.className = `${classes} bp3-file-input_preview`
     }
     return (
       <FileInput {...fileInputProps} ref={this.wrapperRef}/>

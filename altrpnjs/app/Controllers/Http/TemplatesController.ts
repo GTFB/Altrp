@@ -271,8 +271,7 @@ export default class TemplatesController {
 
 
       return {
-        currentTemplate: template,
-        clearData: request.input("data")
+        success: true
       }
     }
   }

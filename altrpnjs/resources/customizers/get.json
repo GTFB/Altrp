@@ -1,0 +1,97 @@
+[
+  {
+    "type": "start",
+    "data": {
+      "type": "node",
+      "label": "start",
+      "props": {
+        "type": "start",
+        "nodeData": {
+          "operator": "",
+          "body": []
+        }
+      }
+    },
+    "id": "1649779954851",
+    "position": {
+      "x": 420,
+      "y": 232
+    }
+  },
+  {
+    "id": "1649779962414",
+    "type": "change",
+    "position": {
+      "x": 422,
+      "y": 344
+    },
+    "data": {
+      "type": "node",
+      "label": "change",
+      "props": {
+        "type": "change",
+        "items": [
+          {
+            "id": "o04zcv39v",
+            "action": "set",
+            "right": {
+              "namespace": "expression",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px",
+              "JSExpression": "await require('../AltrpModels/{{model_name}}').default.all()"},
+            "left": {
+              "path": "data.data"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "return",
+    "data": {
+      "type": "node",
+      "label": "return",
+      "props": {
+        "type": "return"
+      },
+      "property": {
+        "namespace": "expression",
+        "method": "",
+        "methodSettings": {
+          "parameters": []
+        },
+        "size": "120px",
+        "JSExpression": "httpContext.response.json({{context_data}})"
+      }
+    },
+    "id": "1649779972245",
+    "position": {
+      "x": 446,
+      "y": 439
+    }
+  },
+  {
+    "source": "1649779954851",
+    "sourceHandle": null,
+    "target": "1649779962414",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflowedge-1649779954851null-1649779962414null"
+  },
+  {
+    "source": "1649779962414",
+    "sourceHandle": null,
+    "target": "1649779972245",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflowedge-1649779962414null-1649779972245null"
+  }
+]

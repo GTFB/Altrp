@@ -1130,3 +1130,4 @@ export function advancedTabControllers(element) {
   actionsControllers(element, 'Appearance of Bottom of Element Actions', 'wrapper_appearB_', TAB_ADVANCED);
 
 }
+window.advancedTabControllers = advancedTabControllers

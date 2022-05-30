@@ -6,6 +6,8 @@ import {setAdminDisable, setAdminEnable} from "../js/store/admin-state/actions";
 import AltrpCodeEditor from "./altrp-editor/AltrpCodeEditor";
 import store from '../js/store/store';
 import {TextArea} from "@blueprintjs/core";
+import {pageReload} from "../js/helpers";
+import delay from '../../../front-app/src/js/functions/delay'
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
 
@@ -103,17 +105,6 @@ class AdvancedSettings extends Component {
   };
 
   /**
-   * Запрос на очистку кэша
-   */
-  clearAllCache = async (e) =>{
-    let result  = await confirm('Are You Sure');
-    if(! result){
-      return;
-    }
-    let res = await new Resource({route:'/admin/ajax/clear_cache'}).delete();
-
-  };
-  /**
    * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
    * @param e
    */
@@ -124,11 +115,17 @@ class AdvancedSettings extends Component {
     }
     store.dispatch(setAdminDisable());
 
-    let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
-    if(res.success){
-      await alert('success');
+    try{
+      let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
+
+      if(res.success){
+        await alert('success');
+      }
+      store.dispatch(setAdminEnable());
+    }catch (e) {
+      await delay(5000)
+      pageReload()
     }
-    store.dispatch(setAdminEnable());
   };
   render() {
     const {altrp_custom_headers}  = this.state
@@ -162,13 +159,6 @@ class AdvancedSettings extends Component {
               </button>
             </div>
 
-            <div className="admin-styles-advanced-block">
-              <div className="advanced-text-custom">Clear All Cache:</div>
-              <button className="btn btn_success btn_advanced"
-                      onClick={this.clearAllCache}>
-                Clear
-              </button>
-            </div>
 
             <div className="admin-styles-advanced-block">
               <div className="advanced-text-custom">Custom Headers for Pages:</div>

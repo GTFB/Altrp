@@ -90,6 +90,46 @@ body {
     }
 }
 
+.nodes-panel__search {
+  position: relative;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 21px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .input-search__nodes {
+    width: 95%;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px 20px 10px 35px;
+
+    &::placeholder {
+      color: #515F81;
+      font-family: Roboto, sans-serif;
+      font-size: 12px;
+    }
+  }
+
+}
+
+.widget-panel {
+  display:flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: 1%;
+}
+
+
 .customizer-widget {
     width: 120px;
     height: 100px;

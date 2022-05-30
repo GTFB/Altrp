@@ -590,6 +590,7 @@ class Input extends BaseElement {
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
+      locked: true,
       conditions: {
         "content_type!": ["file"]
       },

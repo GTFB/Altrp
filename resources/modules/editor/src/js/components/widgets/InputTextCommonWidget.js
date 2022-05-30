@@ -839,10 +839,24 @@ class InputTextCommonWidget extends Component {
     </span>
   }
 
+  /**
+   * Получить css классы для InputTextCommonWidget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
-
+    let classes = this.getClasses()
     const {
       content_readonly,
     } = settings;
@@ -937,6 +951,7 @@ class InputTextCommonWidget extends Component {
           type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
           name={this.getName()}
           id={this.getName()}
+          className={classes}
           value={value || ""}
           popoverProps={this.popoverProps}
           element={this.props.element}

@@ -966,6 +966,20 @@ class InputTextareaWidget extends Component {
     return value;
   }
 
+  /**
+   * Получить css классы для textarea
+   */
+  getClasses = ()=>{
+    let classes = 'altrp-field ';
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
 
   render() {
     let label = null;
@@ -1058,6 +1072,9 @@ class InputTextareaWidget extends Component {
       autocomplete = "off";
     }
 
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "");
+
     const input = (
       <TextArea
         value={value || ""}
@@ -1065,7 +1082,7 @@ class InputTextareaWidget extends Component {
         autoComplete={autocomplete}
         placeholder={this.state.settings.content_placeholder}
         className={
-          "altrp-field " + (this.state.settings.position_css_classes || "")
+          classes
         }
         onChange={this.onChange}
         onBlur={this.onBlur}

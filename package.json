@@ -25,6 +25,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "pack": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run customizer-build  && npm run robots-build && gulp pack",
         "only-build": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run customizer-build  && npm run robots-build",
+        "only-build-for-node": "npm run front-build && npm run editor-build && npm run admin-build && npm run customizer-build  && npm run robots-build",
         "packTest": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && npm run customizer-build && gulp packTest",
         "only-pack": "gulp pack",
         "gulp-pack-test": "gulp packTest",
@@ -33,7 +34,7 @@
         "reports:build": "rm -rf public/modules/altrp-reports && cd resources/modules/altrp-reports && PUBLIC_URL=/modules/reports/ react-scripts build",
         "reports:move": "mv -f resources/modules/altrp-reports/build public/modules/reports",
         "server:start": "node server-dist/index.js",
-        "build-pack-js-server": "npm run only-build && node  --max-old-space-size=8144 ./altrpnjs/ace build --production && gulp packJS",
+        "build-pack-js-server": "npm run only-build-for-node && node  --max-old-space-size=8144 ./altrpnjs/ace build --production && gulp packJS",
         "pack-js-server": "node  --max-old-space-size=8144 ./altrpnjs/ace build --production && gulp packJS",
         "install-packages-altrp-js-build": "npm ci --production --prefix ./altrpnjs/build",
         "docs": "jsdoc resources/modules -r"

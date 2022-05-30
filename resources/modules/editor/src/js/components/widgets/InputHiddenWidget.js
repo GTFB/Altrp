@@ -556,16 +556,34 @@ class InputHiddenWidget extends Component {
     return value;
   }
 
+  /**
+   * Получить css классы для input hidden
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     if(isEditor()){
       return <FromIcon/>
     }
     let value = this.getValue()
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "")
+
     return <input
       value={value}
       type="hidden"
       name={this.getName()}
       id={this.getName()}
+      className={classes}
     />
   }
 }

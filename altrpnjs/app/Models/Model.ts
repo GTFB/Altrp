@@ -21,10 +21,18 @@ import Relationship from "App/Models/Relationship"
 import Category from "App/Models/Category"
 import Table from './Table'
 import Column from "App/Models/Column"
-
+import SourceRole from 'App/Models/SourceRole'
+import Role from 'App/Models/Role'
+import Customizer from "App/Models/Customizer";
+import guid from "../../helpers/guid";
+import Timer from "App/Services/Timer";
+import * as mustache from 'mustache'
+import base_path from "../../helpers/path/base_path";
+import fs from "fs";
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
+  private static defaultCustomizersName: string = 'default';
 
   @afterFind()
   public static async createController(model:Model) {
@@ -98,7 +106,7 @@ export default class Model extends BaseModel {
   public user_id: number
 
   @belongsTo(() => User, {
-    foreignKey: "author"
+    foreignKey: "user_id"
   })
   public user: BelongsTo<typeof User>
 
@@ -213,4 +221,242 @@ export default class Model extends BaseModel {
     await models.preload('categories').select('altrp_models.*')
     return models
   }
+
+  public async createController() {
+    const controller = new Controller()
+    controller.fill({
+      model_id: this.id,
+      description: this.description,
+    })
+    return await controller.save()
+  }
+
+  public async createStandartSources() {
+
+    const table = await Table.find(this.table_id)
+    const controller = await this.createController()
+
+    if (table && controller) {
+      let sources = [
+        (new Source()).fill({
+          url: `/filters/${table.name}/{column}`,
+          api_url: `/filters/${table.name}/{column}`,
+          type: `filters`,
+          request_type: `get`,
+          name: `Filters ${this.name}`,
+          title: `Filters ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}/{column}`,
+          api_url: `/${table.name}/{${this.name}}/{column}`,
+          type: `update_column`,
+          request_type: `put`,
+          name: `Update column ${this.name}`,
+          title: `Update column ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}`,
+          api_url: `/${table.name}/{${this.name}}`,
+          type: `delete`,
+          request_type: `delete`,
+          name: `Delete ${this.name}`,
+          title: `Delete ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}`,
+          api_url: `/${table.name}/{${this.name}}`,
+          type: `update`,
+          request_type: `put`,
+          name: `Update ${this.name}`,
+          title: `Update ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}`,
+          api_url: `/${table.name}`,
+          type: `add`,
+          request_type: `post`,
+          name: `Add ${this.name}`,
+          title: `Add ${this.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}`,
+          api_url: `/${table.name}`,
+          type: `get`,
+          request_type: `get`,
+          name: `Get  ${this.name}`,
+          title: `Get  ${this.name}`,
+          auth: false,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${this.name}}`,
+          api_url: `/${table.name}/{${this.name}}`,
+          type: `show`,
+          request_type: `get`,
+          name: `Show  ${this.name}`,
+          title: `Show ${this.name}`,
+          auth: false,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+        (new Source()).fill({
+          url: `/{${this.name}}_options`,
+          api_url: `/{${this.name}}_options`,
+          type: `options`,
+          request_type: `get`,
+          name: `Get options ${this.name}`,
+          title: `Get options ${this.name}`,
+          auth: false,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: this.id,
+        }),
+      ]
+
+      await Promise.all(sources.map(s => s.save()))
+
+      const adminRole = await Role.query().where('name', 'admin').first()
+
+      if (adminRole) {
+        await Promise.all(sources.map(s => {
+          return (new SourceRole()).fill({
+            role_id: adminRole.id,
+            source_id: s.id,
+          }).save()
+        }))
+      }
+    }
+  }
+
+  public static async createDefaultCustomizers(response, modelData, model) {
+    const pathToFiles = 'resources/customizers/'
+
+    let getContent = fs.readFileSync(base_path(`${pathToFiles}get.json`), 'utf8')
+    getContent = mustache.render(getContent, {model_name: model.name, context_data: '{{context.data}}'})
+
+    let getByIdContent = fs.readFileSync(base_path(`${pathToFiles}getById.json`), 'utf8')
+    getByIdContent = mustache.render(getByIdContent, {model_name: model.name, context_data: '{{context.data}}'})
+
+    let postContent = fs.readFileSync(base_path(`${pathToFiles}post.json`), 'utf8')
+    postContent = mustache.render(postContent, {model_name: model.name, context_data: '{{context.data}}', context_order: '{{context.order}}'})
+
+    let putContent = fs.readFileSync(base_path(`${pathToFiles}put.json`), 'utf8')
+    putContent = mustache.render(putContent, {model_name: model.name, context_data_data: '{{context.data.data}}', context_order: '{{context.order}}', context_data: '{{context.data}}'})
+
+    let deleteContent = fs.readFileSync(base_path(`${pathToFiles}delete.json`), 'utf8')
+    deleteContent = mustache.render(deleteContent, {model_name: model.name, context_data: '{{context.data}}'})
+
+    const defaultCustomizersData = [
+      {
+        prefix: 'get_',
+        defaultData: JSON.parse(getContent),
+        customizerRequestType: 'get'
+      },
+      {
+        prefix: 'get_by_id_',
+        defaultData: JSON.parse(getByIdContent),
+        customizerRequestType: 'get'
+      },
+      {
+        prefix: 'post_',
+        defaultData: JSON.parse(postContent),
+        customizerRequestType: 'post'
+      },
+      {
+        prefix: 'put_',
+        defaultData: JSON.parse(putContent),
+        customizerRequestType: 'put'
+      },
+      {
+        prefix: 'delete_',
+        defaultData: JSON.parse(deleteContent),
+        customizerRequestType: 'delete'
+      },
+    ]
+
+    for (let customizerData of defaultCustomizersData) {
+
+      let customizer = new Customizer()
+      customizer.fill({
+        title: customizerData.prefix + modelData.name,
+        name: customizerData.prefix + Model.defaultCustomizersName,
+        type: 'api',
+        model_guid: model.guid,
+        model_id: model.id,
+        guid: guid(),
+        data: customizerData.defaultData
+      })
+
+      try {
+        if (!customizer.settings) {
+          customizer.settings = []
+        }
+        await customizer.save()
+
+        if (model) {
+          let source = new Source();
+          await model.load('altrp_controller')
+
+          source.fill({
+            'sourceable_type': Customizer.sourceable_type,
+            'sourceable_id': customizer.id,
+            'model_id': customizer.model_id,
+            'controller_id': model.altrp_controller.id,
+            'url': "/" + customizer.name,
+            'api_url': "/" + customizer.name,
+            'title': customizer.title,
+            'name': customizer.name,
+            'type': 'customizer',
+            'request_type': customizerData.customizerRequestType
+          })
+
+          customizer = await Customizer.query().preload("altrp_model").firstOrFail()
+
+          if (customizer?.settings?.time && customizer?.settings?.time_type) {
+            new Timer(customizer.name, {
+              time: customizer.settings.time,
+              type: customizer.settings.time_type
+            }, customizer)
+          }
+          await source.save()
+        }
+      } catch (e) {
+        return response.json({
+            'success':
+              false,
+            'message':
+              'Customizer don\'t saved',
+            'throw message': e.message,
+            'trace': e.stack.split('\n'),
+          },
+        )
+      }
+
+
+    }
+  }
+
 }

@@ -5,7 +5,8 @@ import Plugin from "App/Plugin";
 import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import isProd from "../../helpers/isProd";
-import _ from "lodash";
+import _ from "lodash"
+
 Route.group(() => {
 
 
@@ -166,9 +167,9 @@ Route.group(() => {
      * Assets
      */
     Route.get('/media', 'admin/MediaController.index')
-    Route.get('/media/:id', 'admin/MediaController.getById')
     Route.put('/media/:id', 'admin/MediaController.updateMedia')
     Route.post('/media', 'admin/MediaController.store')
+    Route.get('/media/:id', 'admin/MediaController.showFull')
     Route.delete('/media/:id', 'admin/MediaController.destroy')
     Route.get('media_settings', async({response})=>{
       return response.json([])
@@ -185,6 +186,7 @@ Route.group(() => {
 
 
     Route.post('/update_altrp', 'admin/AdminController.update_altrp').name = 'admin.update_altrp'
+    Route.post('/install_test_altrp', 'admin/AdminController.install_test_altrp').name = 'admin.install_test_altrp'
 
     /**
      * Altrp Meta
@@ -200,6 +202,7 @@ Route.group(() => {
     Route.post('/plugins/switch', "admin/PluginController.switch");
     Route.post('/plugins/install', "admin/PluginController.install");
     Route.post('/plugins/update_plugin_files', "admin/PluginController.update_plugin_files");
+    Route.delete('/plugins/:name', "admin/PluginController.delete_plugin");
 
     /**
      * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
@@ -227,12 +230,12 @@ Route.group(() => {
     Route.post('/write_mail_settings', 'admin/MailController.writeSettingsToEnv');
     Route.get('/get_mail_settings', 'admin/MailController.getSettings');
 
-
+    Route.get('/downloads/settings', 'admin/MailController.getSettings');
     Route.get('/package_key', 'admin/AdminController.getPackageKey');
 
 
     /**
-     * plugins ajax requests START
+     * for installed plugins ajax requests START
      */
     const methods = [
       'get', 'post', 'put', 'delete'
@@ -253,21 +256,12 @@ Route.group(() => {
         }
         const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js': 'ts'}`)
         if(fs.existsSync(fileName)){
-          try{
-            if(isProd()){
-              Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
-            }
-            const module = isProd() ? await require(fileName).default : (await import(fileName)).default
-            if(_.isFunction(module)){
-              return await module(httpContext)
-            }
-          }catch (e) {
-            httpContext.response.status(500)
-            return httpContext.response.json({
-              success: false,
-              message: e.message,
-              trace: e.stack.split('\n'),
-            })
+          if(isProd()){
+            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+          }
+          const module = isProd() ? await require(fileName).default : (await import(fileName)).default
+          if(_.isFunction(module)){
+            return await module(httpContext)
           }
         }
         httpContext.response.status(404)
@@ -278,6 +272,8 @@ Route.group(() => {
      * plugins ajax requests END
      */
   }).middleware('catch_unhandled_json').prefix('/ajax')
+
+
   Route.get('/customizers-editor', 'IndicesController.customizer')
 
   Route.get("/robots-editor", "IndicesController.robot")
@@ -287,7 +283,6 @@ Route.group(() => {
 
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')
-
 })
   .prefix('/admin')
   .middleware('admin')

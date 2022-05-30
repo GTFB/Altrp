@@ -1,0 +1,130 @@
+[
+  {
+    "id": "1649778866699",
+    "type": "start",
+    "position": {
+      "x": 408,
+      "y": 115
+    },
+    "data": {
+      "type": "node",
+      "label": "start",
+      "props": {
+        "type": "start",
+        "nodeData": {
+          "operator": "",
+          "body": []
+        }
+      },
+      "request_type": "post"
+    }
+  },
+  {
+    "id": "1649778874926",
+    "type": "change",
+    "position": {
+      "x": 382,
+      "y": 244
+    },
+    "data": {
+      "type": "node",
+      "label": "change",
+      "props": {
+        "type": "change",
+        "items": [
+          {
+            "id": "jbnqcoos2",
+            "action": "set",
+            "left": {
+              "path": "order"
+            },
+            "right": {
+              "path": "data.data",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "namespace": "expression",
+              "size": "120px",
+              "JSExpression": "httpContext.request.all()"
+            }
+          },
+          {
+            "id": "js34wjnri",
+            "action": "delete",
+            "left": {
+              "namespace": "context",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "size": "120px",
+              "path": "order.altrp_ajax"
+            }
+          },
+          {
+            "id": "zbqnql16f",
+            "action": "set",
+            "left": {
+              "path": "data.data"
+            },
+            "right": {
+              "path": "",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "namespace": "expression",
+              "size": "120px",
+              "JSExpression":"await require('../AltrpModels/{{model_name}}').default.create({{context_order}})"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "source": "1649778866699",
+    "sourceHandle": null,
+    "target": "1649778874926",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflowedge-1649778866699null-1649778874926null"
+  },
+  {
+    "id": "1649778883513",
+    "type": "return",
+    "position": {
+      "x": 390,
+      "y": 337
+    },
+    "data": {
+      "type": "node",
+      "label": "return",
+      "props": {
+        "type": "return"
+      },
+      "property": {
+        "namespace": "expression",
+        "method": "",
+        "methodSettings": {
+          "parameters": []
+        },
+        "size": "120px",
+        "JSExpression": "httpContext.response.json({{context_data}})"
+      }
+    }
+  },
+  {
+    "source": "1649778874926",
+    "sourceHandle": null,
+    "target": "1649778883513",
+    "targetHandle": null,
+    "label": "",
+    "type": "default",
+    "animated": true,
+    "id": "reactflowedge-1649778874926null-1649778883513null"
+  }
+]

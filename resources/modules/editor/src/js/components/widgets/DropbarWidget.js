@@ -234,7 +234,23 @@ class DropbarWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для dropbar widget
+   */
+  getClasses = ()=>{
+    let classesState = ``;
+    if(this.isActive()){
+      classesState += 'active '
+    }
+    if(this.isDisabled()){
+      classesState += 'state-disabled '
+    }
+    return classesState;
+  }
+
+
   render() {
+    let classesState = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const buttonText = this.props.element.getResponsiveLockedSetting("button_text", "", "");
     const id = this.props.element.getResponsiveLockedSetting("position_css_id", "", "")
     const customClasses = this.props.element.getResponsiveLockedSetting("position_css_classes", "", null);
@@ -252,13 +268,13 @@ class DropbarWidget extends Component {
       classes.push("altrp-disabled");
     }
 
-    const classes = ["altrp-btn", "dropbar"];
+    const classes = ["altrp-btn", "dropbar", `${classesState}`];
 
     if(customClasses) {
       classes.push(customClasses)
     }
 
-    console.log({background_image});
+   // console.log({background_image});
 
     if (background_image.url) {
       classes.push("altrp-background-image");
@@ -276,18 +292,18 @@ class DropbarWidget extends Component {
         {buttonText}
         {
           showIcon ? (
-            ! isSSR() && <span className="altrp-btn-icon">
+            ! isSSR() && <span className={`${classesState} altrp-btn-icon`}>
           {renderAssetIcon(buttonMedia)}{" "}
           </span>
           ) : ""
         }
       </button>
     );
-    return <div className="altrp-btn-wrapper_dropbar altrp-btn-wrapper">
+    return <div className={`${classesState} altrp-btn-wrapper_dropbar altrp-btn-wrapper`}>
       <AltrpDropbar
         elemenentId={this.props.element.getId()}
         settings={this.props.element.getLockedSettings()}
-        className="btn"
+        className={`btn ${classesState}`}
         element={this.props.element}
         getContent={this.getLockedContent}
         showDelay={dropbarDelay}

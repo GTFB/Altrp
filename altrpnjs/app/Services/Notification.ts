@@ -12,16 +12,16 @@ export default class Notification {
     this.data = messageData;
   }
 
-  send(users: User[]) {
-    users.forEach((user) => {
-      switch (this.data.channel) {
-        case "broadcast":
-          Ws.sendMessage("notification", this.message, user.guid)
-          break
-        case "telegram":
-          TelegramBot.send(this.message, user)
-          break
-      }
-    })
+  send(users: User[], customizerData) {
+    switch (this.data.channel) {
+      case "broadcast":
+        users.forEach((user) => {
+          Ws.sendMessage("notification", this.message.content, user.guid)
+        })
+        break
+      case "telegram":
+        TelegramBot.send(this.message, users, customizerData)
+        break
+    }
   }
 }

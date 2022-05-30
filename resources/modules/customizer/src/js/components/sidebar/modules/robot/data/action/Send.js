@@ -15,18 +15,23 @@ export default class Send extends Component{
         this.state = {
             usersOptions: [],
             rolesOptions: [],
+            customizerOptions: []
         };
         this.onSend = this.onSend.bind(this);
         this.changeSelect = this.changeSelect.bind(this);
         this.changeInput = this.changeInput.bind(this);
         this.usersOptions = new Resource({ route: "/admin/ajax/users_options" });
+        this.customizerOptionsResource = new Resource({ route: "/admin/ajax/customizers_options" });
         this.rolesOptions = new Resource({ route: "/admin/ajax/role_options" });
     }
 
     async componentDidMount() {
         const usersOptions = await this.usersOptions.getAll();
         const rolesOptions = await this.rolesOptions.getAll();
-        this.setState(s =>({...s, usersOptions, rolesOptions}));
+        const customizerOptions = await this.customizerOptionsResource.getAll();
+        this.setState(s =>({...s, usersOptions, rolesOptions, customizerOptions}));
+
+
     }
 
     // Запись значений inputs в store
@@ -204,6 +209,7 @@ export default class Send extends Component{
               activeSection={this.props.activeSection}
               toggleChevron={this.props.toggleChevron}
               selectNode={this.props.selectNode || []}
+              customizerOptions={this.state.customizerOptions}
               content={content}
             />}
             {(channel === "mail") && <SendEmail

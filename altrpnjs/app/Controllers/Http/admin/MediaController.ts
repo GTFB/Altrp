@@ -13,6 +13,7 @@ import data_get from '../../../../helpers/data_get';
 import guid from '../../../../helpers/guid';
 import public_path from "../../../../helpers/path/public_path";
 import Logger from "@ioc:Adonis/Core/Logger";
+import Application from "@ioc:Adonis/Core/Application";
 
 export default class MediaController {
   private static fileTypes: any;
@@ -338,6 +339,53 @@ export default class MediaController {
     return response.json( res );
   }
 
+  async showFull({ params,  }) {
+    const media = await Media.query().where("id", parseInt(params.id)).firstOrFail()
+
+    const serialized = media.serialize()
+
+    const stats = fs.statSync(Application.publicPath(media.url))
+    let mb = stats.size / (1024*1024);
+
+
+    const isFloat = !Number.isInteger(mb);
+
+    if(isFloat) {
+      //@ts-ignore
+      mb = mb.toFixed(3)
+    }
+
+    serialized.filesize = mb + "mb"
+
+    return serialized
+  }
+
+  async show({ params, response }) {
+
+    const path = `/storage/media/${params.year}/${params.month}/${params.name}`
+
+    let file;
+
+    if(fs.existsSync(Application.publicPath(path))) {
+      file = fs.readFileSync(Application.publicPath(path))
+    }
+
+    if(!file) {
+      const media = await Media.query().where("url", path).first();
+
+      if(media) {
+        response.header('custom-label', media.title)
+      }
+
+      return file
+    } else {
+      response.status(404)
+      return {
+        message: "file not found"
+      }
+    }
+  }
+
   async destroy({params, response, }: HttpContextContract){
     const media = await Media.find(params.id)
     if(! media){
@@ -347,6 +395,7 @@ export default class MediaController {
     if(fs.existsSync(filename)){
       fs.rmSync(filename)
     }
+    console.log(media.serialize())
     await media?.delete()
     return response.json({success: true, })
   }

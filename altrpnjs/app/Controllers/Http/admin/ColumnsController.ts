@@ -47,10 +47,9 @@ export default class ColumnsController {
           if(column.type === 'bigInteger' && column.attribute === 'unsigned'){
             query = query.unsigned()
           }
-          if(column.indexed ){
-            query = query.index()
-          }
         })
+        //query = query.index()
+        await this.indexCreator(column.indexed, columnData, model, true)
       }
     } catch (e) {
       response.status(500)
@@ -62,6 +61,18 @@ export default class ColumnsController {
 
     return response.json({success:true, data:column})
   }
+
+  async indexCreator(indexed, columnData, model, newColumn = false) {
+    const indexName = Column.createIndexName(columnData.name, model.table.name)
+    if(indexed) {
+      let indexQuery = `CREATE INDEX ${indexName} ON ${model.table.name}(${columnData.name})`
+      await Database.rawQuery(indexQuery)
+    } else if(! newColumn){
+      let indexQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${indexName}`
+      await Database.rawQuery(indexQuery)
+    }
+  }
+
   async updateColumn({response, params, request}: HttpContextContract) {
 
     let model = await Model.find(params.id)
@@ -131,6 +142,9 @@ export default class ColumnsController {
         model_id: model.id,
         type: columnData.type
       })
+
+      await this.indexCreator(columnData.indexed, columnData, model)
+
       try{
         if(columnData.type !== 'calculated'){
           const client = Database.connection(Env.get('DB_CONNECTION'))
@@ -174,6 +188,8 @@ export default class ColumnsController {
         model_id: model.id,
         type: columnData.type
       })
+
+      await this.indexCreator(columnData.indexed, columnData, model)
 
       await column.save()
       Event.emit('model:updated', model)
@@ -229,6 +245,15 @@ export default class ColumnsController {
       })
 
     }
+
+    //удаление индекса перед удалением поля
+    try {
+      await this.indexCreator(false, column, model)
+    } catch (e) {
+      console.log(e)
+    }
+
+
     await column.delete()
     Event.emit('model:updated', model)
 

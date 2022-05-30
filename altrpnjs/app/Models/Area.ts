@@ -29,7 +29,7 @@ export default class Area extends BaseModel {
 
     return areas.map(area => {
       return {
-        ...area.$attributes,
+        ...area.serialize(),
         categories: area.categories.map(category => {
           return {
             category: category

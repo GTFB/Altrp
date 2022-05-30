@@ -89,6 +89,10 @@ export default class Column extends BaseModel {
   })
   public user: BelongsTo<typeof User>
 
+  @belongsTo(() => User, {
+    foreignKey: "user_id"
+  })
+  public altrp_user: BelongsTo<typeof User>
 
   @belongsTo(() => Model, {
     foreignKey: 'model_id'
@@ -202,5 +206,9 @@ decorate([
       return isProd() ? 'Boolean' : 'boolean'
     }
     return 'any'
+  }
+
+  public static createIndexName(columnName, modelName):string {
+    return `${columnName}_${modelName}`
   }
 }

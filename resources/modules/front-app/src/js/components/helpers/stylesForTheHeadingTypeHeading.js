@@ -168,6 +168,147 @@ export function getHeadingTypeHeadingStyles(settings, id) {
 
   styles += `} `;
 
+  //state disabled
+  styles += `${parentClass} .state-disabled .altrp-heading, ${parentClass} .altrp-heading a {`;
+
+  const colorDisabled = getResponsiveSetting(settings, "heading_style_color", ".state-disabled");
+
+  if (colorDisabled) {
+    styles += colorPropertyStyled(colorDisabled, "color");
+  }
+
+  const typographicDisabled = getResponsiveSetting(
+    settings,
+    "heading_style_typographic", ".state-disabled"
+  );
+
+  if (typographicDisabled) {
+    styles += typographicControllerToStyles(typographicDisabled);
+  }
+
+  const textShadowDisabled = getResponsiveSetting(
+    settings,
+    "heading_style_text_shadow", ".state-disabled"
+  );
+
+  if (textShadowDisabled) {
+    styles += textShadowControllerToStyles(textShadowDisabled);
+  }
+
+  const marginDisabled = getResponsiveSetting(settings, "style_position_margin", ".state-disabled");
+
+  if (marginDisabled) {
+    styles += dimensionsControllerToStyles(marginDisabled, "margin");
+  }
+
+  const paddingDisabled = getResponsiveSetting(settings, "style_position_padding", ".state-disabled");
+
+  if (paddingDisabled) {
+    styles += dimensionsControllerToStyles(paddingDisabled);
+  }
+
+  const zIndexDisabled = getResponsiveSetting(settings, "position_z_index", ".state-disabled");
+
+  if (zIndexDisabled) {
+    styles += simplePropertyStyled(zIndexDisabled, "z-index");
+  }
+
+  const backgroundColorDisabled = getResponsiveSetting(
+    settings,
+    "style_background_color", ".state-disabled"
+  );
+
+  if (backgroundColorDisabled) {
+    styles += colorPropertyStyled(backgroundColorDisabled, "background-color");
+  }
+
+  const opacityDisabled = getResponsiveSetting(settings, "style_background_opacity", ".state-disabled");
+
+  if (opacityDisabled) {
+    styles += opacityStyled(opacityDisabled);
+  }
+
+  const gradientDisabled = getResponsiveSetting(settings, "gradient", ".state-disabled");
+
+  if (gradientDisabled) {
+    styles += gradientStyled(gradientDisabled);
+  }
+
+  styles += headingTransformToStyles(settings, '')
+
+  styles += `} `;
+  //end of disabled
+  //state active
+  styles += `${parentClass} .active .altrp-heading, ${parentClass} .altrp-heading a {`;
+
+  const colorActive = getResponsiveSetting(settings, "heading_style_color", ".active");
+
+  if (colorActive) {
+    styles += colorPropertyStyled(colorActive, "color");
+  }
+
+  const typographicActive = getResponsiveSetting(
+    settings,
+    "heading_style_typographic", ".active"
+  );
+
+  if (typographicActive) {
+    styles += typographicControllerToStyles(typographicActive);
+  }
+
+  const textShadowActive = getResponsiveSetting(
+    settings,
+    "heading_style_text_shadow", ".active"
+  );
+
+  if (textShadowActive) {
+    styles += textShadowControllerToStyles(textShadowActive);
+  }
+
+  const marginActive = getResponsiveSetting(settings, "style_position_margin", ".active");
+
+  if (marginActive) {
+    styles += dimensionsControllerToStyles(marginActive, "margin");
+  }
+
+  const paddingActive = getResponsiveSetting(settings, "style_position_padding", ".active");
+
+  if (paddingActive) {
+    styles += dimensionsControllerToStyles(paddingActive);
+  }
+
+  const zIndexActive = getResponsiveSetting(settings, "position_z_index", ".active");
+
+  if (zIndexActive) {
+    styles += simplePropertyStyled(zIndexActive, "z-index");
+  }
+
+  const backgroundColorActive = getResponsiveSetting(
+    settings,
+    "style_background_color", ".active"
+  );
+
+  if (backgroundColorActive) {
+    styles += colorPropertyStyled(backgroundColorActive, "background-color");
+  }
+
+  const opacityActive = getResponsiveSetting(settings, "style_background_opacity", ".active");
+
+  if (opacityActive) {
+    styles += opacityStyled(opacityActive);
+  }
+
+  const gradientActive = getResponsiveSetting(settings, "gradient", ".active");
+
+  if (gradientActive) {
+    styles += gradientStyled(gradientActive);
+  }
+
+  styles += headingTransformToStyles(settings, '')
+
+  styles += `} `;
+  //end of state active
+
   styles += `${parentClass} .altrp-heading:hover, ${parentClass} .altrp-heading a:hover {`;
 
   const colorLinkHover = getResponsiveSetting(settings, "heading_style_color", ":hover");
@@ -207,6 +348,68 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   //fix display with <strong> and <b> tags
   styles += "display:block;";
   styles += `} `;
+
+  //state disabled
+  styles += `${parentClass} .state-disabled .altrp-heading {`;
+
+  const borderTypeDisabled = getResponsiveSetting(settings, "style_border_type", ".state-disabled");
+
+  if (borderTypeDisabled) {
+    styles += simplePropertyStyled(borderTypeDisabled, "border-style");
+  }
+
+  const borderWidthDisabled = getResponsiveSetting(settings, "style_border_width", ".state-disabled");
+
+  if (borderWidthDisabled) {
+    styles += borderWidthStyled(borderWidthDisabled);
+  }
+
+  const borderColorDisabled = getResponsiveSetting(settings, "style_border_color", ".state-disabled");
+
+  if (borderColorDisabled) {
+    styles += colorPropertyStyled(borderColorDisabled, "border-color");
+  }
+
+  const borderRadiusDisabled = getResponsiveSetting(settings, "style_border_radius", ".state-disabled");
+
+  if (borderRadiusDisabled) {
+    styles += dimensionsStyled(borderRadiusDisabled, "border-radius");
+  }
+  //fix display with <strong> and <b> tags
+  styles += "display:block;";
+  styles += `} `;
+  //end of state disabled
+  //start state active
+  styles += `${parentClass} .active .altrp-heading {`;
+
+  const borderTypeActive = getResponsiveSetting(settings, "style_border_type", ".active");
+
+  if (borderTypeActive) {
+    styles += simplePropertyStyled(borderTypeActive, "border-style");
+  }
+
+  const borderWidthActive = getResponsiveSetting(settings, "style_border_width", ".active");
+
+  if (borderWidthActive) {
+    styles += borderWidthStyled(borderWidthActive);
+  }
+
+  const borderColorActive = getResponsiveSetting(settings, "style_border_color", ".active");
+
+  if (borderColorActive) {
+    styles += colorPropertyStyled(borderColorActive, "border-color");
+  }
+
+  const borderRadiusActive = getResponsiveSetting(settings, "style_border_radius", ".active");
+
+  if (borderRadiusActive) {
+    styles += dimensionsStyled(borderRadiusActive, "border-radius");
+  }
+  styles += "display:block;";
+  styles += `} `;
+  //end state active
+
+
   //hover
   styles += `${parentClass} .altrp-heading:hover {`;
 
@@ -392,6 +595,117 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   }
 
   styles += `} `;
+
+  //start state disabled
+  styles += `${parentClass} .state-disabled .altrp-heading.altrp-background-image {`;
+
+  const backgroundImageDisabled = getResponsiveSetting(settings, "background_image", ".state-disabled");
+
+  if (backgroundImageDisabled) {
+    styles += backgroundImageControllerToStyles(backgroundImageDisabled);
+  }
+
+  const backgroundPositionDisabled = getResponsiveSetting(
+    settings,
+    "background_position", ".state-disabled"
+  );
+
+  if (backgroundPositionDisabled) {
+    styles += simplePropertyStyled(backgroundPositionDisabled, "background-position");
+  }
+
+  const backgroundAttachmentDisabled = getResponsiveSetting(
+    settings,
+    "background_attachment", ".state-disabled"
+  );
+
+  if (backgroundAttachmentDisabled) {
+    styles += simplePropertyStyled(
+      backgroundAttachmentDisabled,
+      "background-attachment"
+    );
+  }
+
+  const backgroundRepeatDisabled = getResponsiveSetting(settings, "background_repeat", ".state-disabled");
+
+  if (backgroundRepeatDisabled) {
+    styles += simplePropertyStyled(backgroundRepeatDisabled, "background-repeat");
+  }
+
+  const backgroundSizeInUnitsDisabled = getResponsiveSetting(settings, "background_image_width", ".state-disabled");
+
+  const backgroundSizeDisabled = getResponsiveSetting(settings, "background_size", ".state-disabled");
+
+  if (backgroundSizeInUnitsDisabled && backgroundSizeDisabled === "") {
+    styles += sizeStyled(backgroundSizeInUnitsDisabled, "background-size");
+  } else {
+    styles += ""
+  }
+
+  if (backgroundSizeDisabled !== "") {
+    styles += simplePropertyStyled(backgroundSizeDisabled, "background-size");
+  } else {
+    styles += ""
+  }
+
+  styles += `} `;
+  //end state disabled
+
+  //start state active
+  styles += `${parentClass} .active .altrp-heading.altrp-background-image {`;
+
+  const backgroundImageActive = getResponsiveSetting(settings, "background_image", ".active");
+
+  if (backgroundImageActive) {
+    styles += backgroundImageControllerToStyles(backgroundImageActive);
+  }
+
+  const backgroundPositionActive = getResponsiveSetting(
+    settings,
+    "background_position", ".active"
+  );
+
+  if (backgroundPositionActive) {
+    styles += simplePropertyStyled(backgroundPositionActive, "background-position");
+  }
+
+  const backgroundAttachmentActive = getResponsiveSetting(
+    settings,
+    "background_attachment", ".active"
+  );
+
+  if (backgroundAttachmentActive) {
+    styles += simplePropertyStyled(
+      backgroundAttachmentActive,
+      "background-attachment"
+    );
+  }
+
+  const backgroundRepeatActive = getResponsiveSetting(settings, "background_repeat", ".active");
+
+  if (backgroundRepeatActive) {
+    styles += simplePropertyStyled(backgroundRepeatActive, "background-repeat");
+  }
+
+  const backgroundSizeInUnitsActive = getResponsiveSetting(settings, "background_image_width", ".active");
+
+  const backgroundSizeActive = getResponsiveSetting(settings, "background_size", ".active");
+
+  if (backgroundSizeInUnitsActive && backgroundSizeActive === "") {
+    styles += sizeStyled(backgroundSizeInUnitsActive, "background-size");
+  } else {
+    styles += ""
+  }
+
+  if (backgroundSizeActive !== "") {
+    styles += simplePropertyStyled(backgroundSizeActive, "background-size");
+  } else {
+    styles += ""
+  }
+
+  styles += `} `;
+  //end state active
+
 
   styles += `${parentClass} .altrp-heading.altrp-background-image:hover {`;
 

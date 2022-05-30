@@ -99,6 +99,7 @@ export default class PagesController {
     const pageSize = parseInt(params.pageSize)
     const searchWord = params.s
     let pages
+
     let pagesAll
     let pagination: any = {}
 
@@ -119,7 +120,11 @@ export default class PagesController {
         }
       }
     } else {
-      pagesAll = await Page.query().preload("user").preload("categories")
+      const query =  Page.query()
+      if(searchWord){
+        query.orWhere('title', 'LIKE', `%${searchWord}%`)
+      }
+      pagesAll = await query.preload("user").preload("categories")
     }
 
     const modPages = pagesAll.map( page => {
@@ -139,7 +144,6 @@ export default class PagesController {
         ...pagination
       }
     })
-
     return modPages
   }
 

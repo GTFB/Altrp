@@ -4,12 +4,16 @@ import * as _ from 'lodash'
 export default function renderTournament(settings, device, context) {
   const {data, headers} = _.get(getResponsiveSetting(settings, 'path', device), context, {data: [], headers: []})
 
+  if (!data?.length) {
+    return 'No data'
+  }
+
   const rounds : any = []
 
   let matches : any = []
-  data.sort((a, b) => a.round - b.round).forEach((el, i) => {
+  data.sort((a, b) => a?.round - b?.round).forEach((el, i) => {
     if (i !== 0) {
-      if (data[i - 1].round === el.round) {
+      if (data[i - 1]?.round === el?.round) {
         return matches.push(el)
       }
       matches = matches.sort((a, b) => a.match - b.match)
@@ -35,7 +39,7 @@ export default function renderTournament(settings, device, context) {
                   if (rounds.length - 2 === i) {
                     return 'Semi-finals'
                   }
-                  return `Round ${round[0].round}`
+                  return `Round ${round[0]?.round}`
                 })()}
               </div>
             `)}
@@ -44,7 +48,7 @@ export default function renderTournament(settings, device, context) {
             ${rounds.map(round => `
               <div class="reacket-round">
                 ${round.map(match => `
-                  ${match.round === 1 ? '' : `
+                  ${match?.round === 1 ? '' : `
                     <div class="reacket-spacer ">&nbsp;</div>
                   `}
 
@@ -67,12 +71,12 @@ export default function renderTournament(settings, device, context) {
                     </div>
                   </div>
 
-                  ${match.round === 1 ? '' : `
+                  ${match?.round === 1 ? '' : `
                     <div class="reacket-spacer ">&nbsp;</div>
                   `}
                 `).join('')}
               </div>
-              ${round[0].round === rounds.length ? '' : `
+              ${round[0]?.round === rounds.length ? '' : `
                 <div class="reacket-connectors">
                   <div data-test="connector-left" class="reacket-connector">
                     ${(new Array(Math.ceil(round.length / 2))).fill(1).map(() => `

@@ -165,6 +165,7 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_SELECT,
       label: "Options Sorting",
       responsive: false,
+      locked: true,
       options: [
         {
           value: "",
@@ -183,6 +184,7 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("sort_default", {
       type: CONTROLLER_SWITCHER,
+      locked: true,
       label: "Sort Default"
     });
 
@@ -192,6 +194,7 @@ class InputSelectTree extends BaseElement {
       conditions: {
         "model_for_options!": ""
       },
+      locked: true,
       description:
         'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
     });

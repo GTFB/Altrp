@@ -7,7 +7,7 @@ import {useSelector} from "react-redux";
 import Trash from "./../../../svgs/trashFB.svg"
 
 
-function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, settings}) {
+function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, settings, classes}) {
   const circleRef = useRef(null)
   const popperRef = useRef(null)
   const textareaRef = useRef(null)
@@ -68,31 +68,31 @@ function FeedbackWidgetHookComponent({x, y, id, deleteComment, idWidget, setting
 
   return (
     ReactDOM.createPortal(
-      <div className={"container__comment-fb" + ` altrp-element${idWidget}`} style={{
+      <div className={`${classes} container__comment-fb` + ` altrp-element${idWidget}`} style={{
         left: `${x}px`,
         top: `${y}px`,
       }}
       >
-        <div ref={circleRef} className="circle-fb">{id}</div>
+        <div ref={circleRef} className={`${classes} circle-fb`}>{id}</div>
         <div style={styles.popper} {...attributes.popper} ref={popperRef} className="block__comment">
-          <div className="block__comment-top">
-            <h2 className="block__comment-top__text">Comments</h2>
-            <Plus onClick={() => deleteComment(id)} className="block__comment-top__close" width={12} height={12}/>
+          <div className={`${classes} block__comment-top`}>
+            <h2 className={`${classes} block__comment-top__text`}>Comments</h2>
+            <Plus onClick={() => deleteComment(id)} className={`${classes} block__comment-top__close`} width={12} height={12}/>
           </div>
-          <div style={{marginBottom: "20px"}} className="container__messages">
+          <div style={{marginBottom: "20px"}} className={`${classes} container__messages`}>
             {messages.map(message => (
-              <div key={message.id} className="item__message">
-                <div className="item__message-top">
-                  <strong className="item__message-name">{message.name}</strong>
-                  <Trash onClick={() => trashComment(message.id)} className="trash__comment"/>
+              <div key={message.id} className={`${classes} item__message`}>
+                <div className={`${classes} item__message-top`}>
+                  <strong className={`${classes} item__message-name`}>{message.name}</strong>
+                  <Trash onClick={() => trashComment(message.id)} className={`${classes} trash__comment`}/>
                 </div>
-                <p className="item__message-value">{message.text}</p>
+                <p className={`${classes} item__message-value`}>{message.text}</p>
               </div>
             ))}
           </div>
           <form onSubmit={submitMessage}>
-            <textarea onKeyDown={shiftEnter} ref={textareaRef} value={value} onChange={changeMessage} className="block__comment-textarea" placeholder="Leave a comment" rows="2"/>
-            <div className="block__comment-bottom">
+            <textarea onKeyDown={shiftEnter} ref={textareaRef} value={value} onChange={changeMessage} className={`${classes} block__comment-textarea`} placeholder="Leave a comment" rows="2"/>
+            <div className={`${classes} block__comment-bottom`}>
               <button type="submit">{settings.messenger_text_btn || "Add Comment"}</button>
             </div>
           </form>

@@ -148,7 +148,7 @@ class AltrpPosts extends React.Component {
     } else if(_.get(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`)){
       HoverPostContentComponent = _.get(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`)
     }
-    return <div className="altrp-post" key={(post.id || post.altrpIndex)}>
+    return <div className={`${this.props?.className} altrp-post`} key={(post.id || post.altrpIndex)}>
         {PostContentComponent}
         {this.state.hoverSimpleTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{HoverPostContentComponent}</div>}
       </div>
@@ -198,11 +198,13 @@ class AltrpPosts extends React.Component {
     const settings = {...this.props.settings};
     const element = this.props.element;
     let {data: posts} = this.props;
-    if(! posts.length && ! isEditor()){
+    if(! posts.length && !isEditor()){
       return null;
     }
 
-    if(element.getResponsiveLockedSetting('posts_per_page') >= posts?.length || element.getResponsiveLockedSetting('posts_per_page') <= 0){
+
+    if(getResponsiveSetting(this.props.settings,'posts_per_page') >= posts?.length
+      || getResponsiveSetting(this.props.settings,'posts_per_page') <= 0){
       return null;
     }
     let prev_text = element.getResponsiveLockedSetting('prev_text', '', 'Previous Page')
@@ -309,7 +311,7 @@ class AltrpPosts extends React.Component {
       <PostsWrapper columnsCount={columnsCount}
                                         posts_columns_gap={posts_columns_gap}
                                         posts_rows_gap={posts_rows_gap}
-                                        className="altrp-posts">
+                                        className={`${this.props?.className} altrp-posts`}>
         {posts.map((p, idx)=>{
           return this.renderPost(postsStart + idx);
         })}

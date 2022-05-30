@@ -51,7 +51,6 @@ class BaseElement extends ControlStack {
     this.settingsLock =  settingsLock || {};
 
     const controls = controllersManager.getControls(this.getName())
-
     // Выбираем locked настройки
     Object.keys(controls).map(key => {
       controls[key].map(tab => {
@@ -166,7 +165,7 @@ class BaseElement extends ControlStack {
     let data = {};
     data.id = this.getId();
     data.name = this.getName();
-    data.settings = this.settings
+    data.settings = this.settings;
 
     data.settingsLock = this.settingsLock;
     data.type = this.getType();
@@ -461,12 +460,16 @@ class BaseElement extends ControlStack {
     if (!settingName) {
       return _.cloneDeep(settings);
     }
+
     if (settings[settingName] === undefined) {
       let control = window.controllersManager.getElementControl(
         this.getName(),
         settingName
       );
 
+      if(settingName === "button_text") {
+        console.log(control, settings[settingName]);
+      }
       if (!control || !control.default) {
         if (_.isString(_default)) {
           return _default;
@@ -474,7 +477,11 @@ class BaseElement extends ControlStack {
         return _default || null;
       }
       settings[settingName] = control.default;
+      if(settingName === "button_text") {
+        console.log(control, settings[settingName]);
+      }
     }
+
     return settings[settingName] || _default;
   }
 
@@ -518,7 +525,6 @@ class BaseElement extends ControlStack {
 
   setSettingValue(settingName, value, dispatchToHistory = true, locked = false) {
     const settings = locked ? this.settingsLock : this.settings
-
     //check change value
     if (settings[settingName] !== value) {
       if (
@@ -952,5 +958,5 @@ class BaseElement extends ControlStack {
     }
   }
 }
-
+window.BaseElement = BaseElement
 export default BaseElement;

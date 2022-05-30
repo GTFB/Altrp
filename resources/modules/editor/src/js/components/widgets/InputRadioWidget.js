@@ -828,7 +828,7 @@ class InputRadioWidget extends Component {
     const content_options = this.props.element.getResponsiveLockedSetting('content_options');
     const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0
+      && content_options?.indexOf('{{') === 0
       && ! model_for_options){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
@@ -1007,6 +1007,20 @@ class InputRadioWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для input radio
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getLockedSettings();
@@ -1073,6 +1087,9 @@ class InputRadioWidget extends Component {
         classLabel = "";
         break;
     }
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
+
 
     let content_label = this.props.element.getResponsiveLockedSetting("content_label")
     let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
@@ -1080,19 +1097,19 @@ class InputRadioWidget extends Component {
     if (content_label || label_icon) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container classLabel`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
-              ? "altrp-field-label--required"
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
+              ? `${classes} altrp-field-label--required`
               : ""
             }`}
           >
             {content_label}
           </label>
           {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
+            <span className={`${classes} altrp-label-icon`}>
               {renderAssetIcon(label_icon)}
             </span>
           )}
@@ -1112,12 +1129,12 @@ class InputRadioWidget extends Component {
     const input = this.renderRepeatedInput();
 
     const cssId = this.props.element.getResponsiveLockedSetting('position_css_id')
-    const cssClasses = this.props.element.getResponsiveLockedSetting('position_css_classes')
+  //  const cssClasses = this.props.element.getResponsiveLockedSetting('position_css_classes')
 
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={`altrp-field-container altrp-field-radio-container ${cssClasses ? cssClasses : ''}`}
+        className={`${classes} altrp-field-container altrp-field-radio-container`}
         id={cssId ? cssId : ''}
       >
         {content_label_position_type === "top" ? label : ""}
@@ -1136,7 +1153,8 @@ class InputRadioWidget extends Component {
   renderRepeatedInput() {
     const inline = this.props.element.getResponsiveLockedSetting("vertical_radio", "", false);
     const radioPosition = this.props.element.getResponsiveLockedSetting('radio_position')
-
+    let classes =
+      this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
     const { options = [] } = this.state;
     let { value = "" } = this.state;
     const fieldName =
@@ -1149,10 +1167,12 @@ class InputRadioWidget extends Component {
       Math.random()
         .toString(36)
         .substr(2, 9);
+
+
     return (
-      <div className="altrp-field-subgroup">
+      <div className={`${classes} altrp-field-subgroup`}>
         <RadioGroup
-          className={`altrp-field-radio-group`}
+          className={`${classes} altrp-field-radio-group`}
           name={`${formID}-${fieldName}`}
           inline={!inline}
           onChange={this.onChange}
@@ -1171,7 +1191,7 @@ class InputRadioWidget extends Component {
             }
             return (
               <Radio
-                className={`altrp-field-radio ${checked ? "active" : ""} ${radioPosition == 'right' ? 'bp3-align-right' : ''}`}
+                className={`${classes} altrp-field-radio ${checked ? "active" : ""} ${radioPosition == 'right' ? 'bp3-align-right' : ''}`}
                 label={option.label}
                 value={option.value}
                 key={`${fieldName}-${idx}`}

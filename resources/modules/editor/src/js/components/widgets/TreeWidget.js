@@ -1,16 +1,74 @@
 import React from "react";
+import {NullArray} from "./styled-components/TreeComponent";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 
-import {NullArray} from "./styled-components/TreeComponent";
-
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
 
-export const normalizeValues = function(branch) {
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-tree-columns {
+    display: grid;
+  }
+
+  .altrp-tree-heading {
+    display: grid;
+    padding-left: 60px;
+    align-items: center;
+  }
+
+  .altrp-tree-heading__text {
+    display: inline-block;
+  }
+
+  .altrp-tree {
+    overflow-x: auto;
+  }
+
+  .bp3-tree-root > .bp3-tree-node {
+    padding-left: 0;
+  }
+
+  .bp3-tree-node__border_last > .bp3-tree-node-content .altrp-tree-columns__column_divider {
+     border-bottom: none;
+  }
+
+  .bp3-tree-node {
+    padding-left: 20px
+  }
+
+  .bp3-collapse .bp3-tree-node-content {
+      padding: 0;
+  }
+
+  .altrp-tree-columns__column {
+    display: flex;
+    align-items: center;
+  }
+
+  .bp3-tree-node-expanded > .bp3-tree-node-content .altrp-tree-columns__column_divider {
+    border-bottom: none;
+  }
+
+  .bp3-tree-node-list > .bp3-tree-node__border_last {
+    margin-bottom: 10px
+  }
+
+  .altrp-tree-columns__column {
+    position-relative
+  }
+
+  .altrp-tree-container {
+    display: flex;
+  }
+`)
+
+
+export const normalizeValues = function(branch, iconValue=this.props.element.getSettings("icon")) {
   const folderIcon = "folder-close";
-  const icon = branch.icon || folderIcon;
+
+  const icon = iconValue || folderIcon;
 
   // {
   //   assetType: "media",
@@ -22,9 +80,7 @@ export const normalizeValues = function(branch) {
   return {
     ...branch,
     labelValue: label,
-    label: label,
-    icon: icon?.indexOf && icon.indexOf("/") !== -1 || icon.url ? renderAsset(icon) : folderIcon,
-    iconValue: icon,
+    label: <div dangerouslySetInnerHTML={{ __html: label }}/>,
     treeId: branch.tree_id || -1,
     parentId: branch.parent || -1,
   }
@@ -36,115 +92,229 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
-  const data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
+  let data = _.cloneDeep(getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData()));
+  settings.columns = this.props.element.getLockedSettings("column_repeater", []);
+  settings.flat = this.props.element.getLockedSettings("flat_col", false);
 
-  if(! _.isArray(data)){
+  if(!_.isArray(data)){
     return [];
   }
-  return data;
+
   let repeater = [];
 
-  const keys = {
-    label: "",
-    icon: "",
-    tree_id: "",
-    parent: "",
-  }
+  // if(isEditor()) {
+  //   data = [
+  //     {
+  //       label: "label 1",
+  //       id: 1,
+  //       children: [
+  //         {
+  //           label: "child 1",
+  //           id: 2,
+  //           children: []
+  //         },
+  //         {
+  //           label: "child 2",
+  //           id: 3,
+  //           children: [
+  //             {
+  //               label: "child 1",
+  //               id: 4,
+  //               children: []
+  //             },
+  //           ]
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       label: "label 2",
+  //       id: 5,
+  //       children: [
+  //         {
+  //           label: "child 1",
+  //           id: 6,
+  //           children: []
+  //         },
+  //         {
+  //           label: "child 2",
+  //           id: 7,
+  //           children: []
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       label: "label 3",
+  //       id: 8,
+  //       children: []
+  //     },
+  //   ]
+  // }
 
-  if(isEditor()) {
-    settings.data = [
-      {
-        label: "label 1",
-        tree_id: 1,
-        value: 1,
-      },
-      {
-        label: "child 1",
-        parent_id: 1,
-        value: 2,
-      },
-      {
-        label: "child 2",
-        parent_id: 1,
-        tree_id: 2,
-        value: 3,
-      },
-      {
-        label: "child 1",
-        parent_id: 2,
-        tree_id: 2,
-        value: 4,
-      },
-      {
-        label: "label 2",
-        tree_id: 3,
-        value: 5,
-      },
-      {
-        label: "child 1",
-        parent_id: 3,
-        value: 6,
-      },
-      {
-        label: "child 2",
-        parent_id: 3,
-        value: 7,
-      },
-      {
-        label: "label 3",
-        value: 8,
-      },
-    ]
-  }
+  settings.maxDepth = getMaxDepth(data, settings.maxDepth)
 
-  settings.dataSettings.forEach((s) => {
-    switch (s.value) {
-      case "label":
-        keys[s.value] = s.label || "label"
-        break;
-      case "icon":
-        keys[s.value] = s.label || "icon"
-        break;
-      case "parent":
-        keys[s.value] = s.label || "parent_id"
-        break;
-      case "tree_id":
-        keys[s.value] = s.label || "tree_id"
-        break;
-    }
-  })
-
-  let allKeys = true;
-
-  Object.values(keys).forEach((k) => {
-    if(!k) {
-      allKeys = false
-    }
-  })
-
-  if(allKeys && settings.data.length > 0) {
-    settings.data.forEach((d) => {
-      repeater.push({
-        label: d[keys.label],
-        icon: d[keys.icon],
-        tree_id: d[keys.tree_id],
-        parent: d[keys.parent],
-        value: d.value ? d.value : -1
-      })
-    })
-  }
-
-  if(!defaultOptions) {
-    return this.updateRepeater(repeater, {
-      sort: [settings.sortDefault, settings.sortOption]
-    })
-  } else {
-    if(! _.isArray(settings?.data)){
-      return  [];
-    }
-    return settings?.data?.map(branch => this.normalizeValues(branch)) || []
-  }
+  return data.map((branch, idx) => replaceChildrenToChildNode(branch, settings.columns, data.length - 1 === idx, 0, settings.flat, settings.maxDepth))
 }
+
+const getMaxDepth = (data, maxDepth=0, depth=0) => {
+  if(depth > maxDepth) {
+    maxDepth = depth
+  }
+
+  for(const branch of data) {
+    if(branch.children.length > 0) {
+      maxDepth = getMaxDepth(branch.children, maxDepth, depth+1)
+    }
+  }
+
+  return maxDepth
+}
+
+const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=false, maxDepth) => {
+  branch.childNodes = branch.children || []
+
+  delete branch.children
+
+  branch.depth = depth
+
+  branch.label = getColumns(columns, branch, flat, maxDepth)
+
+
+  branch.childNodes = branch.childNodes.map((childBranch, idx) => {
+    return  replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx, depth+1, flat, maxDepth)
+  })
+
+
+
+  if(!last) {
+    branch.className = "bp3-tree-node__border"
+  } else {
+    branch.className = "bp3-tree-node__border_last"
+  }
+
+  if(branch.childNodes.length === 0) {
+    branch.hasCaret = false
+  }
+
+  return branch
+}
+
+const getColumns = (columns, branch, flat, maxDepth) => {
+  const filteredColumns = columns.filter(c => {
+
+    return branch[c.value] !== null && branch[c.value] !== undefined
+  })
+
+  const firstElementWidth = filteredColumns[0].size || "1" + filteredColumns[0].unit || "px"
+  const widths = filteredColumns.slice(1).map(column => {
+    if(column.width) {
+      return `${(column.width.size || "1") + column.width.unit || "fr"}`
+    } else {
+      return "1fr"
+    }
+  })
+
+  const values = {
+    classNames: "altrp-tree-columns__column",
+    marginRight: 0,
+    translateX: 0
+  }
+
+  if(flat) {
+    if(maxDepth > 0) {
+      values.marginRight = 20 + (20 * maxDepth) - (branch.depth * 20)
+    }
+
+    if(columns[0].divider) {
+      values.classNames += " altrp-tree-columns__column_divider"
+    }
+  }
+
+  return <>
+    {
+      !flat ? (
+        <div className="altrp-tree-columns" style={{
+          gridTemplateColumns: widths.join(" ")
+        }}>
+          {
+            filteredColumns.map((column, idx) => {
+              let classNames = "altrp-tree-columns__column";
+              let translateX = 0;
+              let marginRight = 0;
+
+              // if(idx > 0 && branch.depth > 0) {
+              //   translateX = (15 * branch.depth)
+              // }
+              //
+              // if(idx === 0 && branch.depth > 0 && maxDepth > 0) {
+              //   marginRight = 20 + (20 * maxDepth)
+              // }
+
+              if(column.divider) {
+                classNames += " altrp-tree-columns__column_divider"
+              }
+
+              // console.log(marginRight)
+
+              return (
+                <div
+                  className={classNames}
+                  key={idx}
+                >
+                  {
+                    branch[column.value]
+                  }
+                </div>
+              )
+            })
+          }
+        </div>
+      ) : (
+        <>
+          {
+            <div
+              className={values.classNames}
+              style={{
+                width: firstElementWidth,
+                marginRight: values.marginRight,
+                float: "left"
+              }}
+            >
+              {
+                branch[columns[0].value]
+              }
+            </div>
+          }
+          <div className="altrp-tree-columns_flat altrp-tree-columns" style={{
+            transform: `translateX(-${values.translateX}px)`,
+            gridTemplateColumns: widths.join(" ")
+          }}>
+            {
+              filteredColumns.map((column, idx) => {
+                if(idx === 0) return "";
+
+                let classNames = "altrp-tree-columns__column";
+
+                // console.log(marginRight)
+
+                return (
+                  <div
+                    className={classNames}
+                    key={idx}
+                  >
+                    {
+                      branch[column.value]
+                    }
+                  </div>
+                )
+              })
+            }
+          </div>
+        </>
+      )
+    }
+  </>
+}
+
 
 export const updateRepeater = function (repeaterSetting, other={}) {
   const repeater = [];
@@ -178,7 +348,6 @@ export const updateRepeater = function (repeaterSetting, other={}) {
     repeater.push({
       ...branchSettings,
       id: idx,
-      hasCaret: branchSettings.treeId !== -1,
       childNodes: children
     })
   })
@@ -186,10 +355,10 @@ export const updateRepeater = function (repeaterSetting, other={}) {
   let newRepeater = [];
 
   repeater.forEach((branch) => {
-    newRepeater.push({
-      ...branch,
-      childNodes: this.childrenInChildren(branch.childNodes, repeater)
-    })
+    branch.childNodes = this.childrenInChildren(branch.childNodes, repeater)
+    branch.hasCaret = branch.childNodes.length > 0
+
+    newRepeater.push(branch)
   })
 
   if (other?.sort && !other?.sort[0]) {
@@ -199,20 +368,37 @@ export const updateRepeater = function (repeaterSetting, other={}) {
     }
   }
 
-  return newRepeater.filter((branch) => branch.parentId === -1);
+  return newRepeater.map((branch => removeEmpty(branch))).filter((branch) => branch.parentId === -1);
+}
+
+export const removeEmpty = function (branch) {
+  if(branch.childNodes.length > 0) {
+    branch.childNodes = branch.childNodes.map(childNode => removeEmpty(childNode))
+    return branch
+  } else {
+    branch.parent = -1
+    branch.parentId = -1
+    return branch
+  }
 }
 
 export const childrenInChildren = function(children, repeater) {
   const replacedChildren = [];
 
   if(children.length > 0) {
+
     children.forEach((branch) => {
-      repeater.forEach((repBranch) => {
-        if(branch.id === repBranch.id) {
-          repBranch.childNodes = this.childrenInChildren(repBranch.childNodes, repeater)
-          replacedChildren.push(repBranch)
-        }
-      })
+      if(branch.parent_id !== branch.tree_id) {
+        repeater.forEach((repBranch) => {
+          if(branch.id === repBranch.id) {
+            if(repBranch.childNodes?.length > 0) {
+              repBranch.childNodes = this.childrenInChildren(repBranch.childNodes, repeater)
+            }
+
+            replacedChildren.push(repBranch)
+          }
+        })
+      }
     })
   }
 
@@ -224,10 +410,12 @@ class TreeWidget extends Component {
     super(props);
     let settings = props.element.getSettings();
 
+    const filtrationRepeater = this.getFromDatasource(settings) || []
+
     this.state = {
       settings,
       type: settings.select_type || "repeater",
-      repeater: [],
+      repeater: filtrationRepeater,
     };
 
     props.element.component = this;
@@ -266,48 +454,45 @@ class TreeWidget extends Component {
         repeater: filtrationRepeater
       }))
     } else if(settings.type === "datasource") {
-      const filtrationRepeater = this.getFromDatasource(settings) || []
+      let settings = this.props.element.getSettings();
 
-      this.setState(s => ({
+      const data = this.getFromDatasource(settings) || [];
+
+      this.setState((s) => ({
         ...s,
-        repeater: filtrationRepeater
+        repeater: data
+      }))
+      //
+      // this.setState(s => ({
+      //   ...s,
+      //   repeater: filtrationRepeater
+      // }))
+    }
+  }
+
+
+
+  _componentDidUpdate(prevProps) {
+    let path = this.props.element.getLockedSettings("tree_from_datasource", '');
+    path = path.replace(/}}/g, '').replace(/{{/g, '');
+    let rawData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
+
+    if(this.rawData !== rawData) {
+      this.rawData = rawData
+      if(! rawData?.length){
+        return
+      }
+      let settings = this.props.element.getSettings();
+
+      const data = this.getFromDatasource(settings) || [];
+
+      this.setState((s) => ({
+        ...s,
+        repeater: data
       }))
     }
   }
 
-
-
-  _componentDidUpdate(prevProps, prevState) {
-    let settings = {
-      type: this.state.type,
-    }
-
-    if(isEditor()) {
-      if(settings.type === "repeater") {
-        settings.repeater = this.props.element.getResponsiveLockedSetting("tree_repeater", "", []);
-        settings.prevRepeater = prevState.settings.tree_repeater || [];
-
-        if(settings.type === "repeater") {
-
-          const filtrationRepeater = this.updateRepeater(settings.repeater)
-
-          if(!_.isEqual(settings.prevRepeater, this.state.settings.tree_repeater)) {
-            this.setState(s => ({
-              ...s,
-              repeater: filtrationRepeater
-            }))
-          }
-        }
-      }
-
-      if(this.state.settings.select_type !== prevState.settings.select_type) {
-        this.setState(s => ({
-          ...s,
-          type: this.state.settings.select_type
-        }))
-      }
-    }
-  }
   handleNodeClick(node, path) {
     const originallySelected = node.isSelected;
 
@@ -374,29 +559,92 @@ class TreeWidget extends Component {
     })
   }
 
+  /**
+   * Получить css классы для tree widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+  getTreeHeading() {
+    const columns_repeater = this.props.element.getLockedSettings("column_repeater");
+    const activated = this.props.element.getLockedContent("columns_heading_activator")
+
+    const widths = columns_repeater.map(column => {
+      if(column.label_width) {
+        return `${(column.label_width.size || "1") + column.label_width.unit || "fr"}`
+      } else {
+        return "1fr"
+      }
+    })
+
+    return activated ? (
+      <div className="altrp-tree-heading" style={{
+        gridTemplateColumns: widths.join(" ")
+      }}>
+        {
+          columns_repeater.map((column, idx) => (
+            <div className="altrp-tree-heading__column" key={idx}>
+              <div className="altrp-tree-heading__text">
+                {
+                  column.label
+                }
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    ) : ""
+  }
+
   render() {
 
+
+  let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
       this.state.repeater.length > 0 ? (
-        <TreeBlueprint
-          contents={this.state.repeater}
-          onNodeClick={this.handleNodeClick}
-          onNodeCollapse={this.handleNodeCollapse}
-          onNodeExpand={this.handleNodeExpand}
+        <div className="altrp-tree">
+          {
+            this.getTreeHeading()
+          }
+          <TreeBlueprint
+            className={classes}
+            contents={this.state.repeater}
+            onNodeClick={this.handleNodeClick}
+            onNodeCollapse={this.handleNodeCollapse}
+            onNodeExpand={this.handleNodeExpand}
           />
+        </div>
       ) : (
         <NullArray>
           Add a branch
         </NullArray>
       )
-    ) : this.state.repeater.length > 0 ? (<TreeBlueprint
-      contents={this.state.repeater}
-      onNodeClick={this.handleNodeClick}
-      onNodeCollapse={this.handleNodeCollapse}
-      onNodeExpand={this.handleNodeExpand}
-    />) : <NullArray>
-      Datasource is null
-    </NullArray>
+    ) : this.state.repeater.length > 0 ? (
+      <div className="altrp-tree">
+        {
+          this.getTreeHeading()
+        }
+        <TreeBlueprint
+          className={classes}
+          contents={this.state.repeater}
+          onNodeClick={this.handleNodeClick}
+          onNodeCollapse={this.handleNodeCollapse}
+          onNodeExpand={this.handleNodeExpand}
+        />
+      </div>
+    ) : isEditor() ? (
+      <NullArray>
+        Datasource is null
+      </NullArray>
+    ) : ""
   }
 }
 

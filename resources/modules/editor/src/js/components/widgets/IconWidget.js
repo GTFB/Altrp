@@ -26,16 +26,31 @@ class IconWidget extends Component {
     actionsManager.unregisterWidgetActions(this.props.element.getId());
   }
 
+  /**
+   * Получить css классы для icon widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const titleText = this.state.settings.title_text === undefined ? 'Title' : this.state.settings.title_text
+    const classes = this.getClasses() + (this.state.settings.position_css_classes || "")
     return (
-      <div className='icon-widget-wrapper'>
-        <span className="icon-widget__icon">{this.state.settings.icon?.id ? renderAsset(this.state.settings.icon) : <DefaultIcon />}</span>
-        <div className="content">
+      <div className={`${classes} icon-widget-wrapper`}>
+        <span className={`${classes} icon-widget__icon`}>{this.state.settings.icon?.id ? renderAsset(this.state.settings.icon) : <DefaultIcon />}</span>
+        <div className={`${classes} content`}>
           {React.createElement(this.state.settings.title_tag || 'h3', {
-            className: 'title',
+            className: `${classes} title`,
           }, titleText)}
-          <div className="description">{this.state.settings.description === undefined ? 'Icon description' : this.state.settings.description}</div>
+          <div className={`${classes} description`}>{this.state.settings.description === undefined ? 'Icon description' : this.state.settings.description}</div>
         </div>
       </div>
     )

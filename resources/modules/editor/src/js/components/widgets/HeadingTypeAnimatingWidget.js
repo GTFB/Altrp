@@ -105,10 +105,26 @@ class HeadingTypeAnimatingWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для heading type animating widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
-    return <Animating 
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+    return <Animating
+      classes={classes}
       settings={this.state.settings}
-      getContent={this.getLockedContent.bind(this)} 
+      getContent={this.getLockedContent.bind(this)}
     />
   }
 }

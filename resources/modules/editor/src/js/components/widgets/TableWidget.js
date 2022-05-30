@@ -229,10 +229,23 @@ class TableWidget extends Component {
       return '';
     }
     let data = [];
+
+    let hasPagination = this.props.element.getLockedSettings("table_data_settings_pagination")
+
+    let options;
+
+
     if(this.props.element.getLockedSettings('table_datasource')
         && this.props.element.getLockedSettings('choose_datasource') === 'datasource'){
       let path = this.props.element.getLockedSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData())
+
+      if(hasPagination || !_.isBoolean(hasPagination)) {
+        const splittedPath = path.split("altrpdata.");
+        if(splittedPath.length > 1) {
+          options = getDataByPath(`altrpdata._options.${splittedPath[1]}`, [], this.props.element.getCurrentModel().getData())
+        }
+      }
     }
     if(! this.query || ! this.table_query || this.table_query !== this.props.element.getLockedSettings().table_query){
       this.table_query = this.props.element.getLockedSettings().table_query;
@@ -283,6 +296,7 @@ class TableWidget extends Component {
                       widgetState={isEditor() ? null : this.state.widgetState}
                       currentModel={this.props.currentModel}
                       currentScreen={this.props.currentScreen}
+                      options={options}
                       data={isEditor() ? null : (data || query.getFromModel(this.state.modelData))}
                       settings={this.props.element?.settings}/>
     {/*</React.Suspense>*/}

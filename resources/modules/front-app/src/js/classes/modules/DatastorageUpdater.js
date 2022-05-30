@@ -27,7 +27,7 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {Datasource[]} dataSources
    *  @param {boolean} initialUpdate
    */
-  async updateCurrent(dataSources = null, initialUpdate = true) {
+  async updateCurrent(dataSources = null, initialUpdate = true, newParams={}) {
     dataSources = dataSources.map(ds => {
       if(ds instanceof Datasource){
         return ds;
@@ -42,6 +42,7 @@ class DataStorageUpdater extends AltrpModel {
     if(!initialUpdate && !_.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
+
     if(! dataSources){
       dataSources = [];
     }
@@ -100,6 +101,7 @@ class DataStorageUpdater extends AltrpModel {
       let requests = groupedDataSources[groupPriority].map(async dataSource => {
         if (dataSource.getWebUrl()) {
           let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
+
           let defaultParams = _.cloneDeep(params);
           let needUpdateFromForms = false;
           _.each(params, (paramValue, paramName) => {
@@ -128,8 +130,12 @@ class DataStorageUpdater extends AltrpModel {
                 res = await (new Resource({ route: dataSource.getWebUrl() })).get(id);
               }
             } else if (!_.isEmpty(params)) {
-              res = await (new Resource({ route: dataSource.getWebUrl() })).getQueried(params);
-              dataSource.params = _.cloneDeep(params);
+                params = {
+                  ...params,
+                  ...newParams
+                }
+                res = await (new Resource({ route: dataSource.getWebUrl() })).getQueried(params);
+                dataSource.params = _.cloneDeep(params);
             } else {
               res = await (new Resource({ route: dataSource.getWebUrl() })).getAll();
             }
@@ -139,12 +145,11 @@ class DataStorageUpdater extends AltrpModel {
             }
             console.error(err);
           }
-          res = _.get(res, 'data', res);
           dataSources = dataSources.filter(ds => ds !== dataSource);
           if(! dataSources.length){
             this.setProperty('updated', true);
           }
-          appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
+          appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res, true));
           return res;
         }
       });

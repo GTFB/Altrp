@@ -154,9 +154,24 @@ class MapWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для map widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
-        <AltrpMap element={this.props.element} settings={this.state.settings} id={this.props.element.id} />
+        <AltrpMap element={this.props.element} classes={classes} settings={this.state.settings} id={this.props.element.id} />
     );
   }
 }

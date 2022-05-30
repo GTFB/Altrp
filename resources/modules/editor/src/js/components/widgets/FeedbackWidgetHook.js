@@ -4,7 +4,7 @@ import FeedbackWidgetHookComponent from "./FeedbackWidgetHookComponent";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 
-function FeedbackWidgetHook({settings, idWidget}) {
+function FeedbackWidgetHook({settings, idWidget, classes}) {
   const [state, setState] = useState({
     active: false,
     windowComments: [],
@@ -71,16 +71,17 @@ function FeedbackWidgetHook({settings, idWidget}) {
   }
 
 
+
   return (
     <>
-      <div ref={containerRef} className={settings.custom_position ? "feedback__container-сustom" : "feedback__container"}>
-        <button onClick={toggleClick} className={`feedback__button${state.active ? "-active" : ""}`}>
+      <div ref={containerRef} className={settings.custom_position ? `${classes} feedback__container-сustom` : `${classes} feedback__container`}>
+        <button onClick={toggleClick} className={`${classes} feedback__button${state.active ? "-active" : ""}`}>
           <Plus width={14} height={14}/>
-          <span className="feedback__text">{settings.frame_text_btn || "feedback"}</span>
+          <span className={`${classes} feedback__text`}>{settings.frame_text_btn || "feedback"}</span>
         </button>
       </div>
       {state.windowComments.map(item => (
-        <FeedbackWidgetHookComponent idWidget={idWidget} settings={settings} key={item.id} {...item} deleteComment={deleteComment}/>
+        <FeedbackWidgetHookComponent classes={classes} idWidget={idWidget} settings={settings} key={item.id} {...item} deleteComment={deleteComment}/>
       ))}
     </>
   );

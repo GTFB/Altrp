@@ -994,6 +994,22 @@ class InputSelectTreeWidget extends Component {
   onInteraction = (isOpen)=>{
     this.setState(state=>({...state, isOpen}))
   }
+
+  /**
+   * Получить css классы для input select tree
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+
   render() {
     const element = this.props.element;
     let label = null;
@@ -1043,6 +1059,9 @@ class InputSelectTreeWidget extends Component {
         classLabel = "";
         break;
     }
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+
 
     let content_label = this.props.element.getResponsiveLockedSetting("content_label")
     let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
@@ -1050,19 +1069,19 @@ class InputSelectTreeWidget extends Component {
     if (content_label || label_icon) {
       label = (
         <div
-          className={"altrp-field-label-container " + classLabel}
+          className={`${classes} altrp-field-label-container classLabel`}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
-              ? "altrp-field-label--required"
+            className={`${classes} altrp-field-label ${this.state.settings.content_required
+              ? `${classes} altrp-field-label--required`
               : ""
             }`}
           >
             {content_label}
           </label>
           {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
+            <span className={`${classes} altrp-label-icon`}>
               {renderAssetIcon(label_icon)}
             </span>
           )}
@@ -1082,8 +1101,6 @@ class InputSelectTreeWidget extends Component {
     };
 
     let input = null;
-
-    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
     const position_css_id = this.getLockedContent('position_css_id')
 
     let body = isEditor() ?
@@ -1096,11 +1113,12 @@ class InputSelectTreeWidget extends Component {
         fill={true}
         isOpen={this.state.isOpen}
         onInteraction={this.onInteraction}
-        popoverClassName={`altrp-select-tree_popover altrp-select-tree${this.props.element.getId()}`}
+        popoverClassName={`${classes} altrp-select-tree_popover altrp-select-tree${this.props.element.getId()}`}
         renderTarget={({isOpen, ref, ...targetProps}) => {
           targetProps.className += " altrp-select-tree-btn"
           return (
             <Button
+              className={classes}
               text={buttonLabel}
               fill
               disabled={content_readonly}
@@ -1119,7 +1137,7 @@ class InputSelectTreeWidget extends Component {
         interactionKind="click"
         placement="bottom"
         content={
-          <div className={"altrp-select-tree" + (position_css_classes ? ` ${position_css_classes}` : "")} id={position_css_id}>
+          <div className={`${classes} altrp-select-tree`} id={position_css_id}>
             {
               ! s_off ? (
                 <InputGroup
@@ -1149,7 +1167,7 @@ class InputSelectTreeWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={`${classes} altrp-field-container `}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

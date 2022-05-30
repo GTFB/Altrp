@@ -14,12 +14,20 @@ export const SET_CURRENT_DATASOURCE_LOADING = 'SET_CURRENT_DATASOURCE_LOADING';
  *     dataStorageName: {string},
  *   }
  */
-export function changeCurrentDataStorage(dataStorageName, data = {}) {
-  return {
+export function changeCurrentDataStorage(dataStorageName, data = {}, withOptions=false) {
+  const value = {
     type: CHANGE_CURRENT_DATASOURCE,
     data,
     dataStorageName
   };
+  if(withOptions) {
+    value.data = _.get(data, 'data', data);
+
+    delete data.data
+
+    value.options = data
+  }
+  return value
 }
 
 /**

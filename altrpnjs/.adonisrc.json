@@ -50,6 +50,10 @@
       "reloadServer": false
     },
     {
+      "pattern": "resources/customizers/**/*.json",
+      "reloadServer": false
+    },
+    {
       "pattern": "app/altrp-templates/**/*.stub",
       "reloadServer": false
     },

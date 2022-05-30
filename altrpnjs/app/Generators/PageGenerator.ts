@@ -69,7 +69,8 @@ export default class PageGenerator extends BaseGenerator {
       if(fs.existsSync(fileName)){
         let content = fs.readFileSync(fileName, {encoding:'utf8'})
         content = content.replace(/\n/g, '')
-        extraStyles.extra_header_styles += `<style>${content}</style>`
+        extraStyles.extra_header_styles += `
+<style id="extra_header_styles">${content}</style>`
       }
     }
     return extraStyles

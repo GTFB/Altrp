@@ -1,3 +1,18 @@
+import {iconsManager} from "../../../../../admin/src/js/helpers";
+
+const {
+  convertData,
+  isEditor,
+  parseOptionsFromSettings,
+  parseParamsFromString,
+  replaceContentWithData,
+  renderAssetIcon,
+  renderAsset,
+  getDataByPath,
+  Resource,
+  getDataFromLocalStorage
+} = window.altrpHelpers;
+
 import Resource from "../../classes/Resource";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import convertData from "../../../../../front-app/src/js/functions/convertData";
@@ -391,6 +406,25 @@ textarea.altrp-field {
 .altrp-field-select2 .altrp-field-select2__control {
   min-height: 14px;
 }
+
+.bp3-active .altrp-select-delete-icon path {
+  fill: #FFFFFF;
+
+}
+
+.altrp-select-delete-icon {
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.altrp-select-center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between
+}
+
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -420,6 +454,17 @@ class InputSelectWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+
+    let options = parseOptionsFromSettings(
+      props.element.getLockedSettings("content_options")
+    )
+
+    const content_options = props.element.getResponsiveLockedSetting('content_options');
+    const model_for_options = props.element.getResponsiveLockedSetting('model_for_options');
+    if (content_options?.indexOf('{{') === 0 && ! model_for_options) {
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], props.element.getCurrentModel())
+    }
+
     this.defaultValue =
       this.getLockedContent("content_default_value") ||
       (this.valueMustArray() ? [] : "");
@@ -429,9 +474,8 @@ class InputSelectWidget extends Component {
     this.state = {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getLockedSettings("content_options")
-      ),
+      options,
+      isOpen: false,
       paramsForUpdate: null,
     };
 
@@ -440,7 +484,6 @@ class InputSelectWidget extends Component {
       targetClassName: "altrp-select-popover",
       position: 'bottom',
       minimal: props.element.getResponsiveLockedSetting('minimal'),
-      // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
@@ -452,7 +495,11 @@ class InputSelectWidget extends Component {
       this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
 
+    this.popoverRef = React.createRef();
     this.inputRef = React.createRef();
+
+    this.onClick = this.onClick.bind(this)
+    this.checkOutsideClick = this.checkOutsideClick.bind(this)
   }
 
   /**
@@ -625,12 +672,6 @@ class InputSelectWidget extends Component {
     ) {
       this.updateOptions();
     }
-    // if (content_options && !model_for_options) {
-    //   let options = parseOptionsFromSettings(content_options);
-    //   if (!_.isEqual(options, this.state.options)) {
-    //     this.setState(state => ({...state, options}));
-    //   }
-    // }
     this.updateValue(prevProps);
   }
 
@@ -845,14 +886,23 @@ class InputSelectWidget extends Component {
     );
   }
 
-  async onItemSelect(value) {
+  async onItemSelect(value, e) {
     if (value.value !== undefined){
       value = value.value;
+    }
+
+    for(const el of e.nativeEvent.composedPath()) {
+      if(el.classList?.contains("altrp-select-delete-icon")) {
+        e.preventDefault()
+        return
+      }
     }
 
     if(value === -1) {
       value = null
     }
+
+    document.removeEventListener("click", this.checkOutsideClick)
 
     const options = this.getOptions();
     const element = this.props.element;
@@ -891,10 +941,11 @@ class InputSelectWidget extends Component {
           options,
         }))
     }
-    console.log(value);
+
     this.setState(state => ({
         ...state,
-        value
+        value,
+        isOpen: false
       }),
       () => {
         /**
@@ -921,10 +972,12 @@ class InputSelectWidget extends Component {
     const content_options = this.props.element.getResponsiveLockedSetting('content_options');
     const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)) {
-      if (content_options.indexOf('{{') === 0 && ! model_for_options) {
-        options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
-      } else {
-        options = parseOptionsFromSettings(this.props.element.getLockedSettings("content_options"));
+      if(isEditor()) {
+        if (content_options?.indexOf('{{') === 0 && ! model_for_options) {
+          options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
+        } else {
+          options = parseOptionsFromSettings(this.props.element.getLockedSettings("content_options"));
+        }
       }
 
       if( ! _.isArray(options)){
@@ -948,7 +1001,6 @@ class InputSelectWidget extends Component {
         value: '',
       })
     }
-
     return options;
   }
 
@@ -1056,11 +1108,47 @@ class InputSelectWidget extends Component {
       {renderAsset(left_icon)}
     </span>
   }
+
+  checkOutsideClick(e) {
+    for(const el of e.composedPath()) {
+      if(el.classList?.contains("bp3-button")) {
+        e.preventDefault()
+        return
+      }
+    }
+
+    for(const el of e.composedPath()) {
+      if(el.classList?.contains("bp3-popover")) {
+        e.preventDefault()
+        return
+      }
+    }
+
+    document.removeEventListener("click", this.checkOutsideClick)
+    this.setState((s) => ({
+      ...s,
+      isOpen: false
+    }))
+  }
+
   /**
    * Обработка клика по кнопке
    * @return {Promise<void>}
    */
-  onClick = async ()=>{
+  async onClick() {
+
+    this.setState((s) => ({
+        ...s,
+        isOpen: !s.isOpen
+    }), () => {
+      if(this.state.isOpen) {
+        document.addEventListener("click", this.checkOutsideClick)
+      } else {
+        document.removeEventListener("click", this.checkOutsideClick)
+      }
+    })
+
+
     if (this.props.element.getLockedSettings("click_actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
@@ -1076,6 +1164,11 @@ class InputSelectWidget extends Component {
       );
     }
   }
+
+  componentWillUnmount() {
+    // document.removeEventListener("click", this.checkOutsideClick)
+  }
+
   /**
    * Создаем элемент из поисковой строки
    * @param title
@@ -1154,6 +1247,52 @@ class InputSelectWidget extends Component {
       this.searchOnPending = false;
     }
   }
+
+  /**
+   * Получить css классы для input select
+   */
+  getClasses = ()=>{
+    let classes = ` `;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
+  async deleteItem(value) {
+    const deleteActions = this.props.element.getLockedSettings("delete_actions");
+
+    const actionsManager = (
+      await import(
+        /* webpackChunkName: 'ActionsManager' */
+        "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+        )
+    ).default;
+
+    this.props.element.getCurrentModel().setProperty('value', value);
+
+    const action = await actionsManager.callAllWidgetActions(
+      this.props.element.getIdForAction(),
+      "search",
+      deleteActions,
+      this.props.element
+    );
+
+    if(action.success) {
+      let options = this.getOptions();
+
+      options = options.filter((elem) => elem.value !== value);
+
+      this.setState(s => ({
+        ...s,
+        options
+      }))
+    }
+  }
+
   render() {
 
     const element = this.props.element;
@@ -1257,28 +1396,55 @@ class InputSelectWidget extends Component {
     let input = null;
 
     let itemsOptions = this.getOptions();
-    const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
+    let classes =
+      this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "");
+    // const position_css_classes = element.getResponsiveLockedSetting('position_css_classes', '', '')
     const position_css_id = this.getLockedContent('position_css_id')
 
+    const hasDeleteActions = this.props.element.getLockedSettings("delete_actions", []).length > 0
 
     input = (
         <Select
           inputProps={inputProps}
           disabled={content_readonly}
-          popoverProps={this.popoverProps}
+          popoverProps={{
+            ...this.popoverProps,
+            isOpen: this.state.isOpen,
+            popoverRef: this.popoverRef
+          }}
           createNewItemFromQuery={element.getResponsiveLockedSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}
           itemRenderer={(item, {handleClick, modifiers, query}) => {
             if (!modifiers.matchesPredicate) {
               return null;
             }
+
             return <MenuItem
-              text={<span dangerouslySetInnerHTML={{__html: item.label}}/>}
-              key={item.value}
+              text={<div className="altrp-select-center">
+                <div className="altrp-select-center" dangerouslySetInnerHTML={{__html: item.label}}/>
+                {
+                  hasDeleteActions ? (
+                    <div className="altrp-select-delete-icon" onClick={() => this.deleteItem(item.value)}>
+                      {
+                        iconsManager().renderIcon('close')
+                      }
+                    </div>
+                  ) : ""
+                }
+              </div>}
               active={item.value === this.getValue()}
-              label={item.rightLabel || ''}
+              key={item.value}
               disabled={modifiers.disabled || item.disabled}
-              onClick={handleClick}
+              onClick={(e) => {
+                for(const el of e.nativeEvent.composedPath()) {
+                  if(el.classList?.contains("altrp-select-delete-icon")) {
+                    e.preventDefault()
+                    return
+                  }
+                }
+
+                handleClick(e)
+              }}
             />
           }}
           itemPredicate={(query, item) => {
@@ -1292,9 +1458,9 @@ class InputSelectWidget extends Component {
           // itemRenderer={({label})=>label}
           noResults={<MenuItem disabled={true} text={no_results_text}/>}
           name={this.getName()}
-          onItemSelect={item => this.onItemSelect(item)}
+          onItemSelect={(item, e) => this.onItemSelect(item, e)}
           id={position_css_id}
-          className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
+          className={classes}
         >
           <Button
             // text={value}

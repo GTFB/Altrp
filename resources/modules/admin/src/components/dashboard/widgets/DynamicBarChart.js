@@ -42,7 +42,8 @@ const DynamicBarChart = ({
   maxValue,
   minValue,
   currency,
-  borderColor
+  borderColor,
+  classes
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -79,11 +80,12 @@ const DynamicBarChart = ({
     customProps.arcLabel = addCurrencyToLabel(currency)
     customProps.tooltipFormat = addCurrencyToLabel(currency)
   }
-  
+
   return (
     <>
-      <div style={{ height, width }}>
+      <div style={{ height, width }} className={classes}>
         <ResponsiveBar
+          className={classes}
           data={data}
           margin={{
             top: margin?.top || 30,

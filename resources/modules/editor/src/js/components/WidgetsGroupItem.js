@@ -25,7 +25,6 @@ function WidgetsGroupItem(props) {
         <div className="widgets">
           {props.widgets.filter(item => {
             if(!item.getGroup){
-              console.log(item);
               return false
             }
             return item.getGroup() === props.name

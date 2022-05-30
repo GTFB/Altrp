@@ -158,6 +158,20 @@ class StarsWidget extends Component {
     return value;
   }
 
+  /**
+   * Получить css классы для stars widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     const countNumber = parseInt(this.props.element.getLockedContent("count")?.size) || 1;
     const count = new Array(countNumber).fill("", 0, countNumber);
@@ -169,9 +183,9 @@ class StarsWidget extends Component {
     } else {
       visualValue = 0
     }
-
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
-      <StarsList className="altrp-stars-list">
+      <StarsList className={`${classes} altrp-stars-list`}>
         {
           count.map((count, idx) => {
             let active = value-1 >= idx
@@ -182,7 +196,7 @@ class StarsWidget extends Component {
 
             return <Star
               onClick={() => this.handleClick(idx)}
-              className={"altrp-stars-star" + (active ? " active" : "") + (!this.state.changed ? " altrp-stars-visual" : "")}
+              className={`${classes} altrp-stars-star` + (active ? " active" : "") + (!this.state.changed ? " altrp-stars-visual" : "")}
               acitve={active}
               key={idx}
             >

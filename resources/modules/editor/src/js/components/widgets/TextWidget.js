@@ -81,7 +81,23 @@ class TextWidget extends Component {
     this.props.element.templateNeedUpdate();
   }
 
+  /**
+   * Получить css классы для text widget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
+    let classes =
+      this.getClasses() + (this.state.settings.position_css_classes || "") //text_position_css_classes
     let tooltip = (
       <Tooltip
         switch={this.state.settings.text_advanced_tooltip_active || false}
@@ -104,7 +120,7 @@ class TextWidget extends Component {
     textContent = isEditor() ?textContent: replaceContentWithData(textContent)
     if (this.props.CKEditor) {
       return (
-        <div className={"altrp-text " + (this.state.settings.position_css_classes || "")}
+        <div className={`${classes} altrp-text `}
              onKeyDown={e=>e.stopPropagation()}
              id={this.state.settings.position_css_id}>
           <this.props.CKEditor
@@ -119,8 +135,8 @@ class TextWidget extends Component {
 
     return React.createElement("div", {
       className:
-        "altrp-text ck ck-content " +
-        this.state.settings.text_position_css_classes,
+        `${classes} altrp-text ck ck-content ` +
+        this.state.settings.text_position_css_classes || "",
       id: this.state.settings.text_position_css_id || "",
       onMouseOver: tooltipActive,
       dangerouslySetInnerHTML: {
