@@ -1,3 +1,4 @@
+import * as mustache from 'mustache'
 import md5 from 'md5'
 import {DateTime} from 'luxon'
 import {
@@ -583,6 +584,7 @@ export default class Page extends BaseModel {
       styles += `
 <style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
     }
+    styles = mustache.render(styles, {})
 
     return styles
   }

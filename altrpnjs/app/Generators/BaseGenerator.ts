@@ -64,6 +64,8 @@ export abstract class BaseGenerator{
       fileName += '.css'
     }
     fileName = Application.publicPath(`altrp/css/${fileName}`)
+    content = mustache.render(content,{})
+
     if(! fs.existsSync(Application.publicPath(`altrp/css/`))){
       fs.mkdirSync(Application.publicPath(`altrp/css/`), {recursive:true})
     }

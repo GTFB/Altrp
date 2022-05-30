@@ -297,7 +297,6 @@ class AdminBar extends React.Component {
       return '';
     }
 
-    console.log(this.state.contentResult)
     return (
       <AdminBarWrapper>
         <div className={"admin-bar bvi-hide " + (this.state.barIsOpened ? '' : 'closed')}>
