@@ -60,6 +60,7 @@ import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-st
 
 window.React = React;
 window.ReactDOM = ReactDOM;
+window.Link = Link;
 window.Component = React.Component;
 getAPiToken();
 class Admin extends Component {
