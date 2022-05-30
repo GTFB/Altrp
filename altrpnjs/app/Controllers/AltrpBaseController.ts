@@ -91,7 +91,7 @@ export default class AltrpBaseController {
     DiscordBot.send(content)
   }
 
-  protected async sendNotification() {
+  public async sendNotification() {
     const messageData = _.get(this.customizerData, "message")
     const content = JSON.parse(replaceContentWithData(messageData.content, this.customizerData))
     const entitiesData = JSON.parse(messageData.entitiesData)
@@ -117,7 +117,8 @@ export default class AltrpBaseController {
     const httpContext = _.get(this.customizerData, "httpContext");
 
     if(controller[customizer.name]) {
-      return await controller[customizer.name](httpContext)
+      console.log(await controller[customizer.name](httpContext))
+      return controller[customizer.name](httpContext)
     } else {
       return {
         message: "customizer name invalid",

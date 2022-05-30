@@ -72,11 +72,21 @@
     width: 150px;
 }
 
+.admin_input_key_select {
+  height: 35px;
+}
+
 // Admin Settings telegram
 .admin_settings_telegram{
     display: flex;
-    align-items: center;
+    justify-content: center;
     margin-top: 20px;
+
+    flex-direction: column;
+
+    & .admin_input {
+      margin-bottom: 10px;
+    }
 
     .admin_input__label{
         font-weight: 700;
