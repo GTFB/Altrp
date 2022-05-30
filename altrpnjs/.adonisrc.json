@@ -50,6 +50,10 @@
       "reloadServer": false
     },
     {
+      "pattern": "resources/customizers/**/*.json",
+      "reloadServer": false
+    },
+    {
       "pattern": "app/altrp-templates/**/*.stub",
       "reloadServer": false
     },
@@ -59,26 +63,6 @@
     },
     {
       "pattern": "../public/modules/*",
-      "reloadServer": false
-    },
-    {
-      "pattern": "resources/customizers/delete.json",
-      "reloadServer": false
-    },
-    {
-      "pattern": "resources/customizers/get.json",
-      "reloadServer": false
-    },
-    {
-      "pattern": "resources/customizers/getById.json",
-      "reloadServer": false
-    },
-    {
-      "pattern": "resources/customizers/post.json",
-      "reloadServer": false
-    },
-    {
-      "pattern": "resources/customizers/put.json",
       "reloadServer": false
     }
   ]

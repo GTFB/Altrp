@@ -47,7 +47,6 @@ export class TelegramBot {
       global.telegramBot.start((ctx) => {
         const id = ctx.message.chat.id;
         const username = ctx.message.from.username;
-
         User.query().where("telegram_user_id", username).orWhere("telegram_user_id", "@" + username).first().then((user) => {
           if(user) {
             console.log(user, "user in start")
