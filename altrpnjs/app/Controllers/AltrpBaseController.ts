@@ -102,7 +102,7 @@ export default class AltrpBaseController {
       start_text: messageData.start_text,
       content
     }, messageData);
-    await notification.send(users, this.customizerData)
+    await notification.send(users)
   }
 
   protected async execCustomizer(name) {

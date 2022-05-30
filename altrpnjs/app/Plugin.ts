@@ -449,6 +449,7 @@ export default class Plugin {
     archive.extractAllTo(this.getPath(), true)
 
     fs.removeSync(temp_path)
+    await this.callUpdateHooks()
     return true
   }
 
@@ -539,6 +540,10 @@ export default class Plugin {
 
   async callDeactivationHooks() {
     await this.getAndCallHooks('deactivate')
+  }
+
+  async callUpdateHooks() {
+    await this.getAndCallHooks('update')
   }
 
 }

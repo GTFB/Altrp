@@ -1,6 +1,5 @@
 import User from "App/Models/User";
 import Ws from "./Ws"
-import TelegramBot from "App/Services/TelegramBot";
 
 export default class Notification {
   data;
@@ -12,7 +11,7 @@ export default class Notification {
     this.data = messageData;
   }
 
-  send(users: User[], customizerData) {
+  send(users: User[], ) {
     switch (this.data.channel) {
       case "broadcast":
         users.forEach((user) => {
