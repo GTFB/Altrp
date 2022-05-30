@@ -65,10 +65,10 @@ export {default as getTimeValue} from "./functions/getTimeValue";
 export {default as startOfMonth} from "./functions/startOfMonth";
 export {default as startOfYear} from "./functions/startOfYear";
 export {default as isEditor} from "./functions/isEditor";
+export {default as CONDITIONS_OPTIONS} from "./constants/CONDITIONS_OPTIONS";
 export {getResponsiveSetting} from "./functions/getResponsiveSetting";
 
 
-export const CONDITIONS_OPTIONS = _CONDITIONS_OPTIONS
 
 
 /**
