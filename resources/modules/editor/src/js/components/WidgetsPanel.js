@@ -4,47 +4,60 @@ import Scrollbars from "react-custom-scrollbars";
 import {connect} from "react-redux";
 import Search from '../../svgs/search-editor.svg'
 import WidgetsGroupItem from "./WidgetsGroupItem";
-
+const defaultGroups = [{
+  name: 'activeGroupBasic',
+  title: 'Basic',
+},{
+  name: 'activeGroupForm',
+  title: 'Form'
+},{
+  name: 'activeGroupAdvanced',
+  title: 'Advanced'
+},{
+  name: 'activeGroupDiagrams',
+  title: 'Diagrams'
+},
+]
 class WidgetsPanel extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeGroupBasic: true,
-      activeGroupForm: true,
-      activeGroupAdvanced: true,
-      activeGroupDiagrams: true,
-      searchWidgets: ''
+      activeGroup: 'activeGroupBasic',
+      searchWidgets: '',
+      groups:defaultGroups
     }
   }
 
-  toggleGroups = (e) => {
-    switch (e.currentTarget.dataset.group) {
-      case 'Basic':
-        this.setState(state => ({
-          ...state,
-          activeGroupBasic: !this.state.activeGroupBasic
-        }))
-        break
-      case 'Form':
-        this.setState(state => ({
-          ...state,
-          activeGroupForm: !this.state.activeGroupForm
-        }))
-        break
-      case 'Advanced':
-        this.setState(state => ({
-          ...state,
-          activeGroupAdvanced: !this.state.activeGroupAdvanced
-        }))
-        break
-      case 'Diagrams':
-        this.setState(state => ({
-          ...state,
-          activeGroupDiagrams: !this.state.activeGroupDiagrams
-        }))
-        break
+  toggleGroups = (name) => {
+    this.setState(state=>({...state, activeGroup: name}))
+  }
+  componentDidMount(){
+    this.updateGroups()
+  }
+  updateGroups(){
+    let additionalGroups = []
+    const elements = this.props.elements
+    for (let elem in elements){
+      if(elements.hasOwnProperty(elem) && elements[elem].getGroup){
+        if(defaultGroups.map(g=>g.title).indexOf(elements[elem].getGroup()) === -1){
+          console.log(elements[elem].getGroup());
+          additionalGroups.push(elements[elem].getGroup())
+        }
+
+      }
     }
+    console.log(additionalGroups);
+
+    additionalGroups = _.uniq(additionalGroups)
+    additionalGroups = additionalGroups.map(ag=>({name: ag, title: ag}))
+    let groups = [...this.state.groups, ...additionalGroups]
+    this.setState(state=>({...state, groups}))
+  }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+   if(prevProps.elements !== this.props.elements){
+     this.updateGroups()
+   }
   }
 
   changeSearch = (e) => {
@@ -56,6 +69,7 @@ class WidgetsPanel extends Component {
 
   render() {
     const {elements} = this.props
+    const {groups, activeGroup} = this.state
     let widgets = []
 
     for (let elementName in elements) {
@@ -63,12 +77,12 @@ class WidgetsPanel extends Component {
         elements.hasOwnProperty(elementName) &&
         elements[elementName].getType() === "widget"
       ) {
+        console.log(elements[elementName].getType());
         widgets.push(elements[elementName]);
       }
     }
 
     let widgetsFilter = widgets.filter(item => item.getTitle().toLowerCase().includes(this.state.searchWidgets.toLowerCase()))
-
     return (
       <div className="widget-panel-wrapper">
         <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
@@ -78,36 +92,17 @@ class WidgetsPanel extends Component {
               <Search className='search-icon'/>
             </div>
             {this.state.searchWidgets === '' ? (
-               <>
-                 <WidgetsGroupItem
-                   widgets={widgets}
-                   activeGroup={this.state.activeGroupBasic}
-                   toggleGroups={this.toggleGroups}
-                   name={'Basic'}
-                 />
-
-                 <WidgetsGroupItem
-                   widgets={widgets}
-                   activeGroup={this.state.activeGroupForm}
-                   toggleGroups={this.toggleGroups}
-                   name={'Form'}
-                 />
-
-                 <WidgetsGroupItem
-                   widgets={widgets}
-                   activeGroup={this.state.activeGroupAdvanced}
-                   toggleGroups={this.toggleGroups}
-                   name={'Advanced'}
-                 />
-
-                 <WidgetsGroupItem
-                   widgets={widgets}
-                   activeGroup={this.state.activeGroupDiagrams}
-                   toggleGroups={this.toggleGroups}
-                   name={'Diagrams'}
-                 />
-
-               </>
+              <>
+              {groups.map(gr=>{
+                return <WidgetsGroupItem
+                  key={gr.name}
+                  widgets={widgets}
+                  activeGroup={activeGroup === gr.name}
+                  toggleGroups={()=>this.toggleGroups(gr.name)}
+                  name={gr.title}
+                />
+              })}
+              </>
             ) : (
               <>
                   {

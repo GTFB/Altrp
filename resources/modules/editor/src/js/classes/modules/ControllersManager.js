@@ -31,42 +31,77 @@ import SqlSelectController from "../../components/controllers/SqlSelectControlle
 import SqlAsParamsController from "../../components/controllers/SqlAsParamsController";
 import EventSelectController from "../../components/controllers/EventSelectController";
 import ElementChooseController from "../../components/controllers/ElementChooseController";
-
+window.CONTROLLERS = window.CONTROLLERS || {}
 export const TAB_CONTENT = "content";
+window.CONTROLLERS.TAB_CONTENT = TAB_CONTENT
 export const TAB_STYLE = "style";
+window.CONTROLLERS.TAB_STYLE = TAB_STYLE
 export const TAB_ADVANCED = "advanced";
+window.CONTROLLERS.TAB_ADVANCED = TAB_ADVANCED
 export const CONTROLLER_TEXTAREA = "textarea";
+window.CONTROLLERS.CONTROLLER_TEXTAREA = CONTROLLER_TEXTAREA
 export const CONTROLLER_DATE = "date";
+window.CONTROLLERS.CONTROLLER_DATE = CONTROLLER_DATE
 export const CONTROLLER_RANGE = "range";
+window.CONTROLLERS.CONTROLLER_RANGE = CONTROLLER_RANGE
 export const CONTROLLER_WYSIWYG = "wysiwyg";
+window.CONTROLLERS.CONTROLLER_WYSIWYG = CONTROLLER_WYSIWYG
 export const CONTROLLER_TEXT = "text";
+window.CONTROLLERS.CONTROLLER_TEXT = CONTROLLER_TEXT
 export const CONTROLLER_NUMBER = "number";
+window.CONTROLLERS.CONTROLLER_NUMBER = CONTROLLER_NUMBER
 export const CONTROLLER_SWITCHER = "switcher";
+window.CONTROLLERS.CONTROLLER_SWITCHER = CONTROLLER_SWITCHER
 export const CONTROLLER_DIMENSIONS = "dimensions";
+window.CONTROLLERS.CONTROLLER_DIMENSIONS = CONTROLLER_DIMENSIONS
 export const CONTROLLER_SELECT = "select";
+window.CONTROLLERS.CONTROLLER_SELECT = CONTROLLER_SELECT
 export const CONTROLLER_CHOOSE = "choose";
+window.CONTROLLERS.CONTROLLER_CHOOSE = CONTROLLER_CHOOSE
 export const CONTROLLER_SLIDER = "slider";
+window.CONTROLLERS.CONTROLLER_SLIDER = CONTROLLER_SLIDER
 export const CONTROLLER_SELECT2 = "select2";
+window.CONTROLLERS.CONTROLLER_SELECT2 = CONTROLLER_SELECT2
 export const CONTROLLER_LINK = "link";
+window.CONTROLLERS.CONTROLLER_LINK = CONTROLLER_LINK
 export const CONTROLLER_COLOR = "color";
+window.CONTROLLERS.CONTROLLER_COLOR = CONTROLLER_COLOR
 export const CONTROLLER_MEDIA = "media";
+window.CONTROLLERS.CONTROLLER_MEDIA = CONTROLLER_MEDIA
 export const CONTROLLER_BUTTON = "button";
+window.CONTROLLERS.CONTROLLER_BUTTON = CONTROLLER_BUTTON
 export const CONTROLLER_HEADING = "heading";
+window.CONTROLLERS.CONTROLLER_HEADING = CONTROLLER_HEADING
 export const CONTROLLER_CSSEDITOR = "css-editor";
+window.CONTROLLERS.CONTROLLER_CSSEDITOR = CONTROLLER_CSSEDITOR
 export const CONTROLLER_SHADOW = "shadow";
+window.CONTROLLERS.CONTROLLER_SHADOW = CONTROLLER_SHADOW
 export const CONTROLLER_TRANSFORM = "transform";
+window.CONTROLLERS.CONTROLLER_TRANSFORM = CONTROLLER_TRANSFORM
 export const CONTROLLER_TYPOGRAPHIC = "typographic";
+window.CONTROLLERS.CONTROLLER_TYPOGRAPHIC = CONTROLLER_TYPOGRAPHIC
 export const CONTROLLER_REPEATER = "repeater";
+window.CONTROLLERS.CONTROLLER_REPEATER = CONTROLLER_REPEATER
 export const CONTROLLER_QUERY = "query";
+window.CONTROLLERS.CONTROLLER_QUERY = CONTROLLER_QUERY
 export const CONTROLLER_FILTERS = "filters";
+window.CONTROLLERS.CONTROLLER_FILTERS = CONTROLLER_FILTERS
 export const CONTROLLER_COLWIDTH = "colwidth";
+window.CONTROLLERS.CONTROLLER_COLWIDTH = CONTROLLER_COLWIDTH
 export const CONTROLLER_GRADIENT = "gradient";
+window.CONTROLLERS.CONTROLLER_GRADIENT = CONTROLLER_GRADIENT
 export const CONTROLLER_SQL = "sql";
+window.CONTROLLERS.CONTROLLER_SQL = CONTROLLER_SQL
 export const CONTROLLER_SQL_PARAMS = "sql-params";
+window.CONTROLLERS.CONTROLLER_SQL_PARAMS = CONTROLLER_SQL_PARAMS
 export const CONTROLLER_CREATIVE_LINK = "creative-link";
+window.CONTROLLERS.CONTROLLER_CREATIVE_LINK = CONTROLLER_CREATIVE_LINK
 export const CONTROLLER_CREATIVE_HOVER = "creative-hover";
+window.CONTROLLERS.CONTROLLER_CREATIVE_HOVER = CONTROLLER_CREATIVE_HOVER
 export const CONTROLLER_EVENT_HANDLER = "event-handler";
+window.CONTROLLERS.CONTROLLER_EVENT_HANDLER = CONTROLLER_EVENT_HANDLER
 export const CONTROLLER_ELEMENTS = "elements";
+window.CONTROLLERS.CONTROLLER_ELEMENTS = CONTROLLER_ELEMENTS
 
 class ControllersManager {
   constructor() {
@@ -120,10 +155,10 @@ class ControllersManager {
 
   registerControls() {
     let elementClasses = window.appStore.getState().widgetsManager.elements;
-    
+
     this.elementsControls = {};
     for (let elementClassName in elementClasses) {
-      if (elementClasses.hasOwnProperty(elementClassName)) {
+      if (elementClasses.hasOwnProperty(elementClassName) && ! this.elementsControls[elementClassName]) {
         this.elementsControls[elementClassName] = new elementClasses[
           elementClassName
         ]().getControls();
@@ -134,6 +169,7 @@ class ControllersManager {
     if (!this.elementsControls) {
       this.registerControls();
     }
+
     return this.elementsControls[elementName];
   }
 
