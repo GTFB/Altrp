@@ -17,6 +17,13 @@ export default class SettingsController {
       return response.json({})
     }
 
+    try {
+      await set_altrp_setting(params.setting_name, request.input('value'), request.input('encrypt'))
+    } catch (e) {
+      logger.error(e.message)
+      return response.json({})
+    }
+
     if(params.setting_name === "telegram_bot_token") {
       await TelegramBot.startBotFromSettings(request.input('value'), null, null, httpContext)
     } else if(params.setting_name === "telegram_bot_webhook") {
@@ -25,14 +32,7 @@ export default class SettingsController {
       await TelegramBot.startBotFromSettings(null, null, request.input('value'), httpContext)
     }
 
-    try {
-      set_altrp_setting(params.setting_name, request.input('value'), request.input('encrypt'))
-    } catch (e) {
-      logger.error(e.message)
-      return response.json({})
-    }
     return response.json({result: true})
-
   }
 
   getSettings({params, response, request}: HttpContextContract) {
