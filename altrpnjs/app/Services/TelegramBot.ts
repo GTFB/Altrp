@@ -19,7 +19,7 @@ export class TelegramBot {
   // markup = []
   // keyboard
 
-  constructor(token, webhook, keyboard, updated, httpContext: null|HttpContextContract=null) {
+  constructor(token, webhook, keyboard, updated="", httpContext: null|HttpContextContract=null) {
     if(httpContext) {
       this.httpContext = httpContext
     }
@@ -385,4 +385,4 @@ export class TelegramBot {
   }
 }
 
-export default new TelegramBot(Env.get("ALTRP_SETTING_TELEGRAM_BOT_TOKEN"), Env.get("ALTRP_SETTING_TELEGRAM_BOT_WEBHOOK"), get_altrp_setting("telegram_bot_keyboard", "", true))
+export default new TelegramBot(Env.get("ALTRP_SETTING_TELEGRAM_BOT_TOKEN"), Env.get("ALTRP_SETTING_TELEGRAM_BOT_WEBHOOK"), get_altrp_setting("telegram_bot_keyboard", "", true), "", null)
