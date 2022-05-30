@@ -41,15 +41,17 @@ class ElementContextMenu extends Component {
    }
 
   handleKeyDown = (e) => {
-    e.preventDefault()
     let charCode = String.fromCharCode(e.which).toLowerCase()
     if((e.ctrlKey || e.metaKey) && charCode === 's') {
+      e.preventDefault()
       if (window.appStore.getState().templateStatus.status !== 'TEMPLATE_UPDATED') {
         getEditor().modules.saveImportModule.saveTemplate()
       }
     }else if((e.ctrlKey || e.metaKey) && charCode === 'c') {
+      e.preventDefault()
       this.onSelectItem(null, window.appStore.getState().currentElement.currentElement.toObject())
     }else if((e.ctrlKey || e.metaKey) && charCode === 'v') {
+      e.preventDefault()
       this.onPasteElement(e)
     }
    }

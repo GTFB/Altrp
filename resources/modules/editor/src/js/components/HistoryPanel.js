@@ -199,7 +199,7 @@ const RevisionTabContent = () => {
         new: _.cloneDeep(getTemplateDataStorage().rootElement)
       })
     );
-    
+
     window.parent.appStore.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     getEditor().showWidgetsPanel();
   };

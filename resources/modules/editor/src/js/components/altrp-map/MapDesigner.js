@@ -24,7 +24,7 @@ import ModalControl from "./ModalControl";
 import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
-import { isEditor } from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import MarkerCluster from "./MarkerCluster";
 
 function noob() {}

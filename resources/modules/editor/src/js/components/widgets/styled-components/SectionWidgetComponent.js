@@ -1,4 +1,4 @@
-const { getResponsiveSetting } = window.altrpHelpers;
+import {getResponsiveSetting} from "../../../../../../front-app/src/js/functions/getResponsiveSetting"
 import {
   simplePropertyStyled,
   borderWidthStyled,

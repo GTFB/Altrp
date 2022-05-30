@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { iconsManager } from "../../../../../admin/src/js/helpers";
-import { isEditor, renderAsset } from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import iconsManager from "../../../../../front-app/src/js/functions/iconsManager";
 
 class AltrpInputFile extends Component {
   constructor(props) {

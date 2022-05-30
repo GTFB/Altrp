@@ -124,11 +124,7 @@ export default class ElementRenderer {
       allow_end_tag = `@end~`
     }
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
-    {{{getResponsiveSetting(element${this.getId()}_settings, 'en_an', screen)
-      ? \`data-enter-animation-type="\${getResponsiveSetting(element${this.getId()}_settings, 'en_an', device)}"
-      data-enter-animation-delay="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_delay', device, 0)}"
-      \`
-      : ''}}}
+
       ${reactElement ? `data-react-element="${this.getId()}"` : ''}
     {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'wrapper_click_actions', device)) ? '' : 'data-altrp-wrapper-click-actions="${this.getIdForAction()}"' }}}
     {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'wrapper_appearB_actions', device)) ? '' : 'data-altrp-wrapper-appear-bottom-actions="${this.getIdForAction()}"' }}}

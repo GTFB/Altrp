@@ -1,6 +1,7 @@
 import AltrpLink from "../altrp-link/AltrpLink";
-import { isEditor, parseURLTemplate } from "../../../../../front-app/src/js/helpers";
-import Animating from "../altrp-heading/Animating";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-heading {

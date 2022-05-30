@@ -1,17 +1,11 @@
 import {matchSorter} from "match-sorter";
-
-const {
-  convertData,
-  isEditor,
-  parseOptionsFromSettings,
-  parseParamsFromString,
-  replaceContentWithData,
-  renderAssetIcon,
-  renderAsset,
-  getDataByPath,
-  Resource,
-  getDataFromLocalStorage
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import convertData from "../../../../../front-app/src/js/functions/convertData";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import React from "react";
 import recurseEach from "../../helpers/recurse-each";

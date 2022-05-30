@@ -1,7 +1,6 @@
-import {
-  getDataByPath,
-  isEditor, parseURLTemplate
-} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import AltrpImage from "../altrp-image/AltrpImage";
 
 (window.globalDefaults = window.globalDefaults || []).push(`

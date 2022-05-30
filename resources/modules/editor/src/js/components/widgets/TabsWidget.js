@@ -1,7 +1,5 @@
-const {
-  TemplateLoader,
-  renderAssetIcon,
-} = window.altrpHelpers;
+import TemplateLoader from "../template-loader/TemplateLoader";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
 const {Tab, Tabs} = window.altrpLibs.Blueprint;
 (window.globalDefaults = window.globalDefaults || []).push(`
 

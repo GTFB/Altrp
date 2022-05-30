@@ -2,8 +2,7 @@ import delay from '../functions/delay';
 import AdminBarWrapper from './AdminBarWrapper';
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Scrollbars from "react-custom-scrollbars";
-
-const {getDataByPath}= window.altrpHelpers;
+import getDataByPath from "../functions/getDataByPath";
 
 class AdminBar extends React.Component {
   constructor(props) {
@@ -229,7 +228,7 @@ class AdminBar extends React.Component {
   }
 
   logout = async () => {
-    const res = await new window.altrpHelpers.Resource({route:'/logout'}).post();
+    const res = await new Resource({route:'/logout'}).post();
     location.reload();
   }
 

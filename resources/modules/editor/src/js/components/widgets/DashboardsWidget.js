@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCurrentBreakpoint } from "../../../../../front-app/src/js/helpers";
+import getCurrentBreakpoint from "../../../../../front-app/src/js/functions/getCurrentBreakpoint";
 
 import AltrpDashboards from "../altrp-dashboards/AltrpDashboards"
 

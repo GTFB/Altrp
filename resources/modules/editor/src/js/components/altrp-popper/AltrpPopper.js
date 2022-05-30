@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState, useMemo} from "react";
 import ReactDOM from "react-dom";
 import {usePopper} from "react-popper";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import { usePrevious } from "../../../../../front-app/src/js/helpers/react";
 
 export default function AltrpPopper(props) {

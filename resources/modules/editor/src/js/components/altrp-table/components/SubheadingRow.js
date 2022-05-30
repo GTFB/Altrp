@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
 import {
   dimensionsControllerToStyles,
   typographicControllerToStyles
@@ -27,7 +27,7 @@ ${
       return '';
     }
     const {
-      cell_alignment, 
+      cell_alignment,
       padding,
       color,
       bg_color,
@@ -52,9 +52,9 @@ ${
     if(bg_color?.color){
       stringStyles += `background-color: ${bg_color.color};`;
     }
-    
+
     stringStyles += `}&.altrp-table-tr .altrp-table-td:hover{`;
-    
+
     const cell_alignment_hover = styles['cell_alignment_:hover_'];
     const padding_hover = styles['padding_:hover_'];
     const color_hover = styles['color_:hover_'];

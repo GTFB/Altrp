@@ -1,10 +1,11 @@
 import React, { useState, } from "react";
 import {useTable, } from "react-table";
 import ('../../../sass/altrp-pagination.scss');
-import {
-  isEditor, mbParseJSON,
-  parseURLTemplate, renderAsset, replaceContentWithData
-} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import mbParseJSON from "../../../../../front-app/src/js/functions/mb-parse-JSON";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";

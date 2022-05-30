@@ -52,6 +52,7 @@ import MainSvg from "../../../svgs/main-v2.svg";
 import DropletSvg from "../../../svgs/droplet-new.svg";
 import React from "react";
 import LayoutSvg from "../../../svgs/layout-v2.svg";
+import getAltrpLang from "../../helpers/get-altrp-lang";
 
 const updateModels = async () => {
   let options = await new Resource({ route: "/admin/ajax/model_options" }).getAll()
@@ -88,7 +89,7 @@ const defaultState = [
   { path: "/admin/areas", component: <Areas />, exact: false},
   { path: "/admin/menus/:id", component: <MenuPage />, exact: false},
   { path: "/admin/menus", component: <MenusList />, exact: false},
-  { path: "/admin/robots", component: <Robots />, exact: false},
+  { path: "/admin/robots", component: getAltrpLang() === "javascript" ? null : <Robots />, exact: false},
   { path: "/admin/customizers", component: <Customizer />, exact: false},
   { path: "/admin/pages", component: <AllPages />, exact: true},
   { path: "/admin/pages/edit/:id", component: <AddPage />, exact: false},

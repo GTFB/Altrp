@@ -1,4 +1,4 @@
-import {getResponsiveSetting} from "../../helpers";
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 import { typographicControllerToStyles, colorPropertyStyled } from "../../helpers/styles";
 
 const getBreadcrumbsStyles =(settings,id)=>{

@@ -1,12 +1,12 @@
 import React, {Component, Suspense} from "react";
-const {
-  getComponentByElementId,
-  getHTMLElementById,
-  isEditor,
-  isSSR,
-  parseURLTemplate, printElements,
-  renderAssetIcon, scrollToElement
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import isSSR from "../../../../../front-app/src/js/functions/isSSR";
+import getComponentByElementId from "../../../../../front-app/src/js/functions/getComponentByElementId";
+import getHTMLElementById from "../../../../../front-app/src/js/functions/getHTMLElementById";
+import printElements from "../../../../../front-app/src/js/functions/printElements";
+import scrollToElement from "../../../../../front-app/src/js/functions/scrollToElement";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
 (window.globalDefaults = window.globalDefaults || []).push(`

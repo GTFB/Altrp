@@ -497,6 +497,33 @@ class Table extends BaseElement {
       },
     });
 
+    repeater.addControl('column_switcher_custom_width_list', {
+      type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
+      responsive: false,
+      label: 'Add Custom Width',
+      default: false,
+      conditions: {
+        'column_filter_type': "select",
+      },
+    });
+
+    repeater.addControl("column_custom_setWidth_list", {
+      type: CONTROLLER_SLIDER,
+      hideOnEmail: true,
+      responsive: false,
+      label: "Custom Width List",
+      default: {
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 1500,
+      min: 0,
+      conditions: {
+        'column_switcher_custom_width_list': true,
+      },
+    });
+
 
     repeater.addControl('null_placeholder', {
       type: CONTROLLER_TEXT,

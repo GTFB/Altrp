@@ -1,7 +1,8 @@
 import {getMenuByGUID} from "../../../../../front-app/src/js/functions/menus";
 import {addMenu} from "../../../../../front-app/src/js/store/menus-storage/actions";
-
-const { isEditor, mbParseJSON, conditionChecker, renderAsset} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import conditionChecker from "../../../../../front-app/src/js/functions/conditionChecker";
+import mbParseJSON from "../../../../../front-app/src/js/functions/mb-parse-JSON";
 
 
 const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;

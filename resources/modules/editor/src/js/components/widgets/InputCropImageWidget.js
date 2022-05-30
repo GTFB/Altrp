@@ -1,11 +1,8 @@
 import AltrpFile from "../../../../../front-app/src/js/classes/AltrpFile";
-
-const {
-  isEditor,
-  parseOptionsFromSettings,
-  replaceContentWithData,
-  getDataFromLocalStorage
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 const {ImageCrop} = window.altrpLibs
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 

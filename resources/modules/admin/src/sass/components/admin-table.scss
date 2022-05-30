@@ -246,3 +246,27 @@
     text-decoration: underline;
   }
 }
+
+.copy-button__table {
+  background-color: #E9E6EB;
+  border-radius: 4px;
+  transition: 0.3s ease;
+
+  &:hover {
+    background-color: #DCD9DE;
+  }
+}
+
+.tab-button__table {
+  background-color: #6DA0ED;
+  border-radius: 4px;
+  transition: 0.3s ease;
+
+  & svg {
+    fill: white;
+  }
+
+  &:hover {
+    background-color: #5B86C7;
+  }
+}

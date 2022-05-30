@@ -1,6 +1,5 @@
 import AccordionItem from "./AccordionItem";
-
-const {renderAssetIcon} = window.altrpHelpers;
+import renderAssetIcon from "../../../../../../front-app/src/js/functions/renderAssetIcon";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-accordion-item-button {

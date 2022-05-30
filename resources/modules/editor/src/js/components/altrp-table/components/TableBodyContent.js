@@ -1,6 +1,6 @@
 import React from "react";
 import {FixedSizeList} from "react-window";
-import {scrollbarWidth} from "../../../../../../front-app/src/js/helpers";
+import scrollbarWidth from "../../../../../../front-app/src/js/functions/scrollbarWidth";
 import Row from './Row';
 import SubheadingRow from "./SubheadingRow";
 
