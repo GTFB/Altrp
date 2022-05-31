@@ -1,0 +1,62 @@
+
+.modal__content__wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 30px;
+  height: 200px;
+
+  .customizer__title_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    row-gap: 15px;
+
+    .input__title {
+      width: 100%;
+      height: calc(1.5em + 0.75rem + 2px);
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      box-shadow: none;
+    }
+  }
+
+  .customizer__action_buttons_wrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    column-gap: 2%;
+  }
+
+  .popupBtn {
+    cursor: pointer;
+    color: #ffffff;
+    min-width: 74px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    text-decoration: none;
+  }
+
+  .okBtn {
+    background-color: #87CA00;
+  }
+
+  .cancelBtn {
+    background-color: #315EFB;
+  }
+
+}
+
