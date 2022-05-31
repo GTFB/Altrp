@@ -16,10 +16,6 @@ export default function TreeComponent(settings, prefix) {
     "}",
 
     "bp3-tree-node-caret-none",
-      () => "position: absolute",
-    "}",
-
-    "bp3-tree-node-caret-none",
       ["width", "icon_size", "slider"],
       ["height", "icon_size", "slider"],
       () => "z-index: 99",
@@ -61,23 +57,42 @@ export default function TreeComponent(settings, prefix) {
       ["padding", "heading_padding", "dimensions"],
       ["margin", "heading_margin", "dimensions"],
       ["background-color", "heading_background", "color"],
+      ["grid-gap", "heading_gap", "slider"],
     "}",
 
-    "altrp-tree-heading__column",
+    "altrp-tree-heading__text",
       ["padding", "heading_column_padding", "dimensions"],
-      ["margin-right", "heading_gap", "slider"],
       ["", "heading_typographic", "typographic"],
       ["color", "heading_color", "color"],
       ["background-color", "heading_column_background", "color"],
-      ["border-radius", "heading_border_radius", "dimensions"],
-      ["border-style", "heading_border_type", "", ":hover"],
-      ["border-width", "heading_border_width", "dimensions"],
-      ["border-color", "heading_border_color", "color"],
       ["", "heading_border_shadow", "shadow"],
     "}",
 
+    "bp3-tree-node__border > .bp3-tree-node-content .altrp-tree-columns__column_divider",
+      ["border-bottom-style", "divider_type"],
+      ["border-bottom-width", "divider_size", "slider"],
+      ["border-bottom-color", "divider_color", "color"],
+    "}",
+
+    "bp3-tree-node__border > .bp3-tree-node-content .altrp-tree-columns_flat",
+    ["border-bottom-style", "divider_type"],
+    ["border-bottom-width", "divider_size", "slider"],
+    ["border-bottom-color", "divider_color", "color"],
+    "}",
+
+    "bp3-tree-node-list",
+      ["padding-top", "divider_gap", "slider"],
+    "}",
+
+    "bp3-tree",
+      ["width", "width", "slider"],
+    "}",
+
+    "altrp-tree-columns__columns",
+    ["grid-gap", "column_gap", "slider"],
+    "}",
+
     "altrp-tree-columns__column",
-      ["margin-right", "column_gap", "slider"],
       ["", "column_typographic", "typographic"],
       ["color", "column_color", "color"],
     "}",
@@ -107,6 +122,10 @@ export default function TreeComponent(settings, prefix) {
       ["border-width", "border_width", "dimensions", ":hover"],
       ["border-color", "border_color", "color", ":hover"],
       ["", "border_shadow", "shadow", ":hover"],
+    "}",
+
+    "altrp-tree-columns__column",
+      ["height", "item_height", "slider"],
     "}",
 
     ("bp3-tree-node-selected > .bp3-tree-node-content:nth-child(1).bp3-tree-node-content, " +

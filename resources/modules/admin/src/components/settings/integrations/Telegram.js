@@ -1,10 +1,16 @@
 import Resource from "../../../../../editor/src/js/classes/Resource";
 import store from "../../../js/store/store";
 import AutoUpdateInput from "../../AutoUpdateInput";
+import React from "react";
 
 class Telegram extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      botWork: false
+    }
+
     this.toggle = this.toggle.bind(this);
   }
 
@@ -54,6 +60,33 @@ class Telegram extends Component {
             className="admin_input_key form_styles_border" />
         </div>
         <div>
+          <div className="admin_input__label">
+            Telegram webhook
+          </div>
+          <div className="admin_input">
+            <AutoUpdateInput
+              className="admin_input_key form_styles_border"
+              route="/admin/ajax/settings"
+              type="text"
+              resourceid="telegram_bot_webhook"
+              id="telegram_bot_customizer"
+            />
+          </div>
+        </div>
+        <div>
+          <div className="admin_input__label">
+            Telegram keyboard
+          </div>
+          <div className="admin_input">
+            <AutoUpdateInput
+              className="admin_input_key form_styles_border"
+              route="/admin/ajax/settings"
+              type="textarea"
+              resourceid="telegram_bot_keyboard"
+              id="telegram_bot_keyboard"
+              encrypt
+            />
+          </div>
         </div>
     </div>
   }

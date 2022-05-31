@@ -22,6 +22,7 @@ import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
 import keys from "lodash/keys"
+import Customizer from "App/Models/Customizer";
 
 
 export default class ModelsController {
@@ -833,6 +834,9 @@ export default class ModelsController {
     await (new ModelGenerator).deleteFiles(model)
 
     const client = Database.connection(Env.get('DB_CONNECTION'))
+    await Customizer.query().where('model_id', model.id).update({
+      model_id: null
+    })
     if (table) {
       await Column.query().where('table_id', table.id).delete()
       await model.delete()

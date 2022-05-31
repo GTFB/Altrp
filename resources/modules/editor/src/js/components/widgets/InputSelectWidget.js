@@ -450,8 +450,9 @@ class InputSelectWidget extends Component {
     )
 
     const content_options = props.element.getResponsiveLockedSetting('content_options');
+    const model_for_options = props.element.getResponsiveLockedSetting('model_for_options');
     if (content_options?.indexOf('{{') === 0 && ! model_for_options) {
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], props.element.getCurrentModel())
     }
 
     this.defaultValue =
@@ -661,12 +662,6 @@ class InputSelectWidget extends Component {
     ) {
       this.updateOptions();
     }
-    // if (content_options && !model_for_options) {
-    //   let options = parseOptionsFromSettings(content_options);
-    //   if (!_.isEqual(options, this.state.options)) {
-    //     this.setState(state => ({...state, options}));
-    //   }
-    // }
     this.updateValue(prevProps);
   }
 

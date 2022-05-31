@@ -4,6 +4,10 @@ import * as _ from 'lodash'
 export default function renderTournament(settings, device, context) {
   const {data, headers} = _.get(getResponsiveSetting(settings, 'path', device), context, {data: [], headers: []})
 
+  if (!data?.length) {
+    return 'No data'
+  }
+
   const rounds : any = []
 
   let matches : any = []
