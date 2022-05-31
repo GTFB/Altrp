@@ -105,6 +105,11 @@ export default class PluginController {
       response.status(400)
       return response.json({success: false, message: 'Name Required'})
     }
+    if (request?.body()?.action === 'update') {
+      let plugin = new Plugin({'name': request.input('name'),})
+      plugin.deletePluginFiles()
+      plugin.deleteStaticFiles()
+    }
     let apiResponse
     try {
       apiResponse = await axios.get(request.input('update_url'), {

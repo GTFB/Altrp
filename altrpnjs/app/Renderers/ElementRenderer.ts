@@ -151,7 +151,8 @@ export default class ElementRenderer {
     }
 
     let content = fs.readFileSync(ElementRenderer.wrapperStub, {encoding: 'utf8'});
-    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} ${getAddingClasses(settings)} `;
+    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} ${getAddingClasses(settings, screenName)} `;
+
     if (this.getType() === "widget") {
       classes += ` altrp-widget_${this.getName()}`;
     }
@@ -168,7 +169,8 @@ export default class ElementRenderer {
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
     ${getResponsiveSetting(settings, 'en_an', screenName)
       ? `data-enter-animation-type="${getResponsiveSetting(settings, 'en_an', screenName)}"
-      data-enter-animation-delay="${getResponsiveSetting(settings, 'en_a_delay', screenName, 0)}"
+      data-enter-animation-delay="${getResponsiveSetting(settings, 'en_a_delay', screenName, 0)?.size || 0}"
+      data-enter-animation-duration="${getResponsiveSetting(settings, 'en_a_duration', screenName, 0)?.size || 400}"
       `
       : ''}
       ${reactElement ? `data-react-element="${this.getId()}"` : ''}

@@ -194,7 +194,11 @@ export default class Plugin {
 
   public copyStaticFiles() {
     let publicPath = this.getPath('/public')
-    fs.copySync(publicPath, this.getPublicPath('/public'))
+
+    if (fs.existsSync(publicPath) ) {
+      fs.copySync(publicPath, this.getPublicPath('/public'))
+    }
+
   }
 
   public deleteStaticFiles() {
@@ -445,6 +449,7 @@ export default class Plugin {
     archive.extractAllTo(this.getPath(), true)
 
     fs.removeSync(temp_path)
+    await this.callUpdateHooks()
     return true
   }
 
@@ -521,7 +526,7 @@ export default class Plugin {
       },])
 
     for (const hook of hooks) {
-      await hook.fn()
+      await hook.fn(this)
     }
   }
 
@@ -535,6 +540,10 @@ export default class Plugin {
 
   async callDeactivationHooks() {
     await this.getAndCallHooks('deactivate')
+  }
+
+  async callUpdateHooks() {
+    await this.getAndCallHooks('update')
   }
 
 }

@@ -10,11 +10,6 @@ import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import { setTitle } from "../../../../../front-app/src/js/helpers";
 import { setTemplateData } from "../../store/template-data/actions";
-import ElementsFactory from "./ElementsFactory";
-import {
-  getSheet,
-  stringifyStylesheet
-} from "../../../../../front-app/src/js/helpers/elements";
 import templateStylesModule from "./TemplateStylesModule";
 
 class SaveImportModule extends BaseModule {
@@ -95,6 +90,13 @@ class SaveImportModule extends BaseModule {
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
 
     templateData.styles = await templateStylesModule.generateStyles();
+
+    this.resource.post({
+      ...templateData,
+      type: "review",
+      parent_template: this.template_id
+    })
+
     this.resource
       .put(this.template_id, templateData)
       .then(res => {

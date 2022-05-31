@@ -67,7 +67,9 @@ class PostsWidget extends Component {
       ...this.props.element.settings,
       ...this.props.element.settingsLock || {},
     };
+
     return <PostsComponent query={query}
+                           className={classes}
                            currentModel={this.props.currentModel}
                            data={data}
                            element={this.props.element}
