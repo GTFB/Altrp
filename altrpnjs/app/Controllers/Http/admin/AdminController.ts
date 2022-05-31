@@ -25,6 +25,7 @@ import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
+import {RequestContract} from "@ioc:Adonis/Core/Request";
 
 export default class AdminController {
 
@@ -41,8 +42,6 @@ export default class AdminController {
     const type = request.input('type')
     View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
     clearRequireCache()
-    const used = process.memoryUsage().heapUsed / 1024 / 1024;
-    Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
     switch (type) {
       case 'listeners':{
         await AdminController.upgradeListeners()
@@ -57,20 +56,18 @@ export default class AdminController {
       }
         break;
       case 'pages':{
-        await AdminController.upgradePages()
+        await AdminController.upgradePages(request)
       }
         break;
       default:{
         await AdminController.upgradeListeners()
         await AdminController.upgradeModels()
-        await AdminController.upgradePages()
+        await AdminController.upgradePages(request)
         await AdminController.upgradeTemplates()
 
       }
     }
     try {
-      const used = process.memoryUsage().heapUsed / 1024 / 1024;
-      Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       if (isProd()) {
         await promisify(exec)('pm2 restart all --update-env')
       }
@@ -177,16 +174,27 @@ export default class AdminController {
     return {success: true, package_key: Env.get('PACKAGE_KEY')}
   }
 
-  private static async upgradePages() {
+  private static async upgradePages(request: RequestContract) {
     Logger.info('Upgrading pages')
-    const pageGenerator = new PageGenerator()
 
-    const pages = await Page.query().whereNull('deleted_at').select('*')
+    let pages
+    if(request.input('id')){
+      pages = await Page.query()
+        .whereNull('deleted_at').where('id', request.input('id'))
+        .select('*')
+    } else {
+      pages = await Page.query().whereNull('deleted_at').select('*')
+    }
+
     for (let page of pages) {
+      const pageGenerator = new PageGenerator()
       try{
         await pageGenerator.run(page)
+
+        const used = process.memoryUsage().heapUsed / 1024 / 1024;
+        Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
-        Logger.error(`Error while Page ${page.guid}  generate: ${e.message}`, e.stack.split('\n'))
+        Logger.error(`Error while Page ${page.guid} generate: ${e.message}`, e.stack.split('\n'))
       }
     }
   }

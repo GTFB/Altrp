@@ -3,8 +3,9 @@
 
 ## Changelog
 
-### 1.1.2
+### 1.1.3
 * Fix Styles Load for Embedded Templates
+
 ### 1.1.2
 * Fix Template Render Issues 
 * Fix Popup Position Settings Issues

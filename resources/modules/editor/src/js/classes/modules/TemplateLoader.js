@@ -55,7 +55,6 @@ export class TemplateLoader {
         const resource = new Resource({route: `/ajax/templates/${templateId}`});
         template = await resource.getQueried({withStyles: true});
         if(_.isString(template.styles)){
-
           let _document = isEditor() ?
               document.getElementById("editorContent").contentWindow.document :
               document;
@@ -70,6 +69,21 @@ export class TemplateLoader {
         this.templatesCache.setProperty(templateId, template);
       } else {
         template = this.templatesCache.getProperty(templateId);
+      }
+      if(! isEditor() && ! document.querySelector(`[data-template-styles="${template.guid}]"`)){
+        const resource = new Resource({route: `/ajax/templates/${templateId}`});
+        let template = await resource.getQueried({withStyles: true});
+        if(_.isString(template.styles)){
+          let _document = isEditor() ?
+            document.getElementById("editorContent").contentWindow.document :
+            document;
+
+          const stylesElement = _document.createElement('style')
+          stylesElement.setAttribute(`data-template-styles`, template.guid)
+          stylesElement.innerHTML = template.styles
+
+          _document.head.appendChild(stylesElement)
+        }
       }
       if(_.isArray(TemplateLoader.pendingCallbacks[templateId])){
         TemplateLoader.pendingCallbacks[templateId].forEach(callback=>{
