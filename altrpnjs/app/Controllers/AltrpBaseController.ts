@@ -106,7 +106,7 @@ export default class AltrpBaseController {
   }
 
   protected async execCustomizer(name) {
-    const customizer = await Customizer.query().where("name", name).preload("altrp_model").firstOrFail();
+    const customizer = await Customizer.query().where("guid", name).preload("altrp_model").firstOrFail();
 
     const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
 
