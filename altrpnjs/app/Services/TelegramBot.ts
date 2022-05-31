@@ -54,6 +54,32 @@ export class TelegramBot {
     }
   }
 
+  async message(ctx, customizer, next?) {
+    if(!ctx.message) {
+      await next()
+      return
+    }
+
+    const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
+
+    const ControllerClass = isProd() ? (await require(controllerName)).default
+      : (await import(controllerName)).default
+    const controller = new ControllerClass()
+
+    const user = await User.query().where("telegram_chat", ctx.message.chat.id).first()
+
+    this.customizerHttpContext.auth = {
+      user
+    }
+
+    if(next) {
+      await next()
+    }
+    this.customizerHttpContext.ctx = ctx;
+    await controller[customizer.name](this.customizerHttpContext);
+
+  }
+
   async init(updated) {
     console.log("init")
 
@@ -102,24 +128,12 @@ export class TelegramBot {
 
         global.telegramBot = new Telegraf(this.token, )
 
+        global.telegramBot.start(async (ctx) => {
+          await this.message(ctx, customizer)
+        });
+
         global.telegramBot.use(async (ctx, next) => {
-
-          const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
-
-          const ControllerClass = isProd() ? (await require(controllerName)).default
-            : (await import(controllerName)).default
-          const controller = new ControllerClass()
-
-          const user = await User.query().where("telegram_chat", ctx.message.chat.id).first()
-
-          this.customizerHttpContext.auth = {
-            user
-          }
-
-          await next();
-          this.customizerHttpContext.ctx = ctx;
-          await controller[customizer.name](this.customizerHttpContext);
-
+          await this.message(ctx, customizer, next)
         });
 
         await global.telegramBot.launch().catch((e) => {

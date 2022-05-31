@@ -117,8 +117,9 @@ export default class AltrpBaseController {
     const httpContext = _.get(this.customizerData, "httpContext");
 
     if(controller[customizer.name]) {
-      console.log(await controller[customizer.name](httpContext))
-      return controller[customizer.name](httpContext)
+      const val = await controller[customizer.name](httpContext)
+
+      return val
     } else {
       return {
         message: "customizer name invalid",
