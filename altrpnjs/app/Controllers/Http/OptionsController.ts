@@ -80,6 +80,7 @@ export default class OptionsController {
     customizers = customizers.filter(customizer => customizer.altrp_model)
 
     return customizers.map((page) => {
+      //@ts-ignore
       page = page.serialize()
 
       return {
