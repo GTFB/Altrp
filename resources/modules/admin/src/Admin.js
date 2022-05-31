@@ -60,6 +60,7 @@ import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-st
 
 window.React = React;
 window.ReactDOM = ReactDOM;
+window.Link = Link;
 window.Component = React.Component;
 getAPiToken();
 class Admin extends Component {
@@ -126,13 +127,13 @@ class Admin extends Component {
     store.dispatch(changeCurrentUser(currentUser));
 
     if(currentUser.guid && !this.altrpIo) {
-      this.altrpIo = io( {
+      window.altrpIo = io( {
         path: '/wsaltrp',
         auth: {
           key: currentUser.guid,
         },
       })
-      this.altrpIo.on("message", (data) => {
+      window.altrpIo.on("message", (data) => {
         console.log(data)
       })
     }

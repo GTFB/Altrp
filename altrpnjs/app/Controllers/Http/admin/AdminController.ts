@@ -22,6 +22,10 @@ import {promisify} from "util";
 import resource_path from "../../../../helpers/path/resource_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import public_path from "../../../../helpers/path/public_path";
+import View from "@ioc:Adonis/Core/View";
+import {CacheManager} from "edge.js/build/src/CacheManager";
+import env from "../../../../helpers/env";
+import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 
 export default class AdminController {
 
@@ -29,7 +33,14 @@ export default class AdminController {
   //
   // }
   public async upgradeAllResources({response}:HttpContextContract){
-    try {
+    const res : {
+      success:boolean,
+      message?:string,
+      trace?:[],
+    } = {success: true,
+    }
+    View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
+    clearRequireCache()
       if(fs.existsSync(resource_path('views/altrp'))){
         fs.rmSync(resource_path('views/altrp'), { recursive: true, })
       }
@@ -81,18 +92,15 @@ export default class AdminController {
       }
       try {
         if(isProd()){
-          await promisify(exec)('pm2 restart all' )
+        await promisify(exec)('pm2 restart all --update-env')
         }
 
       }catch (e) {
+      res.message = 'Error server restarting: \n' + e.message
         Logger.error(e.message, e.stack.split('\n'))
       }
-      return response.json({success: true,})
-    }catch (e) {
-      response.status(500);
-      Logger.error(e)
-      return response.json({success: false,message: 'Generate Error', trace: e.stack.split('\n')});
-    }
+
+    return response.json(res)
   }
 
 

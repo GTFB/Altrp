@@ -82,9 +82,7 @@ class InputDateWidget extends Component {
 
     this.state = {
       settings: { ...props.element.getSettings() },
-      options: parseOptionsFromSettings(
-        props.element.getLockedSettings("content_options")
-      ),
+
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
@@ -106,13 +104,7 @@ class InputDateWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getLockedSettings("content_options")) {
-      let options = parseOptionsFromSettings(
-        this.props.element.getLockedSettings("content_options")
-      );
 
-      this.setState(state => ({ ...state, options }));
-    }
 
     let value = this.state.value;
 
@@ -392,51 +384,6 @@ class InputDateWidget extends Component {
     }
   }
 
-  /**
-   * Обновляет опции для селекта при обновлении данных, полей формы
-   */
-  async updateOptions() {
-    {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getLockedSettings("params_for_update");
-      let formData = _.get(this.props.formsStore, [formId], {});
-      paramsForUpdate = parseParamsFromString(
-        paramsForUpdate,
-        new AltrpModel(formData)
-      );
-      /**
-       * Сохраняем параметры запроса, и если надо обновляем опции
-       */
-      let options = [...this.state.options];
-
-      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-        if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getLockedSettings("params_as_filters", false)) {
-            paramsForUpdate = JSON.stringify(paramsForUpdate);
-            options = await new Resource({
-              route: this.getRoute()
-            }).getQueried({ filters: paramsForUpdate });
-          } else {
-            options = await new Resource({ route: this.getRoute() }).getQueried(
-              paramsForUpdate
-            );
-          }
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        } else if (this.state.paramsForUpdate) {
-          options = await new Resource({ route: this.getRoute() }).getAll();
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        }
-
-        this.setState(state => ({
-          ...state,
-          paramsForUpdate,
-          options
-        }));
-      }
-    }
-  }
 
   getFormat() {
     let format = this.props.element.getLockedSettings('content_format');

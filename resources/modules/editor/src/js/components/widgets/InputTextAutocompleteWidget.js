@@ -496,7 +496,7 @@ class InputTextCommonWidget extends Component {
     let element = this.props.element;
     const content_options = this.props.element.getResponsiveLockedSetting('options');
     if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0 ){
+      && content_options?.indexOf('{{') === 0 ){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){
         options = [];

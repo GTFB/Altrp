@@ -832,6 +832,10 @@ export function actionsControllers(
       {
         label: 'Remove Items',
         value: 'remove_items'
+      },
+      {
+        label: 'Delete',
+        value: 'delete'
       }
     ],
     conditions: {
@@ -1100,3 +1104,4 @@ export function actionsControllers(
    * Список произвольных действия для кнопки END
    */
 }
+window.actionsControllers = actionsControllers

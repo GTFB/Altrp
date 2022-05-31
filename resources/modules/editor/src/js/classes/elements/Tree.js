@@ -95,6 +95,7 @@ class Tree extends BaseElement {
 
 
     this.addControl('tree_from_datasource', {
+      locked: true,
       label: 'Datasource path',
       type: CONTROLLER_TEXTAREA,
       conditions: {
@@ -104,14 +105,50 @@ class Tree extends BaseElement {
 
     let repeaterColumns = new Repeater();
 
-    repeater.addControl('repeater_column_label', {
+    repeaterColumns.addControl('label', {
       type: CONTROLLER_TEXT,
       label: "Label",
     });
 
-    repeater.addControl('repeater_column_value', {
+    repeaterColumns.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Heading width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'fr',
+        'px',
+        '%',
+      ],
+      max: 300,
+      min: 1,
+    });
+
+    repeaterColumns.addControl('value', {
       type: CONTROLLER_TEXT,
       label: "Value",
+    });
+
+
+    repeaterColumns.addControl("width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Value width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'fr',
+        'px',
+        '%',
+      ],
+      max: 300,
+      min: 1,
+    });
+
+    repeaterColumns.addControl('divider', {
+      type: CONTROLLER_SWITCHER,
+      label: "Divider",
     });
 
     this.addControl("column_repeater", {
@@ -133,6 +170,40 @@ class Tree extends BaseElement {
     this.addControl('cursor', {
       type: CONTROLLER_SWITCHER,
       label: "Cursor pointer",
+    });
+
+    this.addControl('columns_heading_activator', {
+      type: CONTROLLER_SWITCHER,
+      label: "Columns heading",
+      locked: true
+    });
+
+    this.addControl('flat_col', {
+      type: CONTROLLER_SWITCHER,
+      label: "Flat column",
+      locked: true
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('content_style', {
+      tab: TAB_STYLE,
+      label: 'Content',
+    });
+
+    this.addControl("width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 2000,
+      min: 100,
     });
 
     this.endControlSection();
@@ -241,20 +312,74 @@ class Tree extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('typographic_section', {
+    this.startControlSection('divider_section', {
       tab: TAB_STYLE,
-      label: 'Typographic',
+      label: 'Divider',
     });
 
-    this.addControl('typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
+    this.addControl('divider_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
       }
     );
 
-    this.addControl('typographic_color', {
+    this.addControl("divider_size", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('divider_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
+    });
+
+    this.addControl("divider_gap", {
+      type: CONTROLLER_SLIDER,
+      label: 'Gap',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
     });
 
     this.endControlSection();
@@ -289,6 +414,190 @@ class Tree extends BaseElement {
     });
 
     this.endControlSection();
+
+    this.startControlSection('heading_columns', {
+      tab: TAB_STYLE,
+      label: 'Heading columns',
+    });
+
+    this.addControl('heading_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('heading_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('heading_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+    });
+
+    this.addControl('heading_column_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Column padding',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('heading_gap', {
+      type: CONTROLLER_SLIDER,
+      label: 'Gap',
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('heading_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
+    );
+
+    this.addControl('heading_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+    });
+
+    this.addControl('heading_column_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Column background color',
+    });
+
+    this.addControl('heading_border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl('heading_border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true,
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
+    this.addControl('heading_border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
+    );
+
+    this.addControl('heading_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('heading_border_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('style_columns', {
+      tab: TAB_STYLE,
+      label: 'Columns',
+    });
+
+    this.addControl('column_gap', {
+      type: CONTROLLER_SLIDER,
+      label: 'Gap',
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('column_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
+    );
+
+    this.addControl('column_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+    });
+
+    this.endControlSection();
+
 
     advancedTabControllers(this);
   }

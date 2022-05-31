@@ -96,9 +96,12 @@ export default class AltrpBaseController {
     const content = JSON.parse(replaceContentWithData(messageData.content, this.customizerData))
     const entitiesData = JSON.parse(messageData.entitiesData)
 
-    const users = await this.getRequiredUsers(messageData.entities, entitiesData)
+    const users = await this.getRequiredUsers(messageData.entities, entitiesData) || []
 
-    const notification = new Notification(content, messageData);
+    const notification = new Notification({
+      start_text: messageData.start_text,
+      content
+    }, messageData);
     await notification.send(users, this.customizerData)
   }
 
