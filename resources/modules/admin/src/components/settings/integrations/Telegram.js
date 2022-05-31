@@ -69,7 +69,7 @@ class Telegram extends Component {
         </div>
         <div>
           <div className="admin_input__label">
-            Telegram webhook
+            Telegram customizer
           </div>
           <div className="admin_input">
             <AutoUpdateInput
