@@ -76,11 +76,16 @@ export default class OptionsController {
   }
 
   public async customizers() {
-    const customizers = await Customizer.all()
+    let customizers = await Customizer.query().preload("altrp_model")
+    customizers = customizers.filter(customizer => customizer.altrp_model)
 
-    return options(customizers, {
-      value: "name",
-      label: "title"
+    return customizers.map((page) => {
+      page = page.serialize()
+
+      return {
+        value: page.guid,
+        label: page.title
+      }
     })
   }
 

@@ -57,9 +57,7 @@ export class TelegramBot {
   async init(updated) {
     console.log("init")
 
-    const webhookSplitted = this.webhook.split("/");
-
-    const customizer = await Customizer.query().where("name", webhookSplitted[webhookSplitted.length-1]).preload("altrp_model").first()
+    const customizer = await Customizer.query().where("guid", this.webhook).preload("altrp_model").first()
 
     if(customizer) {
       const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
