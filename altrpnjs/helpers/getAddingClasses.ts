@@ -1,4 +1,6 @@
-export default function getAddingClasses(settings:any){
+import getResponsiveSetting from "./getResponsiveSetting";
+
+export default function getAddingClasses(settings:any, screen){
   const {
     hide_on_wide_screen,
     hide_on_desktop,
@@ -30,6 +32,9 @@ export default function getAddingClasses(settings:any){
   }
   if (isFixed) {
     classes += ' fixed-section';
+  }
+  if (getResponsiveSetting(settings, 'en_an', screen)) {
+    classes += ' altrp-invisible ';
   }
   return classes
 }

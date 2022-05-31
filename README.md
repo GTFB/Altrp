@@ -4,6 +4,8 @@
 ## Changelog
 
 ### 1.1.2
+* Fix Styles Load for Embedded Templates
+### 1.1.2
 * Fix Template Render Issues 
 * Fix Popup Position Settings Issues
 * Now When Creating Models, Customizers are Created

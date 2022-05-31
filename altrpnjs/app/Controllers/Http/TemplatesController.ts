@@ -14,6 +14,7 @@ import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
+import mbParseJSON from "../../../helpers/mbParseJSON";
 
 export default class TemplatesController {
   public async index({ request }) {
@@ -225,7 +226,7 @@ export default class TemplatesController {
     return template
   }
 
-  public async getTemplate({ params, response }) {
+  public async getTemplate({ params, response, request }) {
     const templateQuery = Template.query()
 
     if(isNaN(params.template_id)) {
@@ -234,7 +235,7 @@ export default class TemplatesController {
       templateQuery.where("id", parseInt(params.template_id))
     }
 
-    const template = await templateQuery.firstOrFail()
+    let template = await templateQuery.firstOrFail()
 
     if (!template) {
       response.status(404)
@@ -242,7 +243,22 @@ export default class TemplatesController {
         success: false
       }
     }
-      return template.dataWithoutContent()
+
+    // @ts-ignore
+    template = template.serialize()
+    // @ts-ignore
+    delete template.html_content
+    if(request.qs()?.withStyles){
+      let styles = mbParseJSON(template.styles)
+      if(styles.all_styles){
+        styles = styles.all_styles.join('')
+      }
+      template.styles = styles
+    } else {
+      // @ts-ignore
+      delete template.styles
+    }
+    return template
   }
 
   public async delete({ params }) {
@@ -566,6 +582,6 @@ export default class TemplatesController {
   template = template.serialize()
   delete template.html_content
   delete template.styles
-  return response.json(template);
+  return response.json({template});
   }
 }

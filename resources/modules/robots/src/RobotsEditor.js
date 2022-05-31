@@ -140,8 +140,6 @@ class RobotsEditor extends Component {
       params.className = 'green';
     }
     const newStore = addEdge(params, robotStore);
-    console.log(newStore);
-    console.log(params);
     store.dispatch(setRobotSettingsData(newStore));
   }
 
