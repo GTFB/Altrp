@@ -17,19 +17,19 @@ export default class SettingsController {
       return response.json({})
     }
 
+    if(params.setting_name === "telegram_bot_token") {
+      await TelegramBot.startBotFromSettings(request.input('value'), null, null, httpContext, "token")
+    } else if(params.setting_name === "telegram_bot_webhook") {
+      await TelegramBot.startBotFromSettings(null, request.input('value'), null, httpContext, "webhook")
+    } else if(params.setting_name === "telegram_bot_keyboard") {
+      await TelegramBot.startBotFromSettings(null, null, request.input('value'), httpContext, "keyboard")
+    }
+
     try {
       await set_altrp_setting(params.setting_name, request.input('value'), request.input('encrypt'))
     } catch (e) {
       logger.error(e.message)
       return response.json({})
-    }
-
-    if(params.setting_name === "telegram_bot_token") {
-      await TelegramBot.startBotFromSettings(request.input('value'), null, null, httpContext)
-    } else if(params.setting_name === "telegram_bot_webhook") {
-      await TelegramBot.startBotFromSettings(null, request.input('value'), null, httpContext)
-    } else if(params.setting_name === "telegram_bot_keyboard") {
-      await TelegramBot.startBotFromSettings(null, null, request.input('value'), httpContext)
     }
 
     return response.json({result: true})

@@ -4,7 +4,6 @@ import User from "App/Models/User";
 import Customizer from "App/Models/Customizer";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
-import * as _ from "lodash";
 import HttpContext, {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 
@@ -19,6 +18,7 @@ export class TelegramBot {
   // markup = []
   // keyboard
 
+  //@ts-ignore
   constructor(token, webhook, keyboard, updated='', httpContext: null|HttpContextContract=null) {
 
     if(httpContext) {
@@ -28,14 +28,7 @@ export class TelegramBot {
     if(token && webhook) {
       this.token = token
       this.webhook = webhook
-      try {
-        this.keyboard = JSON.parse(keyboard)
-      } catch (e) {
-        console.log("keyboard is invalid")
-        if(httpContext) {
-          httpContext.response.abort("keyboard is invalid")
-        }
-      }
+
 
       this.init(updated).catch(e => {
         console.log(e)
@@ -48,24 +41,13 @@ export class TelegramBot {
     }
   }
 
-  static async startBotFromSettings(token?, webhook?, keyboard?, httpContext?) {
+  static async startBotFromSettings(token?, webhook?, keyboard?, httpContext?, updated?) {
     const envToken =Env.get("ALTRP_SETTING_TELEGRAM_BOT_TOKEN")
     const envWebhook = Env.get("ALTRP_SETTING_TELEGRAM_BOT_WEBHOOK")
-    const envKeyboard = get_altrp_setting("telegram_bot_keyboard", "", true)
+    // const envKeyboard = get_altrp_setting("telegram_bot_keyboard", "", true)
 
     token = token || envToken;
     webhook = webhook || envWebhook;
-    keyboard = keyboard || envKeyboard;
-
-    let updated: null | string = null
-
-    if(token !== envToken) {
-      updated = "token"
-    } else if (webhook !== envWebhook) {
-      updated = "webhook"
-    } else if (keyboard !== envKeyboard) {
-      updated = "keyboard"
-    }
 
     if(updated) {
       new TelegramBot(token, webhook, keyboard, updated, httpContext)
@@ -91,9 +73,14 @@ export class TelegramBot {
 
         controller.sendNotification = async function () {}
 
+        this.customizerHttpContext.ctx = {
+          reply() {}
+        }
+
         await controller[customizer.name](this.customizerHttpContext)
 
         this.customizerController = controller
+
         this.customizer = controller[customizer.name]
       } else {
         console.log("Customizer not found")
@@ -125,6 +112,11 @@ export class TelegramBot {
             : (await import(controllerName)).default
           const controller = new ControllerClass()
 
+          const user = await User.query().where("telegram_chat", ctx.message.chat.id).first()
+
+          this.customizerHttpContext.auth = {
+            user
+          }
 
           await next();
           this.customizerHttpContext.ctx = ctx;
