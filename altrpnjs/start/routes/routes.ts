@@ -309,7 +309,7 @@ ${e.message}`,
     /**
      * handle all 4 HTTP methods
      */
-    Route[method]('plugins', async (httpContext: HttpContextContract) => {
+    Route[method]('plugins-handlers', async (httpContext: HttpContextContract) => {
       const plugins = await Plugin.getEnabledPlugins()
       const segments = httpContext.request.url().split('/').filter(segment => segment)
       const plugin = plugins.find(plugin => {

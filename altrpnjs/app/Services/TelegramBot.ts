@@ -47,9 +47,10 @@ export class TelegramBot {
       global.telegramBot.start((ctx) => {
         const id = ctx.message.chat.id;
         const username = ctx.message.from.username;
-
         User.query().where("telegram_user_id", username).orWhere("telegram_user_id", "@" + username).first().then((user) => {
           if(user) {
+            console.log(user, "user in start")
+
             user.telegram_chat = id;
             user.save()
 
@@ -79,6 +80,7 @@ export class TelegramBot {
             })
 
           } else {
+            console.log("start user is null")
             ctx.reply(`${Env.get("APP_URL")}/telegram/login?chat=${ctx.message.chat.id}`)
           }
         })
@@ -97,7 +99,7 @@ export class TelegramBot {
     switch (block.type) {
       case "content":
 
-        return block.data.text || "message is null"
+        return block.data.text || "message is null (content)"
 
       case "photo":
       case "file":
@@ -105,12 +107,16 @@ export class TelegramBot {
       case "video":
       case "link":
 
-        return block.data.url || "message is null"
+        return block.data.url || "message is null (media)"
 
       case "customizer":
         const customizer = await Customizer.query().where("name", block.data.customizer).preload("altrp_model").firstOrFail();
 
         if(ctx) {
+          console.log("ctx")
+          console.log(ctx)
+          console.log("ctx")
+
           //@ts-ignore
           const chat = ctx.message.chat.id;
 
@@ -124,8 +130,12 @@ export class TelegramBot {
               user: user
             }
 
-            console.log(chat, "chat_id")
-
+            console.log("user in customizer")
+            console.log(user)
+            console.log("user in customizer")
+            console.log("chat_id")
+            console.log(chat)
+            console.log("chat_id")
 
             const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
 
@@ -139,7 +149,7 @@ export class TelegramBot {
               const val = await controller[customizer.name](httpContext);
 
               console.log(val, "customizer")
-              return val || "message is null"
+              return val || "message is null (customizer)"
             } else {
               return "error"
             }
