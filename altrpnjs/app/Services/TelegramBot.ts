@@ -55,7 +55,7 @@ export class TelegramBot {
   }
 
   async message(ctx, customizer, next?) {
-    if(!ctx.message) {
+    if(!ctx.message && next) {
       await next()
       return
     }
