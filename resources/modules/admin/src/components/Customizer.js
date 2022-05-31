@@ -7,6 +7,8 @@ import {redirect, titleToName, objectDeepCleaning, generateId} from "../js/helpe
 import {altrpRandomId} from "../../../front-app/src/js/helpers";
 import UserTopPanel from "./UserTopPanel";
 import { withRouter } from 'react-router-dom'
+import SmallModal from "./SmallModal";
+import './../sass/components/DuplicateCustomizer.scss'
 
 class Customizer extends Component {
   constructor(props) {
@@ -19,12 +21,19 @@ class Customizer extends Component {
       count: 1,
       pageCount: 1,
       activeHeader: 0,
-      customizersSearch: ""
+      customizersSearch: "",
+      popupWindow: false,
+      duplicateCustomizerTitle: '',
+      duplicateCustomizerId: 1
     };
 
     this.resource = new Resource({
       route: "ajax/customizers"
-    });
+    })
+
+    this.duplicateResource = new Resource({
+      route: "ajax/customizers/duplicate"
+    })
 
     this.itemsPerPage = 10;
     this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
@@ -187,6 +196,26 @@ class Customizer extends Component {
     this.setState({customizersSearch: e.target.value})
   }
 
+  openDuplicateModal = (response) => {
+      this.setState(state => ({ ...state, popupWindow: !this.state.popupWindow, duplicateCustomizerTitle:response?.data?.title, duplicateCustomizerId: response?.data?.id }))
+  }
+
+  changeDuplicateTitle = (e) => {
+    this.setState(state => ({ ...state, duplicateCustomizerTitle: e.target.value }))
+  }
+
+  duplicateCustomizer = async () => {
+
+    this.duplicateResource.post({
+      title: this.state.duplicateCustomizerTitle,
+      name: this.state.duplicateCustomizerTitle + `_${altrpRandomId()}`,
+      duplicateCustomizerId: this.state.duplicateCustomizerId
+    }).then(response => {
+      redirect(response?.redirect_route)
+    })
+
+  }
+
   render() {
     const { currentPage, customizers, customizersSearch, count, pageCount  } = this.state;
     return (
@@ -258,6 +287,13 @@ class Customizer extends Component {
                 data: {power: 1},
                 after: () => this.fetchData(),
                 title: "Enable"
+              },
+              {
+                tag: "button",
+                route: "/admin/ajax/customizers",
+                method: "get",
+                after: (response) => this.openDuplicateModal(response),
+                title: 'Duplicate'
               }, {
                 tag: 'button',
                 route: '/admin/ajax/exports/customizers',
@@ -293,6 +329,18 @@ class Customizer extends Component {
             openPagination={true}
           />
         </div>
+        <SmallModal activeMode={this.state.popupWindow} toggleModal={this.openDuplicateModal}>
+          <div className="modal__content__wrapper">
+            <div className="customizer__title_wrapper">
+              <h5>Customizer title</h5>
+              <input type="text" className="input__title" value={this.state.duplicateCustomizerTitle} onChange={this.changeDuplicateTitle}/>
+            </div>
+            <div className="customizer__action_buttons_wrapper">
+              <button className="popupBtn okBtn" onClick={this.duplicateCustomizer}>Ok</button>
+              <button className="popupBtn cancelBtn" onClick={this.openDuplicateModal}>Cancel</button>
+            </div>
+          </div>
+        </SmallModal>
       </div>
     );
   }
