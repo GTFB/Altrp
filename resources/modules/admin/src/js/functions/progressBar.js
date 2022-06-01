@@ -1,4 +1,4 @@
-
+import '../../sass/components/altrp-progress-bar.scss'
 import {  ProgressBar,Intent } from "@blueprintjs/core";
 export default function progressBar(value){
   let progressBar = document.getElementById('altrp-progress-bar')
@@ -8,7 +8,6 @@ export default function progressBar(value){
     document.body.appendChild(progressBar)
   }
   if (value){
-    console.log(value);
     ReactDOM.render(<ProgressBar value={value} intent={Intent.PRIMARY}/>, progressBar)
   } else {
     document.body.removeChild(progressBar)
