@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Lightbox from 'react-image-lightbox';
 import {connect} from "react-redux";
-const {isEditor} = window.altrpHelpers
 import ('./altrp-lightbox.scss');
 
 class AltrpLightbox extends Component {

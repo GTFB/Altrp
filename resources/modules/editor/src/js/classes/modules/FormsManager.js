@@ -1,7 +1,6 @@
 import AltrpForm from "../AltrpForm";
+import Resource from "../Resource";
 
-
-const {Resource} = window.altrpHelpers
 /**
  * Класс менеджер форм для фронтенда/редактора
  */

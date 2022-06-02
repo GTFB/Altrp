@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import DropdownMenu from "./dropdown/DropdownMenu";
 import ("./altrp-menu.scss");
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 class AltrpMenu extends Component {
   constructor(props) {

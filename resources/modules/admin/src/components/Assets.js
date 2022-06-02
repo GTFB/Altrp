@@ -390,7 +390,6 @@ class Assets extends Component {
 
   render() {
 
-
     const {currentPage, pageCount, count} = this.state;
 
     let UploadIcon = iconsManager().getIconComponent('upload');
@@ -514,6 +513,17 @@ class Assets extends Component {
                            title: 'Title',
                          },
                          {
+                           name: 'url',
+                           title: 'Path',
+                           copy: true
+                         },
+                         {
+                           name: 'url-tab',
+                           title: 'Url',
+                           get: "url",
+                           switchToNewTab: true
+                         },
+                         {
                            name: 'media_type',
                            title: 'File type',
                          },
@@ -524,14 +534,6 @@ class Assets extends Component {
                          {
                            name: 'categories',
                            title: 'Categories'
-                         },
-                         {
-                           name: 'created_at',
-                           title: 'Created at'
-                         },
-                         {
-                           name: 'updated_at',
-                           title: 'Updated at'
                          }
                        ]}
 
@@ -646,6 +648,17 @@ class Assets extends Component {
                          button__table: true,
                        },
                        {
+                         name: 'url',
+                         title: 'Path',
+                         copy: true
+                       },
+                       {
+                         name: 'url-tab',
+                         title: 'Url',
+                         get: "url",
+                         switchToNewTab: true
+                       },
+                       {
                          name: 'media_type',
                          title: 'File type',
                        },
@@ -656,14 +669,6 @@ class Assets extends Component {
                        {
                          name: 'categories',
                          title: 'Categories'
-                       },
-                       {
-                         name: 'created_at',
-                         title: 'Created at'
-                       },
-                       {
-                         name: 'updated_at',
-                         title: 'Updated at'
                        }
                      ]}
 

@@ -1,4 +1,4 @@
-const {getResponsiveSetting} = window.altrpHelpers;
+import {getResponsiveSetting} from "../functions/getResponsiveSetting";
 import {
   shadowControllerToStyles,
   dimensionsControllerToStyles,

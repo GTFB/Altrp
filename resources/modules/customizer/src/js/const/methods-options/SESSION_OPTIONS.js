@@ -20,7 +20,7 @@ const classDescription = '';
  */
 const SESSION_OPTIONS = [
   {
-    value: 'Session.all',
+    value: 'session.all',
     objectInstance: 'Session',
     label: 'all',
     description: '',
@@ -33,7 +33,7 @@ const SESSION_OPTIONS = [
     ],
   },
   {
-    value: 'Session.getDefaultDriver',
+    value: 'session.getDefaultDriver',
     objectInstance: 'Session',
     label: 'getDefaultDriver',
     description: 'Get the default driver name.',
@@ -46,7 +46,7 @@ const SESSION_OPTIONS = [
     ],
   },
   {
-    value: 'Session.driver',
+    value: 'session.driver',
     objectInstance: 'Session',
     label: 'driver',
     description: 'Get a driver instance.',
@@ -67,7 +67,7 @@ const SESSION_OPTIONS = [
       })
     ],
   },{
-    value: 'Session.put',
+    value: 'session.put',
     objectInstance: 'Session',
     label: 'put',
     description: 'Put a key / value pair or array of key / value pairs in the session.',
@@ -89,7 +89,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.remember',
+    value: 'session.remember',
     objectInstance: 'Session',
     label: 'remember',
     description: 'Get an item from the session, or store the default value.',
@@ -113,7 +113,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.push',
+    value: 'session.push',
     objectInstance: 'Session',
     label: 'push',
     description: 'Push a value onto a session array.',
@@ -137,7 +137,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.increment',
+    value: 'session.increment',
     objectInstance: 'Session',
     label: 'increment',
     description: 'Increment the value of an item in the session.',
@@ -161,7 +161,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.decrement',
+    value: 'session.decrement',
     objectInstance: 'Session',
     label: 'decrement',
     description: 'Decrement the value of an item in the session.',
@@ -185,7 +185,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.flash',
+    value: 'session.flash',
     objectInstance: 'Session',
     label: 'flash',
     description: 'Flash a key / value pair to the session.',
@@ -207,7 +207,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.reflash',
+    value: 'session.reflash',
     objectInstance: 'Session',
     label: 'reflash',
     description: 'Reflash all of the session flash data.',
@@ -217,7 +217,7 @@ const SESSION_OPTIONS = [
     parameters:[
     ],
   },{
-    value: 'Session.remove',
+    value: 'session.remove',
     objectInstance: 'Session',
     label: 'remove',
     description: 'Remove an item from the session, returning its value.',
@@ -235,7 +235,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.forget',
+    value: 'session.forget',
     objectInstance: 'Session',
     label: 'forget',
     description: 'Remove one or many items from the session.',
@@ -253,7 +253,7 @@ const SESSION_OPTIONS = [
       }),
     ],
   },{
-    value: 'Session.flush',
+    value: 'session.flush',
     objectInstance: 'Session',
     label: 'flush',
     description: 'Remove all of the items from the session.',

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import InlineEditor from "@ckeditor/ckeditor5-build-inline";
 import UploadAdapterPlugin from "./Plugins/UploadAdapterPlugin";
+// import {ImageUploadProgress} from "@ckeditor/ckeditor5-image";
 
 const defaultToolbar = [
   "heading",
@@ -32,12 +33,21 @@ class CKeditor extends Component {
   }
 
   render() {
-    const text = this.props.text == undefined ? "Type text here" : this.props.text
+    const text = this.props.text === undefined ? "Type text here" : this.props.text
 
     const config = {
       extraPlugins: [UploadAdapterPlugin],
       body: this.body,
-      toolbar: defaultToolbar
+      toolbar: defaultToolbar,
+      heading: {
+        options: [
+          { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+          { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+          { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+          { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+          { model: 'code', view: {name: 'code', classes: 'ck-editor_code'}, title: 'Code', class: 'ck-heading_code' }
+        ]
+      }
     };
 
     if (this.props.textWidget) {
@@ -53,9 +63,9 @@ class CKeditor extends Component {
               // You can store the "editor" and use when it is needed.
               editor.plugins.get( 'TextTransformation' ).isEnabled = false;
             }}
-            onChange={(event, editor) =>
+            onChange={(event, editor) => {
               this.props.changeText(editor.getData())
-            }
+            }}
           />
         </>
       );
@@ -71,7 +81,9 @@ class CKeditor extends Component {
           editor.plugins.get( 'TextTransformation' ).isEnabled = false;
 
         }}
-        onChange={(event, editor) => this.props.onChange(event, editor)}
+        onChange={(event, editor) => {
+          this.props.onChange(event, editor)
+        }}
         onBlur={(event, editor) => this.props.onBlur(event, editor)}
       />
     );

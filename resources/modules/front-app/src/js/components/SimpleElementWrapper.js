@@ -3,10 +3,16 @@ import { changeCurrentPageProperty } from "../store/current-page/actions";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
-const {getDataByPath} = window.altrpHelpers;
 import styled from "styled-components";
 import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
 import React from "react";
+import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
+import isEditor from "../functions/isEditor";
+import replaceContentWithData from "../functions/replaceContentWithData";
+import setTitle from "../functions/setTitle";
+import altrpRandomId from "../functions/altrpRandomId";
+import conditionsChecker from "../functions/conditionsChecker";
+import altrpCompare from "../functions/altrpCompare";
 
 const TransparentDiv = styled.div`
 `;
@@ -48,7 +54,7 @@ class SimpleElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    !window.altrpHelpers.isEditor() && window?.frontApp?.onWidgetMount();
+    !isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -183,15 +189,15 @@ class SimpleElementWrapper extends Component {
       appStore
         .getState()
         .currentDataStorage.getProperty("currentDataStorageLoaded") &&
-      !window.altrpHelpers.isEditor() &&
+      !isEditor() &&
       this.props.element.getName() === "section"
     ) {
       let title = appStore.getState().currentTitle;
-      title = window.altrpHelpers.replaceContentWithData(title);
+      title = replaceContentWithData(title);
       if (appStore.getState().altrpPage.getProperty("title") !== title) {
         appStore.dispatch(changeCurrentPageProperty("title", title));
       }
-      window.altrpHelpers.setTitle(title);
+      setTitle(title);
     }
   }
   /**
@@ -200,7 +206,7 @@ class SimpleElementWrapper extends Component {
   updateElement() {
     this.setState(state => ({
       ...state,
-      updateToken: window.altrpHelpers.altrpRandomId()
+      updateToken: altrpRandomId()
     }));
   }
 
@@ -230,7 +236,7 @@ class SimpleElementWrapper extends Component {
         value
       };
     });
-    let elementDisplay = window.altrpHelpers.conditionsChecker(
+    let elementDisplay = conditionsChecker(
       conditions,
       element.getSettings("conditional_other_display") === "AND",
       this.props.element.getCurrentModel(),
@@ -274,13 +280,13 @@ class SimpleElementWrapper extends Component {
     let display = true;
     formConditions.forEach(c => {
       if (logic === "AND") {
-        display *= window.altrpHelpers.altrpCompare(
+        display *= altrpCompare(
           _.get(formsStore, `${formId}.${c.field_id}`),
           c.value,
           c.operator
         );
       } else {
-        display += window.altrpHelpers.altrpCompare(
+        display += altrpCompare(
           _.get(formsStore, `${formId}.${c.field_id}`),
           c.value,
           c.operator
@@ -323,7 +329,7 @@ class SimpleElementWrapper extends Component {
       styles.display = "none";
     }
     let CSSId = this.props.element.getSettings("advanced_element_id", "");
-    CSSId = window.altrpHelpers.replaceContentWithData(
+    CSSId = replaceContentWithData(
       CSSId,
       this.props.element.getCurrentModel().getData()
     );
@@ -398,7 +404,7 @@ class SimpleElementWrapper extends Component {
         WrapperComponent = React.Fragment;
         break;
     }
-    tooltip_text = window.altrpHelpers.replaceContentWithData(
+    tooltip_text = replaceContentWithData(
       tooltip_text,
       this.props.element.getCurrentModel().getData()
     );
@@ -412,6 +418,16 @@ class SimpleElementWrapper extends Component {
       onMouseEnter: tooltip_show_type === "hover" ? this.tooltipOnMouseEnter : null,
       onMouseLeave: tooltip_show_type === "hover" ? this.tooltipOnMouseLeave : null,
     };
+    const entranceAnimationType = element.getResponsiveSetting('en_an');
+    if (entranceAnimationType) {
+      wrapperProps['data-enter-animation-type'] = entranceAnimationType;
+      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay')?.size || 0;
+      wrapperProps.className = 'dynamic-animation altrp-invisible'
+      content = <>
+        <EntranceAnimationsStyles settings={element.getSettings()} elementId={element.getId()}/>
+        {content}
+      </>
+    }
     if (WrapperComponent === React.Fragment) {
       wrapperProps = {};
     }

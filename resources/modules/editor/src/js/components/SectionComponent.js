@@ -1,4 +1,5 @@
-const { isEditor, redirect } = window.altrpHelpers;
+import isEditor from "../../../../front-app/src/js/functions/isEditor";
+import redirect from "../../../../front-app/src/js/functions/redirect";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-section {

@@ -1,6 +1,9 @@
 import Query from "../../classes/Query";
 import {Scrollbars} from "react-custom-scrollbars";
-const {getDataByPath, getWidgetState, isEditor, storeWidgetState} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
+import getWidgetState from "../../../../../front-app/src/js/functions/getWidgetState";
+import storeWidgetState from "../../../../../front-app/src/js/functions/storeWidgetState";
 // const AltrpTableWithoutUpdate = React.lazy(() => import(/* webpackChunkName: 'altrp-table-without-update' */'../altrp-table/altrp-table-without-update'));
 // const AltrpTableWithoutUpdate = React.lazy(() => import(/* webpackChunkName: 'altrp-table-without-update' */'../altrp-table/altrp-table-without-update'));
 // const AltrpTable = React.lazy(() => import(/* webpackChunkName: 'altrp-table' */'../altrp-table/altrp-table'));

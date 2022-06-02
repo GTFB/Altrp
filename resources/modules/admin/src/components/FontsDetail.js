@@ -33,7 +33,7 @@ export class FontsDetail extends React.Component {
 
   getAuthorList = (id) => {
     this.props.getAuthorList().then(data => {
-      let author = data.find(item => item.id === id);
+      let author = data.users.find(item => item.id === id);
       this.setState({
         authorName: author.name,
       })
@@ -45,7 +45,7 @@ export class FontsDetail extends React.Component {
   }
 
   render() {
-    const {authorName, created_at, filename, media_type} = this.state
+    const {authorName, created_at, filename, url, media_type} = this.state
 
     if (!this.props.fontId) return null;
 
@@ -73,7 +73,12 @@ export class FontsDetail extends React.Component {
             </div>
             <div className="document-detail__content">
               <div className="document-detail__display">
-
+                {media_type === "video" && (
+                  <video preload="metadata" muted controls className="video-display">
+                    <source src={url} type="video/mp4"/>
+                    <source src={url} type="video/webm"/>
+                  </video>
+                )}
               </div>
               <div className="document-detail__editing-section">
                 <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>

@@ -1,6 +1,6 @@
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import numberWithSpaces from "../../helpers/number-with-spaces";
-const {isEditor} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 const Slider = window.altrpLibs.Blueprint.RangeSlider;
 

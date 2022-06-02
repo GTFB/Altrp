@@ -1,5 +1,5 @@
 import { Switch } from "@blueprintjs/core";
-const {TemplateLoader} = window.altrpHelpers;
+import TemplateLoader from "../template-loader/TemplateLoader";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-tabs-switcher_wrapper {

@@ -170,6 +170,7 @@ Route.group(() => {
      * Assets
      */
     Route.get('/media', 'admin/MediaController.index')
+    Route.put('/media/:id', 'admin/MediaController.updateMedia')
     Route.post('/media', 'admin/MediaController.store')
     Route.get('/media/:id', 'admin/MediaController.showFull')
     Route.delete('/media/:id', 'admin/MediaController.destroy')

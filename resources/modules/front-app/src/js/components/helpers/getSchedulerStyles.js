@@ -1,12 +1,6 @@
-import {getResponsiveSetting} from '../../helpers';
-import {
-  borderWidthStyled,
-  sizeStyled,
-  colorPropertyStyled,
-  simplePropertyStyled,
-  dimensionsControllerToStyles,
-  typographicControllerToStyles
-} from '../../helpers/styles';
+
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
+import { borderWidthStyled, sizeStyled, colorPropertyStyled, simplePropertyStyled, dimensionsControllerToStyles, typographicControllerToStyles } from '../../helpers/styles';
 
 const getSchedulerStyles = (settings, id) => {
   let styles = ''

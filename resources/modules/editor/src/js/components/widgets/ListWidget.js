@@ -1,4 +1,4 @@
-import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-list-ul {

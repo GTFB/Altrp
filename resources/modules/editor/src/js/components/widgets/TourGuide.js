@@ -1,5 +1,5 @@
 import AltrpTour from '../altrp-tour/AltrpTour';
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 class TourGuide extends Component {
   constructor(props) {

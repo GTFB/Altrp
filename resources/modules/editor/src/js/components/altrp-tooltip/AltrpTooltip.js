@@ -1,5 +1,6 @@
 import React from 'react';
-const {isEditor, isSSR} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import isSSR from "../../../../../front-app/src/js/functions/isSSR";
 let Tooltip2;
 
 if(window.altrpLibs) {

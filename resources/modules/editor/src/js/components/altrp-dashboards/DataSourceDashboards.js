@@ -17,7 +17,7 @@ import AddItemButton from "./settings/AddItemButton";
 import ExportDashboardButton from "./settings/ExportDashboardButton";
 import ImportDashboard from "./settings/ImportDashboard";
 import ImportDiagram from "./settings/ImportDiagram";
-import { isEditor } from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 

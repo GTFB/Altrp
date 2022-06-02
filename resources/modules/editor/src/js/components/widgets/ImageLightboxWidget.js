@@ -3,10 +3,8 @@ import {
   addImageToLightboxStorage, removeImageFromLightbox
 } from "../../../../../front-app/src/js/store/ligtbox-images-storage/actions";
 
-const {
-  getDataByPath,
-  isEditor, parseURLTemplate
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import AltrpImage from "../altrp-image/AltrpImage";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 

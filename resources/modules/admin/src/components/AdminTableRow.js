@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import NewTab from "./../svgs/newTab.svg";
 
 export default class AdminTableRow extends Component {
 
@@ -75,6 +77,22 @@ export default class AdminTableRow extends Component {
             props.src = row.url
             props.onClick = row.clickToImage
             delete props.children
+          }
+          if (column.copy) {
+            tag = CopyToClipboard
+            props.children = <button>Copy</button>
+            props.text = text
+            props.className = "copy-button__table"
+          }
+          if (column.switchToNewTab) {
+            tag = "button";
+            props.children = <NewTab width={16} height={16}/>
+            props.className = "tab-button__table"
+            props.onClick = () => {
+              let path = _.get(row, column.get, '')
+              let origin = window.location.origin
+              window.open(origin + path, '_blank')
+            }
           }
           if (column.is_boolean) {
             props.children = [

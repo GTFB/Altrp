@@ -56,6 +56,7 @@ import getAPiToken from "./js/functions/get-api-token";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 import {io} from "socket.io-client";
 import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-state/action";
+import getAltrpLang from "./js/helpers/get-altrp-lang";
 
 
 window.React = React;
@@ -302,6 +303,22 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminTablesDropList menu={this.state.menu}  activeButton={() => this.setState({ activeButton: 3 })}/>
                         </li>
+                        {getAltrpLang() === "javascript" ? (
+                          <li>
+                            <Link to="/admin/customizers"
+                                  className={
+                                     location.pathname.includes('customizers') ?
+                                      "admin-nav-list__link active__panel" :
+                                      "admin-nav-list__link admin-nav-list__link-top"
+                                  }
+                                  onClick={() => this.setState({ activeButton: 4 })}
+                            >
+                              <RobotsSvg className="icon" />
+                              <DropletSvg className="icon__droplet"/>
+                              <span>Visual Codes</span>
+                            </Link>
+                          </li>
+                        ) : (
                         <li>
                           <Link to="/admin/robots"
                                 className={
@@ -317,6 +334,7 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
+                        )}
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
@@ -483,6 +501,19 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminTablesDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 3 })}/>
                         </li>
+                        {getAltrpLang() === "javascript" ? (
+                          <li>
+                            <Link to="/admin/customizers"
+                                  className={
+                                     location.pathname.includes('customizers') ?
+                                      "admin-nav-list__link-mini active__panel" :
+                                      "admin-nav-list__link-mini admin-nav-list__link-top"}
+                                  onClick={() => this.setState({ activeButton: 4 })}
+                            >
+                              <RobotsSvg className="icon-mini" />
+                            </Link>
+                          </li>
+                        ) : (
                         <li>
                           <Link to="/admin/robots"
                                 className={
@@ -495,6 +526,7 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
+                        )}
 
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">

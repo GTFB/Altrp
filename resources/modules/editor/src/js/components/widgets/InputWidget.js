@@ -1,16 +1,14 @@
-import {
-  altrpCompare,
-  convertData,
-  isEditor,
-  parseOptionsFromSettings,
-  parseParamsFromString,
-  parseURLTemplate,
-  replaceContentWithData,
-  sortOptions,
-  renderAssetIcon,
-  valueReplacement,
-  getDataFromLocalStorage
-} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import convertData from "../../../../../front-app/src/js/functions/convertData";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
+import parseParamsFromString from "../../../../../front-app/src/js/functions/parseParamsFromString";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import altrpCompare from "../../../../../front-app/src/js/functions/altrpCompare";
+import valueReplacement from "../../../../../front-app/src/js/functions/valueReplacement";
+import sortOptions from "../../../../../front-app/src/js/functions/sortOptions";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
@@ -18,7 +16,7 @@ import AltrpModel from "../../classes/AltrpModel";
 import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 import AltrpInput from "../altrp-input/AltrpInput";
-const {moment} = window.altrpHelpers;
+import moment from 'moment';
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-field {

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ("./altrp-input.scss");
 import AltrpInputFile from "./AltrpInputFile";
-import { isValueMatchMask, validateEmail } from "../../../../../front-app/src/js/helpers";
+import validateEmail from "../../../../../front-app/src/js/functions/validateEmail";
 import MaskedInput from "./MaskedInput";
 
 class AltrpInput extends Component {

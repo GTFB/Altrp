@@ -10,7 +10,7 @@ import {
   iconSizeStyled,
   shadowControllerToStyles,
 } from '../../helpers/styles';
-import { getResponsiveSetting } from '../../helpers';
+import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
 
 /**
  * Преобразует объект стилей, который задается в виджете Cards в строку css для вставки в GlobalStyles

@@ -1,5 +1,5 @@
 import Query from "../../classes/Query";
-import {getDataByPath} from "../../../../../front-app/src/js/helpers";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import PostsComponent from '../altrp-posts/altrp-posts';
 
 class PostsWidget extends Component {

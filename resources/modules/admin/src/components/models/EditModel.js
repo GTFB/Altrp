@@ -53,6 +53,7 @@ class EditModel extends Component {
       modalWindow: false,
       modalRelationWindow: false,
       activeHeader: 0,
+      prevTitle: null
     };
 
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
@@ -117,6 +118,10 @@ class EditModel extends Component {
       }
     }))
     if (this.state.id) {
+      this.setState(state => ({
+        ...state,
+        prevTitle: document.title,
+      }))
       this.modelsResource.get(this.state.id)
         .then(model => {
           this.setState(state => ({
@@ -128,6 +133,7 @@ class EditModel extends Component {
             }
           }));
           this.modelName = model.name;
+          document.title = `Model: ${model.title} | Edit`;
         });
 
       this.fieldsResource.getAll()
@@ -148,6 +154,7 @@ class EditModel extends Component {
 
   componentWillUnmount() {
     window.removeEventListener("scroll", this.listenScrollHeader)
+    if (this.state.id) document.title = this.state.prevTitle;
   }
 
 
@@ -192,6 +199,7 @@ class EditModel extends Component {
     const { model, fields,  relations, sql_editors, accessors, isModalOpened,
        data_source_options, modalWindow, modalRelationWindow } = this.state;
 
+    console.log("title", this.state.prevTitle);
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
