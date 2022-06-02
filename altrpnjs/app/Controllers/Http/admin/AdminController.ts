@@ -49,8 +49,8 @@ export default class AdminController {
       }
         break;
       case 'templates':{
-        await AdminController.upgradeTemplates()
-        }
+        await AdminController.upgradeTemplates(request)
+      }
         break;
       case 'models':{
         await AdminController.upgradeModels()
@@ -64,7 +64,7 @@ export default class AdminController {
         await AdminController.upgradeListeners()
         await AdminController.upgradeModels()
         await AdminController.upgradePages(request)
-        await AdminController.upgradeTemplates()
+        await AdminController.upgradeTemplates(request)
 
       }
       }
@@ -82,14 +82,33 @@ export default class AdminController {
   }
 
 
-  private static async upgradeTemplates(){
+  private static async upgradeTemplates(request: RequestContract){
     Logger.info('Upgrading templates')
     const templateGenerator = new TemplateGenerator()
 
-    const templates = await Template.query().where('type', 'template').whereNull('deleted_at').select('*')
+
+    let templates
+    let id = request.input('id')
+    if(id){
+      if(id.indexOf(',')){
+        id = id.split(',')
+        templates = await Template.query()
+          .whereIn('id', id)
+          .select('*')
+      } else {
+        templates = await Template.query()
+          .where('id', id)
+          .select('*')
+      }
+    } else {
+      templates = await Template.query().whereNull('deleted_at').select('*')
+    }
     for (let template of templates) {
       try{
         await templateGenerator.run(template)
+
+        const used = process.memoryUsage().heapUsed / 1024 / 1024;
+        Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
         Logger.error(`Error while Template ${template.guid} generate: ${e.message}`, e.stack.split('\n'))
       }
@@ -179,10 +198,19 @@ export default class AdminController {
     Logger.info('Upgrading pages')
 
     let pages
-    if(request.input('id')){
-      pages = await Page.query()
-        .whereNull('deleted_at').where('id', request.input('id'))
-        .select('*')
+
+    let id = request.input('id')
+    if(id){
+      if(id.indexOf(',')){
+        id = id.split(',')
+        pages = await Page.query().whereNull('deleted_at')
+          .whereIn('id', id)
+          .select('*')
+      } else {
+        pages = await Page.query()
+          .where('id', id)
+          .select('*')
+      }
     } else {
       pages = await Page.query().whereNull('deleted_at').select('*')
     }

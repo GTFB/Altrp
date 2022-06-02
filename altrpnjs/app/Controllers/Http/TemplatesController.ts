@@ -17,6 +17,10 @@ import Area from "App/Models/Area";
 import mbParseJSON from "../../../helpers/mbParseJSON";
 
 export default class TemplatesController {
+  public async getAllIds({ response }) {
+    let templates =await Template.query().where('type', 'template').select('id')
+    return response.json({data: templates, success: true})
+  }
   public async index({ request }) {
     const params = request.qs();
      const page = parseInt(params.page) || 1

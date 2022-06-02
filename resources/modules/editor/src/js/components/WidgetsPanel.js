@@ -77,7 +77,6 @@ class WidgetsPanel extends Component {
         elements.hasOwnProperty(elementName) &&
         elements[elementName].getType() === "widget"
       ) {
-        console.log(elements[elementName].getType());
         widgets.push(elements[elementName]);
       }
     }

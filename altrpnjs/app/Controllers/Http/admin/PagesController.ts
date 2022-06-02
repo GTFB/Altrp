@@ -1,4 +1,4 @@
-// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { v4 as uuid } from "uuid";
 import Page from "App/Models/Page";
 import Template from "App/Models/Template";
@@ -6,9 +6,33 @@ import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
 import PageGenerator from "App/Generators/PageGenerator";
+import validGuid from "../../../../helpers/validGuid";
 
 export default class PagesController {
-  public async create({auth, request, response}) {
+  public async getTemplatePagesIds({ request, response}:HttpContextContract){
+    const template_id = request.params().template_id
+    let template
+    let pagesTemplates
+    if(validGuid(template_id)){
+      pagesTemplates = await PagesTemplate.query().where('template_guid', template_id)
+      template = await Template.query().where('guid', template_id)
+    } else {
+      pagesTemplates = await PagesTemplate.query().where('template_id', template_id)
+      template = await Template.find(template_id)
+    }
+    const excludePages = pagesTemplates.filter(pt=>pt.condition_type === 'exclude').map(pt=>pt.page_guid)
+    const includePages = pagesTemplates.filter(pt=>pt.condition_type === 'include').map(pt=>pt.page_guid)
+    console.log(includePages);
+    let pages
+    if(template.all_site){
+      pages = await Page.query().whereNotIn('guid', excludePages)
+    } else {
+      pages = await Page.query().whereIn('guid', includePages)
+    }
+    pages = pages.map(p=>p.id)
+    return response.json({data:pages, success:true})
+  }
+  public async create({auth, request, response}:HttpContextContract) {
     await auth.use("web").authenticate();
 
     let res: {
@@ -20,7 +44,7 @@ export default class PagesController {
       success: false,
     }
 
-    const data = {
+    const data: any = {
       ...request.body(),
       content: request.input("content") || "",
       model_id: request.input("model_id"),
