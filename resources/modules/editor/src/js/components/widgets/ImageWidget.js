@@ -126,7 +126,12 @@ class ImageWidget extends Component {
     if(_.get(this.props.element.getResponsiveLockedSetting('height_size'), 'size', '100') === "0") {
       height = ""
     }
-
+    if(! media){
+      media = {
+        url: '/img/nullImage.png',
+        media_type: 'image',
+      }
+    }
     let altrpImage = (
       <AltrpImage
         image={media}

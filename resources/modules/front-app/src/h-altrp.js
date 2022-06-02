@@ -151,13 +151,13 @@ window.addEventListener('h-altrp-loaded', e =>{
     module?.default(e);
   })
 
-  if(document.querySelector('[data-enter-animation-type]')){
-    import('./js/functions/add-animation-classes').then(module=>{
-      document.addEventListener('scroll', module.default)
-      module.default();
-    })
-  }
 })
 
+if(document.querySelector('[data-enter-animation-type]')){
+  import('./js/functions/add-animation-classes').then(module=>{
+    document.addEventListener('scroll', module.default)
+    module.default();
+  })
+}
 const altrpe = new Event(`altrpe`);
 document.dispatchEvent(altrpe)

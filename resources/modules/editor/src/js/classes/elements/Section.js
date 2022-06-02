@@ -58,7 +58,6 @@ class Section extends BaseElement{
         // }
       ],
       prefixClass: 'altrp-section_',
-      locked: true,
     });
 
     this.addControl(

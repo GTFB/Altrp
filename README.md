@@ -3,8 +3,14 @@
 
 ## Changelog
 
-### 1.1.1
+### 1.1.3
+* Fix Styles Load for Embedded Templates
+
+### 1.1.2
 * Fix Template Render Issues 
+* Fix Popup Position Settings Issues
+* Now When Creating Models, Customizers are Created
+* Add Telegram Bot Integration
 
 ### 1.1.1
 * ALTRP Updates via Admin

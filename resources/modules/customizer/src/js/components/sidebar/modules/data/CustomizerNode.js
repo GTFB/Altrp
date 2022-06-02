@@ -3,6 +3,7 @@ import store from "../../../../store/store";
 import { setUpdatedNode } from "../../../../store/customizer-settings/actions";
 import Resource from "../../../../../../../editor/src/js/classes/Resource";
 import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
+import PropertyComponent from "../../PropertyComponent";
 
 export default class CustomizerNode extends Component{
     constructor(props){
@@ -10,7 +11,8 @@ export default class CustomizerNode extends Component{
         this.state={
             customizerOptions: []
         }
-        this.customizerOptionsResource = new Resource({ route: "/admin/ajax/customizer_options" });
+
+        this.customizerOptionsResource = new Resource({ route: "/admin/ajax/customizers_options" });
     }
 
     async componentDidMount() {
@@ -41,7 +43,7 @@ export default class CustomizerNode extends Component{
 
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                 <div className="controller-container controller-container_select">
-                    <div className="controller-container__label control-select__label controller-label">Start</div>
+                    <div className="controller-container__label control-select__label controller-label"></div>
                     <div className="control-container_select-wrapper controller-field">
                     <select className="control-select control-field"
                         value={customizer || ''}
@@ -51,6 +53,14 @@ export default class CustomizerNode extends Component{
                         {customizerOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
                     </select>
                     </div>
+                </div>
+                <div>
+                  customizer name
+                </div>
+                <div>
+                  {
+                    customizer
+                  }
                 </div>
             </div>{/* ./controllers-wrapper */}
         </div> {/* ./settings-section */}

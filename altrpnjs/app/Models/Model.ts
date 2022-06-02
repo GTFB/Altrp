@@ -25,7 +25,7 @@ import SourceRole from 'App/Models/SourceRole'
 import Role from 'App/Models/Role'
 import Customizer from "App/Models/Customizer";
 import guid from "../../helpers/guid";
-import Timer from "App/Services/Timer";
+// import Timer from "App/Services/Timers";
 import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
@@ -436,10 +436,10 @@ export default class Model extends BaseModel {
           customizer = await Customizer.query().preload("altrp_model").firstOrFail()
 
           if (customizer?.settings?.time && customizer?.settings?.time_type) {
-            new Timer(customizer.name, {
-              time: customizer.settings.time,
-              type: customizer.settings.time_type
-            }, customizer)
+            // new Timer(customizer.name, {
+            //   time: customizer.settings.time,
+            //   type: customizer.settings.time_type
+            // }, customizer)
           }
           await source.save()
         }

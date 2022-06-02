@@ -329,7 +329,7 @@ export default class MediaController {
     if(fs.existsSync(filename)){
       fs.rmSync(filename)
     }
-    console.log(media.serialize())
+
     await media?.delete()
     return response.json({success: true, })
   }

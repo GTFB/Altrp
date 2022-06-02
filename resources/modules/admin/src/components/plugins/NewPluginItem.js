@@ -6,16 +6,18 @@ import './new-plugin-item.scss'
 class NewPluginItem extends Component {
   state = {};
   installPluginResource = new Resource({route: '/admin/ajax/plugins/install'})
-  installPlugin = async () => {
+  installPlugin = async (action = null) => {
     const {plugin,} = this.props
     let res
     try{
       res = await this.installPluginResource.post({
-        ...plugin
+        ...plugin,
+        action
       })
     }catch (e) {
       alert("Plugin failed to install: \n" + e.message)
-
+      console.error(e);
+      return
     }
     if(res?.success) {
       alert("Plugin successfully installed")
@@ -53,7 +55,7 @@ class NewPluginItem extends Component {
                 this.isPluginAdded(downloadedPlugins, plugin.name)
                   // проверка плагина на версионность, если плагину нужен апдейт - рендерим кнопку апдейта
                 ? this.checkVersion(plugin)
-                  ? <button className="update__btn" onClick={this.installPlugin}>Update</button>
+                  ? <button className="update__btn" onClick={() => this.installPlugin('update')}>Update</button>
                   : <button className="reinstall__btn" onClick={this.installPlugin}>Reinstall</button>
 
                   : <button className="install__btn" onClick={this.installPlugin}>Install</button>

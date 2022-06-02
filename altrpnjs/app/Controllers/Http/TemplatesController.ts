@@ -14,8 +14,13 @@ import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
+import mbParseJSON from "../../../helpers/mbParseJSON";
 
 export default class TemplatesController {
+  public async getAllIds({ response }) {
+    let templates =await Template.query().where('type', 'template').select('id')
+    return response.json({data: templates, success: true})
+  }
   public async index({ request }) {
     const params = request.qs();
      const page = parseInt(params.page) || 1
@@ -124,17 +129,44 @@ export default class TemplatesController {
 
     const guid = uuid();
 
-    const data = {
-      area: parseInt(request.input("area")),
-      data: JSON.stringify(request.input("data")),
-      name: request.input("name"),
-      title: request.input("title"),
-      type: "template",
-      guid,
-      user_id: auth.user?.id,
+    const body = request.body()
+    let template
+
+    if (body.type === "review") {
+
+
+      const {name, title, parent_template, type, data, styles} = body
+
+      const stringyfiedData = JSON.stringify(data)
+      const stringyfiedStyles = JSON.stringify(styles)
+      // console.log(name, title, 'parent_template:', +parent_template, type,)
+      // template = await Template.create({name, title, type, data: stringyfiedData, styles: stringyfiedStyles, parent_template: +parent_template, area: 1})
+
+      template = await Template.create({
+        area: 1,
+        data: stringyfiedData,
+        name: name,
+        title: title,
+        type: type,
+        styles: stringyfiedStyles,
+        parent_template: Number(parent_template),
+        guid,
+        user_id: auth.user?.id,
+      })
+    } else {
+      let data = {
+        area: parseInt(request.input("area")),
+        data: JSON.stringify(request.input("data")),
+        name: request.input("name"),
+        title: request.input("title"),
+        type: "template",
+        guid,
+        user_id: auth.user?.id,
+      }
+
+       template = await Template.create(data);
     }
 
-    const template = await Template.create(data);
 
     if(request.input("categories")) {
       for (const option of request.input("categories")) {
@@ -157,6 +189,7 @@ export default class TemplatesController {
     }
     let templateGenerator = new TemplateGenerator()
     await templateGenerator.run(template)
+
     return {
       message: "Success",
       redirect: true,
@@ -197,7 +230,7 @@ export default class TemplatesController {
     return template
   }
 
-  public async getTemplate({ params, response }) {
+  public async getTemplate({ params, response, request }) {
     const templateQuery = Template.query()
 
     if(isNaN(params.template_id)) {
@@ -206,7 +239,7 @@ export default class TemplatesController {
       templateQuery.where("id", parseInt(params.template_id))
     }
 
-    const template = await templateQuery.firstOrFail()
+    let template = await templateQuery.firstOrFail()
 
     if (!template) {
       response.status(404)
@@ -214,7 +247,22 @@ export default class TemplatesController {
         success: false
       }
     }
-      return template.dataWithoutContent()
+
+    // @ts-ignore
+    template = template.serialize()
+    // @ts-ignore
+    delete template.html_content
+    if(request.qs()?.withStyles){
+      let styles = mbParseJSON(template.styles)
+      if(styles.all_styles){
+        styles = styles.all_styles.join('')
+      }
+      template.styles = styles
+    } else {
+      // @ts-ignore
+      delete template.styles
+    }
+    return template
   }
 
   public async delete({ params }) {
@@ -319,7 +367,18 @@ export default class TemplatesController {
   }
 
   public async getReviews({ params, response }) {
-    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
+    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id))
+
+    if(templates.length > 0) {
+      return templates
+    } else {
+      response.status(404)
+      return templates
+    }
+  }
+
+  public async getReview({ params, response }) {
+    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id)).andWhere("id", parseInt(params.review_id));
 
     if(templates.length > 0) {
       return templates
@@ -527,6 +586,6 @@ export default class TemplatesController {
   template = template.serialize()
   delete template.html_content
   delete template.styles
-  return response.json(template);
+  return response.json({template});
   }
 }

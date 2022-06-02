@@ -244,21 +244,6 @@ class Customizer extends Component {
                 },
                 title: "Edit"
               }, {
-                // tag: "button",
-                // route: "/admin/ajax/customizers",
-                // method: "put",
-                // data: {name: 1},
-                // after: () => this.fetchData(),
-                // title: "Rename"
-
-
-                tag: "button",
-                route: "/admin/ajax/customizers",
-                method: "put",
-                data: {power: 1},
-                after: () => this.fetchData(),
-                title: "Enable"
-              }, {
                 tag: 'button',
                 route: '/admin/ajax/exports/customizers',
                 method: 'get',

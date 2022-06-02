@@ -7,20 +7,32 @@ import User from "App/Models/User"
 import Role from "App/Models/Role"
 import {promisify} from "util";
 import isProd from "../../../../helpers/isProd";
+import {TelegramBot} from "App/Services/TelegramBot";
 
 export default class SettingsController {
-  saveSettings({params, response, request, logger}: HttpContextContract) {
+  async saveSettings(httpContext: HttpContextContract) {
+    const {params, response, request, logger} = httpContext;
+
     if (!request.input('value')) {
       return response.json({})
     }
+
+    if(params.setting_name === "telegram_bot_token") {
+      await TelegramBot.startBotFromSettings(request.input('value'), null, null, httpContext, "token")
+    } else if(params.setting_name === "telegram_bot_webhook") {
+      await TelegramBot.startBotFromSettings(null, request.input('value'), null, httpContext, "webhook")
+    } else if(params.setting_name === "telegram_bot_keyboard") {
+      await TelegramBot.startBotFromSettings(null, null, request.input('value'), httpContext, "keyboard")
+    }
+
     try {
-      set_altrp_setting(params.setting_name, request.input('value'), request.input('encrypt'))
+      await set_altrp_setting(params.setting_name, request.input('value'), request.input('encrypt'))
     } catch (e) {
       logger.error(e.message)
       return response.json({})
     }
-    return response.json({result: true})
 
+    return response.json({result: true})
   }
 
   getSettings({params, response, request}: HttpContextContract) {

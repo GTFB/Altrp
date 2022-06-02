@@ -21,9 +21,9 @@ import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
-import User from "App/Models/User";
 import keys from "lodash/keys"
 import Customizer from "App/Models/Customizer";
+
 
 export default class ModelsController {
   async index({response, request}: HttpContextContract) {
@@ -123,22 +123,7 @@ export default class ModelsController {
         const created_at_column_exists = await Column.query().where('name', '=', 'created_at').andWhere('model_id', '=', model.id)
         const updated_at_column_exists = await Column.query().where('name', '=', 'updated_at').andWhere('model_id', '=', model.id)
 
-        if (!created_at_column_exists?.length) {
-          const created_at_column = new Column()
-          created_at_column.fill({
-            name: 'created_at',
-            title: 'created_at',
-            description: 'created_at',
-            null: true,
-            type: 'timestamp',
-            table_id: model.table.id,
-            model_id: model.id,
-            user_id: auth?.user?.id,
-          })
-          await created_at_column.save()
-        }
-
-        if (!updated_at_column_exists?.length) {
+        if (!created_at_column_exists?.length && !updated_at_column_exists?.length) {
           const updated_at_column = new Column()
           updated_at_column.fill({
             name: 'updated_at',
@@ -151,11 +136,48 @@ export default class ModelsController {
             user_id: auth?.user?.id,
           })
           await updated_at_column.save()
+          const created_at_column = new Column()
+          created_at_column.fill({
+            name: 'created_at',
+            title: 'created_at',
+            description: 'created_at',
+            null: true,
+            type: 'timestamp',
+            table_id: model.table.id,
+            model_id: model.id,
+            user_id: auth?.user?.id,
+          })
+          await created_at_column.save()
+
+          const client = Database.connection(Env.get('DB_CONNECTION'))
+          try {
+            await client.schema.table(model.table.name, table => {
+                table.timestamp('created_at')
+                table.timestamp('updated_at')
+            })
+          } catch (e) {
+            console.log(e)
+          }
         }
 
       } else {
-        await Column.query().where('name', '=', 'created_at').andWhere('model_id', '=', model.id).delete()
-        await Column.query().where('name', '=', 'updated_at').andWhere('model_id', '=', model.id).delete()
+        const created_at_column = await Column.query().where('name', '=', 'created_at').andWhere('model_id', '=', model.id)
+        const updated_at_column = await Column.query().where('name', '=', 'updated_at').andWhere('model_id', '=', model.id)
+
+        if(created_at_column?.length && updated_at_column?.length) {
+          const client = Database.connection(Env.get('DB_CONNECTION'))
+          try {
+            await client.schema.table(model.table.name, table => {
+              table.dropColumns('created_at', 'updated_at')
+            })
+          } catch (e) {
+            console.log(e)
+          }
+          await created_at_column[0].delete()
+          await updated_at_column[0].delete()
+        }
+
+
       }
       if (modelData.soft_deletes) {
         const deleted_at_column_exists = await Column.query().where('name', '=', 'deleted_at').andWhere('model_id', '=', model.id)
@@ -172,9 +194,32 @@ export default class ModelsController {
             user_id: auth?.user?.id,
           })
           await deleted_at_column.save()
+
+          const client = Database.connection(Env.get('DB_CONNECTION'))
+          try {
+            await client.schema.table(model.table.name, table => {
+              table.timestamp('deleted_at')
+            })
+          } catch (e) {
+            console.log(e)
+          }
+
         }
       } else {
-        await Column.query().where('name', '=', 'deleted_at').andWhere('model_id', '=', model.id).delete()
+        const column = await Column.query().where('name', '=', 'deleted_at').andWhere('model_id', '=', model.id)
+        if (column?.length) {
+          const client = Database.connection(Env.get('DB_CONNECTION'))
+          try {
+            await client.schema.table(model.table.name, table => {
+              table.dropColumn('deleted_at')
+            })
+          } catch (e) {
+            console.log(e)
+          }
+          await column[0].delete()
+        }
+
+
       }
       Event.emit('model:updating', model)
       await model.save()
@@ -264,8 +309,7 @@ export default class ModelsController {
 
   public async deleteModelRow(httpContext: HttpContextContract) {
     const id = parseInt(httpContext.params.id);
-    let user = new User
-    await httpContext.auth.use('web').login(user)
+
     const rowId = parseInt(httpContext.params.row);
 
     const model = await Model.query().where('id', id).firstOrFail();

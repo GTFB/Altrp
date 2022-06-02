@@ -12,7 +12,6 @@
         "admin-start": "webpack-dev-server --config webpack.admin.dev.js",
         "reports-start": "webpack-dev-server --config webpack.reports.dev.js",
         "robots-start": "webpack-dev-server --config webpack.robots.dev.js",
-        "customizer-start": "webpack-dev-server --config webpack.customizer.dev.js",
         "ts-compile": "tsc",
         "front-build": "webpack --config webpack.front.prod.js",
         "editor-build": "webpack --config webpack.editor.prod.js",

@@ -46,9 +46,13 @@ class SliderController extends Component {
   };
 
   getDefaultValue() {
+    let unit = 'px'
+    if(this.props?.units?.length){
+      unit = this.props.units[0]
+    }
     return {
       size: '',
-      unit: 'px',
+      unit,
     };
   }
   inputUpdate(e) {
@@ -107,11 +111,4 @@ class SliderController extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
 export default connect(controllerMapStateToProps)(SliderController);

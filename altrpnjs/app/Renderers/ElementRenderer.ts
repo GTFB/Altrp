@@ -76,14 +76,17 @@ export default class ElementRenderer {
         case 'section':{
           if (widthType === "boxed" && !isFixed) {
             section_classes = " altrp-section_boxed ";
-            styles['max-width'] = '100%'
           }
           if (widthType === "section_boxed" && !isFixed) {
             section_classes = " altrp-section_section-boxed "
           }
 
           if (widthType === "full" && !isFixed) {
-            section_classes = " altrp-section--full-width "
+          }
+          section_classes = ` {{getSectionWidthClass(element${this.getId()}_settings)}} `
+          if(this.getId() === '_j197hsngs'){
+            console.log(section_classes);
+
           }
         }
         break;
@@ -112,7 +115,7 @@ export default class ElementRenderer {
     }
 
     let content = fs.readFileSync(ElementRenderer.wrapperStub, {encoding: 'utf8'});
-    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} {{{getAddingClasses(element${this.getId()}_settings)}}} `;
+    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} {{{getAddingClasses(element${this.getId()}_settings, screen)}}} `;
     if (this.getType() === "widget") {
       classes += ` altrp-widget_${this.getName()}`;
     }
@@ -126,7 +129,8 @@ export default class ElementRenderer {
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
     {{{getResponsiveSetting(element${this.getId()}_settings, 'en_an', screen)
       ? \`data-enter-animation-type="\${getResponsiveSetting(element${this.getId()}_settings, 'en_an', device)}"
-      data-enter-animation-delay="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_delay', device, 0)}"
+      data-enter-animation-delay="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_delay', device)?.size || 0}"
+      data-enter-animation-duration="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_duration', device)?.size || 0}"
       \`
       : ''}}}
       ${reactElement ? `data-react-element="${this.getId()}"` : ''}

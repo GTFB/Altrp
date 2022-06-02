@@ -7,7 +7,8 @@ import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
-import Timer, {timers} from "App/Services/Timer";
+// import timers from "App/Services/Timers";
+import Timer from "App/Models/Timer";
 
 export default class CustomizersController {
 
@@ -47,10 +48,12 @@ export default class CustomizersController {
         customizer = await Customizer.query().preload("altrp_model").firstOrFail()
 
         if(customizer?.settings?.time && customizer?.settings?.time_type) {
-            new Timer(customizer.name, {
-              time: customizer.settings.time,
-              type: customizer.settings.time_type
-            }, customizer)
+          await Timer.createWithCheck({
+            type: "customizer",
+            value: customizer.guid,
+            time: customizer.settings.time,
+            time_type: customizer.settings.time_type
+          })
         }
         await source.save()
       }
@@ -140,7 +143,11 @@ export default class CustomizersController {
     // }
     const oldType = customizer.type
     const oldSettings = customizer.settings
+    const all = request.all()
+    delete all.created_at
+    delete all.updated_at
 
+    customizer.merge(all)
     customizer.merge({
       name: request.all().name,
       title: request.all().title,
@@ -202,12 +209,14 @@ export default class CustomizersController {
 
 
       if(customizer?.settings?.time && customizer.settings?.time_type) {
-        new Timer(customizer.name, {
+        await Timer.createWithCheck({
+          type: "customizer",
+          value: customizer.guid,
           time: customizer.settings.time,
-          type: customizer.settings.time_type
-        }, customizer)
+          time_type: customizer.settings.time_type
+        })
       } else if(oldSettings?.time_type !== customizer?.settings?.time_type || oldSettings?.time !== customizer?.settings?.time) {
-        timers.remove(customizer.name)
+        // await timers.remove(customizer.guid)
       }
 
     } catch
@@ -303,7 +312,7 @@ export default class CustomizersController {
       }
 
       if(customizer?.settings?.time && customizer?.settings?.time_type) {
-        timers.remove(customizer.name)
+        // await timers.remove(customizer.guid)
       }
 
       await customizer.delete()

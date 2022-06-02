@@ -49,6 +49,7 @@ class Image extends BaseElement {
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Image',
+      responsive: false,
       locked: true,
     });
 
