@@ -1,5 +1,5 @@
 export default function getSectionWidthClass(settings){
-  const {layout_content_width_type:widthType, isFixed} = this.element.settings
+  const {layout_content_width_type:widthType, isFixed} = settings
 
   let section_classes = 'altrp-section_boxed'
   if (widthType === "boxed" && !isFixed) {
