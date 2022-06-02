@@ -26,11 +26,13 @@ Route.group(() => {
 
     Route.post('/templates', 'TemplatesController.create').middleware('auth')
     Route.get('/templates', 'TemplatesController.index')
+    Route.get('/templates/getAllIds', 'TemplatesController.getAllIds')
     Route.get('/templates/options', 'TemplatesController.options')
     Route.get('/templates/:id', 'TemplatesController.get')
     Route.put('/templates/:id', 'TemplatesController.update')
     Route.delete('/templates/:id/reviews', 'TemplatesController.deleteReviews')
-    Route.get('/templates/:id/reviews', 'TemplatesController.getReviews')
+    Route.get('/templates/:id/reviews/', 'TemplatesController.getReviews')
+    Route.get('/templates/:id/reviews/:review_id', 'TemplatesController.getReview')
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
@@ -46,6 +48,7 @@ Route.group(() => {
 
     Route.post('/pages', 'admin/PagesController.create')
     Route.get('/pages', 'admin/PagesController.index')
+    Route.get('/get-template-pages-ids/:template_id', 'admin/PagesController.getTemplatePagesIds')
     Route.get('/pages/routes', 'admin/PagesController.getRoutes')
     Route.get('/pages/routes/add', 'admin/PagesController.addRoute')
 

@@ -844,7 +844,7 @@ class InputImageSelectWidget extends Component {
     const content_options = this.props.element.getResponsiveLockedSetting('content_options');
     const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0
+      && content_options?.indexOf('{{') === 0
       && ! model_for_options){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
       if( ! _.isArray(options)){

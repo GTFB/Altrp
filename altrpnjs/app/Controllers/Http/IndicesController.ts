@@ -16,14 +16,14 @@ export default class IndicesController {
     return view.render('admin', Edge({
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
-      url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/bundle.js"
+      url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/admin.js"
     }))
   }
   async customizer({view}) {
     return view.render('customizer', Edge({
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
-      url: Env.get("PATH_ENV") === "production" ? "/modules/customizer/customizer.js" : "http://localhost:3007/src/bundle.js"
+      url: Env.get("PATH_ENV") === "production" ? "/modules/customizer/customizer.js" : "http://localhost:3002/src/customizer.js"
     }))
   }
 

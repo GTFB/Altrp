@@ -1,185 +1,168 @@
 import Env from "@ioc:Adonis/Core/Env";
-import {Telegraf, } from "telegraf";
+import {Telegraf} from "telegraf";
 import User from "App/Models/User";
 import Customizer from "App/Models/Customizer";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
-import * as _ from "lodash";
+import HttpContext, {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
+import get_altrp_setting from "../../helpers/get_altrp_setting";
 
 export class TelegramBot {
   token
-  bot
-  markup = []
+  webhook
   keyboard
+  httpContext
+  customizer
+  customizerHttpContext
+  customizerController
+  // markup = []
+  // keyboard
 
-  constructor(token) {
-    if(!this.token) {
+  //@ts-ignore
+  constructor(token, webhook, keyboard, updated='', httpContext: null|HttpContextContract=null) {
+
+    if(httpContext) {
+      this.httpContext = httpContext
+    }
+
+    if(token && webhook) {
       this.token = token
+      this.webhook = webhook
+
+
+      this.init(updated).catch(e => {
+        console.log(e)
+      })
+    } else {
+      console.log("token or webhookUrl is null")
+      if(httpContext) {
+        httpContext.response.abort("token or webhookUrl is null")
+      }
     }
   }
 
-  async send(message, user, customizerData) {
-    const blocks = message.content
-    console.log(blocks)
+  static async startBotFromSettings(token?, webhook?, keyboard?, httpContext?, updated?) {
+    const envToken =Env.get("ALTRP_SETTING_TELEGRAM_BOT_TOKEN")
+    const envWebhook = Env.get("ALTRP_SETTING_TELEGRAM_BOT_WEBHOOK")
+    // const envKeyboard = get_altrp_setting("telegram_bot_keyboard", "", true)
 
-    if(this.token && !this.bot) {
-      try {
+    token = token || envToken;
+    webhook = webhook || envWebhook;
 
-        this.bot = new Telegraf(this.token)
-
-        await this.bot.launch()
-
-      } catch (e) {
-
-      }
+    if(updated) {
+      new TelegramBot(token, webhook, keyboard, updated, httpContext)
     }
-    if(this.bot) {
-      for (const block of blocks) {
-        if(user.telegram_chat) {
-          await this.sendByType(block, user, customizerData)
+  }
 
-          if(this.markup.length > 0) {
-            this.keyboard = this.markup.map((block: {
-              listener_value: string | undefined
-            }) => {
-              if(block.listener_value) {
-                return {
-                  text: block.listener_value
-                }
-              } else {
-                return {
-                  text: "Listener value is null"
-                }
-              }
-            })
-          }
+  async message(ctx, customizer, next?) {
+    if(!ctx.message && next) {
+      await next()
+      return
+    }
+
+    const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
+
+    const ControllerClass = isProd() ? (await require(controllerName)).default
+      : (await import(controllerName)).default
+    const controller = new ControllerClass()
+
+    const user = await User.query().where("telegram_chat", ctx.message.chat.id).first()
+
+    this.customizerHttpContext.auth = {
+      user
+    }
+
+    if(next) {
+      await next()
+    }
+    this.customizerHttpContext.ctx = ctx;
+    await controller[customizer.name](this.customizerHttpContext);
+
+  }
+
+  async init(updated) {
+    console.log("init")
+
+    const customizer = await Customizer.query().where("guid", this.webhook).preload("altrp_model").first()
+
+    if(customizer) {
+      const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
+
+      const ControllerClass = isProd() ? (await require(controllerName)).default
+        : (await import(controllerName)).default
+      const controller = new ControllerClass()
+
+      if(controller[customizer.name]) {
+        this.customizerHttpContext = HttpContext;
+
+        controller.sendNotification = async function () {}
+
+        this.customizerHttpContext.ctx = {
+          reply() {}
+        }
+
+        await controller[customizer.name](this.customizerHttpContext)
+
+        this.customizerController = controller
+
+        this.customizer = controller[customizer.name]
+      } else {
+        console.log("Customizer not found")
+        if(this.httpContext) {
+          this.httpContext.response.abort("Customizer not found")
+        } else {
+          return "Customizer not found"
         }
       }
 
-      this.bot.start((ctx) => {
-        const id = ctx.message.chat.id;
-        const username = ctx.message.from.username;
+      if(global.telegramBot && updated) {
+        if (global.telegramBot.polling !== undefined || global.telegramBot.webhookServer !== undefined) {
+          await global.telegramBot.stop()
+        }
 
-        User.query().where("telegram_user_id", username).orWhere("telegram_user_id", "@" + username).first().then((user) => {
-          if(user) {
-            user.telegram_chat = id;
-            user.save()
+        global.telegramBot = null
+      }
 
-            ctx.telegram.sendMessage(ctx.message.chat.id, message.start_text || "start text is null", {
-              hide_keyboard: true,
-              reply_markup: JSON.stringify({
-                keyboard: [
-                  this.keyboard,
-                ],
-                resize_keyboard: true
-              })
-            })
+      try {
+
+
+        global.telegramBot = new Telegraf(this.token, )
+
+        global.telegramBot.start(async (ctx) => {
+          await this.message(ctx, customizer)
+        });
+
+        global.telegramBot.use(async (ctx, next) => {
+          await this.message(ctx, customizer, next)
+        });
+
+        await global.telegramBot.launch().catch((e) => {
+          console.log(e)
+          if(this.httpContext) {
+            this.httpContext.response.abort(e)
           } else {
-            ctx.reply(`${Env.get("APP_URL")}/telegram/login?chat=${ctx.message.chat.id}`)
+            return e
           }
         })
-      })
-
-    } else {
-      console.log("Telegram bot is null")
-    }
-  }
-
-  async getData(block, customizerData, ctx=null) {
-    if(ctx) {
-      customizerData.context.ctx = ctx
-    }
-
-    switch (block.type) {
-      case "content":
-
-        return block.data.text || "message is null"
-
-      case "photo":
-      case "file":
-      case "document":
-      case "video":
-      case "link":
-
-        return block.data.url || "message is null"
-
-      case "customizer":
-        const customizer = await Customizer.query().where("name", block.data.customizer).preload("altrp_model").firstOrFail();
-
-        const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
-
-        const ControllerClass = isProd() ? (await require(controllerName)).default
-          : (await import(controllerName)).default
-        const controller = new ControllerClass()
-
-        const httpContext = _.get(customizerData, "httpContext");
-
-        if(controller[customizer.name]) {
-          const val = await controller[customizer.name](httpContext);
-
-          return val || "message is null"
+      } catch (e) {
+        console.log(e)
+        if(this.httpContext) {
+          this.httpContext.response.abort(e)
         } else {
-          return "error"
+          return e
         }
-
-    }
-  }
-
-  async sendByType(block, user, customizerData) {
-    customizerData.context.current_user = user;
-    customizerData.current_user = user
-    await customizerData.httpContext.auth.use('web').login(user)
-
-    if (block.listener && block.listener !== "none") {
-      try {
-        switch (block.listener) {
-          case "photo":
-
-            this.bot.on("photo", async (ctx) => {
-              ctx.reply(await this.getData(block, customizerData, ctx))
-            })
-
-            break
-          case "document":
-
-            this.bot.on("document", async (ctx) => {
-              ctx.reply(await this.getData(block, customizerData, ctx))
-            })
-
-            break
-          case "button":
-
-            //@ts-ignore
-            this.markup.push(block)
-
-          case "text":
-            if (!block.data.listener_value.startsWith("/")) {
-
-              this.bot.hears(block.data.listener_value, async (ctx) => {
-                ctx.reply(await this.getData(block, customizerData, ctx))
-              })
-
-            } else {
-
-              this.bot.command(block.data.listener_value, async (ctx) => {
-                ctx.reply(await this.getData(block, customizerData, ctx))
-              })
-
-            }
-            break
-        }
-      } catch (e) {
-        console.log(e)
       }
     } else {
-      try {
-
-        this.bot.telegram.sendMessage(user.telegram_chat, await this.getData(block, customizerData))
-      } catch (e) {
-        console.log(e)
+      console.log("customizer not found")
+      if(this.httpContext) {
+        this.httpContext.response.abort("customizer not found")
+      } else {
+        return "customizer not found"
       }
     }
   }
+
+
 }
 
-export default new TelegramBot(Env.get("ALTRP_SETTING_TELEGRAM_BOT_TOKEN"))
+export default new TelegramBot(Env.get("ALTRP_SETTING_TELEGRAM_BOT_TOKEN"), Env.get("ALTRP_SETTING_TELEGRAM_BOT_WEBHOOK"), get_altrp_setting("telegram_bot_keyboard", "", true), "", null)

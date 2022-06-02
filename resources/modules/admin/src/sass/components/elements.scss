@@ -781,6 +781,11 @@ input[type="text"].form__input {
   flex-basis: 23%;
 }
 
+.form-group_column {
+  display: flex;
+  flex-direction: column;
+}
+
 .relations__checkbox {
   display: flex;
   justify-content: space-between;

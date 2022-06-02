@@ -16,6 +16,8 @@ import {
   stringifyStylesheet
 } from "../../../../../front-app/src/js/helpers/elements";
 import templateStylesModule from "./TemplateStylesModule";
+import progressBar from "../../../../../admin/src/js/functions/progressBar";
+import upgradeBackend from "../../../../../admin/src/js/functions/upgradeBackend";
 
 class SaveImportModule extends BaseModule {
   constructor(modules) {
@@ -95,18 +97,28 @@ class SaveImportModule extends BaseModule {
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
 
     templateData.styles = await templateStylesModule.generateStyles();
-
-    this.resource
-      .put(this.template_id, templateData)
-      .then(res => {
-        store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
-        rootElement && rootElement.remove();
-      })
-      .catch(err => {
-        console.error(err);
-        store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
-        rootElement && rootElement.remove();
-      });
+    const pagesIds = (await(new Resource({route: `/admin/ajax/get-template-pages-ids/`}))
+      .get(this.template_id)).data
+    const count = pagesIds.length + 2;
+    progressBar(0.001)
+    await this.resource.post({
+      ...templateData,
+      type: "review",
+      parent_template: this.template_id
+    })
+    try{
+      await this.resource
+        .put(this.template_id, templateData)
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+      rootElement && rootElement.remove();
+    }catch (e) {
+      console.error(e);
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+      rootElement && rootElement.remove();
+      progressBar()
+    }
+    await upgradeBackend(['pages'], pagesIds)
+    progressBar(0)
   }
 
   /**

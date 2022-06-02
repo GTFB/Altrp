@@ -4,8 +4,9 @@ import Resource from "../../../editor/src/js/classes/Resource";
 class AutoUpdateInput extends Component {
   constructor(props){
     super(props);
+
     this.resource = new Resource({
-      route: this.props.route,
+      route: props.route,
     });
 
     this.state = {
@@ -24,8 +25,14 @@ class AutoUpdateInput extends Component {
    */
   componentDidUpdate(prevProps, prevState){
     if(prevProps.route !== this.props.route){
+      let route = this.props.route;
+
+      if(this.props.encrypt) {
+        route = route + "?decrypt=true"
+      }
+
       this.resource = new Resource({
-        route: this.props.route,
+        route,
       });
       console.log(this.resource);
     }
@@ -39,7 +46,14 @@ class AutoUpdateInput extends Component {
     if(this.props.value !== undefined || ! this.props.resourceid){
       return;
     }
-    let res = await this.resource.get(this.props.resourceid);
+
+    let resourceid = this.props.resourceid;
+
+    if(this.props.encrypt) {
+      resourceid = resourceid + "?decrypt=true"
+    }
+
+    let res = await this.resource.get(resourceid);
     this.setState(state=>{
       return{...state,
         value: res[this.props.resourceid] || "",
@@ -85,7 +99,7 @@ class AutoUpdateInput extends Component {
     if(_.isFunction(this.props.onBlur)){
       this.props.onBlur(newValue);
     }
-    let res = await this.resource.put(this.props.resourceid, {value: newValue, column_value: newValue});
+    let res = await this.resource.put(this.props.resourceid, {value: newValue, column_value: newValue, encrypt: this.props.encrypt || false});
 
     this.setState(state=>{
       return{...state,
@@ -100,11 +114,46 @@ class AutoUpdateInput extends Component {
     }
     const inputProps = {...this.props};
     delete inputProps.changevalue;
-    return<input{...inputProps} className={className}
-                onBlur={this.changeValue}
-                onKeyDown={this.onKeyDown}
-                onChange={this.onChange}
-                value={this.state.value}/>
+
+    delete inputProps.encrypt
+
+    let input = <input
+      {...inputProps}
+      className={className}
+      onBlur={this.changeValue}
+      onKeyDown={this.onKeyDown}
+      onChange={this.onChange}
+      value={this.state.value}
+    />
+
+    if(inputProps.type === "select") {
+      input = <select
+        {...inputProps}
+        className={className}
+        onBlur={this.changeValue}
+        onKeyDown={this.onKeyDown}
+        onChange={this.onChange}
+        value={this.state.value}
+      >
+        {
+          inputProps.children
+        }
+      </select>
+    } else if (inputProps.type === "textarea") {
+      input = <textarea
+        {...inputProps}
+        className={className}
+        onBlur={this.changeValue}
+        style={{
+          height: 200
+        }}
+        onKeyDown={this.onKeyDown}
+        onChange={this.onChange}
+        value={this.state.value}
+      />
+    }
+
+    return input
   }
 }
 

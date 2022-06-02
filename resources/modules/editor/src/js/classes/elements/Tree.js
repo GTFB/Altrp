@@ -101,7 +101,6 @@ class Tree extends BaseElement {
       conditions: {
         'select_type': "datasource",
       },
-      locked: true
     });
 
     let repeaterColumns = new Repeater();
@@ -111,9 +110,45 @@ class Tree extends BaseElement {
       label: "Label",
     });
 
+    repeaterColumns.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Heading width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'fr',
+        'px',
+        '%',
+      ],
+      max: 300,
+      min: 1,
+    });
+
     repeaterColumns.addControl('value', {
       type: CONTROLLER_TEXT,
       label: "Value",
+    });
+
+
+    repeaterColumns.addControl("width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Value width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'fr',
+        'px',
+        '%',
+      ],
+      max: 300,
+      min: 1,
+    });
+
+    repeaterColumns.addControl('divider', {
+      type: CONTROLLER_SWITCHER,
+      label: "Divider",
     });
 
     this.addControl("column_repeater", {
@@ -141,6 +176,34 @@ class Tree extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Columns heading",
       locked: true
+    });
+
+    this.addControl('flat_col', {
+      type: CONTROLLER_SWITCHER,
+      label: "Flat column",
+      locked: true
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('content_style', {
+      tab: TAB_STYLE,
+      label: 'Content',
+    });
+
+    this.addControl("width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 2000,
+      min: 100,
     });
 
     this.endControlSection();
@@ -249,20 +312,74 @@ class Tree extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('typographic_section', {
+    this.startControlSection('divider_section', {
       tab: TAB_STYLE,
-      label: 'Typographic',
+      label: 'Divider',
     });
 
-    this.addControl('typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
+    this.addControl('divider_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
       }
     );
 
-    this.addControl('typographic_color', {
+    this.addControl("divider_size", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('divider_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
+    });
+
+    this.addControl("divider_gap", {
+      type: CONTROLLER_SLIDER,
+      label: 'Gap',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
     });
 
     this.endControlSection();

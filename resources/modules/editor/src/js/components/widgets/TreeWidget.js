@@ -1,4 +1,6 @@
 import React from "react";
+import {NullArray} from "./styled-components/TreeComponent";
+
 const {
   getDataByPath,
   isEditor,
@@ -6,34 +8,62 @@ const {
   renderAssetIcon
 } = window.altrpHelpers;
 
-import {NullArray} from "./styled-components/TreeComponent";
-
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-tree-columns {
-    display: flex;
-  }
-
-  .altrp-tree-columns__column {
-    margin-right: 20px;
-  }
-
-  .altrp-tree-columns__column:last-child {
-    margin-right: 0;
+    display: grid;
   }
 
   .altrp-tree-heading {
-    display: flex;
+    display: grid;
     padding-left: 60px;
+    align-items: center;
   }
 
-  .altrp-tree-heading__column {
-    margin-right: 20px;
+  .altrp-tree-heading__text {
+    display: inline-block;
   }
 
-  .altrp-tree-heading__column:last-child {
-    margin-right: 0;
+  .altrp-tree {
+    overflow-x: auto;
+  }
+
+  .bp3-tree-root > .bp3-tree-node {
+    padding-left: 0;
+  }
+
+  .bp3-tree-node__border_last > .bp3-tree-node-content .altrp-tree-columns__column_divider {
+     border-bottom: none;
+  }
+
+  .bp3-tree-node {
+    padding-left: 20px
+  }
+
+  .bp3-collapse .bp3-tree-node-content {
+      padding: 0;
+  }
+
+  .altrp-tree-columns__column {
+    display: flex;
+    align-items: center;
+  }
+
+  .bp3-tree-node-expanded > .bp3-tree-node-content .altrp-tree-columns__column_divider {
+    border-bottom: none;
+  }
+
+  .bp3-tree-node-list > .bp3-tree-node__border_last {
+    margin-bottom: 10px
+  }
+
+  .altrp-tree-columns__column {
+    position-relative
+  }
+
+  .altrp-tree-container {
+    display: flex;
   }
 `)
 
@@ -65,9 +95,9 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
-  let data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
+  let data = _.cloneDeep(getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData()));
   settings.columns = this.props.element.getLockedSettings("column_repeater", []);
-
+  settings.flat = this.props.element.getLockedSettings("flat_col", false);
 
   if(!_.isArray(data)){
     return [];
@@ -123,18 +153,46 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   //   ]
   // }
 
+  settings.maxDepth = getMaxDepth(data, settings.maxDepth)
 
-  return data.map((branch) => replaceChildrenToChildNode(branch, settings.columns))
+  return data.map((branch, idx) => replaceChildrenToChildNode(branch, settings.columns, data.length - 1 === idx, 0, settings.flat, settings.maxDepth))
 }
 
-const replaceChildrenToChildNode = (branch, columns) => {
-  branch.childNodes = branch.children
+const getMaxDepth = (data, maxDepth=0, depth=0) => {
+  if(depth > maxDepth) {
+    maxDepth = depth
+  }
+
+  for(const branch of data) {
+    if(branch.children.length > 0) {
+      maxDepth = getMaxDepth(branch.children, maxDepth, depth+1)
+    }
+  }
+
+  return maxDepth
+}
+
+const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=false, maxDepth) => {
+  branch.childNodes = branch.children || []
 
   delete branch.children
 
-  branch.label = getColumns(columns, branch)
+  branch.depth = depth
 
-  branch.childNodes = branch.childNodes.map((branch) => replaceChildrenToChildNode(branch, columns))
+  branch.label = getColumns(columns, branch, flat, maxDepth)
+
+
+  branch.childNodes = branch.childNodes.map((childBranch, idx) => {
+    return  replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx, depth+1, flat, maxDepth)
+  })
+
+
+
+  if(!last) {
+    branch.className = "bp3-tree-node__border"
+  } else {
+    branch.className = "bp3-tree-node__border_last"
+  }
 
   if(branch.childNodes.length === 0) {
     branch.hasCaret = false
@@ -143,24 +201,123 @@ const replaceChildrenToChildNode = (branch, columns) => {
   return branch
 }
 
-const getColumns = (columns, branch) => {
+const getColumns = (columns, branch, flat, maxDepth) => {
   const filteredColumns = columns.filter(c => {
 
-    return branch[c.value]
+    return branch[c.value] !== null && branch[c.value] !== undefined
   })
 
-  return <div className="altrp-tree-columns">
+  const firstElementWidth = filteredColumns[0].size || "1" + filteredColumns[0].unit || "px"
+  const widths = filteredColumns.slice(1).map(column => {
+    if(column.width) {
+      return `${(column.width.size || "1") + column.width.unit || "fr"}`
+    } else {
+      return "1fr"
+    }
+  })
+
+  const values = {
+    classNames: "altrp-tree-columns__column",
+    marginRight: 0,
+    translateX: 0
+  }
+
+  if(flat) {
+    if(maxDepth > 0) {
+      values.marginRight = 20 + (20 * maxDepth) - (branch.depth * 20)
+    }
+
+    if(columns[0].divider) {
+      values.classNames += " altrp-tree-columns__column_divider"
+    }
+  }
+
+  return <>
     {
-      filteredColumns.map((column, idx) => (
-        <div className="altrp-tree-columns__column" key={idx}>
+      !flat ? (
+        <div className="altrp-tree-columns" style={{
+          gridTemplateColumns: widths.join(" ")
+        }}>
           {
-            branch[column.value]
+            filteredColumns.map((column, idx) => {
+              let classNames = "altrp-tree-columns__column";
+              let translateX = 0;
+              let marginRight = 0;
+
+              // if(idx > 0 && branch.depth > 0) {
+              //   translateX = (15 * branch.depth)
+              // }
+              //
+              // if(idx === 0 && branch.depth > 0 && maxDepth > 0) {
+              //   marginRight = 20 + (20 * maxDepth)
+              // }
+
+              if(column.divider) {
+                classNames += " altrp-tree-columns__column_divider"
+              }
+
+              // console.log(marginRight)
+
+              return (
+                <div
+                  className={classNames}
+                  key={idx}
+                >
+                  {
+                    branch[column.value]
+                  }
+                </div>
+              )
+            })
           }
         </div>
-      ))
+      ) : (
+        <>
+          {
+            <div
+              className={values.classNames}
+              style={{
+                width: firstElementWidth,
+                marginRight: values.marginRight,
+                float: "left"
+              }}
+            >
+              {
+                branch[columns[0].value]
+              }
+            </div>
+          }
+          <div className="altrp-tree-columns_flat altrp-tree-columns" style={{
+            transform: `translateX(-${values.translateX}px)`,
+            gridTemplateColumns: widths.join(" ")
+          }}>
+            {
+              filteredColumns.map((column, idx) => {
+                if(idx === 0) return "";
+
+                let classNames = "altrp-tree-columns__column";
+
+                // console.log(marginRight)
+
+                return (
+                  <div
+                    className={classNames}
+                    key={idx}
+                  >
+                    {
+                      branch[column.value]
+                    }
+                  </div>
+                )
+              })
+            }
+          </div>
+        </>
+      )
     }
-  </div>
+  </>
 }
+
 
 export const updateRepeater = function (repeaterSetting, other={}) {
   const repeater = [];
@@ -300,9 +457,14 @@ class TreeWidget extends Component {
         repeater: filtrationRepeater
       }))
     } else if(settings.type === "datasource") {
-      settings = {
+      let settings = this.props.element.getSettings();
 
-      }
+      const data = this.getFromDatasource(settings) || [];
+
+      this.setState((s) => ({
+        ...s,
+        repeater: data
+      }))
       //
       // this.setState(s => ({
       //   ...s,
@@ -313,38 +475,27 @@ class TreeWidget extends Component {
 
 
 
-  // _componentDidUpdate(prevProps, prevState) {
-  //   let settings = {
-  //     type: this.state.type,
-  //   }
-  //
-  //   if(isEditor()) {
-  //     if(settings.type === "repeater") {
-  //       settings.repeater = this.props.element.getResponsiveLockedSetting("tree_repeater", "", []);
-  //       settings.prevRepeater = prevState.settings.tree_repeater || [];
-  //
-  //       if(settings.type === "repeater") {
-  //
-  //         const filtrationRepeater = this.updateRepeater(settings.repeater)
-  //
-  //         if(!_.isEqual(settings.prevRepeater, this.state.settings.tree_repeater)) {
-  //           this.setState(s => ({
-  //             ...s,
-  //             repeater: filtrationRepeater
-  //           }))
-  //         }
-  //       }
-  //     }
-  //
-  //     if(this.state.settings.select_type !== prevState.settings.select_type) {
-  //       this.setState(s => ({
-  //         ...s,
-  //         type: this.state.settings.select_type
-  //       }))
-  //     }
-  //   }
-  // }
-  //
+  _componentDidUpdate(prevProps) {
+    let path = this.props.element.getLockedSettings("tree_from_datasource", '');
+    path = path.replace(/}}/g, '').replace(/{{/g, '');
+    let rawData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
+
+    if(this.rawData !== rawData) {
+      this.rawData = rawData
+      if(! rawData?.length){
+        return
+      }
+      let settings = this.props.element.getSettings();
+
+      const data = this.getFromDatasource(settings) || [];
+
+      this.setState((s) => ({
+        ...s,
+        repeater: data
+      }))
+    }
+  }
+
   handleNodeClick(node, path) {
     const originallySelected = node.isSelected;
 
@@ -426,17 +577,29 @@ class TreeWidget extends Component {
   }
 
   getTreeHeading() {
-    const column_repeater = this.props.element.getLockedSettings("column_repeater");
+    const columns_repeater = this.props.element.getLockedSettings("column_repeater");
     const activated = this.props.element.getLockedContent("columns_heading_activator")
 
+    const widths = columns_repeater.map(column => {
+      if(column.label_width) {
+        return `${(column.label_width.size || "1") + column.label_width.unit || "fr"}`
+      } else {
+        return "1fr"
+      }
+    })
+
     return activated ? (
-      <div className="altrp-tree-heading">
+      <div className="altrp-tree-heading" style={{
+        gridTemplateColumns: widths.join(" ")
+      }}>
         {
-          column_repeater.map((column, idx) => (
+          columns_repeater.map((column, idx) => (
             <div className="altrp-tree-heading__column" key={idx}>
-              {
-                column.label
-              }
+              <div className="altrp-tree-heading__text">
+                {
+                  column.label
+                }
+              </div>
             </div>
           ))
         }
@@ -450,7 +613,7 @@ class TreeWidget extends Component {
   let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
       this.state.repeater.length > 0 ? (
-        <>
+        <div className="altrp-tree">
           {
             this.getTreeHeading()
           }
@@ -461,14 +624,14 @@ class TreeWidget extends Component {
             onNodeCollapse={this.handleNodeCollapse}
             onNodeExpand={this.handleNodeExpand}
           />
-        </>
+        </div>
       ) : (
         <NullArray>
           Add a branch
         </NullArray>
       )
     ) : this.state.repeater.length > 0 ? (
-      <>
+      <div className="altrp-tree">
         {
           this.getTreeHeading()
         }
@@ -479,7 +642,7 @@ class TreeWidget extends Component {
           onNodeCollapse={this.handleNodeCollapse}
           onNodeExpand={this.handleNodeExpand}
         />
-      </>
+      </div>
     ) : isEditor() ? (
       <NullArray>
         Datasource is null

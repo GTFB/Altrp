@@ -272,12 +272,14 @@ export function advancedTabControllers(element) {
   element.addControl('en_a_duration', {
     label: 'Animation Duration (ms)',
     type: CONTROLLER_SLIDER,
+    units: ['ms'],
     max: 1000,
     min: 0,
   })
   element.addControl('en_a_delay', {
     label: 'Animation Delay (ms)',
     type: CONTROLLER_SLIDER,
+    units: ['ms'],
     max: 1000,
     min: 0,
   })
@@ -1123,3 +1125,4 @@ export function advancedTabControllers(element) {
   actionsControllers(element, 'Appearance of Bottom of Element Actions', 'wrapper_appearB_', TAB_ADVANCED);
 
 }
+window.advancedTabControllers = advancedTabControllers

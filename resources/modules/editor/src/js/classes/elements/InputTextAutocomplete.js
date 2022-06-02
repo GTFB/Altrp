@@ -416,6 +416,7 @@ class InputTextCommon extends BaseElement {
     // });
 
     this.addControl("content_options", {
+      locked: true,
       type: CONTROLLER_TEXTAREA,
       label: "Or Type Select Options",
       conditions: {

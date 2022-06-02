@@ -91,7 +91,7 @@ export default class AltrpBaseController {
     DiscordBot.send(content)
   }
 
-  protected async sendNotification() {
+  public async sendNotification() {
     const messageData = _.get(this.customizerData, "message")
     const content = JSON.parse(replaceContentWithData(messageData.content, this.customizerData))
     const entitiesData = JSON.parse(messageData.entitiesData)
@@ -103,11 +103,11 @@ export default class AltrpBaseController {
       content
     }, messageData);
 
-    await notification.send(users, this.customizerData)
+    await notification.send(users)
   }
 
   protected async execCustomizer(name) {
-    const customizer = await Customizer.query().where("name", name).preload("altrp_model").firstOrFail();
+    const customizer = await Customizer.query().where("guid", name).preload("altrp_model").firstOrFail();
 
     const controllerName = app_path(`AltrpControllers/${customizer.altrp_model.name}Controller`);
 
@@ -118,7 +118,9 @@ export default class AltrpBaseController {
     const httpContext = _.get(this.customizerData, "httpContext");
 
     if(controller[customizer.name]) {
-      return await controller[customizer.name](httpContext)
+      const val = await controller[customizer.name](httpContext)
+
+      return val
     } else {
       return {
         message: "customizer name invalid",
