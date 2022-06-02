@@ -264,6 +264,10 @@ class CustomizerSettingsPanel extends React.Component {
                                        label: 'None',
                                      },
                                      {
+                                       value: 'minute',
+                                       label: 'Minute',
+                                     },
+                                     {
                                        value: 'hour',
                                        label: 'Hour',
                                      },
