@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import {BaseModel, column} from '@ioc:Adonis/Lucid/Orm'
-import timers from "App/Services/Timers";
+//import timers from "App/Services/Timers";
 import getNextWeek from "../../helpers/getNextWeek";
 import Customizer from "App/Models/Customizer";
 import isProd from "../../helpers/isProd";
@@ -9,6 +9,8 @@ import HttpContext from "@ioc:Adonis/Core/HttpContext";
 import { setTimeout, clearTimeout } from "node:timers"
 
 export default class Timer extends BaseModel {
+  public static table = 'altrp_timers'
+
   timeout
 
   constructor() {
@@ -42,7 +44,7 @@ export default class Timer extends BaseModel {
     } else {
       timer = await Timer.create(data)
     }
-    await timers.add(timer)
+    // await timers.add(timer)
   }
 
   public getTimeInMilliseconds() {

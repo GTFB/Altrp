@@ -16,7 +16,8 @@ class NewPluginItem extends Component {
       })
     }catch (e) {
       alert("Plugin failed to install: \n" + e.message)
-
+      console.error(e);
+      return
     }
     if(res?.success) {
       alert("Plugin successfully installed")

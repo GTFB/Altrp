@@ -128,7 +128,6 @@ class Timers {
     // other.update("timers", timerValue)
   }
 }
-
 const timers = new Timers()
 
 export default timers

@@ -7,7 +7,7 @@ import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
-import timers from "App/Services/Timers";
+// import timers from "App/Services/Timers";
 import Timer from "App/Models/Timer";
 
 export default class CustomizersController {
@@ -216,7 +216,7 @@ export default class CustomizersController {
           time_type: customizer.settings.time_type
         })
       } else if(oldSettings?.time_type !== customizer?.settings?.time_type || oldSettings?.time !== customizer?.settings?.time) {
-        await timers.remove(customizer.guid)
+        // await timers.remove(customizer.guid)
       }
 
     } catch
@@ -312,7 +312,7 @@ export default class CustomizersController {
       }
 
       if(customizer?.settings?.time && customizer?.settings?.time_type) {
-        await timers.remove(customizer.guid)
+        // await timers.remove(customizer.guid)
       }
 
       await customizer.delete()

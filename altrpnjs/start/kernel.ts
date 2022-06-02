@@ -15,7 +15,7 @@ import './view'
 import './events'
 import "../app/Services/TelegramBot"
 import "../app/Services/DiscordBot"
-import "../app/Services/Timers";
+//import "../app/Services/Timers";
 import Env from "@ioc:Adonis/Core/Env";
 import fs from "fs";
 import base_path from "../helpers/path/base_path";
