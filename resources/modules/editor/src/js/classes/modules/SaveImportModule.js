@@ -117,7 +117,11 @@ class SaveImportModule extends BaseModule {
       rootElement && rootElement.remove();
       progressBar()
     }
-    await upgradeBackend(['pages'], pagesIds)
+    if(pagesIds?.length){
+      await upgradeBackend(['pages'], pagesIds)
+    } else {
+      progressBar(1)
+    }
     progressBar(0)
   }
 
