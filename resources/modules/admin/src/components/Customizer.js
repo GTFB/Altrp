@@ -195,10 +195,10 @@ class Customizer extends Component {
           <div className="admin-heading-left">
             <div className="admin-breadcrumbs">
               <a className="admin-breadcrumbs__link" href="#">
-                Visual Codes
+                Robotizers
               </a>
               <span className="admin-breadcrumbs__separator">/</span>
-              <span className="admin-breadcrumbs__current">All Visual Codes</span>
+              <span className="admin-breadcrumbs__current">All Robotizers</span>
             </div>
             <button onClick={this.addNew} className="btn">
               Add New

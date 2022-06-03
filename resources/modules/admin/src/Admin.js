@@ -315,7 +315,7 @@ class Admin extends Component {
                             >
                               <RobotsSvg className="icon" />
                               <DropletSvg className="icon__droplet"/>
-                              <span>Visual Codes</span>
+                              <span>Robotizers</span>
                             </Link>
                           </li>
                         ) : (

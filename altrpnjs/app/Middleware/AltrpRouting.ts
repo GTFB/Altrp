@@ -178,8 +178,7 @@ export default class AltrpRouting {
         _.set(_frontend_route, 'templates', [])
         let res = await httpContext.view.render(`altrp/pages/${page.guid}`,
           Edge({
-            hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
-            url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+            hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3002/src/h-altrp.js',
             title: replaceContentWithData(page.title || 'Altrp', altrpContext),
             altrpContext,
             is_admin,

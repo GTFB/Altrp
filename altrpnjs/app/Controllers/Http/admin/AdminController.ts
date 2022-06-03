@@ -60,6 +60,10 @@ export default class AdminController {
       }
         break;
       default:{
+
+        if (fs.existsSync(resource_path('views/altrp'))) {
+          fs.rmSync(resource_path('views/altrp'), {recursive: true,})
+        }
         await AdminController.upgradeListeners()
         await AdminController.upgradeModels()
         await AdminController.upgradePages(request)
@@ -264,9 +268,6 @@ export default class AdminController {
   private static async upgradeListeners() {
     Logger.info('Upgrading Listeners')
 
-    if (fs.existsSync(resource_path('views/altrp'))) {
-      fs.rmSync(resource_path('views/altrp'), {recursive: true,})
-    }
     const listenerGenerator = new ListenerGenerator()
 
     await listenerGenerator.hookTemplates()

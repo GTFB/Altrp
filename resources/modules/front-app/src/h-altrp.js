@@ -41,8 +41,8 @@ documentCheckEvents(() => {
       && window.elementDecorator
       && window.ElementWrapper
       // && window.formsManager
-      && window.altrpHelpers
-      && window.altrpHelpers.replaceContentWithData
+      // && window.altrpHelpers
+      // && window.altrpHelpers.replaceContentWithData
       && window.appStore
       && window._
       /**
