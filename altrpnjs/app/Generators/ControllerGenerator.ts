@@ -55,6 +55,9 @@ export default class ControllerGenerator extends BaseGenerator {
       await s.load('model', model=>{
         model.preload('table')
       })
+      await s.load('altrp_model', model=>{
+        model.preload('table')
+      })
       if(s.sourceable_id){
         switch (s.sourceable_type){
           case Customizer.sourceable_type:{

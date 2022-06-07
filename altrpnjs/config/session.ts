@@ -8,6 +8,14 @@
 import Env from '@ioc:Adonis/Core/Env'
 import Application from '@ioc:Adonis/Core/Application'
 import { SessionConfig } from '@ioc:Adonis/Addons/Session'
+let secure = Env.get('COOKIE_SECURE',true)
+let sameSite:boolean|'lax' | 'none' | 'strict' = 'none'
+if(typeof secure === 'string'){
+  secure = secure === 'true'
+  if(! secure){
+    sameSite = false
+  }
+}
 
 const sessionConfig: SessionConfig = {
   enabled: true,
@@ -21,8 +29,8 @@ const sessionConfig: SessionConfig = {
     //@ts-ignore
       maxAge: 7200,
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      secure,
+      sameSite,
     }, // see the cookie driver
   file: {
     location: Application.tmpPath('sessions'),

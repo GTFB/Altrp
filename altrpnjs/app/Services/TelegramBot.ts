@@ -6,6 +6,7 @@ import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext, {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
+import Logger from "@ioc:Adonis/Core/Logger";
 
 export class TelegramBot {
   token
@@ -31,10 +32,9 @@ export class TelegramBot {
 
 
       this.init(updated).catch(e => {
-        console.log(e)
+        Logger.trace(e)
       })
     } else {
-      console.log("token or webhookUrl is null")
       if(httpContext) {
         httpContext.response.abort("token or webhookUrl is null")
       }

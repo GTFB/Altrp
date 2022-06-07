@@ -135,8 +135,17 @@ export default class TemplatesController {
     if (body.type === "review") {
 
 
-      const {name, title, parent_template, type, data, styles} = body
-
+      const {name, title, type, data, styles} = body
+      let {parent_template} =  body
+      if(validGuid(parent_template)){
+        parent_template = await Template.query().where('guid', parent_template).first()
+        if(! parent_template){
+          response.status(404)
+          return response.json({success:false, message: `Template ${parent_template} not found!`})
+        }
+        parent_template = parent_template.id
+      }
+      console.log(parent_template);
       const stringyfiedData = JSON.stringify(data)
       const stringyfiedStyles = JSON.stringify(styles)
       // console.log(name, title, 'parent_template:', +parent_template, type,)
@@ -199,7 +208,7 @@ export default class TemplatesController {
   }
 
   public async options({ request}:HttpContextContract) {
-    const query = Template.query()
+    const query = Template.query().whereNull('deleted_at')
     query.where('type', 'template')
     const qs = request.qs()
     if(qs.template_type){
