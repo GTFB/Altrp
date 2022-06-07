@@ -120,8 +120,10 @@ class CustomizerSettingsPanel extends React.Component {
 
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
-    const time = settings?.time || "";
-    const time_type = settings?.time_type || "none";
+    const MethodType = settings?.hook_type;
+
+    const time = customizer.time || "";
+    const time_type = customizer.time_type || "none";
 
     let Url = ''
     if (this.props.customizer.source !== null) {
@@ -176,11 +178,11 @@ class CustomizerSettingsPanel extends React.Component {
                                      {
                                        value: 'listener',
                                        label: 'Listener',
+                                     },
+                                     {
+                                       label: 'Model Class Method',
+                                       value: 'method'
                                      }
-                                     // {
-                                     //   value: 'method',
-                                     //   label: 'Model Custom Method',
-                                     // },
                                      // {
                                      //   value: 'before',
                                      //   label: 'Before Page Load',
@@ -188,7 +190,7 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {type === 'api' && <><div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                    {(type === 'api' || type === 'method') && <><div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
                       <AltrpSelect id="crud-fields"
                                    className="controller-field"
@@ -229,7 +231,19 @@ class CustomizerSettingsPanel extends React.Component {
                         </div>
                       )
                     }
-
+                    {
+                      type === "method" && (
+                        <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                          <div className="controller-container__label control-select__label controller-label">Method name</div>
+                          <InputGroup className="form-control-blueprint"
+                                      type="text"
+                                      id="customizer-title"
+                                      value={MethodType || ""}
+                                      onChange={this.changeMethodType}
+                          />
+                        </div>
+                      )
+                    }
                     <form className="Customizer-title" onSubmit={this.EditTitleForm}>
                       <div className="controller-container__label control-select__label controller-label">Title:</div>
                       <div className="customizer-block__title">
@@ -318,18 +332,14 @@ class CustomizerSettingsPanel extends React.Component {
   }
   changeTimeType = (e)=> {
     let {customizer} = this.props;
-    if(_.isArray(_.get(customizer, 'settings'))){
-      customizer = mutate.set(customizer, 'settings', {})
-    }
-    customizer = mutate.set(customizer, 'settings.time_type', e.value||'')
+
+    customizer = mutate.set(customizer, 'time_type', e.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   }
   changeTime = (e)=> {
     let {customizer} = this.props;
-    if(_.isArray(_.get(customizer, 'settings'))){
-      customizer = mutate.set(customizer, 'settings', {})
-    }
-    customizer = mutate.set(customizer, 'settings.time', e.target.value||'')
+
+    customizer = mutate.set(customizer, 'time', e.target.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   }
   changeModel = (e)=>{
@@ -345,7 +355,14 @@ class CustomizerSettingsPanel extends React.Component {
     customizer = mutate.set(customizer, 'settings.hook_type', e.target.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   };
-
+  changeMethodType = (e)=>{
+    let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
+    customizer = mutate.set(customizer, 'settings.method_type', e.target.value||'')
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+  };
 }
 function  mapStateToProps(state) {
   return {
