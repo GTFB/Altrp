@@ -79,7 +79,8 @@ export default class AdminController {
 
     } catch (e) {
       res.message = 'Error server restarting: \n' + e.message
-      Logger.error(e.message, e.stack.split('\n'))
+      e.message = 'Error server restarting: \n' + e.message
+      console.error(e);
     }
 
     return response.json(res)
@@ -114,7 +115,7 @@ export default class AdminController {
         const used = process.memoryUsage().heapUsed / 1024 / 1024;
         Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
-        Logger.error(`Error while Template ${template.guid} generate: ${e.message}`, e.stack.split('\n'))
+        console.error(`Error while Template ${template.guid} generate: ${e.message}`);
       }
     }
   }
@@ -227,7 +228,7 @@ export default class AdminController {
         const used = process.memoryUsage().heapUsed / 1024 / 1024;
         Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
-        Logger.error(`Error while Page ${page.guid} generate: ${e.message}`, e.stack.split('\n'))
+        console.error(`Error while Page ${page.guid} generate: ${e.message}`, e.stack.split('\n'));
       }
     }
   }
@@ -247,7 +248,7 @@ export default class AdminController {
       try{
         await modelGenerator.run(model)
       }catch (e) {
-        Logger.error(`Error while Model generate: ${e.message}`, e.stack.split('\n'))
+        console.error(`Error while Model generate: ${e.message}`);
       }
       let controller: any = model.altrp_controller
       if (!controller) {
@@ -261,7 +262,7 @@ export default class AdminController {
       try{
         await controllerGenerator.run(controller)
       }catch (e) {
-        Logger.error(`Error while Controller generate: ${e.message}`, e.stack.split('\n'))
+        console.error(e);
       }
     }
   }

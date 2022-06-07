@@ -56,7 +56,9 @@ export default class ControllerGenerator extends BaseGenerator {
         model.preload('table')
       })
       await s.load('altrp_model', model=>{
-        model.preload('table')
+        model.preload('table', loader=>{
+          loader.preload('columns')
+        })
       })
       if(s.sourceable_id){
         switch (s.sourceable_type){

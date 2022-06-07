@@ -174,7 +174,7 @@ export default class Source extends BaseModel {
       let controller = isProd() ? require(path).default : (await  import(path)).default
       return new controller()
     }catch (e) {
-      Logger.error(e.message)
+      console.error(e);
     }
   }
 
@@ -239,14 +239,14 @@ export default class Source extends BaseModel {
         case SQLEditor.sourceable_type:{
 
           if(!this.sQLEditor?.name){
-            Logger.error(`SQLEditor Not found method name type
+            console.error(`SQLEditor Not found method name type
              Source: ${this.name}`);
           }
           return this.sQLEditor?.name || `_${altrpRandomId()}`
         }
       }
       if(!this.sQLEditor?.name){
-        Logger.error(`Not found method name type
+        console.error(`Not found method name type
              Source: ${this.name}`);
       }
       return `_${altrpRandomId()}`
@@ -505,5 +505,25 @@ export default class Source extends BaseModel {
     }
 
     return datasources
+  }
+  async preloadSourceable(){
+    if(this.sourceable_id){
+      switch (this.sourceable_type){
+        case Customizer.sourceable_type:{
+          this.customizer = await Customizer.find( this.sourceable_id)
+          if(this.customizer){
+            await this.customizer.load('source')
+          }
+        }
+          break
+        case SQLEditor.sourceable_type:{
+          this.sQLEditor = await SQLEditor.find( this.sourceable_id)
+          if(this.sQLEditor){
+            await this.sQLEditor.load('source')
+          }
+        }
+          break
+      }
+    }
   }
 }
