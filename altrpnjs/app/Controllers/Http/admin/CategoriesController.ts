@@ -6,25 +6,40 @@ export default class CategoriesController {
 
   async index({response, request}: HttpContextContract){
     const params = request.qs()
-    const page = parseInt(params.page) || 1
-    const pageSize = parseInt(params.pageSize) || 10
+    const page = parseInt(params.page)
+    const pageSize = parseInt(params.pageSize)
     const searchWord = params.s
     let categories
+    let count
+    let pageCount
 
-    if (searchWord) {
-      categories = await Category.query()
-        .orWhere('name', 'LIKE', `%${searchWord}%`)
-        .orWhere('title', 'LIKE', `%${searchWord}%`)
-        .orWhere('description', 'LIKE', `%${searchWord}%`)
-        .orderBy('title').paginate(page, pageSize)
+    if (page && pageSize) {
+      if (searchWord) {
+        categories = await Category.query()
+          .orWhere('name', 'LIKE', `%${searchWord}%`)
+          .orWhere('title', 'LIKE', `%${searchWord}%`)
+          .orWhere('description', 'LIKE', `%${searchWord}%`)
+          .orderBy('title').paginate(page, pageSize)
+        const foundCategories = categories
+        categories = foundCategories.all()
+        count = foundCategories.getMeta().total,
+        pageCount = foundCategories.getMeta().last_page
+      } else {
+        categories = await Category.query().orderBy('title').paginate(page, pageSize)
+        const foundCategories = categories
+        categories = foundCategories.all()
+        count = foundCategories.getMeta().total,
+        pageCount = foundCategories.getMeta().last_page
+      }
     } else {
-      categories = await Category.query().orderBy('title').paginate(page, pageSize)
+      categories = await Category.query().orderBy('title')
     }
 
+
     return response.json({
-      categories: categories.all(),
-      count: categories.getMeta().total,
-      pageCount: categories.getMeta().last_page,
+      categories: categories,
+      count,
+      pageCount,
     })
   }
 
