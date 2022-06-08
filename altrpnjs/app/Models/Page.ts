@@ -35,9 +35,9 @@ import DEFAULT_REACT_ELEMENTS from '../../helpers/const/DEFAULT_REACT_ELEMENTS';
 import is_array from '../../helpers/is_array';
 import validGuid from '../../helpers/validGuid';
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
 import AltrpRouting from "App/Middleware/AltrpRouting";
 import PageGenerator from 'App/Generators/PageGenerator'
+
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -621,20 +621,35 @@ export default class Page extends BaseModel {
       prefix = `/screens/${screenName}`
       cssPrefix = `/${screenName}`
     }
-    // @ts-ignore
-    let footer:Template = await Template.getTemplate(this.id, 'footer')
-    let contentGuid = data_get(await Template.getTemplate(this.id, 'content'), 'guid')
+
+    let footer = await Template.getTemplate(this.id, 'footer')
+    let footerContent = ''
+    if(footer instanceof Template){
+      footerContent = await footer.getChildrenContent(screenName)
+    }
+    let content = await Template.getTemplate(this.id, 'content')
+    let contentGuid = data_get(content, 'guid')
+    let contentContent = ''
+    if(content instanceof Template){
+      contentContent = await content.getChildrenContent(screenName)
+    }
     let footerGuid = data_get(footer, 'guid')
-    let headerGuid = data_get(await Template.getTemplate(this.id, 'header'), 'guid')
-    const footerHash = footer.html_content ?  encodeURI(md5(footer.html_content)) : ''
+    let header = await Template.getTemplate(this.id, 'header')
+    let headerGuid = data_get(header, 'guid')
+    let headerContent = ''
+    if(header instanceof Template){
+      headerContent = await header.getChildrenContent(screenName)
+    }
+    //@ts-ignore
+    const footerHash = footer?.html_content ?  encodeURI(md5(footer?.html_content)) : ''
     let result = `<div class="app-area app-area_header">
-      ${headerGuid ? `@include('altrp${prefix}/templates/header/${headerGuid}')` : ''}
+      ${headerGuid ? headerContent : ''}
       </div>
       <div class="app-area app-area_content">
-      ${contentGuid ? `@include('altrp${prefix}/templates/content/${contentGuid}')` : ''}
+      ${contentGuid ? contentContent : ''}
       </div>
       <div class="app-area app-area_footer">
-      ${footerGuid ? `@include('altrp${prefix}/templates/footer/${footerGuid}')` : ''}
+      ${footerGuid ? footerContent : ''}
       </div>
       ${footerGuid ? `<link href="/altrp/css${cssPrefix}/${footerGuid}.css?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>` : ''}
       `
@@ -645,12 +660,20 @@ export default class Page extends BaseModel {
       .select('*')
 
     for (let area of areas) {
-      const template = await Template.getTemplate(this.id, area.name)
-      let customGuid = data_get(template, 'guid')
-      if (customGuid) {
+      const template:Template | {} = await Template.getTemplate(this.id, area.name)
+      if(template instanceof Template){
+        let content = await template.getChildrenContent(screenName)
         result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
+          ${content ? content : ''}
+          </div>`
+      } else {
+        let customGuid = data_get(template, 'guid')
+        if (customGuid) {
+          result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
           ${customGuid ? `@include('altrp${prefix}/templates/${area.name}/${customGuid}')` : ''}
           </div>`
+        }
+
       }
     }
 
@@ -793,82 +816,39 @@ export default class Page extends BaseModel {
 
   async renderPageAreas():Promise<string> {
     const areas = await this.getAreas(true)
-    let json = '['
+    // return JSONStringifyEscape(areas)
+
     for(const area of areas){
       if(_.isArray(area.templates)){
-        for(const {} of area.templates){
+        for(let templateKey in area.templates){
+          if(area.templates.hasOwnProperty(templateKey)){
+            if(area.templates[templateKey].data){
+              area.templates[templateKey].data =
+                mbParseJSON(area.templates[templateKey].data, area.templates[templateKey].data)
+              area.templates[templateKey].data = JSON.stringify(area.templates[templateKey].data)
+            }
 
-          json += JSON.stringify(area).replace(/\//g, '\\/')
-          json += ','
+          }
         }
         continue
       }
       if(area?.template?.data){
-        const _area = {...area}
-        delete _area.template
-        json += '{'
-        for(const key in _area){
-          if(_area.hasOwnProperty(key)){
-            json += `"${key}":${JSONStringifyEscape(_area[key])},`
-          }
-        }
-        const _template = {...area.template}
-        delete _template.data
-        json += `"template":{`
+        area.template.data = mbParseJSON(area.template.data, area.template.data)
+        area.template.data = JSON.stringify(area.template.data)
 
-        for(const key in _template){
-          if(_template.hasOwnProperty(key)){
-            json += `"${key}":${JSONStringifyEscape(_template[key])},`
-          }
-        }
-        let  data = area.template.data
-        if(_.isString(area.template.data)){
-          data = JSON.parse(data)
-        }
-        json +=`"data": ${Page._renderJsonFromElement(data, '') || '{}'}`
-        json += `} },`
+        // const data = {...area.template.data}
+        // delete area.template.data
+        // for(const key in data){
+        //   if(data.hasOwnProperty(key)){
+        //
+        //   }
+        // }
+
       }
 
     }
-    json +=']'
-    json  = await TemplateGenerator.prepareContent(json)
-    return json
-  }
 
-  private static _renderJsonFromElement(element, json){
-
-    const settings = {
-      ...element.settings,
-      ...element.settingsLock
-    }
-    const {
-      conditional_display_choose,
-      conditional_roles,
-      conditional_permissions,
-      react_element,
-    } = settings
-    if(DEFAULT_REACT_ELEMENTS.indexOf(element.name) === -1 && ! react_element){
-      if(_.isArray(element.children)){
-        for(const child of element.children){
-          json = Page._renderJsonFromElement(child, json)
-          if(json){
-            json += ','
-          }
-        }
-      }
-      return json
-    }
-    if(conditional_display_choose ||
-      (conditional_permissions?.length || conditional_roles?.length)){
-      json += `
-      @if(allowedForUser(${JSON.stringify(settings).replace(/\//g, '\\/')}, user))~
-      `
-      json += JSON.stringify(element).replace(/\//g, '\\/')
-      json += `
-      @end~
-      `
-    }
-    return json
+    return JSONStringifyEscape(areas)
   }
 
 }

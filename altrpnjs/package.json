@@ -48,6 +48,7 @@
     "envfile": "^6.17.0",
     "fs-extra": "^10.0.0",
     "heic-convert": "^1.2.4",
+    "html-minifier": "^4.0.0",
     "image-size": "^1.0.1",
     "jimp": "^0.16.1",
     "lodash": "^4.17.21",

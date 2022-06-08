@@ -1,7 +1,6 @@
 import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
-import Edge from '../../helpers/edge';
 import replaceContentWithData from "../../helpers/replaceContentWithData"
 import {matchPath} from 'react-router'
 import empty from "../../helpers/empty"
@@ -14,6 +13,9 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
 import resource_path from "../../helpers/path/resource_path";
 import fs from "fs";
+import base_path from "../../helpers/path/base_path";
+import * as mustache from 'mustache'
+import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 
 export default class AltrpRouting {
 
@@ -130,12 +132,6 @@ export default class AltrpRouting {
           classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
-          // res = minify(res, {
-          //   collapseWhitespace:true,
-          //   minifyCSS: true,
-          //   minifyJS: true,
-          // })
-
         }
         model_data = classInstance ? classInstance.serialize() : {}
       } catch (e) {
@@ -184,24 +180,30 @@ export default class AltrpRouting {
       let path = `altrp/pages/${page.guid}`;
       const device = getCurrentDevice(httpContext.request)
       if (fs.existsSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.edge`))) {
-        path = `altrp/screens/${device}/pages/${page.guid}`
+        path = `resources/views/altrp/screens/${device}/pages/${page.guid}.edge`
 
       }
       console.log(performance.now() - start);
-      let res = await httpContext.view.render(path,
-        Edge({
-          ...altrpContext,
-          altrpContext,
-          is_admin,
-          user,
-          csrfToken: httpContext.request.csrfToken,
-          isProd: isProd(),
-          model_data,
-          route_args: pageMatch.params,
-          datasources,
-          device,
-        })
-      )
+      let content = fs.readFileSync(base_path(path), 'utf8')
+
+      content = mustache.render(content, {
+        ...altrpContext,
+        altrpContext,
+        is_admin,
+        user,
+        csrfToken: httpContext.request.csrfToken,
+        isProd: isProd(),
+        model_data: JSONStringifyEscape(model_data),
+        route_args: JSONStringifyEscape(pageMatch.params),
+        datasources: JSONStringifyEscape(datasources),
+        altrp_skeleton_color: get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
+        altrp_skeleton_highlight_color:  get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) ,
+        altrp_image_lazy:  get_altrp_setting( 'altrp_image_lazy', 'none' ) ,
+        container_width: get_altrp_setting( 'container_width', '1440' ),
+        device,
+      })
+      let res = content
+
       console.log(performance.now() - start);
 
       /**

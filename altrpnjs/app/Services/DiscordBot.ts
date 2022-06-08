@@ -34,15 +34,13 @@ export class DiscordBot {
   }
 
   sendByType(block, channel) {
-    console.log(block)
     try {
       switch (block.type) {
         case "message":
-          console.log(block.value)
           channel.send(block.value)
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 }

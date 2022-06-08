@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @include('favicons')
-    @!component('front-app-css')
+    {{{favicons}}}
+    {{{front_app_css}}}
     <title>{{title}}</title>
     <meta property="og:title" content="{{title}}">
 
@@ -59,26 +59,24 @@
         window.currentPage = {{{_frontend_route}}};
 {{=<% %>=}}
         window.pageStorage = {};
-        window.ALTRP_DEBUG = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_debug', false ) ) }}};
-        window.ALTRP_LOAD_BY_USER = {{{ JSON.stringify( ! ! get_altrp_setting( 'altrp_user_load', false ) ) }}};
         window.lazySections = [];
         if (typeof window.page_id !== 'undefined' && typeof page_areas !== 'undefined') {
           window.pageStorage[window.page_id] = {areas:page_areas};
         }
-        window.altrpImageLazy = '{{ get_altrp_setting( 'altrp_image_lazy', 'none' ) }}';
-        window.altrpSkeletonColor = '{{ get_altrp_setting( 'altrp_skeleton_color', '#ccc' ) }}';
-        window.altrpSkeletonHighlightColor = '{{ get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) }}';
-        window.model_data = {{{ JSON.stringify( model_data ) }}};
-        window.altrpPreloadedDatasources = {{{ JSON.stringify( datasources ?? '' ).replace(/\//g, '\\/') }}};
+        window.altrpImageLazy = '{{altrp_image_lazy}}';
+        window.altrpSkeletonColor = '{{altrp_skeleton_color}}';
+        window.altrpSkeletonHighlightColor = '{{altrp_skeleton_highlight_color}}';
+        window.model_data = {{{model_data}}};
+        window.altrpPreloadedDatasources = {{{datasources }}};
         window.altrpMenus = [];
-        window.route_args = {{{ JSON.stringify( route_args ) }}};
-        window.container_width = {{{ get_altrp_setting( 'container_width', '1440' ) }}};
+        window.route_args = {{{route_args}}};
+        window.container_width = {{{container_width}}};
         /* ]]> */
       </script>
-    <script src="/serviceWorker.js?{{env('PACKAGE_KEY')}}"></script>
+    <script src="/serviceWorker.js?{{PACKAGE_KEY}}"></script>
     <%={{ }}=%>
     <script defer src="{{ hAltrp }}"></script>
     {{{extra_footer_styles}}}
-  @!component('front-app-js')
+  {{{all_site_js}}}
 </body>
 </html>

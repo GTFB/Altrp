@@ -128,7 +128,6 @@ export default class ElementRenderer {
               this.isLink() ? 'altrp-pointer' : '',
               children_content
             );
-          console.log(element_content);
         }
       } else {
         element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})

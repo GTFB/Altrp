@@ -21,7 +21,6 @@ import fs from "fs";
 import {promisify} from "util";
 import resource_path from "../../../../helpers/path/resource_path";
 import Logger from "@ioc:Adonis/Core/Logger";
-import public_path from "../../../../helpers/path/public_path";
 import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";

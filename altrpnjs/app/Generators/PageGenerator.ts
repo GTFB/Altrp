@@ -1,5 +1,5 @@
 import fs from 'fs'
-import {BaseGenerator} from "./BaseGenerator";
+import BaseGenerator from "./BaseGenerator";
 import Application from "@ioc:Adonis/Core/Application";
 import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
@@ -10,6 +10,8 @@ import * as _ from "lodash";
 import getLatestVersion from "../../helpers/getLatestVersion";
 import Env from "@ioc:Adonis/Core/Env";
 import env from "../../helpers/env";
+import base_path from "../../helpers/path/base_path";
+import get_altrp_setting from "../../helpers/get_altrp_setting";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -63,6 +65,9 @@ export default class PageGenerator extends BaseGenerator {
     let elements_list:string[]|string = await page.extractElementsNames()
     elements_list = elements_list.map(e=>`'${e}'`)
     elements_list = elements_list.join(',')
+    const favicons = this.getFavicons()
+    const front_app_css = this.getFrontAppCss()
+    const all_site_js = this.getFrontAppJs()
     const pages = await this.page.getPagesForFrontend();
     const page_areas =  await page.renderPageAreas()
     for(const screen of SCREENS){
@@ -83,17 +88,19 @@ export default class PageGenerator extends BaseGenerator {
           _frontend_route: JSONStringifyEscape(_frontend_route),
           page_id: page.id,
           title: page.title,
+          front_app_css: front_app_css,
           version: getLatestVersion(),
           page_areas,
+          all_site_js,
           extra_header_styles,
           extra_footer_styles,
+          favicons,
           all_styles,
           _altrp: JSONStringifyEscape({
             version: getLatestVersion(),
             isNodeJS: true
           }),
-        })
-
+        }, false, true)
     }
     return
   }
@@ -129,5 +136,17 @@ export default class PageGenerator extends BaseGenerator {
       fontUrl = '<link rel="stylesheet"  href="' + fontUrl + '" />'
       return fontUrl
     }).join('')
+  }
+
+  private getFavicons() {
+    return fs.readFileSync(base_path('resources/views/favicons.html'), 'utf8')
+  }
+
+  private getFrontAppCss() {
+    return fs.readFileSync(base_path('resources/views/front-app-css.html'), 'utf8')
+  }
+
+  private getFrontAppJs() {
+    return `<script>${get_altrp_setting('all_site_js', '', true)}</script>`
   }
 }

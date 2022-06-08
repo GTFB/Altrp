@@ -4,7 +4,7 @@ import Column from "App/Models/Column";
 import Table from "App/Models/Table";
 import Relationship from "App/Models/Relationship";
 import fs from 'fs'
-import {BaseGenerator} from "./BaseGenerator";
+import BaseGenerator from "./BaseGenerator";
 import * as _ from "lodash";
 import ControllerGenerator from "./ControllerGenerator";
 import isProd from "../../helpers/isProd";

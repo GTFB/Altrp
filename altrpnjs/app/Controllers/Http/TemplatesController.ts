@@ -145,7 +145,7 @@ export default class TemplatesController {
         }
         parent_template = parent_template.id
       }
-      console.log(parent_template);
+
       const stringyfiedData = JSON.stringify(data)
       const stringyfiedStyles = JSON.stringify(styles)
       // console.log(name, title, 'parent_template:', +parent_template, type,)

@@ -9,9 +9,10 @@ import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
+import prepareContent from "../../helpers/prepareContent";
+import {minify} from 'html-minifier'
 
-export abstract class BaseGenerator{
+class BaseGenerator {
   private fileName: string;
   protected directory: string;
   private stubFilePath: string;
@@ -31,7 +32,7 @@ export abstract class BaseGenerator{
     return this
   }
 
-  protected async apply(vars: object,  prepareContent = false){
+  protected async apply(vars: object,  prepare = false, htmlMinify = false){
     let content: string = ''
 
     if(fs.existsSync(this.stubFilePath)){
@@ -39,11 +40,18 @@ export abstract class BaseGenerator{
     }
 
     content = mustache.render(content, vars)
-    if(prepareContent){
-      content = await TemplateGenerator.prepareContent(content)
+    if(prepare){
+      content = await prepareContent(content)
     }
     if(! fs.existsSync(this.directory)){
       fs.mkdirSync(this.directory, {recursive:true})
+    }
+    if(htmlMinify){
+      content = minify(content, {
+        collapseWhitespace:true,
+        minifyCSS: true,
+        minifyJS: true,
+      })
     }
     fs.writeFileSync(this.getFullFileName(), content)
     if(isProd()){
@@ -84,3 +92,4 @@ export abstract class BaseGenerator{
     return
   }
 }
+export default BaseGenerator

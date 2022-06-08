@@ -118,7 +118,7 @@ export default function renderInputSelect2(settings, device) {
   );
 }
 
-
+//@ts-ignore
 const renderSelect2 = (settings, device) => {
   // const {
   //   content_options_nullable,

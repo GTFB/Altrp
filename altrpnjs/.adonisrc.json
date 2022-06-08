@@ -50,6 +50,10 @@
       "reloadServer": false
     },
     {
+      "pattern": "resources/views/**/*.html",
+      "reloadServer": false
+    },
+    {
       "pattern": "resources/customizers/**/*.json",
       "reloadServer": false
     },

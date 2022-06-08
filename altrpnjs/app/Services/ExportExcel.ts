@@ -15,7 +15,6 @@ export default class ExportExcel {
     const sheetName = settings.name || "table"
 
     this.worksheet = this.workbook.addWorksheet(sheetName);
-    console.log(columns)
     this.worksheet.columns = columns.map((value) => ({
       header: value,
       key: value,

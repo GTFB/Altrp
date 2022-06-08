@@ -1,10 +1,9 @@
-import {BaseGenerator} from "App/Generators/BaseGenerator";
+import BaseGenerator from "./BaseGenerator";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import fs from "fs";
 import path from "path"
 import Customizer from "App/Models/Customizer";
-
 
 export default class ListenerGenerator extends BaseGenerator {
   public static directory = app_path('/AltrpListeners/')
