@@ -22,7 +22,7 @@ export default class PagesController {
     }
     const excludePages = pagesTemplates.filter(pt=>pt.condition_type === 'exclude').map(pt=>pt.page_guid)
     const includePages = pagesTemplates.filter(pt=>pt.condition_type === 'include').map(pt=>pt.page_guid)
-    console.log(includePages);
+
     let pages
     if(template.all_site){
       pages = await Page.query().whereNotIn('guid', excludePages)

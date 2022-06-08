@@ -1,6 +1,6 @@
 import React from "react";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-const {isEditor} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
    .altrp-input-pagination {

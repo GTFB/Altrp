@@ -1,12 +1,10 @@
 import AltrpInput from "../altrp-input/AltrpInput";
-const {
-  isEditor,
-  replaceContentWithData,
-  renderAsset,
-  getDataByPath,
-  parseOptionsFromSettings,
-  getDataFromLocalStorage,
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 const {
   MenuItem,
   Menu} = window.altrpLibs.Blueprint;

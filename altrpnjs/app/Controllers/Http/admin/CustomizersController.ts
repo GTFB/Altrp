@@ -66,6 +66,7 @@ export default class CustomizersController {
         await Event.emit('model:updated', model)
       }
     } catch (e) {
+      console.error(e);
       return response.json({
           'success':
             false,

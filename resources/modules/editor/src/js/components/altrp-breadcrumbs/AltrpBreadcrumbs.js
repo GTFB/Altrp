@@ -1,6 +1,7 @@
 import { withRouter } from "react-router";
 import ("./altrp-breadcrumbs.scss");
-import {isEditor, replaceContentWithData} from "../../../../../front-app/src/js/helpers";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import AltrpImage from "../altrp-image/AltrpImage";
 
 

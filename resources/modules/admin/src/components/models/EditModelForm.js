@@ -178,19 +178,19 @@ class EditModelForm extends Component {
           />
         </div>
 
-        <div className="form-group form-group_width23">
-          <label htmlFor="page-description" className="font__edit">Parent Model</label>
-          {/*<input type="text" id="page-description"*/}
-          {/*       value={model.parent_model_id || ''}*/}
-          {/*       onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
-          {/*       className="form-control" />*/}
-          <InputGroup className="form-control-blueprint"
-                      onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
-                      value={model.parent_model_id || ''}
-                      type="text"
-                      id="page-description"
-          />
-        </div>
+        {/*<div className="form-group form-group_width23">*/}
+        {/*  <label htmlFor="page-description" className="font__edit">Parent Model</label>*/}
+        {/*  <input type="text" id="page-description"*/}
+        {/*         value={model.parent_model_id || ''}*/}
+        {/*         onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
+        {/*         className="form-control" />*/}
+        {/*  <InputGroup className="form-control-blueprint"*/}
+        {/*              onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
+        {/*              value={model.parent_model_id || ''}*/}
+        {/*              type="text"*/}
+        {/*              id="page-description"*/}
+        {/*  />*/}
+        {/*</div>*/}
         <div className="form-group form-group_width23 form-group_column">
           <label htmlFor="page-description" className="font__edit">Model Description</label>
           {/*<input type="text" id="page-description"*/}

@@ -195,10 +195,10 @@ class Customizer extends Component {
           <div className="admin-heading-left">
             <div className="admin-breadcrumbs">
               <a className="admin-breadcrumbs__link" href="#">
-                Visual Codes
+                Robotizers
               </a>
               <span className="admin-breadcrumbs__separator">/</span>
-              <span className="admin-breadcrumbs__current">All Visual Codes</span>
+              <span className="admin-breadcrumbs__current">All Robotizers</span>
             </div>
             <button onClick={this.addNew} className="btn">
               Add New
@@ -243,21 +243,6 @@ class Customizer extends Component {
                   target: "_blank"
                 },
                 title: "Edit"
-              }, {
-                // tag: "button",
-                // route: "/admin/ajax/customizers",
-                // method: "put",
-                // data: {name: 1},
-                // after: () => this.fetchData(),
-                // title: "Rename"
-
-
-                tag: "button",
-                route: "/admin/ajax/customizers",
-                method: "put",
-                data: {power: 1},
-                after: () => this.fetchData(),
-                title: "Enable"
               }, {
                 tag: 'button',
                 route: '/admin/ajax/exports/customizers',

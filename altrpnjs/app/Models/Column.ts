@@ -205,7 +205,7 @@ decorate([
     ].indexOf(this.type) !== -1){
       return isProd() ? 'Boolean' : 'boolean'
     }
-    return 'any'
+    return 'String'
   }
 
   public static createIndexName(columnName, modelName):string {

@@ -21,7 +21,7 @@ import ACTIONS_NAMES from '../../helpers/const/ACTIONS_NAMES'
 import * as _ from 'lodash'
 import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
 import Database from '@ioc:Adonis/Lucid/Database'
-import Logger from '@ioc:Adonis/Core/Logger'
+
 import User from 'App/Models/User';
 import {isString} from 'lodash';
 import PageRole from 'App/Models/PageRole';
@@ -448,7 +448,7 @@ export default class Page extends BaseModel {
         }
       }
     } catch (e) {
-      Logger.error(e.message)
+      console.error(e);
     }
     return pages
   }

@@ -15,7 +15,7 @@ import TimesIcon from '../../svgs/times.svg';
 class AddMigrationPage extends Component{
     constructor(props){
         super(props);
-        
+
         //Типы  полей
         this.column_types = [
             {id: "id",name: "Identifier",fields:[]},
@@ -30,7 +30,7 @@ class AddMigrationPage extends Component{
             {id: "text",name: "Text",fields:["nullable","default","unique"]},
             {id: "timestamps",name: "Timestamps",fields:["size"]},
         ];
-        
+
         //Значения колонки по умолчанию
         const default_column = {
             id: "",
@@ -44,7 +44,7 @@ class AddMigrationPage extends Component{
             null: false,
             unique: false,
         };
-        
+
         //Значения ключа по умолчанию
         const default_key = {
             id: "",
@@ -55,7 +55,7 @@ class AddMigrationPage extends Component{
             onDelete: "restrict",
             onUpdate: "restrict",
         };
-        
+
         //Типы действий для onDelete и onUpdate
         this.key_actions = [
             {id: "restrict", name: "RESTRICT"},
@@ -63,7 +63,7 @@ class AddMigrationPage extends Component{
             {id: "set null", name: "SET NULL"},
             {id: "no action", name: "NO ACTION"},
         ];
-        
+
         //Колонки для таблицы полей
         this.table_columns = [
             {name: 'title',title: 'Title',},
@@ -76,17 +76,17 @@ class AddMigrationPage extends Component{
             {
                 name: 'edit',
                 title: 'Edit',
-                is_button: true, 
+                is_button: true,
                 button: {class: "",function: this.addModalColumnShow.bind(this),title: "Edit"},
             },
             {
                 name: 'delete',
                 title: 'Delete',
-                is_button: true, 
+                is_button: true,
                 button: {class: "",function: this.onDeleteColumnClick.bind(this),title: "Delete"},
             },
         ];
-        
+
         //Колонки для таблицы полей
         this.table_keys = [
             {name: 'target_table',title: 'Target Table',},
@@ -97,18 +97,18 @@ class AddMigrationPage extends Component{
             {
                 name: 'edit',
                 title: 'Edit',
-                is_button: true, 
+                is_button: true,
                 button: {class: "",function: this.addModalKeyShow.bind(this),title: "Edit"},
             },
             {
                 name: 'delete',
                 title: 'Delete',
-                is_button: true, 
+                is_button: true,
                 button: {class: "",function: this.onDeleteKeyClick.bind(this),title: "Delete"},
             },
         ],
-        
-        
+
+
         this.state = {
             column_modal_toggle: false,
             key_modal_toggle: false,
@@ -127,34 +127,34 @@ class AddMigrationPage extends Component{
             selected_key: null,
             key: default_key
         };
-        
+
         this.resource = new Resource({route: '/admin/ajax/tables'});
         this.migration_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/migrations'});
-        
+
         this.addModalColumnShow = this.addModalColumnShow.bind(this);
         this.addModalKeyShow = this.addModalKeyShow.bind(this);
-        
+
         this.onChangeColumn = this.onChangeColumn.bind(this);
         this.onChangeKey = this.onChangeKey.bind(this);
-        
+
         this.addColumn = this.addColumn.bind(this);
         this.addKey = this.addKey.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.getModalClasses = this.getModalClasses.bind(this);
-        
+
         this.onDeleteColumnClick = this.onDeleteColumnClick.bind(this);
         this.onDeleteKeyClick = this.onDeleteKeyClick.bind(this);
-        
+
         this.changeName = this.changeName.bind(this);
         this.saveMigration = this.saveMigration.bind(this);
-        
+
         this.isShowField = this.isShowField.bind(this);
-        
-        
-        
-        
+
+
+
+
     }
-    
+
     //Подгрузка данных
     async componentDidMount(){
         //Получаем данные о таблице
@@ -173,51 +173,51 @@ class AddMigrationPage extends Component{
             return{...state, data: { ...state.data, keys: keys_res}};
         });
     }
-    
+
     //Получаем класс для модального окна
     getModalClasses(type) {
-        
+
         let modal_toggle = type+"_modal_toggle";
-        
+
         let modalClasses = 'admin-modal';
         if (this.state[modal_toggle]) {
           modalClasses += ' admin-modal_active';
         }
         return modalClasses;
     }
-    
+
     //Получаем класс для модального окна
     isShowField(field_name) {
-        
+
         let state = false;
-        
+
         let type = this.column_types.find(item => item.id === this.state.column.type);
-        
+
         if(type) {
-            
+
             let index = type.fields.indexOf(field_name);
-            
+
             if(index > -1)  {
                 state = true;
             }
-            
+
         }
         return state;
     }
-    
+
     //Меняем переменную для открытия той или иной модали
     toggleModal(type) {
         let modal_toggle = type+"_modal_toggle";
-        
+
         this.setState((state) => {
             return { ...state, [modal_toggle]: !state[modal_toggle]}
-        }, () => {console.log(this.state)})
+        }, () => {})
     }
-    
-    
+
+
     addModalColumnShow(e) {
         let itemIndex = this.state.data.columns.indexOf(e);
-        
+
         this.setState((state) => {
             if(itemIndex === -1) {
                 return { ...state, selected_column: null, column: state.default_column}
@@ -225,15 +225,15 @@ class AddMigrationPage extends Component{
             else {
                 return { ...state, selected_column: itemIndex, column: state.data.columns[itemIndex]}
             }
-            
-        }, () => { 
+
+        }, () => {
             this.toggleModal("column");
         });
     }
-    
+
     addModalKeyShow(e) {
         let itemIndex = this.state.data.keys.indexOf(e);
-        
+
         this.setState((state) => {
             if(itemIndex === -1) {
                 return { ...state, selected_key: null, key: state.default_key}
@@ -241,21 +241,21 @@ class AddMigrationPage extends Component{
             else {
                 return { ...state, selected_key: itemIndex, key: state.data.keys[itemIndex]}
             }
-        }, () => { 
+        }, () => {
             this.toggleModal("key");
         });
     }
-    
+
     //Добавление столбца
     addColumn(e) {
         e.preventDefault();
-        
+
         let obj = {...this.state.column};
-        
+
         if(obj.id == "") {
             obj.id = new Date().getTime();
         }
-        
+
         this.setState((state) => {
             if(state.selected_column == null) {
                 return { ...state, data: { ...state.data,  columns: update(state.data.columns, {$push: [obj]})}};
@@ -267,17 +267,17 @@ class AddMigrationPage extends Component{
             this.toggleModal("column");
         });
     }
-    
+
     //Добавление ключа
     addKey(e) {
         e.preventDefault();
-        
+
         let obj = {...this.state.key};
-        
+
         if(obj.id == "") {
             obj.id = new Date().getTime();
         }
-        
+
         this.setState((state) => {
             if(state.selected_key == null) {
                 return { ...state, data: { ...state.data,  keys: update(state.data.keys, {$push: [obj]})}};
@@ -289,10 +289,10 @@ class AddMigrationPage extends Component{
             this.toggleModal("key");
         });
     }
-    
+
     onDeleteColumnClick(e){
         const conf = confirm(`Are you sure?`);
-        
+
         if (conf) {
             let itemIndex = this.state.data.columns.indexOf(e);
             if(itemIndex !== -1) {
@@ -304,10 +304,10 @@ class AddMigrationPage extends Component{
             }
         }
     }
-    
+
     onDeleteKeyClick(e){
         const conf = confirm(`Are you sure?`);
-        
+
         if (conf) {
             let itemIndex = this.state.data.keys.indexOf(e);
             if(itemIndex !== -1) {
@@ -319,7 +319,7 @@ class AddMigrationPage extends Component{
             }
         }
     }
-    
+
     /**
      * Изменение значений при работе с модальным окном
      * @param {type} e
@@ -328,36 +328,36 @@ class AddMigrationPage extends Component{
     onChangeColumn(e) {
         let field_name = e.target.name;
         let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
-        
+
         if(field_name === "name") {
-            
-        
+
+
             let val = e.target.value.replace("_", " ");
-            value = val.charAt(0).toUpperCase() + val.slice(1); 
-            
+            value = val.charAt(0).toUpperCase() + val.slice(1);
+
             let title = this.state.column.title;
             let description = this.state.column.description;
-            
+
             if(title === "" || title === value.slice(0, value.length - 1)) {
                 title = value;
             }
             if(description === "" || description === value.slice(0, value.length - 1)) {
-                description = value; 
+                description = value;
             }
-            
+
             this.setState({ ...this.state, column:{...this.state.column, [field_name]: e.target.value, title: title, description: description }});
             return;
         }
-        
-        this.setState({ ...this.state, column:{...this.state.column, [field_name]: value}}, () => {console.log(this.state)});
+
+        this.setState({ ...this.state, column:{...this.state.column, [field_name]: value}}, () => {});
     }
     onChangeKey(e) {
         let field_name = e.target.name;
         console.log(e.target.value);
         this.setState({ ...this.state, key:{...this.state.key, [field_name]: e.target.value}});
     }
-    
-    
+
+
     changeName(e) {
         let target = e.target;
         let name_value = target.value
@@ -367,12 +367,12 @@ class AddMigrationPage extends Component{
     }
     async saveMigration(e) {
         e.preventDefault();
-        
+
         if(this.state.name == "") {
             alert("Enter migration name!");
             return;
         }
-        
+
         let url = this.state.main_url + "/migrations";
         let headers = {
             'Content-Type': 'application/json'
@@ -388,8 +388,8 @@ class AddMigrationPage extends Component{
             body: JSON.stringify(data),
             headers,
         };
-        
-        
+
+
         let res;
         res = await this.migration_resource.post(data);
         console.log(res)
@@ -397,7 +397,7 @@ class AddMigrationPage extends Component{
             alert("Success");
         }
         else {
-            
+
             alert("Error");
         }
     }
@@ -426,8 +426,8 @@ class AddMigrationPage extends Component{
             <div>
                 <button onClick={(e) => this.addModalKeyShow(e)}>Add Key</button>
             </div>
-            
-            
+
+
             <div className={this.getModalClasses("key")}>
                 <div className="admin-modal__bg" onClick={() => this.toggleModal("key")}/>
                 <div className="admin-modal-content">
@@ -492,7 +492,7 @@ class AddMigrationPage extends Component{
                   </div>
                 </div>
             </div>
-            
+
             <div className={this.getModalClasses("column")}>
                 <div className="admin-modal__bg" onClick={() => this.toggleModal("column")}/>
                 <div className="admin-modal-content">
@@ -568,14 +568,14 @@ class AddMigrationPage extends Component{
                 </div>
               </div>
             <div>
-                
+
             </div>
             <div>
                 <form className="admin-form" onSubmit={this.saveMigration}>
                     <button className="btn btn_success">Save</button>
                 </form>
             </div>
-            
+
         </div>
     </div>;
   }

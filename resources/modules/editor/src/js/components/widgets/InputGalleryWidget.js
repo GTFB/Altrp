@@ -1,12 +1,9 @@
 import AltrpFile from "../../../../../front-app/src/js/classes/AltrpFile";
 import CloseIcon from "../../../svgs/times.svg"
-
-const {
-  isEditor,
-  parseOptionsFromSettings,
-  replaceContentWithData,
-  getDataFromLocalStorage
-} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
+import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 
 const FileInput = window.altrpLibs.Blueprint.FileInput;

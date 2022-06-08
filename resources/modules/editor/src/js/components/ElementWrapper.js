@@ -79,7 +79,7 @@ import getInputPagintaionStyles from "../../../../front-app/src/js/components/he
 import Overlay from "./Overlay";
 
 const { connect } = window.reactRedux;
-const { replaceContentWithData } = window.altrpHelpers;
+import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
   elementName,
   elementId,

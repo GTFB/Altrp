@@ -1,6 +1,6 @@
 import {CSSTransition} from "react-transition-group";
 
-const {iconsManager} = window.altrpHelpers
+import iconsManager from "../functions/iconsManager";
 import { Scrollbars } from "react-custom-scrollbars";
 import { togglePopup } from "../store/popup-trigger/actions";
 import AltrpImage from "../../../../editor/src/js/components/altrp-image/AltrpImage";
@@ -294,6 +294,8 @@ class FrontPopup extends Component {
     }
 
     const content_height = rootElement.getResponsiveSetting('content_height_custom_popup_layout')
+    const size = content_height?.size
+    const unit = content_height?.unit
     return (
       <CSSTransition
         in={isVisible}
@@ -326,7 +328,7 @@ class FrontPopup extends Component {
           >
             {close_context !== 'window' && closeButton}
             {rootElement.getSettings("").height_popup_layout === 'fitToContent'
-              ? <div className="popup-content" style={{height: content_height.size+content_height.unit}}>
+              ? <div className="popup-content" style={{height: size+unit}}>
                 {React.createElement(rootElement.componentClass, {
                   element: rootElement,
                   ElementWrapper :this.ElementWrapper,
@@ -348,7 +350,7 @@ class FrontPopup extends Component {
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
-                <div className="popup-content" style={{height: content_height.size+content_height.unit}}>
+                <div className="popup-content" style={{height: size+unit}}>
                   {React.createElement(rootElement.componentClass, {
                     element: rootElement,
                     ElementWrapper :this.ElementWrapper,

@@ -48,6 +48,9 @@ export default class TemplateGenerator extends BaseGenerator {
     if (!template) {
       return
     }
+    if(template.type !== 'template'){
+      return
+    }
     await template.load('currentArea')
 
     this.template = template

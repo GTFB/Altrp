@@ -1,7 +1,7 @@
 import Plus from "../../../svgs/plus.svg";
 import {useEffect, useRef, useState} from "react";
 import FeedbackWidgetHookComponent from "./FeedbackWidgetHookComponent";
-const {isEditor} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 
 function FeedbackWidgetHook({settings, idWidget, classes}) {

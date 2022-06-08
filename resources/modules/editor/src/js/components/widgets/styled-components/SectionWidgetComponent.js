@@ -1,4 +1,4 @@
-const { getResponsiveSetting } = window.altrpHelpers;
+import {getResponsiveSetting} from "../../../../../../front-app/src/js/functions/getResponsiveSetting"
 import {
   simplePropertyStyled,
   borderWidthStyled,
@@ -660,7 +660,6 @@ function altrpSectionFullHover(settings, state=':hover') {
  */
 
 export default function SectionWidgetComponent(settings, childrenLength, elementId) {
-
   // console.log(`& > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}`);
   return `
 

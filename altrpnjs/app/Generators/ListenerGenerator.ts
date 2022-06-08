@@ -106,7 +106,7 @@ export default class ListenerGenerator extends BaseGenerator {
 
         hook("listenrs", listenerGenerator)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
   }
@@ -151,7 +151,7 @@ export default class ListenerGenerator extends BaseGenerator {
 
         hook("templates", templateGenerator)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
   }
@@ -197,7 +197,7 @@ export default class ListenerGenerator extends BaseGenerator {
 
         hook("controllers", controllerGenerator)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
   }
@@ -243,7 +243,7 @@ export default class ListenerGenerator extends BaseGenerator {
 
         hook("models", modelGenerator)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
   }
@@ -289,7 +289,7 @@ export default class ListenerGenerator extends BaseGenerator {
 
         hook("pages", pagesGenerator)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
   }

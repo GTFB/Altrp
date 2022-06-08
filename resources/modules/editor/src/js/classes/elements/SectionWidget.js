@@ -68,7 +68,6 @@ class SectionWidget extends BaseElement {
         // }
       ],
       prefixClass: "altrp-section_",
-      locked: true,
     });
 
     this.addControl("layout_flex_wrap_content", {

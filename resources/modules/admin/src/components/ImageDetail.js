@@ -5,7 +5,7 @@ import ArrowImageDet from '../svgs/arrowImageDet.svg';
 import AutoSave from './AutoSaveDocumentDetail';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {createGlobalStyle} from "styled-components";
-import { Scrollbars } from "react-custom-scrollbars";
+import Scrollbars from "react-custom-scrollbars";
 
 const GlobalStyle = createGlobalStyle`
   #admin {
@@ -30,7 +30,7 @@ export class ImageDetail extends React.Component {
 
   getAuthorList = (id) => {
     this.props.getAuthorList().then(data => {
-      let author = data.find(item => item.id == id);
+      let author = data.users.find(item => item.id === id);
       this.setState({
         authorName: author.name,
       })
@@ -58,7 +58,6 @@ export class ImageDetail extends React.Component {
   render() {
     const {authorName, url, created_at, filename, media_type, height, width, filesize, mediaVariation} = this.state
 
-    console.log(this.state)
     if (!this.props.imageId) return null;
 
     return (

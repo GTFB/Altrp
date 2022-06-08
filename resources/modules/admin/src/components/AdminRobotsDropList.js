@@ -20,7 +20,7 @@ class AdminRobotsDropList extends Component {
                    className={pathname.indexOf('customizers') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
                    onClick={this.props.activeButton}
              >
-               <span>Visual Codes</span>
+               <span>Robotizers</span>
              </Link>
            </li>
          </ul>
@@ -31,7 +31,7 @@ class AdminRobotsDropList extends Component {
                    className={pathname.indexOf('customizers') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
                    onClick={this.props.activeButton}
              >
-               <span>Visual Codes</span>
+               <span>Robotizers</span>
              </Link>
            </li>
          </ul>

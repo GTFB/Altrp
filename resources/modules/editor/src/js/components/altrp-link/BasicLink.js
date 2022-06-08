@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 class BasicLink extends Component {
   render() {
     let classes = this.props.className;

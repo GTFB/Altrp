@@ -1,11 +1,13 @@
 const path = require("path");
 const webpack = require("webpack");
+const WebpackBuildNotifierPlugin = require("webpack-build-notifier");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   entry: {
     admin:"./resources/modules/admin/src/index.js",
     customizer:"./resources/modules/customizer/src/index.js",
+    "h-altrp":"./resources/modules/front-app/src/h-altrp.js",
   },
   mode: "development",
   module: {
@@ -77,7 +79,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "admin/"),
     publicPath: "http://localhost:3002/src/",
-    chunkFilename: "[chunkhash].bundle.js",
+    chunkFilename: "[name].[contenthash].js",
     filename: "[name].js"
   },
   devServer: {
@@ -93,6 +95,9 @@ module.exports = {
     hotOnly: true
   },
   plugins: [
+    new WebpackBuildNotifierPlugin({
+      title: "Admin, Customizers, Front App"
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       "process.env": "{}",

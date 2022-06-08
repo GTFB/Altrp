@@ -82,6 +82,72 @@ export default class MediaController {
     })
   }
 
+  async getById({params, response}: HttpContextContract) {
+
+    const id = params.id
+    let media
+    const mediaToUpdate = await Media.query().where("id", "=", id).whereNull('guid').select('*')
+    await Promise.all(mediaToUpdate.map(async (m:Media) =>{
+      m.guid = guid()
+      await m.save()
+      Logger.info(`Media id ${m.id} guid write!`)
+    }))
+    let query = Media.query().where("id", "=", id).whereNull('deleted_at')
+    let categories = params.categories;
+    let type = params.type;
+
+    if (!categories) {
+      categories = []
+    } else {
+      categories = categories.split(',')
+    }
+
+    if (type) {
+      if (type === 'other') {
+        query.where(query => {
+          query.where('type', type).orWhereNull('type')
+        })
+      } else {
+        query.where('type', type)
+      }
+    }
+
+    if( ! empty(categories)){
+      query.leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
+        .whereIn('altrp_category_objects.category_guid', categories)
+    }
+
+
+    media = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories'))
+
+    media = media.map(model => {
+      return model.serialize()
+    })
+
+    media = media[0]
+
+    return response.json(media)
+  }
+
+  async updateMedia({response, request}: HttpContextContract) {
+    const id = request.all().id
+    const mediaToUpdate = await Media.find(id)
+    if (!mediaToUpdate) {
+      response.status(404)
+      return response.json({
+        success: false,
+        message: 'Media not found'
+      })
+    }
+   try {
+     mediaToUpdate.merge(request.all())
+     await mediaToUpdate.save()
+   } catch (e) {
+     console.error(e)
+   }
+    return response.json(mediaToUpdate)
+  }
+
   public static  getFileTypes() {
     if (!MediaController.fileTypes) {
       let fileTypes = fs.readFileSync(base_path('config/file-types.json'), {encoding:'utf8'});
@@ -329,7 +395,7 @@ export default class MediaController {
     if(fs.existsSync(filename)){
       fs.rmSync(filename)
     }
-    console.log(media.serialize())
+
     await media?.delete()
     return response.json({success: true, })
   }

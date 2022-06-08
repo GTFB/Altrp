@@ -101,11 +101,11 @@ export default class AltrpRouting {
     });
     httpContext.params = pageMatch.params
 
-    if(! page){
+    if (!page) {
       page = await Page.query().where('not_found', true).first()
     }
 
-    if(! page){
+    if (!page) {
       httpContext.response.status(404)
       return httpContext.response.send('page not found')
     }
@@ -130,6 +130,12 @@ export default class AltrpRouting {
           classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
+          // res = minify(res, {
+          //   collapseWhitespace:true,
+          //   minifyCSS: true,
+          //   minifyJS: true,
+          // })
+
         }
         model_data = classInstance ? classInstance.serialize() : {}
       } catch (e) {
@@ -138,7 +144,7 @@ export default class AltrpRouting {
       if (empty(model_data)) {
         httpContext.response.status(404)
         page = await Page.query().where('not_found', true).first()
-        if(! page){
+        if (!page) {
           return httpContext.response.send('page not found')
         }
       }
@@ -174,6 +180,7 @@ export default class AltrpRouting {
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
     altrpContext.altrpdata = datasources
     try {
+
       let path = `altrp/pages/${page.guid}`;
       const device = getCurrentDevice(httpContext.request)
       if (fs.existsSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.edge`))) {

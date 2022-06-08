@@ -14,7 +14,7 @@ export default function renderInputSelect2(settings, device) {
     label_icon
   } = settings;
 
-  let value = getResponsiveSetting(settings,"content_default_value", device) || [];
+  let value = getResponsiveSetting(settings, "content_default_value", device) || [];
 
   // const getName = (): string => {
   //   return `${form_id}[${field_id}]`;
@@ -22,7 +22,7 @@ export default function renderInputSelect2(settings, device) {
 
   let classLabel = "";
   let styleLabel = {};
-  const content_label_position_type = getResponsiveSetting(settings,"content_label_position_type", device) || 'top';
+  const content_label_position_type = getResponsiveSetting(settings, "content_label_position_type", device) || 'top';
   switch (content_label_position_type) {
     case "top":
       styleLabel = {
@@ -83,36 +83,29 @@ export default function renderInputSelect2(settings, device) {
   let altrpInput: string = ""
 
   let input: string = "";
-  switch (settings.getName()) {
-    case "input-select2":
-    {
-      input = renderSelect2(settings, device);
-    }
-      break;
-    default: {
-      const isClearable = settings.content_clearable;
-      const isDate = settings.content_type === "date";
-      const timestamp = getResponsiveSetting(settings,"content_timestamp", device);
-      if (isDate && timestamp) {
-        const isValid = moment.unix(value).isValid();
-        if (isValid) {
-          try {
-            value = moment.unix(value / 1000).format("YYYY-MM-DD");
-          } catch (error) {
-            console.log(error);
-          }
-        }
+
+  const isClearable = settings.content_clearable;
+  const isDate = settings.content_type === "date";
+  const timestamp = getResponsiveSetting(settings, "content_timestamp", device);
+  if (isDate && timestamp) {
+    const isValid = moment.unix(value).isValid();
+    if (isValid) {
+      try {
+        value = moment.unix(value / 1000).format("YYYY-MM-DD");
+      } catch (error) {
+        console.log(error);
       }
-      input = `
+    }
+  }
+  input = `
        <div class="altrp-input-wrapper">
         ${altrpInput}
       ${isClearable && (
-        `<button class="input-clear-btn">✖</button>`
-      )}
+    `<button class="input-clear-btn">✖</button>`
+  )}
       </div>
       `
-    }
-  }
+
   return (
     `<div class="altrp-field-container ">
   ${content_label_position_type === "top" ? label : ""}
@@ -122,7 +115,7 @@ export default function renderInputSelect2(settings, device) {
   ${input}
   ${content_label_position_type === "bottom" ? label : ""}
   </div>`
-);
+  );
 }
 
 
@@ -134,10 +127,10 @@ const renderSelect2 = (settings, device) => {
   // } = settings;
 
   let options = [];
-  let value = getResponsiveSetting(settings,"content_default_value", device) || []
+  let value = getResponsiveSetting(settings, "content_default_value", device) || []
 
 
-  if (!getResponsiveSetting(settings,"select2_multiple", device, false)) {
+  if (!getResponsiveSetting(settings, "select2_multiple", device, false)) {
     options.forEach(option => {
       if (!option) {
         return;
@@ -145,14 +138,14 @@ const renderSelect2 = (settings, device) => {
       // @ts-ignore
       if (option.value === value) {
         // @ts-ignore
-        value = { ...option };
+        value = {...option};
       }
       // @ts-ignore
       if (_.isArray(option.options)) {
         // @ts-ignore
         option.options.forEach(option => {
           if (option.value == value) {
-            value = { ...option };
+            value = {...option};
           }
         });
       }
@@ -166,14 +159,14 @@ const renderSelect2 = (settings, device) => {
         // @ts-ignore
         if (option.value && option.value.toString() === _v.toString()) {
           // @ts-ignore
-          _v = { ...option };
+          _v = {...option};
         }
         // @ts-ignore
         if (_.isArray(option.options)) {
           // @ts-ignore
           option.options.forEach(option => {
             if (option.value && option.value.toString() === _v.toString()) {
-              _v = { ...option };
+              _v = {...option};
             }
           });
         }
@@ -225,8 +218,8 @@ const renderSelect2 = (settings, device) => {
   //   isMulti: this.props.element.getSettings("select2_multiple", false),
   // };
   return (
-   ` <div class="altrp-input-wrapper">
+    ` <div class="altrp-input-wrapper">
 
   </div>`
-);
+  );
 }

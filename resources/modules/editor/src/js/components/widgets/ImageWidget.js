@@ -1,7 +1,6 @@
-import {
-  getDataByPath,
-  isEditor, parseURLTemplate
-} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import AltrpImage from "../altrp-image/AltrpImage";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -126,7 +125,12 @@ class ImageWidget extends Component {
     if(_.get(this.props.element.getResponsiveLockedSetting('height_size'), 'size', '100') === "0") {
       height = ""
     }
-
+    if(! media){
+      media = {
+        url: '/img/nullImage.png',
+        media_type: 'image',
+      }
+    }
     let altrpImage = (
       <AltrpImage
         image={media}

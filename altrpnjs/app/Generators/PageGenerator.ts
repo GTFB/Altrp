@@ -74,7 +74,7 @@ export default class PageGenerator extends BaseGenerator {
         .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
         .stub(PageGenerator.template)
         .apply({
-          hAltrp: Env.get('PATH_ENV') === 'production' ? `/modules/front-app/h-altrp.js?${env('PACKAGE_KEY')}` : 'http://localhost:3001/src/bundle.h-altrp.js',
+          hAltrp: Env.get('PATH_ENV') === 'production' ? `/modules/front-app/h-altrp.js?${env('PACKAGE_KEY')}` : 'http://localhost:3002/src/h-altrp.js',
           children_content,
           fonts,
           elements_list,

@@ -6,7 +6,10 @@ import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"
 import AltrpModel from "../../classes/AltrpModel";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
-import {getResponsiveSetting, isEditor, renderAssetIcon, setAltrpIndex} from "../../../../../front-app/src/js/helpers";
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import setAltrpIndex from "../../../../../front-app/src/js/functions/setAltrpIndex";
+import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import PostsWrapper from "./components/PostsWrapper";
 import Pagination from "../altrp-table/components/Pagination";
 

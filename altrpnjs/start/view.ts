@@ -18,6 +18,7 @@ import getLatestVersion from "../helpers/getLatestVersion";
 import data_get from "../helpers/data_get";
 import renderInputCheckbox from "../helpers/widgets-renders/renderInputCheckbox";
 import renderInputRadio from "../helpers/widgets-renders/renderInputRadio";
+import getSectionWidthClass from "../helpers/widgets-renders/getSectionWidthClass";
 
 View.global('get_logo_url', get_logo_url)
 View.global('getLocale', getLocale)
@@ -34,6 +35,7 @@ View.global('renderSectionBG', renderSectionBG)
 View.global('getColumnClasses', getColumnClasses)
 View.global('getLatestVersion', getLatestVersion)
 View.global('data_get', data_get)
+View.global('getSectionWidthClass', getSectionWidthClass)
 /**
  * RENDERS START
  */

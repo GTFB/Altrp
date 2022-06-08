@@ -24,7 +24,9 @@ export default function AltrpImage(props: any, device: string) {
     width: _.isNumber(props.width) ?
       props.width + 'px' : props.width ? props.width : '100%',
   }
-
+  if(props.height){
+    placeholderStyles.height = _.isNumber(props.height) ?     props.height + 'px' : props.height
+  }
   const altrpSkeletonColor = get_altrp_setting( 'altrp_skeleton_color', '#ccc' )
   const altrpSkeletonHighlightColor = get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' )
   let addingStyles = `<style class="altrp-image-placeholder_${widgetId}-styles">.altrp-element${widgetId} .altrp-image-placeholder::before{display: block;

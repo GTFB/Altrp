@@ -1,4 +1,4 @@
-import { renderAsset } from "../../../../../front-app/src/js/helpers";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-divider {

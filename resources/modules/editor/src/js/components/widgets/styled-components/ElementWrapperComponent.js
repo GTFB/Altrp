@@ -1,5 +1,5 @@
 
-import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
+import { getResponsiveSetting } from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
 
 const settingsToStyles = ({ settings }) => {
    let styles = '';

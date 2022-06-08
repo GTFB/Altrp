@@ -134,6 +134,7 @@ class Table extends BaseElement {
     this.addControl('table_data_settings_pagination', {
       type: CONTROLLER_SWITCHER,
       label: 'Pagination',
+      locked:true,
       default: true
     });
 
@@ -494,6 +495,33 @@ class Table extends BaseElement {
       responsive: false,
       conditions: {
         'column_is_filtered': true,
+      },
+    });
+
+    repeater.addControl('column_switcher_custom_width_list', {
+      type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
+      responsive: false,
+      label: 'Add Custom Width',
+      default: false,
+      conditions: {
+        'column_filter_type': "select",
+      },
+    });
+
+    repeater.addControl("column_custom_setWidth_list", {
+      type: CONTROLLER_SLIDER,
+      hideOnEmail: true,
+      responsive: false,
+      label: "Custom Width List",
+      default: {
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 1500,
+      min: 0,
+      conditions: {
+        'column_switcher_custom_width_list': true,
       },
     });
 

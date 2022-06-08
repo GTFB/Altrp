@@ -1,5 +1,6 @@
 import React from 'react';
-const {isEditor, isSSR} = window.altrpHelpers;
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import isSSR from "../../../../../front-app/src/js/functions/isSSR";
 import styled from "styled-components";
 let Tooltip2;
 let Popover2InteractionKind

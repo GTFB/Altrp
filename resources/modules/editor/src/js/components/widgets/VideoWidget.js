@@ -1,7 +1,5 @@
-import {
-  getDataByPath,
-  parseIDFromYoutubeURL
-} from "../../../../../front-app/src/js/helpers";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
+import parseIDFromYoutubeURL from "../../../../../front-app/src/js/functions/parseIDFromYoutubeURL";
 class VideoWidget extends Component {
 
   render() {

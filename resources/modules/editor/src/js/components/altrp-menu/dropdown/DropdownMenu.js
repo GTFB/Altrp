@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import AltrpImage from "../../altrp-image/AltrpImage";
-import AltrpLink from "../../altrp-link/AltrpLink";
 import DropdownSub from "./DropdownSub";
 import LinkMenu from "../LinkMenu";
 

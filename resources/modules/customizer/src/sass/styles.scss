@@ -158,6 +158,7 @@ body {
     color: #222;
     text-align: center;
     border: 1px solid $dark-purple;
+    background-color: white;
     &.selected {
         border: 3px solid $dark-purple;
     }
@@ -173,6 +174,7 @@ body {
   color: #222;
   text-align: center;
   border: 1px solid $dark-purple;
+  background-color: white;
   &.selected {
     border: 3px solid $dark-purple;
   }
@@ -187,6 +189,7 @@ body {
     padding: 16px;
     text-align: center;
     border: 1px solid $dark-purple;
+    background-color: white;
     border-radius: 5px;
     //box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.08),
     //0px 4px 48px rgba(0, 0, 0, 0.08);
@@ -208,6 +211,7 @@ body {
     text-align: center;
     font-weight: bold;
     border: 1px solid $dark-purple;
+    background-color: white;
 
     &.selected {
         border: 3px solid $dark-purple;
@@ -219,6 +223,7 @@ body {
     border-top: 50px solid transparent;
     border-left: 100px solid red;
     border-bottom: 50px solid transparent;
+    background-color: white;
     &.selected{
         border: 3px solid $dark-purple;
     }
@@ -232,6 +237,7 @@ body {
     color: #222;
     text-align: center;
     border: 1px solid $dark-purple;
+    background-color: white;
     &.selected {
         border: 3px solid $dark-purple;
     }
@@ -245,6 +251,7 @@ body {
     color: #222;
     text-align: center;
     border: 1px solid $dark-purple;
+    background-color: white;
     -webkit-transform: perspective(100px) rotateX(10deg);
     transform: perspective(100px) rotateX(10deg);
 
@@ -273,6 +280,7 @@ body {
     border-top: 50px solid transparent;
     border-left: 100px solid red;
     border-bottom: 50px solid transparent;
+    background-color: white;
     &.selected{
         border: 3px solid $dark-purple;
     }
@@ -413,6 +421,7 @@ body {
   text-align: center;
   font-weight: bold;
   border: 1px solid $dark-purple;
+  background-color: white;
 
   &.selected {
     border: 3px solid $dark-purple;
@@ -986,6 +995,67 @@ body {
   & .ace-tomorrow .ace_gutter{
     background-color: #D3D7DB;
   }
+}
+
+.changeNode-center .editor-code-panel:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.modal-code {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  background-color: rgba(52, 59, 76, 0.4);
+}
+
+.modal-code__container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 85vw;
+  height: 85vh;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.modal-code__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.model-code__title {
+  font-size: 21px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.modal-code__content {
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+}
+
+.modal-code-icon__close {
+  transform: rotate(-45deg);
+  cursor: pointer;
+
+  & path {
+    fill: #000;
+  }
+}
+
+.btn-code__modal {
+  font-size: 14px;
 }
 
 .controller-bottom-code {

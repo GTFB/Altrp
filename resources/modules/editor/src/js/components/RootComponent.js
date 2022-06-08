@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-
-const {isEditor} = window.altrpHelpers
+import isEditor from "../../../../front-app/src/js/functions/isEditor";
 
 class RootComponent extends Component {
   constructor(props) {

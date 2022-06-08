@@ -90,28 +90,6 @@ const STRING_OPTIONS = [
       }),
     ],
   },
-  {
-    value: 'string.replace',
-    objectInstance: 'string',
-    label: 'replace',
-    description: ' The replace() method returns a new string with some or all matches of a pattern replaced by a replacement. The pattern can be a string or a RegExp, and the replacement can be a string or a function to be called for each match. If pattern is a string, only the first occurrence will be replaced. ',
-    classDescription,
-    returns: [
-      ARRAY,
-    ],
-    parameters:[
-      new Parameter({
-        name: "regexp",
-        types: [REGULAR_EXPRESSION],
-        required: true,
-      }),
-      new Parameter({
-        name: "substr",
-        types: [STRING],
-        required: true,
-      }),
-    ],
-  },
 ];
 
 export default STRING_OPTIONS

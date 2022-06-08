@@ -35,7 +35,6 @@ import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
-import Echo from "laravel-echo"
 
 import store from "./js/store/store";
 import { setUserData, setUsersOnline } from "./js/store/current-user/actions";
@@ -56,11 +55,13 @@ import getAPiToken from "./js/functions/get-api-token";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 import {io} from "socket.io-client";
 import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-state/action";
+import getAltrpLang from "./js/helpers/get-altrp-lang";
 
 
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Link = Link;
+window.Router = Router;
 window.Component = React.Component;
 getAPiToken();
 class Admin extends Component {
@@ -80,12 +81,14 @@ class Admin extends Component {
 
   filterRoutes(filterFn){
     if(_.isFunction(filterFn)){
-      this.props.setRoutes(filterFn(this.props.routes))
+      this.props.setRoutes(filterFn(store.getState()?.routesState?.routes || []))
     }
   }
   filterMainMenu(filterFn){
+    console.log(filterFn);
+    console.log(this.props.mainMenu);
     if(_.isFunction(filterFn)){
-      this.props.setMainMenu(filterFn(this.props.mainMenu))
+      this.props.setMainMenu(filterFn(store.getState()?.routesState?.mainMenu || []))
     }
   }
 
@@ -126,7 +129,7 @@ class Admin extends Component {
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
 
-    if(currentUser.guid && !this.altrpIo) {
+    if(currentUser.guid && !window.altrpIo) {
       window.altrpIo = io( {
         path: '/wsaltrp',
         auth: {
@@ -302,6 +305,22 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminTablesDropList menu={this.state.menu}  activeButton={() => this.setState({ activeButton: 3 })}/>
                         </li>
+                        {getAltrpLang() === "javascript" ? (
+                          <li>
+                            <Link to="/admin/customizers"
+                                  className={
+                                     location.pathname.includes('customizers') ?
+                                      "admin-nav-list__link active__panel" :
+                                      "admin-nav-list__link admin-nav-list__link-top"
+                                  }
+                                  onClick={() => this.setState({ activeButton: 4 })}
+                            >
+                              <RobotsSvg className="icon" />
+                              <DropletSvg className="icon__droplet"/>
+                              <span>Robotizers</span>
+                            </Link>
+                          </li>
+                        ) : (
                         <li>
                           <Link to="/admin/robots"
                                 className={
@@ -317,6 +336,7 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
+                        )}
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
@@ -483,6 +503,19 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminTablesDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 3 })}/>
                         </li>
+                        {getAltrpLang() === "javascript" ? (
+                          <li>
+                            <Link to="/admin/customizers"
+                                  className={
+                                     location.pathname.includes('customizers') ?
+                                      "admin-nav-list__link-mini active__panel" :
+                                      "admin-nav-list__link-mini admin-nav-list__link-top"}
+                                  onClick={() => this.setState({ activeButton: 4 })}
+                            >
+                              <RobotsSvg className="icon-mini" />
+                            </Link>
+                          </li>
+                        ) : (
                         <li>
                           <Link to="/admin/robots"
                                 className={
@@ -495,6 +528,7 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
+                        )}
 
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">

@@ -114,7 +114,8 @@ class CustomizerSettingsPanel extends React.Component {
   }
 
   render() {
-    const {modelsOptions} = this.state;
+    let {modelsOptions} = this.state;
+    console.log(modelsOptions);
     const {customizer} = this.props;
     const {type, model_id, settings = {}} = customizer
 
