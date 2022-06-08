@@ -3,7 +3,6 @@ import {BaseModel, column, HasOne, hasOne} from '@ioc:Adonis/Lucid/Orm'
 import Page from "App/Models/Page";
 import Source from "App/Models/Source";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import Logger from "@ioc:Adonis/Core/Logger";
 import Customizer from "App/Models/Customizer";
 import mbParseJSON from "../../helpers/mbParseJSON";
 import _ from 'lodash';
@@ -83,15 +82,15 @@ export default class PageDatasource extends BaseModel {
   // @ts-ignore
   async fetchControllerMethod(httpContext:HttpContextContract, altrpContext){
     // @ts-ignore
-    await this.load('source')
     if(!this.source){
       return null
     }
+    await this.source.preloadSourceable()
     await this.source.load('model')
     const controller = await this.source.getControllerInstance()
     if(! controller){
-      Logger.error(`Error in source with name ${this.source.name}:
-       Controller error!`)
+      console.error(`Error in source with name ${this.source.name}:
+       Controller error!`);
       return null
     }
     try{
@@ -108,8 +107,8 @@ export default class PageDatasource extends BaseModel {
       await controller[this.source.getMethodName()](httpContext)
       return httpContext.response.getBody();
     } catch (e){
-      Logger.error(`Error in source with name ${this.source.name}:
-       ${e.stack}`)
+      console.error(`Error in source with name ${this.source.name}:
+       ${e.stack}`);
     }
   }
 }

@@ -578,7 +578,7 @@ export default class ModelsController {
 
     await controller.save()
 
-    await Model.createDefaultCustomizers(response, modelData, model)
+    await Model.createDefaultCustomizers( modelData, model)
 
     let sources = [
       (new Source()).fill({

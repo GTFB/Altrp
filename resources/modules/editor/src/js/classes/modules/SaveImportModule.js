@@ -99,23 +99,29 @@ class SaveImportModule extends BaseModule {
     templateData.styles = await templateStylesModule.generateStyles();
     const pagesIds = (await(new Resource({route: `/admin/ajax/get-template-pages-ids/`}))
       .get(this.template_id)).data
-    const count = pagesIds.length + 2;
+
     progressBar(0.001)
-    await this.resource.post({
-      ...templateData,
-      type: "review",
-      parent_template: this.template_id
-    })
     try{
+      await this.resource.post({
+        ...templateData,
+        type: "review",
+        parent_template: this.template_id
+      })
       await this.resource
         .put(this.template_id, templateData)
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
       rootElement && rootElement.remove();
     }catch (e) {
       console.error(e);
+      if(e instanceof Promise){
+        e= await  e
+      }
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
       rootElement && rootElement.remove();
       progressBar()
+      alert(`template not saved
+${e.message}`)
+      return
     }
     if(pagesIds?.length){
       await upgradeBackend(['pages'], pagesIds)

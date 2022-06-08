@@ -38,7 +38,7 @@ export default class UpdateService {
       return false;
     }
     if (!await UpdateService.write_public_permissions()) {
-      Logger.error('Failed to update file read mode');
+      console.error('Failed to update file read mode');
     }
 
     if (!file) {
@@ -50,7 +50,7 @@ export default class UpdateService {
     UpdateService.update_files()
 
     if (!await UpdateService.write_public_permissions('public')) {
-      Logger.error('Failed to update file reading mode after unzipping');
+      console.error('Failed to update file reading mode after unzipping');
     }
     UpdateService.delete_archive()
     // Upgrade the Database

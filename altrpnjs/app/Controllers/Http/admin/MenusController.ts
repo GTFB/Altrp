@@ -6,7 +6,7 @@ import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
 
 export default class MenusController {
-  public async index({request}) {
+  public async index({request, response}) {
     const params = request.qs()
     const page = parseInt(params.page) || 1
     const pageSize = parseInt(params.pageSize) || 10
@@ -19,7 +19,9 @@ export default class MenusController {
       menus = await Menu.query().preload("categories").paginate(page, pageSize)
     }
 
-    return menus.all().map((menu) => {
+    const pageCount = menus.getMeta().last_page
+    const count = menus.getMeta().total
+    menus = menus.all().map((menu) => {
       return {
         ...menu.serialize(),
         categories: menu.categories.map(category => {
@@ -27,10 +29,19 @@ export default class MenusController {
             category: category
           }
         }),
-        count: menus.getMeta().total,
-        pageCount: menus.getMeta().last_page,
+        count,
+        pageCount,
       }
     })
+    return response.json(
+      {
+        menus,
+        success: true,
+        count,
+        pageCount,
+
+      }
+    )
   }
 
   public async show({params}) {

@@ -134,6 +134,7 @@ class Table extends BaseElement {
     this.addControl('table_data_settings_pagination', {
       type: CONTROLLER_SWITCHER,
       label: 'Pagination',
+      locked:true,
       default: true
     });
 

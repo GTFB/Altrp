@@ -5,6 +5,7 @@ window.altrpIo = io( {
   path: '/wsaltrp',
   auth: {
   },
+
 })
 window.altrpIo.on("message", (data) => {
   if(data === 'altrpe'){
@@ -12,9 +13,9 @@ window.altrpIo.on("message", (data) => {
     window.altrpIo.disconnect()
   }
 })
-window.altrpIo.on("connect_error", (e) => {
+window.altrpIo.on("connect_error", (data) => {
   import('./_h-altrp')
   window.altrpIo.disconnect()
-  console.error(e);
+
 })
 window.altrpIo.send('altrp-front-load')

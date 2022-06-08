@@ -1,6 +1,5 @@
 import path from 'path'
 import AdmZip from "adm-zip"
-import Logger from '@ioc:Adonis/Core/Logger'
 import public_path from '../helpers/path/public_path'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import app_path from '../helpers/path/app_path'
@@ -181,7 +180,7 @@ export default class Plugin {
           name: plugin_name
         })
       } catch (e) {
-        Logger.error(e)
+        console.error(e);
       }
       return null
     }).filter(p => p)
@@ -434,7 +433,7 @@ export default class Plugin {
           }
       })
     } catch (e) {
-      Logger.error(e.getMessage() + '\n' + e.stack)
+      console.error(e);
       return false
     }
     if (!res) {
@@ -487,7 +486,7 @@ export default class Plugin {
 
         return new Plugin({'name': plugin})
       } catch (e) {
-        Logger.error(`Plugin meta file \`plugin\` not found`)
+        console.error(`Plugin meta file \`plugin\` not found`);
         return null
       }
     })
@@ -512,7 +511,7 @@ export default class Plugin {
             hookName
           })
         } catch (e) {
-          Logger.error(e)
+          console.error(e);
         }
       }
     }

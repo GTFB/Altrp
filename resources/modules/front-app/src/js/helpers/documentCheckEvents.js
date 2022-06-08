@@ -1,20 +1,7 @@
 const documentCheckEvents = (cb) => {
 
   const events = [
-    'click',
-    'dblclick',
-    'mouseenter',
-    'mousedown',
-    'mouseout',
-    'mouseup',
-    'mousewheel',
-    'mouseover',
-    'mouseleave',
-    'mousemove',
-    'touch',
-    'scroll',
     'altrpe',
-    'resize'
   ]
 
   const eventFunction = () => {
