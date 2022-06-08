@@ -236,7 +236,7 @@ export default class AdminController {
   private static async upgradeModels() {
     Logger.info('Upgrading models')
 
-    const models = await Model.query().preload('altrp_controller').select('*')
+    const models = await Model.query().select('*')
 
     const controllerGenerator = new ControllerGenerator()
     const modelGenerator = new ModelGenerator()
@@ -250,7 +250,7 @@ export default class AdminController {
       }catch (e) {
         console.error(`Error while Model generate: ${e.message}`);
       }
-      let controller: any = model.altrp_controller
+      let controller: any = await Controller.query().where('model_id', model.id).first()
       if (!controller) {
         controller = new Controller();
         controller.fill({
