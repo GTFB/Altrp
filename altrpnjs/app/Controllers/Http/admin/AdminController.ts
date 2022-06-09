@@ -156,6 +156,7 @@ export default class AdminController {
     try {
       await updateService.update()
     } catch (e) {
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -181,6 +182,7 @@ export default class AdminController {
     try {
       await updateService.update('test')
     } catch (e) {
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
