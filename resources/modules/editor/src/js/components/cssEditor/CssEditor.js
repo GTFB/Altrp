@@ -5,6 +5,7 @@ import {useDispatch} from "react-redux";
 import {setGlobalStylesCss} from "../../store/global-css-editor/actions";
 import {changeTemplateStatus} from "../../store/template-status/actions";
 import CONSTANTS from "../../consts";
+import applyGlobalCss from "../../helpers/applyGlobalCss";
 
 function CssEditor() {
   const [data, setData] = useState({
@@ -34,7 +35,9 @@ function CssEditor() {
 
   const save = () => {
     if (confirm('Save changes?')) {
-      data.meta.save()
+      data.meta.save().then(()=>{
+        applyGlobalCss()
+      })
       dispatch(setGlobalStylesCss(data.value))
       dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE))
     }
