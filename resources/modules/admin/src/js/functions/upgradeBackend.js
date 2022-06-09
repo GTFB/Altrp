@@ -6,7 +6,6 @@ const defaultTypes = [
   'listeners',
   'models',
   'pages',
-  'templates',
 ]
 
 async function upgradeBackend(types = defaultTypes, ids ) {
@@ -29,7 +28,7 @@ async function upgradeBackend(types = defaultTypes, ids ) {
   if(ids){
     count += ids.length / 3
   } else {
-    count += pages?.length / 3 + templates?.length / 3
+    count += pages?.length / 3
   }
 
   let _i = 1
