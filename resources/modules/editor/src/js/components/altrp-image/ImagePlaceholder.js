@@ -7,11 +7,9 @@ ${({elementId})=>elementId ? `.altrp-element${elementId} .altrp-image-placeholde
   max-width: 100%;
   overflow: hidden;
   width:${props => {
-    console.log(props.elementId);
   if (_.isNumber(props.width)) {
     return props.width + 'px';
   }
-  console.log(props.width);
   return props.width ? props.width : '100%'
 }};
 ${(props) => {

@@ -13,7 +13,6 @@ Ws.io.on("connection", async (socket) => {
     const guid = await Ws.pushClient(socket)
 
     socket.on("disconnect", () => {
-      console.log('disconnect');
       Ws.removeClient(guid, socket)
     })
 
