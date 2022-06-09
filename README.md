@@ -5,6 +5,7 @@
 
 ### 1.1.3
 * Fix Styles Load for Embedded Templates
+* Fix Global Styles
 
 ### 1.1.2
 * Fix Template Render Issues 
