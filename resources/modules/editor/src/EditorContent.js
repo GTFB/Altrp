@@ -24,6 +24,7 @@ import frontElementsManager from '../../front-app/src/js/classes/FrontElementsMa
 import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
 import '../../front-app/src/js/libs/reacket'
 import Scrollbars from "react-custom-scrollbars";
+import applyGlobalCss from "./js/helpers/applyGlobalCss";
 
 window.Link = 'a';
 frontElementsManager.loadAllComponents();
@@ -82,6 +83,7 @@ class EditorContent extends Component {
     this.setState({
       rootElement
     });
+    applyGlobalCss()
   }
 
   /**

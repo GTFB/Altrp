@@ -12,6 +12,7 @@ import Env from "@ioc:Adonis/Core/Env";
 import env from "../../helpers/env";
 import base_path from "../../helpers/path/base_path";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
+import AltrpMeta from "App/Models/AltrpMeta";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -120,6 +121,12 @@ export default class PageGenerator extends BaseGenerator {
         extraStyles.extra_header_styles += `
 <style id="extra_header_styles">${content}</style>`
       }
+    }
+    let global_styles_editor:AltrpMeta|string|null = await AltrpMeta.query().where('meta_name', 'global_styles_editor').first()
+    if(global_styles_editor){
+      global_styles_editor = global_styles_editor.meta_value
+      extraStyles.extra_header_styles += global_styles_editor ?
+        `<style id="global_styles_editor">${global_styles_editor}</style>` : ''
     }
     return extraStyles
   }
