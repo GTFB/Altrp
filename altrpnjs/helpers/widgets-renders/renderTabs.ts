@@ -1,7 +1,7 @@
 import objectToStylesString from "../objectToStylesString";
 import renderAsset from "../renderAsset";
 import getResponsiveSetting from "../getResponsiveSetting"
-import replaceContentWithData from "../replaceContentWithData";
+import replaceContentWithData from "../string/replaceContentWithData";
 
 export default function renderTabs(settings, device, context) {
   let buttonClasses = "";

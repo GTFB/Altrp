@@ -1,7 +1,7 @@
 import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
-import replaceContentWithData from "../../helpers/replaceContentWithData"
+import replaceContentWithData from "../../helpers/string/replaceContentWithData"
 import {matchPath} from 'react-router'
 import empty from "../../helpers/empty"
 import * as _ from 'lodash'
@@ -16,6 +16,8 @@ import fs from "fs";
 import base_path from "../../helpers/path/base_path";
 import * as mustache from 'mustache'
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
+import filterAllowedForUser from "../../helpers/string/filterAllowedForUser";
+import {column} from "@ioc:Adonis/Lucid/Orm";
 
 export default class AltrpRouting {
 
@@ -177,15 +179,12 @@ export default class AltrpRouting {
     altrpContext.altrpdata = datasources
     try {
 
-      let path = `altrp/pages/${page.guid}`;
       const device = getCurrentDevice(httpContext.request)
-      if (fs.existsSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.edge`))) {
-        path = `resources/views/altrp/screens/${device}/pages/${page.guid}.edge`
 
-      }
       console.log(performance.now() - start);
-      let content = fs.readFileSync(base_path(path), 'utf8')
-
+      console.log(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`));
+      let content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
+      content = filterAllowedForUser(content, user)
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
@@ -196,10 +195,10 @@ export default class AltrpRouting {
         model_data: JSONStringifyEscape(model_data),
         route_args: JSONStringifyEscape(pageMatch.params),
         datasources: JSONStringifyEscape(datasources),
-        altrp_skeleton_color: get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
-        altrp_skeleton_highlight_color:  get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) ,
-        altrp_image_lazy:  get_altrp_setting( 'altrp_image_lazy', 'none' ) ,
-        container_width: get_altrp_setting( 'container_width', '1440' ),
+        altrp_skeleton_color: get_altrp_setting('altrp_skeleton_color', '#ccc'),
+        altrp_skeleton_highlight_color: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
+        altrp_image_lazy: get_altrp_setting('altrp_image_lazy', 'none'),
+        container_width: get_altrp_setting('container_width', '1440'),
         device,
       })
       let res = content

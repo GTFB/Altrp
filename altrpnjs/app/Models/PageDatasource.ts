@@ -6,7 +6,7 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Customizer from "App/Models/Customizer";
 import mbParseJSON from "../../helpers/mbParseJSON";
 import _ from 'lodash';
-import replaceContentWithData from "../../helpers/replaceContentWithData";
+import replaceContentWithData from "../../helpers/string/replaceContentWithData";
 
 
 export default class PageDatasource extends BaseModel {

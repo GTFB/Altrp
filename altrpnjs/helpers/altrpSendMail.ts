@@ -2,7 +2,7 @@ import Mail from '@ioc:Adonis/Addons/Mail'
 import {SmtpDriver} from "@adonisjs/mail/build/src/Drivers/Smtp";
 import Env from "@ioc:Adonis/Core/Env";
 import Logger from "@ioc:Adonis/Core/Logger";
-import replaceContentWithData from "./replaceContentWithData";
+import replaceContentWithData from "./string/replaceContentWithData";
 
 export default async function altrpSendMail(
   {

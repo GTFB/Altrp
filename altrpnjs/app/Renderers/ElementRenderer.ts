@@ -16,8 +16,8 @@ import getSectionWidthClass from "../../helpers/widgets-renders/getSectionWidthC
 
 export default class ElementRenderer {
   static straightRenderIgnore = [
-    'input-radio',
-    'input-checkbox',
+    // 'input-radio',
+    // 'input-checkbox',
     // 'section_widget',
   ]
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
@@ -59,7 +59,7 @@ export default class ElementRenderer {
       ...this.element.settingsLock
     }
 
-    const {
+    let {
       advanced_element_id,
       conditional_display_choose,
       conditional_roles,
@@ -109,8 +109,7 @@ export default class ElementRenderer {
 
       styles = objectToStylesString(styles)
       const text_widget_content = this.getTextWidgetContent(screenName)
-      if (this.getType() === 'widget'
-        && ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1) {
+      if (this.getType() === 'widget') {
         const filename = string.camelCase(`render_${this.getName()}`)
           + (isProd() ? '.js' : '.ts')
         if (fs.existsSync(base_path(`helpers/widgets-renders/${filename}`))) {
@@ -160,10 +159,10 @@ export default class ElementRenderer {
     let allow_end_tag = ''
     if (conditional_display_choose ||
       (conditional_permissions?.length || conditional_roles?.length)) {
-      allow_start_tag = `@if(allowedForUser(element${this.getId()}_settings, user))~
-`
-      allow_end_tag = `@end~
-`
+      conditional_roles = conditional_roles || []
+      conditional_permissions = conditional_permissions || []
+      allow_start_tag = `<allowedforuser type="${conditional_display_choose}" roles="${conditional_roles.join(",")}" permissions="${conditional_permissions.join(",")}">`
+      allow_end_tag = `</allowedforuser>`
     }
 
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
@@ -192,7 +191,6 @@ export default class ElementRenderer {
     content = mustache.render(content, {
       id: this.getId(),
       element_content,
-      set_content: this.getEdgeSetContent(!!allow_start_tag),
       type: this.getType(),
       wrapper_attributes,
       allow_start_tag,
@@ -225,21 +223,7 @@ export default class ElementRenderer {
     if (this.getName() !== 'text') {
       return ''
     }
-    if (this.element.settings.content) {
-      return `<div class="altrp-text ck ck-content">{{{data_get(altrpContext, '${this.element.settings.content}', '${this.element.settings.text || ''}')}}}</div>`
-    }
     return `<div class="altrp-text ck ck-content">${getResponsiveSetting(this.element.settings, 'text', screenName, '')}</div>`
   }
 
-  private getEdgeSetContent(allow_start_tag: boolean = false): string {
-    if (ElementRenderer.straightRenderIgnore.indexOf(this.getName()) === -1 && !allow_start_tag) {
-      return ''
-    }
-
-    let settings = {...this.element.settings}
-
-    return `
-@set('element${this.getId()}_settings', ${JSON.stringify(settings).replace(/\//g, '\\/')})~
-`
-  }
 }

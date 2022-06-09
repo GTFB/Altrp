@@ -1,4 +1,4 @@
-import replaceContentWithData from "./replaceContentWithData";
+import replaceContentWithData from "./string/replaceContentWithData";
 import getResponsiveSetting from "./getResponsiveSetting";
 import * as _ from "lodash"
 

@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import Env from "@ioc:Adonis/Core/Env";
 import ExportExcel from "App/Services/ExportExcel";
 import ExportWord from "App/Services/ExportWord";
-import replaceContentWithData from "../../helpers/replaceContentWithData";
+import replaceContentWithData from "../../helpers/string/replaceContentWithData";
 import Model from "App/Models/Model";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";

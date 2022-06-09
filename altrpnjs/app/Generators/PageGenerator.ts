@@ -44,7 +44,7 @@ export default class PageGenerator extends BaseGenerator {
   }
 
   getFilename(page):string{
-    return page.guid + '.edge'
+    return page.guid + '.html'
   }
 
   async run(page: Page) {

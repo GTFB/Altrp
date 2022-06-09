@@ -3,6 +3,7 @@ import loadGlobalStyles from "./load-global-styles";
 export default function mountElements(){
   loadGlobalStyles();
   let elementContainers = document.querySelectorAll('*:not([data-react-element]) [data-react-element]');
+  console.log(elementContainers);
   elementContainers = _.filter(elementContainers, container =>{
     return !container.parentElement.closest('[data-react-element]')
   })
