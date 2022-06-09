@@ -7,6 +7,7 @@ import empty from "../../helpers/empty";
 import {
   column,
   beforeSave,
+  beforeCreate,
   BaseModel,
   manyToMany,
   ManyToMany,
@@ -75,7 +76,7 @@ export default class User extends BaseModel {
     }
   }
 
-  @beforeSave()
+  @beforeCreate()
   public static async addGuid (user: User) {
     if (!user.$dirty.guid) {
       user.guid = uuid()
