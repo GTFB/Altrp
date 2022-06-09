@@ -5,6 +5,7 @@ export default class DropUniqueCustomizers extends BaseSchema {
 
   public async up () {
     this.schema.table(this.tableName, async (table) => {
+
       try {
         table.dropIndex('name', 'altrp_customizers_name_unique');
         table.index('name')

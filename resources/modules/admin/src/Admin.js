@@ -35,7 +35,6 @@ import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
-import Echo from "laravel-echo"
 
 import store from "./js/store/store";
 import { setUserData, setUsersOnline } from "./js/store/current-user/actions";
@@ -129,7 +128,7 @@ class Admin extends Component {
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
 
-    if(currentUser.guid && !this.altrpIo) {
+    if(currentUser.guid && !window.altrpIo) {
       window.altrpIo = io( {
         path: '/wsaltrp',
         auth: {

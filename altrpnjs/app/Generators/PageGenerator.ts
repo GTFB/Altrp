@@ -3,6 +3,7 @@ import {BaseGenerator} from "./BaseGenerator";
 import Application from "@ioc:Adonis/Core/Application";
 import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
+import AltrpMeta from "App/Models/AltrpMeta";
 
 export default class PageGenerator extends BaseGenerator {
 
@@ -72,6 +73,12 @@ export default class PageGenerator extends BaseGenerator {
         extraStyles.extra_header_styles += `
 <style id="extra_header_styles">${content}</style>`
       }
+    }
+    let global_styles_editor:AltrpMeta|string|null = await AltrpMeta.query().where('meta_name', 'global_styles_editor').first()
+    if(global_styles_editor){
+      global_styles_editor = global_styles_editor.meta_value
+      extraStyles.extra_header_styles += global_styles_editor ?
+        `<style id="global_styles_editor">${global_styles_editor}</style>` : ''
     }
     return extraStyles
   }

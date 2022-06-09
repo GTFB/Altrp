@@ -2,11 +2,29 @@ import _ from "lodash";
 import objectToStylesString from "../../objectToStylesString";
 import getResponsiveSetting from "../../getResponsiveSetting";
 import get_altrp_setting from "../../get_altrp_setting";
+import objectToAttributesString from "../../objectToAttributesString";
 
 export default function AltrpImage(props: any, device: string) {
   const {settings, widgetId, image} = props
+
   const {lazyload_disable,} = settings
   if (lazyload_disable) {
+    if(image.rawSVG){
+      let svg = image.rawSVG;
+      let regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig'); //для работы с циклом
+      let _props = {};
+      let propsString = svg.match(/<svg(.*?)=\"(.*?)\">/gi)?svg.match(/<svg(.*?)=\"(.*?)\">/gi)[0] : '';
+
+      let match;
+      while (match = regex.exec(propsString)) {
+        _props[match[1]] = match[3];
+      }
+      svg = svg.replace(/<!--[\s\S]*?-->/g, '')
+      svg = svg.replace(/<![\s\S]*?>/g, '')
+      svg = svg.replace(/<\?[\s\S]*?\?>/g, '')
+      svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+      return `<div class=" altrp-image-placeholder"><svg xmlns="http://www.w3.org/2000/" class="altrp-image" ${objectToAttributesString(_props)}>${svg}</svg></div>`
+    }
     let src = _.get(settings, 'content_media.dataUrl') || _.get(settings, 'content_media.url')
     if (src) {
       src = `src="${src}"`
