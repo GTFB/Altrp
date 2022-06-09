@@ -96,11 +96,12 @@ class AltrpImage extends Component {
     }
 
     let placeholder = <ImagePlaceholder color={media.main_color}
-                                        className={'altrp-image-placeholder '}
+                                        className={'altrp-image-placeholder'}
                                         ref={this.imageRef}
                                         settings={this.props.element?.getSettings() || {}}
                                         height={height}
                                         width={width}
+                                        elementId={this.props.elementId}
                                         style={placeholderStyles}
                                         mediaWidth={media.width || 100}
                                         mediaHeight={media.height || 75}>

@@ -34,6 +34,7 @@ class ImageWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    this.elementId = props.element.getId()
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
@@ -141,6 +142,7 @@ class ImageWidget extends Component {
         //   "altrp-image" +
         //   (background_image ? " altrp-background-image-widget" : "")
         // }
+        elementId={this.elementId}
         className="altrp-image"
       />
     );
