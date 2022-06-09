@@ -103,18 +103,69 @@ async function selectForSQLEditor( sql:string, bindings,  request:RequestContrac
     sql += _sql_order_by
   }
 
-
   sql = sql.replace(/ALTRP_FILTERS/g, _sql_filters)
   sql = sql.replace(/ALTRP_AND_FILTERS/g,_sql_and_filters)
   sql = sql.replace(/'?(ALTRP_DETAIL_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_filters)
   sql = sql.replace(/'?(ALTRP_DETAIL_AND_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_and_filters)
-  let result = await Database.rawQuery(sql, bindings)
+
+  let result = await Database.rawQuery(convertShortcodes(sql, qs), bindings)
   if(_.isArray(_.get(result, '0',))){
     result = _.get(result, '0',)
   }
   return result
 }
 export default selectForSQLEditor
+
+
+export function convertShortcodes(sql:string, qs:any):string {
+
+  let pos1 = 0;
+  let pos2 = 0;
+  let _sql = sql
+
+  while (true) {
+
+    let openPos = sql.indexOf('{{', pos1);
+    if (openPos == -1) break;
+
+    let closePos = sql.indexOf('}}', pos2);
+    if (closePos == -1) break;
+
+    let shortCode = sql.slice(openPos, closePos+2);
+    let code = sql.slice(openPos+2, closePos);
+
+    if(code.indexOf( 'IF_AND_REQUEST' ) !== -1) {
+      _sql = _sql.replace(shortCode, replaceIfAndRequest(code, qs))
+    }
+
+    // continue from the following position
+    pos1 = openPos + 1;
+    pos2 = closePos + 1;
+  }
+
+  console.log(_sql)
+
+  return _sql;
+}
+
+
+export function replaceIfAndRequest(code:string, qs:any):string {
+
+  let query = ''
+
+  let args = code.split(':');
+
+  let arg1 = args[1].trim();
+  let arg2 = args[2].trim();
+  let arg3 = args[3] ? args[3].trim() : '=';
+
+  if (qs[arg2] !== undefined) {
+    query = ` AND ${arg1} ${arg3} ${qs[arg2]} `
+  }
+
+  return query;
+
+}
 
 
 export function getDetailQueryValues(query, filter:string):object {
