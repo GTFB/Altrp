@@ -151,16 +151,28 @@ export function convertShortcodes(sql:string, qs:any):string {
 
 export function replaceIfAndRequest(code:string, qs:any):string {
 
-  let query = ''
-
+  let query = ``
   let args = code.split(':');
-
   let arg1 = args[1].trim();
   let arg2 = args[2].trim();
   let arg3 = args[3] ? args[3].trim() : '=';
 
-  if (qs[arg2] !== undefined) {
-    query = ` AND ${arg1} ${arg3} ${qs[arg2]} `
+  switch (arg3) {
+    case 'IN':
+      let searchable = Array.isArray(qs[arg2]) ? qs[arg2].toString() : qs[arg2];
+      query = ` AND ${arg1} ${arg3} (${searchable}) `;
+      break;
+    case 'ILIKE' || 'LIKE':
+      query = ` AND ${arg1} ${arg3} %${qs[arg2]}% `;
+      break;
+    case 'START_LIKE':
+       query = ` AND ${arg1} LIKE %${qs[arg2]} `;
+      break;
+    case 'END_LIKE':
+      query = ` AND ${arg1} LIKE ${qs[arg2]}% `;
+      break;
+    default:
+      query = ` AND ${arg1} ${arg3} ${qs[arg2]} `;
   }
 
   return query;
