@@ -124,10 +124,8 @@ export function convertShortcodes(sql:string, qs:any):string {
   let _sql = sql
 
   while (true) {
-
     let openPos = sql.indexOf('{{', pos1);
     if (openPos == -1) break;
-
     let closePos = sql.indexOf('}}', pos2);
     if (closePos == -1) break;
 
@@ -138,13 +136,15 @@ export function convertShortcodes(sql:string, qs:any):string {
       _sql = _sql.replace(shortCode, replaceIfAndRequest(code, qs))
     }
 
+    if(code.indexOf( 'IS_NULL' ) !== -1) {
+      _sql = _sql.replace(shortCode, replaceIsNull(code, qs))
+    }
+
     // continue from the following position
     pos1 = openPos + 1;
     pos2 = closePos + 1;
   }
-
   console.log(_sql)
-
   return _sql;
 }
 
@@ -157,26 +157,44 @@ export function replaceIfAndRequest(code:string, qs:any):string {
   let arg2 = args[2].trim();
   let arg3 = args[3] ? args[3].trim() : '=';
 
-  switch (arg3) {
-    case 'IN':
-      let searchable = Array.isArray(qs[arg2]) ? qs[arg2].toString() : qs[arg2];
-      query = ` AND ${arg1} ${arg3} (${searchable}) `;
-      break;
-    case 'ILIKE' || 'LIKE':
-      query = ` AND ${arg1} ${arg3} %${qs[arg2]}% `;
-      break;
-    case 'START_LIKE':
-       query = ` AND ${arg1} LIKE %${qs[arg2]} `;
-      break;
-    case 'END_LIKE':
-      query = ` AND ${arg1} LIKE ${qs[arg2]}% `;
-      break;
-    default:
-      query = ` AND ${arg1} ${arg3} ${qs[arg2]} `;
+  if (typeof qs[arg2] !== 'undefined') {
+    let searchable = qs[arg2];
+    switch (arg3) {
+      case 'IN':
+      case 'NOT_IN':
+        if (typeof qs[arg2] === 'string') {
+          searchable = qs[arg2].replace(/\[|\]/g, '');
+        }
+        if (Array.isArray(qs[arg2])) {
+          searchable = qs[arg2].toString();
+        }
+        query = ` AND ${arg1} ${arg3 == 'IN' ? arg3 : 'NOT IN'} (${searchable}) `;
+        break;
+      case 'LIKE':
+      case 'ILIKE':
+        searchable = `'%${qs[arg2]}%'`;
+        query = ` AND ${arg1} ${arg3} ${searchable} `;
+        break;
+      case 'START_LIKE':
+        searchable = `'%${qs[arg2]}'`;
+        query = ` AND ${arg1} LIKE ${searchable} `;
+        break;
+      case 'END_LIKE':
+        searchable = `'${qs[arg2]}%'`;
+        query = ` AND ${arg1} LIKE ${searchable} `;
+        break;
+      default:
+        query = ` AND ${arg1} ${arg3} ${qs[arg2]} `;
+    }
   }
-
   return query;
+}
 
+
+export function replaceIsNull(code:string, qs:any):string {
+  let args = code.split(':');
+  let arg1 = args[1].trim();
+  return typeof qs[arg1] !== 'undefined' ? ` false ` : ` true `;
 }
 
 
