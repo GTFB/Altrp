@@ -65,6 +65,7 @@ export default class SQLEditorController {
     delete sQLEditorData.roles
     delete sQLEditorData.permissions
     delete sQLEditorData.test
+    delete sQLEditorData.id;
     sQLEditor.fill(sQLEditorData)
     await sQLEditor.save()
     let model = await Model.find(sQLEditor.model_id)
