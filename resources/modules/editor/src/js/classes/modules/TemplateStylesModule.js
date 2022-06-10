@@ -11,7 +11,7 @@ class TemplateStylesModule{
    * @returns {{all_styles, important_styles}}
    */
   async generateStyles(){
-    let styles = {}
+    let styles
     let stylesElements
     if (window.altrpEditorContent.editorWindow.current) {
       let rootElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName(

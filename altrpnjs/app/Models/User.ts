@@ -133,7 +133,8 @@ export default class User extends BaseModel {
         if(typeof roleName === 'string'){
           return role.name
         }
-        return role.id
+        // @ts-ignore
+        return parseInt(role.id)
       }).indexOf(roleName) !== -1;
     }).length)
   }

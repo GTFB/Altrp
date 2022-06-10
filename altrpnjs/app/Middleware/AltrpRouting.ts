@@ -13,11 +13,9 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
 import resource_path from "../../helpers/path/resource_path";
 import fs from "fs";
-import base_path from "../../helpers/path/base_path";
 import * as mustache from 'mustache'
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import filterAllowedForUser from "../../helpers/string/filterAllowedForUser";
-import {column} from "@ioc:Adonis/Lucid/Orm";
 
 export default class AltrpRouting {
 
@@ -182,9 +180,9 @@ export default class AltrpRouting {
       const device = getCurrentDevice(httpContext.request)
 
       console.log(performance.now() - start);
-      console.log(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`));
+
       let content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
-      content = filterAllowedForUser(content, user)
+      content = await filterAllowedForUser(content, user)
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
@@ -202,7 +200,7 @@ export default class AltrpRouting {
         device,
       })
       let res = content
-
+      console.log(res.length);
       console.log(performance.now() - start);
 
       /**

@@ -50,7 +50,6 @@ class BaseGenerator {
       content = minify(content, {
         collapseWhitespace:true,
         minifyCSS: true,
-        minifyJS: true,
       })
     }
     fs.writeFileSync(this.getFullFileName(), content)

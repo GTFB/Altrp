@@ -1,3 +1,4 @@
+import purifycss from "purify-css"
 import * as mustache from 'mustache'
 import md5 from 'md5'
 import {DateTime} from 'luxon'
@@ -515,76 +516,9 @@ export default class Page extends BaseModel {
     return styles;
   }
 
-  async getAllStyles(screenName = '') {
+  async getAllStyles(screenName = '', html) {
 
     let styles = ''
-    let contentStyles = data_get(await Template.getTemplate(this.id, 'content'), 'styles')
-    let headerStyles = data_get(await Template.getTemplate(this.id, 'header'), 'styles')
-
-    let areas = await Area.query().whereNotIn('name', [
-      'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
-    ])
-      .select('name')
-    areas = areas.filter((area:Area) => {
-      const settings = mbParseJSON(area.settings, {})
-      return ! _.get(settings, 'not_content')
-    })
-    for (let area of areas) {
-      let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
-      if (customStyles) {
-        customStyles = JSON.parse(customStyles)
-        if(screenName && _.get(customStyles, screenName, []).length ) {
-          customStyles = _.get(customStyles, screenName, [])
-        }else {
-          customStyles = _.get(customStyles, 'all_styles', [])
-        }
-        customStyles = customStyles.map(s => {
-          if (s.indexOf('</style>') === -1) {
-            s = `
-<style id="custom_area_styles_${area.name}">${s}</style>`
-            return s
-          }
-        })
-        styles += customStyles.join('')
-      }
-    }
-
-    if (headerStyles) {
-      headerStyles = JSON.parse(headerStyles)
-
-      if(screenName && _.get(headerStyles, screenName, []).length ) {
-        headerStyles = _.get(headerStyles, screenName, [])
-      }else {
-        headerStyles = _.get(headerStyles, 'all_styles', [])
-      }
-
-      headerStyles = headerStyles.map(s => {
-        if (s.indexOf('</style>') === -1) {
-          s = `
-<style id="header_style">${s}</style>`
-          return s
-        }
-      })
-      styles += headerStyles.join('')
-    }
-    if (contentStyles) {
-      contentStyles = JSON.parse(contentStyles)
-
-      if(screenName && _.get(contentStyles, screenName, []).length ) {
-        contentStyles = _.get(contentStyles, screenName, [])
-      }else {
-        contentStyles = _.get(contentStyles, 'all_styles', [])
-      }
-
-      contentStyles = contentStyles.map(s => {
-        if (s.indexOf('</style>') === -1) {
-          s = `
-<style id="content_style">${s}</style>`
-          return s
-        }
-      })
-      styles += contentStyles.join('')
-    }
 
     let _contentAreas = await Area.query().whereNotIn('name', [
       'card', 'popup', 'reports', 'email'
@@ -609,6 +543,81 @@ export default class Page extends BaseModel {
       styles += `
 <style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
     }
+    let contentStyles = data_get(await Template.getTemplate(this.id, 'content'), 'styles')
+    let headerStyles = data_get(await Template.getTemplate(this.id, 'header'), 'styles')
+
+    let areas = await Area.query().whereNotIn('name', [
+      'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
+    ])
+      .select('name')
+    areas = areas.filter((area:Area) => {
+      const settings = mbParseJSON(area.settings, {})
+      return ! _.get(settings, 'not_content')
+    })
+    const purifycssOptions = {
+      minify:true,
+      whitelist: [ '*:not*' ]
+    }
+    for (let area of areas) {
+      let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
+      if (customStyles) {
+        customStyles = JSON.parse(customStyles)
+        if(screenName && _.get(customStyles, screenName, []).length ) {
+          customStyles = _.get(customStyles, screenName, [])
+        }else {
+          customStyles = _.get(customStyles, 'all_styles', [])
+        }
+        customStyles = customStyles.map( s => {
+          if (s.indexOf('</style>') === -1) {
+            s = purifycss(html, s, purifycssOptions)
+            s = `
+<style id="custom_area_styles_${area.name}">${s}</style>`
+          }
+          return s
+        })
+        styles += customStyles.join('')
+      }
+    }
+
+    if (headerStyles) {
+      headerStyles = JSON.parse(headerStyles)
+
+      if(screenName && _.get(headerStyles, screenName, []).length ) {
+        headerStyles = _.get(headerStyles, screenName, [])
+      }else {
+        headerStyles = _.get(headerStyles, 'all_styles', [])
+      }
+
+      headerStyles = headerStyles.map( s => {
+        if (s.indexOf('</style>') === -1) {
+          s = purifycss(html, s, purifycssOptions)
+          s = `
+<style id="header_style">${s}</style>`
+          return s
+        }
+      })
+      styles += headerStyles.join('')
+    }
+    if (contentStyles) {
+      contentStyles = JSON.parse(contentStyles)
+
+      if(screenName && _.get(contentStyles, screenName, []).length ) {
+        contentStyles = _.get(contentStyles, screenName, [])
+      }else {
+        contentStyles = _.get(contentStyles, 'all_styles', [])
+      }
+
+      contentStyles = contentStyles.map( s => {
+        if (s.indexOf('</style>') === -1) {
+          s = purifycss(html, s, purifycssOptions)
+          s = `
+<style id="content_style">${s}</style>`
+        }
+        return s
+      })
+      styles += contentStyles.join('')
+    }
+
     styles = mustache.render(styles, {})
 
     return styles
@@ -817,24 +826,14 @@ export default class Page extends BaseModel {
   async renderPageAreas():Promise<string> {
     const areas = await this.getAreas(true)
     // return JSONStringifyEscape(areas)
-
+    const _areas:any[] = []
     for(const area of areas){
       if(_.isArray(area.templates)){
-        for(let templateKey in area.templates){
-          if(area.templates.hasOwnProperty(templateKey)){
-            if(area.templates[templateKey].data){
-              area.templates[templateKey].data =
-                mbParseJSON(area.templates[templateKey].data, area.templates[templateKey].data)
-              area.templates[templateKey].data = JSON.stringify(area.templates[templateKey].data)
-            }
-
-          }
-        }
-        continue
+        // continue
       }
       if(area?.template?.data){
         area.template.data = mbParseJSON(area.template.data, area.template.data)
-        area.template.data = JSON.stringify(area.template.data)
+        // area.template.data = JSON.stringify(area.template.data)
 
         // const data = {...area.template.data}
         // delete area.template.data
@@ -845,10 +844,10 @@ export default class Page extends BaseModel {
         // }
 
       }
-
+      _areas.push(area)
     }
 
-    return JSONStringifyEscape(areas)
+    return JSONStringifyEscape(_areas)
   }
 
 }

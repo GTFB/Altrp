@@ -75,7 +75,7 @@ export default class PageGenerator extends BaseGenerator {
       let fileName = this.getFilename(page)
       let children_content = await this.page.getChildrenContent(screen.name)
       const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
-      let all_styles = await this.page.getAllStyles(screen.name)
+      let all_styles = await this.page.getAllStyles(screen.name, children_content)
       await this.addFile(fileName)
         .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
         .stub(PageGenerator.template)
@@ -139,7 +139,7 @@ export default class PageGenerator extends BaseGenerator {
       }
       font = encodeURIComponent(font);
       font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic'
-      let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
+      let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic&display=swap';
       fontUrl = '<link rel="stylesheet"  href="' + fontUrl + '" />'
       return fontUrl
     }).join('')
@@ -154,6 +154,10 @@ export default class PageGenerator extends BaseGenerator {
   }
 
   private getFrontAppJs() {
-    return `<script>${get_altrp_setting('all_site_js', '', true)}</script>`
+    return `<script id="all_site_js">
+    /* <![CDATA[ */
+    ${get_altrp_setting('all_site_js', '', true)}
+    /* ]]> */
+    </script>`
   }
 }

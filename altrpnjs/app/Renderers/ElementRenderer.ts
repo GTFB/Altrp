@@ -13,6 +13,8 @@ import renderSectionBG from "../../helpers/renderSectionBG";
 import getAddingClasses from "../../helpers/getAddingClasses";
 import renderSection from "../../helpers/widgets-renders/renderSection";
 import getSectionWidthClass from "../../helpers/widgets-renders/getSectionWidthClass";
+import Role from "App/Models/Role";
+import Permission from "App/Models/Permission";
 
 export default class ElementRenderer {
   static straightRenderIgnore = [
@@ -160,7 +162,16 @@ export default class ElementRenderer {
     if (conditional_display_choose ||
       (conditional_permissions?.length || conditional_roles?.length)) {
       conditional_roles = conditional_roles || []
+      // @ts-ignore
+      conditional_roles = await Role.query().whereIn('id', conditional_roles)
+      // @ts-ignore
+      conditional_roles = conditional_roles.map(r => r.name)
       conditional_permissions = conditional_permissions || []
+      // @ts-ignore
+      conditional_permissions = await Permission.query().whereIn('id', conditional_permissions)
+      // @ts-ignore
+      conditional_permissions = conditional_permissions.map(p => p.name)
+      // @ts-ignore
       allow_start_tag = `<allowedforuser type="${conditional_display_choose}" roles="${conditional_roles.join(",")}" permissions="${conditional_permissions.join(",")}">`
       allow_end_tag = `</allowedforuser>`
     }

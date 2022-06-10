@@ -68,13 +68,13 @@ async function upgradeBackend(types = defaultTypes, ids ) {
         do {
           ++i
           try {
-            await delay(750)
+            await delay(100)
             await axios.get('/ajax/_token')
             serverRestarted = true
           } catch (e) {
             console.error(e);
           }
-        } while (!serverRestarted && i < 10)
+        } while (!serverRestarted && i < 30)
       }
     }while (ids.length)
     ids = null
