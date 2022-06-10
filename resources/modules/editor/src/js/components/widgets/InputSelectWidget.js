@@ -1,18 +1,4 @@
 import {iconsManager} from "../../../../../admin/src/js/helpers";
-
-const {
-  convertData,
-  isEditor,
-  parseOptionsFromSettings,
-  parseParamsFromString,
-  replaceContentWithData,
-  renderAssetIcon,
-  renderAsset,
-  getDataByPath,
-  Resource,
-  getDataFromLocalStorage
-} = window.altrpHelpers;
-
 import Resource from "../../classes/Resource";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import convertData from "../../../../../front-app/src/js/functions/convertData";

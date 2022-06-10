@@ -66,12 +66,13 @@ class HeadingTypeHeadingWidget extends Component {
 
   render() {
     let heading;
+    let textStrokeSwitch = this.props.element.getResponsiveLockedSetting('style_text_stroke_switcher')
 
     let modelData = this.props.element.getCurrentModel().getData();
     const background_image = this.props.element.getLockedSettings('background_image', {});
     let text = this.getLockedContent('text');
     let link;
-    const className = this.getClasses() + (this.state.settings.position_css_classes || "") + " altrp-heading altrp-heading--link " + (background_image.url ? ' altrp-background-image' : '');
+    const className = this.getClasses() + (this.state.settings.position_css_classes || "") + " altrp-heading altrp-heading--link " + (background_image.url ? ' altrp-background-image' : '') + (textStrokeSwitch ? "text-stroke-included" : "");
 
     if (this.state.settings.link_link && this.state.settings.link_link.url) {
       let linkProps = {

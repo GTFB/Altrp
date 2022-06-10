@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import InlineEditor from "@ckeditor/ckeditor5-build-inline";
 import UploadAdapterPlugin from "./Plugins/UploadAdapterPlugin";
+// import {ImageResizeButtons, ImageResizeEditing, ImageResizeHandles} from '@ckeditor/ckeditor5-image';
 // import {ImageUploadProgress} from "@ckeditor/ckeditor5-image";
 
 const defaultToolbar = [

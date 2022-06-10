@@ -45,6 +45,11 @@ class SwitcherController extends Component {
         <div className="control-switcher__caret" />
         <div className="control-switcher__off-text">OFF</div>
       </div>
+      {this.props.description && (
+        <div className="controller-container__description"
+             dangerouslySetInnerHTML={{__html:this.props.description}}
+        />
+      )}
     </div>
   }
 }

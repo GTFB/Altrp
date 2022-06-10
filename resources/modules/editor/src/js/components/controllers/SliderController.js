@@ -47,7 +47,7 @@ class SliderController extends Component {
 
   getDefaultValue() {
     return {
-      size: '',
+      size: Number.isFinite(this.props.defaultSize) ? this.props.defaultSize : '',
       unit: 'px',
     };
   }

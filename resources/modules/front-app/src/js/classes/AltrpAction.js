@@ -6,27 +6,25 @@ import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
 import elementsToPdf from "../functions/elementsToPdf";
-const {
-  altrpLogin,
-  altrpLogout,
-  dataFromTable,
-  dataToCSV,
-  dataToXML,
-  getAppContext,
-  getComponentByElementId,
-  getHTMLElementById,
-  parseParamsFromString,
-  getDataByPath,
-  printElements,
-  replaceContentWithData,
-  scrollToElement,
-  setDataByPath,
-  dataToXLS,
-  delay,
-  altrpCompare,
-  Resource,
-  getWrapperHTMLElementByElement
-} = window.altrpHelpers;
+import altrpLogin from "../functions/altrpLogin"
+import altrpLogout from "../functions/altrpLogout"
+import dataFromTable from "../functions/dataFromTable"
+import dataToCSV from "../functions/dataToCSV"
+import dataToXML from "../functions/dataToXML"
+import getAppContext from "../functions/getAppContext"
+import getComponentByElementId from "../functions/getComponentByElementId"
+import getHTMLElementById from "../functions/getHTMLElementById"
+import parseParamsFromString from "../functions/parseParamsFromString"
+import getDataByPath from "../functions/getDataByPath"
+import printElements from "../functions/printElements"
+import replaceContentWithData from "../functions/replaceContentWithData"
+import scrollToElement from "../functions/scrollToElement"
+import setDataByPath from "../functions/setDataByPath"
+import dataToXLS from "../functions/dataToXLS"
+import delay from "../functions/delay"
+import altrpCompare from "../functions/altrpCompare"
+import getWrapperHTMLElementByElement from "../functions/getWrapperHTMLElementByElement"
+import Resource from "../../../../editor/src/js/classes/Resource"
 
 // let  history = require('history');
 // // import {history} from 'history';

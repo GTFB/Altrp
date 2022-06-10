@@ -13,10 +13,11 @@ export default function renderHeading(settings, device, context) {
     default:
 
       const background_image = getResponsiveSetting(settings, 'background_image', device, {})
+      const textStrokeSwitch = getResponsiveSetting(settings, 'style_text_stroke_switcher', device, {})
       let text = getContent(settings,context,'text', device)
       let link
       const className = "altrp-heading altrp-heading--link " +
-         (background_image?.url ? ' altrp-background-image' : '')
+         (background_image?.url ? ' altrp-background-image' : '') + (textStrokeSwitch ? "text-stroke-included" : "")
       // @ts-ignore
       let wrapperClasses = "altrp-heading-wrapper"
 

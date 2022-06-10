@@ -1,12 +1,10 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-const {
-  conditionsChecker,
-  getConverter,
-  getDataByPath,
-  isEditor,
-  prepareContext,
-  replaceContentWithData
-} = window.altrpHelpers;
+import conditionsChecker from "../functions/conditionsChecker";
+import getConverter from "../functions/getConverter";
+import getDataByPath from "../functions/getDataByPath";
+import isEditor from "../functions/isEditor";
+import prepareContext from "../functions/prepareContext";
+import replaceContentWithData from "../functions/replaceContentWithData";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addSettings} from "../store/elements-settings/actions";
 import ELEMENTS_IGNORES_FORM_UPDATE from "../constants/ELEMENTS_IGNORES_FORM_UPDATE";

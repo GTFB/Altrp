@@ -8,6 +8,7 @@ import Select from "react-select";
 import HistoryIcon from '../../../svgs/history.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import {renderScrollbar} from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 
 class CreativeLinkController extends Component {
   constructor(props) {
@@ -378,7 +379,8 @@ class CreativeLinkController extends Component {
         borderWidth: "0px 1px 1px 1px",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
-        position: 'absolute'
+        position: 'absolute',
+        zIndex: 100
       }),
 
       menuList: () => ({
@@ -464,6 +466,7 @@ class CreativeLinkController extends Component {
               options={styleOptions}
               styles={customStyles}
               placeholder={valueCreativeLink.label}
+              components={{ MenuList: renderScrollbar }}
               noOptionsMessage={() => "no fonts found"}
             />
           </div>

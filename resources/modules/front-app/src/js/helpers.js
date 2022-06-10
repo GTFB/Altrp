@@ -1,7 +1,5 @@
-import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import React from "react";
-import replaceContentWithData from "./functions/replaceContentWithData";
 export {default as replaceContentWithData} from "./functions/replaceContentWithData";
 export {default as getDataByPath} from "./functions/getDataByPath";
 export {default as getComponentByElementId} from "./functions/getComponentByElementId";
@@ -65,6 +63,12 @@ export {default as getTimeValue} from "./functions/getTimeValue";
 export {default as startOfMonth} from "./functions/startOfMonth";
 export {default as startOfYear} from "./functions/startOfYear";
 export {default as isEditor} from "./functions/isEditor";
+export {default as dataFromTable} from "./functions/dataFromTable";
+export {default as dataToCSV} from "./functions/dataToCSV";
+export {default as dataToXML} from "./functions/dataToXML";
+export {default as getAppContext} from "./functions/getAppContext";
+export {default as dataToXLS} from "./functions/dataToXLS";
+export {default as prepareContext} from "./functions/prepareContext";
 export {default as CONDITIONS_OPTIONS} from "./constants/CONDITIONS_OPTIONS";
 export {getResponsiveSetting} from "./functions/getResponsiveSetting";
 
@@ -95,136 +99,6 @@ window.altrphelpers = {
   }
 };
 
-
-
-/**
- * Забирает данные из HTML таблицы
- * @param {{}}HTMLElement
- */
-export function dataFromTable(HTMLElement) {
-  const data = [];
-  const headers = [];
-  if (!(HTMLElement && HTMLElement.querySelectorAll)) {
-    return data;
-  }
-  let table = HTMLElement.querySelector(".altrp-table");
-  if (!table && HTMLElement.querySelector(".altrp-table-tr")) {
-    table = HTMLElement;
-  }
-  if (!table) {
-    return data;
-  }
-  const ths = table.querySelectorAll(".altrp-table-th");
-  _.each(ths, th => {
-    // if (th.innerText) {
-    headers.push(th.innerText || "");
-    // }
-  });
-  const rows = table.querySelectorAll(".altrp-table-tbody .altrp-table-tr");
-  _.each(rows, row => {
-    const cells = row.querySelectorAll(".altrp-table-td");
-    const part = {};
-    headers.forEach((header, idx) => {
-      if (!header) {
-        return;
-      }
-      part[header] = cells[idx].innerText || "";
-    });
-    data.push(part);
-  });
-  return data;
-}
-
-/**
- * Создать csv-файл из данных и скачать
- * @param {{}} data
- * @param {string} filename
- */
-export async function dataToCSV(data = {}, filename) {
-  filename = filename || "File";
-  if (!data) {
-    return { success: false };
-  }
-  if (_.isObject() && !_.isArray(data)) {
-    data = [data];
-  }
-  if (!_.isArray(data)) {
-    return { success: false };
-  }
-
-  let headers = _.toPairs(data[0]).map(([name, value]) => name);
-  let csvContent =
-    // 'data:text/csv;charset=utf-8,'
-    "" +
-    headers.join(";") +
-    "\n" +
-    data
-      .map(item => {
-        let line = "";
-        headers.forEach((h, idx) => {
-          let value = _.get(item, h) || "";
-          if (_.isObject(value)) {
-            value = JSON.stringify(value);
-          }
-
-          line +=
-            (_.isString(value) ? value.replace(/\s/g, " ") : value) +
-            (headers.length === idx + 1 ? "" : ";");
-        });
-        return line;
-      })
-      .join("\n");
-  let blob = new Blob([csvContent], {
-    type: "text/csv",
-    charset: "windows-1251"
-    // charset: 'utf-8',
-  });
-  let link = document.createElement("a");
-  link.setAttribute("href", window.URL.createObjectURL(blob));
-  link.setAttribute("download", filename + ".csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  return { success: true };
-}
-
-/**
- * Генерация и загрузка XLS-файла
- * @param {Object data} Объект данных
- * @param {String} filename Имя файла
- */
-export async function dataToXLS(data, filename = "table", templateName = "") {
-  const formData = new FormData();
-  formData.append("filename", filename);
-  formData.append("data", JSON.stringify(data));
-  formData.append("template", templateName);
-
-  const response = await fetch("/api/export-excel", {
-    method: "POST",
-    body: formData
-  });
-
-  return await response.blob();
-}
-
-/**
- * Генерация и загрузка XML-файла
- * @param {Object data} Объект данных
- * @param {String} filename Имя файла
- */
-export async function dataToXML(data, filename = "table") {
-  const formData = new FormData();
-  formData.append("filename", filename);
-  formData.append("data", JSON.stringify(data));
-
-  const response = await fetch("/api/export-xml", {
-    method: "POST",
-    body: formData
-  });
-
-  return await response.blob();
-}
-
 export function cutString(string, maxLength = 80) {
   if (string.length <= maxLength) return string;
   return string.slice(0, maxLength) + "...";
@@ -250,43 +124,6 @@ export function recurseCount(object = {}, path = "") {
     count += recurseCount(item, path);
   });
   return count;
-}
-
-/**
- * Вовращает AltrpModel, в котором храняться все источники данных на странице
- * @param {{}} model
- * @return {AltrpModel}
- */
-export function getAppContext(model = null) {
-  const { currentModel } = appStore.getState();
-  if(model instanceof AltrpModel){
-    model = model.getData();
-  }
-  const currentModelData = model ? model : currentModel.getData();
-  const urlParams = _.cloneDeep(
-    window.currentRouterMatch instanceof AltrpModel
-      ? window.currentRouterMatch.getProperty("params")
-      : {}
-  );
-  const context = new AltrpModel(_.assign(urlParams, currentModelData));
-  const {
-    altrpPageState,
-    altrpPage,
-    altrpMeta,
-    currentDataStorage,
-    currentUser,
-    altrpresponses,
-    formsStore
-  } = appStore.getState();
-
-  context.setProperty("altrpdata", currentDataStorage);
-  context.setProperty("altrppagestate", altrpPageState);
-  context.setProperty("altrpmeta", altrpMeta);
-  context.setProperty("altrpuser", currentUser);
-  context.setProperty("altrpresponses", altrpresponses);
-  context.setProperty("altrpforms", formsStore);
-  context.setProperty("altrppage", altrpPage);
-  return context;
 }
 
 /**
@@ -332,21 +169,6 @@ export function isValueMatchMask(value, mask) {
   );
 }
 
-
-/**
- *
- * @param {{}} context
- * @return {{}}
- */
-export function prepareContext(context) {
-  context.altrpdata = appStore.getState().currentDataStorage.getData();
-  context.altrpmodel = appStore.getState().currentModel.getData();
-  context.altrpuser = appStore.getState().currentUser.getData();
-  context.altrppagestate = appStore.getState().altrpPageState.getData();
-  context.altrpresponses = appStore.getState().altrpresponses.getData();
-  context.altrpmeta = appStore.getState().altrpMeta.getData();
-  return context;
-}
 
 /**
  * Парсит xml строку в объект
