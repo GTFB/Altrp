@@ -8,15 +8,25 @@ import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 // import timers from "App/Services/Timers";
-import Timer from "App/Models/Timer";
+import timers from "../../../Services/Timers";
 
 export default class CustomizersController {
 
 
   public async store({request, response}: HttpContextContract) {
 
+    const requestAll = request.all();
+
+    if(requestAll.is_method !== undefined) {
+      if(requestAll.is_method) {
+        requestAll.type = "method"
+      }
+
+      delete requestAll.is_method
+    }
+
     let customizer = new Customizer()
-    customizer.fill(request.all())
+    customizer.fill(requestAll)
 
     customizer.guid = guid()
     try {
@@ -48,12 +58,7 @@ export default class CustomizersController {
         customizer = await Customizer.query().preload("altrp_model").firstOrFail()
 
         if(customizer?.settings?.time && customizer?.settings?.time_type) {
-          await Timer.createWithCheck({
-            type: "customizer",
-            value: customizer.guid,
-            time: customizer.settings.time,
-            time_type: customizer.settings.time_type
-          })
+          await timers.add(customizer, model)
         }
         await source.save()
       }
@@ -210,12 +215,7 @@ export default class CustomizersController {
 
 
       if(customizer?.settings?.time && customizer.settings?.time_type) {
-        await Timer.createWithCheck({
-          type: "customizer",
-          value: customizer.guid,
-          time: customizer.settings.time,
-          time_type: customizer.settings.time_type
-        })
+        await timers.add(customizer, model)
       } else if(oldSettings?.time_type !== customizer?.settings?.time_type || oldSettings?.time !== customizer?.settings?.time) {
         // await timers.remove(customizer.guid)
       }
