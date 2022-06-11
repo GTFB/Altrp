@@ -27,7 +27,7 @@ ${(props) => {
 
   background-color: ${props => props.color ? props.color : '#fff'};
 }
-${({elementId})=>elementId ? `.altrp-element${elementId} .altrp-image-placeholder:not(&)` : '&'}::before{
+${({elementId})=>elementId ? `.altrp-element${elementId}:not(&) .altrp-image-placeholder` : '&'}::before{
   display: block;
   content: '';
   width: 100%;
@@ -50,6 +50,7 @@ ${(props) => {
   }
   if (Number(props.mediaWidth) && Number(props.mediaHeight)) {
     style += `padding-top:${(props.mediaHeight / props.mediaWidth) * 100}%;`
+    console.log(style);
   }
   return style;
 }};

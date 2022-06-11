@@ -28,7 +28,7 @@ export default class UpdateService {
       return true;
     }
 
-    Logger.info("Starting Update")
+    console.log("Starting Update")
     let file = ''
     try {
       file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
@@ -62,7 +62,7 @@ export default class UpdateService {
     View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
     clearRequireCache()
     UpdateService.setPackageKey();
-    Logger.info("End Update")
+    console.log("End Update")
     return true;
   }
   static setPackageKey(){
