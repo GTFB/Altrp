@@ -12,14 +12,17 @@ class FrontElementsManager {
    *
    * @return {Promise<void>}
    */
-  async loadComponents() {
+  async loadComponents(elementsLists = null) {
     let componentsToLoad;
-    if (window.altrpElementsLists) {
-      window.altrpElementsLists = window.altrpElementsLists.filter(elementName =>{
+    if(! elementsLists){
+      elementsLists = window.altrpElementsLists
+    }
+    if (elementsLists) {
+      elementsLists = elementsLists.filter(elementName =>{
         return this.ELEMENTS.find(element => elementName === element.name);
       })
       componentsToLoad = this.ELEMENTS.filter(el => {
-        return window.altrpElementsLists.indexOf(el.name) !== -1;
+        return elementsLists.indexOf(el.name) !== -1;
       });
       // componentsToLoad = componentsToLoad.map(async el => {
       //   return (this.components[el.name] = (

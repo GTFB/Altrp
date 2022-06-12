@@ -61,7 +61,7 @@ window.LIBS = {
   'fullcalendar': () => {
     return import(/* webpackChunkName: 'fullcalendar' */'../libs/fullcalendar').then(res => {
       window.libsLoaded.push('fullcalendar')
-      console.log('LOAD "fullcalendar": ', performance.now());
+      console.log('LOAD fullcalendar: ', performance.now());
       return Promise.resolve(res)
 
     });

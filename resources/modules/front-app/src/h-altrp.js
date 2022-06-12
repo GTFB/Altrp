@@ -8,10 +8,9 @@ window.altrpIo = io( {
 })
 window.altrpIo.on("message", (data) => {
   if(data === 'altrpe'){
+    import('./js/helpers/dataRevealElements').then(cb=>cb.default())
     import('./_h-altrp')
     console.log('SOCKET IO CONNECTED: ', performance.now());
-    import('./js/helpers/dataRevealElements').then(cb=>cb.default())
-
     window.altrpIo.disconnect()
   }
 })

@@ -24,11 +24,11 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
   })
 })
 
-documentCheckEvents(() => {
+documentCheckEvents( () => {
   /**
    * Рендерим главный компонент после загрузки основных модулей
    */
-  window.loadingCallback = function loadingCallback() {
+  window.loadingCallback = async function loadingCallback() {
     loadPageActions()
     if (window.React
       && window.Component
@@ -55,9 +55,11 @@ documentCheckEvents(() => {
       const hAltrpLoadedEvent = new Event('h-altrp-loaded');
       window.dispatchEvent(hAltrpLoadedEvent);
 
-      /**
-       * Загружаем все действия привязанные к загрузке страницы
-       */
+      let actionComponents = _.get(__altrp_settings__, 'action_components', [])
+      if(actionComponents.find((action => action === 'toggle_popup'))){
+        let loadPopups = (await import('./js/functions/load-popups')).default;
+        loadPopups();
+      }
     }
   }
 

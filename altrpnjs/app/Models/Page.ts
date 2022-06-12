@@ -849,4 +849,8 @@ export default class Page extends BaseModel {
     return JSONStringifyEscape(_areas)
   }
 
+  async getPopupsGuids() {
+    const popups = await Template.getTemplates(this.id, 'popup' )
+    return popups.map(popup => popup.guid)
+  }
 }

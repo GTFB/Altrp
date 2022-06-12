@@ -18,7 +18,6 @@ function doRevealAction(revealElements){
       let options = element.dataset.revealOptions
       element.removeAttribute('data-reveal-options')
       options = mbParseJSON(options, {})
-      console.log(options);
       if(options.addClasses){
         if(typeof options.addClasses === 'string'){
           try {

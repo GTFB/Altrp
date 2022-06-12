@@ -99,6 +99,8 @@ export default class PageGenerator extends BaseGenerator {
           all_styles,
           _altrp: JSONStringifyEscape({
             version: getLatestVersion(),
+            pageGuid: page.guid,
+            popupsGuids: await page.getPopupsGuids(),
             isNodeJS: true
           }),
         }, false, true)
