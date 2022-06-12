@@ -17,7 +17,7 @@ export class DiscordBot {
 
       this.bot.login(this.token)
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -29,7 +29,6 @@ export class DiscordBot {
         blocks.forEach((block => this.sendByType(block, channel)))
       })
     } else {
-      console.log("Discord bot is null")
     }
   }
 

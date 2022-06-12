@@ -3,13 +3,15 @@ import {RequestContract} from "@ioc:Adonis/Core/Request";
 
 
 export default function getCurrentDevice(request: RequestContract):string {
+  let {__altrp_current_device} = request.cookiesList()
 
-  if( request.cookie('__altrp_current_device')){
-    return request.cookie('__altrp_current_device')
+  if( __altrp_current_device){
+    return __altrp_current_device
   }
 
   // @ts-ignore
   const detector = new MobileDetect(request.header('user-agent') );
+
   if(detector.tablet()){
     return 'Tablet';
   }

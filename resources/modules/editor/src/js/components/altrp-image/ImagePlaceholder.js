@@ -50,7 +50,6 @@ ${(props) => {
   }
   if (Number(props.mediaWidth) && Number(props.mediaHeight)) {
     style += `padding-top:${(props.mediaHeight / props.mediaWidth) * 100}%;`
-    console.log(style);
   }
   return style;
 }};

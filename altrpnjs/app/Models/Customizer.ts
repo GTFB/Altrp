@@ -298,7 +298,6 @@ export default class Customizer extends BaseModel {
   async callCustomizer(model: Model) {
     const customizer = this
 
-    // console.log('asdasd', this)
 
     const controllerName = app_path(`AltrpControllers/${model.name}Controller`);
 

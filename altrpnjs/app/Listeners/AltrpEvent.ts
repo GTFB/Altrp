@@ -30,7 +30,7 @@ export default class AltrpEvent {
 
         await func(data)
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
 

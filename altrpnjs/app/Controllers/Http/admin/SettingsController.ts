@@ -61,7 +61,7 @@ export default class SettingsController {
       try {
         await promisify(exec)(`node ${acePath} migration:fresh --force`)
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
 

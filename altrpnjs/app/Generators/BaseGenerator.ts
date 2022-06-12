@@ -11,6 +11,7 @@ import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import prepareContent from "../../helpers/prepareContent";
 import {minify} from 'html-minifier'
+import PagesCache from "App/Services/PagesCache";
 
 class BaseGenerator {
   private fileName: string;
@@ -33,6 +34,7 @@ class BaseGenerator {
   }
 
   protected async apply(vars: object,  prepare = false, htmlMinify = false){
+    PagesCache.clearAllCache()
     let content: string = ''
 
     if(fs.existsSync(this.stubFilePath)){

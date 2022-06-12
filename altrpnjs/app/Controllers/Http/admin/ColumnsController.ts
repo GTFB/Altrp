@@ -250,7 +250,7 @@ export default class ColumnsController {
     try {
       await this.indexCreator(false, column, model)
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
 
 

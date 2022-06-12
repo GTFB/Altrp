@@ -81,7 +81,6 @@ export class TelegramBot {
   }
 
   async init(updated) {
-    console.log("init")
 
     const customizer = await Customizer.query().where("guid", this.webhook).preload("altrp_model").first()
 
@@ -107,7 +106,6 @@ export class TelegramBot {
 
         this.customizer = controller[customizer.name]
       } else {
-        console.log("Customizer not found")
         if(this.httpContext) {
           this.httpContext.response.abort("Customizer not found")
         } else {
@@ -137,7 +135,7 @@ export class TelegramBot {
         });
 
         await global.telegramBot.launch().catch((e) => {
-          console.log(e)
+          console.error(e)
           if(this.httpContext) {
             this.httpContext.response.abort(e)
           } else {
@@ -145,7 +143,7 @@ export class TelegramBot {
           }
         })
       } catch (e) {
-        console.log(e)
+        console.erro(e)
         if(this.httpContext) {
           this.httpContext.response.abort(e)
         } else {
@@ -153,7 +151,6 @@ export class TelegramBot {
         }
       }
     } else {
-      console.log("customizer not found")
       if(this.httpContext) {
         this.httpContext.response.abort("customizer not found")
       } else {

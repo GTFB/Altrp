@@ -1,4 +1,5 @@
 import getResponsiveSetting from './getResponsiveSetting';
+import {encode} from 'html-entities';
 
 export default function renderSectionBG(settings, element_id, device){
 
@@ -6,14 +7,15 @@ export default function renderSectionBG(settings, element_id, device){
     'background_section',
   ]
 
+
   const background_image = getResponsiveSetting(settings,
     'background_image',device,
     {}
   );
-  sectionBackground.push('altrp-background-image' + element_id);
-  if (background_image?.url  ) {
-    sectionBackground.push('altrp-background-image');
-  }
+
+  const revealOptions = background_image?.url ? {
+    addClasses: 'altrp-background-image' + element_id
+  } : {}
 
   const background_video_poster = getResponsiveSetting(settings, 'url_video-poster', device) || '';
   const background_video_url = getResponsiveSetting(settings,'url_video', device) || '';
@@ -24,5 +26,5 @@ export default function renderSectionBG(settings, element_id, device){
     <source src="${background_video_url || 'none'}" type="video/mp4" class="section-video-source"/>
       </video>`
     :
-    `<span class="${sectionBackground.join(" ")}" ></span>`
+    `<span class="${sectionBackground.join(" ")}" data-reveal-options="${encode(JSON.stringify(revealOptions))}" ></span>`
 }

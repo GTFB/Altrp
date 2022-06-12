@@ -15,6 +15,7 @@ import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
 import mbParseJSON from "../../../helpers/mbParseJSON";
+import _ from "lodash";
 
 export default class TemplatesController {
   public async getAllIds({ response }) {
@@ -148,8 +149,6 @@ export default class TemplatesController {
 
       const stringyfiedData = JSON.stringify(data)
       const stringyfiedStyles = JSON.stringify(styles)
-      // console.log(name, title, 'parent_template:', +parent_template, type,)
-      // template = await Template.create({name, title, type, data: stringyfiedData, styles: stringyfiedStyles, parent_template: +parent_template, area: 1})
 
       template = await Template.create({
         area: 1,
@@ -423,6 +422,9 @@ export default class TemplatesController {
 
     if(setting) {
       res.data = JSON.parse(setting.data)
+      if(_.isString(res.data)){
+        res.data = JSON.parse(res.data)
+      }
     }
 
     return res

@@ -57,7 +57,7 @@ export default class RelationshipsController {
               ON UPDATE ${relationshipData.onUpdate}`
             await Database.rawQuery(query)
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
         }
 
@@ -93,7 +93,7 @@ export default class RelationshipsController {
               ON UPDATE restrict`
             await Database.rawQuery(query)
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
 
           const belongsToRelationship = new Relationship()

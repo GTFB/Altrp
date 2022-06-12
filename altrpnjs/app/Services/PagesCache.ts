@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export default class PagesCache {
 
   private static instance: PagesCache;
@@ -11,16 +13,22 @@ export default class PagesCache {
     return PagesCache.instance
   }
 
-  static getCache(pageGuid:string):string|null{
+  static getCache(pageGuid:string, device:string):string|null{
     if(!pageGuid){
       console.error('Empty Page Guid');
       return null
     }
-    return PagesCache.getInstance().getCache(pageGuid)
+    return PagesCache.getInstance().getCache(pageGuid, device)
   }
 
 
-  static setCache(pageGuid:string, htmlContent:string){
+  static clearAllCache(){
+
+    PagesCache.getInstance().clearAllCache()
+  }
+
+
+  static setCache(pageGuid:string, device:string, htmlContent:string){
     if(!pageGuid){
       console.error('Empty Page Guid');
       return
@@ -30,16 +38,24 @@ export default class PagesCache {
       return
     }
 
-    PagesCache.getInstance().setCache(pageGuid, htmlContent)
-
+    PagesCache.getInstance().setCache(pageGuid, device, htmlContent)
   }
 
-  private getCache(pageGuid:string):string|null {
-    return _.isString(this.cache[pageGuid]) ? this.cache[pageGuid] : null
+  private static getCacheName(pageGuid:string, device:string){
+    return `${pageGuid}${device}`
   }
 
-  private setCache(pageGuid:string, htmlContent:string) {
+  private getCache(pageGuid:string, device:string):string|null {
+    return _.isString(this.cache[PagesCache.getCacheName(pageGuid, device)])
+      ? this.cache[PagesCache.getCacheName(pageGuid, device)]
+      : null
+  }
 
-   this.cache[pageGuid] = htmlContent
+  private setCache(pageGuid:string, device:string, htmlContent:string) {
+   this.cache[PagesCache.getCacheName(pageGuid, device)] = htmlContent
+  }
+
+  private clearAllCache() {
+    this.cache = {};
   }
 }

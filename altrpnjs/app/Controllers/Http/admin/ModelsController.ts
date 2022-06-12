@@ -156,7 +156,7 @@ export default class ModelsController {
                 table.timestamp('updated_at')
             })
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
         }
 
@@ -171,7 +171,7 @@ export default class ModelsController {
               table.dropColumns('created_at', 'updated_at')
             })
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
           await created_at_column[0].delete()
           await updated_at_column[0].delete()
@@ -201,7 +201,7 @@ export default class ModelsController {
               table.timestamp('deleted_at')
             })
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
 
         }
@@ -214,7 +214,7 @@ export default class ModelsController {
               table.dropColumn('deleted_at')
             })
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
           await column[0].delete()
         }
@@ -802,7 +802,7 @@ export default class ModelsController {
             try {
               await relationship[i].delete()
             } catch (e) {
-              console.log(e)
+              console.error(e)
             }
           }
 

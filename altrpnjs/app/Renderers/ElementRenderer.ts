@@ -92,6 +92,11 @@ export default class ElementRenderer {
       let styles: {} | string = {}
       const {layout_content_width_type: widthType, isFixed} = this.element.settings
       let section_classes = ''
+
+      const fitToContent = getResponsiveSetting(settings,"layout_height", screenName)
+      if (fitToContent === "fit") {
+        section_classes +=" section-fit-to-content ";
+      }
       switch (this.getName()) {
         case 'section': {
           if (widthType === "boxed" && !isFixed) {

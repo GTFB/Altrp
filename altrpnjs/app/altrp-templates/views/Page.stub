@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ getLocale() }}">
 <head>
+<style type="text/css">body{display:none;}</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -79,5 +80,7 @@
     <script defer src="{{ hAltrp }}"></script>
     {{{extra_footer_styles}}}
   {{{all_site_js}}}
+  <style type="text/css">body{display:flex;}</style>
+
 </body>
 </html>

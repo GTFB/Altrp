@@ -267,7 +267,7 @@ export default class Template extends BaseModel {
       const renderer = new RootElementRenderer(data)
       return await renderer.render(screenName)
     } catch (e) {
-      console.log(e)
+      console.error(e)
 
       return ""
     }

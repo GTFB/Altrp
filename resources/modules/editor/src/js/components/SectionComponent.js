@@ -158,7 +158,7 @@ class SectionComponent extends Component {
       />
     ));
 
-    const fitToContent = this.props.element.getResponsiveLockedSetting("layout_height", "", "default")
+    const fitToContent = this.props.element.getResponsiveSetting("layout_height", "", "default")
     if (fitToContent === "fit") {
       sectionClasses.push("section-fit-to-content");
     }

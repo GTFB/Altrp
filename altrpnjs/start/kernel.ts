@@ -21,7 +21,6 @@ import fs from "fs";
 import base_path from "../helpers/path/base_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import guid from "../helpers/guid";
-import applyPluginsFiltersAsync from "../helpers/plugins/applyPluginsFiltersAsync";
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +39,6 @@ Server.middleware.register([
   () => import('App/Middleware/AltrpRouting'),
 ])
 
-applyPluginsFiltersAsync('config', '')
 
 Route.get('*', async () => {
 })

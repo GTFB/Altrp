@@ -16,6 +16,7 @@ import fs from "fs";
 import * as mustache from 'mustache'
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import filterAllowedForUser from "../../helpers/string/filterAllowedForUser";
+import PagesCache from "App/Services/PagesCache";
 
 export default class AltrpRouting {
 
@@ -180,8 +181,11 @@ export default class AltrpRouting {
       const device = getCurrentDevice(httpContext.request)
 
       console.log(performance.now() - start);
-
-      let content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
+      let content = PagesCache.getCache(page.guid, device)
+      if(!content){
+        content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
+        PagesCache.setCache(page.guid, device, content)
+      }
       content = await filterAllowedForUser(content, user)
       content = mustache.render(content, {
         ...altrpContext,
@@ -200,7 +204,7 @@ export default class AltrpRouting {
         device,
       })
       let res = content
-      console.log(res.length);
+
       console.log(performance.now() - start);
 
       /**
@@ -229,6 +233,4 @@ export default class AltrpRouting {
          `)
     }
   }
-
-
 }

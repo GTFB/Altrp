@@ -23,7 +23,7 @@ export default class GlobalTemplateStylesController {
       })
       return groups
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return {}
     }
   }
@@ -42,7 +42,7 @@ export default class GlobalTemplateStylesController {
       const style = await GlobalStyle.create(data)
       return style
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 

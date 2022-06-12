@@ -260,7 +260,6 @@ class Section extends BaseElement{
           label: 'min height'
         }
       ],
-      locked: true,
     });
 
     this.addControl("label_style_min_height", {

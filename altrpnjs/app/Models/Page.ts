@@ -517,7 +517,6 @@ export default class Page extends BaseModel {
   }
 
   async getAllStyles(screenName = '', html) {
-
     let styles = ''
 
     let _contentAreas = await Area.query().whereNotIn('name', [
