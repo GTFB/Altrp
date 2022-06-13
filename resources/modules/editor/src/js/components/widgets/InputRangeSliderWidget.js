@@ -1,8 +1,9 @@
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import numberWithSpaces from "../../helpers/number-with-spaces";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import {RangeSlider} from '@blueprintjs/core'
 
-const Slider = window.altrpLibs.Blueprint.RangeSlider;
+const Slider = RangeSlider;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .bp3-slider-label{

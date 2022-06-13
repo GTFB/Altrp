@@ -11,9 +11,8 @@ import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/
 import parseParamsFromString from "../../../../../front-app/src/js/functions/parseParamsFromString";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-const Button = window.altrpLibs.Blueprint.Button;
-const MenuItem = window.altrpLibs.Blueprint.MenuItem;
-const Select = window.altrpLibs.BlueprintSelect.Select;
+import {Select} from "@blueprintjs/select";
+import {MenuItem, Button} from "@blueprintjs/core";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .bp3-popover {

@@ -5,8 +5,8 @@ import conditionChecker from "../../../../../front-app/src/js/functions/conditio
 import mbParseJSON from "../../../../../front-app/src/js/functions/mb-parse-JSON";
 
 
-const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
-const Popover2 = window.altrpLibs.Popover2;
+import {Button, ButtonGroup, Menu, MenuItem, Position} from '@blueprintjs/core'
+import {Popover2} from '@blueprintjs/popover2'
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-menu-item__icon svg {

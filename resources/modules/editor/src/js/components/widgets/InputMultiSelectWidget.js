@@ -9,10 +9,9 @@ import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPa
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import {MultiSelect} from "@blueprintjs/select";
+import {MenuItem, Button} from "@blueprintjs/core";
 
-const Button = window.altrpLibs.Blueprint.Button;
-const MenuItem = window.altrpLibs.Blueprint.MenuItem;
-const MultiSelect = window.altrpLibs.BlueprintSelect.MultiSelect;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 

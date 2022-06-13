@@ -5,12 +5,12 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
-const {
+import {
   MenuItem,
-  Menu} = window.altrpLibs.Blueprint;
-const {
+  Menu} from '@blueprintjs/core'
+import {
   Popover2,
-  } = window.altrpLibs.BlueprintPopover;
+  } from '@blueprintjs/popover2'
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-const {RangeSlider} = window.altrpLibs.Blueprint
+import {RangeSlider} from "@blueprintjs/core";
 
 /**
  * This is a custom UI for our 'between' or number range

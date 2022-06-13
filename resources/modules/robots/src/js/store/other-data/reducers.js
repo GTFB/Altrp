@@ -12,7 +12,6 @@ export function otherDataReducer(state, action) {
   switch (action.type) {
     case SET_UPDATE_BUTTON:
       state.updateButton = action.data;
-      console.log(state);
       break;
   }
   return state;

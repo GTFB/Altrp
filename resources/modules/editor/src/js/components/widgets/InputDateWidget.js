@@ -5,7 +5,8 @@ import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/
 import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-const { DateInput, TimePrecision } = window.altrpLibs.BlueprintDatetime;
+import {DateInput, TimePrecision} from "@blueprintjs/datetime";
+
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-date-field-container .bp3-popover-wrapper, .altrp-date-field-container .bp3-popover-target {
     width: 100%;

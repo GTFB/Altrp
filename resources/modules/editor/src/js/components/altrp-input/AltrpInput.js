@@ -3,6 +3,7 @@ import ("./altrp-input.scss");
 import AltrpInputFile from "./AltrpInputFile";
 import validateEmail from "../../../../../front-app/src/js/functions/validateEmail";
 import MaskedInput from "./MaskedInput";
+import {InputGroup} from "@blueprintjs/core";
 
 class AltrpInput extends Component {
   state = {
@@ -29,7 +30,7 @@ class AltrpInput extends Component {
   //   }
   // }
   render() {
-    let Input = window.altrpLibs.Blueprint.InputGroup;
+    let Input = InputGroup;
     const { isValid } = this.state;
     const { content_type, content_mask, mask_mismatch_message } = this.props.settings;
     const inputProps = {

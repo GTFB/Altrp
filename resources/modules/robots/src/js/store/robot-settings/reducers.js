@@ -10,7 +10,6 @@ export function robotSettingsDataReducer(state, action) {
     case SET_UPDATED_NODE:
       const index = state.findIndex(node => node.id == action.value.id);
       state[index] = action.value;
-      console.log(state);
       break;
     case SET_ROBOT_SETTINGS:
       state = action.data;

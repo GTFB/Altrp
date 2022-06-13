@@ -3,7 +3,7 @@ import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
-const {ImageCrop} = window.altrpLibs
+import ImageCrop from 'react-image-crop'
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 
 (window.globalDefaults = window.globalDefaults || []).push(`

@@ -9,12 +9,9 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import React from "react";
 import recurseEach from "../../helpers/recurse-each";
-const Button = window.altrpLibs.Blueprint.Button;
-const MenuItem = window.altrpLibs.Blueprint.MenuItem;
-const Popover = window.altrpLibs.Popover2;
-const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
-const Alignment = window.altrpLibs.Blueprint.Alignment;
-const InputGroup = window.altrpLibs.Blueprint.InputGroup;
+import {MenuItem, Button, TreeBlueprint as Tree, Alignment, InputGroup} from "@blueprintjs/core";
+import {Popover2} from "@blueprintjs/popover2";
+let Popover = Popover2;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 

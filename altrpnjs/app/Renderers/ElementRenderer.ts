@@ -96,19 +96,21 @@ export default class ElementRenderer {
       const fitToContent = getResponsiveSetting(settings,"layout_height", screenName)
       if (fitToContent === "fit") {
         section_classes +=" section-fit-to-content ";
+        console.log(section_classes);
       }
       switch (this.getName()) {
         case 'section': {
           if (widthType === "boxed" && !isFixed) {
-            section_classes = " altrp-section_boxed ";
+            section_classes += " altrp-section_boxed ";
           }
           if (widthType === "section_boxed" && !isFixed) {
-            section_classes = " altrp-section_section-boxed "
+            section_classes += " altrp-section_section-boxed "
           }
 
           if (widthType === "full" && !isFixed) {
           }
-          section_classes = getSectionWidthClass(settings)
+
+          section_classes += getSectionWidthClass(settings)
 
         }
           break;

@@ -1,6 +1,12 @@
 import Resource from '../../classes/Resource';
-const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction, locales} = window.altrpLibs.fullCalendar
-const {InputGroup, TextArea} = window.altrpLibs.Blueprint
+import {FullCalendar} from '@fullcalendar/react'
+
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interaction from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import ruLocale from '@fullcalendar/core/locales/ru'
+import enLocale from '@fullcalendar/core/locales/en-gb'
+import {InputGroup, TextArea} from '@blueprintjs/core'
 
 
 

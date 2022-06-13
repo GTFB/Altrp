@@ -3,7 +3,7 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
 import getBreadcrumbsItems from "../../../../../front-app/src/js/functions/getBreadcrumbsItems";
 import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
-const {Breadcrumbs} = window.altrpLibs.Blueprint;
+import {Breadcrumbs} from "@blueprintjs/core";
 
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings})=>{

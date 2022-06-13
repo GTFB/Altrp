@@ -1,6 +1,6 @@
 import TemplateLoader from "../template-loader/TemplateLoader";
 import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
-const {Tab, Tabs} = window.altrpLibs.Blueprint;
+import {Tab, Tabs} from '@blueprintjs/core'
 (window.globalDefaults = window.globalDefaults || []).push(`
 
 .altrp-tab-btn-container {

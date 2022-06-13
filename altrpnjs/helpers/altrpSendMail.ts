@@ -31,7 +31,7 @@ export default async function altrpSendMail(
   subject = replaceContentWithData(subject, context)
   html = replaceContentWithData(html, context)
   try {
-    // @ts-ignore
+
     await Mail.use('smtp').send((message) => {
       message
         .from(from || Env.get('MAIL_FROM_ADDRESS'))
@@ -43,7 +43,7 @@ export default async function altrpSendMail(
       success:true
     }
   } catch (e) {
-    Logger.error(e)
+    console.error(e);
     return {
       success: false,
       message: e.message,

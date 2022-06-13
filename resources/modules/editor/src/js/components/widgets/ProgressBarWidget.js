@@ -1,6 +1,7 @@
 import React from "react";
+import {ProgressBar as ProgressBarInit} from "../../classes/elements/ProgressBar";
 
-const ProgressBarInit = window.altrpLibs.Blueprint.ProgressBar;
+
 
 class ProgressBarWidget extends Component {
   constructor(props) {

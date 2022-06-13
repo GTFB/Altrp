@@ -1,11 +1,8 @@
 import React from 'react';
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import isSSR from "../../../../../front-app/src/js/functions/isSSR";
-let Tooltip2;
+import {Tooltip2} from "@blueprintjs/popover2";
 
-if(window.altrpLibs) {
-  Tooltip2 = window.altrpLibs.Tooltip2;
-}
 
 function offset(slider) {
   if(!slider) {

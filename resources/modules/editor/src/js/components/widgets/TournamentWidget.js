@@ -1,4 +1,4 @@
-const { Reacket } = window.altrpLibs
+import Reacket from "Reacket";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 

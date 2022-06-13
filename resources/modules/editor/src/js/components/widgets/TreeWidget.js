@@ -5,7 +5,7 @@ import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPa
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 
-const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
+import TreeBlueprint from '@blueprintjs/core'
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-tree-columns {

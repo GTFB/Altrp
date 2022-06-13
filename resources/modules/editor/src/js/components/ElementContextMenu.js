@@ -10,7 +10,7 @@ import {
   getDataFromLocalStorage,
   saveDataToLocalStorage
 } from "../../../../front-app/src/js/helpers";
-const {Portal} = window.altrpLibs.Blueprint
+import {Portal} from "@blueprintjs/core"
 
 class ElementContextMenu extends Component {
   constructor(props) {

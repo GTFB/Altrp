@@ -5,8 +5,7 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-
-const FileInput = window.altrpLibs.Blueprint.FileInput;
+import {FileInput} from "@blueprintjs/core";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-widget_input-gallery .bp3-file-upload-input{

@@ -347,7 +347,6 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
   return styles;
 }}`;
 ElementWrapperGlobalStyles = connect((state)=>{
-  console.log(state);
   return {
     currentScreen: state.currentScreen
   }
