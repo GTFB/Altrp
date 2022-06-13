@@ -20,7 +20,7 @@
 <%={{ }}=%>
 {{{extra_header_styles}}}
 {{{all_styles}}}
-
+{{{plugin_frontend_head}}}
     <script>
         /* <![CDATA[ */
         console.log('START: ',performance.now());
@@ -91,5 +91,6 @@
     <%={{ }}=%>
     {{{extra_footer_styles}}}
   @!component('front-app-js')
+  {{{plugin_frontend_bottom}}}
 </body>
 </html>

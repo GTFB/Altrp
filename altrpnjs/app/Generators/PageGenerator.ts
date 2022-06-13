@@ -4,6 +4,7 @@ import Application from "@ioc:Adonis/Core/Application";
 import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
 import AltrpMeta from "App/Models/AltrpMeta";
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class PageGenerator extends BaseGenerator {
 
@@ -44,6 +45,13 @@ export default class PageGenerator extends BaseGenerator {
 
     this.page = page
 
+    let plugin_frontend_head = ''
+    plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
+      {plugin_frontend_head, page})
+
+    let plugin_frontend_bottom = ''
+    plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_bottom',
+      {plugin_frontend_bottom, page} )
 
     return await this.addFile(fileName)
       .destinationDir(PageGenerator.directory)
@@ -52,6 +60,8 @@ export default class PageGenerator extends BaseGenerator {
         children_content,
         elements_list,
         extra_header_styles,
+        plugin_frontend_head,
+        plugin_frontend_bottom,
         extra_footer_styles,
         all_styles,
       })
