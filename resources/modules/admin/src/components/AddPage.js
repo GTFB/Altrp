@@ -748,16 +748,6 @@ class AddPage extends Component {
 
                       <div className="addPage__bottom">
                         <div className="addPage__bottom-block">
-                          <input type="checkbox" id="caching"
-                                 checked={this.state.value.is_cached || ""}
-                                 onChange={e => {
-                                   this.changeValue(e.target.checked, "is_cached");
-                                 }}
-                                 className="addPage__bottom-checkbox"/>
-                          {getAltrpLang() === 'php' && <label htmlFor="caching" className="addPage__bottom-label font__edit">Сaching (Only for Static
-                            Pages)</label>}
-                        </div>
-                        <div className="addPage__bottom-block">
                           <input type="checkbox" id="404"
                                  checked={this.state.value.not_found || ""}
                                  onChange={e => {

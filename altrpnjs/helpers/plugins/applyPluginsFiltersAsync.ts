@@ -26,7 +26,7 @@ export default async function applyPluginsFiltersAsync(type: string, content,) {
             hookName
           })
         } catch (e) {
-          Logger.error(e)
+          console.error(e);
         }
       }
     }
