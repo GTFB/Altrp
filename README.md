@@ -8,6 +8,7 @@
 * Fix Global Styles
 * Fix Some Render Issues
 * PostgreSQL Support Added
+* Section Structure Variants Selector Added
 
 ### 1.1.2
 * Fix Template Render Issues 
