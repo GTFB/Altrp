@@ -143,7 +143,7 @@ export class TelegramBot {
           }
         })
       } catch (e) {
-        console.erro(e)
+        console.error(e)
         if(this.httpContext) {
           this.httpContext.response.abort(e)
         } else {
