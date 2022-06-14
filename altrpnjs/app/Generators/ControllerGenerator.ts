@@ -47,6 +47,7 @@ export default class ControllerGenerator extends BaseGenerator {
 
     this.controller = controller
     this.model = this.controller.altrp_model
+
     this.sources = this.controller.sources
     /**
      * Асинхронно подгружаем связи для ресурсов
@@ -126,6 +127,7 @@ export default class ControllerGenerator extends BaseGenerator {
   }
 
   private getMethodsContent(modelClassName: string): string {
+
     return `
   ${this.sources.map(source => source.renderForController(modelClassName)).join('')}
     `
