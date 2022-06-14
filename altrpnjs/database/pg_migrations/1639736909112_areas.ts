@@ -11,7 +11,7 @@ export default class Areas extends BaseSchema {
       this.schema.createTable(this.tableName, (table) => {
         table.bigIncrements('id')
 
-        table.string("name")
+        table.string("name").unique()
         table.text("settings", 'longtext')
         table.string("title")
         table.string("guid", 36).nullable()

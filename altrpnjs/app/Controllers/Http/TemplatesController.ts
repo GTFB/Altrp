@@ -245,7 +245,7 @@ export default class TemplatesController {
       templateQuery.where("id", parseInt(params.template_id))
     }
 
-    let template = await templateQuery.firstOrFail()
+    let template = await templateQuery.first()
 
     if (!template) {
       response.status(404)
@@ -258,8 +258,9 @@ export default class TemplatesController {
     template = template.serialize()
     // @ts-ignore
     delete template.html_content
-    if(request.qs()?.withStyles){
-      let styles = mbParseJSON(template.styles)
+    if(request.qs()?.withStyles && template.styles){
+      let styles = mbParseJSON(template.styles, template.styles)
+
       if(styles.all_styles){
         styles = styles.all_styles.join('')
       }
