@@ -293,6 +293,7 @@ export default class AltrpRouting {
   getFonts(): string {
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
+      console.log(font);
       if(font === 'Arial'){
         return ''
       }
