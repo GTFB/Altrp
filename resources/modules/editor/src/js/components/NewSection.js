@@ -15,7 +15,6 @@ class NewSection extends Component {
     };
 
     this.showTemplates = this.showTemplates.bind(this);
-    this.showSections = this.showSections.bind(this);
   }
 
   onDragOver(e) {
@@ -49,7 +48,7 @@ class NewSection extends Component {
     }));
   }
 
-  showSections() {
+  toggleSection =() => {
     this.setState((s) => ({
       ...s,
       showSections: !s.showSections
@@ -68,7 +67,7 @@ class NewSection extends Component {
         >
           <div className="new-section-buttons d-flex">
             <button
-              onClick={this.showSections}
+              onClick={this.toggleSection}
               draggable="true"
               className="new-section__button new-section__button_add d-flex "
             >
@@ -87,7 +86,7 @@ class NewSection extends Component {
           this.state.showTemplates && <GetTemplate showTemplates={this.showTemplates}/>
         }
         {
-          this.state.showSections && <GetSection showSections={this.showSections}/>
+          this.state.showSections && <GetSection toggleSection={this.toggleSection}/>
         }
       </>
     );

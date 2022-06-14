@@ -96,7 +96,6 @@ export default class ElementRenderer {
       const fitToContent = getResponsiveSetting(settings,"layout_height", screenName)
       if (fitToContent === "fit") {
         section_classes +=" section-fit-to-content ";
-        console.log(section_classes);
       }
       switch (this.getName()) {
         case 'section': {
@@ -109,7 +108,6 @@ export default class ElementRenderer {
 
           if (widthType === "full" && !isFixed) {
           }
-
           section_classes += getSectionWidthClass(settings)
 
         }

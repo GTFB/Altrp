@@ -62,6 +62,9 @@ const databaseConfig: DatabaseConfig = {
       },
       migrations: {
         naturalSort: true,
+        paths: [
+          './database/pg_migrations'
+        ]
       },
       healthCheck: false,
       debug: false,

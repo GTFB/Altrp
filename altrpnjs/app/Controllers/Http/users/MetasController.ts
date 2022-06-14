@@ -42,10 +42,18 @@ export default class MetasController {
   }
 
   public async show({params}) {
-    const userMeta = await UserMeta.query()
+    let userMeta = await UserMeta.query()
       .where("user_id", parseInt(params.id))
-      .firstOrFail();
+      .first();
+    if(! userMeta){
+      userMeta = await UserMeta.create({
+        user_id: params.id,
+        first_name: '',
+        second_name: '',
+        patronymic: '',
+      })
 
+    }
     return userMeta
   }
 }

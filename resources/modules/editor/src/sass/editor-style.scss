@@ -3,6 +3,7 @@
 @import "./creative-link";
 @import "./creative-hover";
 @import "./editor-content";
+@import "./new-section-structure";
 @import "../js/components/altrp-menu/altrp-menu";
 @import "../js/components/altrp-carousel/altrp-carousel";
 @import "../js/components/altrp-lightbox/altrp-lightbox";
@@ -2436,4 +2437,8 @@ body {
   --width-editor-hide: 0;
   --width-editor-noHide: 275px;
   --width-editor-default: var(--width-editor-noHide);
+}
+.btn_success:hover{
+  color: #fff;
+  text-decoration: none;
 }

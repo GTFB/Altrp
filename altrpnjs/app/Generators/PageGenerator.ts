@@ -13,6 +13,7 @@ import env from "../../helpers/env";
 import base_path from "../../helpers/path/base_path";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import AltrpMeta from "App/Models/AltrpMeta";
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -31,6 +32,7 @@ export default class PageGenerator extends BaseGenerator {
   getGlobal(path, _default: any = null): any {
     return _.get(this.__altrp_global__, path, _default)
   }
+
   public static directory = Application.resourcesPath('/views/altrp/pages')
   public static template = app_path(`altrp-templates/views/Page.stub`)
   public page: Page;
@@ -43,17 +45,17 @@ export default class PageGenerator extends BaseGenerator {
     }
   }
 
-  getFilename(page):string{
+  getFilename(page): string {
     return page.guid + '.html'
   }
 
   async run(page: Page) {
-    if(! page){
+    if (!page) {
       return
     }
 
 
-    if (!page.guid ) {
+    if (!page.guid) {
       console.error(`Page ${page.id} render error. Need more data`);
       return
     }
@@ -63,15 +65,24 @@ export default class PageGenerator extends BaseGenerator {
     const fonts = this.getFonts()
     const _frontend_route = page.serialize()
     _.set(_frontend_route, 'templates', [])
-    let elements_list:string[]|string = await page.extractElementsNames()
-    elements_list = elements_list.map(e=>`'${e}'`)
+    let elements_list: string[] | string = await page.extractElementsNames()
+    elements_list = elements_list.map(e => `'${e}'`)
     elements_list = elements_list.join(',')
     const favicons = this.getFavicons()
     const front_app_css = this.getFrontAppCss()
     const all_site_js = this.getFrontAppJs()
     const pages = await this.page.getPagesForFrontend();
-    const page_areas =  await page.renderPageAreas()
-    for(const screen of SCREENS){
+
+    let plugin_frontend_head = ''
+
+    plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_head, page)
+
+    let plugin_frontend_bottom = ''
+
+    plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_bottom, page)
+
+    const page_areas = await page.renderPageAreas()
+    for (const screen of SCREENS) {
       let fileName = this.getFilename(page)
       let children_content = await this.page.getChildrenContent(screen.name)
       const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
@@ -94,6 +105,8 @@ export default class PageGenerator extends BaseGenerator {
           page_areas,
           all_site_js,
           extra_header_styles,
+          plugin_frontend_head,
+          plugin_frontend_bottom,
           extra_footer_styles,
           favicons,
           all_styles,
@@ -107,25 +120,26 @@ export default class PageGenerator extends BaseGenerator {
     }
     return
   }
-  async getExtraStyles(elementsList):Promise<{
-    extra_header_styles:string
-    extra_footer_styles:string
-  }>{
+
+  async getExtraStyles(elementsList): Promise<{
+    extra_header_styles: string
+    extra_footer_styles: string
+  }> {
     const extraStyles = {
       extra_header_styles: '',
       extra_footer_styles: '',
     }
-    for(let element of elementsList){
+    for (let element of elementsList) {
       const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
-      if(fs.existsSync(fileName)){
-        let content = fs.readFileSync(fileName, {encoding:'utf8'})
+      if (fs.existsSync(fileName)) {
+        let content = fs.readFileSync(fileName, {encoding: 'utf8'})
         content = content.replace(/\n/g, '')
         extraStyles.extra_header_styles += `
 <style id="extra_header_styles">${content}</style>`
       }
     }
-    let global_styles_editor:AltrpMeta|string|null = await AltrpMeta.query().where('meta_name', 'global_styles_editor').first()
-    if(global_styles_editor){
+    let global_styles_editor: AltrpMeta | string | null = await AltrpMeta.query().where('meta_name', 'global_styles_editor').first()
+    if (global_styles_editor) {
       global_styles_editor = global_styles_editor.meta_value
       extraStyles.extra_header_styles += global_styles_editor ?
         `<style id="global_styles_editor">${global_styles_editor}</style>` : ''

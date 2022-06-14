@@ -92,7 +92,6 @@ export default class AltrpRouting {
       page_params: object,
     } = {
       page_params: httpContext.request.qs(),
-
     }
     this.setGlobal('altrpSettings', altrpSettings)
     let pageMatch: any = {}
@@ -165,8 +164,8 @@ export default class AltrpRouting {
     // })
 
     const altrpContext = {
-      ...pageMatch.params,
       ...model_data,
+        ...pageMatch.params,
       altrpuser,
       altrppage: {
         title,
@@ -174,10 +173,10 @@ export default class AltrpRouting {
         params: httpContext.request.qs()
       }
     }
+
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
     altrpContext.altrpdata = datasources
     try {
-
       const device = getCurrentDevice(httpContext.request)
 
       console.log(performance.now() - start);

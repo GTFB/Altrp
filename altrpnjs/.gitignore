@@ -6,6 +6,7 @@ coverage
 .env
 tmp
 .env-prod
+.env-mysql
 
 #bundles
 public/*

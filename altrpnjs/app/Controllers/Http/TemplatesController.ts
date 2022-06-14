@@ -1,4 +1,3 @@
-// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import validGuid from '../../../helpers/validGuid';
 
@@ -15,7 +14,6 @@ import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
 import mbParseJSON from "../../../helpers/mbParseJSON";
-import _ from "lodash";
 
 export default class TemplatesController {
   public async getAllIds({ response }) {
@@ -421,11 +419,14 @@ export default class TemplatesController {
     const setting = await TemplateSetting.query().where("template_id", id).andWhere("setting_name", "conditions").first();
 
     if(setting) {
+      if(typeof setting.data === 'string'){
       res.data = JSON.parse(setting.data)
-      if(_.isString(res.data)){
-        res.data = JSON.parse(res.data)
+      } else {
+        res.data = setting.data
       }
     }
+
+
 
     return res
   }

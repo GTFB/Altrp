@@ -14,6 +14,7 @@
 {{{fonts}}}
 {{{extra_header_styles}}}
 {{{all_styles}}}
+{{{plugin_frontend_head}}}
     <script>
         /* <![CDATA[ */
         console.log('START: ',performance.now());
@@ -81,6 +82,7 @@
     {{{extra_footer_styles}}}
   {{{all_site_js}}}
   <style type="text/css">body{display:flex;}</style>
-
+  @!component('front-app-js')
+  {{{plugin_frontend_bottom}}}
 </body>
 </html>
