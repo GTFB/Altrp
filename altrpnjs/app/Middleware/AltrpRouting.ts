@@ -175,6 +175,7 @@ export default class AltrpRouting {
     }
 
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
+    console.log(url);
     altrpContext.altrpdata = datasources
     try {
       const device = getCurrentDevice(httpContext.request)

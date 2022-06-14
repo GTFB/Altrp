@@ -14,6 +14,7 @@ import base_path from "../../helpers/path/base_path";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import AltrpMeta from "App/Models/AltrpMeta";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
+import FONTS, {GOOGLE_FONT} from "../../helpers/const/FONTS";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -73,16 +74,15 @@ export default class PageGenerator extends BaseGenerator {
     const all_site_js = this.getFrontAppJs()
     const pages = await this.page.getPagesForFrontend();
 
-    let plugin_frontend_head = ''
-
-    plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_head, page)
-
-    let plugin_frontend_bottom = ''
-
-    plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_bottom, page)
-
     const page_areas = await page.renderPageAreas()
     for (const screen of SCREENS) {
+
+      let plugin_frontend_head = ''
+      plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_head, page, screen.name)
+
+      let plugin_frontend_bottom = ''
+      plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_bottom, page, screen.name)
+
       let fileName = this.getFilename(page)
       let children_content = await this.page.getChildrenContent(screen.name)
       const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
@@ -150,7 +150,7 @@ export default class PageGenerator extends BaseGenerator {
   getFonts(): string {
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
-      if (font === 'Arial') {
+      if (FONTS[font] !== GOOGLE_FONT) {
         return ''
       }
       font = encodeURIComponent(font);

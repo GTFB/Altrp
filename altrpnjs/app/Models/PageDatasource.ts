@@ -81,6 +81,7 @@ export default class PageDatasource extends BaseModel {
   }
   // @ts-ignore
   async fetchControllerMethod(httpContext:HttpContextContract, altrpContext){
+
     // @ts-ignore
     if(!this.source){
       return null
@@ -103,7 +104,8 @@ export default class PageDatasource extends BaseModel {
         }
       }
       httpContext.request.updateQs(this.getParsedParameters(altrpContext))
-
+      console.log(controller);
+      console.log(this.source.getMethodName());
       await controller[this.source.getMethodName()](httpContext)
       return httpContext.response.getBody();
     } catch (e){

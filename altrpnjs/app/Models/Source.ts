@@ -493,7 +493,9 @@ export default class Source extends BaseModel {
     const pageDatasources:any[] = await PageDatasource.query()
       .where('page_id', id)
       .where('server_side', true)
+      .preload('source')
       .select('*')
+
     for(const pageDatasource of pageDatasources){
       const data = await pageDatasource.fetchControllerMethod(_.cloneDeep(httpContext), altrpContext)
       if(data?.data){
