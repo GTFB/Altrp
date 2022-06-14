@@ -103,7 +103,6 @@ export default class PageDatasource extends BaseModel {
         }
       }
       httpContext.request.updateQs(this.getParsedParameters(altrpContext))
-
       await controller[this.source.getMethodName()](httpContext)
       return httpContext.response.getBody();
     } catch (e){

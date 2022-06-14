@@ -11,7 +11,7 @@ export default class Areas extends BaseSchema {
       this.schema.createTable(this.tableName, (table) => {
         table.bigIncrements('id')
 
-        table.string("name")
+        table.string("name").unique()
         table.text("settings", 'longtext')
         table.string("title")
         table.string("guid", 36).nullable()
@@ -20,6 +20,7 @@ export default class Areas extends BaseSchema {
          */
         table.timestamp('created_at', {useTz: true})
         table.timestamp('updated_at', {useTz: true})
+
 
         const areas = [
           {
@@ -60,7 +61,7 @@ export default class Areas extends BaseSchema {
           },
           {
             name: "mails",
-            title: "Mails",
+            title: "Email Templates",
             guid: guid(),
             settings: "[]"
           },
