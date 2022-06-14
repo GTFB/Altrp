@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export default class PagesCache {
 
   private static instance: PagesCache;

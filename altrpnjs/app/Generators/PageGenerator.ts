@@ -47,11 +47,11 @@ export default class PageGenerator extends BaseGenerator {
 
     let plugin_frontend_head = ''
     plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
-      {plugin_frontend_head, page})
+      plugin_frontend_head, page)
 
     let plugin_frontend_bottom = ''
     plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_bottom',
-      {plugin_frontend_bottom, page} )
+      plugin_frontend_bottom, page )
 
     return await this.addFile(fileName)
       .destinationDir(PageGenerator.directory)

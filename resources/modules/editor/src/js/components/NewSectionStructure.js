@@ -2,6 +2,7 @@ import '../../sass/new-section-structure.scss'
 import Section from "../classes/elements/Section";
 import Column from "../classes/elements/Column";
 import {getTemplateDataStorage} from "../helpers";
+
 export default class NewSectionStructure extends Component {
   state = {
     variants: STRUCTURES[0].variants,
@@ -60,7 +61,7 @@ export default class NewSectionStructure extends Component {
         )}
       </div>
       <div className="d-flex flex-grow-1 new-section-structure__content flex-wrap">
-        {variants.map((v,idx)=>
+        {variants.map((v, idx) =>
           <div className={`new-section-structure__item ${
             variant === v ? 'new-section-structure__item_active' : ''
           }`}
@@ -70,7 +71,7 @@ export default class NewSectionStructure extends Component {
                  this.setState(state => ({...state, variant: v}))
                }}
                key={`variant${idx}`}>
-            {v.map((c,_idx)=>
+            {v.map((c, _idx) =>
               <div className="new-section-structure__item-column"
                    style={{width: `${c}%`}}
                    key={`variant_column${idx}${_idx}`}/>
@@ -80,9 +81,11 @@ export default class NewSectionStructure extends Component {
       </div>
       <div className="d-flex pt-4">
         <button className="btn new-section-structure__apply mr-1"
-                onClick={this.append}>Append</button>
+                onClick={this.append}>Append
+        </button>
         <button className="btn new-section-structure__apply"
-                onClick={this.prepend}>Prepend</button>
+                onClick={this.prepend}>Prepend
+        </button>
       </div>
     </div>
   }
@@ -101,17 +104,77 @@ const STRUCTURES = [
       [50, 50],
       [25, 75],
       [75, 25],
-      [33.33, 66.67],
-      [66.67, 33.33],
+      [33.333333, 66.67],
+      [66.666667, 33.333333],
     ]
   },
   {
     columnCount: 3,
     variants: [
-      [33.33, 33.33, 33.33],
+      [33.333333, 33.333333, 33.333333],
       [50, 25, 25],
       [25, 50, 25],
       [25, 25, 50],
+      [66.666666, 16.666667, 16.666667],
+      [16.666667, 66.666666, 16.666667],
+      [16.666667, 16.666667, 66.666666],
+    ]
+  },
+  {
+    columnCount: 4,
+    variants: [
+      [25, 25, 25, 25],
+      [50, 16.666667, 16.666667, 16.666667],
+      [16.666667, 50, 16.666667, 16.666667],
+      [16.666667, 16.666667, 50, 16.666667],
+      [16.666667, 16.666667, 16.666667, 50],
+      [33.333333, 33.333333, 16.666667, 16.666667],
+      [16.666667, 33.333333, 33.333333, 16.666667],
+      [16.666667, 16.666667, 33.333333, 33.333333],
+      [33.333333, 16.666667, 33.333333, 16.666667],
+      [33.333333, 16.666667, 16.666667, 33.333333],
+      [16.666667, 33.333333, 16.666667, 33.333333],
+    ]
+  },
+  {
+    columnCount: 5,
+    variants: [
+      [20, 20, 20, 20, 20],
+      [50, 12.5, 12.5, 12.5, 12.5,],
+      [12.5, 50, 12.5, 12.5, 12.5,],
+      [12.5, 12.5, 50, 12.5, 12.5,],
+      [12.5, 12.5, 12.5, 50, 12.5,],
+      [12.5, 12.5, 12.5, 12.5, 50,],
+      [25, 25, 16.666667, 16.666667, 16.666667,],
+      [25, 16.666667, 25, 16.666667, 16.666667,],
+      [25, 16.666667, 16.666667, 25, 16.666667,],
+      [25, 16.666667, 16.666667, 16.666667, 25,],
+      [16.666667, 25, 25, 16.666667, 16.666667,],
+      [16.666667, 25, 16.666667, 25, 16.666667,],
+      [16.666667, 25, 16.666667, 16.666667, 25,],
+      [16.666667, 16.666667, 25, 25, 16.666667,],
+      [16.666667, 16.666667, 25, 16.666667, 25,],
+    ]
+  },
+  {
+    columnCount: 6,
+    variants: [
+      [16.666667, 16.666667, 16.666667, 16.666667, 16.666667, 16.666667,],
+      [25, 25, 10, 10, 10, 10,],
+      [25, 10, 25, 10, 10, 10,],
+      [25, 10, 10, 25, 10, 10,],
+      [25, 10, 10, 10, 25, 10,],
+      [25, 10, 10, 10, 10, 25,],
+      [10, 25, 25, 10, 10, 10,],
+      [10, 25, 10, 25, 10, 10,],
+      [10, 25, 10, 10, 25, 10,],
+      [10, 25, 10, 10, 10, 25,],
+      [10, 10, 25, 25, 10, 10,],
+      [10, 10, 25, 10, 25, 10,],
+      [10, 10, 25, 10, 10, 25,],
+      [10, 10, 10, 25, 25, 10,],
+      [10, 10, 10, 10, 25, 25,],
+
     ]
   },
 ]

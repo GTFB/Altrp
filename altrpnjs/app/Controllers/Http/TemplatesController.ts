@@ -420,9 +420,15 @@ export default class TemplatesController {
     }
     const setting = await TemplateSetting.query().where("template_id", id).andWhere("setting_name", "conditions").first();
 
-    if(setting) {
-      res.data = JSON.parse(setting.data)
+    if(setting){
+      if(typeof setting.data === 'string'){
+        res.data = JSON.parse(setting.data)
+      } else {
+        res.data = setting.data
+      }
     }
+
+
 
     return res
   }

@@ -2,10 +2,9 @@ import Plugin from 'App/Plugin';
 import fs from 'fs';
 import app_path from '../path/app_path';
 import isProd from '../isProd';
-import Logger from '@ioc:Adonis/Core/Logger';
 import _ from 'lodash'
 
-export default async function applyPluginsFiltersAsync(type: string, content,) {
+export default async function applyPluginsFiltersAsync(type: string, content, ...params) {
 
   const base = `AltrpPlugins`
 
@@ -40,7 +39,7 @@ export default async function applyPluginsFiltersAsync(type: string, content,) {
     return hook.hookName
   },])
   for(const hook of hooks){
-    content = await hook.fn(content)
+    content = await hook.fn(content, ...params)
   }
   return content
 }
