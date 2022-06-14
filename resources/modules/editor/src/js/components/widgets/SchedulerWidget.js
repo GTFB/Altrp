@@ -1,5 +1,5 @@
 import Resource from '../../classes/Resource';
-import {FullCalendar} from '@fullcalendar/react'
+import FullCalendar from '@fullcalendar/react'
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interaction from '@fullcalendar/interaction';

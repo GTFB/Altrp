@@ -9,7 +9,7 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import React from "react";
 import recurseEach from "../../helpers/recurse-each";
-import {MenuItem, Button, TreeBlueprint as Tree, Alignment, InputGroup} from "@blueprintjs/core";
+import {MenuItem, Button, Tree as TreeBlueprint , Alignment, InputGroup} from "@blueprintjs/core";
 import {Popover2} from "@blueprintjs/popover2";
 let Popover = Popover2;
 

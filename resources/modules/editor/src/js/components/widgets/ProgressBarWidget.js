@@ -1,7 +1,5 @@
 import React from "react";
-import {ProgressBar as ProgressBarInit} from "../../classes/elements/ProgressBar";
-
-
+import  ProgressBarInit from "../../classes/elements/ProgressBar";
 
 class ProgressBarWidget extends Component {
   constructor(props) {

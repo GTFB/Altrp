@@ -2,10 +2,9 @@ import React from "react";
 import {NullArray} from "./styled-components/TreeComponent";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
-import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 
-import TreeBlueprint from '@blueprintjs/core'
+import {Tree as TreeBlueprint} from '@blueprintjs/core'
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-tree-columns {
