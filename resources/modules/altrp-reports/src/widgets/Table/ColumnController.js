@@ -85,7 +85,7 @@ function ColumnController() {
         onChange={(value) => setColumn({ ...column, sort: value })}
       />
       <Button variant="primary" size="sm" onClick={handleSave}>
-        Добавить колонку
+        Add Column
       </Button>
       <ListGroup>
         {columns.map((column, key) => (

@@ -7,6 +7,7 @@ import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
 import PageGenerator from "App/Generators/PageGenerator";
 import validGuid from "../../../../helpers/validGuid";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class PagesController {
   public async getTemplatePagesIds({ request, response}:HttpContextContract){
@@ -129,7 +130,8 @@ export default class PagesController {
 
     if (page && pageSize) {
       if (searchWord) {
-        pages = await Page.query().orWhere('title', 'LIKE', `%${searchWord}%`).preload("user").preload("categories").paginate(page, pageSize)
+        pages = await Page.query().orWhere('title', LIKE, `%${searchWord}%`)
+          .preload("user").preload("categories").paginate(page, pageSize)
         pagesAll = pages.all()
         pagination = {
           count: pages.getMeta().total,
@@ -146,7 +148,7 @@ export default class PagesController {
     } else {
       const query =  Page.query()
       if(searchWord){
-        query.orWhere('title', 'LIKE', `%${searchWord}%`)
+        query.orWhere('title', LIKE, `%${searchWord}%`)
       }
       pagesAll = await query.preload("user").preload("categories")
     }

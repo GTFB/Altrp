@@ -285,4 +285,15 @@ export default class AdminController {
       await listenerGenerator.run(_l)
     }
   }
+  async getHealthCheck({response}:HttpContextContract){
+
+    let used = process.memoryUsage().heapUsed / 1024 / 1024;
+    used = Math.round(used * 100) / 100
+    return response.json({
+      success:true,
+      data:{
+        used
+      }
+    })
+  }
 }

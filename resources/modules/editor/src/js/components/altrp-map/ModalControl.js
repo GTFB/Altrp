@@ -638,10 +638,10 @@ const ModalControl = (
   return (
     <div className="altrp-map__modal modal">
       <ModalComponent settings={settings} className={!open ? "modal__body" : "modal__body open"}>
-        <h3 className={`${id} altrp-custom--typographic`}>Настройки</h3>
+        <h3 className={`${id} altrp-custom--typographic`}>Settings</h3>
         <div className="modal__body-text">
           <label>
-            Подпись
+            Sign
             <input
               type="text"
               value={properties.tooltip}
@@ -651,14 +651,14 @@ const ModalControl = (
         </div>
         <div className="modal__body-text">
           <label>
-            Всплывающее сообщение
+            Popup Message
             <textarea value={properties.popup} onChange={handlePopup} />
           </label>
         </div>
         {optionsToSelect.length > 0 && (
           <div className="mb-3">
             <label>
-              Объекты
+              Object
               <Select
                 value={points}
                 isMulti
@@ -672,7 +672,7 @@ const ModalControl = (
         {localParameters.length > 0 && localParameters.map(input => input)}
         {properties.fillColor && (
           <div className="modal__body-color">
-            <label>Цвет заливки</label>
+            <label>Аill Сolor</label>
             {colors.map((item, key) => (
               <button
                 key={key}
@@ -690,7 +690,7 @@ const ModalControl = (
         )}
         {properties.color && (
           <div className="modal__body-color">
-            <label>Цвет границы</label>
+            <label>Border Color</label>
             {colors.map((item, key) => (
               <button
                 key={key}
@@ -707,7 +707,7 @@ const ModalControl = (
         {properties.fillOpacity && (
           <div className="modal__body-text">
             <label>
-              Прозрачность заливки
+              Opacity
               <Slider
                 className={`${id} altrp-dashboard__edit--range-edit-color`}
                 defaultValue={properties.fillOpacity}
@@ -742,7 +742,7 @@ const ModalControl = (
               }}
               onClick={saveSettings}
             >
-              Сохранить
+              Save
             </button>
           </div>
           <div className="col">
@@ -754,7 +754,7 @@ const ModalControl = (
               }}
               onClick={onClose}
             >
-              Отмена
+              Cancel
             </button>
           </div>
         </div>

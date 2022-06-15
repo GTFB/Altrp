@@ -14,6 +14,7 @@ import guid from '../../../../helpers/guid';
 import public_path from "../../../../helpers/path/public_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import Application from "@ioc:Adonis/Core/Application";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class MediaController {
   private static fileTypes: any;
@@ -56,7 +57,9 @@ export default class MediaController {
     let count
     let pageCount = 1
     if (pageSize && page) {
-      media = await (query.orderBy('id','desc').select('altrp_media.*').preload('categories')).where('title', 'LIKE', `%${searchWord}%`).paginate(page, pageSize)
+      media = await (query.orderBy('id','desc').select('altrp_media.*')
+        .preload('categories'))
+        .where('title', LIKE, `%${searchWord}%`).paginate(page, pageSize)
       count = media.getMeta().total
       pageCount = media.getMeta().last_page
 

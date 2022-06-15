@@ -54,6 +54,7 @@ class BaseGenerator {
         minifyCSS: true,
       })
     }
+    content = await applyPluginsFiltersAsync('generate_file', content, this)
     fs.writeFileSync(this.getFullFileName(), content)
     if(isProd()){
       /**

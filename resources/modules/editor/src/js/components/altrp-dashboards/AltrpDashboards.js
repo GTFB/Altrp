@@ -222,7 +222,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
   const navigationMenu = () => (
     <Nav className={navPosition}>
       <Nav.Item className="nav-button" onClick={() => setIsShow(true)}>
-        Добавить виджет
+        Add Widget
       </Nav.Item>
       <Nav.Item className="nav-datepickers">
         <div className="nav-datepicker">
@@ -254,10 +254,10 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         </div>
       </Nav.Item>
       <Nav.Item className="nav-button" onClick={handleWeek}>
-        Неделя
+        Week
       </Nav.Item>
       <Nav.Item className="nav-button" onClick={handleMonth}>
-        Месяц
+        Month
       </Nav.Item>
       {globalParameter &&
         globalParameter.map((param, index) => (
@@ -282,11 +282,11 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item onClick={() => setIsShow(true)}>
-          Добавить виджет
+          Add Widget
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item onClick={handleWeek}>Неделя</Dropdown.Item>
-        <Dropdown.Item onClick={handleMonth}>Месяц</Dropdown.Item>
+        <Dropdown.Item onClick={handleWeek}>Week</Dropdown.Item>
+        <Dropdown.Item onClick={handleMonth}>Month</Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.ItemText as="div">
           <DatePicker
