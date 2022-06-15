@@ -112,7 +112,8 @@ async function selectForSQLEditor( sql:string, bindings,  request:RequestContrac
   if(_.isArray(_.get(result, '0',))){
     result = _.get(result, '0',)
   }
-  return result
+
+  return result.hasOwnProperty('rows') ? result.rows : result
 }
 export default selectForSQLEditor
 
