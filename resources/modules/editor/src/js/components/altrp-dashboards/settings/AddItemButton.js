@@ -14,7 +14,7 @@ class AddItemButton extends Component {
         }}
         onClick={this.props.onAddItem}
       >
-        Добавить виджет
+        Add Widget
       </button>
     );
   }

@@ -11,6 +11,9 @@ Route.group(() => {
 
 
   Route.group(() => {
+    Route.get("/get_health_check", "admin/AdminController.getHealthCheck")
+
+
     Route.get("/areas", "admin/AreasController.index")
     Route.post("/areas", "admin/AreasController.create")
     Route.get("/areas/:id", "admin/AreasController.show")

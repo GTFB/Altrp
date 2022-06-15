@@ -261,7 +261,7 @@ export default class TemplatesController {
     template = template.serialize()
     // @ts-ignore
     delete template.html_content
-    if(request.qs()?.withStyles && template.styles){
+    if(request.qs()?.withStyles && template?.styles){
       let styles = mbParseJSON(template.styles, template.styles)
 
       if(styles.all_styles){

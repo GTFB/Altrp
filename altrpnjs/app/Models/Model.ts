@@ -232,6 +232,7 @@ export default class Model extends BaseModel {
       })
       await controller.save()
     }
+    return controller
   }
 
   public async createStandartSources() {
