@@ -242,7 +242,7 @@ export default class TemplatesController {
   public async getTemplate({ params, response, request }) {
     const templateQuery = Template.query()
 
-    if(isNaN(params.template_id)) {
+    if(validGuid(params.template_id)) {
       templateQuery.where("guid", params.template_id)
     } else {
       templateQuery.where("id", parseInt(params.template_id))
