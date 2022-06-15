@@ -184,7 +184,7 @@ export function replaceIfAndRequest(code:string, qs:any):string {
         query = ` AND ${arg1} LIKE ${searchable} `;
         break;
       default:
-        query = ` AND ${arg1} ${arg3} ${qs[arg2]} `;
+        query = ` AND ${arg1} ${arg3} '${qs[arg2]}' `;
     }
   }
   return query;
