@@ -21,6 +21,7 @@ import isProd from "../../helpers/isProd"
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
+import FONTS, { SYSTEM_FONT} from "../../helpers/const/FONTS";
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -293,8 +294,8 @@ export default class AltrpRouting {
   getFonts(): string {
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
-      console.log(font);
-      if(font === 'Arial'){
+
+      if(FONTS[font] === SYSTEM_FONT){
         return ''
       }
       font = encodeURIComponent(font);

@@ -23,6 +23,7 @@ import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
 import keys from "lodash/keys"
 import Customizer from "App/Models/Customizer";
+import LIKE from "../../../../helpers/const/LIKE";
 
 
 export default class ModelsController {
@@ -439,7 +440,8 @@ export default class ModelsController {
 
     if (page && pageSize) {
       if (searchWord) {
-        sources = await Source.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('title', 'LIKE', `%${searchWord}%`).paginate(page, pageSize)
+        sources = await Source.query().orWhere('name', LIKE, `%${searchWord}%`)
+          .orWhere('title', LIKE, `%${searchWord}%`).paginate(page, pageSize)
       } else {
         sources = await Source.query().paginate(page, pageSize)
       }
@@ -912,7 +914,7 @@ export default class ModelsController {
        */
       let sql_editors_data_sources: any[] = []
 
-      let _sqls: any = SQLEditor.query().where('title', 'LIKE', '%' + search_text + '%')
+      let _sqls: any = SQLEditor.query().where('title', LIKE, '%' + search_text + '%')
 
       await _sqls.preload('model', query => {
         query.preload('altrp_table')

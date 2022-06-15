@@ -1,6 +1,7 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Permission from "App/Models/Permission";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class PermissionsController {
 
@@ -22,7 +23,8 @@ export default class PermissionsController {
     let permissions
 
     if (searchWord) {
-      permissions = await Permission.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('display_name', 'LIKE', `%${searchWord}%`).paginate(page, 20)
+      permissions = await Permission.query().orWhere('name', LIKE, `%${searchWord}%`)
+        .orWhere('display_name', LIKE, `%${searchWord}%`).paginate(page, 20)
     } else {
       permissions = await Permission.query().paginate(page, 20)
     }

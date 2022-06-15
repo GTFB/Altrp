@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Category from "App/Models/Category";
 import { v4 as uuid } from "uuid";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class CategoriesController {
 
@@ -13,9 +14,9 @@ export default class CategoriesController {
 
     if (searchWord) {
       categories = await Category.query()
-        .orWhere('name', 'LIKE', `%${searchWord}%`)
-        .orWhere('title', 'LIKE', `%${searchWord}%`)
-        .orWhere('description', 'LIKE', `%${searchWord}%`)
+        .orWhere('name', LIKE, `%${searchWord}%`)
+        .orWhere('title', LIKE, `%${searchWord}%`)
+        .orWhere('description', LIKE, `%${searchWord}%`)
         .orderBy('title').paginate(page, pageSize)
     } else {
       categories = await Category.query().orderBy('title').paginate(page, pageSize)
