@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import User from "App/Models/User";
 import keys from "lodash/keys"
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class UsersController {
   public async getCurrentUser({auth}:HttpContextContract) {
@@ -61,9 +62,9 @@ export default class UsersController {
 
     if (searchWord) {
       users = await User.query()
-        .orWhere('email', 'LIKE', `%${searchWord}%`)
-        .orWhere('name', 'LIKE', `%${searchWord}%`)
-        .orWhere('last_name', 'LIKE', `%${searchWord}%`)
+        .orWhere('email', LIKE, `%${searchWord}%`)
+        .orWhere('name', LIKE, `%${searchWord}%`)
+        .orWhere('last_name', LIKE, `%${searchWord}%`)
         .preload('roles')
         .paginate(page, pageSize)
     } else {

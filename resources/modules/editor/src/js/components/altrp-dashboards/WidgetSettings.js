@@ -682,7 +682,7 @@ class WidgetSettings extends Component {
                 style={{ width: "100%" }}
                 onClick={e => this.props.onAddItem(this.state.editElement)}
               >
-                Сохранить
+                Save
               </button>
             </div>
             <div className="col">
@@ -691,7 +691,7 @@ class WidgetSettings extends Component {
                 style={{ width: "100%" }}
                 onClick={e => this.props.onCloseHandler(null, false)}
               >
-                Отмена
+                Cancel
               </button>
             </div>
           </div>
@@ -703,7 +703,7 @@ class WidgetSettings extends Component {
                 style={{ width: "100%" }}
                 onClick={e => this.props.onCloseHandler(null)}
               >
-                Сохранить
+                Save
               </button>
             </div>
           </div>

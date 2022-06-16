@@ -23,21 +23,21 @@ const WidgetParams = ({ show, setShow, onSave }) => {
 
   const handleSave = () => {
     // Скрываем модальку
-    setShow(false); 
+    setShow(false);
     onSave(widget);
   };
 
   return (
     <Modal show={show} onHide={() => setShow(false)} animation={false} size="lg" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить виджет</Modal.Title>
+        <Modal.Title>Add Widget</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row>
           <Col>
             <Form>
               <Form.Group controlId="formGroupEmail">
-                <Form.Label>Название виджета</Form.Label>
+                <Form.Label>Widget's Name</Form.Label>
                 <Form.Control
                   type="text"
                   value={widget.name}
@@ -46,7 +46,7 @@ const WidgetParams = ({ show, setShow, onSave }) => {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Тип виджета</Form.Label>
+                <Form.Label>Widget's Type</Form.Label>
                 <Form.Control
                   as="select"
                   custom
@@ -61,7 +61,7 @@ const WidgetParams = ({ show, setShow, onSave }) => {
                 </Form.Control>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Цветовая схема</Form.Label>
+                <Form.Label>color Scheme</Form.Label>
                 <Form.Control
                   as="select"
                   custom
@@ -79,7 +79,7 @@ const WidgetParams = ({ show, setShow, onSave }) => {
                 </Form.Control>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Источник данных</Form.Label>
+                <Form.Label>Data Source</Form.Label>
                 <Form.Control
                   as="select"
                   custom
@@ -87,7 +87,7 @@ const WidgetParams = ({ show, setShow, onSave }) => {
                   onChange={(e) => setWidget({ ...widget, source: e.target.value })}
                   required
                 >
-                  <option value="">Выберите источник</option>
+                  <option value="">Choose Source</option>
                   {dataSources.map(({ name, url }, key) => (
                     <option key={key} value={url}>
                       {name}
@@ -123,10 +123,10 @@ const WidgetParams = ({ show, setShow, onSave }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setShow(false)}>
-          Закрыть
+          Close
         </Button>
         <Button variant="warning" onClick={handleSave} disabled={widget.name === ""}>
-          Сохранить изменения
+          Save
         </Button>
       </Modal.Footer>
     </Modal>

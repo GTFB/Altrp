@@ -47,8 +47,9 @@ class Menu extends BaseElement {
       isClearable: true,
       options_resource: '/admin/ajax/menus/options?value=guid',
       nullable: true,
-      after: <div className="control-button-container mt-2"><button onClick={()=>{
-      }} className="btn btn_success">Edit Menus</button></div>,
+      after: <div className="control-button-container mt-2">
+        <a target="_blank" href="/admin/menus" className="btn btn_success">Edit Menus</a>
+      </div>,
       locked: true,
     });
 

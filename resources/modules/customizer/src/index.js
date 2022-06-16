@@ -11,7 +11,13 @@ import IconsManager from "../../editor/src/js/classes/modules/IconsManager";
 import "./sass/styles.scss";
 import {Provider} from 'react-redux';
 import AltrpCustomizer from "./js/classes/AltrpCustomizer";
+import {io} from "socket.io-client";
 
+window.altrpIo = io( {
+  path: '/wsaltrp',
+  auth: {
+  },
+})
 
 window.React = React;
 window.ReactDOM = ReactDOM;

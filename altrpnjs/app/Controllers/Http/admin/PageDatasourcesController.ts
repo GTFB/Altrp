@@ -2,6 +2,7 @@
 
 import PageDatasource from "App/Models/PageDatasource";
 import Page from "App/Models/Page";
+import PageGenerator from "App/Generators/PageGenerator";
 
 export default class PageDatasourcesController {
   public async store({ request, response }) {
@@ -29,7 +30,8 @@ export default class PageDatasourcesController {
     }
 
     const pageDatasource = await PageDatasource.create(data)
-
+    const pageGenerator = new PageGenerator()
+    await pageGenerator.run(page)
     return pageDatasource
   }
 
@@ -51,10 +53,13 @@ export default class PageDatasourcesController {
     pageDatasource.priority = body.priority;
     pageDatasource.source_id = body.source_id;
     pageDatasource.server_side = body.server_side || false;
-    pageDatasource.page_id = body.page_id;
     pageDatasource.page_guid = body.page_guid
 
     if(await pageDatasource.save()) {
+      const page = await Page.query().where("guid", body.page_guid).firstOrFail()
+
+      const pageGenerator = new PageGenerator()
+      await pageGenerator.run(page)
       return {
         success: true
       }

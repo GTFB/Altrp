@@ -21,6 +21,7 @@ import isProd from "../../helpers/isProd"
 import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
+import FONTS, { SYSTEM_FONT} from "../../helpers/const/FONTS";
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -94,7 +95,6 @@ export default class AltrpRouting {
       page_params: object,
     } = {
       page_params: httpContext.request.qs(),
-
     }
     this.setGlobal('altrpSettings', altrpSettings)
     let pageMatch:any = {}
@@ -162,8 +162,8 @@ export default class AltrpRouting {
 
       const _frontend_route = page.serialize()
       const altrpContext = {
-        ...pageMatch.params,
         ...model_data,
+        ...pageMatch.params,
         altrpuser,
         altrppage:{
           title,
@@ -171,6 +171,7 @@ export default class AltrpRouting {
           params: httpContext.request.qs()
         }
       }
+
       const datasources= await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
       altrpContext.altrpdata = datasources
       try {
@@ -178,6 +179,7 @@ export default class AltrpRouting {
         _.set(_frontend_route, 'templates', [])
         let res = await httpContext.view.render(`altrp/pages/${page.guid}`,
           Edge({
+            ...altrpContext,
             hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
             url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
             title: replaceContentWithData(page.title || 'Altrp', altrpContext),
@@ -292,7 +294,8 @@ export default class AltrpRouting {
   getFonts(): string {
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
-      if(font === 'Arial'){
+
+      if(FONTS[font] === SYSTEM_FONT){
         return ''
       }
       font = encodeURIComponent(font);

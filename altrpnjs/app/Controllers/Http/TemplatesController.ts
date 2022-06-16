@@ -242,13 +242,13 @@ export default class TemplatesController {
   public async getTemplate({ params, response, request }) {
     const templateQuery = Template.query()
 
-    if(isNaN(params.template_id)) {
+    if(validGuid(params.template_id)) {
       templateQuery.where("guid", params.template_id)
     } else {
       templateQuery.where("id", parseInt(params.template_id))
     }
 
-    let template = await templateQuery.firstOrFail()
+    let template = await templateQuery.first()
 
     if (!template) {
       response.status(404)
@@ -261,8 +261,9 @@ export default class TemplatesController {
     template = template.serialize()
     // @ts-ignore
     delete template.html_content
-    if(request.qs()?.withStyles){
-      let styles = mbParseJSON(template.styles)
+    if(request.qs()?.withStyles && template?.styles){
+      let styles = mbParseJSON(template.styles, template.styles)
+
       if(styles.all_styles){
         styles = styles.all_styles.join('')
       }
@@ -420,9 +421,15 @@ export default class TemplatesController {
     }
     const setting = await TemplateSetting.query().where("template_id", id).andWhere("setting_name", "conditions").first();
 
-    if(setting) {
-      res.data = JSON.parse(setting.data)
+    if(setting){
+      if(typeof setting.data === 'string'){
+        res.data = JSON.parse(setting.data)
+      } else {
+        res.data = setting.data
+      }
     }
+
+
 
     return res
   }

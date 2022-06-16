@@ -36,5 +36,8 @@ export default function getAddingClasses(settings:any, screen){
   if (getResponsiveSetting(settings, 'en_an', screen)) {
     classes += ' altrp-invisible ';
   }
+  if (getResponsiveSetting(settings, 'css_class', screen)) {
+    classes += ` ${getResponsiveSetting(settings, 'css_class', screen)} `
+  }
   return classes
 }

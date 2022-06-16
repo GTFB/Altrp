@@ -222,12 +222,16 @@ export default class Model extends BaseModel {
   }
 
   public async createController() {
-    const controller = new Controller()
-    controller.fill({
-      model_id: this.id,
-      description: this.description,
-    })
-    return await controller.save()
+    let controller = await Controller.query().where('model_id',this.id).first()
+    if(! controller){
+      controller = new Controller()
+      controller.fill({
+        model_id: this.id,
+        description: this.description,
+      })
+      await controller.save()
+    }
+    return controller
   }
 
   public async createStandartSources() {

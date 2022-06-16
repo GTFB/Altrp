@@ -193,8 +193,7 @@ export default class Source extends BaseModel {
       return ''
     }
     return `
-    await httpContext.auth.check();
-    if(! await httpContext.auth.user.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
+    if(! await httpContext.auth?.user?.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false,  message: 'Permission denied'});
     }
@@ -206,8 +205,7 @@ export default class Source extends BaseModel {
       return ''
     }
     return `
-    await httpContext.auth.check();
-    if(! await httpContext.auth.user.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
+    if(! await httpContext.auth?.user?.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false, message: 'Permission denied'});
     }
@@ -492,10 +490,24 @@ export default class Source extends BaseModel {
 
     const pageDatasources:any[] = await PageDatasource.query()
       .where('page_id', id)
+      .preload('source')
       .where('server_side', true)
       .select('*')
     for(const pageDatasource of pageDatasources){
-      const data = await pageDatasource.fetchControllerMethod(_.cloneDeep(httpContext), altrpContext)
+      const newHttpContext = {
+        params: httpContext.params,
+        auth:{
+          user: httpContext.auth.user
+        },
+        request: httpContext.request,
+        response: httpContext.response,
+        logger: httpContext.logger,
+        profiler: httpContext.profiler,
+        route: httpContext.route,
+        routeKey: httpContext.routeKey,
+      }
+      const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
+
       if(data?.data){
         datasources[pageDatasource.alias] = data.data
 

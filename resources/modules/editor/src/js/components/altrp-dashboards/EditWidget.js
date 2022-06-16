@@ -80,7 +80,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
       <Card.Body>
         <Form>
           <Form.Group>
-            <Form.Label>Название виджета</Form.Label>
+            <Form.Label>Widget's Name</Form.Label>
             <Form.Control type="text" ref={title} defaultValue={widget.title} required />
           </Form.Group>
 
@@ -120,10 +120,10 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
       </Card.Body>
       <Card.Footer>
         <Button variant="secondary" onClick={() => setIsEdit(false)}>
-          Закрыть
+          Close
         </Button>
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
-          Сохранить
+          Save
         </Button>
       </Card.Footer>
     </Card>

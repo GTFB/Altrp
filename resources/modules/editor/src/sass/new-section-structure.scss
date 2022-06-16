@@ -1,0 +1,63 @@
+@import "../../../../sass/vars";
+.new-section-structure{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  &__apply{
+    display: inline-block;
+    padding: 6px 12px;
+    background: #315EFB;
+    border-radius: 10px;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    text-decoration: none;
+    color: white;
+  }
+  &__content{
+    overflow:auto;
+    margin-left: -10px;
+  }
+  &__tab{
+    margin-right: 16px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    background-color: #E6E9EC;
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    &_selected{
+      background-color: #87CA00;
+      color: white;
+    }
+  }
+  &__item{
+    height: 100px;
+    width: 200px;
+    margin-left: 10px;
+    display: flex;
+    cursor: pointer;
+    border-radius: 3px;
+    &_active{
+      background-color: lightblue;
+    }
+    &-column{
+      height: 100px;
+      display: flex;
+      position: relative;
+      border: 3px solid transparent;
+      &::before{
+        content: "";
+        background: $light-light-gray;
+        border-radius: 3px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    }
+  }
+}

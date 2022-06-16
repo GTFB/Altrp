@@ -196,7 +196,7 @@ class AddControllerPage extends Component{
                             Relations
                             <div className="input-group">
                                 <input className='form__input' type="text" name="relation" value={this.state.relation}  onChange={(e) => {this.onChange(e)}}/>
-                                <button onClick={(e) => {this.addRelation(e)}}>Добавить</button>
+                                <button onClick={(e) => {this.addRelation(e)}}>Add</button>
                             </div>
                         </label>
                     </div>

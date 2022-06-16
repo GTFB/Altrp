@@ -1,5 +1,6 @@
 import '../../sass/components/altrp-progress-bar.scss'
 import {  ProgressBar,Intent } from "@blueprintjs/core";
+import '../../../../editor/src/sass/blueprint.scss';
 export default function progressBar(value){
   let progressBar = document.getElementById('altrp-progress-bar')
   if(! progressBar){

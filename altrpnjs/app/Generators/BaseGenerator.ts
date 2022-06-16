@@ -40,6 +40,7 @@ export abstract class BaseGenerator{
     if(! fs.existsSync(this.directory)){
       fs.mkdirSync(this.directory, {recursive:true})
     }
+    content = await applyPluginsFiltersAsync('generate_file', content, this)
     fs.writeFileSync(this.getFullFileName(), content)
     if(isProd()){
       /**
