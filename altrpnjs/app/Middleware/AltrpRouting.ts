@@ -1,3 +1,4 @@
+import Env from '@ioc:Adonis/Core/Env'
 import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
@@ -17,6 +18,16 @@ import * as mustache from 'mustache'
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import filterAllowedForUser from "../../helpers/string/filterAllowedForUser";
 import PagesCache from "App/Services/PagesCache";
+import Edge from "../../helpers/edge";
+import data_get from "../../helpers/data_get";
+import recurseMapElements from "../../helpers/recurseMapElements";
+import is_array from "../../helpers/is_array";
+import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import validGuid from "../../helpers/validGuid";
+import Template from "App/Models/Template";
+import data_set from "../../helpers/data_set";
+import getLatestVersion from "../../helpers/getLatestVersion";
+import FONTS, {SYSTEM_FONT} from "../../helpers/const/FONTS";
 
 export default class AltrpRouting {
 
@@ -228,9 +239,255 @@ export default class AltrpRouting {
          ${e.stack}
          `);
       httpContext.response.status(500)
-      return httpContext.response.send(`500 Internal Server Error to View Custom Page: ${e.message}
+      try{
+        return this.tryRenderEdgeTemplate({
+          page,
+          httpContext,
+          altrpContext,
+          model_data,
+          pageMatch,
+          is_admin,
+          datasources,
+          user,
+        })
+      }catch (e) {
+
+        console.error(`Error to Render Edge Custom Page: ${e.message}
+         ${e.stack}
+         `);
+        httpContext.response.status(500)
+      }
+      return httpContext.response.send(`500 Internal Server! Error to Render Edge Custom Page: ${e.message}
          ${e.stack}
          `)
     }
+  }
+  async tryRenderEdgeTemplate({page,
+                                httpContext,
+                                altrpContext,
+                                model_data,
+                                pageMatch,
+                                datasources,
+                                user,
+                                is_admin}){
+
+    try{
+      const _frontend_route = page.serialize()
+
+      const pages = await page.getPagesForFrontend();
+      const altrp_settings = await page.getPageSettings(this)
+      const pageAreas = await page.getAreas(true);
+      const altrpElementsLists = await this.extractElementsNames(pageAreas);
+
+      _.set(page, 'templates', [])
+      _.set(_frontend_route, 'templates', [])
+      let res = await httpContext.view.render(`altrp/pages/${page.guid}`,
+        Edge({
+          ...altrpContext,
+          hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
+          url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+          title: replaceContentWithData(page.title || 'Altrp', altrpContext),
+          altrpContext,
+          is_admin,
+          pages,
+          user,
+          csrfToken: httpContext.request.csrfToken,
+          isProd: isProd(),
+          page_areas: pageAreas,
+          page_id: page.id,
+          altrpElementsLists,
+          elements_list: altrpElementsLists,
+          model_data,
+          fonts: this.getFonts(),
+          altrp_settings,
+          _frontend_route,
+          route_args: pageMatch.params,
+          datasources,
+          device: getCurrentDevice(httpContext.request),
+          version: getLatestVersion(),
+          _altrp: {
+            version: getLatestVersion(),
+            isNodeJS: true
+          },
+        })
+      )
+      // res = minify(res, {
+      //   collapseWhitespace:true,
+      //   minifyCSS: true,
+      //   minifyJS: true,
+      // })
+
+      /**
+       * Add Custom Headers
+       */
+
+      let customHeaders:string|object = get_altrp_setting('altrp_custom_headers', '', true)
+      if(customHeaders){
+        customHeaders = replaceContentWithData(customHeaders, altrpContext)
+        customHeaders = stringToObject(customHeaders)
+        for(let key in customHeaders){
+          if(customHeaders.hasOwnProperty(key)){
+            httpContext.response.header(key, customHeaders[key])
+          }
+        }
+      }
+      return httpContext.response.send(res)
+    } catch (e) {
+      console.error(`Error to View Custom Page: ${e.message}
+           ${e.stack}
+           `);
+      httpContext.response.status(500)
+      return httpContext.response.send(`500 Internal Server Error to View Custom Page: ${e.message}
+           ${e.stack}
+           `)
+    }
+  }
+
+  getFonts(): string {
+    let fonts: string[] = this.getGlobal('fonts', [])
+    return fonts.map(font => {
+
+      if(FONTS[font] === SYSTEM_FONT){
+        return ''
+      }
+      font = encodeURIComponent(font);
+      font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic'
+      let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
+      fontUrl = '<link rel="stylesheet"  href="' + fontUrl + '" />'
+      return fontUrl
+    }).join('')
+  }
+
+  async  extractElementsNamesFromTemplate( template_id, elementNames ){
+    const altrpSettings: any = this.getGlobal('altrpSettings')
+    let template
+    if( validGuid( template_id ) ){
+      template = await Template.query().where( 'guid', template_id ).first();
+    } else {
+      template = await Template.find( template_id );
+    }
+    if( ! template ){
+      return;
+    }
+    data_set(altrpSettings, 'templates_data.' + template_id,  template.dataWithoutContent());
+
+    let data = JSON.parse( template.data );
+    this._extractElementsNames( data, elementNames, false );
+  }
+  async _extractElementsNames(element, elementNames, only_react_elements) {
+    let plugins_widget_list: any = ''
+    if (!plugins_widget_list) {
+      plugins_widget_list = []
+    } else {
+      plugins_widget_list = plugins_widget_list.split(',')
+    }
+    const reactElements = _.concat(DEFAULT_REACT_ELEMENTS, plugins_widget_list)
+    if (!is_array(elementNames)) {
+      elementNames = []
+    }
+    if (!element.name || !_.isString(element.name)) {
+      return
+    }
+    if (!(only_react_elements
+      && !(data_get(element, 'settings.react_element')
+        || (reactElements.indexOf(element.name) !== -1)))) {
+      elementNames.push(element.name)
+      if (element.name === 'section' || element.name === 'column' || element.name === 'section_widget') {
+
+        recurseMapElements(element, function (element) {
+            if (element.name && elementNames.indexOf(element.name) === -1) {
+              elementNames.push(element.name)
+            }
+          }
+        )
+
+      }
+    }
+    if (element.children && is_array(element.children)) {
+      for(const child of element.children)
+      {
+        await this._extractElementsNames(child, elementNames, only_react_elements)
+      }
+    }
+    if (element.name === 'template' && data_get(element, 'settings.template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template'), elementNames)
+    }
+    if (element.name === 'posts' && data_get(element, 'settings.posts_card_template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_template'), elementNames)
+    }
+    if (element.name === 'posts' && data_get(element, 'settings.posts_card_hover_template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames)
+    }
+    if (element.name === 'table'
+      && data_get(element, 'settings.row_expand')
+      && data_get(element, 'settings.card_template')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.card_template'), elementNames)
+    }
+    if (element.name === 'dropbar'
+      && data_get(element, 'settings.template_dropbar_section')) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames)
+    }
+    if (element.name === 'carousel'
+      && data_get(element, 'settings.slides_repeater')?.length > 0) {
+
+      for (const el of data_get(element, 'settings.slides_repeater')) {
+        if(el.card_slides_repeater) {
+          await this.extractElementsNamesFromTemplate(el.card_slides_repeater, elementNames)
+        }
+      }
+    }
+    if (element.name === 'table'
+      && data_get(element, 'settings.tables_columns')) {
+      let columns = data_get(element, 'settings.tables_columns', [])
+      for(let column of columns)
+      {
+        if (data_get(column, 'column_template')) {
+          await this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
+        }
+      }
+    }
+    if (element.name === 'tabs'
+      && data_get(element, 'settings.items_tabs')) {
+      let tabs = data_get(element, 'settings.items_tabs', [])
+      for(let tab of tabs)
+      {
+        if (data_get(tab, 'card_template')) {
+          this.extractElementsNamesFromTemplate(data_get(tab, 'card_template'), elementNames)
+        }
+      }
+    }
+    if (element.name === 'table'
+      && data_get(element, 'settings.row_expand')
+      && data_get(element, 'settings.tables_columns')
+      && is_array(data_get(element, 'settings.tables_columns'))) {
+      let columns = data_get(element, 'settings.tables_columns')
+      for(let column of columns)
+      {
+        if (data_get(column, 'column_template')) {
+          this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
+        }
+      }
+    }
+
+  }
+  async  extractElementsNames(areas: any[] = [], _only_react_elements = true){
+    let elementNames = [];
+
+    await Promise.all(areas.map(async area => {
+      if(area?.template?.data) {
+        let data = area.template.data
+        if(_.isString(data)){
+          data= JSON.parse(data)
+          area.template.data=data
+        }
+        await this._extractElementsNames( data, elementNames, _only_react_elements );
+      } else {
+      }
+    }))
+    // elementNames = array_unique( elementNames );
+    // elementNames = array_values( elementNames );
+    elementNames = _.uniq(elementNames)
+
+    return elementNames;
   }
 }
