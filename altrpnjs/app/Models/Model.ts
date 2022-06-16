@@ -215,7 +215,6 @@ export default class Model extends BaseModel {
 
     models.where(function (query) {
       query.where('altrp_models.title', 'like', `%${search}%`)
-        .orWhere('altrp_models.id', 'like', `%${search}%`)
     }).orderBy(orderColumn, sortType)
 
     await models.preload('categories').select('altrp_models.*')
