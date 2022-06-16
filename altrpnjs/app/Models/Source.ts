@@ -475,6 +475,7 @@ export default class Source extends BaseModel {
     \`${sql}\`, {
        'sql_name' : '${this.sQLEditor?.name}',
        'table_name' : '${this.model?.table?.name}',
+       'is_object' : '${this.sQLEditor?.is_object}',
      }, httpContext.request )});
     `;
   }
