@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  withRouter,
 } from "react-router-dom";
 import { hot } from "react-hot-loader";
 import { Scrollbars } from "react-custom-scrollbars";

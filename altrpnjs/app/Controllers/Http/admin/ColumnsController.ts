@@ -68,8 +68,12 @@ export default class ColumnsController {
       let indexQuery = `CREATE INDEX ${indexName} ON ${model.table.name}(${columnData.name})`
       await Database.rawQuery(indexQuery)
     } else if(! newColumn){
+      try {
       let indexQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${indexName}`
       await Database.rawQuery(indexQuery)
+      }catch (e) {
+
+      }
     }
   }
 
@@ -188,7 +192,7 @@ export default class ColumnsController {
         model_id: model.id,
         type: columnData.type
       })
-
+      console.log(columnData.indexed);
       await this.indexCreator(columnData.indexed, columnData, model)
 
       await column.save()

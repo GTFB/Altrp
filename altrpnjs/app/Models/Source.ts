@@ -465,7 +465,7 @@ export default class Source extends BaseModel {
             break;
           default: return
         }
-        let value = `\${${namespace}.${prop}}`
+        let value = `\${${namespace}.${prop} ? ${namespace}.${prop} : ''}`
         path = Source.escapeRegExp(path)
         sql = sql.replace(new RegExp(`{{${path}}}`, "g"), value || "")
       });
@@ -475,6 +475,7 @@ export default class Source extends BaseModel {
     \`${sql}\`, {
        'sql_name' : '${this.sQLEditor?.name}',
        'table_name' : '${this.model?.table?.name}',
+       'is_object' : '${this.sQLEditor?.is_object}',
      }, httpContext.request )});
     `;
   }

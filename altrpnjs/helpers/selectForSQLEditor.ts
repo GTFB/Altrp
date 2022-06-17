@@ -108,12 +108,15 @@ async function selectForSQLEditor( sql:string, bindings,  request:RequestContrac
   sql = sql.replace(/'?(ALTRP_DETAIL_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_filters)
   sql = sql.replace(/'?(ALTRP_DETAIL_AND_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_and_filters)
 
-  let result = await Database.rawQuery(convertShortcodes(sql, qs), bindings)
-  if(_.isArray(_.get(result, '0',))){
-    result = _.get(result, '0',)
+  let _result = await Database.rawQuery(convertShortcodes(sql, qs), bindings)
+  if(_.isArray(_.get(_result, '0',))){
+    _result = _.get(_result, '0',)
   }
 
-  return result.hasOwnProperty('rows') ? result.rows : result
+  let result = _result.hasOwnProperty('rows') ? _result.rows : _result
+
+  return bindings.hasOwnProperty('is_object') && bindings.is_object === 'true' ? result[0] : result
+
 }
 export default selectForSQLEditor
 

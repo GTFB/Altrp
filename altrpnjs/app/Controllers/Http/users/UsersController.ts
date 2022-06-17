@@ -32,9 +32,9 @@ export default class UsersController {
     const body = request.body()
 
     if(body.password !== body.password_confirmation) {
-      response.status(500)
+      response.status(400)
       return {
-        message: "User not created"
+        message: "Passwords mismatch, user not created."
       }
     }
 
