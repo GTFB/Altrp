@@ -84,6 +84,46 @@ export default class CustomizersController {
     )
   }
 
+
+  public async duplicate({request, response}: HttpContextContract) {
+
+    const body = request.body()
+
+    const {title, name, duplicateCustomizerId} = body
+
+    const parentCustomizer = await Customizer.query().where('id', '=', duplicateCustomizerId).first()
+
+    if (!parentCustomizer) {
+        response.status(404)
+        return response.json({
+            'success': false,
+            'message': 'Customizer not found'
+          },
+      )
+    }
+
+    const customizer = await Customizer.create({
+        title: title,
+        name: name,
+        guid: guid(),
+        type: parentCustomizer?.type,
+        model_guid: parentCustomizer?.model_guid,
+        data: parentCustomizer?.data,
+        settings: parentCustomizer?.settings,
+        model_id: parentCustomizer?.model_id
+    })
+
+    return response.json({
+        'success': true,
+        'data': customizer,
+        'redirect_route':
+          '/admin/customizers-editor?customizer_id=' + customizer.id
+      },
+    )
+  }
+
+
+
   public async show({params, response}: HttpContextContract) {
     let customizer
     if (validGuid(params.id)) {

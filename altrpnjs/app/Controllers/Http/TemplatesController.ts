@@ -193,6 +193,50 @@ export default class TemplatesController {
     }
   }
 
+
+  public async duplicate({ auth, request, response }) {
+
+    const guid = uuid()
+
+    const body = request.body()
+    const {title, name, duplicateTemplateId} = body
+
+    const parentTemplate = await Template.query().where('id', '=', duplicateTemplateId).first()
+
+    if (!parentTemplate) {
+      response.status(404)
+      return response.json({
+          'success': false,
+          'message': 'Template not found'
+        },
+      )
+    }
+
+     const template = await Template.create({
+        area: parentTemplate?.area,
+        data: parentTemplate?.data,
+        name: name,
+        title: title,
+        type: parentTemplate?.type,
+        styles: parentTemplate?.styles,
+        parent_template: Number(parentTemplate?.parent_template),
+        guid,
+        user_id: auth.user?.id,
+        html_content: parentTemplate?.html_content,
+        all_site: parentTemplate?.all_site
+      })
+
+    let templateGenerator = new TemplateGenerator()
+    await templateGenerator.run(template)
+
+    return {
+      message: "Success",
+      redirect: true,
+      data: JSON.parse(template.data),
+      url: `/admin/editor?template_id=${template.id}`
+    }
+  }
+
   public async options({ request}:HttpContextContract) {
     const query = Template.query()
     query.where('type', 'template')
