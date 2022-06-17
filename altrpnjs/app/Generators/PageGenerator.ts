@@ -64,6 +64,14 @@ export default class PageGenerator extends BaseGenerator {
     this.setGlobal('altrpSettings', {})
     const altrp_settings = await page.getPageSettings(this)
     const fonts = this.getFonts()
+
+    await page.load('data_sources', data_source => {
+      data_source.preload('source', source => {
+        source.preload('model', model => {
+          model.preload('table')
+        })
+      })
+    })
     const _frontend_route = page.serialize()
     _.set(_frontend_route, 'templates', [])
     let elements_list: string[] | string = await page.extractElementsNames()
@@ -75,6 +83,7 @@ export default class PageGenerator extends BaseGenerator {
     const pages = await this.page.getPagesForFrontend();
 
     const page_areas = await page.renderPageAreas()
+
     for (const screen of SCREENS) {
 
       let plugin_frontend_head = ''
