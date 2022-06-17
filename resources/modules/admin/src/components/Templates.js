@@ -9,6 +9,7 @@ import Pagination from "./Pagination";
 import UserTopPanel from "./UserTopPanel";
 import SmallModal from "./SmallModal";
 import TemplateChildrenModal from "./templateChildrenModal";
+import {altrpRandomId} from "../../../front-app/src/js/helpers";
 
 
 class Templates extends Component {
@@ -28,13 +29,19 @@ class Templates extends Component {
       sorting: {},
       categoryOptions: [],
       activeCategory: 'All',
-      modal: false
+      modal: false,
+      popupWindow: false,
+      duplicateTemplateTitle: '',
+      duplicateTemplateId: 1
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
     });
     this.templateTypesResource = new Resource({
       route: '/admin/ajax/areas'
+    });
+    this.duplicateResource = new Resource({
+      route: '/admin/ajax/templates/duplicate'
     });
     this.onClick = this.onClick.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -458,6 +465,26 @@ class Templates extends Component {
     }
   }
 
+  openDuplicateModal = (response) => {
+    this.setState(state => ({ ...state, popupWindow: !this.state.popupWindow, duplicateTemplateTitle:response?.title, duplicateTemplateId: response?.id }))
+  }
+
+  changeDuplicateTitle = (e) => {
+    this.setState(state => ({ ...state, duplicateTemplateTitle: e.target.value }))
+  }
+
+  duplicateTemplate = async () => {
+
+    this.duplicateResource.post({
+      title: this.state.duplicateTemplateTitle,
+      name: this.state.duplicateTemplateTitle,
+      duplicateTemplateId: this.state.duplicateTemplateId
+    }).then(response => {
+      redirect(response?.url)
+    })
+
+  }
+
   render() {
     const {templateSearch, categoryOptions, sorting, templates, count, pageCount, currentPage} = this.state
 
@@ -552,6 +579,12 @@ class Templates extends Component {
             // className: ''
             title: 'Clear History'
           }, {
+              tag: "button",
+              route: "/admin/ajax/templates",
+              method: "get",
+              after: (response) => this.openDuplicateModal(response),
+              title: 'Duplicate'
+            }, {
             tag: 'button',
             route: '/admin/ajax/exports/templates',
             method: 'get',
@@ -594,6 +627,18 @@ class Templates extends Component {
           <TemplateChildrenModal toggleModal={this.toggleModal} categoryOptions={this.state.categoryOptions} activeArea={this.state.activeTemplateArea.id} templateAreas={this.state.templateAreasModal} />
         </SmallModal>
       )}
+      <SmallModal activeMode={this.state.popupWindow} toggleModal={this.openDuplicateModal}>
+        <div className="modal__content__wrapper">
+          <div className="customizer__title_wrapper">
+            <h5>Template title</h5>
+            <input type="text" className="input__title" value={this.state.duplicateTemplateTitle} onChange={this.changeDuplicateTitle}/>
+          </div>
+          <div className="customizer__action_buttons_wrapper">
+            <button className="popupBtn okBtn" onClick={this.duplicateTemplate}>Ok</button>
+            <button className="popupBtn cancelBtn" onClick={this.openDuplicateModal}>Cancel</button>
+          </div>
+        </div>
+      </SmallModal>
     </div>;
   }
 

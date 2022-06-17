@@ -28,6 +28,7 @@ Route.group(() => {
     Route.post("/favicon", "admin/AdminController.updateFavicon")
 
     Route.post('/templates', 'TemplatesController.create').middleware('auth')
+    Route.post('/templates/duplicate', 'TemplatesController.duplicate').middleware('auth')
     Route.get('/templates', 'TemplatesController.index')
     Route.get('/templates/getAllIds', 'TemplatesController.getAllIds')
     Route.get('/templates/options', 'TemplatesController.options')
@@ -149,6 +150,7 @@ Route.group(() => {
      */
     Route.get('/customizers', 'admin/CustomizersController.index')
     Route.post('/customizers', 'admin/CustomizersController.store')
+    Route.post('/customizers/duplicate', 'admin/CustomizersController.duplicate')
     Route.get('/customizers/:id', 'admin/CustomizersController.show')
     Route.get('/customizers-content/:id', 'admin/CustomizersController.content')
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
