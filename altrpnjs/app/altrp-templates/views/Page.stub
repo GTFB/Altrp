@@ -7,7 +7,6 @@
 
     @include('favicons')
 
-    <meta property="og:title" content="{{title}}">
  {{=<% %>=}}
    <title>{{ title }}</title>
   <!-- Style -->
