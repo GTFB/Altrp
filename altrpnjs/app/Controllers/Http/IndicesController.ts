@@ -40,8 +40,8 @@ export default class IndicesController {
     return view.render('robot', Edge({
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
-      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/robots.js" : "http://localhost:3006/src/bundle.js",
-      css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : "/modules/editor/editor.css"
+      url: Env.get("PATH_ENV") === "production" ? "/modules/robots/robots.js" : "http://localhost:3006/src/bundle.js",
+      css: "/modules/editor/editor.css"
     }))
   }
 

@@ -216,6 +216,24 @@ class BaseElement extends ControlStack {
       );
     }
   }
+  /**
+   * добавлйет новый  дочерний элемент в конец
+   * @param {BaseElement} child
+   * */
+  prependChild(child, dispatchToHistory = true) {
+    this.children.unshift(child);
+    child.setParent(this);
+    if (this.component && typeof this.component.setChildren === "function") {
+      this.component.setChildren(this.children);
+    }
+    this.templateNeedUpdate();
+    if (dispatchToHistory) {
+      let index = this.children.length - 1;
+      store.dispatch(
+        addHistoryStoreItem("ADD", { element: child, index, parent: this })
+      );
+    }
+  }
 
   setAllChild(child, dispatchToHistory = true) {
     const factory = getFactory();

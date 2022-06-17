@@ -106,6 +106,8 @@ function altrpJSZip() {
     '!./altrpnjs/build/app/AltrpControllers/**/*',
     '!./altrpnjs/build/public/altrp-plugins/**/*',
     '!./altrpnjs/build/public/app/media/**/*',
+    '!./altrpnjs/build/public/robots.txt',
+    '!./altrpnjs/build/public/sitemap.xml',
     '!./altrpnjs/build/resources/views/altrp/**/*',
   ], {dot: true,}).pipe(zip(filename))
     .pipe(gulp.dest('../'))

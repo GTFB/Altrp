@@ -864,7 +864,7 @@ export function actionsControllers(
     description: 'Value or Path to Value',
     conditions: {
       type: ['set_data'],
-      set_type: ['set', 'toggle_set', 'push_items']
+      set_type: ['set', 'toggle_set', 'push_items',]
     },
     locked: true,
   });

@@ -52,7 +52,7 @@ const Export = () => {
         loading ? (
           <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />
         ) : (
-          <CloudArrowUpFill title="Сохранить" fill="#ffffff" />
+          <CloudArrowUpFill title="Save" fill="#ffffff" />
         )
       }
       drop="up"
@@ -66,9 +66,9 @@ const Export = () => {
           saveTemplate();
         }}
       >
-        С панелью для печати
+        With Panel for Print
       </Dropdown.Item>
-      <Dropdown.Item eventKey="2">Скачать PDF</Dropdown.Item>
+      <Dropdown.Item eventKey="2">Download PDF</Dropdown.Item>
     </SplitButton>
   );
 };

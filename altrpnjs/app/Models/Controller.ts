@@ -40,7 +40,8 @@ export default class Controller extends BaseModel {
 
 
   @hasMany(() => Source, {
-    foreignKey: 'controller_id'
+    foreignKey: 'controller_id',
+    localKey: 'id'
   })
   public sources: HasMany<typeof Source>
 

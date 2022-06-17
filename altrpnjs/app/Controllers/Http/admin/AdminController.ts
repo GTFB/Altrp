@@ -26,6 +26,7 @@ import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
+import delay from "../../../../helpers/delay";
 
 export default class AdminController {
 
@@ -60,6 +61,10 @@ export default class AdminController {
       }
         break;
       default:{
+
+        if (fs.existsSync(resource_path('views/altrp'))) {
+          fs.rmSync(resource_path('views/altrp'), {recursive: true,})
+        }
         await AdminController.upgradeListeners()
         await AdminController.upgradeModels()
         await AdminController.upgradePages(request)
@@ -74,7 +79,8 @@ export default class AdminController {
 
     } catch (e) {
       res.message = 'Error server restarting: \n' + e.message
-      Logger.error(e.message, e.stack.split('\n'))
+      e.message = 'Error server restarting: \n' + e.message
+      console.error(e);
     }
 
     return response.json(res)
@@ -109,7 +115,7 @@ export default class AdminController {
         const used = process.memoryUsage().heapUsed / 1024 / 1024;
         Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
-        Logger.error(`Error while Template ${template.guid} generate: ${e.message}`, e.stack.split('\n'))
+        console.error(`Error while Template ${template.guid} generate: ${e.message}`);
       }
     }
   }
@@ -150,6 +156,7 @@ export default class AdminController {
     try {
       await updateService.update()
     } catch (e) {
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -175,6 +182,7 @@ export default class AdminController {
     try {
       await updateService.update('test')
     } catch (e) {
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -218,11 +226,11 @@ export default class AdminController {
       const pageGenerator = new PageGenerator()
       try{
         await pageGenerator.run(page)
-
+        await delay(100);
         const used = process.memoryUsage().heapUsed / 1024 / 1024;
         Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
-        Logger.error(`Error while Page ${page.guid} generate: ${e.message}`, e.stack.split('\n'))
+        console.error(`Error while Page ${page.guid} generate: ${e.message}`, e.stack.split('\n'));
       }
     }
   }
@@ -230,7 +238,7 @@ export default class AdminController {
   private static async upgradeModels() {
     Logger.info('Upgrading models')
 
-    const models = await Model.query().preload('altrp_controller').select('*')
+    const models = await Model.query().select('*')
 
     const controllerGenerator = new ControllerGenerator()
     const modelGenerator = new ModelGenerator()
@@ -242,9 +250,9 @@ export default class AdminController {
       try{
         await modelGenerator.run(model)
       }catch (e) {
-        Logger.error(`Error while Model generate: ${e.message}`, e.stack.split('\n'))
+        console.error(`Error while Model generate: ${e.message}`);
       }
-      let controller: any = model.altrp_controller
+      let controller: any = await Controller.query().where('model_id', model.id).first()
       if (!controller) {
         controller = new Controller();
         controller.fill({
@@ -256,7 +264,7 @@ export default class AdminController {
       try{
         await controllerGenerator.run(controller)
       }catch (e) {
-        Logger.error(`Error while Controller generate: ${e.message}`, e.stack.split('\n'))
+        console.error(e);
       }
     }
   }
@@ -264,9 +272,6 @@ export default class AdminController {
   private static async upgradeListeners() {
     Logger.info('Upgrading Listeners')
 
-    if (fs.existsSync(resource_path('views/altrp'))) {
-      fs.rmSync(resource_path('views/altrp'), {recursive: true,})
-    }
     const listenerGenerator = new ListenerGenerator()
 
     await listenerGenerator.hookTemplates()
@@ -279,5 +284,16 @@ export default class AdminController {
     for (const _l of listeners) {
       await listenerGenerator.run(_l)
     }
+  }
+  async getHealthCheck({response}:HttpContextContract){
+
+    let used = process.memoryUsage().heapUsed / 1024 / 1024;
+    used = Math.round(used * 100) / 100
+    return response.json({
+      success:true,
+      data:{
+        used
+      }
+    })
   }
 }

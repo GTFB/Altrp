@@ -1,4 +1,4 @@
-import Timer from "App/Models/Timer";
+
 
 // export default class Timer {
 //   name;
@@ -67,16 +67,22 @@ import Timer from "App/Models/Timer";
 //   }
 // }
 
+import Customizer from "App/Models/Customizer";
+import Model from "App/Models/Model";
+
 class Timers {
   timers: {
-    [n: string]: Timer
+    [n: string]: Customizer
   } = {}
 
   constructor() {
-    Timer.all().then((timersFromDB) => {
-      timersFromDB.forEach(elem => {
-        this.add(elem)
-      })
+    Customizer.query().whereNotNull("time").then( async (timersFromDB: Customizer[]) => {
+      for (const elem of timersFromDB) {
+        //@ts-ignore
+        const val = await elem.related("altrp_model").query().firstOrFail()
+
+        this.add(elem, val)
+      }
     })
   }
 
@@ -87,7 +93,7 @@ class Timers {
     }
   }
 
-  add(timer: Timer) {
+  add(timer: Customizer, model: Model) {
     // this.timers[timer.name] = timer
 
     if(this.timers[timer.id]) {
@@ -96,7 +102,7 @@ class Timers {
 
     this.timers[timer.id] = timer
 
-    this.timers[timer.id].start()
+    this.timers[timer.id].start(model)
 
     // const timerValue = other.get("timers", {});
 
@@ -105,12 +111,12 @@ class Timers {
     // other.update("timers", timerValue)
   }
 
-  async remove(value) {
+  async remove(removeId) {
     // this.stop(name.name);
     let id = "";
 
     for(const timerKey in this.timers) {
-      if(this.timers[timerKey].value === value) {
+      if(this.timers[timerKey].id === removeId) {
         id = timerKey
       }
     }

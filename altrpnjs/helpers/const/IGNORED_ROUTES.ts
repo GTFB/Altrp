@@ -7,6 +7,7 @@ const IGNORED_ROUTES = [
   "/sw.js",
   "/sw/workbox-sw.js",
   "/serviceWorker.js",
+  "/favicon.ico",
   "/service-worker-files"
 ];
 

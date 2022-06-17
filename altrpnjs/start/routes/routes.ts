@@ -363,6 +363,6 @@ ${e.message}`,
   Route.get('routes', async ({response}:HttpContextContract)=>{
     return response.json({success: true, pages: []})
   })
-})
+}).middleware('catch_unhandled_json')
   .prefix("/ajax")
 

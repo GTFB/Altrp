@@ -4,7 +4,7 @@ import TimesIcon from '../svgs/times.svg';
 import store from "../js/store/store";
 import {toggleModal} from "../js/store/modal-settings/actions";
 import CloseModal from "./../svgs/clear_black.svg"
-import {InputGroup} from "@blueprintjs/core";
+import {Checkbox, InputGroup} from "@blueprintjs/core";
 
 
 class AdminModal extends Component {
@@ -50,9 +50,17 @@ class AdminModal extends Component {
     this.props.submit(this.formData).then(this.props.success)
   }
 
-  changeValue(e) {
+  changeValue(e, type) {
     let target = e.target;
-    this.formData[target.dataset.field] = target.value;
+
+    switch (type) {
+      case "checkbox":
+        this.formData[target.dataset.field] = target.checked;
+        break;
+      default:
+        this.formData[target.dataset.field] = target.value;
+    }
+
     let errors = [...this.state.errors];
     errors[target.dataset.error] = '';
     this.setState(state => {
@@ -76,34 +84,49 @@ class AdminModal extends Component {
         <div className="admin-caption">{this.props.title}</div>
         <div className="admin-modal-form form">
           {
-            this.props.fields.map((field, idx) => <label className="form-label label__RobotoFont"
-                                                         data-field={field.name}
-                                                         key={field.name}>{field.label}
-              {(field.type !== 'select') ?
-                <InputGroup
-                  type={field.type || 'text'}
-                  className="form-control-blueprint form-control-blueprint__marginModal"
-                  data-field={field.name}
-                  data-error={idx}
-                  defaultValue={field.defaultValue || ''}
-                  onChange={this.changeValue}
-                /> :
-                  <select className="form__input"
-                          data-field={field.name}
-                          data-error={idx}
-                          defaultValue={field.defaultValue || ''}
-                          onChange={this.changeValue}>
-                    <option value=""/>
-                    {
-                      field.options.map(option =>
-                          <option key={option.id}
-                                  value={option.id}
-                                  children={option.title || option.name}/>)
-                    }
-                  </select>
+            this.props.fields.map((field, idx) => {
+              let input;
+
+              switch (field.type) {
+                case "select":
+                  input = <InputGroup
+                    type={field.type || 'text'}
+                    className="form-control-blueprint form-control-blueprint__marginModal"
+                    data-field={field.name}
+                    data-error={idx}
+                    defaultValue={field.defaultValue || ''}
+                    onChange={this.changeValue}
+                  />
+                  break
+                case "checkbox":
+                  input = <Checkbox
+                    defaultValue={field.defaultValue || false}
+                    className="form-control-blueprint form-control-blueprint__marginModal"
+                    data-field={field.name}
+                    data-error={idx}
+                    onChange={(e) => this.changeValue(e, "checkbox")}
+                  />
+                  break
+                default:
+                  input = <InputGroup
+                    type={field.type || 'text'}
+                    className="form-control-blueprint form-control-blueprint__marginModal"
+                    data-field={field.name}
+                    data-error={idx}
+                    defaultValue={field.defaultValue || ''}
+                    onChange={this.changeValue}
+                  />
               }
-              {this.state.errors[idx] ? <span className="form-label__error">{this.state.errors[idx]}</span> : ''}
-            </label>)
+
+              return <label className="form-label label__RobotoFont"
+                            data-field={field.name}
+                            key={field.name}>{field.label}
+                {
+                  input
+                }
+                {this.state.errors[idx] ? <span className="form-label__error">{this.state.errors[idx]}</span> : ''}
+              </label>
+            })
           }
           <div className="form-bottom">
             <button className="btn btn_success" onClick={this.submit}>{this.props.submitButton}</button>

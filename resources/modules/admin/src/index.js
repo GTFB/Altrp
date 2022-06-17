@@ -2,6 +2,15 @@ import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import checkPackageKey from "./js/functions/checkPackageKey";
+import {withRouter} from "react-router-dom";
+import {io} from "socket.io-client";
+
+window.altrpIo = io( {
+  path: '/wsaltrp',
+  auth: {
+  },
+})
+window.withRouter = withRouter;
 
 window.React = React;
 window.Component = Component;

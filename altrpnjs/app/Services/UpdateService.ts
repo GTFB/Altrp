@@ -28,7 +28,7 @@ export default class UpdateService {
       return true;
     }
 
-    Logger.info("Starting Update")
+    console.log("Starting Update")
     let file = ''
     try {
       file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
@@ -38,7 +38,7 @@ export default class UpdateService {
       return false;
     }
     if (!await UpdateService.write_public_permissions()) {
-      Logger.error('Failed to update file read mode');
+      console.error('Failed to update file read mode');
     }
 
     if (!file) {
@@ -50,7 +50,7 @@ export default class UpdateService {
     UpdateService.update_files()
 
     if (!await UpdateService.write_public_permissions('public')) {
-      Logger.error('Failed to update file reading mode after unzipping');
+      console.error('Failed to update file reading mode after unzipping');
     }
     UpdateService.delete_archive()
     // Upgrade the Database
@@ -62,7 +62,7 @@ export default class UpdateService {
     View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
     clearRequireCache()
     UpdateService.setPackageKey();
-    Logger.info("End Update")
+    console.log("End Update")
     return true;
   }
   static setPackageKey(){

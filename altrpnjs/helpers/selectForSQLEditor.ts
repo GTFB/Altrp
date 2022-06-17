@@ -103,15 +103,103 @@ async function selectForSQLEditor( sql:string, bindings,  request:RequestContrac
     sql += _sql_order_by
   }
 
-
   sql = sql.replace(/ALTRP_FILTERS/g, _sql_filters)
   sql = sql.replace(/ALTRP_AND_FILTERS/g,_sql_and_filters)
   sql = sql.replace(/'?(ALTRP_DETAIL_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_filters)
   sql = sql.replace(/'?(ALTRP_DETAIL_AND_FILTERS)(:[a-z0-9_,.:]+)?'?/g, _sql_detail_and_filters)
 
-  return _.get(await Database.rawQuery(sql, bindings), '0', [])
+  let _result = await Database.rawQuery(convertShortcodes(sql, qs), bindings)
+  if(_.isArray(_.get(_result, '0',))){
+    _result = _.get(_result, '0',)
+  }
+
+  let result = _result.hasOwnProperty('rows') ? _result.rows : _result
+
+  return bindings.hasOwnProperty('is_object') && bindings.is_object === 'true' ? result[0] : result
+
 }
 export default selectForSQLEditor
+
+
+export function convertShortcodes(sql:string, qs:any):string {
+
+  let pos1 = 0;
+  let pos2 = 0;
+  let _sql = sql
+
+  while (true) {
+    let openPos = sql.indexOf('{{', pos1);
+    if (openPos == -1) break;
+    let closePos = sql.indexOf('}}', pos2);
+    if (closePos == -1) break;
+
+    let shortCode = sql.slice(openPos, closePos+2);
+    let code = sql.slice(openPos+2, closePos);
+
+    if(code.indexOf( 'IF_AND_REQUEST' ) !== -1) {
+      _sql = _sql.replace(shortCode, replaceIfAndRequest(code, qs))
+    }
+
+    if(code.indexOf( 'IS_NULL' ) !== -1) {
+      _sql = _sql.replace(shortCode, replaceIsNull(code, qs))
+    }
+
+    // continue from the following position
+    pos1 = openPos + 1;
+    pos2 = closePos + 1;
+  }
+  console.log(_sql)
+  return _sql;
+}
+
+
+export function replaceIfAndRequest(code:string, qs:any):string {
+
+  let query = ``
+  let args = code.split(':');
+  let arg1 = args[1].trim();
+  let arg2 = args[2].trim();
+  let arg3 = args[3] ? args[3].trim() : '=';
+
+  if (typeof qs[arg2] !== 'undefined') {
+    let searchable = qs[arg2];
+    switch (arg3) {
+      case 'IN':
+      case 'NOT_IN':
+        if (typeof qs[arg2] === 'string') {
+          searchable = qs[arg2].replace(/\[|\]/g, '');
+        }
+        if (Array.isArray(qs[arg2])) {
+          searchable = qs[arg2].toString();
+        }
+        query = ` AND ${arg1} ${arg3 == 'IN' ? arg3 : 'NOT IN'} (${searchable}) `;
+        break;
+      case 'LIKE':
+      case 'ILIKE':
+        searchable = `'%${qs[arg2]}%'`;
+        query = ` AND ${arg1} ${arg3} ${searchable} `;
+        break;
+      case 'START_LIKE':
+        searchable = `'%${qs[arg2]}'`;
+        query = ` AND ${arg1} LIKE ${searchable} `;
+        break;
+      case 'END_LIKE':
+        searchable = `'${qs[arg2]}%'`;
+        query = ` AND ${arg1} LIKE ${searchable} `;
+        break;
+      default:
+        query = ` AND ${arg1} ${arg3} '${qs[arg2]}' `;
+    }
+  }
+  return query;
+}
+
+
+export function replaceIsNull(code:string, qs:any):string {
+  let args = code.split(':');
+  let arg1 = args[1].trim();
+  return typeof qs[arg1] !== 'undefined' ? ` false ` : ` true `;
+}
 
 
 export function getDetailQueryValues(query, filter:string):object {

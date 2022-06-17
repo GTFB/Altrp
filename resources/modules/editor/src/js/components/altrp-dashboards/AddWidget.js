@@ -104,12 +104,12 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   return (
     <Card>
       <Card.Header>
-        <Card.Title>Добавить виджет</Card.Title>
+        <Card.Title>Add Widget</Card.Title>
       </Card.Header>
       <Card.Body>
         <Form>
           <Form.Group>
-            <Form.Label>Название виджета</Form.Label>
+            <Form.Label>Widget's Name</Form.Label>
             <Form.Control
               type="text"
               ref={title}
@@ -159,10 +159,10 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       </Card.Body>
       <Card.Footer>
         <Button variant="secondary" onClick={() => setIsShow(false)}>
-          Закрыть
+          Close
         </Button>
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
-          Сохранить
+          Save
         </Button>
       </Card.Footer>
     </Card>

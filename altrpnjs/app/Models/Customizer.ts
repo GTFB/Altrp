@@ -20,8 +20,14 @@ import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
 import {DateTime} from 'luxon'
+import getNextWeek from "../../helpers/getNextWeek";
+import {clearTimeout, setTimeout} from "node:timers";
+import app_path from "../../helpers/path/app_path";
+import isProd from "../../helpers/isProd";
+import HttpContext from "@ioc:Adonis/Core/HttpContext";
 
 export default class Customizer extends BaseModel {
+  timeout
 
   public static sourceable_type = `App\\Altrp\\Customizer`
 
@@ -251,6 +257,62 @@ export default class Customizer extends BaseModel {
 
     return `this.${settings?.type || "set"}CustomizerData('${path}', ${v});
     `;
+  }
+
+  @column()
+  public time: number
+
+  @column()
+  public time_type: string
+
+  public getTimeInMilliseconds() {
+
+    const count = Math.abs(this.time - 1);
+
+    switch (this.time_type) {
+      case "day":
+        const oneDay = 86400000;
+        const toNextDay = oneDay - new Date().getTime() % oneDay;
+        return (oneDay * count) + toNextDay
+      case "week":
+        return getNextWeek(count)
+      case "minute":
+        const oneMinute = 60000;
+        const toNextMinute = oneMinute - new Date().getTime() % oneMinute;
+        return (oneMinute * count) + toNextMinute
+      default:
+        const oneHour = 3600000;
+        const toNextHour = oneHour - new Date().getTime() % oneHour;
+        return (oneHour * count) + toNextHour
+    }
+  }
+
+  async start(model: Model) {
+    this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
+  }
+
+  stop() {
+    clearTimeout(this.timeout)
+  }
+
+  async callCustomizer(model: Model) {
+    const customizer = this
+
+    // console.log('asdasd', this)
+
+    const controllerName = app_path(`AltrpControllers/${model.name}Controller`);
+
+    const ControllerClass = isProd() ? (await require(controllerName)).default
+      : (await import(controllerName)).default
+    const controller = new ControllerClass()
+
+    if(controller[customizer.name]) {
+      await controller[customizer.name](HttpContext)
+    } else {
+      console.log("customizer name invalid")
+    }
+
+    this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
   }
 
   changePropertyToJS(propertyData, value, type = 'set'): string {
