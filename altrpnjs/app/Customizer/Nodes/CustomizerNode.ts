@@ -33,7 +33,7 @@ export default class CustomizerNode extends BaseNode implements NodeInterface
     const item = this.data.data.props.nodeData;
 
     if(item.id) {
-      JSContent += `this.setCustomizerData('context.${item.id}', await this.execCustomizer('${item.id}'))
+      JSContent += `this.setCustomizerData('context.customizer[${item.id}]', await this.execCustomizer('${item.id}'))
     `
     }
 

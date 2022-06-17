@@ -2,6 +2,7 @@ import delay from '../functions/delay';
 import AdminBarWrapper from './AdminBarWrapper';
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Scrollbars from "react-custom-scrollbars";
+import upgradeBackend from "../../../../admin/src/js/functions/upgradeBackend";
 
 const {getDataByPath}= window.altrpHelpers;
 
@@ -169,14 +170,7 @@ class AdminBar extends React.Component {
       update: true
     }))
 
-    try{
-      let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
-      if(res.success){
-        await alert('success');
-      }
-    }catch (e) {
-      await delay(4000)
-    }
+    await upgradeBackend()
 
     this.setState(state => ({
       ...state,

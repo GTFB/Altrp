@@ -6,7 +6,7 @@ import _ from "lodash";
 import Logger from "@ioc:Adonis/Core/Logger";
 
 
-class Ws {
+class AltrpSocket {
   public io: Server
   private booted = false
   public clients: {} = {}
@@ -111,4 +111,4 @@ class Ws {
   }
 }
 
-export default new Ws()
+export default new AltrpSocket()

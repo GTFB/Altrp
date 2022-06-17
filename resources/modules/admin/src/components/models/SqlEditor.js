@@ -74,7 +74,8 @@ class SqlEditor extends Component {
     let storeState = store.getState();
     this.setState(state=>({
         ...state,
-      AceEditor: storeState.aceEditorReducer.AceEditor
+      AceEditor: storeState.aceEditorReducer.AceEditor,
+      AceEditorResponse: storeState.aceEditorReducer.AceEditor,
     }))
   };
 
@@ -325,6 +326,9 @@ class SqlEditor extends Component {
   }
 
   render() {
+    if(! this.state.AceEditor){
+      return ''
+    }
     const {id} = this.props.match.params;
     const { isFieldRemoteModalOpened, remoteFields, editingRemoteField } = this.state;
     return (

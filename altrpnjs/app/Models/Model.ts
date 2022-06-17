@@ -25,7 +25,7 @@ import SourceRole from 'App/Models/SourceRole'
 import Role from 'App/Models/Role'
 import Customizer from "App/Models/Customizer";
 import guid from "../../helpers/guid";
-import Timer from "App/Services/Timer";
+// import Timer from "App/Services/Timers";
 import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
@@ -158,25 +158,25 @@ export default class Model extends BaseModel {
   }
 
   getLabelColumnName() {
-    let label = this?.table?.columns.find(c => {
+    let label = this?.table?.columns?.find(c => {
       return c.is_label
     })?.name
     if (!label) {
-      label = this?.table?.columns.find(c => c.is_title)?.name
+      label = this?.table?.columns?.find(c => c.is_title)?.name
     }
     return label || 'id'
   }
 
   getTitleColumnName() {
-    let title = this?.table?.columns.find(c => c.is_title)?.name
+    let title = this?.table?.columns?.find(c => c.is_title)?.name
     if (!title) {
-      title = this?.table?.columns.find(c => c.is_label)?.name
+      title = this?.table?.columns?.find(c => c.is_label)?.name
     }
     return title || 'id'
   }
 
   getIndexedColumns(): Column[] {
-    return this?.table?.columns.filter(c => c.indexed) || []
+    return this?.table?.columns?.filter(c => c.indexed) || []
   }
 
   public static async getModelsOptions(with_names = false, not_plural = false, search = false) {
@@ -215,7 +215,6 @@ export default class Model extends BaseModel {
 
     models.where(function (query) {
       query.where('altrp_models.title', 'like', `%${search}%`)
-        .orWhere('altrp_models.id', 'like', `%${search}%`)
     }).orderBy(orderColumn, sortType)
 
     await models.preload('categories').select('altrp_models.*')
@@ -223,12 +222,16 @@ export default class Model extends BaseModel {
   }
 
   public async createController() {
-    const controller = new Controller()
-    controller.fill({
-      model_id: this.id,
-      description: this.description,
-    })
-    return await controller.save()
+    let controller = await Controller.query().where('model_id',this.id).first()
+    if(! controller){
+      controller = new Controller()
+      controller.fill({
+        model_id: this.id,
+        description: this.description,
+      })
+      await controller.save()
+    }
+    return controller
   }
 
   public async createStandartSources() {
@@ -351,7 +354,7 @@ export default class Model extends BaseModel {
     }
   }
 
-  public static async createDefaultCustomizers(response, modelData, model) {
+  public static async createDefaultCustomizers( modelData, model) {
     const pathToFiles = 'resources/customizers/'
 
     let getContent = fs.readFileSync(base_path(`${pathToFiles}get.json`), 'utf8')
@@ -436,23 +439,15 @@ export default class Model extends BaseModel {
           customizer = await Customizer.query().preload("altrp_model").firstOrFail()
 
           if (customizer?.settings?.time && customizer?.settings?.time_type) {
-            new Timer(customizer.name, {
-              time: customizer.settings.time,
-              type: customizer.settings.time_type
-            }, customizer)
+            // new Timer(customizer.name, {
+            //   time: customizer.settings.time,
+            //   type: customizer.settings.time_type
+            // }, customizer)
           }
           await source.save()
         }
       } catch (e) {
-        return response.json({
-            'success':
-              false,
-            'message':
-              'Customizer don\'t saved',
-            'throw message': e.message,
-            'trace': e.stack.split('\n'),
-          },
-        )
+        console.error(e);
       }
 
 

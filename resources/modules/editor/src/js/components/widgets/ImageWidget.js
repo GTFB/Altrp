@@ -35,6 +35,7 @@ class ImageWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    this.elementId = props.element.getId()
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
@@ -126,7 +127,12 @@ class ImageWidget extends Component {
     if(_.get(this.props.element.getResponsiveLockedSetting('height_size'), 'size', '100') === "0") {
       height = ""
     }
-
+    if(! media){
+      media = {
+        url: '/img/nullImage.png',
+        media_type: 'image',
+      }
+    }
     let altrpImage = (
       <AltrpImage
         image={media}
@@ -137,6 +143,7 @@ class ImageWidget extends Component {
         //   "altrp-image" +
         //   (background_image ? " altrp-background-image-widget" : "")
         // }
+        elementId={this.elementId}
         className="altrp-image"
       />
     );

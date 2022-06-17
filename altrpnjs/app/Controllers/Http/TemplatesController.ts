@@ -14,8 +14,13 @@ import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
+import mbParseJSON from "../../../helpers/mbParseJSON";
 
 export default class TemplatesController {
+  public async getAllIds({ response }) {
+    let templates =await Template.query().where('type', 'template').select('id')
+    return response.json({data: templates, success: true})
+  }
   public async index({ request }) {
     const params = request.qs();
      const page = parseInt(params.page) || 1
@@ -130,8 +135,17 @@ export default class TemplatesController {
     if (body.type === "review") {
 
 
-      const {name, title, parent_template, type, data, styles} = body
-
+      const {name, title, type, data, styles} = body
+      let {parent_template} =  body
+      if(validGuid(parent_template)){
+        parent_template = await Template.query().where('guid', parent_template).first()
+        if(! parent_template){
+          response.status(404)
+          return response.json({success:false, message: `Template ${parent_template} not found!`})
+        }
+        parent_template = parent_template.id
+      }
+      console.log(parent_template);
       const stringyfiedData = JSON.stringify(data)
       const stringyfiedStyles = JSON.stringify(styles)
       // console.log(name, title, 'parent_template:', +parent_template, type,)
@@ -238,7 +252,7 @@ export default class TemplatesController {
   }
 
   public async options({ request}:HttpContextContract) {
-    const query = Template.query()
+    const query = Template.query().whereNull('deleted_at')
     query.where('type', 'template')
     const qs = request.qs()
     if(qs.template_type){
@@ -269,16 +283,16 @@ export default class TemplatesController {
     return template
   }
 
-  public async getTemplate({ params, response }) {
+  public async getTemplate({ params, response, request }) {
     const templateQuery = Template.query()
 
-    if(isNaN(params.template_id)) {
+    if(validGuid(params.template_id)) {
       templateQuery.where("guid", params.template_id)
     } else {
       templateQuery.where("id", parseInt(params.template_id))
     }
 
-    const template = await templateQuery.firstOrFail()
+    let template = await templateQuery.first()
 
     if (!template) {
       response.status(404)
@@ -286,7 +300,23 @@ export default class TemplatesController {
         success: false
       }
     }
-      return template.dataWithoutContent()
+
+    // @ts-ignore
+    template = template.serialize()
+    // @ts-ignore
+    delete template.html_content
+    if(request.qs()?.withStyles && template?.styles){
+      let styles = mbParseJSON(template.styles, template.styles)
+
+      if(styles.all_styles){
+        styles = styles.all_styles.join('')
+      }
+      template.styles = styles
+    } else {
+      // @ts-ignore
+      delete template.styles
+    }
+    return template
   }
 
   public async delete({ params }) {
@@ -436,8 +466,14 @@ export default class TemplatesController {
     const setting = await TemplateSetting.query().where("template_id", id).andWhere("setting_name", "conditions").first();
 
     if(setting) {
+      if(typeof setting.data === 'string'){
       res.data = JSON.parse(setting.data)
+      } else {
+        res.data = setting.data
+      }
     }
+
+
 
     return res
   }
@@ -610,6 +646,6 @@ export default class TemplatesController {
   template = template.serialize()
   delete template.html_content
   delete template.styles
-  return response.json(template);
+  return response.json({template});
   }
 }

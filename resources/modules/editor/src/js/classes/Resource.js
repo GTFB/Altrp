@@ -32,6 +32,7 @@ class Resource {
    * @return {string}
    */
   getRoute() {
+
     return this.dynamicURL ? replaceContentWithData(this.route) : this.route;
   }
   /**
@@ -417,7 +418,6 @@ class Resource {
    * @return {Promise}
    * */
   async getQueried(params, customHeaders = null, cors = false) {
-    console.log(params)
     let options = {
       method: "get",
       headers: _.assign(

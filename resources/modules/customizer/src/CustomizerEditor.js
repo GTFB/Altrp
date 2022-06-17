@@ -22,10 +22,6 @@ import {
 } from "./js/store/customizer-settings/actions";
 import {setCurrentCustomizer} from "./js/store/current-customizer/actions";
 import Sidebar from "./js/components/sidebar/Sidebar";
-import Switch from "./js/components/sidebar/modules/widgets/Switch";
-import Change from "./js/components/sidebar/modules/widgets/Change";
-import Start from "./js/components/sidebar/modules/widgets/Start";
-import Return from "./js/components/sidebar/modules/widgets/Return";
 import CustomEdge from "./js/components/sidebar/modules/widgets/CustomEdge";
 import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLine';
 import ContextMenuCustomizer from "./js/components/sidebar/modules/data/ContextMenuCustomizer";
@@ -33,7 +29,6 @@ import {contextMenu} from "react-contexify";
 import {setCopyNode, setSelectNode} from "./js/store/copy-node/action";
 import {isJSON} from "../../front-app/src/js/helpers";
 import {io} from "socket.io-client";
-import getNodeData from "./js/components/sidebar/modules/robot/getNodeData";
 
 const mapStateToProps = state => {
   return {

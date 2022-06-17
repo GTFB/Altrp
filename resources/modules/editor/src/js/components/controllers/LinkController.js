@@ -140,14 +140,14 @@ class LinkController extends Component {
         </div>
       </div>
       <div id="settings" className="settingBlock settingBlock-none">
-        <div className="control-container_select-wrapper">
-          <div className="controller-container__label control-select__label">
-            Choose Tag
-            </div>
-          <select className="control-select control-field" value={value.tag} onChange={this.changeTag}>
-            {this.state.tagsOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-          </select>
-        </div>
+        {/*<div className="control-container_select-wrapper">*/}
+        {/*  <div className="controller-container__label control-select__label">*/}
+        {/*    Choose Tag*/}
+        {/*    </div>*/}
+        {/*  <select className="control-select control-field" value={value.tag} onChange={this.changeTag}>*/}
+        {/*    {this.state.tagsOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}*/}
+        {/*  </select>*/}
+        {/*</div>*/}
         <label className="settings-checkbox-option" >
           <input id={`toggleSettingsNewPageCheckbox_${this.props.controlId}`} onChange={this.toggleSettingsNewPage} type="checkbox" checked={value.openInNew} className="settings-checkbox" />
           <span className="settings-checkbox-container" />

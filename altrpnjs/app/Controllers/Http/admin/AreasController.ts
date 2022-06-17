@@ -4,6 +4,7 @@ import Area from "App/Models/Area";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
 import {v4 as uuid} from "uuid";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class AreasController {
   public async index({request}) {
@@ -14,7 +15,8 @@ export default class AreasController {
     let areas
 
     if (searchWord) {
-      areas = await Area.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('title', 'LIKE', `%${searchWord}%`).preload("categories").paginate(page, pageSize)
+      areas = await Area.query().orWhere('name', LIKE, `%${searchWord}%`)
+        .orWhere('title', LIKE, `%${searchWord}%`).preload("categories").paginate(page, pageSize)
     } else {
       areas = await Area.query().preload("categories").paginate(page, pageSize)
     }

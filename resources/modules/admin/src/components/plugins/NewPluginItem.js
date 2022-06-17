@@ -12,11 +12,11 @@ class NewPluginItem extends Component {
     try{
       res = await this.installPluginResource.post({
         ...plugin,
-        action
       })
     }catch (e) {
       alert("Plugin failed to install: \n" + e.message)
-
+      console.error(e);
+      return
     }
     if(res?.success) {
       alert("Plugin successfully installed")

@@ -4,6 +4,7 @@ import Robot from "App/Models/Robot";
 import { v4 as uuid } from "uuid";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
+import LIKE from "../../../helpers/const/LIKE";
 
 export default class RobotsController {
   public async index({request}) {
@@ -15,8 +16,8 @@ export default class RobotsController {
 
     if (searchWord) {
       robots = await Robot.query()
-        .orWhere('name', 'LIKE', `%${searchWord}%`)
-        .orWhere('chart', 'LIKE', `%${searchWord}%`)
+        .orWhere('name', LIKE, `%${searchWord}%`)
+        .orWhere('chart', LIKE, `%${searchWord}%`)
         .preload('user')
         .preload('categories')
         .paginate(page, pageSize)

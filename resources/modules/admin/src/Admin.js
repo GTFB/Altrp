@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  withRouter,
 } from "react-router-dom";
 import { hot } from "react-hot-loader";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -35,7 +36,6 @@ import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
-import Echo from "laravel-echo"
 
 import store from "./js/store/store";
 import { setUserData, setUsersOnline } from "./js/store/current-user/actions";
@@ -61,6 +61,7 @@ import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-st
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Link = Link;
+window.Router = Router;
 window.Component = React.Component;
 getAPiToken();
 class Admin extends Component {
@@ -80,12 +81,14 @@ class Admin extends Component {
 
   filterRoutes(filterFn){
     if(_.isFunction(filterFn)){
-      this.props.setRoutes(filterFn(this.props.routes))
+      this.props.setRoutes(filterFn(store.getState()?.routesState?.routes || []))
     }
   }
   filterMainMenu(filterFn){
+    console.log(filterFn);
+    console.log(this.props.mainMenu);
     if(_.isFunction(filterFn)){
-      this.props.setMainMenu(filterFn(this.props.mainMenu))
+      this.props.setMainMenu(filterFn(store.getState()?.routesState?.mainMenu || []))
     }
   }
 
@@ -126,7 +129,7 @@ class Admin extends Component {
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
 
-    if(currentUser.guid && !this.altrpIo) {
+    if(currentUser.guid && !window.altrpIo) {
       window.altrpIo = io( {
         path: '/wsaltrp',
         auth: {

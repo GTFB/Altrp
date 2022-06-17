@@ -9,7 +9,7 @@ import {
   removeFont
 } from "../../../../../front-app/src/js/store/fonts-storage/actions";
 import { renderScrollbar } from "../../../../../admin/src/components/altrp-select/AltrpSelect";
-import { altrpFontsSet } from "../../../../../front-app/src/js/constants/fonts";
+import {altrpFontsSet, GOOGLE_FONT, SYSTEM_FONT} from "../../../../../front-app/src/js/constants/fonts";
 import PresetGlobalFonts from "./PresetGlobalFonts";
 import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
@@ -32,12 +32,36 @@ class TypographicController extends Component {
     this.verChange = this.verChange.bind(this);
     this.setGlobal = this.setGlobal.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
-    const familyOptions = _.toPairs(altrpFontsSet).map(([font, type]) => {
-      return {
-        label: font,
-        value: font
-      };
-    });
+    const familyOptions = [
+      {
+        label: 'System Fonts',
+        options: _.toPairs(altrpFontsSet).map(([font, type]) => {
+          if(type === SYSTEM_FONT){
+            return {
+              label: font,
+              value: font
+            };
+          }
+        }).filter(f => f)
+      },
+      {
+        label: 'Google Fonts',
+        options: _.toPairs(altrpFontsSet).map(([font, type]) => {
+          if(type === GOOGLE_FONT){
+            return {
+              label: font,
+              value: font
+            };
+          }
+        }).filter(f => f)
+      },
+    ]
+    // const familyOptions = _.toPairs(altrpFontsSet).map(([font, type]) => {
+    //   return {
+    //     label: font,
+    //     value: font
+    //   };
+    // });
     this.units = ["px", "em", "rem", "%", "vw", "vh"];
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
@@ -439,6 +463,7 @@ class TypographicController extends Component {
         width: "100%",
         borderRadius: "0px 0px 3px 3px",
         borderWidth: "0px 1px 1px 1px",
+        backgroundColor: "#fff",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
         position: "absolute",
@@ -501,6 +526,7 @@ class TypographicController extends Component {
                 options={familyOptions}
                 styles={customStyles}
                 placeholder={value.label}
+                menuIsOpen={true}
                 isClearable={true}
                 components={{ MenuList: renderScrollbar }}
                 noOptionsMessage={() => "no fonts found"}

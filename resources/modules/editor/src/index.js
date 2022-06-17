@@ -18,7 +18,13 @@ import store from "../src/js/store/store";
 import IconsManager from "./js/classes/modules/IconsManager";
 import "./sass/editor-style.scss";
 import controllerHistory from "./js/classes/ControllerHistory";
+import {io} from "socket.io-client";
 
+window.altrpIo = io( {
+  path: '/wsaltrp',
+  auth: {
+  },
+})
 
 window.iconsManager = new IconsManager();
 

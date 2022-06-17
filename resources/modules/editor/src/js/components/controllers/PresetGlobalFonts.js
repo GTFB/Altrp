@@ -19,7 +19,6 @@ class PresetGlobalFonts extends Component {
     if (fonts.length > 0) {
       fonts.forEach(fonts => {
         if (this.props.checkGlobal(fonts.guid)) {
-          console.log(this.props.checkGlobal(fonts.guid));
           this.setState(s => ({ ...s, defaultValue: fonts.guid }));
         }
       });

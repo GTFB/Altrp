@@ -1,6 +1,7 @@
 import Resource from "../Resource";
 import AltrpModel from "../AltrpModel";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 /**
  * @class TemplateLoader
@@ -19,7 +20,6 @@ export class TemplateLoader {
 
 
   constructor(){
-    this.resource = new Resource({route: '/ajax/templates'});
     this.templatesCache = new AltrpModel(_.get(window.__altrp_settings__, 'templates_data',{}));
   }
 
@@ -31,7 +31,6 @@ export class TemplateLoader {
    * @return {[]}
    */
   async loadTemplate(templateId, force = false){
-
     let update = force;
     templateId = Number(templateId) ? Number(templateId) : templateId;
 
@@ -53,12 +52,39 @@ export class TemplateLoader {
       let template = null;
 
       if (update) {
-        template = await this.resource.get(templateId);
+        const resource = new Resource({route: `/ajax/templates/${templateId}`});
+        template = await resource.getQueried({withStyles: true});
+        if(_.isString(template.styles)){
+          let _document = isEditor() ?
+              document.getElementById("editorContent").contentWindow.document :
+              document;
+
+          const stylesElement = _document.createElement('style')
+          stylesElement.setAttribute(`data-template-styles`, template.guid)
+          stylesElement.innerHTML = template.styles
+
+          _document.head.appendChild(stylesElement)
+          delete template.styles
+        }
         this.templatesCache.setProperty(templateId, template);
       } else {
         template = this.templatesCache.getProperty(templateId);
       }
+      if(! isEditor() && ! document.querySelector(`[data-template-styles="${template.guid}]"`)){
+        const resource = new Resource({route: `/ajax/templates/${templateId}`});
+        let template = await resource.getQueried({withStyles: true});
+        if(_.isString(template.styles)){
+          let _document = isEditor() ?
+            document.getElementById("editorContent").contentWindow.document :
+            document;
 
+          const stylesElement = _document.createElement('style')
+          stylesElement.setAttribute(`data-template-styles`, template.guid)
+          stylesElement.innerHTML = template.styles
+
+          _document.head.appendChild(stylesElement)
+        }
+      }
       if(_.isArray(TemplateLoader.pendingCallbacks[templateId])){
         TemplateLoader.pendingCallbacks[templateId].forEach(callback=>{
           callback(template);
@@ -70,6 +96,7 @@ export class TemplateLoader {
       return template;
 
     }catch(error){
+      console.error(error);
       if(_.isArray(TemplateLoader.pendingCallbacks[templateId])){
         TemplateLoader.pendingCallbacks[templateId].forEach(callback=>{
           callback(null);
@@ -117,6 +144,6 @@ export class TemplateLoader {
   }
 }
 
- window.templateLoader =  new TemplateLoader();
+  window.templateLoader =  new TemplateLoader();
 
 export default window.templateLoader;

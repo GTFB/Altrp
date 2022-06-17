@@ -25,66 +25,52 @@ import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
+import {RequestContract} from "@ioc:Adonis/Core/Request";
+import delay from "../../../../helpers/delay";
 
 export default class AdminController {
 
   // async setSettings({params, response, request, }:HttpContextContract){
   //
   // }
-  public async upgradeAllResources({response}: HttpContextContract) {
+  public async upgradeAllResources({response,request}: HttpContextContract) {
     const res : {
       success:boolean,
       message?:string,
       trace?:[],
     } = {success: true,
     }
+    const type = request.input('type')
     View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
     clearRequireCache()
-    if (fs.existsSync(resource_path('views/altrp'))) {
-      fs.rmSync(resource_path('views/altrp'), {recursive: true,})
-    }
-    const models = await Model.query().preload('altrp_controller').select('*')
-    // const step = 10
-    const modelGenerator = new ModelGenerator()
-    const controllerGenerator = new ControllerGenerator()
-    const templateGenerator = new TemplateGenerator()
-    const pageGenerator = new PageGenerator()
-    const listenerGenerator = new ListenerGenerator()
-
-    await listenerGenerator.hookTemplates()
-    await listenerGenerator.hookControllers()
-    await listenerGenerator.hookModels()
-    await listenerGenerator.hookPages()
-    await listenerGenerator.hookListeners()
-    const listeners = await Customizer.query().where('type', 'listener').select('*')
-
-    for (const _l of listeners) {
-      await listenerGenerator.run(_l)
-    }
-
-    for (let model of models) {
-      if (model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media') {
-        continue
+    switch (type) {
+      case 'listeners':{
+        await AdminController.upgradeListeners()
       }
-      await modelGenerator.run(model)
-      let controller: any = model.altrp_controller
-      if (!controller) {
-        controller = new Controller();
-        controller.fill({
-          model_id: model.id,
-          description: model.description,
-        })
-        await controller.save()
+        break;
+      case 'templates':{
+        await AdminController.upgradeTemplates(request)
       }
-      await controllerGenerator.run(controller)
-    }
-    const templates = await Template.query().where('type', 'template').whereNull('deleted_at').select('*')
-    for (let template of templates) {
-      await templateGenerator.run(template)
-    }
-    const pages = await Page.query().whereNull('deleted_at').select('*')
-    for (let page of pages) {
-      await pageGenerator.run(page)
+        break;
+      case 'models':{
+        await AdminController.upgradeModels()
+      }
+        break;
+      case 'pages':{
+        await AdminController.upgradePages(request)
+      }
+        break;
+      default:{
+
+        if (fs.existsSync(resource_path('views/altrp'))) {
+          fs.rmSync(resource_path('views/altrp'), {recursive: true,})
+        }
+        await AdminController.upgradeListeners()
+        await AdminController.upgradeModels()
+        await AdminController.upgradePages(request)
+        await AdminController.upgradeTemplates(request)
+
+      }
     }
     try {
       if (isProd()) {
@@ -93,12 +79,46 @@ export default class AdminController {
 
     } catch (e) {
       res.message = 'Error server restarting: \n' + e.message
-      Logger.error(e.message, e.stack.split('\n'))
+      e.message = 'Error server restarting: \n' + e.message
+      console.error(e);
     }
 
     return response.json(res)
   }
 
+
+  private static async upgradeTemplates(request: RequestContract){
+    Logger.info('Upgrading templates')
+    const templateGenerator = new TemplateGenerator()
+
+
+    let templates
+    let id = request.input('id')
+    if(id){
+      if(id.indexOf(',')){
+        id = id.split(',')
+        templates = await Template.query()
+          .whereIn('id', id)
+          .select('*')
+      } else {
+        templates = await Template.query()
+          .where('id', id)
+          .select('*')
+      }
+    } else {
+      templates = await Template.query().whereNull('deleted_at').select('*')
+    }
+    for (let template of templates) {
+      try{
+        await templateGenerator.run(template)
+
+        const used = process.memoryUsage().heapUsed / 1024 / 1024;
+        Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
+      }catch (e) {
+        console.error(`Error while Template ${template.guid} generate: ${e.message}`);
+      }
+    }
+  }
 
   public async updateFavicon({request}) {
     const favicon = request.allFiles().favicon || null
@@ -136,6 +156,7 @@ export default class AdminController {
     try {
       await updateService.update()
     } catch (e) {
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -161,6 +182,7 @@ export default class AdminController {
     try {
       await updateService.update('test')
     } catch (e) {
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -177,5 +199,101 @@ export default class AdminController {
 
   async getPackageKey() {
     return {success: true, package_key: Env.get('PACKAGE_KEY')}
+  }
+
+  private static async upgradePages(request: RequestContract) {
+    Logger.info('Upgrading pages')
+
+    let pages
+
+    let id = request.input('id')
+    if(id){
+      if(id.indexOf(',')){
+        id = id.split(',')
+        pages = await Page.query().whereNull('deleted_at')
+          .whereIn('id', id)
+          .select('*')
+      } else {
+        pages = await Page.query()
+          .where('id', id)
+          .select('*')
+      }
+    } else {
+      pages = await Page.query().whereNull('deleted_at').select('*')
+    }
+
+    for (let page of pages) {
+      const pageGenerator = new PageGenerator()
+      try{
+        await pageGenerator.run(page)
+        await delay(100);
+        const used = process.memoryUsage().heapUsed / 1024 / 1024;
+        Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
+      }catch (e) {
+        console.error(`Error while Page ${page.guid} generate: ${e.message}`, e.stack.split('\n'));
+      }
+    }
+  }
+
+  private static async upgradeModels() {
+    Logger.info('Upgrading models')
+
+    const models = await Model.query().select('*')
+
+    const controllerGenerator = new ControllerGenerator()
+    const modelGenerator = new ModelGenerator()
+
+    for (let model of models) {
+      if (model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media') {
+        continue
+      }
+      try{
+        await modelGenerator.run(model)
+      }catch (e) {
+        console.error(`Error while Model generate: ${e.message}`);
+      }
+      let controller: any = await Controller.query().where('model_id', model.id).first()
+      if (!controller) {
+        controller = new Controller();
+        controller.fill({
+          model_id: model.id,
+          description: model.description,
+        })
+        await controller.save()
+      }
+      try{
+        await controllerGenerator.run(controller)
+      }catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
+  private static async upgradeListeners() {
+    Logger.info('Upgrading Listeners')
+
+    const listenerGenerator = new ListenerGenerator()
+
+    await listenerGenerator.hookTemplates()
+    await listenerGenerator.hookControllers()
+    await listenerGenerator.hookModels()
+    await listenerGenerator.hookPages()
+    await listenerGenerator.hookListeners()
+    const listeners = await Customizer.query().where('type', 'listener').select('*')
+
+    for (const _l of listeners) {
+      await listenerGenerator.run(_l)
+    }
+  }
+  async getHealthCheck({response}:HttpContextContract){
+
+    let used = process.memoryUsage().heapUsed / 1024 / 1024;
+    used = Math.round(used * 100) / 100
+    return response.json({
+      success:true,
+      data:{
+        used
+      }
+    })
   }
 }

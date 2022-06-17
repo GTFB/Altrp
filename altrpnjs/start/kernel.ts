@@ -15,11 +15,13 @@ import './view'
 import './events'
 import "../app/Services/TelegramBot"
 import "../app/Services/DiscordBot"
+//import "../app/Services/Timers";
 import Env from "@ioc:Adonis/Core/Env";
 import fs from "fs";
 import base_path from "../helpers/path/base_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import guid from "../helpers/guid";
+import applyPluginsFiltersAsync from "../helpers/plugins/applyPluginsFiltersAsync";
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,8 @@ Server.middleware.register([
   () => import('@ioc:Adonis/Addons/Shield'),
   () => import('App/Middleware/AltrpRouting'),
 ])
+
+applyPluginsFiltersAsync('config', '')
 
 Route.get('*', async () => {
 })

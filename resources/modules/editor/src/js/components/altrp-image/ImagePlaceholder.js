@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import styled,{createGlobalStyle} from 'styled-components';
 import {getResponsiveSetting} from "../../../../../front-app/src/js/helpers";
 
-const ImagePlaceholder = styled.div`& {
+const ImagePlaceholder = styled.div`
+${({elementId})=>elementId ? `.altrp-element${elementId} .altrp-image-placeholder:not(&), &` : '&'} {
   position: relative;
   max-width: 100%;
   overflow: hidden;
@@ -25,7 +26,7 @@ ${(props) => {
 
   background-color: ${props => props.color ? props.color : '#fff'};
 }
-&::before{
+${({elementId})=>elementId ? `.altrp-element${elementId}:not(&) .altrp-image-placeholder` : '&'}::before{
   display: block;
   content: '';
   width: 100%;
@@ -48,12 +49,17 @@ ${(props) => {
   }
   if (Number(props.mediaWidth) && Number(props.mediaHeight)) {
     style += `padding-top:${(props.mediaHeight / props.mediaWidth) * 100}%;`
+    console.log(style);
   }
   return style;
 }};
 }
-&& .altrp-skeleton,
-&& .altrp-image{
+${({elementId})=>elementId ?
+  `.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-skeleton, && .altrp-skeleton`
+  : '&& .altrp-skeleton'} ,
+${({elementId})=>elementId ?
+  `.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-image, && .altrp-image`
+  : '&& .altrp-image'} {
   position:absolute;
   top:0;
   left:0;

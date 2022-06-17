@@ -3,7 +3,10 @@ const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  entry: "./resources/modules/admin/src/index.js",
+  entry: {
+    admin:"./resources/modules/admin/src/index.js",
+    customizer:"./resources/modules/customizer/src/index.js",
+  },
   mode: "development",
   module: {
     rules: [
@@ -75,7 +78,7 @@ module.exports = {
     path: path.resolve(__dirname, "admin/"),
     publicPath: "http://localhost:3002/src/",
     chunkFilename: "[chunkhash].bundle.js",
-    filename: "bundle.js"
+    filename: "[name].js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),

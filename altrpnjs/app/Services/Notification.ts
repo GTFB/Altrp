@@ -1,5 +1,5 @@
 import User from "App/Models/User";
-import Ws from "./Ws"
+import AltrpSocket from "./AltrpSocket"
 
 export default class Notification {
   data;
@@ -15,7 +15,7 @@ export default class Notification {
     switch (this.data.channel) {
       case "broadcast":
         users.forEach((user) => {
-          Ws.sendMessage("notification", this.message.content, user.guid)
+          AltrpSocket.sendMessage("notification", this.message.content, user.guid)
         })
         break
       case "telegram":

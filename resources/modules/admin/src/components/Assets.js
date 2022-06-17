@@ -43,7 +43,7 @@ class Assets extends Component {
       lineTableCheckedOthers: []
     };
     this.typesFiles = {
-      images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
+      images: ['png', 'gif', 'jpg', 'jpeg', 'webp', 'avif'],
       svgs: ['svg'],
       fonts: ['ttf', 'otf', 'woff', 'woff2', 'eot'],
       archives: ['zip', 'rar'],

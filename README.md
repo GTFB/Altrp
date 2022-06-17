@@ -3,6 +3,15 @@
 
 ## Changelog
 
+### 1.2.1
+
+### 1.2.0
+* Fix Styles Load for Embedded Templates
+* Fix Global Styles
+* Fix Some Render Issues
+* PostgreSQL Support Added
+* Section Structure Variants Selector Added
+
 ### 1.1.2
 * Fix Template Render Issues 
 * Fix Popup Position Settings Issues

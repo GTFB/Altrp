@@ -6,6 +6,7 @@ import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
 import PropertyComponent from "../../PropertyComponent";
 import isAltrpJS from "../../../../helpers/isAltrpJS";
+import {NumericInput} from "@blueprintjs/core";
 
 class ReturnNode extends React.Component {
   constructor(props) {
@@ -14,9 +15,13 @@ class ReturnNode extends React.Component {
   }
 
   changeByPath = (e, path) => {
+
     let node = this.getNode();
     let value = _.isString(e?.target?.value) ? e.target.value : e;
-    node = mutate.set(node, `data.${path}`, e)
+
+    node = mutate.set(node, `data.${path}`, value)
+
+    console.log(node)
     store.dispatch(setUpdatedNode(node));
   }
 
@@ -39,6 +44,15 @@ class ReturnNode extends React.Component {
             <div className="settings-section__label">Settings Return</div>
           </div>
           <div className="controllers-wrapper">
+            <div className="controllers-wrapper">
+              <div className="controller-container controller-container_select">
+                <div className="controller-container__label control-select__label controller-label">Status</div>
+                <NumericInput
+                  value={node.data.status || 200}
+                  onValueChange={(valueAsNumber) => this.changeByPath(valueAsNumber, "status")}
+                />
+              </div>
+            </div>
             <div className="controller-container controller-container_select">
               <div className="controller-container__label control-select__label controller-label ">Return Value:</div>
               <PropertyComponent

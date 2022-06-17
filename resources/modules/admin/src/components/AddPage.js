@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
-import {Link, Redirect, withRouter} from "react-router-dom";
-import AltrpSelect from "./altrp-select/AltrpSelect";
+import {Link,  withRouter} from "react-router-dom";
 import AdminTable from "./AdminTable";
 import AdminModal2 from "./AdminModal2";
 import PageDataSourceForm from "./pages/PageDataSourceForm";
@@ -14,8 +13,6 @@ import {MultiSelect, Select} from "@blueprintjs/select";
 import UserTopPanel from "./UserTopPanel";
 import {compose} from "redux";
 import {connect} from "react-redux";
-import Models from "./Models";
-import getAltrpLang from "../js/helpers/get-altrp-lang";
 
 const columns = [
   {
@@ -299,7 +296,7 @@ class AddPage extends Component {
     }
     this.state.value.redirect = redirect;
     this.state.value.path = path;
-
+    console.log(this.state);
     if (this.state.id) {
       res = await this.resource.put(this.state.id, {
         ...this.state.value,
@@ -503,14 +500,6 @@ class AddPage extends Component {
               onClick={this.changeCurrentTab('content')}
             >
               Content
-            </button>
-            <button
-              className={this.state.currentTab === "SEO" ?
-                "custom-tab__tab custom-tab__tab--selected" :
-                "custom-tab__tab"}
-              onClick={this.changeCurrentTab('SEO')}
-            >
-              SEO
             </button>
             {this.props.match.params.id && (
               <button
@@ -748,16 +737,6 @@ class AddPage extends Component {
 
                       <div className="addPage__bottom">
                         <div className="addPage__bottom-block">
-                          <input type="checkbox" id="caching"
-                                 checked={this.state.value.is_cached || ""}
-                                 onChange={e => {
-                                   this.changeValue(e.target.checked, "is_cached");
-                                 }}
-                                 className="addPage__bottom-checkbox"/>
-                          {getAltrpLang() === 'php' && <label htmlFor="caching" className="addPage__bottom-label font__edit">Сaching (Only for Static
-                            Pages)</label>}
-                        </div>
-                        <div className="addPage__bottom-block">
                           <input type="checkbox" id="404"
                                  checked={this.state.value.not_found || ""}
                                  onChange={e => {
@@ -785,56 +764,9 @@ class AddPage extends Component {
                       </div>
                     </React.Fragment>
                   );
-                } else if (this.state.currentTab === 'SEO') {
-                  return (
-                    <React.Fragment>
-
-                      <div className="form-group__inline-wrapper">
-                        <div className="form-group form-group_width47">
-                          <label htmlFor="seo-title" className="font__edit">Title</label>
-
-
-                          <InputGroup type="text"
-                                      id="seo-title"
-                                      value={this.state.value.seo_title || ""}
-                                      onChange={e => {
-                                        this.changeValue(e.target.value, "seo_title");
-                                      }}
-                                      className="form-control-blueprint"
-                          />
-                        </div>
-                        <div className="form-group form-group_width47">
-                          <label htmlFor="seo-keywords" className="font__edit">Keywords</label>
-
-
-                          <InputGroup type="text"
-                                      id="seo-keywords"
-                                      value={this.state.value.seo_keywords || ""}
-                                      onChange={e => {
-                                        this.changeValue(e.target.value, "seo_keywords");
-                                      }}
-                                      className="form-control-blueprint"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group form-control-blueprint">
-                        <label htmlFor="seo_description" className="font__edit">Description</label>
-                        <TextArea id="seo_description"
-                                  className="textarea-blueprint"
-                                  value={this.state.value.seo_description || ""}
-                                  onChange={e => {
-                                    this.changeValue(e.target.value, "seo_description");
-                                  }}
-                                  fill
-                                  large
-                        />
-                      </div>
-                    </React.Fragment>
-                  );
                 }
               })()}
-              {(this.state.currentTab === "content" || this.state.currentTab === "SEO") && (
+              {(this.state.currentTab === "content") && (
                 <button className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}>
                   {this.state.id ? "Save" : "Add"}
                 </button>

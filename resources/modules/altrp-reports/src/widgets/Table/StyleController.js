@@ -32,10 +32,10 @@ const StyleController = () => {
           { name: "Уменьшенный", value: "sm" },
         ]}
       />
-      <ToggleControl name="Выделить все нечетные строки" value={striped} onChange={setStriped} />
-      <ToggleControl name="Выделять строку при наведении" value={hover} onChange={setHover} />
-      <ToggleControl name="Добавить вертикальные границы" value={bordered} onChange={setBordered} />
-      <ToggleControl name="Убрать все границы" value={borderless} onChange={setBorderless} />
+      <ToggleControl name="Select all odd lines" value={striped} onChange={setStriped} />
+      <ToggleControl name="Select all even lines" value={hover} onChange={setHover} />
+      <ToggleControl name="Add vertical borders" value={bordered} onChange={setBordered} />
+      <ToggleControl name="Remove all borders" value={borderless} onChange={setBorderless} />
     </>
   );
 };

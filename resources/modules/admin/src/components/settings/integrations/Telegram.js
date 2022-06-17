@@ -8,10 +8,18 @@ class Telegram extends Component {
     super(props);
 
     this.state = {
-      botWork: false
+      botWork: false,
+      customizerOptions: []
     }
 
     this.toggle = this.toggle.bind(this);
+    this.customizerOptionsResource = new Resource({ route: "/admin/ajax/customizers_options" });
+
+  }
+
+  async componentDidMount() {
+    const customizerOptions = await this.customizerOptionsResource.getAll();
+    this.setState(s =>({...s, customizerOptions}));
   }
 
   // Изменение положения переключателя
@@ -61,16 +69,22 @@ class Telegram extends Component {
         </div>
         <div>
           <div className="admin_input__label">
-            Telegram webhook
+            Telegram customizer
           </div>
           <div className="admin_input">
             <AutoUpdateInput
               className="admin_input_key form_styles_border"
               route="/admin/ajax/settings"
-              type="text"
+              type="select"
               resourceid="telegram_bot_webhook"
               id="telegram_bot_customizer"
-            />
+            >
+              {
+                this.state.customizerOptions.map(elem => (
+                  <option value={elem.value} key={elem.value}>{elem.label}</option>
+                ))
+              }
+            </AutoUpdateInput>
           </div>
         </div>
         <div>
@@ -93,3 +107,4 @@ class Telegram extends Component {
 }
 
 export default Telegram
+

@@ -157,7 +157,11 @@ class Customizer extends Component {
       submitButton: "Add",
       submit: data =>{
         data.name = titleToName(data.title);
+
+        console.log(data)
+        if(!data.is_method) {
         data.name += `_${altrpRandomId()}`
+        }
         return  this.resource.post( data )
       },
       fields: [
@@ -165,6 +169,11 @@ class Customizer extends Component {
           name: "title",
           label: "Customizer Title",
           required: true
+        },
+        {
+          name: "is_method",
+          label: "Method",
+          type: "checkbox"
         },
       ],
       active: true,

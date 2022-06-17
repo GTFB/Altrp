@@ -56,7 +56,7 @@ class Templates extends Component {
     let areaId = parseInt(e.target.dataset.area);
     let activeTemplateArea = {};
     this.state.templateAreas.forEach(area => {
-      if (area.id === areaId) {
+      if (area.id == areaId) {
         activeTemplateArea = area;
       }
     });
