@@ -161,10 +161,11 @@ export function replaceIfAndRequest(code:string, qs:any):string {
   let arg2 = args[2].trim();
   let arg3 = args[3] ? args[3].trim() : '=';
 
-  if (typeof qs[arg2] !== 'undefined') {
+  if (qs[arg2] && typeof qs[arg2] !== 'undefined') {
     let searchable = qs[arg2];
     switch (arg3) {
       case 'IN':
+      case 'NOT IN':
       case 'NOT_IN':
         if (typeof qs[arg2] === 'string') {
           searchable = qs[arg2].replace(/\[|\]/g, '');
