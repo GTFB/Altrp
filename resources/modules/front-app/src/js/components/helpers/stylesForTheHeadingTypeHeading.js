@@ -777,5 +777,33 @@ export function getHeadingTypeHeadingStyles(settings, id) {
 
   styles += `} `;
 
+  styles += `${parentClass} .text-stroke-included {`
+
+  const styleTextStrokeSwitch = getResponsiveSetting(
+    settings,
+    "style_text_stroke_switcher"
+  );
+
+  const styleTextStrokeSlider = getResponsiveSetting(
+    settings,
+    "style_text_stroke_slider"
+  );
+
+  const styleTextStrokeColor = getResponsiveSetting(
+    settings,
+    "style_text_stroke_color"
+  );
+
+  const styleTextStrokeFillColor = getResponsiveSetting(
+    settings,
+    "style_text_stroke_fill_color"
+  );
+
+  if (styleTextStrokeSwitch) {
+    styles += `-webkit-text-stroke: ${styleTextStrokeSlider?.size + styleTextStrokeSlider?.unit || "1px"} ${styleTextStrokeColor?.colorPickedHex || "black"}; -webkit-text-fill-color: ${styleTextStrokeFillColor?.colorPickedHex || "white"};`
+  }
+
+  styles += `} `;
+
   return styles;
 }

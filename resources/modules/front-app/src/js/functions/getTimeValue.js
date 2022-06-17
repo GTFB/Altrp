@@ -1,5 +1,6 @@
 import  startOfMonth from "./startOfMonth";
 import  startOfYear from "./startOfYear";
+import moment from 'moment';
 
 /**
  * Получить какое-то время по шаблону `YYYY-MM-DD`
@@ -51,7 +52,6 @@ export default function getTimeValue(path, defaultValue = null) {
     }
       break;
   }
-  const {moment} = window.altrpHelpers;
   value = moment(value).format("YYYY-MM-DD");
   return value;
 }

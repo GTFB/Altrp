@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 
-
 const ImagePlaceholder = styled.div`
 ${({elementId})=>elementId ? `.altrp-element${elementId} .altrp-image-placeholder:not(&), &` : '&'} {
   position: relative;

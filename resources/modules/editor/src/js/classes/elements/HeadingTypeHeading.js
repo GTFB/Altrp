@@ -443,6 +443,42 @@ class HeadingTypeHeading extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("style_text_stroke", {
+      tab: TAB_STYLE,
+      label: "Text stroke"
+    });
+
+    this.addControl("style_text_stroke_switcher", {
+      type: CONTROLLER_SWITCHER,
+      label: "text stroke",
+      description: "Non-standard. Check cross-browser support before using.",
+      default: false,
+      locked: true,
+    });
+
+    this.addControl("style_text_stroke_slider", {
+      type: CONTROLLER_SLIDER,
+      label: 'stroke width',
+      defaultSize: 1,
+      units: [
+        'px',
+      ],
+      max: 1000,
+      min: 1,
+    });
+
+    this.addControl("style_text_stroke_color", {
+      type: CONTROLLER_COLOR,
+      label: "stroke color"
+    });
+
+    this.addControl("style_text_stroke_fill_color", {
+      type: CONTROLLER_COLOR,
+      label: "text fill color"
+    });
+
+    this.endControlSection();
+
     this.startControlSection('heading_style_font', {
       tab: TAB_STYLE,
       label: 'Font',

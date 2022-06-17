@@ -51,8 +51,8 @@ class SliderController extends Component {
       unit = this.props.units[0]
     }
     return {
-      size: '',
-      unit,
+      size: Number.isFinite(this.props.defaultSize) ? this.props.defaultSize : '',
+      unit: 'px',
     };
   }
   inputUpdate(e) {
