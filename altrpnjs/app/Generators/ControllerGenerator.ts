@@ -47,6 +47,7 @@ export default class ControllerGenerator extends BaseGenerator {
 
     this.controller = controller
     this.model = this.controller.altrp_model
+
     this.sources = this.controller.sources
     /**
      * Асинхронно подгружаем связи для ресурсов
@@ -54,6 +55,11 @@ export default class ControllerGenerator extends BaseGenerator {
     this.sources = await Promise.all(this.sources.map(async (s:Source) => {
       await s.load('model', model=>{
         model.preload('table')
+      })
+      await s.load('altrp_model', model=>{
+        model.preload('table', loader=>{
+          loader.preload('columns')
+        })
       })
       if(s.sourceable_id){
         switch (s.sourceable_type){
@@ -121,6 +127,7 @@ export default class ControllerGenerator extends BaseGenerator {
   }
 
   private getMethodsContent(modelClassName: string): string {
+
     return `
   ${this.sources.map(source => source.renderForController(modelClassName)).join('')}
     `

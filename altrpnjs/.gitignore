@@ -6,10 +6,12 @@ coverage
 .env
 tmp
 .env-prod
+.env-mysql
 
 #bundles
 public/*
 !public/css
+!public/modules/editor/editor.css
 storage/
 app/AltrpModels/
 app/AltrpControllers/

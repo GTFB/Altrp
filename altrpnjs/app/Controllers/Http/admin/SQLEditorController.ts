@@ -65,6 +65,7 @@ export default class SQLEditorController {
     delete sQLEditorData.roles
     delete sQLEditorData.permissions
     delete sQLEditorData.test
+    delete sQLEditorData.id;
     sQLEditor.fill(sQLEditorData)
     await sQLEditor.save()
     let model = await Model.find(sQLEditor.model_id)
@@ -77,8 +78,8 @@ export default class SQLEditorController {
           'sourceable_id': sQLEditor.id,
           'model_id': sQLEditor.model_id,
           'controller_id': model.altrp_controller.id,
-          'url': "/" + string.pluralize(sQLEditor.name),
-          'api_url': "/" + string.pluralize(sQLEditor.name),
+          'url': "/" + sQLEditor.name,
+          'api_url': "/" + sQLEditor.name,
           'title': 'SQL Editor ' + string.pascalCase(sQLEditor.name),
           'name': 'SQL Editor ' + string.pascalCase(sQLEditor.name),
           'type': string.snakeCase(sQLEditor.name),
@@ -147,8 +148,8 @@ export default class SQLEditorController {
             'sourceable_id': sQLEditor.id,
             'model_id': sQLEditor.model_id,
             'controller_id': model.altrp_controller.id,
-            'url': "/" + string.pluralize(sQLEditor.name),
-            'api_url': "/" + string.pluralize(sQLEditor.name),
+            'url': "/" + sQLEditor.name,
+            'api_url': "/" + sQLEditor.name,
             'title': 'SQL Editor ' + string.pascalCase(sQLEditor.name),
             'name': 'SQL Editor ' + string.pascalCase(sQLEditor.name),
             'type': string.snakeCase(sQLEditor.name),
@@ -162,8 +163,8 @@ export default class SQLEditorController {
             'sourceable_id': sQLEditor.id,
             'model_id': sQLEditor.model_id,
             'controller_id': model.altrp_controller.id,
-            'url': "/" + string.pluralize(sQLEditor.name),
-            'api_url': "/" + string.pluralize(sQLEditor.name),
+            'url': "/" + sQLEditor.name,
+            'api_url': "/" + sQLEditor.name,
             'title': 'SQL Editor ' + string.pascalCase(sQLEditor.name),
             'name': 'SQL Editor ' + string.pascalCase(sQLEditor.name),
             'type': string.snakeCase(sQLEditor.name),

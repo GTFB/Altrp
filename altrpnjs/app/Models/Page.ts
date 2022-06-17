@@ -1,3 +1,4 @@
+import * as mustache from 'mustache'
 import md5 from 'md5'
 import {DateTime} from 'luxon'
 import {
@@ -20,7 +21,6 @@ import ACTIONS_NAMES from '../../helpers/const/ACTIONS_NAMES'
 import * as _ from 'lodash'
 import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
 import Database from '@ioc:Adonis/Lucid/Database'
-import Logger from '@ioc:Adonis/Core/Logger'
 import AltrpRouting from 'App/Middleware/AltrpRouting'
 import User from 'App/Models/User';
 import {isString} from 'lodash';
@@ -438,7 +438,7 @@ export default class Page extends BaseModel {
         }
       }
     } catch (e) {
-      Logger.error(e.message)
+      console.error(e);
     }
     return pages
   }
@@ -583,6 +583,7 @@ export default class Page extends BaseModel {
       styles += `
 <style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
     }
+    styles = mustache.render(styles, {})
 
     return styles
   }

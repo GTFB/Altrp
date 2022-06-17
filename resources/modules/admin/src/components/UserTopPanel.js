@@ -8,11 +8,13 @@ import {logout} from "../js/helpers";
 import {io} from "socket.io-client";
 import getCookie from "../../../editor/src/js/helpers/getCookie";
 import  Cookies from 'js-cookie';
+import TopMemoryUsage from "./TopMemoryUsage";
 
 class UserTopPanel extends Component {
 
   render(){
     return<div className="admin-user-top-panel top-panel d-flex align-items-center">
+      <TopMemoryUsage/>
       {this.props.userName&&<a href="#" className="top-panel-notification notification">
         <BellIcon className="notification__icon"/>
       </a>}

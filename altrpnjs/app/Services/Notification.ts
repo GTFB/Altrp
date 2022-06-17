@@ -1,6 +1,5 @@
 import User from "App/Models/User";
-import Ws from "./Ws"
-import TelegramBot from "App/Services/TelegramBot";
+import AltrpSocket from "./AltrpSocket"
 
 export default class Notification {
   data;
@@ -12,15 +11,15 @@ export default class Notification {
     this.data = messageData;
   }
 
-  send(users: User[], customizerData) {
+  send(users: User[], ) {
     switch (this.data.channel) {
       case "broadcast":
         users.forEach((user) => {
-          Ws.sendMessage("notification", this.message.content, user.guid)
+          AltrpSocket.sendMessage("notification", this.message.content, user.guid)
         })
         break
       case "telegram":
-        TelegramBot.send(this.message, users, customizerData)
+        // TelegramBot.init(null)
         break
     }
   }

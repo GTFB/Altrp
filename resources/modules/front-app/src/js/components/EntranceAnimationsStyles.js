@@ -6,8 +6,10 @@ import {getResponsiveSetting} from "../functions/getResponsiveSetting";
  * Render styles to animations via styled component
  * @param {{}} settings
  * @param {string} elementId
+ * todo: delete this module
  */
 const EntranceAnimationsStyles = createGlobalStyle`${({settings, elementId, })=>{
+  // console.error(elementId);
   const entranceAnimationType = getResponsiveSetting(settings, 'en_an');
   const overflowHiddenContainer = getResponsiveSetting(settings, 'en_a_switcher')
   const animationsMemo = window.animationsMemo || [];

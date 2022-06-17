@@ -3,7 +3,7 @@ import {Link, Redirect} from "react-router-dom";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import AltrpSelect from "../altrp-select/AltrpSelect";
-import {InputGroup, MenuItem} from "@blueprintjs/core";
+import {InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import {MultiSelect} from "@blueprintjs/select";
 import {altrpRandomId} from "../../../../front-app/src/js/helpers";
 
@@ -178,49 +178,34 @@ class EditModelForm extends Component {
           />
         </div>
 
-        <div className="form-group form-group_width23">
-          <label htmlFor="page-description" className="font__edit">Parent Model</label>
-          {/*<input type="text" id="page-description"*/}
-          {/*       value={model.parent_model_id || ''}*/}
-          {/*       onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
-          {/*       className="form-control" />*/}
-          <InputGroup className="form-control-blueprint"
-                      onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
-                      value={model.parent_model_id || ''}
-                      type="text"
-                      id="page-description"
-          />
-        </div>
-        <div className="form-group form-group_width23">
+        {/*<div className="form-group form-group_width23">*/}
+        {/*  <label htmlFor="page-description" className="font__edit">Parent Model</label>*/}
+        {/*  <input type="text" id="page-description"*/}
+        {/*         value={model.parent_model_id || ''}*/}
+        {/*         onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
+        {/*         className="form-control" />*/}
+        {/*  <InputGroup className="form-control-blueprint"*/}
+        {/*              onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
+        {/*              value={model.parent_model_id || ''}*/}
+        {/*              type="text"*/}
+        {/*              id="page-description"*/}
+        {/*  />*/}
+        {/*</div>*/}
+        <div className="form-group form-group_width23 form-group_column">
           <label htmlFor="page-description" className="font__edit">Model Description</label>
           {/*<input type="text" id="page-description"*/}
           {/*       value={model.description || ''}*/}
           {/*       onChange={e => { this.changeValue(e.target.value, 'description') }}*/}
           {/*       className="form-control" />*/}
-          <InputGroup className="form-control-blueprint"
+          <TextArea className="form-control-blueprint"
+                      large={false}
                       onChange={e => { this.changeValue(e.target.value, 'description') }}
                       value={model.description || ''}
-                      type="text"
                       id="page-description"
           />
         </div>
       </div>
       <div className="flex-model">
-        {(model.id) ? '' : <div className="form-group form-group_width34 right-margin">
-          <label htmlFor="model-table_id" className="font__edit">Table</label>
-          <AltrpSelect
-            id="model-table_id"
-            defaultOptions={[
-              {
-                value: '',
-                label: ' ',
-              }
-            ]}
-            value={this.state.value.table_id || ''}
-            isDisabled={model.id}
-            onChange={value => {this.changeValue(value, 'table_id')}}
-            optionsRoute="/admin/ajax/tables/options"/>
-        </div>}
         <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-category form-group_width34">
           <label htmlFor="page-categories" className="font__edit">Categories</label>
           <MultiSelect tagRenderer={this.tagRenderer} id="categories"

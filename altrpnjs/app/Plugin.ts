@@ -1,6 +1,5 @@
 import path from 'path'
 import AdmZip from "adm-zip"
-import Logger from '@ioc:Adonis/Core/Logger'
 import public_path from '../helpers/path/public_path'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import app_path from '../helpers/path/app_path'
@@ -181,7 +180,7 @@ export default class Plugin {
           name: plugin_name
         })
       } catch (e) {
-        Logger.error(e)
+        console.error(e);
       }
       return null
     }).filter(p => p)
@@ -194,7 +193,11 @@ export default class Plugin {
 
   public copyStaticFiles() {
     let publicPath = this.getPath('/public')
-    fs.copySync(publicPath, this.getPublicPath('/public'))
+
+    if (fs.existsSync(publicPath) ) {
+      fs.copySync(publicPath, this.getPublicPath('/public'))
+    }
+
   }
 
   public deleteStaticFiles() {
@@ -277,6 +280,11 @@ export default class Plugin {
 
   private getMeta(meta_name, _default: any = null) {
     if (!fs.existsSync(this.getPath())) {
+      let plugins = get_plugin_setting(Plugin.ALTRP_PLUGINS) || ''
+      plugins = plugins.split(plugins,',')
+      plugins = plugins.filter(p => p === this.name)
+      plugins = plugins.join(',')
+      set_plugin_setting([{key:Plugin.ALTRP_PLUGINS, value: plugins}])
       throw new NotFoundException('Plugin not Found', 404, NotFoundException.code)
     }
     if (is_null(this.plugin_meta_data)) {
@@ -430,7 +438,7 @@ export default class Plugin {
           }
       })
     } catch (e) {
-      Logger.error(e.getMessage() + '\n' + e.stack)
+      console.error(e);
       return false
     }
     if (!res) {
@@ -445,6 +453,7 @@ export default class Plugin {
     archive.extractAllTo(this.getPath(), true)
 
     fs.removeSync(temp_path)
+    await this.callUpdateHooks()
     return true
   }
 
@@ -482,7 +491,7 @@ export default class Plugin {
 
         return new Plugin({'name': plugin})
       } catch (e) {
-        Logger.error(`Plugin meta file \`plugin\` not found`)
+        console.error(`Plugin meta file \`plugin\` not found`);
         return null
       }
     })
@@ -507,7 +516,7 @@ export default class Plugin {
             hookName
           })
         } catch (e) {
-          Logger.error(e)
+          console.error(e);
         }
       }
     }
@@ -521,7 +530,7 @@ export default class Plugin {
       },])
 
     for (const hook of hooks) {
-      await hook.fn()
+      await hook.fn(this)
     }
   }
 
@@ -535,6 +544,10 @@ export default class Plugin {
 
   async callDeactivationHooks() {
     await this.getAndCallHooks('deactivate')
+  }
+
+  async callUpdateHooks() {
+    await this.getAndCallHooks('update')
   }
 
 }

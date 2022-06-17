@@ -5,7 +5,6 @@ import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
-import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import React from "react";
@@ -444,13 +443,9 @@ class ElementWrapper extends Component {
     const entranceAnimationType = element.getResponsiveSetting('en_an');
     if(entranceAnimationType){
       wrapperProps['data-enter-animation-type'] = entranceAnimationType;
-      // wrapperProps['data-enter-animation-duration'] = element.getResponsiveSetting('en_a_duration') || 400;
+      wrapperProps['data-enter-animation-duration'] = element.getResponsiveSetting('en_a_duration')?.size || 400;
       wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay')?.size || 0;
-      wrapperProps.className += ` altrp-invisible`;
-      content = <>
-        <EntranceAnimationsStyles settings={element.getSettings()} elementId={element.getId()}/>
-        {content}
-      </>
+      // wrapperProps.className += ` altrp-invisible`;
     }
     return (
       <>

@@ -253,6 +253,21 @@ class RootElement extends BaseElement {
       },
     });
 
+    this.addControl("content_height_custom_popup_layout", {
+      type: CONTROLLER_SLIDER,
+      label: 'Custom content height',
+      units: [
+        'px',
+        '%',
+        'vh'
+      ],
+      max: 10000,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup.app-popup-height-custom .popup-window{{STATE}} .popup-content': 'height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
     this.addControl("content_position_popup_layout", {
       type: CONTROLLER_SELECT,
       label: "Content Position",

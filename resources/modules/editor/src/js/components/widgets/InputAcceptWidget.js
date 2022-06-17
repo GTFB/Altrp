@@ -401,27 +401,6 @@ class InputAcceptWidget extends Component {
     this.dispatchFieldValueToStore(value, true);
   }
 
-  /**
-   * Обработка нажатия клавиши
-   * @param {{}} e
-   */
-  handleEnter = e => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
-      inputs[index + 1] && inputs[index + 1].focus();
-      const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getLockedSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
-      }
-    }
-  };
 
   /**
    * Загрузка виджета
@@ -529,17 +508,6 @@ class InputAcceptWidget extends Component {
       this.state.value.dynamic
     ) {
       this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
-    }
-
-    /**
-     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции c сервера
-     */
-    if (
-      this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel ||
-      this.props.currentDataStorage !== prevProps.currentDataStorage
-    ) {
-      this.updateOptions();
     }
 
     this.updateValue(prevProps);
@@ -673,50 +641,6 @@ class InputAcceptWidget extends Component {
     }
   }
 
-  /**
-   * Обновляет опции для селекта при обновлении данных, полей формы
-   */
-  async updateOptions() {
-    {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getLockedSettings("params_for_update");
-      let formData = _.get(this.props.formsStore, [formId], {});
-      paramsForUpdate = parseParamsFromString(
-        paramsForUpdate,
-        new AltrpModel(formData)
-      );
-      /**
-       * Сохраняем параметры запроса, и если надо обновляем опции
-       */
-      let options = [...this.state.options];
-      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-        if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getLockedSettings("params_as_filters", false)) {
-            paramsForUpdate = JSON.stringify(paramsForUpdate);
-            options = await new Resource({
-              route: this.getRoute()
-            }).getQueried({ filters: paramsForUpdate });
-          } else {
-            options = await new Resource({ route: this.getRoute() }).getQueried(
-              paramsForUpdate
-            );
-          }
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        } else if (this.state.paramsForUpdate) {
-          options = await new Resource({ route: this.getRoute() }).getAll();
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        }
-
-        this.setState(state => ({
-          ...state,
-          paramsForUpdate,
-          options
-        }));
-      }
-    }
-  }
 
   /**
    * Изменение значения в виджете
@@ -859,76 +783,6 @@ class InputAcceptWidget extends Component {
     }
   };
 
-  /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const { value: inputValue } = e.target;
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getLockedSettings();
-    if (!create_label && !create_url) {
-      return;
-    }
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({ ...state, isDisabled: true }));
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-        this.setState(
-          state => ({ ...state, isDisabled: false }),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-            this.setState(
-              state => ({ ...state, options, value }),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({ ...state, isDisabled: false }));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({ ...state, isDisabled: false }));
-    }
-  };
 
   /**
    * Взовращает имя для атрибута name

@@ -22,14 +22,14 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
   return (
     <Modal show={show} onHide={() => setShow(false)} animation={false} size="lg" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Редактировать виджет #{widget.id}</Modal.Title>
+        <Modal.Title>Edit Widget #{widget.id}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row>
           <Col>
             <Form>
               <Form.Group controlId="formGroupEmail">
-                <Form.Label>Название виджета</Form.Label>
+                <Form.Label>Widget's Name</Form.Label>
                 <Form.Control
                   type="text"
                   value={widget.name}
@@ -38,7 +38,7 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Тип виджета</Form.Label>
+                <Form.Label>Widget's Type</Form.Label>
                 <Form.Control
                   as="select"
                   custom
@@ -53,7 +53,7 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
                 </Form.Control>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Цветовая схема</Form.Label>
+                <Form.Label>Color Scheme</Form.Label>
                 <Form.Control
                   as="select"
                   custom
@@ -71,7 +71,7 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
                 </Form.Control>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Источник данных</Form.Label>
+                <Form.Label>Data Source</Form.Label>
                 <Form.Control
                   as="select"
                   custom
@@ -79,7 +79,7 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
                   onChange={(e) => setWidget({ ...widget, source: e.target.value })}
                   required
                 >
-                  <option value="">Выберите источник</option>
+                  <option value="">Choose Source</option>
                   {dataSources.map(({ name, url }, key) => (
                     <option key={key} value={url}>
                       {name}
@@ -115,10 +115,10 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setShow(false)}>
-          Закрыть
+          Close
         </Button>
         <Button variant="warning" onClick={handleSave} disabled={widget.name === ""}>
-          Сохранить изменения
+          Save
         </Button>
       </Modal.Footer>
     </Modal>

@@ -7,7 +7,7 @@ import {DocumentObj} from "../../components/sidebar/modules/nodes-obj/robot/Docu
 import {CrudObj} from "../../components/sidebar/modules/nodes-obj/robot/CrudObj";
 import {ApiObj} from "../../components/sidebar/modules/nodes-obj/robot/ApiObj";
 import {MessageObj} from "../../components/sidebar/modules/nodes-obj/robot/MessageObj";
-import {RobotObj} from "../../components/sidebar/modules/nodes-obj/robot/RobotObj";
+import {CustomizerObj} from "../../components/sidebar/modules/nodes-obj/robot/CustomizerObj";
 import {DiscordObj} from "../../components/sidebar/modules/nodes-obj/robot/DiscordObj";
 // import {BotObj} from "../../components/sidebar/modules/nodes-obj/robot/BotObj";
 
@@ -22,7 +22,7 @@ export const initialState = {
     CrudObj,
     ApiObj,
     MessageObj,
-    RobotObj,
+    CustomizerObj,
     // BotObj
     DiscordObj
   ]

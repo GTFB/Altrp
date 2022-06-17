@@ -309,7 +309,7 @@ ${e.message}`,
     /**
      * handle all 4 HTTP methods
      */
-    Route[method]('plugins', async (httpContext: HttpContextContract) => {
+    Route[method]('plugins-handlers', async (httpContext: HttpContextContract) => {
       const plugins = await Plugin.getEnabledPlugins()
       const segments = httpContext.request.url().split('/').filter(segment => segment)
       const plugin = plugins.find(plugin => {
@@ -363,6 +363,6 @@ ${e.message}`,
   Route.get('routes', async ({response}:HttpContextContract)=>{
     return response.json({success: true, pages: []})
   })
-})
+}).middleware('catch_unhandled_json')
   .prefix("/ajax")
 

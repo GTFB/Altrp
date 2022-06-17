@@ -174,7 +174,7 @@ export default class Source extends BaseModel {
       let controller = isProd() ? require(path).default : (await  import(path)).default
       return new controller()
     }catch (e) {
-      Logger.error(e.message)
+      console.error(e);
     }
   }
 
@@ -193,8 +193,7 @@ export default class Source extends BaseModel {
       return ''
     }
     return `
-    await httpContext.auth.check();
-    if(! await httpContext.auth.user.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
+    if(! await httpContext.auth?.user?.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false,  message: 'Permission denied'});
     }
@@ -206,8 +205,7 @@ export default class Source extends BaseModel {
       return ''
     }
     return `
-    await httpContext.auth.check();
-    if(! await httpContext.auth.user.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
+    if(! await httpContext.auth?.user?.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false, message: 'Permission denied'});
     }
@@ -239,14 +237,14 @@ export default class Source extends BaseModel {
         case SQLEditor.sourceable_type:{
 
           if(!this.sQLEditor?.name){
-            Logger.error(`SQLEditor Not found method name type
+            console.error(`SQLEditor Not found method name type
              Source: ${this.name}`);
           }
           return this.sQLEditor?.name || `_${altrpRandomId()}`
         }
       }
       if(!this.sQLEditor?.name){
-        Logger.error(`Not found method name type
+        console.error(`Not found method name type
              Source: ${this.name}`);
       }
       return `_${altrpRandomId()}`
@@ -467,7 +465,7 @@ export default class Source extends BaseModel {
             break;
           default: return
         }
-        let value = `\${${namespace}.${prop}}`
+        let value = `\${${namespace}.${prop} ? ${namespace}.${prop} : ''}`
         path = Source.escapeRegExp(path)
         sql = sql.replace(new RegExp(`{{${path}}}`, "g"), value || "")
       });
@@ -477,6 +475,7 @@ export default class Source extends BaseModel {
     \`${sql}\`, {
        'sql_name' : '${this.sQLEditor?.name}',
        'table_name' : '${this.model?.table?.name}',
+       'is_object' : '${this.sQLEditor?.is_object}',
      }, httpContext.request )});
     `;
   }
@@ -492,10 +491,24 @@ export default class Source extends BaseModel {
 
     const pageDatasources:any[] = await PageDatasource.query()
       .where('page_id', id)
+      .preload('source')
       .where('server_side', true)
       .select('*')
     for(const pageDatasource of pageDatasources){
-      const data = await pageDatasource.fetchControllerMethod(_.cloneDeep(httpContext), altrpContext)
+      const newHttpContext = {
+        params: httpContext.params,
+        auth:{
+          user: httpContext.auth.user
+        },
+        request: httpContext.request,
+        response: httpContext.response,
+        logger: httpContext.logger,
+        profiler: httpContext.profiler,
+        route: httpContext.route,
+        routeKey: httpContext.routeKey,
+      }
+      const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
+
       if(data?.data){
         datasources[pageDatasource.alias] = data.data
 
@@ -505,5 +518,25 @@ export default class Source extends BaseModel {
     }
 
     return datasources
+  }
+  async preloadSourceable(){
+    if(this.sourceable_id){
+      switch (this.sourceable_type){
+        case Customizer.sourceable_type:{
+          this.customizer = await Customizer.find( this.sourceable_id)
+          if(this.customizer){
+            await this.customizer.load('source')
+          }
+        }
+          break
+        case SQLEditor.sourceable_type:{
+          this.sQLEditor = await SQLEditor.find( this.sourceable_id)
+          if(this.sQLEditor){
+            await this.sQLEditor.load('source')
+          }
+        }
+          break
+      }
+    }
   }
 }

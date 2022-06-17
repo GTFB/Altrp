@@ -37,7 +37,7 @@ const databaseConfig: DatabaseConfig = {
       client: 'mysql',
       connection: {
 
-        charset: Env.get('DB_CHARSET'),
+        charset: Env.get('DB_CHARSET', 'utf8mb4'),
         host: Env.get('DB_HOST'),
         port: Env.get('DB_PORT'),
         user: Env.get('DB_USERNAME'),
@@ -46,6 +46,25 @@ const databaseConfig: DatabaseConfig = {
       },
       migrations: {
         naturalSort: true,
+      },
+      healthCheck: false,
+      debug: false,
+    },
+
+    pg: {
+      client: 'pg',
+      connection: {
+        host: Env.get('PG_DB_HOST'),
+        port: Env.get('PG_DB_PORT'),
+        user: Env.get('PG_DB_USERNAME'),
+        password: Env.get('PG_DB_PASSWORD', ''),
+        database: Env.get('PG_DB_DATABASE'),
+      },
+      migrations: {
+        naturalSort: true,
+        paths: [
+          './database/pg_migrations'
+        ]
       },
       healthCheck: false,
       debug: false,

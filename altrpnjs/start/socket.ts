@@ -1,17 +1,23 @@
-import Ws from 'App/Services/Ws'
-import getSocketUser from "../helpers/getSocketUser";
+import AltrpSocket from 'App/Services/AltrpSocket'
+import applyPluginsFiltersAsync from "../helpers/plugins/applyPluginsFiltersAsync";
 
-Ws.boot()
+AltrpSocket.boot()
 
-Ws.io.on("connection", async (socket) => {
-  if(getSocketUser(socket)) {
-    const guid = await Ws.pushClient(socket)
+AltrpSocket.io.on("connection", async (socket) => {
+  applyPluginsFiltersAsync('after_socket_connect', socket)
+  socket.on("message", (message) => {
+    if(message === 'altrp-front-load'){
+      socket.send('altrpe')
+    } else {
+      applyPluginsFiltersAsync('socket_receive_message', message, socket)
+    }
+  })
 
-    socket.on("disconnect", () => {
-      Ws.removeClient(guid, socket)
-    })
+  const guid = await AltrpSocket.pushClient(socket)
 
-    // socket.on("message", (message) => {
-    // })
-  }
+  socket.on("disconnect", () => {
+    AltrpSocket.removeClient(guid, socket)
+  })
+
+
 })

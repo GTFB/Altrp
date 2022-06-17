@@ -101,6 +101,7 @@ class AltrpImage extends Component {
                                         settings={this.props.element?.getSettings() || {}}
                                         height={height}
                                         width={width}
+                                        elementId={this.props.elementId}
                                         style={placeholderStyles}
                                         mediaWidth={media.width || 100}
                                         mediaHeight={media.height || 75}>

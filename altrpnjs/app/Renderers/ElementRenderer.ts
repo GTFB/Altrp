@@ -5,6 +5,7 @@ import * as _ from 'lodash'
 import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
 import objectToStylesString from "../../helpers/objectToStylesString";
 import toUnicode from "../../helpers/string/toUnicode";
+import getResponsiveSetting from "../../helpers/getResponsiveSetting";
 
 export default class ElementRenderer {
   public static wrapperStub = app_path('altrp-templates/views/element-wrapper.stub')
@@ -35,6 +36,7 @@ export default class ElementRenderer {
     }/${this.element.name}.stub`)
   }
   async render(): Promise<string>{
+    let settings = {...this.element.settings}
     const reactElement =  this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
     this.element.settingsLock = this.element.settingsLock || {}
@@ -72,19 +74,24 @@ export default class ElementRenderer {
       let styles:{}|string = {}
       const {layout_content_width_type:widthType, isFixed} = this.element.settings
       let section_classes = ''
+
+      const fitToContent = getResponsiveSetting(settings,"layout_height", '')
+      if (fitToContent === "fit") {
+        section_classes +=" section-fit-to-content ";
+      }
       switch (this.getName() ){
         case 'section':{
           if (widthType === "boxed" && !isFixed) {
-            section_classes = " altrp-section_boxed ";
-            styles['max-width'] = '100%'
+            section_classes += " altrp-section_boxed ";
           }
           if (widthType === "section_boxed" && !isFixed) {
-            section_classes = " altrp-section_section-boxed "
+            section_classes += " altrp-section_section-boxed "
           }
 
           if (widthType === "full" && !isFixed) {
-            section_classes = " altrp-section--full-width "
           }
+          section_classes += ` {{getSectionWidthClass(element${this.getId()}_settings)}} `
+
         }
         break;
       }
@@ -112,7 +119,7 @@ export default class ElementRenderer {
     }
 
     let content = fs.readFileSync(ElementRenderer.wrapperStub, {encoding: 'utf8'});
-    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} {{{getAddingClasses(element${this.getId()}_settings)}}} `;
+    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} {{{getAddingClasses(element${this.getId()}_settings, screen)}}} `;
     if (this.getType() === "widget") {
       classes += ` altrp-widget_${this.getName()}`;
     }
@@ -125,6 +132,12 @@ export default class ElementRenderer {
     }
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"
 
+    {{{getResponsiveSetting(element${this.getId()}_settings, 'en_an', screen)
+      ? \`data-enter-animation-type="\${getResponsiveSetting(element${this.getId()}_settings, 'en_an', device)}"
+      data-enter-animation-delay="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_delay', device)?.size || 0}"
+      data-enter-animation-duration="\${getResponsiveSetting(element${this.getId()}_settings, 'en_a_duration', device)?.size || 0}"
+      \`
+      : ''}}}
       ${reactElement ? `data-react-element="${this.getId()}"` : ''}
     {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'wrapper_click_actions', device)) ? '' : 'data-altrp-wrapper-click-actions="${this.getIdForAction()}"' }}}
     {{{isEmpty(getResponsiveSetting(element${this.getId()}_settings, 'wrapper_appearB_actions', device)) ? '' : 'data-altrp-wrapper-appear-bottom-actions="${this.getIdForAction()}"' }}}
@@ -141,7 +154,6 @@ export default class ElementRenderer {
     if(advanced_element_id){
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
-    let settings = {...this.element.settings}
     /**
      * for widget with text content must replace )
      */

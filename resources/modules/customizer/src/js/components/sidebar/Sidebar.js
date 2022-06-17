@@ -12,6 +12,8 @@ import {renderAsset} from "../../../../../front-app/src/js/helpers";
 import {connect} from "react-redux";
 import {BrowserRouter as Router} from "react-router-dom";
 import {setCurrentCustomizer} from "../../store/current-customizer/actions";
+import progressBar from "../../../../../admin/src/js/functions/progressBar";
+import upgradeBackend from "../../../../../admin/src/js/functions/upgradeBackend";
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -27,13 +29,16 @@ class Sidebar extends React.Component {
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
     const customizerData = store.getState()?.currentCustomizer;
     const {customizerSettingsData} = this.props
+    progressBar(0.001)
     let {data} = await this.resource.put(customizerId, {
       ...customizerData,
       data: customizerSettingsData
     });
     // let customizer = mutate.set(customizerData, 'source', data.source)
+    await upgradeBackend(['models', 'listeners'])
     store.dispatch(setCurrentCustomizer(data));
     this.props.btnChange("");
+    progressBar()
   }
 
   render() {
@@ -84,7 +89,8 @@ class Sidebar extends React.Component {
             <SettingsIcon className="icon" />
           </button>
 
-          <button className={"btn font_montserrat font_500 btn_grey " + btnActive} onClick={this.update} >
+          <button className={"btn font_montserrat font_500 btn_grey " + btnActive}
+                  onClick={this.update} >
             UPDATE
           </button>
         </div>

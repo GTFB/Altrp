@@ -40,6 +40,7 @@ export abstract class BaseGenerator{
     if(! fs.existsSync(this.directory)){
       fs.mkdirSync(this.directory, {recursive:true})
     }
+    content = await applyPluginsFiltersAsync('generate_file', content, this)
     fs.writeFileSync(this.getFullFileName(), content)
     if(isProd()){
       /**
@@ -64,6 +65,8 @@ export abstract class BaseGenerator{
       fileName += '.css'
     }
     fileName = Application.publicPath(`altrp/css/${fileName}`)
+    content = mustache.render(content,{})
+
     if(! fs.existsSync(Application.publicPath(`altrp/css/`))){
       fs.mkdirSync(Application.publicPath(`altrp/css/`), {recursive:true})
     }

@@ -102,7 +102,7 @@ class AddWidgetDataSource extends Component {
       <div className="altrp-dashboard__card__add-settings">
         <form onClick={e => e.preventDefault()}>
           <Form.Group className="mb-2">
-            <Form.Label className="label">Название виджета</Form.Label>
+            <Form.Label className="label">Widget's Name</Form.Label>
             <Form.Control
               onChange={e => this.setCardName(e.target.value)}
               name="title"
@@ -113,14 +113,14 @@ class AddWidgetDataSource extends Component {
           </Form.Group>
           {this.state.dataSourcesList.length > 0 && (
             <Form.Group className="mb-2">
-              <Form.Label className="label">Источники данных</Form.Label>
+              <Form.Label className="label">Data Sources</Form.Label>
               <Form.Control
                 onChange={e => this.setDatasource(e.target.value)}
                 className="select-type"
                 name="type"
                 as="select"
               >
-                <option value="0">Выберите источник данных</option>
+                <option value="0">Choose Data Source</option>
                 {this.state.dataSourcesList.map((source, index) => (
                   <option key={index} value={source.path}>
                     {source.title || source.path}
@@ -130,14 +130,14 @@ class AddWidgetDataSource extends Component {
             </Form.Group>
           )}
           <Form.Group>
-            <Form.Label className="label">Тип диаграммы</Form.Label>
+            <Form.Label className="label">Diagram's Type</Form.Label>
             <Form.Control
               onChange={e => this.setDiagramType(e.target.value)}
               className="select-type"
               name="type"
               as="select"
             >
-              <option value="">Выберите тип диаграммы</option>
+              <option value="">Choose Diagram Type</option>
               {this.state.types &&
                 this.state.types.map((type, index) => (
                   <option key={index} value={type.value}>
@@ -157,7 +157,7 @@ class AddWidgetDataSource extends Component {
                 );
               }}
             >
-              Сохранить
+              Save
             </Button>
           </Form.Group>
         </form>

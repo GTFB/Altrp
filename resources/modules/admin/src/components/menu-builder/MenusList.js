@@ -120,11 +120,11 @@ class MenusList extends Component {
 
     this.setState(state => ({
       ...state,
-      menus,
+      menus: menus.menus,
       menusSearch: urlS === null ? this.state.menusSearch : urlS,
       activeCategory: urlCategories === null ? 'All' : urlCategories,
-      pageCount: menus[0].pageCount,
-      count: menus[0].count
+      pageCount: menus.pageCount,
+      count: menus.count
     }))
   }
 

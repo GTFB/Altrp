@@ -1,6 +1,7 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Role from "App/Models/Role";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class RolesController {
   public async create({request}) {
@@ -21,7 +22,8 @@ export default class RolesController {
     let roles
 
     if (searchWord) {
-      roles = await Role.query().orWhere('name', 'LIKE', `%${searchWord}%`).orWhere('display_name', 'LIKE', `%${searchWord}%`).paginate(page, 20)
+      roles = await Role.query().orWhere('name', LIKE, `%${searchWord}%`)
+        .orWhere('display_name', LIKE, `%${searchWord}%`).paginate(page, 20)
     } else {
       roles = await Role.query().paginate(page, 20)
     }

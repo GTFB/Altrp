@@ -194,94 +194,90 @@ export default class SendTelegram extends Component{
                             </button>
                           </div>
                           <div className="repeater-item-content">
-                            <div className="controller-container controller-container_select">
-                              <div className="controller-container__label control-select__label controller-label" >Listener</div>
+                            {/*<div className="controller-container controller-container_select">*/}
+                            {/*  <div className="controller-container__label control-select__label controller-label" >Listener</div>*/}
+                            {/*  <div className="control-container_select-wrapper controller-field">*/}
+                            {/*    <select className="control-select control-field"*/}
+                            {/*            value={item.listener || 'none'}*/}
+                            {/*            onChange={e => {this.changeSelect(e, "listener", item.id)}}*/}
+                            {/*    >*/}
+                            {/*      {listeners.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}*/}
+                            {/*    </select>*/}
+                            {/*  </div>*/}
+                            {/*</div>*/}
+                            <div className="controller-container">
+                              <div className="controller-container__label control-select__label controller-label" >Text</div>
                               <div className="control-container_select-wrapper controller-field">
-                                <select className="control-select control-field"
-                                        value={item.listener || 'none'}
-                                        onChange={e => {this.changeSelect(e, "listener", item.id)}}
-                                >
-                                  {listeners.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                                </select>
+                                <input
+                                  className="control-field"
+                                  type="text"
+                                  id={`block_${item.id}`}
+                                  name="blockListener"
+                                  style={{width: '100%'}}
+                                  value={item?.listener_value ?? ''}
+                                  onChange={(e) => { this.changeInput(e, 'listener_value', item.id) }}
+                                />
                               </div>
                             </div>
-                            {
-                              item.listener === "text" || item.listener === "button" ? (
-                                  <div className="controller-container">
-                                    <div className="controller-container__label control-select__label controller-label" >Text</div>
-                                    <div className="control-container_select-wrapper controller-field">
-                                      <input
-                                        className="control-field"
-                                        type="text"
-                                        id={`block_${item.id}`}
-                                        name="blockListener"
-                                        style={{width: '100%'}}
-                                        value={item?.listener_value ?? ''}
-                                        onChange={(e) => { this.changeInput(e, 'listener_value', item.id) }}
-                                      />
-                                    </div>
-                                  </div>
-                              ) : ""
-                            }
-                            <div className="controller-container controller-container_select">
-                              <div className="controller-container__label control-select__label controller-label" >Type</div>
-                              <div className="control-container_select-wrapper controller-field">
-                                <select className="control-select control-field"
-                                        value={item.type || ''}
-                                        onChange={e => {this.changeSelect(e, "type", item.id)}}
-                                >
-                                  <option disabled value="" />
-                                  {typeOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                                </select>
-                              </div>
-                            </div>
-                            {item.type === "content" && <div className="controller-container controller-container_textarea">
-                              <div className="controller-container__label textcontroller-responsive controller-label">
-                                {this.getLabel(item.type)}
-                              </div>
-                              <div className='controller-field'>
-                                <textarea className="control-field" type="text" id={`telegram_text_${item.id}`} name="text"
-                                       value={item?.data?.text ?? ''} onChange={(e) => {
-                                  this.changeInput(e, "text", item.id)
-                                }}/>
-                              </div>
-                            </div>}
-                            {(item.type !== "content" && item.type !== "customizer" && item.type !== '') && <div className="controller-container controller-container_textarea">
-                              <div className="controller-container__label textcontroller-responsive controller-label">
-                                URL
-                              </div>
-                              <div className='controller-field'>
-                                <textarea className="control-field" type="url" id={`telegram_url_${item.id}`} name="url"
-                                       value={item?.data?.url ?? ''} onChange={(e) => {
-                                  this.changeInput(e, "url", item.id)
-                                }}/>
-                              </div>
-                            </div>}
-                            {(item.type === "customizer" && item.type !== '') && <div className="controller-container controller-container_textarea">
-                              <div className="controller-container__label textcontroller-responsive controller-label">
-                                Customizer
-                              </div>
-                              <div className='controller-field'>
-                                <select className="control-select control-field"
-                                        value={item?.data?.customizer || ''}
-                                        onChange={e => {this.changeInput(e, "customizer", item.id)}}
-                                >
-                                  <option disabled value="" />
-                                  {this.props.customizerOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                                </select>
-                              </div>
-                            </div>}
-                            {(item.type == "button") && <div className="controller-container controller-container_textarea">
-                              <div className="controller-container__label textcontroller-responsive controller-label">
-                              Shortcode
-                              </div>
-                              <div className='controller-field'>
-                                <textarea className="control-field" type="url" id={`telegram_url_${item.id}`} name="url"
-                                       value={item?.data?.shortcode ?? ''} onChange={(e) => {
-                                  this.changeInput(e, "shortcode", item.id)
-                                }}/>
-                              </div>
-                            </div>}
+                            {/*<div className="controller-container controller-container_select">*/}
+                            {/*  <div className="controller-container__label control-select__label controller-label" >Type</div>*/}
+                            {/*  <div className="control-container_select-wrapper controller-field">*/}
+                            {/*    <select className="control-select control-field"*/}
+                            {/*            value={item.type || ''}*/}
+                            {/*            onChange={e => {this.changeSelect(e, "type", item.id)}}*/}
+                            {/*    >*/}
+                            {/*      <option disabled value="" />*/}
+                            {/*      {typeOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}*/}
+                            {/*    </select>*/}
+                            {/*  </div>*/}
+                            {/*</div>*/}
+                            {/*{item.type === "content" && <div className="controller-container controller-container_textarea">*/}
+                            {/*  <div className="controller-container__label textcontroller-responsive controller-label">*/}
+                            {/*    {this.getLabel(item.type)}*/}
+                            {/*  </div>*/}
+                            {/*  <div className='controller-field'>*/}
+                            {/*    <textarea className="control-field" type="text" id={`telegram_text_${item.id}`} name="text"*/}
+                            {/*           value={item?.data?.text ?? ''} onChange={(e) => {*/}
+                            {/*      this.changeInput(e, "text", item.id)*/}
+                            {/*    }}/>*/}
+                            {/*  </div>*/}
+                            {/*</div>}*/}
+                            {/*{(item.type !== "content" && item.type !== "customizer" && item.type !== '') && <div className="controller-container controller-container_textarea">*/}
+                            {/*  <div className="controller-container__label textcontroller-responsive controller-label">*/}
+                            {/*    URL*/}
+                            {/*  </div>*/}
+                            {/*  <div className='controller-field'>*/}
+                            {/*    <textarea className="control-field" type="url" id={`telegram_url_${item.id}`} name="url"*/}
+                            {/*           value={item?.data?.url ?? ''} onChange={(e) => {*/}
+                            {/*      this.changeInput(e, "url", item.id)*/}
+                            {/*    }}/>*/}
+                            {/*  </div>*/}
+                            {/*</div>}*/}
+                            {/*{(item.type === "customizer" && item.type !== '') && <div className="controller-container controller-container_textarea">*/}
+                            {/*  <div className="controller-container__label textcontroller-responsive controller-label">*/}
+                            {/*    Customizer*/}
+                            {/*  </div>*/}
+                            {/*  <div className='controller-field'>*/}
+                            {/*    <select className="control-select control-field"*/}
+                            {/*            value={item?.data?.customizer || ''}*/}
+                            {/*            onChange={e => {this.changeInput(e, "customizer", item.id)}}*/}
+                            {/*    >*/}
+                            {/*      <option disabled value="" />*/}
+                            {/*      {this.props.customizerOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}*/}
+                            {/*    </select>*/}
+                            {/*  </div>*/}
+                            {/*</div>}*/}
+                            {/*{(item.type == "button") && <div className="controller-container controller-container_textarea">*/}
+                            {/*  <div className="controller-container__label textcontroller-responsive controller-label">*/}
+                            {/*  Shortcode*/}
+                            {/*  </div>*/}
+                            {/*  <div className='controller-field'>*/}
+                            {/*    <textarea className="control-field" type="url" id={`telegram_url_${item.id}`} name="url"*/}
+                            {/*           value={item?.data?.shortcode ?? ''} onChange={(e) => {*/}
+                            {/*      this.changeInput(e, "shortcode", item.id)*/}
+                            {/*    }}/>*/}
+                            {/*  </div>*/}
+                            {/*</div>}*/}
                             {/*{(item.type === "file" || item.type === "document" || item.type === "animation"  || item.type === "video") && <div>*/}
                             {/*  <input*/}
                             {/*    type="file"*/}

@@ -58,7 +58,6 @@ export class ImageDetail extends React.Component {
   render() {
     const {authorName, url, created_at, filename, media_type, height, width, filesize, mediaVariation} = this.state
 
-    console.log(this.state)
     if (!this.props.imageId) return null;
 
     return (

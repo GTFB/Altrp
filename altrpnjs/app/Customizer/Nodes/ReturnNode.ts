@@ -32,10 +32,27 @@ export default class ReturnNode extends BaseNode implements NodeInterface
     return data_get( this.data, 'data.request_type', 'get' )
   }
 
+  getStatus() {
+    return data_get( this.data, 'data.status')
+  }
+
   public getJSContent(): string
   {
     let property:object |null|string = this.getProperty()
+
+    const status = this.getStatus()
+
+    let content = "";
+
+    if(status) {
+      content += `httpContext.response.status(${status});
+      `
+    }
+
     property = this.customizer.propertyToJS( property )
-    return `return ${property};`
+
+    content += `return ${property};`
+
+    return content
   }
 }
