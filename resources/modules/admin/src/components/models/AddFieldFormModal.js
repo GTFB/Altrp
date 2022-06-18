@@ -69,6 +69,10 @@ const fieldTypeOptions = [
     value: 'binary',
     label: 'Binary'
   },
+  {
+    value: 'point',
+    label: 'Point'
+  },
 ];
 
 // const fieldTypeOptions = [
