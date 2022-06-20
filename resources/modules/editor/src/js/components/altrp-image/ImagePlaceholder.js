@@ -23,8 +23,12 @@ ${(props) => {
   }
   return `height:${props.height ? props.height : 'auto'};`;
 }}
-
-  background-color: ${props => props.color ? props.color : '#fff'};
+${(props) => {
+  if(props.color){
+    return `background-color: ${props.color};`
+  }
+  return ''
+}}
 }
 ${({elementId})=>elementId ? `.altrp-element${elementId}:not(&) .altrp-image-placeholder` : '&'}::before{
   display: block;

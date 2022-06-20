@@ -526,7 +526,6 @@ class TypographicController extends Component {
                 options={familyOptions}
                 styles={customStyles}
                 placeholder={value.label}
-                menuIsOpen={true}
                 isClearable={true}
                 components={{ MenuList: renderScrollbar }}
                 noOptionsMessage={() => "no fonts found"}
