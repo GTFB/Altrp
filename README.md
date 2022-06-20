@@ -3,7 +3,7 @@
 
 ## Changelog
 
-### 1.2.1
+[//]: <> (### 1.2.1)
 
 ### 1.2.0
 * Fix Styles Load for Embedded Templates
