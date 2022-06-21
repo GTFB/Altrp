@@ -7,11 +7,14 @@ export default function renderSectionBG(settings, element_id, device){
     'background_section',
   ]
 
-
   const background_image = getResponsiveSetting(settings,
     'background_image',device,
     {}
   );
+
+  if(! background_image?.url){
+    sectionBackground.push('altrp-background-image' + element_id)
+  }
 
   const revealOptions = background_image?.url ? {
     addClasses: 'altrp-background-image' + element_id

@@ -109,15 +109,20 @@ class SaveImportModule extends BaseModule {
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
       rootElement && rootElement.remove();
     }catch (e) {
-      console.error(e);
       if(e instanceof Promise){
-        e= await  e
+        e = await e
       }
+      console.error(e);
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
       rootElement && rootElement.remove();
       progressBar()
+      try {
+        e = JSON.stringify(e)
+      }catch (e) {
+
+      }
       alert(`template not saved
-${e.message}`)
+${e}`)
       return
     }
     if(pagesIds?.length){

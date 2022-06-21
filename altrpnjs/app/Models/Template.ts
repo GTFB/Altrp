@@ -111,7 +111,7 @@ export default class Template extends BaseModel {
   public area: number
 
   @column()
-  public user_id: number
+  public user_id: number | null
 
   public getGuid() {
     return this.guid

@@ -34,7 +34,7 @@ export default class Media extends BaseModel {
   public type: string
 
   @column()
-  public author: number
+  public author: number | null
 
   @column()
   public title: string

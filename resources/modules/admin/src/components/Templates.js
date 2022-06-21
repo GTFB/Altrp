@@ -486,8 +486,15 @@ class Templates extends Component {
   }
 
   render() {
-    const {templateSearch, categoryOptions, sorting, templates, count, pageCount, currentPage} = this.state
-
+    let {templateSearch,
+      categoryOptions,
+      sorting,
+      templates,
+      count,
+      templateAreas,
+      pageCount,
+      currentPage} = this.state
+    templateAreas = templateAreas.filter(area => area.name !== 'reports')
     let templatesMap = templates.map(template => {
       let categories = template.categories.map(item => {
         return item.category.title
@@ -529,7 +536,7 @@ class Templates extends Component {
           <button className="btn">Import</button>
         </form>}
         <ul className="nav nav-pills admin-pills">
-          {this.state.templateAreas.map(area => {
+          {templateAreas.map(area => {
             let tabClasses = ['nav-link',];
             if (this.state.activeTemplateArea.name === area.name) {
               tabClasses.push('active');

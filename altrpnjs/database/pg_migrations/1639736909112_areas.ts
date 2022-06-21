@@ -52,12 +52,12 @@ export default class Areas extends BaseSchema {
             guid: guid(),
             settings: "[]"
           },
-          {
-            name: "reports",
-            title: "Reports",
-            guid: guid(),
-            settings: "[]"
-          },
+          // {
+          //   name: "reports",
+          //   title: "Reports",
+          //   guid: guid(),
+          //   settings: "[]"
+          // },
           {
             name: "mails",
             title: "Mails",
