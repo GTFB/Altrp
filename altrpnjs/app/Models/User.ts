@@ -152,6 +152,8 @@ export default class User extends BaseModel {
     if(userMeta) {
       await userMeta.delete()
     }
+    await user.related('roles').detach()
+    await user.related('permissions').detach()
   }
 
   public async hasPermission(value: Permission|number|string): Promise<boolean> {

@@ -221,7 +221,10 @@ class TableWidget extends Component {
     return true;
   }
   render(){
-    const settings = this.props.element.getSettings();
+    const settings = {
+      ...this.props.element.getSettings(),
+      ...(this.props.element.settingsLock ||{})
+    };
     if(! this.props.currentModel.getProperty('altrpModelUpdated')){
       return '';
     }
@@ -271,6 +274,7 @@ class TableWidget extends Component {
       return <div children="Please Add Column"/>
     }
 
+
     const TableComponent = this.props.element.getLockedSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
     return <Scrollbars
         ref={this.scrollbar}
@@ -295,7 +299,7 @@ class TableWidget extends Component {
                       currentScreen={this.props.currentScreen}
                       options={options}
                       data={isEditor() ? null : (data || query.getFromModel(this.state.modelData))}
-                      settings={this.props.element?.settings}/>
+                      settings={settings}/>
     {/*</React.Suspense>*/}
     </Scrollbars>;
   }

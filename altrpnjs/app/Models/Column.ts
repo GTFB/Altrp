@@ -134,10 +134,19 @@ decorate([
     return `
 
 decorate([
-    (0, Orm.column)(${this.name == 'id' ? '{isPrimary: true}' : ''}),
+    (0, Orm.column)(${this.name == 'id' ? '{isPrimary: true}' : `{${this.renderProdPrepare()}}`}),
     metadata("design:type", ${this.getColumnTypeForModel()})
 ], ${this.altrp_model.name}.prototype, "${this.name}", void 0);
 `
+  }
+
+  renderProdPrepare(){
+    if(this.type === 'json'){
+      return `prepare: (data) => {
+            return JSON.stringify(data);
+        },
+        `
+    }
   }
 
   renderForModel():string {
@@ -179,7 +188,6 @@ decorate([
     }
     if(
       [
-      'json',
       'binary',
       'text',
       'geometry',
@@ -187,6 +195,12 @@ decorate([
       'string'
     ].indexOf(this.type) !== -1){
       return isProd() ? 'String' :'string'
+    }
+    if(
+      [
+      'json',
+    ].indexOf(this.type) !== -1){
+      return 'Object'
     }
     if(
       [

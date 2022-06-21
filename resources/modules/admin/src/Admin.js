@@ -85,8 +85,6 @@ class Admin extends Component {
     }
   }
   filterMainMenu(filterFn){
-    console.log(filterFn);
-    console.log(this.props.mainMenu);
     if(_.isFunction(filterFn)){
       this.props.setMainMenu(filterFn(store.getState()?.routesState?.mainMenu || []))
     }

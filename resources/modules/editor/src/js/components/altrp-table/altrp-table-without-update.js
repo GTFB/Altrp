@@ -151,8 +151,7 @@ function AltrpTableWithoutUpdate(
     filterSetting,
     _latestData,
     widgetState,
-    sortSetting,
-    options={}
+    sortSetting
   }) {
 
   const stateRef = React.useRef(widgetState);
@@ -180,11 +179,11 @@ function AltrpTableWithoutUpdate(
     not_grouped_column_icon,
     checkbox_checked_icon: checkedIcon = {},
     checkbox_unchecked_icon: uncheckedIcon = {},
-    checkbox_indeterminate_icon: indeterminateIcon = {},
-    table_datasource,
-    choose_datasource,
-    table_data_settings_pagination } = settings;
+    checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
+  const showPagination = React.useMemo(()=>{
+    return inner_page_size < data?.length
+  }, [data, inner_page_size]);
   /**
    * Для перетаскивания
    */
@@ -421,14 +420,14 @@ function AltrpTableWithoutUpdate(
     }
     return tableSettings;
   }, [
-      inner_page_size,
-      data,
-      columns,
-      stateRef,
-      records,
-      replace_rows,
-      skipPageReset,
-      tables_settings_for_subheading,
+    inner_page_size,
+    data,
+    columns,
+    stateRef,
+    records,
+    replace_rows,
+    skipPageReset,
+    tables_settings_for_subheading,
   ]);
   React.useEffect(() => {
 
@@ -473,6 +472,7 @@ function AltrpTableWithoutUpdate(
     state: reactTableState,
   } = ReactTable;
   const {
+    pageIndex,
     globalFilter,
     groupBy,
     selectedRowIds,
@@ -512,15 +512,15 @@ function AltrpTableWithoutUpdate(
   const selectedIds = React.useMemo(() => flatRows(selectedFlatRows, 'id'), [selectedFlatRows]);
   React.useEffect(() => {
     if (selected_storage &&
-        ! _.isEqual(altrpHelpers.getDataByPath(selected_storage), originalSelectedRows) &&
-        ! isEditor()) {
+      ! _.isEqual(altrpHelpers.getDataByPath(selected_storage), originalSelectedRows) &&
+      ! isEditor()) {
       setDataByPath(selected_storage, originalSelectedRows);
     }
   }, [selectedFlatRows]);
   React.useEffect(() => {
     if (ids_storage &&
-        ! _.isEqual(altrpHelpers.getDataByPath(ids_storage), selectedIds) &&
-        ! isEditor()) {
+      ! _.isEqual(altrpHelpers.getDataByPath(ids_storage), selectedIds) &&
+      ! isEditor()) {
       setDataByPath(ids_storage, selectedIds);
     }
   }, [selectedFlatRows]);
@@ -528,75 +528,28 @@ function AltrpTableWithoutUpdate(
   /**
    * Настройки пагинации
    */
-
-  let path = table_datasource?.replace(/{{/g, '')?.replace(/}}/g, '') || '';
-  const splittedPath = path.split("altrpdata.");
-
-  const [pageIndex, setPageIndex] = React.useState(0);
-  const isInitialMount = React.useRef(true);
-
-  React.useEffect(() => {
-    if(isInitialMount.current) {
-      isInitialMount.current = false
-    } else {
-      const updateDatasource = async () => {
-        if(splittedPath.length > 1) {
-          const allDataSources = window.dataStorageUpdater.getProperty(
-              'currentDataSources'
-          );
-          console.log(allDataSources)
-          const dataSourcesToUpdate = allDataSources.filter(dataSource => {
-            return dataSource.getProperty('alias') === splittedPath[1];
-          });
-          console.log(pageIndex)
-          await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false, {
-            pageSize,
-            page: pageIndex
-          });
-        }
-      }
-      updateDatasource()
-    }
-  }, [pageIndex])
-
   const paginationProps =
     React.useMemo(() => {
       let paginationProps = null;
       if (inner_page_size && (inner_page_size >= 1)) {
         paginationProps = {
           settings,
-          nextPage() {
-            setPageIndex((index) => {
-              const value = index+1
-
-              if(value <= pageCount) {
-                return value
-              }
-            })
-          },
-          previousPage() {
-            setPageIndex((index) => {
-              let value = index-1;
-
-              if(value >= 1) {
-                return value
-              }
-            })
-          },
+          nextPage,
+          previousPage,
           pageIndex,
-          pageCount: options.pageCount || 1,
+          pageCount,
           pageSize,
           setPageSize,
           widgetId,
-          gotoPage(value) {
-            setPageIndex(value+1)
-          },
-        }
+          gotoPage,
+        };
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
 
   let tableElement = React.useRef(null);
+
+
   return  <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
@@ -630,84 +583,84 @@ function AltrpTableWithoutUpdate(
       <div className="altrp-table-head">
         {renderAdditionalRows(settings)}
         {headerGroups.map(headerGroup => {
-          const headerGroupProps = headerGroup.getHeaderGroupProps();
+            const headerGroupProps = headerGroup.getHeaderGroupProps();
 
-          if (!resize_columns && !virtualized_rows) {
-            delete headerGroupProps.style;
-          }
-          return (
-            <div {...headerGroupProps} className="altrp-table-tr">
-              {replace_rows && <div className="altrp-table-th altrp-table-cell" style={{ width: replace_width }} />}
-              {headerGroup.headers.map((column, idx) => {
-                const { column_width, column_header_alignment, header_bg } = column;
+            if (!resize_columns && !virtualized_rows) {
+              delete headerGroupProps.style;
+            }
+            return (
+              <div {...headerGroupProps} className="altrp-table-tr">
+                {replace_rows && <div className="altrp-table-th altrp-table-cell" style={{ width: replace_width }} />}
+                {headerGroup.headers.map((column, idx) => {
+                    const { column_width, column_header_alignment, header_bg } = column;
 
-                let columnProps = column.getHeaderProps(column.getSortByToggleProps());
+                    let columnProps = column.getHeaderProps(column.getSortByToggleProps());
                     columnProps.settings = settings;
-                const resizerProps = {
-                  ...column.getResizerProps(),
-                  onClick: e => { e.stopPropagation(); }
-                };
-                if (!resize_columns && !virtualized_rows) {
-                  // delete columnProps.style;
-                  columnProps.style = {};
-                  if (column_width) columnProps.style.width = column_width + '%';
-                  if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
-                  if (header_bg) columnProps.style.backgroundColor = header_bg.color;
-                }
-                let columnNameContent = column.render('column_name');
-                if (_.isString(columnNameContent)) {
-                  columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') || '&nbsp;' }} />;
-                }
+                    const resizerProps = {
+                      ...column.getResizerProps(),
+                      onClick: e => { e.stopPropagation(); }
+                    };
+                    if (!resize_columns && !virtualized_rows) {
+                      // delete columnProps.style;
+                      columnProps.style = {};
+                      if (column_width) columnProps.style.width = column_width + '%';
+                      if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
+                      if (header_bg) columnProps.style.backgroundColor = header_bg.color;
+                    }
+                    let columnNameContent = column.render('column_name');
+                    if (_.isString(columnNameContent)) {
+                      columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') || '&nbsp;' }} />;
+                    }
 
-                if(table_transpose){
-                  _.unset(columnProps, 'style.width')
-                }
-                return <HeaderCellComponent {...columnProps}
-                                            column={column}
-                  className="altrp-table-th altrp-table-cell"
-                  key={idx}>
-                  {columnNameContent}
-                  {column.canGroupBy ? (
-                    // If the column can be grouped, let's add a toggle
-                    <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
+                    if(table_transpose){
+                      _.unset(columnProps, 'style.width')
+                    }
+                    return <HeaderCellComponent {...columnProps}
+                                                column={column}
+                                                className="altrp-table-th altrp-table-cell"
+                                                key={idx}>
+                      {columnNameContent}
+                      {column.canGroupBy ? (
+                        // If the column can be grouped, let's add a toggle
+                        <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
                       {column.isGrouped ?
                         renderIcon(hide_not_grouped_column_icon, not_grouped_column_icon, ' 🛑 ', 'not-grouped-column') :
                         renderIcon(hide_grouped_column_icon, grouped_column_icon, ' 👊 ', 'grouped-column')}
                     </span>
-                  ) : null}
-                  {
-                    (column.isSorted
-                      ? column.isSortedDesc
-                        ? iconsManager().renderIcon('chevron', { className: 'rotate-180 sort-icon ' })
-                        : iconsManager().renderIcon('chevron', { className: 'sort-icon' })
-                      : '')
+                      ) : null}
+                      {
+                        (column.isSorted
+                          ? column.isSortedDesc
+                            ? iconsManager().renderIcon('chevron', { className: 'rotate-180 sort-icon ' })
+                            : iconsManager().renderIcon('chevron', { className: 'sort-icon' })
+                          : '')
+                      }
+                      {
+                        column.column_is_filtered &&
+                        <label className={`altrp-label altrp-label_${column.column_filter_type}`} onClick={e => { e.stopPropagation() }}>
+                          {column.render('Filter')}
+                        </label>
+                      }
+                      {
+                        resize_columns && <div
+                          {...resizerProps}
+                          className={`altrp-table__resizer ${column.isResizing ? 'altrp-table__resizer_resizing' : ''
+                          }`}
+                        />
+                      }
+                    </HeaderCellComponent>;
                   }
-                  {
-                    column.column_is_filtered &&
-                    <label className={`altrp-label altrp-label_${column.column_filter_type}`} onClick={e => { e.stopPropagation() }}>
-                      {column.render('Filter')}
-                    </label>
-                  }
-                  {
-                    resize_columns && <div
-                      {...resizerProps}
-                      className={`altrp-table__resizer ${column.isResizing ? 'altrp-table__resizer_resizing' : ''
-                        }`}
-                    />
-                  }
-                </HeaderCellComponent>;
-              }
-              )}
-            </div>)
-        }
+                )}
+              </div>)
+          }
         )}
         {global_filter && <div className="altrp-table-tr">
           <th className="altrp-table-th altrp-table-th_global-filter altrp-table-cell"
-            role="cell"
-            colSpan={(visibleColumns.length + replace_rows) || 1}
-            style={{
-              textAlign: 'left',
-            }}
+              role="cell"
+              colSpan={(visibleColumns.length + replace_rows) || 1}
+              style={{
+                textAlign: 'left',
+              }}
           >
             <GlobalFilter
               widgetId={widgetId}
@@ -738,7 +691,7 @@ function AltrpTableWithoutUpdate(
           {(_status === 'loading' ? (loading_text || null) : null)}
         </div></div></div>}
     </TableComponent>
-    {options.pageCount > 1 && paginationProps && <Pagination {...paginationProps} />}
+    {showPagination && paginationProps && <Pagination {...paginationProps} />}
   </React.Fragment>
 }
 
@@ -757,14 +710,14 @@ function AltrpTableWithoutUpdate(
  */
 
 function DefaultColumnFilter({
-  column: { filterValue,
-    preFilteredRows,
-    setFilter,
-    filter_placeholder,
-    column_filter_type,
-    column_is_filtered,
-  },
-}, settings) {
+                               column: { filterValue,
+                                 preFilteredRows,
+                                 setFilter,
+                                 filter_placeholder,
+                                 column_filter_type,
+                                 column_is_filtered,
+                               },
+                             }, settings) {
   const count = preFilteredRows.length;
   filter_placeholder = filter_placeholder ? filter_placeholder.replace('{{count}}', count) : `Search ${count} records...`;
   return (
@@ -792,9 +745,9 @@ function DefaultColumnFilter({
  * @constructor
  */
 function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id, filter_placeholder, null_placeholder },
-  widgetId,
-}) {
+                              column: { filterValue, setFilter, preFilteredRows, id, filter_placeholder, null_placeholder },
+                              widgetId,
+                            }) {
   const options = React.useMemo(() => {
     let _options = new Set();
     preFilteredRows.forEach(row => {
@@ -807,24 +760,24 @@ function SelectColumnFilter({
         label = null_placeholder || '' ;
       }
       return({
-      value: option,
-      label,
-    })});
+        value: option,
+        label,
+      })});
   }, [id, preFilteredRows]);
 
   // Render a multi-select box
   return (<AltrpSelect options={options}
-    isMulti={true}
-    placeholder={filter_placeholder || 'Select some...'}
-    className="altrp-table__filter-select"
-    classNamePrefix={widgetId + ' altrp-field-select2'}
-    onChange={v => {
-      if (!_.isArray(v)) {
-        v = [];
-      }
-      let filterValue = v.map(option => option.value);
-      setFilter(filterValue);
-    }} />
+                       isMulti={true}
+                       placeholder={filter_placeholder || 'Select some...'}
+                       className="altrp-table__filter-select"
+                       classNamePrefix={widgetId + ' altrp-field-select2'}
+                       onChange={v => {
+                         if (!_.isArray(v)) {
+                           v = [];
+                         }
+                         let filterValue = v.map(option => option.value);
+                         setFilter(filterValue);
+                       }} />
   );
 }
 
@@ -841,8 +794,8 @@ function SelectColumnFilter({
  * @constructor
  */
 function SliderColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id, filter_button_text },
-}) {
+                              column: { filterValue, setFilter, preFilteredRows, id, filter_button_text },
+                            }) {
   const [min, max] = React.useMemo(() => {
     let value = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
     if (id === '##' && preFilteredRows.length) {
@@ -891,13 +844,13 @@ function SliderColumnFilter({
  * @constructor
  */
 function NumberRangeColumnFilter({
-  column: { filterValue = [],
-    preFilteredRows,
-    setFilter,
-    filter_max_placeholder,
-    filter_min_placeholder,
-    id },
-}) {
+                                   column: { filterValue = [],
+                                     preFilteredRows,
+                                     setFilter,
+                                     filter_max_placeholder,
+                                     filter_min_placeholder,
+                                     id },
+                                 }) {
   const [min, max] = React.useMemo(() => {
     let value = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
     if (id === '##' && preFilteredRows.length) {
@@ -919,9 +872,9 @@ function NumberRangeColumnFilter({
   let maxPlaceHolder = filter_max_placeholder || `Max (${max})`;
   return (
     <div className="altrp-filter-group"
-      style={{
-        display: 'flex',
-      }}
+         style={{
+           display: 'flex',
+         }}
     >
       <input
         value={filterValue[0] || ''}
@@ -937,7 +890,7 @@ function NumberRangeColumnFilter({
           marginRight: '0.5rem',
         }}
       />
-        to
+      to
       <input
         value={filterValue[1] || ''}
         type="number"
@@ -1025,11 +978,11 @@ export function settingsToColumns(settings, widgetId) {
               case 'full_match': {
                 _column.filter = 'fullMatchText';
               }
-              break;
+                break;
               case 'partial_match': {
                 _column.filter = 'partialMatchText';
               }
-              break;
+                break;
             }
           }
             break;
@@ -1065,14 +1018,14 @@ export function settingsToColumns(settings, widgetId) {
         // to build the toggle for expanding a row
         (card_template && row_expand || row.canExpand) ? (
           <span className="altrp-table__row-expander"
-            {...row.getToggleRowExpandedProps({
-              style: {
-                // We can even use the row.depth property
-                // and paddingLeft to indicate the depth
-                // of the row
-                paddingLeft: `${row.depth * 2}rem`,
-              },
-            })}
+                {...row.getToggleRowExpandedProps({
+                  style: {
+                    // We can even use the row.depth property
+                    // and paddingLeft to indicate the depth
+                    // of the row
+                    paddingLeft: `${row.depth * 2}rem`,
+                  },
+                })}
           >
             {row.isExpanded ?
               renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
@@ -1127,12 +1080,12 @@ const IndeterminateCheckbox = React.forwardRef(
  * @constructor
  */
 function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-  widgetId,
-  settings,
-}) {
+                        preGlobalFilteredRows,
+                        globalFilter,
+                        setGlobalFilter,
+                        widgetId,
+                        settings,
+                      }) {
   const { global_filter_placeholder, global_filter_label } = settings;
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(globalFilter);

@@ -49,10 +49,11 @@ export default function Pagination(
         return countOptions
       }, [inner_page_count_options]);
 
-  console.log(pageSize)
+
   const pageText = React.useMemo(() => {
     let pageText = current_page_text || 'Current Page: {{page}}';
     pageText = pageText.replace('{{page}}', pageIndex + 1).replace('{{page_count}}', pageCount);
+    console.log(inner_page_type);
     if (inner_page_type === 'pages' || posts_pagination_type === 'pages') {
       // let paginatePageCount = Number(inner_page_count) || pageCount;
       // if (paginatePageCount <= 0 || paginatePageCount > pageCount) {
