@@ -13,7 +13,7 @@ export default class SettingsController {
   async saveSettings(httpContext: HttpContextContract) {
     const {params, response, request, logger} = httpContext;
 
-    if (!request.input('value')) {
+    if (request.input('value') === undefined) {
       return response.json({})
     }
 
