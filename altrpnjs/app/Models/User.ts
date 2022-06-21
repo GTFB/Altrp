@@ -17,6 +17,13 @@ import {
   afterCreate, beforeDelete,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from "uuid";
+import Template from "App/Models/Template";
+import Accessors from "App/Models/Accessor";
+import Model from "App/Models/Model";
+import Table from "App/Models/Table";
+import Column from "App/Models/Column";
+import Diagram from "App/Models/Diagram";
+import Media from "App/Models/Media";
 
 export default class User extends BaseModel {
 
@@ -151,6 +158,53 @@ export default class User extends BaseModel {
 
     if(userMeta) {
       await userMeta.delete()
+    }
+    const newAdmin = await User.query()
+      .join('role_user', 'role_user.user_id', 'users.id')
+      .join('roles', 'role_user.role_id', 'roles.id')
+      .where('roles.name', 'admin').select('users.id').first();
+
+    console.log(newAdmin?.id);
+
+    const templates = await Template.query().where("user_id", user.id)
+    for(const template of templates){
+      template.user_id = newAdmin ? newAdmin.id : null;
+      await template.save()
+    }
+    const pages = await Template.query().where("user_id", user.id)
+    for(const page of pages){
+      page.user_id = newAdmin ? newAdmin.id : null;
+      await page.save()
+    }
+    const accessors = await Accessors.query().where("user_id", user.id)
+    for(const accessor of accessors){
+      accessor.user_id = newAdmin ? newAdmin.id : null;
+      await accessor.save()
+    }
+    const models = await Model.query().where("user_id", user.id)
+    for(const model of models){
+      model.user_id = newAdmin ? newAdmin.id : null;
+      await model.save()
+    }
+    const tables = await Table.query().where("user_id", user.id)
+    for(const table of tables){
+      table.user_id = newAdmin ? newAdmin.id : null;
+      await table.save()
+    }
+    const columns = await Column.query().where("user_id", user.id)
+    for(const column of columns){
+      column.user_id = newAdmin ? newAdmin.id : null;
+      await column.save()
+    }
+    const diagrams = await Diagram.query().where("author", user.id)
+    for(const diagram of diagrams){
+      diagram.author = newAdmin ? newAdmin.id : null;
+      await diagram.save()
+    }
+    const medias = await Media.query().where("author", user.id)
+    for(const media of medias){
+      media.author = newAdmin ? newAdmin.id : null;
+      await media.save()
     }
     await user.related('roles').detach()
     await user.related('permissions').detach()

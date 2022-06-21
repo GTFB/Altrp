@@ -27,7 +27,7 @@ export default class Column extends BaseModel {
   public size: number
 
   @column()
-  public user_id: number
+  public user_id: number | null
 
   @column()
   public model_id: number

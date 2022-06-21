@@ -103,7 +103,7 @@ export default class Model extends BaseModel {
   public guid: string
 
   @column()
-  public user_id: number
+  public user_id: number | null
 
   @belongsTo(() => User, {
     foreignKey: "user_id"

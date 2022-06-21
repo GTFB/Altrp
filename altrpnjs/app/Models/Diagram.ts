@@ -2,38 +2,24 @@ import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
 
-export default class Accessors extends BaseModel {
-  public  static table = 'altrp_accessors'
+export default class Diagram extends BaseModel {
+  public  static table = 'altrp_diagrams'
 
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public name: string
+  public settings: string
 
   @column()
   public title: string
 
   @column()
-  public calculation: string
+  public guid: string
 
   @column()
-  public calculation_logic: string
+  public author: number | null
 
-  @column()
-  public description: string
-
-  @column()
-  public  	test : string
-
-  @column()
-  public model_id: number
-
-  @column()
-  public user_id: number | null
-
-  @column()
-  public status: boolean
 
 
   @column.dateTime({ autoCreate: true })
