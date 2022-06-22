@@ -4,6 +4,7 @@ import isProd from "../../helpers/isProd";
 import fs from "fs";
 import path from "path"
 import Customizer from "App/Models/Customizer";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 
 export default class ListenerGenerator extends BaseGenerator {
   public static directory = app_path('/AltrpListeners/')
@@ -50,6 +51,8 @@ export default class ListenerGenerator extends BaseGenerator {
         imports,
         content
       });
+
+    clearRequireCache()
   }
 
 

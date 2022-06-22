@@ -34,7 +34,7 @@ export default class RootElementRenderer{
         children_content += await renderer.render(screenName)
       } catch (e) {
         console.error(`Render Error element ${child.name}
-        ${e.mesage}
+        ${e.message}
         ${e.stack}
         `);
       }

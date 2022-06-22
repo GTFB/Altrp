@@ -9,6 +9,7 @@ import * as _ from "lodash";
 import ControllerGenerator from "./ControllerGenerator";
 import isProd from "../../helpers/isProd";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 
 export default class ModelGenerator extends BaseGenerator {
 
@@ -78,7 +79,7 @@ export default class ModelGenerator extends BaseGenerator {
 
     ListenerGenerator.getHookModels(this)
 
-    return await this.addFile(fileName)
+    await this.addFile(fileName)
       .destinationDir(ModelGenerator.directory)
       .stub(ModelGenerator.template)
       .apply({
@@ -94,6 +95,7 @@ export default class ModelGenerator extends BaseGenerator {
         custom_end,
       })
 
+    clearRequireCache()
   }
 
   private getImportsContent(): string {

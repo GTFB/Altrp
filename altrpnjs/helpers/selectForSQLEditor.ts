@@ -148,7 +148,6 @@ export function convertShortcodes(sql:string, qs:any):string {
     pos1 = openPos + 1;
     pos2 = closePos + 1;
   }
-  console.log(_sql)
   return _sql;
 }
 

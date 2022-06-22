@@ -10,6 +10,7 @@ import Logger from '@ioc:Adonis/Core/Logger'
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import SCREENS from "../../helpers/const/SCREENS";
 import escapeRegExp from "../../helpers/escapeRegExp";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 
 export default class TemplateGenerator extends BaseGenerator {
 
@@ -93,6 +94,7 @@ export default class TemplateGenerator extends BaseGenerator {
         }, true)
     }
 
+    clearRequireCache()
   }
 
   static async prepareContent(content:string):Promise<string>{

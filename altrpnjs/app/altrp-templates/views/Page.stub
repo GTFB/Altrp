@@ -56,7 +56,9 @@
         window.page_id = {{ page_id }};
         window.altrp = {{{_altrp}}};
         window.__altrp_settings__ = {{{altrp_settings}}};
+        <<<ignore_start>>>
         window.page_areas = {{{page_areas}}};
+        <<<ignore_end>>>
         window.altrpPages = {{{pages}}};
         window.altrpElementsLists = [{{{elements_list}}}];
         window.currentPage = {{{_frontend_route}}};
@@ -82,7 +84,6 @@
     {{{extra_footer_styles}}}
   {{{all_site_js}}}
   <style type="text/css">body{display:flex;}</style>
-  @!component('front-app-js')
   {{{plugin_frontend_bottom}}}
 </body>
 </html>

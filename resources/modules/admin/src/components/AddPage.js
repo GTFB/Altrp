@@ -13,6 +13,8 @@ import {MultiSelect, Select} from "@blueprintjs/select";
 import UserTopPanel from "./UserTopPanel";
 import {compose} from "redux";
 import {connect} from "react-redux";
+import progressBar from "../js/functions/progressBar";
+import delay from "../../../front-app/src/js/functions/delay";
 
 const columns = [
   {
@@ -296,17 +298,23 @@ class AddPage extends Component {
     }
     this.state.value.redirect = redirect;
     this.state.value.path = path;
-    console.log(this.state);
+    progressBar(.01)
     if (this.state.id) {
       res = await this.resource.put(this.state.id, {
         ...this.state.value,
         parent_page_id: parent_page_id === "root" ? null : parent_page_id
       });
+      progressBar(1)
+      await delay(100)
+      progressBar()
     } else {
       res = await this.resource.post({
         ...this.state.value,
         parent_page_id: parent_page_id === "root" ? null : parent_page_id
       });
+      progressBar(1)
+      await delay(100)
+      progressBar()
     }
     if (res.success) {
       this.setState(state => {

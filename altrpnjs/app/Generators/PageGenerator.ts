@@ -15,6 +15,7 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import AltrpMeta from "App/Models/AltrpMeta";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import FONTS, {GOOGLE_FONT} from "../../helpers/const/FONTS";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -79,6 +80,7 @@ export default class PageGenerator extends BaseGenerator {
     elements_list = elements_list.join(',')
     const favicons = this.getFavicons()
     const front_app_css = this.getFrontAppCss()
+
     const all_site_js = this.getFrontAppJs()
     const pages = await this.page.getPagesForFrontend();
 
@@ -127,6 +129,7 @@ export default class PageGenerator extends BaseGenerator {
           }),
         }, false, true)
     }
+    clearRequireCache()
     return
   }
 
@@ -180,9 +183,11 @@ export default class PageGenerator extends BaseGenerator {
 
   private getFrontAppJs() {
     return `<script id="all_site_js">
+{{=<% %>=}}
     /* <![CDATA[ */
     ${get_altrp_setting('all_site_js', '', true)}
     /* ]]> */
+<%={{ }}=%>
     </script>`
   }
 }

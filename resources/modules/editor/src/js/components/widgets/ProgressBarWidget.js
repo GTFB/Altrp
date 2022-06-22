@@ -1,5 +1,5 @@
 import React from "react";
-import  ProgressBarInit from "../../classes/elements/ProgressBar";
+import {ProgressBar} from "@blueprintjs/core";
 
 class ProgressBarWidget extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class ProgressBarWidget extends Component {
     }
     let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return (
-      <ProgressBarInit {...settings} className={classes} value={!_.isString(value) ? value : 100}/>
+      <ProgressBar {...settings} className={classes} value={!_.isString(value) ? value : 100}/>
     );
   }
 }

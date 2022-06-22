@@ -7,7 +7,6 @@ import path from "path";
 import isProd from "../../helpers/isProd";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../helpers/env";
-import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import prepareContent from "../../helpers/prepareContent";
 import {minify} from 'html-minifier'
@@ -42,9 +41,14 @@ class BaseGenerator {
     }
 
     content = mustache.render(content, vars)
+
+    content = content.replace(/<<<ignore_start>>>/g,'{{=<% %>=}}')
+    content = content.replace(/<<<ignore_end>>>/g,'<%={{ }}=%>')
+
     if(prepare){
       content = await prepareContent(content)
     }
+
     if(! fs.existsSync(this.directory)){
       fs.mkdirSync(this.directory, {recursive:true})
     }
@@ -61,7 +65,6 @@ class BaseGenerator {
        * clear all view cached pages
        */
       View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
-      clearRequireCache()
     }
     return
   }

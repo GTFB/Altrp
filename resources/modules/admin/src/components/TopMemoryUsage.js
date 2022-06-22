@@ -13,7 +13,7 @@ class TopMemoryUsage extends Component{
         const res = await this.resource.getAll()
         this.setState(state=>({...state, used: res.data.used}))
       }
-    }, 1000)
+    }, 2500)
 
     const {testEnable} = this.props.adminState;
     if(testEnable){

@@ -38,6 +38,8 @@ import validGuid from '../../helpers/validGuid';
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import AltrpRouting from "App/Middleware/AltrpRouting";
 import PageGenerator from 'App/Generators/PageGenerator'
+import fs from "fs";
+import app_path from "../../helpers/path/app_path";
 
 
 export default class Page extends BaseModel {
@@ -518,7 +520,14 @@ export default class Page extends BaseModel {
 
   async getAllStyles(screenName = '', html) {
     let styles = ''
-
+    const elements = await this.extractElementsNames()
+    styles += `<style type="text/css" id="elements_static_styles">`
+    for(const elementName of elements) {
+      if(fs.existsSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`))){
+        styles += fs.readFileSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`), 'utf8')
+      }
+    }
+    styles += `</style>`
     let _contentAreas = await Area.query().whereNotIn('name', [
       'card', 'popup', 'reports', 'email'
     ]).select('*')
@@ -623,10 +632,8 @@ export default class Page extends BaseModel {
   }
 
   async getChildrenContent(screenName = '') {
-    let prefix = ''
     let cssPrefix = ''
     if(screenName){
-      prefix = `/screens/${screenName}`
       cssPrefix = `/${screenName}`
     }
 
@@ -669,17 +676,27 @@ export default class Page extends BaseModel {
 
     for (let area of areas) {
       const template:Template | {} = await Template.getTemplate(this.id, area.name)
+      // @ts-ignore
+      if(! template?.guid){
+        continue
+      }
       if(template instanceof Template){
         let content = await template.getChildrenContent(screenName)
         result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
           ${content ? content : ''}
           </div>`
       } else {
-        let customGuid = data_get(template, 'guid')
-        if (customGuid) {
-          result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
-          ${customGuid ? `@include('altrp${prefix}/templates/${area.name}/${customGuid}')` : ''}
+        const guid = _.get(template, 'guid')
+        if(guid){
+          // @ts-ignore
+          const _template = await Template.query().where('guid', guid).first()
+          if (_template) {
+            let content = await _template.getChildrenContent(screenName)
+            result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
+          ${content ? content : ''}
           </div>`
+          }
+
         }
 
       }

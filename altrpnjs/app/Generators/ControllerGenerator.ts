@@ -9,6 +9,7 @@ import Customizer from "App/Models/Customizer";
 import SQLEditor from "App/Models/SQLEditor";
 import isProd from "../../helpers/isProd";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
+import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 
 export default class ControllerGenerator extends BaseGenerator {
 
@@ -98,7 +99,7 @@ export default class ControllerGenerator extends BaseGenerator {
 
     ListenerGenerator.getHookControllers(this)
 
-    return await this.addFile(fileName)
+    await this.addFile(fileName)
       .destinationDir(ControllerGenerator.directory)
       .stub(ControllerGenerator.template)
       .apply({
@@ -110,6 +111,7 @@ export default class ControllerGenerator extends BaseGenerator {
         custom_end,
       })
 
+    clearRequireCache()
   }
 
   private getImportsContent(): string {

@@ -192,7 +192,7 @@ export default class ColumnsController {
         model_id: model.id,
         type: columnData.type
       })
-      console.log(columnData.indexed);
+
       await this.indexCreator(columnData.indexed, columnData, model)
 
       await column.save()

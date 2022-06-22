@@ -115,11 +115,11 @@ export default class AltrpRouting {
     httpContext.params = pageMatch.params
 
     if (!page) {
+      httpContext.response.status(404)
       page = await Page.query().where('not_found', true).first()
     }
 
     if (!page) {
-      httpContext.response.status(404)
       return httpContext.response.send('page not found')
     }
 
@@ -186,7 +186,7 @@ export default class AltrpRouting {
     }
 
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
-    console.log(url);
+
     altrpContext.altrpdata = datasources
     try {
       const device = getCurrentDevice(httpContext.request)
@@ -235,10 +235,9 @@ export default class AltrpRouting {
 
       return httpContext.response.send(res)
     } catch (e) {
-      console.error(`Error to View Custom Page: ${e.message}
+      console.error(`Error to View Custom Page \`${page.guid}\` : ${e.message}
          ${e.stack}
          `);
-      httpContext.response.status(500)
       try{
         return this.tryRenderEdgeTemplate({
           page,
@@ -333,11 +332,11 @@ export default class AltrpRouting {
       }
       return httpContext.response.send(res)
     } catch (e) {
-      console.error(`Error to View Custom Page: ${e.message}
+      console.error(`Error to View Custom Page \`${page.guid}\`: ${e.message}
            ${e.stack}
            `);
       httpContext.response.status(500)
-      return httpContext.response.send(`500 Internal Server Error to View Custom Page: ${e.message}
+      return httpContext.response.send(`500 Internal Server Error to View Custom Page \`${page.guid}\`: ${e.message}
            ${e.stack}
            `)
     }

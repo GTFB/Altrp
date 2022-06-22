@@ -9,6 +9,20 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
+  'moment': () => {
+    return import(/* webpackChunkName: 'moment' */'../libs/moment').then(res => {
+      window.libsLoaded.push('moment')
+      console.log('LOAD moment: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
+  'blueprint': () => {
+    return import(/* webpackChunkName: 'Blueprint' */'../libs/blueprint').then(res => {
+      window.libsLoaded.push('blueprint')
+      console.log('LOAD Blueprint: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
   'template-loader': () => {
     return import(/* webpackChunkName: 'template-loader' */'../libs/template-loader').then(res => {
       window.libsLoaded.push('template-loader')
@@ -20,7 +34,12 @@ window.LIBS = {
 
 window.libsToLoad = window.libsToLoad || [];
 window.__altrp_settings__?.libsToLoad?.forEach(lib=>{
-  libsToLoad.push(LIBS[lib]())
+  try{
+    libsToLoad.push(LIBS[lib]())
+  }catch (e) {
+    console.error(`Lib Not Found ${lib}`);
+    console.error(e);
+  }
 })
 export default function loadDepends(){
   const _libsNames = [];

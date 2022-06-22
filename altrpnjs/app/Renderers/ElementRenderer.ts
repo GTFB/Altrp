@@ -168,12 +168,18 @@ export default class ElementRenderer {
       (conditional_permissions?.length || conditional_roles?.length)) {
       conditional_roles = conditional_roles || []
       // @ts-ignore
-      conditional_roles = await Role.query().whereIn('id', conditional_roles)
+      if(conditional_roles.length && Number(conditional_roles[0])) {
+        // @ts-ignore
+        conditional_roles = await Role.query().whereIn('id', conditional_roles)
+      }
       // @ts-ignore
       conditional_roles = conditional_roles.map(r => r.name)
       conditional_permissions = conditional_permissions || []
       // @ts-ignore
-      conditional_permissions = await Permission.query().whereIn('id', conditional_permissions)
+      if(conditional_permissions.length && Number(conditional_permissions[0])) {
+        // @ts-ignore
+        conditional_permissions = await Permission.query().whereIn('id', conditional_permissions)
+      }
       // @ts-ignore
       conditional_permissions = conditional_permissions.map(p => p.name)
       // @ts-ignore
