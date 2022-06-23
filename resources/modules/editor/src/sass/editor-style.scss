@@ -1652,6 +1652,7 @@ button {
   display: none;
   //display: flex;
   pointer-events: all;
+  opacity: .5;
   &__button {
     width: 25px;
     height: 25px;

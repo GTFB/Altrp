@@ -14,7 +14,6 @@ export default class DialogConditionsTab extends Component {
       currentLogic: "include",
       searchValue: "",
       pageOptions: [],
-      reportsOptions: []
     };
     this.resource = new Resource({
       route: `/admin/ajax/templates/${getTemplateId()}/conditions`
@@ -26,14 +25,9 @@ export default class DialogConditionsTab extends Component {
     let pageOptions = await new Resource({
       route: "/admin/ajax/pages_options"
     }).getAll();
-    let reportsOptions = await new Resource({
-      route: "/admin/ajax/reports_options"
-    }).getAll();
     this.setState({
       value: conditions.data || [],
       pageOptions,
-      reportsOptions
-      // value: []
     });
   }
 
@@ -169,7 +163,6 @@ export default class DialogConditionsTab extends Component {
     const main_options = [
       { name: "type", value: "all_site", label: "All Site" },
       { name: "type", value: "page", label: "Page" },
-      { name: "type", value: "report", label: "Report" },
       { name: "type", value: "404", label: "404 " },
       // { name: 'type', value: 'model', label: 'Model' },
       // { name: 'type', value: 'not_authorized_page', label: 'Not Authorized' },
@@ -257,23 +250,6 @@ export default class DialogConditionsTab extends Component {
                     />
                   )}
 
-                  {test.object_type === "report" && (
-                    <AltrpSelect
-                      // value={(test.object_ids || []).map(o=>this.state.pageOptions.find())}
-                      value={_.filter(
-                        this.state.reportsOptions,
-                        p =>
-                          test.object_ids &&
-                          test.object_ids.indexOf(p.value) >= 0
-                      )}
-                      onChange={e => this.handleIdsSelect(e, test.id)}
-                      isMulti={true}
-                      closeMenuOnSelect={false}
-                      placeholder="Choose Pages"
-                      options={this.state.reportsOptions}
-                      className="modal-repeater-field-c3"
-                    />
-                  )}
                   <button
                     onClick={() => this.removeCondition(test.id)}
                     className="modal-repeater-tool-remove"

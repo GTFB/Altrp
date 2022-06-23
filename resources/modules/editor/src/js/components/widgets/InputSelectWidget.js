@@ -484,7 +484,7 @@ class InputSelectWidget extends Component {
     this.inputRef = React.createRef();
 
     this.onClick = this.onClick.bind(this)
-    this.checkOutsideClick = this.checkOutsideClick.bind(this)
+
   }
 
   /**
@@ -1094,9 +1094,10 @@ class InputSelectWidget extends Component {
     </span>
   }
 
-  checkOutsideClick(e) {
+  checkOutsideClick = (e)=> {
     for(const el of e.composedPath()) {
-      if(el.classList?.contains("bp3-button")) {
+      if(el.classList?.contains(`altrp-element${this.props.element.getId()}`)) {
+        console.log('c');
         e.preventDefault()
         return
       }
@@ -1104,6 +1105,7 @@ class InputSelectWidget extends Component {
 
     for(const el of e.composedPath()) {
       if(el.classList?.contains("bp3-popover")) {
+        console.log('c');
         e.preventDefault()
         return
       }
@@ -1151,7 +1153,7 @@ class InputSelectWidget extends Component {
   }
 
   componentWillUnmount() {
-    // document.removeEventListener("click", this.checkOutsideClick)
+    document.removeEventListener("click", this.checkOutsideClick)
   }
 
   /**
@@ -1391,6 +1393,7 @@ class InputSelectWidget extends Component {
     input = (
         <Select
           inputProps={inputProps}
+
           disabled={content_readonly}
           popoverProps={{
             ...this.popoverProps,

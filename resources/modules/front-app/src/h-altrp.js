@@ -8,7 +8,6 @@ window.altrpIo = io( {
 })
 window.altrpIo.on("message", (data) => {
   if(data === 'altrpe'){
-    import('./js/helpers/dataRevealElements').then(cb=>cb.default())
     import('./_h-altrp')
     console.log('SOCKET IO CONNECTED: ', performance.now());
     window.altrpIo.disconnect()
@@ -20,3 +19,6 @@ window.altrpIo.on("connect_error", (data) => {
 
 })
 window.altrpIo.send('altrp-front-load')
+document.addEventListener('DOMContentLoaded',()=>{
+  import('./js/helpers/dataRevealElements').then(cb=>cb.default())
+})

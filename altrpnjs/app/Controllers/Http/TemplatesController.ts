@@ -234,7 +234,7 @@ export default class TemplatesController {
         guid,
         user_id: auth.user?.id,
         html_content: parentTemplate?.html_content,
-        all_site: parentTemplate?.all_site
+        all_site: parentTemplate?.all_site ? 1 : 0
       })
 
     let templateGenerator = new TemplateGenerator()
@@ -448,6 +448,7 @@ export default class TemplatesController {
    */
   public async conditions({params,response}) {
     let id = parseInt(params.id);
+
     if(validGuid(params.id)){
       let template = await Template.query().where('guid', params.id).first()
       if(template){
@@ -520,18 +521,11 @@ export default class TemplatesController {
       })
     } else {
       setting.data = data
-
-      if(!setting.save()) {
-        response.status(500);
-
-        return {
-          message: "Conditions not Saved"
-        }
-      }
+      await setting.save()
     }
 
     if(template) {
-      template.all_site = false
+      template.all_site = 0
 
       if(!template.save()) {
         response.status(500)
@@ -542,21 +536,15 @@ export default class TemplatesController {
 
       await template.related("pages").detach()
 
-      request.input("data").forEach(condition => {
+      await Promise.all(request.input("data").map(async condition => {
         switch (condition.object_type) {
           case "all_site":
-            template.all_site = condition.condition_type === "include";
+            template.all_site = condition.condition_type === "include" ? 1 : 0;
+            await template.save()
 
-            if(!template.save()) {
-              response.status(500)
-              return {
-                message: "Conditions all_site not Saved"
-              }
-            }
             break
-          case "report":
           case "page":
-            condition.object_ids.forEach(async objectId => {
+            await Promise.all(condition.object_ids.map(async objectId => {
               const page = await Page.find(objectId)
 
               if(!page) {
@@ -582,12 +570,11 @@ export default class TemplatesController {
                   message: "Conditions page not Saved"
                 }
               }
-            })
+            }))
             break
         }
-      })
+      }))
     }
-
     return {
       success: true
     }

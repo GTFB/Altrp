@@ -27,7 +27,7 @@ export default async function loadPopups(){
   ElementWrapper = ElementWrapper.default
   window.popupsContainer = document.createElement('div');
   window.popupsContainer.style.position = 'relative'
-  window.popupsContainer.style.zIndex = '10000000000'
+  window.popupsContainer.style.zIndex = '999999'
   document.body.appendChild(window.popupsContainer);
   const FrontPopup = module.default;
   console.log(performance.now());

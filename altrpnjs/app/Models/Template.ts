@@ -72,7 +72,7 @@ export default class Template extends BaseModel {
   public guid: string|null
 
   @column()
-  public all_site: boolean
+  public all_site: boolean | number
 
   @hasOne(() => User, {
     localKey: "user_id",
@@ -231,15 +231,13 @@ export default class Template extends BaseModel {
      * И проверяем, есть ли шаблон в исключениях
      */
 
-    _templates = _templates.filter(function (_template) {
-        let pages_template = PagesTemplate.query().where('template_id', _template.id)
+    _templates = (await Promise.all(_templates.map(async function (_template) {
+        let pages_template = await PagesTemplate.query().where('template_id', _template.id)
           .where('page_id', pageId)
           .where('condition_type', '=', 'exclude').first();
-
-        return !pages_template;
+        return {pages_template,_template};
       }
-    )
-    ;
+    ))).filter(({pages_template}) => !pages_template).map(({_template}) => _template);
 
     templates = templates.concat(_templates);
 

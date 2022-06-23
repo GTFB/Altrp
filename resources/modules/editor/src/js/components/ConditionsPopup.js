@@ -16,8 +16,6 @@ const logic_options = [
 const main_options = [
   { name: "type", value: "all_site", label: "All Site" },
   { name: "type", value: "page", label: "Page" },
-  { name: "type", value: "report", label: "Report" },
-  { name: "type", value: "404", label: "404 " },
 ];
 
 function ConditionsPopup() {
@@ -26,7 +24,6 @@ function ConditionsPopup() {
     currentLogic: "include",
     searchValue: "",
     pageOptions: [],
-    reportsOptions: []
   })
 
 
@@ -36,12 +33,10 @@ function ConditionsPopup() {
     const getConditions = async () => {
       let conditions = await axios.get(`/admin/ajax/templates/${getTemplateId()}/conditions`, {signal: abortController.signal});
       let pageOptions = await axios.get("/admin/ajax/pages_options", {signal: abortController.signal});
-      let reportsOptions = await axios.get("/admin/ajax/reports_options", {signal: abortController.signal});
       setState(state => ({
         ...state,
         value: conditions.data.data || [],
         pageOptions: pageOptions.data,
-        reportsOptions: reportsOptions.data
       }))
     }
     getConditions()
@@ -234,38 +229,6 @@ function ConditionsPopup() {
                                    fill={true}
                                    placeholder="Choose Pages"
                                    selectedItems={state.pageOptions.filter(p => test.object_ids.includes(p.value))}
-                                   onItemSelect={current => {
-                                     handleItemSelect(current.value, test.id)
-                                   }}
-                                   itemRenderer={(item, {handleClick}) => {
-                                     return (
-                                       <MenuItem
-                                         icon={isItemSelected(item, test.id) ? "tick" : "blank"}
-                                         text={item.label}
-                                         key={item.value}
-                                         onClick={handleClick}
-                                       />
-                                     )
-                                   }}
-                                   tagInputProps={{
-                                     onRemove: (item) => handleTagRemove(item, test.id, test.object_type),
-                                     large: false,
-                                   }}
-                                   popoverProps={{
-                                     usePortal: false
-                                   }}
-                      />
-                    </div>
-                  )}
-                  {test.object_type === 'report' && (
-                    <div className="condition-popup__multi-select">
-                      <MultiSelect tagRenderer={tagRenderer} id="editor-reports"
-                                   items={state.reportsOptions}
-                                   itemPredicate={ItemPredicate}
-                                   noResults={<MenuItem disabled={true} text="No results."/>}
-                                   fill={true}
-                                   placeholder="Choose Pages"
-                                   selectedItems={state.reportsOptions.filter(p => test.object_ids.includes(p.value))}
                                    onItemSelect={current => {
                                      handleItemSelect(current.value, test.id)
                                    }}

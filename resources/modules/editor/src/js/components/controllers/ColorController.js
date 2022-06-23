@@ -137,7 +137,7 @@ class ColorController extends Component {
     let colorPickerPosition = {
       marginTop: this.state.pickerPosition
     };
-
+    console.log(this.state.opacity);
     return (
       <div className="controller-container controller-container_color">
         <div className="control-color-header">

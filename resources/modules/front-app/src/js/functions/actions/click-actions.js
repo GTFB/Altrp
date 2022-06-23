@@ -50,6 +50,7 @@ export default function clickActions(e){
   if(! actions){
     return;
   }
+  console.log(e);
   e.preventDefault();
   import(/* webpackChunkName: 'ActionsManager' */'../../classes/modules/ActionsManager').then(()=>{
     window.actionsManager.callAllWidgetActions(

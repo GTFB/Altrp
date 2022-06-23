@@ -386,7 +386,7 @@ export default class Page extends BaseModel {
       }
     }
 
-    console.log(altrpSettings.altrpMenus);
+
     altrpSettings.altrpMenus = _.uniq(altrpSettings.altrpMenus)
     altrpSettings.altrpMenus =
       (await Promise.all(altrpSettings.altrpMenus
@@ -868,6 +868,7 @@ export default class Page extends BaseModel {
     for(const area of areas){
       if(_.isArray(area.templates)){
         // continue
+
       }
       if(area?.template?.data){
         area.template.data = mbParseJSON(area.template.data, area.template.data)

@@ -14,7 +14,6 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
 import resource_path from "../../helpers/path/resource_path";
 import fs from "fs";
-import * as mustache from 'mustache'
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import filterAllowedForUser from "../../helpers/string/filterAllowedForUser";
 import PagesCache from "App/Services/PagesCache";
@@ -198,6 +197,7 @@ export default class AltrpRouting {
         PagesCache.setCache(page.guid, device, content)
       }
       content = await filterAllowedForUser(content, user)
+      const mustache = require('mustache')
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,

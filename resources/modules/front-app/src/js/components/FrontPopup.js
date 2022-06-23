@@ -296,6 +296,10 @@ class FrontPopup extends Component {
     const content_height = rootElement.getResponsiveSetting('content_height_custom_popup_layout')
     const size = content_height?.size
     const unit = content_height?.unit
+    const style = {}
+    if(size && unit){
+      style['height'] = size+unit;
+    }
     return (
       <CSSTransition
         in={isVisible}
@@ -328,7 +332,7 @@ class FrontPopup extends Component {
           >
             {close_context !== 'window' && closeButton}
             {rootElement.getSettings("").height_popup_layout === 'fitToContent'
-              ? <div className="popup-content" style={{height: size+unit}}>
+              ? <div className="popup-content" style={style}>
                 {React.createElement(rootElement.componentClass, {
                   element: rootElement,
                   ElementWrapper :this.ElementWrapper,
@@ -347,10 +351,11 @@ class FrontPopup extends Component {
                   <div {...props} className="popup-scrollbar-track-vertical" />
                 )}
                 className="popup-scrollbar"
+                autoHeight
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
-                <div className="popup-content" style={{height: size+unit}}>
+                <div className="popup-content" style={style}>
                   {React.createElement(rootElement.componentClass, {
                     element: rootElement,
                     ElementWrapper :this.ElementWrapper,

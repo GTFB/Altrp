@@ -30,6 +30,8 @@ export default class PagesController {
     } else {
       pages = await Page.query().whereIn('guid', includePages)
     }
+
+
     pages = pages.map(p=>p.id)
     return response.json({data:pages, success:true})
   }
