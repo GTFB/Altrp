@@ -6,10 +6,9 @@ import objectToAttributesString from "../../objectToAttributesString";
 
 export default function AltrpImage(props: any, device: string) {
   const {settings, widgetId, image} = props
-
   const {lazyload_disable,} = settings
   if (lazyload_disable) {
-    if(image.rawSVG){
+    if(image?.rawSVG){
       let svg = image.rawSVG;
       let regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig'); //для работы с циклом
       let _props = {};
@@ -31,6 +30,7 @@ export default function AltrpImage(props: any, device: string) {
     } else {
       src = `scr="/img/nullImage.png"`
     }
+
     return `<img class="altrp-image" width="${props.width}" height="${props.height}" ${src}/>`
   }
 

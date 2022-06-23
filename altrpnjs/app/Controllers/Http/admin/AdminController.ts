@@ -228,15 +228,18 @@ export default class AdminController {
         await pageGenerator.run(page)
         await delay(100);
         const used = process.memoryUsage().heapUsed / 1024 / 1024;
-        Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
+        console.log(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
-        console.error(`Error while Page ${page.guid} generate: ${e.message}`, e.stack.split('\n'));
+
+        console.error(`Error while Page ${page.guid} generate: ${e.message}`,
+          e.stack.split('\n'),
+          );
       }
     }
   }
 
   private static async upgradeModels() {
-    Logger.info('Upgrading models')
+    console.log('Upgrading models')
 
     const models = await Model.query().select('*')
 

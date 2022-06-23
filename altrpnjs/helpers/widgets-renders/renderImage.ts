@@ -59,7 +59,6 @@ export default function renderImage(settings, device, widgetId) {
     height = ''
   }
   let altrpImage = AltrpImage({image: media, widgetId,  width, height, settings, class: 'altrp-image' }, device)
-
   if (link.toPrevPage) {
     return `<div class='${classNames}'>${altrpImage}</div>`
   } else {
@@ -71,6 +70,7 @@ export default function renderImage(settings, device, widgetId) {
     if(link.openInNew){
       linkProps.target = '_blank'
     }
+
     return `<div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}' ${objectToAttributesString(linkProps)}>${altrpImage}</a>` : altrpImage }</div>`
   }
 }

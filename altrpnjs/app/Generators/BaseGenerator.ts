@@ -1,6 +1,5 @@
 import CleanCSS from 'clean-css';
 import View from '@ioc:Adonis/Core/View'
-import * as mustache from 'mustache'
 import fs from 'fs'
 import Application from "@ioc:Adonis/Core/Application";
 import path from "path";
@@ -39,6 +38,7 @@ class BaseGenerator {
     if(fs.existsSync(this.stubFilePath)){
       content = fs.readFileSync(this.stubFilePath, {encoding: 'utf8'})
     }
+    const mustache = require('mustache')
 
     content = mustache.render(content, vars)
 

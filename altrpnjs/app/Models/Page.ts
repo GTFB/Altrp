@@ -386,6 +386,7 @@ export default class Page extends BaseModel {
       }
     }
 
+    console.log(altrpSettings.altrpMenus);
     altrpSettings.altrpMenus = _.uniq(altrpSettings.altrpMenus)
     altrpSettings.altrpMenus =
       (await Promise.all(altrpSettings.altrpMenus
@@ -637,10 +638,16 @@ export default class Page extends BaseModel {
       cssPrefix = `/${screenName}`
     }
 
-    let footer = await Template.getTemplate(this.id, 'footer')
+    // @ts-ignore
+    let footer:{guid} | Template = await Template.getTemplate(this.id, 'footer')
     let footerContent = ''
     if(footer instanceof Template){
       footerContent = await footer.getChildrenContent(screenName)
+    } else if(footer?.guid){
+      const _template = await Template.query().where('guid', footer.guid).first()
+      if (_template) {
+        footerContent = await _template.getChildrenContent(screenName)
+      }
     }
     let content = await Template.getTemplate(this.id, 'content')
     let contentGuid = data_get(content, 'guid')
@@ -649,11 +656,18 @@ export default class Page extends BaseModel {
       contentContent = await content.getChildrenContent(screenName)
     }
     let footerGuid = data_get(footer, 'guid')
-    let header = await Template.getTemplate(this.id, 'header')
+
+    // @ts-ignore
+    let header:{guid} | Template = await Template.getTemplate(this.id, 'header')
     let headerGuid = data_get(header, 'guid')
     let headerContent = ''
     if(header instanceof Template){
       headerContent = await header.getChildrenContent(screenName)
+    } else if(header?.guid){
+      const _template = await Template.query().where('guid', header.guid).first()
+      if (_template) {
+        headerContent = await _template.getChildrenContent(screenName)
+      }
     }
     //@ts-ignore
     const footerHash = footer?.html_content ?  encodeURI(md5(footer?.html_content)) : ''
