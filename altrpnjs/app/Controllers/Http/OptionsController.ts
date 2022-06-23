@@ -10,6 +10,7 @@ import Template from "App/Models/Template";
 import filtration from "../../../helpers/filtration";
 import User from "App/Models/User";
 import Customizer from "App/Models/Customizer";
+import HttpContextContract from "helpers/plugins/adonis-core/HttpContextContract";
 
 export default class OptionsController {
   public async pages() {
@@ -62,12 +63,12 @@ export default class OptionsController {
     })
   }
 
-  public async menus() {
+  public async menus({request}: HttpContextContract) {
     const menu = await Menu.all()
-
+    let value = request.qs().value || 'id'
     return {
       data: options(menu, {
-        value: "id",
+        value,
         label: "name"
       }),
       message: "success",
