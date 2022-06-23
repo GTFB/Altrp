@@ -390,7 +390,15 @@ export default class Page extends BaseModel {
     altrpSettings.altrpMenus = _.uniq(altrpSettings.altrpMenus)
     altrpSettings.altrpMenus =
       (await Promise.all(altrpSettings.altrpMenus
-        .map(async (menuGuid) => await Menu.query().where('guid', menuGuid).select('*').first()
+        .map(async (menuGuid) => {
+          let menu
+          if(validGuid(menuGuid)){
+            menu = await Menu.query().where('guid', menuGuid).select('*').first()
+          } else{
+            menu = await Menu.query().where('id', menuGuid).select('*').first()
+          }
+          return menu
+        }
         ))).filter(menu => menu)
     pageGenerator.setGlobal('fonts', fonts)
 
