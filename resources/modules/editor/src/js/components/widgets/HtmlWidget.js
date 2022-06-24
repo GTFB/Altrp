@@ -1,3 +1,6 @@
+import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+
+import CodeIcon from "../../../svgs/html.svg";
 
 class HtmlWidget extends Component {
   constructor(props) {
@@ -36,6 +39,9 @@ class HtmlWidget extends Component {
     let data = this.getLockedContent("data");
     this.data = data
     let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+    if(isEditor()){
+      return <CodeIcon/>
+    }
     return (
       <>
         <div

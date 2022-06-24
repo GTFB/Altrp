@@ -202,7 +202,7 @@ export default class AdminController {
   }
 
   private static async upgradePages(request: RequestContract) {
-    Logger.info('Upgrading pages')
+    console.log('Upgrading pages')
 
     let pages
 

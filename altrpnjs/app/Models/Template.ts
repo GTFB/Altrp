@@ -20,6 +20,8 @@ import RootElementRenderer from "App/Renderers/RootElement";
 
 export default class Template extends BaseModel {
 
+  static historyLimit: number = 5
+
   @column({isPrimary: true})
   public id: number
 
