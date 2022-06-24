@@ -112,9 +112,15 @@ class CustomizerSettingsPanel extends React.Component {
       }))
     }, 2000)
   }
-
-  render() {
+  getModelOptions = ()=>{
     let {modelsOptions} = this.state;
+    modelsOptions = modelsOptions.filter(o=>{
+      return ['User', 'Role User', 'UserMeta', 'Media'].indexOf(o.label) === -1
+    })
+    return modelsOptions
+  }
+  render() {
+    let modelsOptions = this.getModelOptions();
     console.log(modelsOptions);
     const {customizer} = this.props;
     const {type, model_id, settings = {}} = customizer
@@ -191,22 +197,23 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {(type === 'api' || type === 'method') && <><div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                      <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
-                      <AltrpSelect id="crud-fields"
-                                   className="controller-field"
-                                   isMulti={true}
-                                   value={Middlewares || []}
-                                   onChange={this.changeMiddlewares}
-                                   options={[
-                                     {
-                                       value: 'cors',
-                                       label: 'CORS',
-                                     },
+                    {(type === 'api' || type === 'method') && <>
+                    {/*  <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>*/}
+                    {/*  <div className="controller-container__label control-select__label controller-label">Middlewares:</div>*/}
+                    {/*  <AltrpSelect id="crud-fields"*/}
+                    {/*               className="controller-field"*/}
+                    {/*               isMulti={true}*/}
+                    {/*               value={Middlewares || []}*/}
+                    {/*               onChange={this.changeMiddlewares}*/}
+                    {/*               options={[*/}
+                    {/*                 {*/}
+                    {/*                   value: 'cors',*/}
+                    {/*                   label: 'CORS',*/}
+                    {/*                 },*/}
 
-                                   ]}
-                      />
-                    </div>
+                    {/*               ]}*/}
+                    {/*  />*/}
+                    {/*</div>*/}
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Model:</div>
                       <AltrpSelect id="crud-fields"
@@ -214,7 +221,7 @@ class CustomizerSettingsPanel extends React.Component {
                                    isMulti={false}
                                    value={modelsOptions.find(o=>o.value === model_id) || {}}
                                    onChange={this.changeModel}
-                                   options={modelsOptions.filter(item => item.value >= 5)}
+                                   options={modelsOptions}
                       />
                     </div>
                     </>

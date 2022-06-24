@@ -19,7 +19,6 @@ import "../app/Services/DiscordBot"
 import Env from "@ioc:Adonis/Core/Env";
 import fs from "fs";
 import base_path from "../helpers/path/base_path";
-import Logger from "@ioc:Adonis/Core/Logger";
 import guid from "../helpers/guid";
 
 /*
@@ -73,9 +72,9 @@ Server.middleware.registerNamed({
 let packageKey
 if(fs.existsSync(base_path('.package_key'))){
   packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
-  Logger.info("Setting package key by File")
+  console.log("Setting package key by File")
 } else {
   packageKey = guid()
-  Logger.info("Setting package key by random guid")
+  console.log("Setting package key by random guid")
 }
 Env.set('PACKAGE_KEY', packageKey)

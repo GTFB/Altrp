@@ -1,6 +1,5 @@
 import AdmZip from "adm-zip"
 import env from '../../helpers/env';
-import Logger from '@ioc:Adonis/Core/Logger';
 import axios from 'axios';
 import base_path from '../../helpers/path/base_path';
 import fs from 'fs'
@@ -73,10 +72,10 @@ export default class UpdateService {
     let packageKey
     if(fs.existsSync(base_path('.package_key'))){
       packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
-      Logger.info("Setting package key by File")
+      console.log("Setting package key by File")
     } else {
       packageKey = guid()
-      Logger.info("Setting package key by random guid")
+      console.log("Setting package key by random guid")
     }
     Env.set('PACKAGE_KEY', packageKey)
   }

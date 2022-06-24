@@ -159,7 +159,14 @@ export default class TemplatesController {
         guid,
         user_id: auth.user?.id,
       })
-    } else {
+      let q = await Template.query().where('parent_template', parent_template)
+        .where('type', "review").orderBy('updated_at', 'desc')
+        .offset(Template.historyLimit)
+
+      for(const t of q){
+        await t.delete()
+      }
+       } else {
       let data = {
       area: parseInt(request.input("area")),
       data: JSON.stringify(request.input("data")),
@@ -376,51 +383,29 @@ export default class TemplatesController {
     }
   }
 
-  public async deleteReviews({ params, response }) {
-    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id));
-
-    if(templates.length > 0) {
-      for (const template of templates) {
-        template.delete()
-      }
-
-      return {
-        success: true,
-      }
-    } else {
-      response.status(404)
-      return {
-        success: false
-      }
-    }
-  }
-
-  public async deleteAllReviews({  }) {
-    const templates = await Template.query().where("type", "review");
-
-    for (const template of templates) {
-      await template.delete()
-    }
+  public async deleteReviews({ params, }) {
+     Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id)).delete();
 
     return {
       success: true,
     }
   }
 
-  public async getAllReviews({ response }) {
-    const templates = await Template.query().where("type", "review");
+  public async deleteAllReviews({  }) {
+    await Template.query().where("type", "review").delete();
 
-    if(templates.length > 0) {
-      return templates
-    } else {
-      response.status(404)
-      return templates
+    return {
+      success: true,
     }
+  }
+
+  public async getAllReviews({  }) {
+    return await Template.query().where("type", "review");
   }
 
   public async getReviews({ params, response }) {
     const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id))
-
+    console.log(parseInt(params.id));
     if(templates.length > 0) {
       return templates
     } else {
