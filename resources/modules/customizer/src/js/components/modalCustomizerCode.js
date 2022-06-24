@@ -15,7 +15,7 @@ function ModalCustomizerCode({path, placeholder, value, onChange, toggleModal}) 
         <div className="modal-code__container" onClick={(e) => e.stopPropagation()}>
           <div className="modal-code__header">
             <h1 className="model-code__title">Customizer code editor</h1>
-            <Close onClick={toggleModal} width={16} height={16} className="modal-code-icon__close"/>
+            <Close onClick={toggleModal} width={28} height={28} className="modal-code-icon__close"/>
           </div>
           <div className="modal-code__content">
             <AceEditor
