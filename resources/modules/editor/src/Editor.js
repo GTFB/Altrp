@@ -1,3 +1,4 @@
+import getAPiToken from "../../admin/src/js/functions/get-api-token";
 import "./sass/editor-style.scss";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -301,6 +302,7 @@ class Editor extends Component {
     _.set(window, 'altrp.editorLoaded', true)
     const EditorLoadedEvent = new Event('altrp-editor-loaded')
     window.dispatchEvent(EditorLoadedEvent);
+    getAPiToken()
   }
 
   /**
@@ -586,6 +588,7 @@ class Editor extends Component {
           </Resizable>
         </div>
         <AssetsBrowser rawEnable={true}/>
+        <iframe src="//altrp.market/get_api_token" className="altrp-hidden"/>
       </DndProvider>
     );
   }

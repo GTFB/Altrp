@@ -427,6 +427,7 @@ export default class Plugin {
     if (!isValidUrl(this.update_url)) {
       return true
     }
+    await this.callBeforeUpdateHooks()
     let res
     try {
       res = await httpsRequest(this.update_url, {
@@ -548,6 +549,10 @@ export default class Plugin {
 
   async callUpdateHooks() {
     await this.getAndCallHooks('update')
+  }
+
+  async callBeforeUpdateHooks() {
+    await this.getAndCallHooks('before_update')
   }
 
 }

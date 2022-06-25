@@ -1,9 +1,10 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import {BackgroundWrapper, Content, Iframe, Wrapper} from "./GetTemplate.styled";
+import {getFactory} from "../../helpers";
 
-const marketplaceUrl = "https://altrp.org";
-const url = "https://altrp.org/get/templates"
+const marketplaceUrl = "https://altrp.market";
+const url = "//altrp.market/templates-frame"
 
 export default class GetTemplate extends React.Component {
   constructor(props) {
@@ -13,45 +14,31 @@ export default class GetTemplate extends React.Component {
   }
 
   componentDidMount() {
-    // const elements =  document.getElementsByClassName(`market-element`);
-    //
-    //  for (let element of elements) {
-    //    element.addEventListener("click", (e) => {
-    //      const elementId = _.toNumber(e.currentTarget.classList.toString().split("market-element-")[1])
-    //
-    //      const data = appStore.getState().currentDataStorage.data.templates;
-    //
-    //      for (let dataElem of data) {
-    //        if (dataElem.id === elementId) {
-    //
-    //          const Http = new XMLHttpRequest();
-    //          const url = dataElem.template_url;
-    //          Http.open("GET", url);
-    //          Http.setRequestHeader("Accept", "application/json")
-    //          Http.send();
-    //          Http.onload=(e)=>{
-    //            window.parent.parent.postMessage({
-    //              type: "template_editor",
-    //              data:  e.target.response
-    //            }, "*")
-    //          }
-    //          break;
-    //        }
-    //      }
-    //    })
-    //  }
+    console.log(window);
     window.addEventListener("message", this.message)
   }
 
   message(e) {
-    console.log(e.origin)
+
     if(e.origin !== marketplaceUrl)
       return;
-    switch (e.data.type) {
-      case "template_editor":
-        if(e.data.data) {
-          const value = JSON.parse(e.data.data).data.children;
-          altrpEditor.modules.templateDataStorage.getRootElement().setAllChild(value);
+    const data = JSON.parse(e.data)
+
+    switch (data.type) {
+      case "insert_template":
+        if(data.data) {
+          try {
+            const value = JSON.parse(data.data);
+            for(let child of value.children){
+              const factory = getFactory();
+              child = factory.parseData(child)
+              altrpEditor.modules.templateDataStorage.getRootElement().appendChild(child);
+
+            }
+          }catch (e) {
+            alert("Error parsing data")
+            console.error(e);
+          }
           this.props.showTemplates()
         }
         break

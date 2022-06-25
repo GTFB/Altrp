@@ -27,7 +27,6 @@ import Template from "App/Models/Template";
 import data_set from "../../helpers/data_set";
 import getLatestVersion from "../../helpers/getLatestVersion";
 import FONTS, {SYSTEM_FONT} from "../../helpers/const/FONTS";
-
 export default class AltrpRouting {
 
   public __altrp_global__: {

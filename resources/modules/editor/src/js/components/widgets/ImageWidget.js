@@ -107,10 +107,20 @@ class ImageWidget extends Component {
         url: media,
         name: "null"
       };
-    } else if (this.getLockedContent('default_url') && _.isString(getDataByPath(this.getLockedContent("default_url"), null, model))){
+    } else if (this.getLockedContent('default_url')
+      && _.isString(getDataByPath(this.getLockedContent("default_url"), null, model))){
       media = {
         assetType: "media",
         url: getDataByPath(this.getLockedContent("default_url"), null, model),
+        name: "default"
+      };
+    } else if (this.getLockedContent('default_url')
+      && _.isString(this.getLockedContent('default_url'))
+      && (this.getLockedContent('default_url').indexOf('/') === 0
+      || this.getLockedContent('default_url').indexOf('http') === 0)){
+      media = {
+        assetType: "media",
+        url: this.getLockedContent("default_url"),
         name: "default"
       };
     }
