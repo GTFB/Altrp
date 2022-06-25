@@ -25,7 +25,6 @@ import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
 import '../../front-app/src/js/libs/reacket'
 import Scrollbars from "react-custom-scrollbars";
 import applyGlobalCss from "./js/helpers/applyGlobalCss";
-import getAPiToken from "../../admin/src/js/functions/get-api-token";
 
 window.Link = 'a';
 frontElementsManager.loadAllComponents();
@@ -85,7 +84,6 @@ class EditorContent extends Component {
       rootElement
     });
     applyGlobalCss()
-    getAPiToken()
   }
 
   /**
@@ -123,7 +121,6 @@ class EditorContent extends Component {
         </Router>
       </StyleSheetManager>
       <FontsManager />
-      <iframe src="//altrp.market/get_api_token" className="altrp-hidden"/>
     </Provider>;
   }
 }

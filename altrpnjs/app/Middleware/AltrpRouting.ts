@@ -22,6 +22,8 @@ import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import stringToObject from "../../helpers/string/stringToObject";
 import FONTS, { SYSTEM_FONT} from "../../helpers/const/FONTS";
+
+
 export default class AltrpRouting {
 
   public __altrp_global__: {
