@@ -1,6 +1,6 @@
 import {sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 import styled from "styled-components";
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 import AltrpImage from "../../altrp-image/AltrpImage";
 
 export default function TreeComponent(settings, prefix) {

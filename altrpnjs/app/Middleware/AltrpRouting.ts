@@ -1,3 +1,4 @@
+import * as mustache from'mustache'
 import Env from '@ioc:Adonis/Core/Env'
 import getCurrentDevice from "../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
@@ -184,19 +185,20 @@ export default class AltrpRouting {
     }
 
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
+    const device = getCurrentDevice(httpContext.request)
 
     altrpContext.altrpdata = datasources
     try {
-      const device = getCurrentDevice(httpContext.request)
 
       console.log(performance.now() - start);
       let content = PagesCache.getCache(page.guid, device)
+
       if(!content){
         content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
         PagesCache.setCache(page.guid, device, content)
       }
       content = await filterAllowedForUser(content, user)
-      const mustache = require('mustache')
+
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
@@ -241,6 +243,7 @@ export default class AltrpRouting {
         return this.tryRenderEdgeTemplate({
           page,
           httpContext,
+          device,
           altrpContext,
           model_data,
           pageMatch,
@@ -265,6 +268,7 @@ export default class AltrpRouting {
                                 altrpContext,
                                 model_data,
                                 pageMatch,
+                                device,
                                 datasources,
                                 user,
                                 is_admin}){
@@ -301,7 +305,7 @@ export default class AltrpRouting {
           _frontend_route,
           route_args: pageMatch.params,
           datasources,
-          device: getCurrentDevice(httpContext.request),
+          device,
           version: getLatestVersion(),
           _altrp: {
             version: getLatestVersion(),

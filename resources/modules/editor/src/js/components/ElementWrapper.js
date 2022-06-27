@@ -1,3 +1,4 @@
+import {StyleSheetManager} from 'styled-components'
 import CKEditor from "./ckeditor/CKeditor";
 import AddIcon from "../../svgs/add.svg";
 import store, {getCurrentElement} from "../store/store";
@@ -344,6 +345,7 @@ class ElementWrapper extends Component {
       element = element?.parent
     }
     element = this.element
+    if(nextProps.currentScreen !== this.props.currentScreen) return true;
     while(element){
       needUpdate = element === getCurrentElement()
 
@@ -370,9 +372,8 @@ class ElementWrapper extends Component {
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
 
-    if(nextProps.currentElement !== this.props.currentElement) return true
+
     if(this.state.cursorPos !== nextState.cursorPos) return true;
-    if(nextProps.currentScreen !== this.props.currentScreen) return true;
     if (
       nextProps.controllerValue === this.props.controllerValue &&
       this.props.element !== this.props.currentElement
@@ -488,6 +489,7 @@ class ElementWrapper extends Component {
     if(! this.props.element.getResponsiveSetting('tooltip_enable')){
       tooltip_show_type = 'never'
     }
+
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
         <>
@@ -526,12 +528,12 @@ class ElementWrapper extends Component {
             }
             {emptyColumn}
             <ElementWrapperGlobalStyles
-              settings={this.props.element.getSettings()}
-              elementName={this.props.element.getName()}
-              element={this.props.element}
-              elementId={this.elementId}
-              globalCssEditor={this.props.globalCssEditor}
-            />
+                settings={this.props.element.getSettings()}
+                elementName={this.props.element.getName()}
+                element={this.props.element}
+                elementId={this.elementId}
+                globalCssEditor={this.props.globalCssEditor}
+              />
           </WrapperComponent>
         </>
     );

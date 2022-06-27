@@ -41,7 +41,7 @@ import InputRadioComponent from "../../../../editor/src/js/components/widgets/st
 import InputSliderComponent from "../../../../editor/src/js/components/widgets/styled-components/InputSliderComponent";
 import getInputFileStyles from "./helpers/getInputFileStyles";
 import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
-import {getResponsiveSetting} from "../helpers";
+import {getResponsiveSetting} from"../helpers";
 import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
 import RangeSliderTableComponent from "../../../../editor/src/js/components/widgets/styled-components/RangeSliderTableComponent"

@@ -27,10 +27,10 @@ import redirect from "../../../../front-app/src/js/functions/redirect";
   .altrp-section {
     position: relative;
     overflow: hidden;
-    top: auto;
-    right: auto;
-    left: auto;
-    bottom: auto;
+    // top: auto;
+    // right: auto;
+    // left: auto;
+    // bottom: auto;
   }
 
   .background_section {

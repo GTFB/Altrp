@@ -16,7 +16,7 @@ export default function getCurrentDevice(request: RequestContract):string {
     return 'Tablet';
   }
   if(detector.phone()){
-    return 'Small-Phone';
+    return 'Big-Phone';
   }
   return'DEFAULT_BREAKPOINT';
 }

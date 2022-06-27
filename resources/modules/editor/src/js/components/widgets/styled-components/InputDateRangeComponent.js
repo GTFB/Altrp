@@ -1,5 +1,5 @@
 import {styledString} from "../../../../../../front-app/src/js/helpers/styles";
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 
 export default function InputDateRangeComponent(settings, id, prefix) {
   const styles = [

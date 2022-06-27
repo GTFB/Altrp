@@ -12,7 +12,7 @@ import {
   iconSizeStyled,
   dimensionsControllerToStyles,
 } from "../../../../../../front-app/src/js/helpers/styles";
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 
 export function btnStyles(settings) {
   return [

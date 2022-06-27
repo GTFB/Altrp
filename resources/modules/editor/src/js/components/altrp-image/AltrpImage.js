@@ -4,7 +4,59 @@ import {checkElementInViewBox} from "../../../../../front-app/src/js/helpers/ele
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import isSSR from "../../../../../front-app/src/js/functions/isSSR";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import {createGlobalStyle} from "styled-components";
+import getResponsiveSetting from '../../../../../front-app/src/js/helpers/get-responsive-setting'
 
+const Global = createGlobalStyle`
+${({elementId})=>`.altrp-element${elementId} .altrp-image-placeholder`} {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  width:${props => {
+  if (_.isNumber(props.width)) {
+    return props.width + 'px';
+  }
+  return props.width ? props.width : '100%'
+}};
+${({elementId})=>`.altrp-element${elementId}`} .altrp-image-placeholder::before{
+  display: block;
+  content: '';
+  width: 100%;
+${(props) => {
+  const {settings, height} = props;
+  let style = '';
+  const aspect_ratio_size = getResponsiveSetting(settings, 'aspect_ratio_size');
+  if(Number(aspect_ratio_size) !== 0) {
+    if(aspect_ratio_size === 'custom') {
+      let custom_aspect = getResponsiveSetting(settings, 'custom_aspect');
+      custom_aspect = Number(custom_aspect) || 100;
+      style += `padding-top:${custom_aspect}%;`;
+    } else if(Number(aspect_ratio_size)){
+      style += `padding-top:${aspect_ratio_size}%;`;
+    }
+    return style;
+  }
+  if (height && _.isString(height) && height.indexOf('%') === -1) {
+    return style;
+  }
+  if (Number(props.mediaWidth) && Number(props.mediaHeight)) {
+    style += `padding-top:${(props.mediaHeight / props.mediaWidth) * 100}%;`
+  }
+  return style;
+}};
+
+${({elementId})=>  `.altrp-element${elementId} .altrp-image-placeholder .altrp-skeleton`} ,
+${({elementId})=>`.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-image, && .altrp-image`}
+ {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  height:100%;
+  width:100%;
+}
+`
 class AltrpImage extends Component {
   constructor(props) {
     super(props);
@@ -95,7 +147,15 @@ class AltrpImage extends Component {
       placeholderStyles.background = 'transparent';
     }
 
-    let placeholder = <ImagePlaceholder color={media.main_color}
+
+    let placeholder = <>
+      <Global
+        settings={this.props.element?.getSettings() || {}}
+        elementId={this.props.elementId}
+        height={height}
+        width={width}
+      />
+      <ImagePlaceholder color={media.main_color}
                                         className={'altrp-image-placeholder '}
                                         ref={this.imageRef}
                                         settings={this.props.element?.getSettings() || {}}
@@ -118,7 +178,7 @@ class AltrpImage extends Component {
         id: this.props.id || null,
         style: this.props.style,
       })}
-      </ImagePlaceholder>;
+      </ImagePlaceholder></>;
 
     return <React.Fragment>
       {placeholder}

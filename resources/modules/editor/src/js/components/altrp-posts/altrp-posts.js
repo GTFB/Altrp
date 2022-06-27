@@ -9,7 +9,7 @@ import ElementWrapper from "../../../../../front-app/src/js/components/ElementWr
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
 import setAltrpIndex from "../../../../../front-app/src/js/functions/setAltrpIndex";
-import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import PostsWrapper from "./components/PostsWrapper";
 import Pagination from "../altrp-table/components/Pagination";
 

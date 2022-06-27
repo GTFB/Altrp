@@ -9,7 +9,6 @@ export default async function loadPopups(){
   if(!templates?.length){
     return;
   }
-  console.log(performance.now());
   const elements = ['root-element']
   for (const template of templates) {
     recurseEach(template.data.children, 'children', function(child) {
@@ -30,7 +29,6 @@ export default async function loadPopups(){
   window.popupsContainer.style.zIndex = '999999'
   document.body.appendChild(window.popupsContainer);
   const FrontPopup = module.default;
-  console.log(performance.now());
   window.ReactDOM.render(<window.Provider store={window.appStore}>
     {templates.map(template => {
       return <FrontPopup key={template.id} ElementWrapper={ElementWrapper} template={template} />;

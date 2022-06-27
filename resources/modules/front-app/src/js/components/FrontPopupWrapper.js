@@ -1,4 +1,4 @@
-import {getResponsiveSetting} from "../functions/getResponsiveSetting";
+import getResponsiveSetting from "../functions/getResponsiveSetting";
 import {
   shadowControllerToStyles,
   dimensionsControllerToStyles,

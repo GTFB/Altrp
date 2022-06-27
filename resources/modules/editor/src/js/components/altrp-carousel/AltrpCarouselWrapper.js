@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {dimensionsControllerToStyles, borderWidthStyled} from "../../../../../front-app/src/js/helpers/styles";
-import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 
 const AltrpCarouselWrapper = styled.div`
 & .altrp-carousel-slide{

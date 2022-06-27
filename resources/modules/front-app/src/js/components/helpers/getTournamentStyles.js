@@ -1,4 +1,4 @@
-import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
+import getResponsiveSetting from "../../functions/getResponsiveSetting";
 import {styledString} from "../../helpers/styles";
 
 export default function getTournamentStyles(settings, elementId) {

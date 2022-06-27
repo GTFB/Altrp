@@ -1,4 +1,4 @@
-import { getResponsiveSetting } from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
+import  getResponsiveSetting  from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
 import {
   simplePropertyStyled,
   borderWidthStyled,

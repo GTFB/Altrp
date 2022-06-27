@@ -1,6 +1,6 @@
 
 import {defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 
 export default function InputRangeSliderComponent(settings) {
   const styles = [

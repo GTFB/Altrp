@@ -9,7 +9,7 @@ import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAss
 import setAltrpIndex from "../../../../../front-app/src/js/functions/setAltrpIndex";
 import storeWidgetState from "../../../../../front-app/src/js/functions/setAltrpIndex";
 import renderIcon from "../../../../../front-app/src/js/functions/renderIcon";
-import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import { renderAdditionalRows, renderCellActions, } from "./altrp-table";
 import {
   useSortBy,

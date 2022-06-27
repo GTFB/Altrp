@@ -2,6 +2,7 @@ import {getSheet, stringifyStylesheet} from "../../../../../front-app/src/js/hel
 import {delay} from "../../../../../front-app/src/js/helpers";
 import CONSTANTS from "../../consts";
 import {setCurrentScreen} from "../../store/responsive-switcher/actions";
+import isProd from "../../../../../admin/src/js/helpers/isProd";
 
 class TemplateStylesModule{
   all_styles = []
@@ -54,29 +55,65 @@ class TemplateStylesModule{
     };
     stylesElements = _.uniq(stylesElements)
     for(const screen of CONSTANTS.SCREENS){
-      await delay(450)
-      editorStore.dispatch(setCurrentScreen(screen))
+      await delay(650)
 
       let styledTag = window.altrpEditorContent.editorWindow.current
         .getRootNode()
         .querySelector('[data-styled="active"]');
+
       if (styledTag) {
         const contentDocument = styledTag.getRootNode();
+
+        // this.deleteStyledRules()
+
+        editorStore.dispatch(setCurrentScreen(screen))
         let css = stringifyStylesheet(
           getSheet(styledTag, contentDocument)
         );
-        // console.log(editorStore.getState().currentScreen);
-        if(screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1){
-          css = `${screen.fullMediaQuery}{${css}}`
-        }
+        // let css = styledTag.innerHTML
+// console.log(editorStore.getState().currentScreen);
+        // if(screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1){
+        //   css = `${screen.fullMediaQuery}{${css}}`
+        // }
         const _stylesElements = [...stylesElements]
         _stylesElements.push(css);
         styles[screen.name] = _stylesElements;
       }
     }
-    editorStore.dispatch(setCurrentScreen(currentScreen))
+    /**
+     * Delete styled styles
+     */
 
+    // window.top.document.getElementById("editorContent").contentWindow.document.querySelector('[data-styled]').inn()
+    editorStore.dispatch(setCurrentScreen(currentScreen))
+    // this.deleteStyledRules()
     return styles
+  }
+  deleteStyledRules(){
+
+    let styledTag = window.altrpEditorContent.editorWindow.current
+      .getRootNode()
+      .querySelector('[data-styled="active"]');
+
+
+    if (styledTag) {
+      if(! isProd()){
+        styledTag.innerHTML = ''
+        return
+      }
+      const contentDocument = styledTag.getRootNode();
+      const styleSheet = [...contentDocument.styleSheets].find(ss => {
+        return ss.ownerNode === styledTag
+      })
+      if (styleSheet) {
+
+         [...styleSheet.cssRules].forEach(r=>{
+           console.log(r);
+           // r.cssText = ''
+        })
+
+      }
+    }
   }
 }
 const templateStylesModule = new TemplateStylesModule()

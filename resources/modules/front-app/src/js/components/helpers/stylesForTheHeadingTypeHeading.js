@@ -12,7 +12,7 @@ import {
   translateStyled,
   sliderStyled, dimensionsStyled
 } from "../../helpers/styles";
-import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
+import getResponsiveSetting from "../../functions/getResponsiveSetting";
 
 const headingTransformToStyles = (settings, state) => {
   let styles = 'transform:'

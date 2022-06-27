@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
 import {
   dimensionsControllerToStyles,
   typographicControllerToStyles

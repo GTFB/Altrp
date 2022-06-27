@@ -1,4 +1,4 @@
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 import {defaultStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
 /**

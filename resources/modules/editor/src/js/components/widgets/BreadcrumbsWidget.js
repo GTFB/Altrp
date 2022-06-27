@@ -1,7 +1,7 @@
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 import getBreadcrumbsItems from "../../../../../front-app/src/js/functions/getBreadcrumbsItems";
-import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
 import {Breadcrumbs} from "@blueprintjs/core";
 

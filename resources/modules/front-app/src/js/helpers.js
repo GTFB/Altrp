@@ -70,7 +70,7 @@ export {default as getAppContext} from "./functions/getAppContext";
 export {default as dataToXLS} from "./functions/dataToXLS";
 export {default as prepareContext} from "./functions/prepareContext";
 export {default as CONDITIONS_OPTIONS} from "./constants/CONDITIONS_OPTIONS";
-export {getResponsiveSetting} from "./functions/getResponsiveSetting";
+export {default as getResponsiveSetting} from "./functions/getResponsiveSetting";
 
 
 

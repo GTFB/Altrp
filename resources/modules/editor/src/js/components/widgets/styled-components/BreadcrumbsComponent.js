@@ -1,5 +1,5 @@
 
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 import {typographicControllerToStyles} from "../../../../../../front-app/src/js/helpers/styles";
 
 const BreadcrumbsComponent = styled.div`

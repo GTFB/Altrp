@@ -52,7 +52,7 @@ import getFeedbackStyles from "../../../../front-app/src/js/components/helpers/g
 import getInputPagintaionStyles from "../../../../front-app/src/js/components/helpers/getInputPaginationStyles";
 import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
-import {getResponsiveSetting} from "../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from "../../../../front-app/src/js/functions/getResponsiveSetting";
 import {connect} from "react-redux";
 
 let ElementWrapperGlobalStyles = window.createGlobalStyle`${({

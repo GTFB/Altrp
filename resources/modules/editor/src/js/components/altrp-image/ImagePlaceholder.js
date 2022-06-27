@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import {getResponsiveSetting} from "../../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from '../../../../../front-app/src/js/helpers/get-responsive-setting'
 
-const ImagePlaceholder = styled.div`
-${({elementId})=>elementId ? `.altrp-element${elementId} .altrp-image-placeholder:not(&), &` : '&'} {
+const ImagePlaceholder = styled.div`&{
   position: relative;
   max-width: 100%;
   overflow: hidden;
@@ -30,7 +29,7 @@ ${(props) => {
   return ''
 }}
 }
-${({elementId})=>elementId ? `.altrp-element${elementId}:not(&) .altrp-image-placeholder` : '&'}::before{
+&::before{
   display: block;
   content: '';
   width: 100%;
@@ -56,13 +55,7 @@ ${(props) => {
   }
   return style;
 }};
-}
-${({elementId})=>elementId ?
-  `.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-skeleton, && .altrp-skeleton`
-  : '&& .altrp-skeleton'} ,
-${({elementId})=>elementId ?
-  `.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-image, && .altrp-image`
-  : '&& .altrp-image'} {
+} && .altrp-skeleton,  && .altrp-image{
   position:absolute;
   top:0;
   left:0;

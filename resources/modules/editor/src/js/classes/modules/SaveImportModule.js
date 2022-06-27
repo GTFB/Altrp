@@ -13,6 +13,7 @@ import { setTemplateData } from "../../store/template-data/actions";
 import templateStylesModule from "./TemplateStylesModule";
 import progressBar from "../../../../../admin/src/js/functions/progressBar";
 import upgradeBackend from "../../../../../admin/src/js/functions/upgradeBackend";
+import {changeStateByName} from "../../store/editor-state/actions";
 
 class SaveImportModule extends BaseModule {
   constructor(modules) {
@@ -104,10 +105,14 @@ class SaveImportModule extends BaseModule {
         type: "review",
         parent_template: this.template_id
       })
+
+      store.dispatch(changeStateByName('kill_editor', true))
       await this.resource
         .put(this.template_id, templateData)
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
       rootElement && rootElement.remove();
+      store.dispatch(changeStateByName('kill_editor', false))
+
     }catch (e) {
       if(e instanceof Promise){
         e = await e

@@ -608,18 +608,18 @@ export default class Page extends BaseModel {
       headerStyles = headerStyles.map( s => {
         if (s.indexOf('</style>') === -1) {
           s = purifycss(html, s, purifycssOptions)
-          s = `
-<style id="header_style">${s}</style>`
-          return s
         }
-      })
-      styles += headerStyles.join('')
+        return s
+      }).filter(s=>s)
+      styles += `
+<style id="header_styles">${headerStyles.join('')}</style>`
     }
     if (contentStyles) {
       contentStyles = JSON.parse(contentStyles)
 
       if(screenName && _.get(contentStyles, screenName, []).length ) {
         contentStyles = _.get(contentStyles, screenName, [])
+
       }else {
         contentStyles = _.get(contentStyles, 'all_styles', [])
       }
@@ -627,12 +627,11 @@ export default class Page extends BaseModel {
       contentStyles = contentStyles.map( s => {
         if (s.indexOf('</style>') === -1) {
           s = purifycss(html, s, purifycssOptions)
-          s = `
-<style id="content_style">${s}</style>`
         }
         return s
-      })
-      styles += contentStyles.join('')
+      }).filter(s=>s)
+      styles += `
+<style id="content_style">${contentStyles.join('')}</style>`
     }
 
     styles = mustache.render(styles, {})

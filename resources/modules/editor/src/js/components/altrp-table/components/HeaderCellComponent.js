@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
+import getResponsiveSetting from "../../../../../../front-app/src/js/functions/getResponsiveSetting";
 import {verticalAlignToAlignItems} from "../../../../../../front-app/src/js/helpers/styles";
 
 const HeaderCellComponent = styled.div`${({settings, column})=>{

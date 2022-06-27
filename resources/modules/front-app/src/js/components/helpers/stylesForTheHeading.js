@@ -11,7 +11,7 @@ import {
   backgroundImageControllerToStyles,
   translateStyled
 } from "../../helpers/styles";
-import {getResponsiveSetting} from "../../functions/getResponsiveSetting";
+import getResponsiveSetting from "../../functions/getResponsiveSetting";
 
 /**
  * Преобразует объект стилей, который задается в виджете Heading в строку css для вставки в GlobalStyles
