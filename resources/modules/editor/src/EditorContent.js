@@ -30,7 +30,7 @@ frontElementsManager.loadAllComponents();
 class EditorContent extends Component {
   constructor(props) {
     super(props);
-    this.state = {kill_editor:false};
+
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
     store.subscribe(this.templateStatus.bind(this));
@@ -39,9 +39,6 @@ class EditorContent extends Component {
   }
 
   onStoreUpdate = ()=>{
-    if(this.state.kill_editor !== store.getState().editorState.kill_editor){
-      this.setState(state =>({...state, kill_editor: store.getState().editorState.kill_editor}))
-    }
     if(this.widgetsManager !== store.getState().widgetsManager){
 
       const needLoad = ! ! this.widgetsManager
@@ -95,9 +92,7 @@ class EditorContent extends Component {
     contextMenu.hideAll();
   }
   render() {
-    if(this.state.kill_editor){
-      return''
-    }
+
     return <Provider store={store}>
       <StyleSheetManager target={EditorFrame.contentWindow.document.getElementsByTagName(
           "head"

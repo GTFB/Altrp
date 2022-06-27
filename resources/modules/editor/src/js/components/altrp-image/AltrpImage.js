@@ -46,7 +46,7 @@ ${(props) => {
 }};
 
 ${({elementId})=>  `.altrp-element${elementId} .altrp-image-placeholder .altrp-skeleton`} ,
-${({elementId})=>`.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-image, && .altrp-image`}
+${({elementId})=>`.altrp-element${elementId} .altrp-image-placeholder .altrp-image`}
  {
   position:absolute;
   top:0;

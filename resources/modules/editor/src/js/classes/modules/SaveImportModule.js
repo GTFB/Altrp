@@ -106,12 +106,12 @@ class SaveImportModule extends BaseModule {
         parent_template: this.template_id
       })
 
-      store.dispatch(changeStateByName('kill_editor', true))
+
       await this.resource
         .put(this.template_id, templateData)
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
       rootElement && rootElement.remove();
-      store.dispatch(changeStateByName('kill_editor', false))
+
 
     }catch (e) {
       if(e instanceof Promise){
