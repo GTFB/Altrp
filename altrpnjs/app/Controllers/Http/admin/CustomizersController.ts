@@ -9,6 +9,7 @@ import Event from "@ioc:Adonis/Core/Event";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 // import timers from "App/Services/Timers";
 import timers from "../../../Services/Timers";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class CustomizersController {
 
@@ -315,8 +316,11 @@ export default class CustomizersController {
 
     if (search) {
       customizers.where(function (query) {
-        query.where('altrp_customizers.title', 'like', '%' + search + '%')
-          .orWhere('altrp_customizers.id', 'like', '%' + search + '%')
+        query.orWhere('altrp_customizers.title', LIKE, '%' + search + '%')
+
+        if(Number(search)){
+          query.orWhere('altrp_customizers.id', LIKE, '%' + search + '%')
+        }
       })
     }
     customizers.orderBy(orderColumn, orderType)
