@@ -174,7 +174,7 @@ class EditNotification extends Component{
                 });
                 break;
             case 'save':
-                console.log('SAVE');
+
                 this.serverUpdate();
                 return;
         }

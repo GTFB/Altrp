@@ -30,7 +30,7 @@ frontElementsManager.loadAllComponents();
 class EditorContent extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {}
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
     store.subscribe(this.templateStatus.bind(this));
@@ -56,7 +56,7 @@ class EditorContent extends Component {
   templateStatus() {
     let templateStatus = store.getState().templateStatus.status;
     if (templateStatus !== this.state.templateStatus) {
-      this.setState({ ...this.state, templateStatus });
+      this.setState(state =>({ ...state, templateStatus }));
     }
   }
 

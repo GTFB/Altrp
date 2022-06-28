@@ -160,7 +160,7 @@ export default class TemplatesController {
         user_id: auth.user?.id,
       })
       let q = await Template.query().where('parent_template', parent_template)
-        .where('type', "review").orderBy('updated_at', 'desc')
+        .where('type', "review").select('id').orderBy('updated_at', 'desc')
         .offset(Template.historyLimit)
 
       for(const t of q){

@@ -429,9 +429,7 @@ class ElementWrapper extends Component {
         this.props.element.getCurrentModel().getData()
       )} `;
     }
-    if (this.props.currentElement === this.props.element) {
-      classes += " altrp-element_current";
-    }
+
     classes += this.getClasses();
 
     let emptyColumn = "";

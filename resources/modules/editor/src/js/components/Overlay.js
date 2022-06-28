@@ -13,7 +13,9 @@ class Overlay extends React.Component {
   constructor(props) {
     super(props);
     this.element = props.element
-
+    this.state = {
+      current:false
+    }
   }
 
   deleteElement =(e)=> {
@@ -47,6 +49,12 @@ class Overlay extends React.Component {
       this.onClickTooltip()
     }
   }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(this.props.currentElement === this.element){
+
+    }
+  }
+
   render() {
 
     let _EditIcon = EditIcon;

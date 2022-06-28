@@ -11,11 +11,11 @@ import getLatestVersion from "../../helpers/getLatestVersion";
 import Env from "@ioc:Adonis/Core/Env";
 import env from "../../helpers/env";
 import base_path from "../../helpers/path/base_path";
-import get_altrp_setting from "../../helpers/get_altrp_setting";
 import AltrpMeta from "App/Models/AltrpMeta";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import FONTS, {GOOGLE_FONT} from "../../helpers/const/FONTS";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
+import {encode} from "html-entities";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -182,12 +182,9 @@ export default class PageGenerator extends BaseGenerator {
   }
 
   private getFrontAppJs() {
-    return `<script id="all_site_js">
-{{=<% %>=}}
-    /* <![CDATA[ */
-    ${get_altrp_setting('all_site_js', '', true)}
-    /* ]]> */
-<%={{ }}=%>
-    </script>`
+    const options = {
+      url: '/ajax/get-custom-js'
+    };
+    return `<script id="all_site_js" data-async-content-load="${encode(JSON.stringify(options))}"></script>`
   }
 }

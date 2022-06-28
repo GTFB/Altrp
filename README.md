@@ -5,6 +5,7 @@
 
 [//]: <> (### 1.2.1)
 [//]: <> (* Add Changes in Related Models Before Users Delete)
+[//]: <> (* Asynchronous Custom JavaScript Code Loading)
 
 ### 1.2.0
 * Fix Styles Load for Embedded Templates
@@ -14,7 +15,7 @@
 * Section Structure Variants Selector Added
 
 ### 1.1.2
-* Fix Template Render Issues 
+* Fix Template Render Issues
 * Fix Popup Position Settings Issues
 * Now When Creating Models, Customizers are Created
 * Add Telegram Bot Integration
@@ -70,7 +71,7 @@
 * Release version
 
 ### 0.20.25
-* Some Fixes for Section 
+* Some Fixes for Section
 + Add Video Background for Sections
 * Add Elements Navigator in Editor
 * Fix widgets Tabs Switcher, Divider, Content, Heading
@@ -78,7 +79,7 @@
 ### 0.20.24
 + Add Widget Groups
 * Fix Visual Codes Pagination Issue
-* Restyle Template Condition Popup 
+* Restyle Template Condition Popup
 
 ### 0.20.23
 + Add Tournament Widget
@@ -131,7 +132,7 @@
 * Fix Roles/Permissions Access in Data Source Issues
 
 ### 0.19.2
-* Update Select Components 
+* Update Select Components
 
 ### 0.19.1
 * Fix Customizer and Page Update Issues
@@ -142,14 +143,14 @@
 
 ### 0.18.1
 * Fix Change Label in Node Issue
-* Hide Pagination when Page Size Greater then Items 
+* Hide Pagination when Page Size Greater then Items
 * Fix Regexp Bug in Sliders Widgets on iOs
 + Appearance of Top of Element Actions
 + Appearance of Bottom of Element Actions
 
 ### 0.18.0
 + Customizer Module
-* Fix Condition Display with Default Hidden Widgets  
+* Fix Condition Display with Default Hidden Widgets
 
 ### 0.17.15
 * Fix Hover Card Issue in Card Widget
@@ -166,8 +167,8 @@
 + Add Params fromURl Hash now store in `altrppage.hashParams`
 
 ### 0.17.12
-* Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget 
-+ Add Actions when Changing Text in Input Select and Input Multi Select Widget  
+* Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget
++ Add Actions when Changing Text in Input Select and Input Multi Select Widget
 
 ### 0.17.11
 + Support for Arrays in URL Parameters in `altrppage.params` Object
@@ -190,7 +191,7 @@
 ### 0.17.7
 * Ability to Customize Button for Next / Previous Pages Without Text in Cards "Widget"
 * Fix Link in Heading Widget
-* Fix Column Custom Width 
+* Fix Column Custom Width
 
 ### 0.17.6
 * Fix SSR Bug with Query Parameters
@@ -213,7 +214,7 @@
 * Fix Create Item Bug in Input Multi Select Widget
 * Add Storage Bot and Handler Bot Node
 
-### 0.17.1 
+### 0.17.1
 * Fix "Remove Item" In Set Data Action
 * Fix Input Update in Cards Fields
 
@@ -223,7 +224,7 @@
 + Import Widgets Presets and Global Styles Settings With Templates
 + Add  Widgets:
   1. Input Select
-  2. Input Multi Select   
+  2. Input Multi Select
   3. Input Gallery
   4. Input Slider
   5. Input Range Slider
@@ -235,7 +236,7 @@
   1. Button
 + Render Template Widget on Server
 + Prevent Update Some Widgets on Forms Update
-+ Add Entrance Motion Effect for Widgets 
++ Add Entrance Motion Effect for Widgets
 + Preset Now work with State Style Settings
 + Active Conditions for Menu Items in Menus Setting Admin Page
 + Designer of Telegram Bots;
@@ -245,7 +246,7 @@
 + "tel" and "mailto" Links
 + Toggle Visually Impaired Action
 + Cache for Pages
-+ Page for 404 
++ Page for 404
 + Node js Server for Server Rendering
 
 ### 0.14.0
@@ -254,14 +255,14 @@
 + Add Video Widget
 + Add User Preset Colors for Color & Gradient Controllers
 + Add the Interface for Setting Parameters with the Mark of Required Parameters
-+ Add Revisions to History Panel 
-+ Add the Ability to Play Sounds in Actions 
++ Add Revisions to History Panel
++ Add the Ability to Play Sounds in Actions
 
 ### 0.13.0
 + Аdd the Template Widget
 + Аdd the Section and Column Link
 + Many URL Params for Pages
-+ Add New Custom Code Action 
++ Add New Custom Code Action
 + Setting Fields Value via Set Actions
 + Two New Text Filter in Table
 + Add History Panel in Editor
@@ -278,16 +279,16 @@
 + Add Action Update Elements & Bulk Form Action
 + Draggable Repeater Items
 + Add File Types:
-    Images
-    Documents 
-    Fonts 
-    SVG
-    Archive 
-    Medias
-    Others
+  Images
+  Documents
+  Fonts
+  SVG
+  Archive
+  Medias
+  Others
 
 ### 0.11.00
-+ Select All and Clear Value Action 
++ Select All and Clear Value Action
 + Save Current User Storage
 + Fix Bug with "null" Content
 
@@ -299,7 +300,7 @@
 
 ### 0.9.0
 + Add Map, Diagram, Dashboards Widgets
-+ Add Conditions and Disabled Conditions for Elements by Current User Permissions, Roles 
++ Add Conditions and Disabled Conditions for Elements by Current User Permissions, Roles
 + Add Conditions for Templates by Current Page
 + Add SQL-Builder
 + Add Import/Export Feature
@@ -308,7 +309,7 @@
 
 ### 0.8.0
 + Add Filters and Sorting in Table Widget
-+ Add Auth/not Auth Elements Conditions  
++ Add Auth/not Auth Elements Conditions
 + Redirects Settings to Pages
 + Add Settings for Sorting by Default, and Numbering in order for Table Widgets
 
@@ -316,7 +317,7 @@
 + Add Hover, Active, Disabled States Styling
 + Add Breakpoints Settings for Templates
 + Optimize Front App
-+ Add Models with Relations and Fields Admin Settings 
++ Add Models with Relations and Fields Admin Settings
 
 
 ### 0.6.0
@@ -330,24 +331,24 @@
 
 ### 0.5.0
 + Add Delete/Edit Form Action to Button Widget
-+ Add Dynamic Content Option to Text Controllers and Receive Dynamic Data from Server 
++ Add Dynamic Content Option to Text Controllers and Receive Dynamic Data from Server
 + Add New Text Editor in Text Widget
 
 ### 0.4.0
 + Add "Add New" Form Action to Button Widget
-+ Adding Users Via Admin Interface 
++ Adding Users Via Admin Interface
 
 ### 0.3.2
-+ Add Logo on Login Page  
++ Add Logo on Login Page
 * Change Title on Frontend when Navigate
-* Fix Frontend Routing 
+* Fix Frontend Routing
 
 ### 0.3.1
-* Fix Update Issues 
+* Fix Update Issues
 
 ### 0.3.0
-+ Model Constructor 
-+ Models Query for Table Widget 
++ Model Constructor
++ Models Query for Table Widget
 
 ### 0.2.3
 + Add Change Logo in Admin
@@ -367,7 +368,7 @@
 + Adding and Duplicate Elements by Context Menu
 
 ### 0.1.3
-+ Update Altrp APP from Server 
++ Update Altrp APP from Server
 
 ### 0.1.0
 * Alpha Version 

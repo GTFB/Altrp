@@ -30,6 +30,7 @@ import fs from 'fs'
 import Model from "App/Models/Model";
 import Plugin from "App/Plugin"
 import _ from "lodash";
+import get_altrp_setting from "../../helpers/get_altrp_setting";
 
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
@@ -362,6 +363,10 @@ ${e.message}`,
 
   Route.get('routes', async ({response}:HttpContextContract)=>{
     return response.json({success: true, pages: []})
+  })
+
+  Route.get('get-custom-js', async ({response}:HttpContextContract)=>{
+    return response.json({success: true, data: get_altrp_setting('ALL_SITE_JS', '', true)})
   })
 }).middleware('catch_unhandled_json')
   .prefix("/ajax")

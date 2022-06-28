@@ -22,3 +22,9 @@ window.altrpIo.send('altrp-front-load')
 document.addEventListener('DOMContentLoaded',()=>{
   import('./js/helpers/dataRevealElements').then(cb=>cb.default())
 })
+document.addEventListener('DOMContentLoaded',()=>{
+  if(document.querySelector('[data-async-content-load]')){
+    import('./js/helpers/dataAsyncContentLoad').then(cb=>cb.default())
+
+  }
+})
