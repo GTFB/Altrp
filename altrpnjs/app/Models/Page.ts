@@ -4,6 +4,7 @@ import {DateTime} from 'luxon'
 import {
   BaseModel,
   beforeDelete,
+  afterCreate,
   BelongsTo,
   belongsTo,
   column,
@@ -34,6 +35,7 @@ import mbParseJSON from '../../helpers/mbParseJSON';
 import DEFAULT_REACT_ELEMENTS from '../../helpers/const/DEFAULT_REACT_ELEMENTS';
 import is_array from '../../helpers/is_array';
 import validGuid from '../../helpers/validGuid';
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -431,6 +433,12 @@ export default class Page extends BaseModel {
     datasource.forEach((source) => {
       source.delete()
     })
+    applyPluginsFiltersAsync('page_before_delete', page)
+  }
+
+  @afterCreate()
+  public static async afterCreate(page: Page) {
+    applyPluginsFiltersAsync('page_after_create', page)
   }
 
   async getPagesForFrontend(): Promise<Page[]> {
