@@ -6,7 +6,9 @@
   min-height: 100%;
   z-index: 999999
 }
-
+.bp3-portal{
+  z-index: 1000000
+}
 .app-popup .popup-close-button {
   position: absolute;
   top: 0;

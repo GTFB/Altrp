@@ -5,6 +5,8 @@
 
 [//]: <> (### 1.2.1)
 [//]: <> (* Add Changes in Related Models Before Users Delete)
+[//]: <> (* Add page_after_create and page_before_delete Hooks)
+[//]: <> (* Front App Hooks for Plugins)
 
 ### 1.2.0
 * Fix Styles Load for Embedded Templates
