@@ -1,4 +1,6 @@
 import {io} from "socket.io-client";
+import loadPluginsHelpers from "./js/plugins/loadPluginsHelpers";
+window.altrp.loadPluginsHelpers = loadPluginsHelpers
 console.log('FIRST SCRIPT: ', performance.now());
 
 window.altrpIo = io( {

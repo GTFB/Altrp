@@ -5,6 +5,7 @@ import {DateTime} from 'luxon'
 import {
   BaseModel,
   beforeDelete,
+  afterCreate,
   BelongsTo,
   belongsTo,
   column,
@@ -40,7 +41,7 @@ import AltrpRouting from "App/Middleware/AltrpRouting";
 import PageGenerator from 'App/Generators/PageGenerator'
 import fs from "fs";
 import app_path from "../../helpers/path/app_path";
-
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -445,6 +446,12 @@ export default class Page extends BaseModel {
     datasource.forEach((source) => {
       source.delete()
     })
+    applyPluginsFiltersAsync('page_before_delete', page)
+  }
+
+  @afterCreate()
+  public static async afterCreate(page: Page) {
+    applyPluginsFiltersAsync('page_after_create', page)
   }
 
   async getPagesForFrontend(): Promise<Page[]> {

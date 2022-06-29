@@ -1097,7 +1097,7 @@ class InputSelectWidget extends Component {
   checkOutsideClick = (e)=> {
     for(const el of e.composedPath()) {
       if(el.classList?.contains(`altrp-element${this.props.element.getId()}`)) {
-        console.log('c');
+
         e.preventDefault()
         return
       }

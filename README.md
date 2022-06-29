@@ -6,6 +6,9 @@
 [//]: <> (### 1.2.1)
 [//]: <> (* Add Changes in Related Models Before Users Delete)
 [//]: <> (* Asynchronous Custom JavaScript Code Loading)
+[//]: <> (* Add page_after_create and page_before_delete Hooks)
+[//]: <> (* Front App Hooks for Plugins)
+[//]: <> (* Fix `Insert Raw` with SVG Icon)
 
 ### 1.2.0
 * Fix Styles Load for Embedded Templates

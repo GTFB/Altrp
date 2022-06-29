@@ -8,10 +8,32 @@ import {createGlobalStyle} from "styled-components";
 import getResponsiveSetting from '../../../../../front-app/src/js/helpers/get-responsive-setting'
 
 const Global = createGlobalStyle`
+.altrp-element .altrp-skeleton.altrp-skeleton,
+.altrp-element .altrp-image.altrp-image{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  height:100%;
+  width:100%;
+}
 ${({elementId})=>`.altrp-element${elementId} .altrp-image-placeholder`} {
   position: relative;
   max-width: 100%;
   overflow: hidden;
+
+${(props) => {
+  const {settings} = props;
+  const aspect_ratio_size = getResponsiveSetting(settings, 'aspect_ratio_size');
+  if(Number(aspect_ratio_size) !== 0 && aspect_ratio_size === 'custom'|| Number(aspect_ratio_size)){
+    return 'height:auto;'
+  }
+  if(! props.height || props.height.indexOf('%') !== -1) {
+    return 'height:auto;'
+  }
+  return `height:${props.height ? props.height : 'auto'};`;
+}}
   width:${props => {
   if (_.isNumber(props.width)) {
     return props.width + 'px';
@@ -44,18 +66,6 @@ ${(props) => {
   }
   return style;
 }};
-
-${({elementId})=>  `.altrp-element${elementId} .altrp-image-placeholder .altrp-skeleton`} ,
-${({elementId})=>`.altrp-element${elementId} .altrp-image-placeholder .altrp-image`}
- {
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  height:100%;
-  width:100%;
-}
 `
 class AltrpImage extends Component {
   constructor(props) {
@@ -146,7 +156,6 @@ class AltrpImage extends Component {
     if(visible || window.altrpImageLazy === 'skeleton'){
       placeholderStyles.background = 'transparent';
     }
-
 
     let placeholder = <>
       <Global

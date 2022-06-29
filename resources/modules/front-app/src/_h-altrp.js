@@ -53,6 +53,7 @@ documentCheckEvents( () => {
       console.log('h-altrp LOADED: ', performance.now());
 
       const hAltrpLoadedEvent = new Event('h-altrp-loaded');
+      console.log('h-altrp-loaded');
       window.dispatchEvent(hAltrpLoadedEvent);
 
       let actionComponents = _.get(__altrp_settings__, 'action_components', [])
