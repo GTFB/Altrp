@@ -1,8 +1,7 @@
-import styled,{createGlobalStyle} from 'styled-components';
-import {getResponsiveSetting} from "../../../../../front-app/src/js/helpers";
+import styled from 'styled-components';
+import getResponsiveSetting from '../../../../../front-app/src/js/helpers/get-responsive-setting'
 
-const ImagePlaceholder = styled.div`
-${({elementId})=>elementId ? `.altrp-element${elementId} .altrp-image-placeholder:not(&), &` : '&'} {
+const ImagePlaceholder = styled.div`&{
   position: relative;
   max-width: 100%;
   overflow: hidden;
@@ -13,24 +12,13 @@ ${({elementId})=>elementId ? `.altrp-element${elementId} .altrp-image-placeholde
   return props.width ? props.width : '100%'
 }};
 ${(props) => {
-  const {settings} = props;
-  const aspect_ratio_size = getResponsiveSetting(settings, 'aspect_ratio_size');
-  if(Number(aspect_ratio_size) !== 0 && aspect_ratio_size === 'custom'|| Number(aspect_ratio_size)){
-    return 'height:auto;'
-  }
-  if(! props.height || props.height.indexOf('%') !== -1) {
-    return 'height:auto;'
-  }
-  return `height:${props.height ? props.height : 'auto'};`;
-}}
-${(props) => {
   if(props.color){
     return `background-color: ${props.color};`
   }
   return ''
 }}
 }
-${({elementId})=>elementId ? `.altrp-element${elementId}:not(&) .altrp-image-placeholder` : '&'}::before{
+&::before{
   display: block;
   content: '';
   width: 100%;
@@ -53,24 +41,9 @@ ${(props) => {
   }
   if (Number(props.mediaWidth) && Number(props.mediaHeight)) {
     style += `padding-top:${(props.mediaHeight / props.mediaWidth) * 100}%;`
-    console.log(style);
   }
   return style;
 }};
-}
-${({elementId})=>elementId ?
-  `.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-skeleton, && .altrp-skeleton`
-  : '&& .altrp-skeleton'} ,
-${({elementId})=>elementId ?
-  `.altrp-element${elementId} .altrp-image-placeholder:not(&) .altrp-image, && .altrp-image`
-  : '&& .altrp-image'} {
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  height:100%;
-  width:100%;
 }
 `;
 
