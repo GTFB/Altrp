@@ -16,6 +16,7 @@ import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersA
 import FONTS, {GOOGLE_FONT} from "../../helpers/const/FONTS";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import {encode} from "html-entities";
+import get_altrp_setting from "../../helpers/get_altrp_setting";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -61,6 +62,7 @@ export default class PageGenerator extends BaseGenerator {
       console.error(`Page ${page.id} render error. Need more data`);
       return
     }
+
     this.page = page
     this.setGlobal('altrpSettings', {})
     const altrp_settings = await page.getPageSettings(this)
@@ -77,6 +79,12 @@ export default class PageGenerator extends BaseGenerator {
     _.set(_frontend_route, 'templates', [])
     let elements_list: string[] | string = await page.extractElementsNames()
     elements_list = elements_list.map(e => `'${e}'`)
+
+    const head_start = get_altrp_setting('head_start', '', true)
+    const head_end = get_altrp_setting('head_end', '', true)
+    const body_start = get_altrp_setting('body_start', '', true)
+    const body_end = get_altrp_setting('body_end', '', true)
+
     elements_list = elements_list.join(',')
     const favicons = this.getFavicons()
     const front_app_css = this.getFrontAppCss()
@@ -88,11 +96,15 @@ export default class PageGenerator extends BaseGenerator {
 
     for (const screen of SCREENS) {
 
-      let plugin_frontend_head = ''
-      plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_head, page, screen.name)
 
-      let plugin_frontend_bottom = ''
-      plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_head', plugin_frontend_bottom, page, screen.name)
+    let plugin_frontend_head = ''
+    plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
+      plugin_frontend_head, page)
+
+    let plugin_frontend_bottom = ''
+    plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_bottom',
+      plugin_frontend_bottom, page )
+
 
       let fileName = this.getFilename(page)
       let children_content = await this.page.getChildrenContent(screen.name)
@@ -119,6 +131,10 @@ export default class PageGenerator extends BaseGenerator {
           plugin_frontend_head,
           plugin_frontend_bottom,
           extra_footer_styles,
+          head_start,
+          head_end,
+          body_start,
+          body_end,
           favicons,
           all_styles,
           _altrp: JSONStringifyEscape({

@@ -3,12 +3,22 @@
 
 ## Changelog
 
-[//]: <> (### 1.2.1)
-[//]: <> (* Add Changes in Related Models Before Users Delete)
+[//]: <> (### 1.2.2)
 [//]: <> (* Asynchronous Custom JavaScript Code Loading)
 [//]: <> (* Add page_after_create and page_before_delete Hooks)
 [//]: <> (* Front App Hooks for Plugins)
-[//]: <> (* Fix `Insert Raw` with SVG Icon)
+
+### 1.2.1
+* Add Changes in Related Models Before Users Delete
+* Add page_after_create and page_before_delete Hooks
+* Front App Hooks for Plugins
+* Fix `Insert Raw` with SVG Icon for Images
+* Extend Settings For Email Sending via `altrpSendMail`
+* Add Custom Html for Pages
+1. HEAD Start
+2. HEAD End
+3. BODY Start
+4. BODY End
 
 ### 1.2.0
 * Fix Styles Load for Embedded Templates
