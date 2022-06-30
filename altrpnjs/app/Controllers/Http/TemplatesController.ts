@@ -145,7 +145,7 @@ export default class TemplatesController {
         }
         parent_template = parent_template.id
       }
-      console.log(parent_template);
+
       const stringyfiedData = JSON.stringify(data)
       const stringyfiedStyles = JSON.stringify(styles)
       // console.log(name, title, 'parent_template:', +parent_template, type,)
@@ -320,11 +320,6 @@ export default class TemplatesController {
       delete data.updated_at
       delete data.id
 
-      const prevTemplates = await Template.query().where("guid", data.guid).andWhere("type", "review").orderBy("created_at", "desc")
-
-      if(prevTemplates.length === 5) {
-        await prevTemplates[4].delete()
-      }
 
       template.data = JSON.stringify(request.input("data"));
       template.styles = JSON.stringify(request.input("styles"));
@@ -350,7 +345,9 @@ export default class TemplatesController {
   }
 
   public async deleteAllReviews({  }) {
-    await Template.query().where("type", "review").delete();
+    if((await Template.query().where("type", "review").limit(20).select("id")).length){
+      await Template.query().where("type", "review").limit(20).delete();
+    }
 
     return {
       success: true,

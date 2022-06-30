@@ -5,6 +5,7 @@ import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
 import AltrpMeta from "App/Models/AltrpMeta";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
+import get_altrp_setting from "../../helpers/get_altrp_setting";
 
 export default class PageGenerator extends BaseGenerator {
 
@@ -36,7 +37,10 @@ export default class PageGenerator extends BaseGenerator {
       return
     }
     let children_content = await page.getChildrenContent()
-
+    const head_start = get_altrp_setting('head_start', '', true)
+    const head_end = get_altrp_setting('head_end', '', true)
+    const body_start = get_altrp_setting('body_start', '', true)
+    const body_end = get_altrp_setting('body_end', '', true)
     let elements_list:string[]|string = await page.extractElementsNames()
     const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
     elements_list = elements_list.map(e=>`'${e}'`)
@@ -58,6 +62,10 @@ export default class PageGenerator extends BaseGenerator {
       .stub(PageGenerator.template)
       .apply({
         children_content,
+        head_start,
+        head_end,
+        body_start,
+        body_end,
         elements_list,
         extra_header_styles,
         plugin_frontend_head,
