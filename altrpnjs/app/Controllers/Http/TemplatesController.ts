@@ -240,7 +240,7 @@ export default class TemplatesController {
         parent_template: Number(parentTemplate?.parent_template),
         guid,
         user_id: auth.user?.id,
-        html_content: parentTemplate?.html_content,
+        html_content: '',
         all_site: parentTemplate?.all_site ? 1 : 0
       })
 
@@ -365,7 +365,7 @@ export default class TemplatesController {
 
       template.data = JSON.stringify(request.input("data"));
       template.styles = JSON.stringify(request.input("styles"));
-      template.html_content = request.input("html_content");
+      template.html_content = '';
       await template.save()
 
       let templateGenerator = new TemplateGenerator()

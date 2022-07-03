@@ -74,6 +74,9 @@ class Overlay extends React.Component {
     let overlayClasses = `overlay`;
     let overlayStyles = { width: "100%" };
 
+    if(this.element === this.props.currentElement){
+      overlayClasses += ' overlay_active'
+    }
     let editText = `Edit ${this.element.getTitle()}`;
     let duplicateText = `Duplicate ${this.element.getTitle()}`;
     let deleteText = `Delete ${this.element.getTitle()}`;

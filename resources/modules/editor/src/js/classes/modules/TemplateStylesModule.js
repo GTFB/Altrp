@@ -3,17 +3,23 @@ import {delay} from "../../../../../front-app/src/js/helpers";
 import CONSTANTS from "../../consts";
 import {setCurrentScreen} from "../../store/responsive-switcher/actions";
 import isProd from "../../../../../admin/src/js/helpers/isProd";
+import {changeStateByName} from "../../store/editor-state/actions";
+import store from '../../store/store'
+import {getTemplateType} from "../../helpers";
 
-class TemplateStylesModule{
+class TemplateStylesModule {
   all_styles = []
 
   /**
    *
    * @returns {{all_styles, important_styles}}
    */
-  async generateStyles(){
+  async generateStyles() {
     let styles
     let stylesElements
+    let importantStyles = ''
+
+    store.dispatch(changeStateByName('ignoreUpdate', true))
     if (window.altrpEditorContent.editorWindow.current) {
       let rootElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName(
         "sections-wrapper"
@@ -51,10 +57,10 @@ class TemplateStylesModule{
     stylesElements = stylesElements.map(style =>
       style ? style.innerHTML : ""
     );
-    styles = {
-    };
+    styles = {};
     stylesElements = _.uniq(stylesElements)
-    for(const screen of CONSTANTS.SCREENS){
+
+    for (const screen of CONSTANTS.SCREENS) {
       await delay(650)
 
       let styledTag = window.altrpEditorContent.editorWindow.current
@@ -64,7 +70,6 @@ class TemplateStylesModule{
       if (styledTag) {
         const contentDocument = styledTag.getRootNode();
 
-        // this.deleteStyledRules()
 
         editorStore.dispatch(setCurrentScreen(screen))
         let css = stringifyStylesheet(
@@ -86,35 +91,23 @@ class TemplateStylesModule{
 
     // window.top.document.getElementById("editorContent").contentWindow.document.querySelector('[data-styled]').inn()
     editorStore.dispatch(setCurrentScreen(currentScreen))
-    // this.deleteStyledRules()
+    store.dispatch(changeStateByName('ignoreUpdate', false))
+    if (getTemplateType() === 'header') {
+      for (const screen of CONSTANTS.SCREENS) {
+        if (_.isArray(styles[screen.name])) {
+          let css = styles[screen.name].join('')
+          if (screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1) {
+            css = `${screen.fullMediaQuery}{${css}}`
+          }
+          importantStyles += css
+        }
+      }
+
+    }
+    styles['important_styles'] = importantStyles
     return styles
   }
-  deleteStyledRules(){
-
-    let styledTag = window.altrpEditorContent.editorWindow.current
-      .getRootNode()
-      .querySelector('[data-styled="active"]');
-
-
-    if (styledTag) {
-      if(! isProd()){
-        styledTag.innerHTML = ''
-        return
-      }
-      const contentDocument = styledTag.getRootNode();
-      const styleSheet = [...contentDocument.styleSheets].find(ss => {
-        return ss.ownerNode === styledTag
-      })
-      if (styleSheet) {
-
-         [...styleSheet.cssRules].forEach(r=>{
-           console.log(r);
-           // r.cssText = ''
-        })
-
-      }
-    }
-  }
 }
+
 const templateStylesModule = new TemplateStylesModule()
 export default templateStylesModule

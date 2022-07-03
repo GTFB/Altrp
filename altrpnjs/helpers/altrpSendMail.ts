@@ -1,13 +1,8 @@
-import Mail from '@ioc:Adonis/Addons/Mail'
 import {SmtpDriver} from "@adonisjs/mail/build/src/Drivers/Smtp";
 import Env from "@ioc:Adonis/Core/Env";
-<<<<<<< HEAD
 import replaceContentWithData from "./string/replaceContentWithData";
-=======
-import Logger from "@ioc:Adonis/Core/Logger";
-import replaceContentWithData from "./replaceContentWithData";
+
 import {Message} from "@adonisjs/mail/build/src/Message";
->>>>>>> master
 
 export default async function altrpSendMail(
   {
@@ -27,18 +22,9 @@ export default async function altrpSendMail(
   port = port ? port : Env.get('MAIL_PORT');
   user = user ? user : Env.get('MAIL_USERNAME');
   pass = pass ? pass : Env.get('MAIL_PASSWORD');
-  Mail.extend('smtp', function (){
-    return new SmtpDriver({
-      driver: "smtp",
-      host,
-      port,
-      auth: {
-        user,
-        pass,
-        type: 'login',
-      }})
 
-  })
+
+
   from = from || Env.get('MAIL_FROM_ADDRESS')
   to = replaceContentWithData(to, context)
   subject = replaceContentWithData(subject, context)
@@ -47,6 +33,15 @@ export default async function altrpSendMail(
   fromName = fromName ? fromName : Env.get('MAIL_FROM_NAME')
   try {
 
+    console.log(new SmtpDriver({
+      driver: "smtp",
+      host,
+      port: 465,
+      auth: {
+        user,
+        pass,
+        type: 'login',
+      }}));
     // @ts-ignore
     const message = new Message
     message
@@ -57,10 +52,11 @@ export default async function altrpSendMail(
     await new SmtpDriver({
       driver: "smtp",
       host,
-      port,
+      port: 465,
+      secure: true,
       auth: {
-        user,
-        pass,
+        user:'shtmpel86@gmail.com',
+        pass:'g343576030',
         type: 'login',
       }}).send(message.toJSON().message)
     return {

@@ -354,6 +354,7 @@ class ElementWrapper extends Component {
       }
       element = element?.parent
     }
+
     if(!needUpdate){
       return false;
     }

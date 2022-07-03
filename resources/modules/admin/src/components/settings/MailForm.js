@@ -130,56 +130,9 @@ class MailForm extends Component {
             </Select>
           </div>
 
-          <div className="form-group flex-grow__selectBlueprint form-group_width47">
-            <label htmlFor="mail_encryption">Encryption</label>
-            {/*<select id="mail_encryption" required*/}
-            {/*        name="mail_encryption"*/}
-            {/*        value={mail_encryption}*/}
-            {/*        onChange={this.changeHandler}*/}
-            {/*        className="form-control"*/}
-            {/*>*/}
-            {/*  <option value="" />*/}
-            {/*  <option value="tls">tls</option>*/}
-            {/*  <option value="ssl">ssl</option>*/}
-            {/*</select>*/}
 
-
-            <Select items={EncryptionOptions}
-                    id="mail_encryption"
-                    required
-                    matchTargetWidth
-                    itemPredicate={this.ItemPredicate}
-                    noResults={<MenuItem disabled={true} text="No results." />}
-                    itemRenderer={(item, {handleClick, modifiers, query}) => {
-                      return <MenuItem
-                        text={item || 'None'}
-                        key={item}
-                        active={item === this.state.mail_encryption }
-                        onClick={handleClick}
-                      />
-                    }}
-                    onItemSelect={current => { this.changeValueSelect(current, 'mail_encryption') }}
-                    fill={true}
-            >
-              <Button fill
-                      large
-                      alignText={Alignment.LEFT}
-                      text={this.state.mail_encryption || 'none'}
-                      rightIcon="caret-down"
-              />
-            </Select>
-          </div>
-        </div>
-
-        <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
             <label htmlFor="mail_host">Host</label>
-            {/*<input type="text" id="mail_host" required*/}
-            {/*       name="mail_host"*/}
-            {/*       value={mail_host}*/}
-            {/*       onChange={this.changeHandler}*/}
-            {/*       className="form-control"*/}
-            {/*/>*/}
             <InputGroup type="text"
                         name="mail_host"
                         id="mail_host"
@@ -190,6 +143,9 @@ class MailForm extends Component {
             />
           </div>
 
+        </div>
+
+        <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
             <label htmlFor="mail_port">Port</label>
             {/*<input type="text" id="mail_port" required*/}
@@ -207,9 +163,7 @@ class MailForm extends Component {
                         required
             />
           </div>
-        </div>
 
-        <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
             <label htmlFor="mail_username">User Name</label>
             {/*<input type="email" id="mail_from_address"*/}
@@ -227,16 +181,12 @@ class MailForm extends Component {
                         required
             />
           </div>
+        </div>
+
+        <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
             <label htmlFor="mail_password">Password</label>
-            {/*<input type="password"*/}
-            {/*       autoComplete="mail-settings-password"*/}
-            {/*       id="mail_password" required*/}
-            {/*       name="mail_password"*/}
-            {/*       value={mail_password}*/}
-            {/*       onChange={this.changeHandler}*/}
-            {/*       className="form-control"*/}
-            {/*/>*/}
+
             <InputGroup type="password"
                         name="mail_password"
                         id="mail_password"
@@ -247,17 +197,9 @@ class MailForm extends Component {
                         required
             />
           </div>
-        </div>
-
-        <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
             <label htmlFor="mail_from_address">Mail from Address</label>
-            {/*<input type="text" id="mail_username" required*/}
-            {/*       name="mail_username"*/}
-            {/*       value={mail_username}*/}
-            {/*       onChange={this.changeHandler}*/}
-            {/*       className="form-control"*/}
-            {/*/>*/}
+
             <InputGroup type="email"
                         name="mail_from_address"
                         id="mail_from_address"
@@ -267,8 +209,8 @@ class MailForm extends Component {
                         required
             />
           </div>
-
         </div>
+
 
 
         <div className="btn__wrapper">

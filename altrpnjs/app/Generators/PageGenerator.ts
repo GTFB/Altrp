@@ -97,24 +97,27 @@ export default class PageGenerator extends BaseGenerator {
     for (const screen of SCREENS) {
 
 
-    let plugin_frontend_head = ''
-    plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
-      plugin_frontend_head, page)
+      let plugin_frontend_head = ''
+      plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
+        plugin_frontend_head, page)
 
-    let plugin_frontend_bottom = ''
-    plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_bottom',
-      plugin_frontend_bottom, page )
+      let plugin_frontend_bottom = ''
+      plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_bottom',
+        plugin_frontend_bottom, page)
 
 
       let fileName = this.getFilename(page)
       let children_content = await this.page.getChildrenContent(screen.name)
+      let all_styles = await this.page.getAllStyles(children_content)
+
       const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
-      let all_styles = await this.page.getAllStyles(screen.name, children_content)
       await this.addFile(fileName)
         .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
         .stub(PageGenerator.template)
         .apply({
-          hAltrp: Env.get('PATH_ENV') === 'production' ? `/modules/front-app/h-altrp.js?${env('PACKAGE_KEY')}` : 'http://localhost:3002/src/h-altrp.js',
+          hAltrp: Env.get('PATH_ENV') === 'production'
+            ? `/modules/front-app/h-altrp.js?${env('PACKAGE_KEY')}`
+            : 'http://localhost:3002/src/h-altrp.js',
           children_content,
           fonts,
           elements_list,
@@ -123,7 +126,7 @@ export default class PageGenerator extends BaseGenerator {
           _frontend_route: JSONStringifyEscape(_frontend_route),
           page_id: page.id,
           title: page.title,
-          front_app_css: front_app_css,
+          front_app_css,
           version: getLatestVersion(),
           page_areas,
           all_site_js,

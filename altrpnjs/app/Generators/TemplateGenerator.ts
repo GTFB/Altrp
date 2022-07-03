@@ -45,11 +45,11 @@ export default class TemplateGenerator extends BaseGenerator {
     return template.guid + '.edge'
   }
 
-  async run(template: Template):Promise<void> {
+  async run(template: Template): Promise<void> {
     if (!template) {
       return
     }
-    if(template.type !== 'template'){
+    if (template.type !== 'template') {
       return
     }
     await template.load('currentArea')
@@ -63,10 +63,23 @@ export default class TemplateGenerator extends BaseGenerator {
       await ListenerGenerator.getHookTemplates(this)
       if (template.guid) {
         let currentScreenStyles = _.get(styles, screen.name, [])
-        if(currentScreenStyles.length) {
+        if (currentScreenStyles.length) {
           all_styles = currentScreenStyles.join('')
           all_styles = parse(all_styles)
         }
+
+        // let _styles: string[] = []
+        // _.forEach(styles, (style: string[], key) => {
+        //   const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
+        //   let _style = ''
+        //   _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
+        //   if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
+        //     _style = `${mediaQuery}{${_style}}`
+        //   }
+        //   _styles.push(_style)
+        // })
+        // _styles = _styles.filter(s => s)
+        // console.log(all_styles.textContent);
         await BaseGenerator.generateCssFile(template.guid, all_styles.textContent, screen.name)
       }
 
@@ -97,14 +110,14 @@ export default class TemplateGenerator extends BaseGenerator {
     clearRequireCache()
   }
 
-  static async prepareContent(content:string):Promise<string>{
+  static async prepareContent(content: string): Promise<string> {
 
     let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
     if (_.isArray(paths)) {
       // @ts-ignore
       paths.forEach(path => {
         path = path.replace("{{", "");
-        if(path.indexOf('(') !== -1){
+        if (path.indexOf('(') !== -1) {
           return
         }
         let replace = path + "|| ''";

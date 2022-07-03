@@ -42,6 +42,7 @@ import PageGenerator from 'App/Generators/PageGenerator'
 import fs from "fs";
 import app_path from "../../helpers/path/app_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
+import SCREENS from "../../helpers/const/SCREENS";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -534,7 +535,7 @@ export default class Page extends BaseModel {
     return styles;
   }
 
-  async getAllStyles(screenName = '', html) {
+  async getAllStyles( html) {
     let styles = ''
     const elements = await this.extractElementsNames()
     styles += `<style type="text/css" id="elements_static_styles">`
@@ -586,59 +587,70 @@ export default class Page extends BaseModel {
       let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
       if (customStyles) {
         customStyles = JSON.parse(customStyles)
-        if(screenName && _.get(customStyles, screenName, []).length ) {
-          customStyles = _.get(customStyles, screenName, [])
-        }else {
-          customStyles = _.get(customStyles, 'all_styles', [])
+        let _styles: string[] = []
+
+        if(customStyles.important_styles){
+          _styles = [purifycss(html, customStyles.important_styles, purifycssOptions)]
+        } else {
+          _.forEach(customStyles, (style: string[], key) => {
+            const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
+            let _style = ''
+            _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
+            if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
+              _style = `${mediaQuery}{${_style}}`
+            }
+            _styles.push(_style)
+          })
+          _styles = _styles.filter(s => s)
         }
-        customStyles = customStyles.map( s => {
-          if (s.indexOf('</style>') === -1) {
-            s = purifycss(html, s, purifycssOptions)
-            s = `
-<style id="custom_area_styles_${area.name}">${s}</style>`
-          }
-          return s
-        })
-        styles += customStyles.join('')
+
+        styles += `
+<style id="custom_area_styles_${area.name}">${_styles.join('')}</style>`
       }
     }
 
     if (headerStyles) {
       headerStyles = JSON.parse(headerStyles)
-
-      if(screenName && _.get(headerStyles, screenName, []).length ) {
-        headerStyles = _.get(headerStyles, screenName, [])
-      }else {
-        headerStyles = _.get(headerStyles, 'all_styles', [])
+      let _styles:string[] = []
+      if(headerStyles.important_styles){
+        _styles = [purifycss(html, headerStyles.important_styles, purifycssOptions)]
+      } else {
+        _.forEach(headerStyles, (style:string[], key) => {
+          const mediaQuery = SCREENS.find(s=>s.name === key)?.fullMediaQuery
+          let _style = ''
+          _style = style.map(s=>purifycss(html, s, purifycssOptions)).join('');
+          if(mediaQuery && key !== 'DEFAULT_BREAKPOINT'){
+            _style = `${mediaQuery}{${_style}}`
+          }
+          _styles.push(_style)
+        })
+        _styles = _styles.filter(s=>s)
       }
 
-      headerStyles = headerStyles.map( s => {
-        if (s.indexOf('</style>') === -1) {
-          s = purifycss(html, s, purifycssOptions)
-        }
-        return s
-      }).filter(s=>s)
       styles += `
-<style id="header_styles">${headerStyles.join('')}</style>`
+<style id="header_styles">${_styles.join('')}</style>`
     }
     if (contentStyles) {
       contentStyles = JSON.parse(contentStyles)
 
-      if(screenName && _.get(contentStyles, screenName, []).length ) {
-        contentStyles = _.get(contentStyles, screenName, [])
+      let _styles:string[] = []
+      if(contentStyles.important_styles){
+        _styles = [purifycss(html, contentStyles.important_styles, purifycssOptions)]
+      } else {
+        _.forEach(contentStyles, (style: string[], key) => {
+          const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
+          let _style = ''
+          _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
+          if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
+            _style = `${mediaQuery}{${_style}}`
+          }
+          _styles.push(_style)
 
-      }else {
-        contentStyles = _.get(contentStyles, 'all_styles', [])
+        })
+        _styles = _styles.filter(s => s)
       }
-
-      contentStyles = contentStyles.map( s => {
-        if (s.indexOf('</style>') === -1) {
-          s = purifycss(html, s, purifycssOptions)
-        }
-        return s
-      }).filter(s=>s)
       styles += `
-<style id="content_style">${contentStyles.join('')}</style>`
+<style id="content_style">${_styles.join('')}</style>`
     }
 
     styles = mustache.render(styles, {})

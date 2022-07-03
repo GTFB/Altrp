@@ -11,11 +11,10 @@ export default function getCurrentDevice(request: RequestContract):string {
 
   // @ts-ignore
   const detector = new MobileDetect(request.header('user-agent') );
-
   if(detector.tablet()){
     return 'Tablet';
   }
-  if(detector.phone()){
+  if(detector.phone() || detector.mobile()){
     return 'Big-Phone';
   }
   return'DEFAULT_BREAKPOINT';
