@@ -85,7 +85,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
   elementName,
   elementId,
   settings,
-  element, globalCssEditor
+  element,
 }) => {
   let styles = "";
   let prefix = "altrp-element";
@@ -350,7 +350,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
   }
 
-  styles += globalCssEditor.globalStylesCss
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
 
@@ -685,9 +684,7 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.globalCssEditor.globalStylesCss !== this.props.globalCssEditor.globalStylesCss) {
-      return true
-    }
+
     // if(this.state.children) {
     //   if(this.state.children.component) {
     //     if(this.state.children.component.settings.button_text) {
@@ -914,7 +911,6 @@ class ElementWrapper extends Component {
               elementName={this.props.element.getName()}
               element={this.props.element}
               elementId={this.elementId}
-              globalCssEditor={this.props.globalCssEditor}
             />
           </WrapperComponent>
         </>
@@ -965,7 +961,6 @@ function mapStateToProps(state) {
     // hideTriggers: state.hideTriggers,
     currentScreen: state.currentScreen,
     globalStyles: state.globalStyles,
-    globalCssEditor: state.globalStylesCssEditor,
     historyStore: state.historyStore
   };
 }

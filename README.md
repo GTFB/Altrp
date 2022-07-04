@@ -3,6 +3,10 @@
 
 ## Changelog
 
+[comment]: <> (### 1.2.2)
+
+[comment]: <> (* Fix Global Styles Duplicate Issue)
+
 ### 1.2.1
 * Add Changes in Related Models Before Users Delete
 * Add page_after_create and page_before_delete Hooks
