@@ -64,7 +64,7 @@ import getInputPaginationStyles from "./helpers/getInputPaginationStyles";
 import animationStyles from "../helpers/animations/animations-styles";
 import isEditor from "../functions/isEditor";
 
-const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
+const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEditor }) => {
   let styles = "";
   if(areas){
     styles += getRouteStyles(areas);
@@ -339,6 +339,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   });
 
   styles += ` `;
+  globalCssEditor && (styles += globalCssEditor.globalStylesCss)
 
   window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
@@ -351,6 +352,7 @@ function mapStateToProps(state) {
   return {
     elementsSettings: state.elementsSettings,
     areas: state.areas,
+    globalCssEditor: state.globalStylesCssEditor,
     currentScreen: state.currentScreen,
   };
 }

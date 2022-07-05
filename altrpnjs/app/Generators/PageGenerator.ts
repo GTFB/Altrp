@@ -108,7 +108,12 @@ export default class PageGenerator extends BaseGenerator {
 
       let fileName = this.getFilename(page)
       let children_content = await this.page.getChildrenContent(screen.name)
-      let all_styles = await this.page.getAllStyles(children_content)
+      let all_styles = ''
+      try {
+        all_styles = await this.page.getAllStyles(children_content)
+      }catch (e) {
+        console.error(e);
+      }
 
       const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
       await this.addFile(fileName)

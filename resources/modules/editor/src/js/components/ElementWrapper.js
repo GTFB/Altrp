@@ -1,4 +1,3 @@
-import {StyleSheetManager} from 'styled-components'
 import CKEditor from "./ckeditor/CKeditor";
 import AddIcon from "../../svgs/add.svg";
 import store, {getCurrentElement} from "../store/store";
@@ -358,9 +357,6 @@ class ElementWrapper extends Component {
     if(!needUpdate){
       return false;
     }
-    if (nextProps.globalCssEditor.globalStylesCss !== this.props.globalCssEditor.globalStylesCss) {
-      return true
-    }
     // if(this.state.children) {
     //   if(this.state.children.component) {
     //     if(this.state.children.component.settings.button_text) {
@@ -531,7 +527,6 @@ class ElementWrapper extends Component {
                 elementName={this.props.element.getName()}
                 element={this.props.element}
                 elementId={this.elementId}
-                globalCssEditor={this.props.globalCssEditor}
               />
           </WrapperComponent>
         </>
@@ -568,7 +563,6 @@ function mapStateToProps(state) {
     // hideTriggers: state.hideTriggers,
     currentScreen: state.currentScreen,
     globalStyles: state.globalStyles,
-    globalCssEditor: state.globalStylesCssEditor,
     historyStore: state.historyStore
   };
 }

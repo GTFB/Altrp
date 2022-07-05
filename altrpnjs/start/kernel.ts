@@ -35,12 +35,11 @@ Server.middleware.register([
   () => import('App/Middleware/ConvertEmptyString'),
   () => import('App/Middleware/SilentAuth'),
   () => import('@ioc:Adonis/Addons/Shield'),
-  () => import('App/Middleware/AltrpRouting'),
 ])
 
 
-Route.get('*', async () => {
-})
+Route.get('*', 'AltrpRouting.index')
+
 
 /*
 |--------------------------------------------------------------------------

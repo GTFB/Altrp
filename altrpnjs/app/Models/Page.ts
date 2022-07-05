@@ -23,7 +23,6 @@ import ACTIONS_NAMES from '../../helpers/const/ACTIONS_NAMES'
 import * as _ from 'lodash'
 import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
 import Database from '@ioc:Adonis/Lucid/Database'
-
 import User from 'App/Models/User';
 import {isString} from 'lodash';
 import PageRole from 'App/Models/PageRole';
@@ -37,7 +36,7 @@ import DEFAULT_REACT_ELEMENTS from '../../helpers/const/DEFAULT_REACT_ELEMENTS';
 import is_array from '../../helpers/is_array';
 import validGuid from '../../helpers/validGuid';
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
-import AltrpRouting from "App/Middleware/AltrpRouting";
+import AltrpRouting from "App/Controllers/Http/AltrpRouting";
 import PageGenerator from 'App/Generators/PageGenerator'
 import fs from "fs";
 import app_path from "../../helpers/path/app_path";
@@ -595,7 +594,7 @@ export default class Page extends BaseModel {
           _.forEach(customStyles, (style: string[], key) => {
             const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
             let _style = ''
-            _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
+            _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
             if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
               _style = `${mediaQuery}{${_style}}`
             }
@@ -640,7 +639,7 @@ export default class Page extends BaseModel {
         _.forEach(contentStyles, (style: string[], key) => {
           const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
           let _style = ''
-          _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
+          _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
           if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
             _style = `${mediaQuery}{${_style}}`
           }

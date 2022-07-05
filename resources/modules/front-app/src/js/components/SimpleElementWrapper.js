@@ -246,8 +246,6 @@ class SimpleElementWrapper extends Component {
     if (this.state.elementDisplay === elementDisplay) {
       return;
     }
-    console.log(getDataByPath('altrpdata.templates.data'));
-    console.log(elementDisplay);
     this.setState(state => ({
       ...state,
       elementDisplay

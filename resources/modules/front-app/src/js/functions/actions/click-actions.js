@@ -23,7 +23,7 @@ export default function clickActions(e){
   }
 
   let {actions, element} =
-    getActionsElement(e.target,
+    getActionsElement(html_element,
       'data-altrp-wrapper-click-actions',
       'wrapper_click_actions',
       'clickActions'
@@ -47,6 +47,7 @@ export default function clickActions(e){
   //     html_element = html_element.parentElement
   //   }
   // }
+
   if(! actions){
     return;
   }

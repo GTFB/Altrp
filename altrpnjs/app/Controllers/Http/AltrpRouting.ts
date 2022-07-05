@@ -1,33 +1,33 @@
 import * as mustache from'mustache'
 import Env from '@ioc:Adonis/Core/Env'
-import getCurrentDevice from "../../helpers/getCurrentDevice";
+import getCurrentDevice from "../../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
-import replaceContentWithData from "../../helpers/string/replaceContentWithData"
+import replaceContentWithData from "../../../helpers/string/replaceContentWithData"
 import {matchPath} from 'react-router'
-import empty from "../../helpers/empty"
+import empty from "../../../helpers/empty"
 import * as _ from 'lodash'
 import User from "App/Models/User";
 import Source from "App/Models/Source"
-import isProd from "../../helpers/isProd"
-import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
-import get_altrp_setting from "../../helpers/get_altrp_setting";
-import stringToObject from "../../helpers/string/stringToObject";
-import resource_path from "../../helpers/path/resource_path";
+import isProd from "../../../helpers/isProd"
+import IGNORED_ROUTES from "../../../helpers/const/IGNORED_ROUTES"
+import get_altrp_setting from "../../../helpers/get_altrp_setting";
+import stringToObject from "../../../helpers/string/stringToObject";
+import resource_path from "../../../helpers/path/resource_path";
 import fs from "fs";
-import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
-import filterAllowedForUser from "../../helpers/string/filterAllowedForUser";
+import JSONStringifyEscape from "../../../helpers/string/JSONStringifyEscape";
+import filterAllowedForUser from "../../../helpers/string/filterAllowedForUser";
 import PagesCache from "App/Services/PagesCache";
-import Edge from "../../helpers/edge";
-import data_get from "../../helpers/data_get";
-import recurseMapElements from "../../helpers/recurseMapElements";
-import is_array from "../../helpers/is_array";
-import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS";
-import validGuid from "../../helpers/validGuid";
+import Edge from "../../../helpers/edge";
+import data_get from "../../../helpers/data_get";
+import recurseMapElements from "../../../helpers/recurseMapElements";
+import is_array from "../../../helpers/is_array";
+import DEFAULT_REACT_ELEMENTS from "../../../helpers/const/DEFAULT_REACT_ELEMENTS";
+import validGuid from "../../../helpers/validGuid";
 import Template from "App/Models/Template";
-import data_set from "../../helpers/data_set";
-import getLatestVersion from "../../helpers/getLatestVersion";
-import FONTS, {SYSTEM_FONT} from "../../helpers/const/FONTS";
+import data_set from "../../../helpers/data_set";
+import getLatestVersion from "../../../helpers/getLatestVersion";
+import FONTS, {SYSTEM_FONT} from "../../../helpers/const/FONTS";
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -47,7 +47,7 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async handle(httpContext: HttpContextContract, next: () => Promise<void>) {
+  public async index(httpContext: HttpContextContract) {
     /**
      * Игнорим все запросы кроме get
      */
@@ -78,7 +78,6 @@ export default class AltrpRouting {
      * Игнорим админку и ajax
      */
     if (url.split('/')[1] === 'admin' || url.split('/')[1] === 'ajax') {
-      await next()
       return
     }
 

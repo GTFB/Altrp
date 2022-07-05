@@ -59,7 +59,7 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
                                                                elementName,
                                                                elementId,
                                                                settings,
-                                                               element, globalCssEditor
+                                                               element,
                                                              }) => {
   let styles = "";
   let prefix = "altrp-element";
@@ -324,7 +324,6 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
   }
 
-  styles += globalCssEditor.globalStylesCss
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
 

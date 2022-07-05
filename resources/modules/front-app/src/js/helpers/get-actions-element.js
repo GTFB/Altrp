@@ -21,6 +21,7 @@ export default function getActionsElement(element,
   } else {
     while ((_element = _element?.closest(`[${attribute}]`))){
       const _el = elementSearchForAction(_element?.getAttribute(attribute))
+
       if(_el && ! _.isEmpty(_el.getSettings(settingName))){
         actions = _el.getSettings(settingName)
         _element = _el
