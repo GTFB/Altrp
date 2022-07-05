@@ -7,7 +7,12 @@ import Logger from "@ioc:Adonis/Core/Logger";
 
 
 class AltrpSocket {
-  public io: Server
+  public io = new Server(AdonisServer.instance!, {
+    path: '/wsaltrp',
+    cors: {
+      origin: '*'
+    }
+  })
   private booted = false
   public clients: {} = {}
 
@@ -17,12 +22,6 @@ class AltrpSocket {
     }
 
     this.booted = true
-    this.io = new Server(AdonisServer.instance!, {
-      path: '/wsaltrp',
-      cors: {
-        origin: '*'
-      }
-    })
   }
 
   async pushClient(client: Socket) {
