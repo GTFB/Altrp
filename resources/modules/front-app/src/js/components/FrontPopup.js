@@ -352,6 +352,7 @@ class FrontPopup extends Component {
                 )}
                 className="popup-scrollbar"
                 autoHeight
+                autoHeightMax="100vh"
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
