@@ -1,5 +1,6 @@
 import getResponsiveSetting from './getResponsiveSetting';
 import {encode} from 'html-entities';
+import empty from './empty';
 
 export default function renderSectionBG(settings, element_id, device){
 
@@ -29,5 +30,5 @@ export default function renderSectionBG(settings, element_id, device){
     <source src="${background_video_url || 'none'}" type="video/mp4" class="section-video-source"/>
       </video>`
     :
-    `<span class="${sectionBackground.join(" ")}" data-reveal-options="${encode(JSON.stringify(revealOptions))}" ></span>`
+    `<span class="${sectionBackground.join(" ")}" ${empty(revealOptions) ? '' : `data-reveal-options="${encode(JSON.stringify(revealOptions))}`}" ></span>`
 }
