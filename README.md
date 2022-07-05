@@ -6,6 +6,7 @@
 [comment]: <> (### 1.2.2)
 
 [comment]: <> (* Fix Global Styles Duplicate Issue)
+[comment]: <> (* Fix Popup Height by Content Bug)
 
 ### 1.2.1
 * Add Changes in Related Models Before Users Delete

@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   justify-content: stretch;
 `
 
-const marketplaceUrl = "https://altrp.market";
+const marketplaceUrl = "https://altrp.org";
 
 class Marketplace extends React.Component {
   constructor(props) {

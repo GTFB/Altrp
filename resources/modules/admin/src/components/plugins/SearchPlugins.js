@@ -16,7 +16,7 @@ export default class SearchPlugins extends Component {
       activeHeader: 4,
     };
     this.searchResource = new Resource({
-      route:'https://altrp.market/ajax/models/market_plugins/customizers/search_plugins_for_user_ac58fmi3g'
+      route:'https://altrp.org/ajax/models/market_plugins/customizers/search_plugins_for_user_ac58fmi3g'
     });
     this.downloadedPluginsResource = new Resource({
       route:'/admin/ajax/plugins'
