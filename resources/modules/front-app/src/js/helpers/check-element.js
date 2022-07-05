@@ -8,6 +8,7 @@ import FrontElement from "../classes/FrontElement";
  */
 export default function checkElement(element, params = {}){
   let result = false;
+
   if(_.isEmpty(params.settings) || ! _.isArray(params.settings)){
     return ! result;
   }

@@ -9,12 +9,8 @@ import {
   ReturnButton, ViewElement,
   Wrapper
 } from "./GetSection.styled";
-import {getFactory, iconsManager} from "../../helpers"
-import Scrollbars from "react-custom-scrollbars";
 import NewSectionStructure from "../NewSectionStructure";
 
-const marketplaceUrl = "https://altrp.org";
-const url = "https://altrp.org/get/templates/section"
 
 export default class GetSection extends React.Component {
   constructor(props) {

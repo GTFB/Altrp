@@ -347,6 +347,7 @@ class FrontPopup extends Component {
                   <div {...props} className="popup-scrollbar-track-vertical" />
                 )}
                 className="popup-scrollbar"
+                autoHeight
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
