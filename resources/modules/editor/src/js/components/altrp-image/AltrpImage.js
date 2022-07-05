@@ -40,6 +40,7 @@ ${(props) => {
   }
   return props.width ? props.width : '100%'
 }};
+}
 ${({elementId})=>`.altrp-element${elementId}`} .altrp-image-placeholder::before{
   display: block;
   content: '';
@@ -61,6 +62,7 @@ ${(props) => {
   if (height && _.isString(height) && height.indexOf('%') === -1) {
     return style;
   }
+  console.log(props);
   if (Number(props.mediaWidth) && Number(props.mediaHeight)) {
     style += `padding-top:${(props.mediaHeight / props.mediaWidth) * 100}%;`
   }
@@ -163,6 +165,9 @@ class AltrpImage extends Component {
         elementId={this.props.elementId}
         height={height}
         width={width}
+        style={placeholderStyles}
+        mediaWidth={media.width || 100}
+        mediaHeight={media.height || 75}
       />
       <ImagePlaceholder color={media.main_color}
                                         className={'altrp-image-placeholder '}
