@@ -634,7 +634,9 @@ export default class Page extends BaseModel {
 
       let _styles:string[] = []
       if(contentStyles.important_styles){
+
         _styles = [purifycss(html, contentStyles.important_styles, purifycssOptions)]
+
       } else {
         _.forEach(contentStyles, (style: string[], key) => {
           const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
@@ -695,13 +697,16 @@ export default class Page extends BaseModel {
       }
     }
     //@ts-ignore
-    const footerHash = footer?.html_content ?  encodeURI(md5(footer?.html_content)) : ''
+    const footerHash =  encodeURI(md5(footerGuid ? footerContent : ''))
+    const contentHash = encodeURI(md5(contentGuid ? contentContent : ''))
+
     let result = `<div class="app-area app-area_header">
       ${headerGuid ? headerContent : ''}
       </div>
       <div class="app-area app-area_content">
       ${contentGuid ? contentContent : ''}
       </div>
+      ${contentGuid ? `<link href="/altrp/css${cssPrefix}/${contentGuid}.css?${contentHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>` : ''}
       <div class="app-area app-area_footer">
       ${footerGuid ? footerContent : ''}
       </div>

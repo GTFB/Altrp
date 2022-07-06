@@ -10,7 +10,7 @@ const defaultTypes = [
 
 async function upgradeBackend(types = defaultTypes, ids ) {
 
-  progressBar(.001)
+  progressBar(.02)
   let pages = ['']
   if(types.indexOf('pages') > -1){
     pages = (await axios.get('/admin/ajax/pages')).data

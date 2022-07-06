@@ -91,15 +91,15 @@ class SaveImportModule extends BaseModule {
       }
     }
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
-    progressBar(0.001)
+    progressBar(0.01)
 
     templateData.styles = await templateStylesModule.generateStyles();
-
-    const pagesIds = (await(new Resource({route: `/admin/ajax/get-template-pages-ids/`}))
-      .get(this.template_id)).data
-
-
+    let pagesIds = []
     try{
+      pagesIds = (await(new Resource({route: `/admin/ajax/get-template-pages-ids/`}))
+        .get(this.template_id)).data
+
+
       await this.resource.post({
         ...templateData,
         type: "review",

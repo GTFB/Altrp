@@ -9,6 +9,7 @@
 [//]: <> (* Front App Hooks for Plugins)
 [comment]: <> (* Fix Global Styles Duplicate Issue)
 [comment]: <> (* Fix Popup Height by Content Bug)
+[comment]: <> (* Optimize Css Load for Front App)
 
 ### 1.2.1
 * Add Changes in Related Models Before Users Delete

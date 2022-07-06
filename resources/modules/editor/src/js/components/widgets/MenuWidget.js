@@ -38,7 +38,7 @@ class MenuWidget extends Component {
 
   getMenuData = async () => {
     let menuGUID = this.props.element.getResponsiveLockedSetting('menu')
-    if ((this.state.menuData || !menuGUID) && this.menuGUID === menuGUID || this.loading) {
+    if ((this.state.menuData || !menuGUID) && this.menuGUID === menuGUID ) {
       return
     }
 
@@ -53,15 +53,13 @@ class MenuWidget extends Component {
         appStore.dispatch(addMenu(menuData));
       }
     }
-    this.setState(state => ({...state, menuData}), () => {
-      this.loading = false;
-      this.menuGUID = menuGUID
-    })
+    this.menuData = menuData
+    this.menuGUID = menuGUID
   }
 
   renderHorizontalMenu() {
     this.getMenuData();
-    const {menuData} = this.state;
+    const {menuData} = this;
     if (!menuData) {
       return 'Select Menu';
     }
@@ -92,7 +90,7 @@ class MenuWidget extends Component {
 
   renderVerticalMenu() {
     this.getMenuData();
-    const {menuData} = this.state;
+    const {menuData} = this;
     if (!menuData) {
       return 'Select Menu';
     }
@@ -260,7 +258,7 @@ class MenuWidget extends Component {
   }
 
   renderButton = () => {
-    const {menuData} = this.state;
+    const {menuData} = this;
     if (!menuData) {
       return null;
     }

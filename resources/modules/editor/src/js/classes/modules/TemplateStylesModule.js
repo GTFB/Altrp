@@ -2,10 +2,11 @@ import {getSheet, stringifyStylesheet} from "../../../../../front-app/src/js/hel
 import {delay} from "../../../../../front-app/src/js/helpers";
 import CONSTANTS from "../../consts";
 import {setCurrentScreen} from "../../store/responsive-switcher/actions";
-import isProd from "../../../../../admin/src/js/helpers/isProd";
 import {changeStateByName} from "../../store/editor-state/actions";
 import store from '../../store/store'
-import {getTemplateType} from "../../helpers";
+import {getTemplateDataStorage, getTemplateType} from "../../helpers";
+import extractElements from "../../helpers/extractElements";
+import {setSections} from "../../store/primary-sections/actions";
 
 class TemplateStylesModule {
   all_styles = []
@@ -18,6 +19,25 @@ class TemplateStylesModule {
     let styles
     let stylesElements
     let importantStyles = ''
+    const templateType = getTemplateType()
+    const rootElement = getTemplateDataStorage()
+      .getRootElement()
+
+    let elements = []
+
+    const callback = e=>{
+      const maxTop = 980
+      if(e.getType() !== 'section'){
+        return false
+      }
+      const htmlElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName(`altrp-element${e.getId()}`)[0]
+      if(! htmlElement){
+        return false
+      }
+      const rect = htmlElement.getBoundingClientRect();
+      console.log(rect.y);
+      return rect.y < maxTop
+    }
 
     store.dispatch(changeStateByName('ignoreUpdate', true))
     if (window.altrpEditorContent.editorWindow.current) {
@@ -61,7 +81,6 @@ class TemplateStylesModule {
     stylesElements = _.uniq(stylesElements)
 
     for (const screen of CONSTANTS.SCREENS) {
-      await delay(650)
 
       let styledTag = window.altrpEditorContent.editorWindow.current
         .getRootNode()
@@ -72,17 +91,45 @@ class TemplateStylesModule {
 
 
         editorStore.dispatch(setCurrentScreen(screen))
+        await delay(650)
+
+        if(screen.name === CONSTANTS.DEFAULT_BREAKPOINT){
+          extractElements(rootElement, elements, callback)
+          elements = elements.map(e=>{
+            return _.cloneDeep(e)
+          })
+          console.log(elements);
+          store.dispatch(setSections(elements))
+        }
         let css = stringifyStylesheet(
           getSheet(styledTag, contentDocument)
         );
         // let css = styledTag.innerHTML
 // console.log(editorStore.getState().currentScreen);
-        // if(screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1){
-        //   css = `${screen.fullMediaQuery}{${css}}`
-        // }
         const _stylesElements = [...stylesElements]
         _stylesElements.push(css);
         styles[screen.name] = _stylesElements;
+      }
+      if (templateType === 'content' || [
+        'card',
+        'popup',
+        'reports',
+        'footer',
+        'header',
+        'email'
+      ].indexOf(templateType) === -1){
+        const importantStylesElement = window.document.querySelector('.important_styles [data-styled="active"]');
+
+        const contentDocument = importantStylesElement.getRootNode();
+
+        let css = stringifyStylesheet(
+          getSheet(importantStylesElement, contentDocument)
+        );
+
+        if(screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1){
+          css = `${screen.fullMediaQuery}{${css}}`
+        }
+        importantStyles += css
       }
     }
     /**
@@ -92,7 +139,7 @@ class TemplateStylesModule {
     // window.top.document.getElementById("editorContent").contentWindow.document.querySelector('[data-styled]').inn()
     editorStore.dispatch(setCurrentScreen(currentScreen))
     store.dispatch(changeStateByName('ignoreUpdate', false))
-    if (getTemplateType() === 'header') {
+    if (templateType === 'header') {
       for (const screen of CONSTANTS.SCREENS) {
         if (_.isArray(styles[screen.name])) {
           let css = styles[screen.name].join('')
@@ -102,8 +149,8 @@ class TemplateStylesModule {
           importantStyles += css
         }
       }
-
     }
+    store.dispatch(setSections([]))
     styles['important_styles'] = importantStyles
     return styles
   }

@@ -6,11 +6,11 @@ import app_path from '../../helpers/path/app_path';
 import Template from 'App/Models/Template';
 import path from 'path';
 import * as _ from 'lodash'
-import Logger from '@ioc:Adonis/Core/Logger'
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import SCREENS from "../../helpers/const/SCREENS";
 import escapeRegExp from "../../helpers/escapeRegExp";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
+import DEFAULT_BREAKPOINT from "../../helpers/const/DEFAULT_BREAKPOINT";
 
 export default class TemplateGenerator extends BaseGenerator {
 
@@ -59,39 +59,30 @@ export default class TemplateGenerator extends BaseGenerator {
     let all_styles = _.get(styles, 'all_styles', [])
     all_styles = all_styles.join('')
     all_styles = parse(all_styles)
+    let queriedStyles = ''
     for (const screen of SCREENS) {
       await ListenerGenerator.getHookTemplates(this)
       if (template.guid) {
         let currentScreenStyles = _.get(styles, screen.name, [])
         if (currentScreenStyles.length) {
-          all_styles = currentScreenStyles.join('')
-          all_styles = parse(all_styles)
+          if(screen.name === DEFAULT_BREAKPOINT){
+            queriedStyles += currentScreenStyles.join('')
+          } else{
+            queriedStyles += `${screen.fullMediaQuery}{${currentScreenStyles.join('')}}`
+          }
+        } else {
+           await BaseGenerator.generateCssFile(template.guid, all_styles.textContent, screen.name)
         }
 
-        // let _styles: string[] = []
-        // _.forEach(styles, (style: string[], key) => {
-        //   const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
-        //   let _style = ''
-        //   _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
-        //   if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
-        //     _style = `${mediaQuery}{${_style}}`
-        //   }
-        //   _styles.push(_style)
-        // })
-        // _styles = _styles.filter(s => s)
-        // console.log(all_styles.textContent);
-        await BaseGenerator.generateCssFile(template.guid, all_styles.textContent, screen.name)
       }
 
       let fileName = this.getFilename(template)
       if (!template.currentArea?.name) {
         console.error(`Template ${template.id} render error. Need Area name`);
-        Logger.warn(`Try Render Template without area (id: ${template.id})`)
         return
       }
       if (!template.guid) {
         console.error(`Template ${template.id} render error. Need guid`);
-        Logger.warn(`Try Render Template without guid (id: ${template.id})`)
         return
       }
       let children_content = await template.getChildrenContent(screen.name)
@@ -106,7 +97,11 @@ export default class TemplateGenerator extends BaseGenerator {
           area_name: template.currentArea?.name,
         }, true)
     }
-
+    if (template.guid) {
+      for (const screen of SCREENS) {
+        queriedStyles && await BaseGenerator.generateCssFile(template.guid, queriedStyles, screen.name)
+      }
+    }
     clearRequireCache()
   }
 

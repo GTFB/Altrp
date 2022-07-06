@@ -37,7 +37,6 @@ import Hamburger from "./svgs/hamburger.svg";
 import { contextMenu } from "react-contexify";
 import { closeDynamicContent } from "./js/store/dynamic-content/actions";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
-import DialogWindow from "./js/components/DialogWindow";
 import { renderAsset } from "../../front-app/src/js/helpers";
 import { changeCurrentUser } from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
@@ -59,10 +58,10 @@ import ConditionsPopup from "./js/components/ConditionsPopup";
 import {Rnd} from "react-rnd";
 import { Resizable } from "re-resizable";
 import {io} from "socket.io-client";
-import CssEditor from "./js/components/cssEditor/CssEditor";
 import {setGlobalStylesCss} from "./js/store/global-css-editor/actions";
 import ReactDOM from "react-dom";
 import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
+import ImportantStylesManager from "./js/components/ImportantStylesManager";
 
 /**
  * Главный класс редактора.<br/>
@@ -586,6 +585,7 @@ class Editor extends Component {
           </Resizable>
         </div>
         <AssetsBrowser rawEnable={true}/>
+         <ImportantStylesManager/>
       </DndProvider>
     );
   }
@@ -593,7 +593,8 @@ class Editor extends Component {
 
 function mapStateToProps(state) {
   return {
-    templateStatus: state.templateStatus.status
+    templateStatus: state.templateStatus.status,
+    primarySections: state.primarySections,
   };
 }
 

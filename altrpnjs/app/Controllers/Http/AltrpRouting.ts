@@ -53,7 +53,6 @@ export default class AltrpRouting {
      */
 
     if (httpContext.request.method() !== 'GET') {
-      await next()
       return
     }
     const url = httpContext.request.url();
@@ -62,7 +61,6 @@ export default class AltrpRouting {
      */
     for (const route of IGNORED_ROUTES) {
       if (route === url) {
-        await next()
         return
       }
     }
@@ -70,7 +68,6 @@ export default class AltrpRouting {
     const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
 
     if (httpContext.request.completeUrl().split(modulesUrl).length > 1) {
-      await next()
       return
     }
 

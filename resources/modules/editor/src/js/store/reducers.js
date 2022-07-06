@@ -32,6 +32,7 @@ import {globalStylesPresetsReducer} from "./altrp-global-styles/reducers";
 import { widgetsReducer } from "./widgets/reducers";
 import {globalStylesCssReducer} from "./global-css-editor/reducers";
 import {editorStateReducer} from "./editor-state/reducers";
+import {primarySectionsReducer} from "./primary-sections/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -66,5 +67,6 @@ export default combineReducers({
   altrpMenus: menusReducer,
   elementsSettings: elementsSettingsReducer,
   editorState: editorStateReducer,
-  widgetsManager: widgetsReducer
+  widgetsManager: widgetsReducer,
+  primarySections: primarySectionsReducer,
 });
