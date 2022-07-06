@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import {BackgroundWrapper, Content, Iframe, Wrapper} from "./GetTemplate.styled";
 import {getFactory} from "../../helpers";
 
-const marketplaceUrl = "https://altrp.org";
+const marketplaceUrl = "https://altrp.market";
 const url = "//altrp.market/templates-frame"
 
 export default class GetTemplate extends React.Component {
