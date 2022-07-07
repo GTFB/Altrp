@@ -5,7 +5,6 @@ import Edge from '../../../helpers/edge';
 import Env from '@ioc:Adonis/Core/Env';
 import replaceContentWithData from "../../../helpers/replaceContentWithData"
 import {matchPath} from 'react-router'
-import empty from "../../../helpers/empty"
 import * as _ from 'lodash'
 import getLatestVersion from "../../../helpers/getLatestVersion"
 import User from "App/Models/User";
@@ -47,8 +46,6 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
-
-
     const url = httpContext.request.url();
     /**
      * Игнорим логинизацию
@@ -133,7 +130,7 @@ export default class AltrpRouting {
         } catch (e) {
           console.error(e);
         }
-        if (empty(model_data)) {
+        if (_.isEmpty(model_data)) {
           httpContext.response.status(404)
           return httpContext.response.send('Not Found')
         }

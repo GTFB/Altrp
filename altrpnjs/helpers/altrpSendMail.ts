@@ -1,7 +1,6 @@
 import Mail from '@ioc:Adonis/Addons/Mail'
 import {SmtpDriver} from "@adonisjs/mail/build/src/Drivers/Smtp";
 import Env from "@ioc:Adonis/Core/Env";
-import Logger from "@ioc:Adonis/Core/Logger";
 import replaceContentWithData from "./replaceContentWithData";
 import {Message} from "@adonisjs/mail/build/src/Message";
 
@@ -62,7 +61,7 @@ export default async function altrpSendMail(
       success:true
     }
   } catch (e) {
-    Logger.error(e)
+    console.error(e)
     return {
       success: false,
       message: e.message,
