@@ -127,7 +127,7 @@ class NavigationPanel extends Component {
       onClick: (node, e) => this.showItem(e, node.id),
       [parent != null && "parent"]: parent,
       secondaryLabel: (
-        template.getName() !== "root-element" && (
+        (template.getName() !== "root-element" && (template.getName() === "column" ? template.parent.children.length > 1 : true)) && (
           <div>
             <Icon
               icon="trash"
