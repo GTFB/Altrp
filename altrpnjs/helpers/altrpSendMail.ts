@@ -63,7 +63,7 @@ export default async function altrpSendMail(
       success:true
     }
   } catch (e) {
-    console.error(e);
+    console.error(e)
     return {
       success: false,
       message: e.message,

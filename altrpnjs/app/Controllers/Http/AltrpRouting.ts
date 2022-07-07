@@ -5,7 +5,6 @@ import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
 import replaceContentWithData from "../../../helpers/string/replaceContentWithData"
 import {matchPath} from 'react-router'
-import empty from "../../../helpers/empty"
 import * as _ from 'lodash'
 import User from "App/Models/User";
 import Source from "App/Models/Source"
@@ -51,10 +50,13 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
+<<<<<<< HEAD
 
     if (httpContext.request.method() !== 'GET') {
       return
     }
+=======
+>>>>>>> master
     const url = httpContext.request.url();
     /**
      * Игнорим логинизацию
@@ -139,6 +141,7 @@ export default class AltrpRouting {
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
+<<<<<<< HEAD
         model_data = classInstance ? classInstance.serialize() : {}
       } catch (e) {
         console.error(e);
@@ -148,6 +151,11 @@ export default class AltrpRouting {
         page = await Page.query().where('not_found', true).first()
         if (!page) {
           return httpContext.response.send('page not found')
+=======
+        if (_.isEmpty(model_data)) {
+          httpContext.response.status(404)
+          return httpContext.response.send('Not Found')
+>>>>>>> master
         }
       }
     }
