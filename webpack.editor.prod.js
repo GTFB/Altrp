@@ -5,7 +5,7 @@ const webpack = require("webpack");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 // module.exports = merge(common, {
-module.exports =  {
+module.exports = {
   entry: "./resources/modules/editor/src/index.js",
   mode: 'production',
   devtool: 'source-map',
@@ -38,7 +38,19 @@ module.exports =  {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: 'style-loader',
+            // options: {
+            //   insert: element => {
+            //     document.getElementById('editorContent')
+            //       ?.contentWindow
+            //       .document
+            //       .querySelector('head')?.appendChild(element)
+            //     document.querySelector('head').appendChild(element)
+            //   }
+            // }
+          },
+          // MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader',
         ],
@@ -73,11 +85,11 @@ module.exports =  {
     // new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     // new ExtractTextPlugin('style.css'),
-    new MiniCssExtractPlugin({
-      chunkFilename: '[chunkhash].editor.css',
-
-      filename: 'editor.css',
-    }),
+    // new MiniCssExtractPlugin({
+    //   chunkFilename: '[chunkhash].editor.css',
+    //
+    //   filename: 'editor.css',
+    // }),
     new webpack.DefinePlugin({
       "process.env": "{}",
       global: {}
@@ -85,12 +97,13 @@ module.exports =  {
     new CopyWebpackPlugin({
       patterns: [
 
-          {
-            from: 'resources/modules/editor/src/skins',
-            to: 'skins'
-          },
+        {
+          from: 'resources/modules/editor/src/skins',
+          to: 'skins'
+        },
 
-    ]})
+      ]
+    })
     //   // Options similar to the same options in webpackOptions.output
     //   // both options are optional
     //   filename: '[name].css',

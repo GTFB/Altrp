@@ -375,11 +375,9 @@ class Export extends Component {
   }
 */
   changeMainItem(id, line) {
-    console.log(id, line, this);
     let newValue = {...this.state.value};
     const props = {...this.state.props};
     props[line] = ! props[line];
-    console.log(props);
     if (props[line]) {
       newValue[line] = [];
     } else {
