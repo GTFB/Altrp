@@ -78,6 +78,7 @@ export default class PageGenerator extends BaseGenerator {
     const _frontend_route = page.serialize()
     _.set(_frontend_route, 'templates', [])
     let elements_list: string[] | string = await page.extractElementsNames()
+    const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
     elements_list = elements_list.map(e => `'${e}'`)
 
     const head_start = get_altrp_setting('head_start', '', true)
@@ -94,19 +95,19 @@ export default class PageGenerator extends BaseGenerator {
 
     const page_areas = await page.renderPageAreas()
 
+
+    let plugin_frontend_head = ''
+    plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
+      plugin_frontend_head, page)
+
+    let plugin_frontend_bottom = ''
+    plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_bottom',
+      plugin_frontend_bottom, page)
+
+    let fileName = this.getFilename(page)
+
     for (const screen of SCREENS) {
 
-
-      let plugin_frontend_head = ''
-      plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
-        plugin_frontend_head, page)
-
-      let plugin_frontend_bottom = ''
-      plugin_frontend_bottom = await applyPluginsFiltersAsync('plugin_frontend_bottom',
-        plugin_frontend_bottom, page)
-
-
-      let fileName = this.getFilename(page)
       let children_content = await this.page.getChildrenContent(screen.name)
       let all_styles = ''
       try {
@@ -115,7 +116,6 @@ export default class PageGenerator extends BaseGenerator {
         console.error(e);
       }
 
-      const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
       await this.addFile(fileName)
         .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
         .stub(PageGenerator.template)
@@ -168,6 +168,7 @@ export default class PageGenerator extends BaseGenerator {
     for (let element of elementsList) {
       const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
       if (fs.existsSync(fileName)) {
+        console.log(fileName);
         let content = fs.readFileSync(fileName, {encoding: 'utf8'})
         content = content.replace(/\n/g, '')
         extraStyles.extra_header_styles += `

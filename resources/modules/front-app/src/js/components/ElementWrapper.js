@@ -264,6 +264,47 @@ class ElementWrapper extends Component {
     return display;
   }
 
+  shouldComponentUpdate(newProps, newState){
+    const {element} = this.props;
+    let {dependencies} = element;
+    if(isEditor()){
+      return false
+    }
+    dependencies = dependencies || []
+
+    if(newProps.altrpPageState !== this.props.altrpPageState
+      && dependencies.indexOf('altrppagestate') === -1){
+      ++window.countReduced
+      return false
+    }
+    if(newProps.currentDataStorage !== this.props.currentDataStorage
+      && dependencies.indexOf('altrpdata') === -1){
+      ++window.countReduced
+      return false
+    }
+    if(newProps.altrpresponses !== this.props.altrpresponses
+      && dependencies.indexOf('altrpresponses') === -1){
+      ++window.countReduced
+      return false
+    }
+    if(newProps.formsStore !== this.props.formsStore
+      && dependencies.indexOf('altrpforms') === -1){
+      ++window.countReduced
+      if(element.getName().indexOf('input') > -1 || element.getName() === 'textarea'){
+        return `${element.getFormId()}.${element.getFieldId()}`
+          === newProps.formsStore.changedField
+      }
+      return false
+    }
+    if(newProps.altrpMeta !== this.props.altrpMeta
+      && dependencies.indexOf('altrpmeta') === -1){
+      ++window.countReduced
+      return false
+    }
+    ++window.count;
+    return true
+  }
+
   render() {
     const {element} = this.props;
     const {
@@ -468,23 +509,6 @@ class ElementWrapper extends Component {
         </WrapperComponent>
 
       </>
-    );
-    return  (
-      <WrapperComponent {...wrapperProps} element={element.getId()}>
-
-        {tooltip_show_type && tooltip_show_type !== "never" ? (
-          <AltrpTooltip
-            position={tooltip_position}
-            id={this.props.element.getId()}
-            state={tooltip_show_type}
-            minimal={tooltip_minimal}
-            horizontal={tooltip_horizontal_offset}
-            vertical={tooltip_vertical_offset}
-            text={tooltip_text}>
-            {content}
-          </AltrpTooltip>
-        ) : content}
-      </WrapperComponent>
     );
   }
 }

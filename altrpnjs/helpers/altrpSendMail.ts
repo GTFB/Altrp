@@ -25,7 +25,7 @@ export default async function altrpSendMail(
 
 
 
-  from = from || Env.get('MAIL_FROM_ADDRESS')
+  from = Env.get('MAIL_FROM_ADDRESS')
   to = replaceContentWithData(to, context)
   subject = replaceContentWithData(subject, context)
   html = replaceContentWithData(html, context)
@@ -36,7 +36,7 @@ export default async function altrpSendMail(
     console.log(new SmtpDriver({
       driver: "smtp",
       host,
-      port: 465,
+      port,
       auth: {
         user,
         pass,

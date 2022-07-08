@@ -252,6 +252,46 @@ class SimpleElementWrapper extends Component {
     }));
   }
 
+  shouldComponentUpdate(newProps, newState){
+    const {element} = this.props;
+    let {dependencies} = element;
+    if(isEditor()){
+      return false
+    }
+    dependencies = dependencies || []
+
+    if(newProps.altrpPageState !== this.props.altrpPageState
+      && dependencies.indexOf('altrppagestate') === -1){
+      ++window.countReduced
+      return false
+    }
+    if(newProps.currentDataStorage !== this.props.currentDataStorage
+      && dependencies.indexOf('altrpdata') === -1){
+      ++window.countReduced
+      return false
+    }
+    if(newProps.altrpresponses !== this.props.altrpresponses
+      && dependencies.indexOf('altrpresponses') === -1){
+      ++window.countReduced
+      return false
+    }
+    if(newProps.formsStore !== this.props.formsStore
+      && dependencies.indexOf('altrpforms') === -1){
+      ++window.countReduced
+      if(element.getName().indexOf('input') > -1 || element.getName() === 'textarea'){
+        return `${element.getFormId()}.${element.getFieldId()}`
+          === newProps.formsStore.changedField
+      }
+      return false
+    }
+    if(newProps.altrpMeta !== this.props.altrpMeta
+      && dependencies.indexOf('altrpmeta') === -1){
+      ++window.countReduced
+      return false
+    }
+    ++window.count;
+    return true
+  }
   /**
    * Переключает видимость элемента
    */

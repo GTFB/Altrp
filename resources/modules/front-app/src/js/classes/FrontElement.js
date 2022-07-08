@@ -10,7 +10,7 @@ import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 import {addSettings} from "../store/elements-settings/actions";
 import INPUT_WIDGETS from "../constants/INPUT_WIDGETS";
-
+window.elementsCount = 0
 class FrontElement {
 
   constructor(data = {}, withoutComponent = false){
@@ -18,7 +18,9 @@ class FrontElement {
     this.settings = data.settings;
     this.settingsLock = data.settingsLock;
     this.lazySection = data.lazySection;
-    this.children = data.children;
+    this.lazySection = data.lazySection;
+    this.dependencies = data.dependencies;
+    window.elementsCount++
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;

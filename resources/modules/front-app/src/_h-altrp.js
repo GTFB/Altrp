@@ -8,7 +8,8 @@ import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
 
 window.Link = 'a';
-
+window.count = 0
+window.countReduced = 0
 function loadDatastorageUpdater(){
   import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
     const dataStorageUpdater = window.dataStorageUpdater;

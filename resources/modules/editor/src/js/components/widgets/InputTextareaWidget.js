@@ -987,7 +987,6 @@ class InputTextareaWidget extends Component {
     const settings = this.props.element.getLockedSettings();
     const {
       content_readonly,
-      select2_multiple: isMultiple,
     } = settings;
 
     let value = this.getValue();

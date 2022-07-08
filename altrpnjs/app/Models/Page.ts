@@ -42,6 +42,7 @@ import fs from "fs";
 import app_path from "../../helpers/path/app_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import SCREENS from "../../helpers/const/SCREENS";
+import {dependencies} from "webpack";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -894,6 +895,8 @@ export default class Page extends BaseModel {
       }
       if(area?.template?.data){
         area.template.data = mbParseJSON(area.template.data, area.template.data)
+
+        this.getDataDependencies(area.template.data)
         // area.template.data = JSON.stringify(area.template.data)
 
         // const data = {...area.template.data}
@@ -910,7 +913,45 @@ export default class Page extends BaseModel {
 
     return JSONStringifyEscape(_areas)
   }
-
+  getDataDependencies(data){
+    if(! data){
+      return
+    }
+    let _data = _.cloneDeep(data)
+    delete _data.children
+    for(let settingName in _data.settingsLock){
+      if(_data.settingsLock.hasOwnProperty(settingName)){
+        if(settingName.toLowerCase().indexOf('actions') > -1){
+          delete _data.settingsLock[settingName]
+        }
+      }
+    }
+    for(let settingName in _data.settings){
+      if(_data.settings.hasOwnProperty(settingName)){
+        if(settingName.toLowerCase().indexOf('actions') > -1){
+          delete _data.settings[settingName]
+        }
+      }
+    }
+    _data = JSON.stringify(_data)
+    if(_.isArray(data.children)){
+      for(const child of data.children){
+        this.getDataDependencies(child)
+      }
+    }
+    const dependenciesList = [
+      'altrppagestate',
+      'altrpdata',
+      'altrpforms',
+      'altrpmeta',
+      'altrpresponses',
+    ]
+    for (const d of dependenciesList){
+      if(_data.indexOf(d) > -1){
+        (data.dependencies = data.dependencies || []).push(d)
+      }
+    }
+  }
   async getPopupsGuids() {
     const popups = await Template.getTemplates(this.id, 'popup' )
     return popups.map(popup => popup.guid)

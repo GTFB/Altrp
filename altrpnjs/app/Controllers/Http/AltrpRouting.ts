@@ -50,13 +50,6 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
-<<<<<<< HEAD
-
-    if (httpContext.request.method() !== 'GET') {
-      return
-    }
-=======
->>>>>>> master
     const url = httpContext.request.url();
     /**
      * Игнорим логинизацию
@@ -141,23 +134,16 @@ export default class AltrpRouting {
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
-<<<<<<< HEAD
         model_data = classInstance ? classInstance.serialize() : {}
       } catch (e) {
         console.error(e);
       }
-      if (empty(model_data)) {
+
+      if (_.isEmpty(model_data)) {
         httpContext.response.status(404)
-        page = await Page.query().where('not_found', true).first()
-        if (!page) {
-          return httpContext.response.send('page not found')
-=======
-        if (_.isEmpty(model_data)) {
-          httpContext.response.status(404)
-          return httpContext.response.send('Not Found')
->>>>>>> master
-        }
+        return httpContext.response.send('Not Found')
       }
+
     }
 
     let title = replaceContentWithData(page.title, model_data)
