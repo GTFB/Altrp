@@ -110,7 +110,7 @@ export default class AltrpRouting {
     }
 
     if (!page) {
-      return httpContext.response.send('page not found')
+      return httpContext.response.send('Not Found')
     }
 
     if (!await page.allowedForUser(this)) {
@@ -127,21 +127,38 @@ export default class AltrpRouting {
     let model_data = {}
     if (page.model) {
       try {
-        const ModelClass = (await import(`../AltrpModels/${page.model.name}`)).default
+        const ModelClass = (await import(`../../AltrpModels/${page.model.name}`)).default
         let classInstance
         if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
           classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
         } else if (pageMatch.params?.id) {
+          console.log(pageMatch.params.id);
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
         model_data = classInstance ? classInstance.serialize() : {}
+        console.log(classInstance);
+        console.log(classInstance.serialize());
       } catch (e) {
         console.error(e);
       }
 
       if (_.isEmpty(model_data)) {
         httpContext.response.status(404)
-        return httpContext.response.send('Not Found')
+
+        if (!page) {
+          httpContext.response.status(404)
+          page = await Page.query().where('not_found', true).first()
+        }
+
+        if (!page) {
+          return httpContext.response.send('Not Found')
+        }
+
+        if (!await page.allowedForUser(this)) {
+          return httpContext.response.redirect(page.redirect || '/')
+        }
+
+        await page.load('model');
       }
 
     }

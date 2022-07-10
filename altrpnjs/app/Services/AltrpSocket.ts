@@ -10,7 +10,9 @@ class AltrpSocket {
   public io: Server
   private booted = false
   public clients: {} = {}
-
+  constructor() {
+    this.boot()
+  }
   public boot() {
     if (this.booted) {
       return

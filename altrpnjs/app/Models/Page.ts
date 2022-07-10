@@ -42,7 +42,6 @@ import fs from "fs";
 import app_path from "../../helpers/path/app_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import SCREENS from "../../helpers/const/SCREENS";
-import {dependencies} from "webpack";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})

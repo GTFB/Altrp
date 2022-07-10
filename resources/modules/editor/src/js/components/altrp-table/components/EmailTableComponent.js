@@ -2,7 +2,6 @@ import AltrpQueryComponent from "../../altrp-query-component/altrp-query-compone
 import {isEditor, prepareURLForEmail} from "../../../../../../front-app/src/js/helpers";
 
 export function EmailTableComponent(props){
-  // console.log(props);
   const {data, settings,  } = props;
   const {
     tables_columns: columns = [],

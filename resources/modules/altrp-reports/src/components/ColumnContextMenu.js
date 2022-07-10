@@ -11,7 +11,6 @@ const ColumnContextMenu = () => {
   const tmpWidget = useSelector((state) => state.sections.present.tmpWidget);
 
   const onClick = ({ props }) => {
-    console.log(props);
     switch (props.action) {
       case MENU_PASTE_WIDGET:
         return dispatch(pasteWidget(props.sectionIndex, props.columnIndex));
