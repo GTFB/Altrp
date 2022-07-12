@@ -271,11 +271,13 @@ export default class PagesController {
       await page.save()
       const pageGenerator = new PageGenerator()
       await pageGenerator.run(page)
-      if(request.input("categories")) {
-        await page.related("categories").detach()
 
+      if(request.input("categories").length > 0) {
+
+        await page.related("categories").detach()
         for (const option of request.input("categories")) {
-          const category = await Category.find(option.value);
+
+          const category = await Category.query().where('guid', option.value).firstOrFail();
 
           if (!category) {
             response.status(404)
