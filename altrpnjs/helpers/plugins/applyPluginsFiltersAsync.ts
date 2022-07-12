@@ -39,7 +39,11 @@ export default async function applyPluginsFiltersAsync(type: string, content, ..
     return hook.hookName
   },])
   for(const hook of hooks){
-    content = await hook.fn(content, ...params)
+    try{
+      content = await hook.fn(content, ...params)
+    } catch (e) {
+      console.error(e);
+    }
   }
   return content
 }

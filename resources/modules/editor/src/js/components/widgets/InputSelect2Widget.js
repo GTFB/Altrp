@@ -1121,8 +1121,10 @@ class InputSelect2Widget extends Component {
         classLabel = "";
         break;
     }
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    content_label = replaceContentWithData(content_label, this.props.element.getCurrentModel()?.getData())
 
-    if (this.state.settings.content_label) {
+    if (content_label) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
