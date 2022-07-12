@@ -3,6 +3,7 @@ import Font from 'App/Models/Font';
 import validGuid from '../../../../helpers/validGuid';
 import guid from "../../../../helpers/guid";
 import _ from "lodash";
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class FontsController {
 
@@ -102,8 +103,8 @@ export default class FontsController {
 
     if (search) {
       fonts.where(function (query) {
-        query.where('altrp_fonts.font_family', 'like', '%' + search + '%')
-          .orWhere('altrp_fonts.id', 'like', '%' + search + '%')
+        query.where('altrp_fonts.font_family', LIKE, '%' + search + '%')
+          .orWhere('altrp_fonts.id', LIKE, '%' + search + '%')
       })
     }
     fonts.orderBy(orderColumn, orderType)

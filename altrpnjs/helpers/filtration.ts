@@ -1,3 +1,5 @@
+import LIKE from "./const/LIKE"
+
 const filtration = (query, request, sColumns) => {
   const params = request.qs()
 
@@ -19,7 +21,7 @@ const filtration = (query, request, sColumns) => {
         subQuery.where(subSubQuery => {
 
           sColumns.forEach((column) => {
-            subSubQuery.orWhere(column, "like", `%${s}%`)
+            subSubQuery.orWhere(column, LIKE, `%${s}%`)
           })
 
           return subSubQuery

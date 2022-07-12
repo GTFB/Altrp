@@ -29,6 +29,7 @@ import guid from "../../helpers/guid";
 import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
+import LIKE from "../../helpers/const/LIKE";
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
@@ -214,7 +215,7 @@ export default class Model extends BaseModel {
     }
 
     models.where(function (query) {
-      query.where('altrp_models.title', 'like', `%${search}%`)
+      query.where('altrp_models.title', LIKE, `%${search}%`)
     }).orderBy(orderColumn, sortType)
 
     await models.preload('categories').select('altrp_models.*')

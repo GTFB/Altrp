@@ -7,6 +7,7 @@ import Model from "App/Models/Model";
 import {string} from "@ioc:Adonis/Core/Helpers";
 import Event from "@ioc:Adonis/Core/Event";
 import {parseInt} from "lodash"
+import LIKE from "../../../../helpers/const/LIKE";
 
 export default class SQLEditorController {
   public async index({request, response}: HttpContextContract) {
@@ -22,9 +23,9 @@ export default class SQLEditorController {
      const sortType: 'asc' | 'desc' = orderType === 'Asc' ? 'Asc' : orderType
      if (searchWord) {
        sQLEditors =  await SQLEditor.query()
-         .orWhere('title', 'like', `%${searchWord}%`)
-         .orWhere('name', 'like', `%${searchWord}%`)
-         .orWhere('description', 'like', `%${searchWord}%`)
+         .orWhere('title', LIKE, `%${searchWord}%`)
+         .orWhere('name', LIKE, `%${searchWord}%`)
+         .orWhere('description', LIKE, `%${searchWord}%`)
          .orderBy(orderColumn, sortType).paginate(page, pageSize)
      } else {
         sQLEditors = await SQLEditor.query().orderBy(orderColumn, sortType).paginate(page, pageSize)
