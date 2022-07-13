@@ -340,7 +340,7 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
   if (_.isString(element_css_editor)) {
     styles += element_css_editor.replace(
       /__selector__/g,
-      `${prefix}${elementId}`
+      `.${prefix}${elementId}`
     );
   }
   return styles;

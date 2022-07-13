@@ -19,6 +19,7 @@ const { connect } = window.reactRedux;
 import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 import ElementWrapperGlobalStyles from "./ElementWrapperGlobalStyles";
 
+
 class ElementWrapper extends Component {
   constructor(props) {
     super(props);
