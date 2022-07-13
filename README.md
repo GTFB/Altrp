@@ -10,6 +10,7 @@
 [comment]: <> (* Fix Global Styles Duplicate Issue)
 [comment]: <> (* Fix Popup Height by Content Bug)
 [comment]: <> (* Optimize Css Load for Front App)
+[comment]: <> (* Add Mustache Support for Inputs Labels)
 
 ### 1.2.1
 * Add Changes in Related Models Before Users Delete

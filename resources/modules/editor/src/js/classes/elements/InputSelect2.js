@@ -78,6 +78,7 @@ class InputSelect2 extends BaseElement {
 
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
+      locked:true,
       label: "Label"
     });
 
