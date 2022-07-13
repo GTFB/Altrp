@@ -12,7 +12,6 @@ import {
   editorSetCurrentElement
 } from "../helpers";
 import AltrpTooltip2 from "./altrp-tooltip/AltrpTooltip2";
-import React from "react";
 import Overlay from "./Overlay";
 
 const { connect } = window.reactRedux;

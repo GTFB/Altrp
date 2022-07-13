@@ -268,6 +268,10 @@ export default class PagesController {
           page[input] = body[input]
         }
       })
+
+      page.model_id = body.model_id || null
+      page.parent_page_id = body.parent_page_id || null
+
       await page.related('roles').detach()
       await page.parseRoles(request.input('roles'));
       await page.save()
