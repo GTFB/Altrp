@@ -57,6 +57,7 @@ class Button extends BaseElement {
 
     this.addControl('button_text', {
       type: CONTROLLER_TEXTAREA,
+      responsive: false,
       label: 'Button Text',
       default: 'Click Me',
       locked: true,
