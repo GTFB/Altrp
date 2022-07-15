@@ -1054,7 +1054,7 @@ class InputTextCommonWidget extends Component {
           fill={true}
           position="bottom"
           popoverRef={this.popoverRef}
-          usePortal={false}
+          usePortal={true}
           className={classes}
           content={<Menu>
             {options.map(this.itemRenderer)}
