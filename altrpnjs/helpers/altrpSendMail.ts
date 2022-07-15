@@ -33,15 +33,6 @@ export default async function altrpSendMail(
   fromName = fromName ? fromName : Env.get('MAIL_FROM_NAME')
   try {
 
-    console.log(new SmtpDriver({
-      driver: "smtp",
-      host,
-      port,
-      auth: {
-        user,
-        pass,
-        type: 'login',
-      }}));
     // @ts-ignore
     const message = new Message
     message
@@ -52,11 +43,10 @@ export default async function altrpSendMail(
     await new SmtpDriver({
       driver: "smtp",
       host,
-      port: 465,
-      secure: true,
+      port,
       auth: {
-        user:'shtmpel86@gmail.com',
-        pass:'g343576030',
+        user,
+        pass,
         type: 'login',
       }}).send(message.toJSON().message)
     return {
