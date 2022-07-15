@@ -57,6 +57,11 @@ const { isEditor, redirect } = window.altrpHelpers;
     padding-right: calc((100vw - ${window.container_width || 1440}px) / 2);
     width: 100vw;
   }
+  .popup-content .altrp-section_section-boxed.altrp-section_section-boxed{
+    width:100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
 `);
 
 class SectionComponent extends Component {

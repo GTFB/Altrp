@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ getLocale() }}">
 <head>
+{{{head_start}}}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -44,8 +45,10 @@
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
+{{{head_end}}}
 </head>
 <body class="front-app-body">
+{{{body_start}}}
     <div id="front-app" class="front-app {{ is_admin ? 'front-app_admin' : '' }}">
         <div class="route-content" id="route-content">
             {{{children_content}}}
@@ -91,5 +94,6 @@
     {{{extra_footer_styles}}}
   @!component('front-app-js')
   {{{plugin_frontend_bottom}}}
+{{{body_end}}}
 </body>
 </html>

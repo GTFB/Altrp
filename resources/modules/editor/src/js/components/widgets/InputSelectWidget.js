@@ -962,7 +962,7 @@ class InputSelectWidget extends Component {
     const content_options = this.props.element.getResponsiveLockedSetting('content_options');
     const model_for_options = this.props.element.getResponsiveLockedSetting('model_for_options');
     if(_.isString(content_options)) {
-      if(isEditor()) {
+      if(! isEditor()) {
         if (content_options?.indexOf('{{') === 0 && ! model_for_options) {
           options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
         } else {
@@ -1099,9 +1099,9 @@ class InputSelectWidget extends Component {
     </span>
   }
 
-  checkOutsideClick(e) {
+  checkOutsideClick = (e)=> {
     for(const el of e.composedPath()) {
-      if(el.classList?.contains("bp3-button")) {
+      if(el.classList?.contains(`altrp-element${this.props.element.getId()}`)) {
         e.preventDefault()
         return
       }
@@ -1346,6 +1346,7 @@ class InputSelectWidget extends Component {
     }
 
     let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    content_label = replaceContentWithData(content_label, this.props.element.getCurrentModel()?.getData())
     let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
 
 

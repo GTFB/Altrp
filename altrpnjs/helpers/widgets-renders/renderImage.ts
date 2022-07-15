@@ -10,7 +10,7 @@ export default function renderImage(settings, device, context, widgetId) {
   const link = settings.image_link || {}
   const cursorPointer = getResponsiveSetting(settings,'cursor_pointer', device,false)
 
-  let classNames = 'altrp-image-container'
+  let classNames = 'altrp-image-container altrp-image-placeholder'
   let media = settings.content_media
 
   if(cursorPointer) {

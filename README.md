@@ -3,8 +3,23 @@
 
 ## Changelog
 
-[//]: <> (### 1.2.1)
-[//]: <> (* Add Changes in Related Models Before Users Delete)
+[comment]: <> (### 1.2.2)
+
+[comment]: <> (* Fix Global Styles Duplicate Issue)
+[comment]: <> (* Fix Popup Height by Content Bug)
+[comment]: <> (* Add Mustache Support for Inputs Labels)
+
+### 1.2.1
+* Add Changes in Related Models Before Users Delete
+* Add page_after_create and page_before_delete Hooks
+* Front App Hooks for Plugins
+* Fix `Insert Raw` with SVG Icon for Images
+* Extend Settings For Email Sending via `altrpSendMail`
+* Add Custom Html for Pages
+1. HEAD Start
+2. HEAD End
+3. BODY Start
+4. BODY End
 
 ### 1.2.0
 * Fix Styles Load for Embedded Templates

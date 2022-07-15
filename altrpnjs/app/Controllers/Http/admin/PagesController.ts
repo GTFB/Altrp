@@ -266,16 +266,22 @@ export default class PagesController {
           page[input] = body[input]
         }
       })
+
+      page.model_id = body.model_id || null
+      page.parent_page_id = body.parent_page_id || null
+
       await page.related('roles').detach()
       await page.parseRoles(request.input('roles'));
       await page.save()
       const pageGenerator = new PageGenerator()
       await pageGenerator.run(page)
-      if(request.input("categories")) {
-        await page.related("categories").detach()
 
+      if(request.input("categories").length > 0) {
+
+        await page.related("categories").detach()
         for (const option of request.input("categories")) {
-          const category = await Category.find(option.value);
+
+          const category = await Category.query().where('guid', option.value).firstOrFail();
 
           if (!category) {
             response.status(404)

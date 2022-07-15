@@ -268,24 +268,6 @@ class MailForm extends Component {
             />
           </div>
 
-
-          <div className="form-group form-group_width47">
-            <label htmlFor="mail_from_name">Mail from Name</label>
-            {/*<input type="text" id="mail_from_name"*/}
-            {/*       name="mail_from_name"*/}
-            {/*       value={mail_from_name}*/}
-            {/*       onChange={this.changeHandler}*/}
-            {/*       className="form-control"*/}
-            {/*/>*/}
-            <InputGroup type="text"
-                        name="mail_from_name"
-                        id="mail_from_name"
-                        value={mail_from_name}
-                        onChange={this.changeHandler}
-                        className="form-control-blueprint"
-                        required
-            />
-          </div>
         </div>
 
 

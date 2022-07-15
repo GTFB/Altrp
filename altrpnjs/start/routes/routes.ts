@@ -309,7 +309,7 @@ ${e.message}`,
     /**
      * handle all 4 HTTP methods
      */
-    Route[method]('plugins-handlers', async (httpContext: HttpContextContract) => {
+    Route[method]('plugins-handlers/*', async (httpContext: HttpContextContract) => {
       const plugins = await Plugin.getEnabledPlugins()
       const segments = httpContext.request.url().split('/').filter(segment => segment)
       const plugin = plugins.find(plugin => {
@@ -317,9 +317,10 @@ ${e.message}`,
       })
       if(! plugin){
         httpContext.response.status(404)
-        return httpContext.response.json({success: false, message: 'Not Found'})
+        return httpContext.response.json({success: false, message: `Plugin \`${segments[2]}\` Not Found`})
       }
-      const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/${method}/${segments[3]}`)
+      const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/${method}/${segments[3]}.${isProd() ? 'js' : 'ts'}`)
+
       if(fs.existsSync(fileName)){
         try{
           if(isProd()){

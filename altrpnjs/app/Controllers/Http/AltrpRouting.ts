@@ -1,27 +1,26 @@
-import getCurrentDevice from "../../helpers/getCurrentDevice";
+import getCurrentDevice from "../../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
-import Edge from '../../helpers/edge';
+import Edge from '../../../helpers/edge';
 import Env from '@ioc:Adonis/Core/Env';
-import replaceContentWithData from "../../helpers/replaceContentWithData"
+import replaceContentWithData from "../../../helpers/replaceContentWithData"
 import {matchPath} from 'react-router'
-import empty from "../../helpers/empty"
 import * as _ from 'lodash'
-import getLatestVersion from "../../helpers/getLatestVersion"
+import getLatestVersion from "../../../helpers/getLatestVersion"
 import User from "App/Models/User";
-import is_array from "../../helpers/is_array"
-import data_get from "../../helpers/data_get"
-import recurseMapElements from "../../helpers/recurseMapElements"
-import validGuid from "../../helpers/validGuid";
+import is_array from "../../../helpers/is_array"
+import data_get from "../../../helpers/data_get"
+import recurseMapElements from "../../../helpers/recurseMapElements"
+import validGuid from "../../../helpers/validGuid";
 import Template from "App/Models/Template";
-import data_set from "../../helpers/data_set";
-import DEFAULT_REACT_ELEMENTS from "../../helpers/const/DEFAULT_REACT_ELEMENTS"
+import data_set from "../../../helpers/data_set";
+import DEFAULT_REACT_ELEMENTS from "../../../helpers/const/DEFAULT_REACT_ELEMENTS"
 import Source from "App/Models/Source"
-import isProd from "../../helpers/isProd"
-import IGNORED_ROUTES from "../../helpers/const/IGNORED_ROUTES"
-import get_altrp_setting from "../../helpers/get_altrp_setting";
-import stringToObject from "../../helpers/string/stringToObject";
-import FONTS, { SYSTEM_FONT} from "../../helpers/const/FONTS";
+import isProd from "../../../helpers/isProd"
+import IGNORED_ROUTES from "../../../helpers/const/IGNORED_ROUTES"
+import get_altrp_setting from "../../../helpers/get_altrp_setting";
+import stringToObject from "../../../helpers/string/stringToObject";
+import FONTS, { SYSTEM_FONT} from "../../../helpers/const/FONTS";
 
 
 export default class AltrpRouting {
@@ -43,23 +42,16 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async handle(httpContext: HttpContextContract, next: () => Promise<void>) {
+  public async index(httpContext: HttpContextContract) {
     /**
      * Игнорим все запросы кроме get
      */
-
-
-    if (httpContext.request.method() !== 'GET') {
-      await next()
-      return
-    }
     const url = httpContext.request.url();
     /**
      * Игнорим логинизацию
      */
     for(const route of IGNORED_ROUTES) {
       if(route === url) {
-        await next()
         return
       }
     }
@@ -67,7 +59,6 @@ export default class AltrpRouting {
     const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
 
     if(httpContext.request.completeUrl().split(modulesUrl).length > 1) {
-      await next()
       return
     }
 
@@ -75,7 +66,6 @@ export default class AltrpRouting {
      * Игнорим админку и ajax
      */
     if (url.split('/')[1] === 'admin' || url.split('/')[1] === 'ajax') {
-      await next()
       return
     }
 
@@ -140,7 +130,7 @@ export default class AltrpRouting {
         } catch (e) {
           console.error(e);
         }
-        if (empty(model_data)) {
+        if (_.isEmpty(model_data)) {
           httpContext.response.status(404)
           return httpContext.response.send('Not Found')
         }
@@ -223,6 +213,7 @@ export default class AltrpRouting {
         if(customHeaders){
           customHeaders = replaceContentWithData(customHeaders, altrpContext)
           customHeaders = stringToObject(customHeaders)
+          // @ts-ignore
           for(let key in customHeaders){
             if(customHeaders.hasOwnProperty(key)){
               httpContext.response.header(key, customHeaders[key])

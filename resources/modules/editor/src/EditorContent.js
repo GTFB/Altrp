@@ -83,6 +83,14 @@ class EditorContent extends Component {
     this.setState({
       rootElement
     });
+    const head = document.querySelector('#editorContent')?.contentDocument.querySelector('head')
+    if(head){
+      const stylesTags = _.toArray(document.querySelectorAll('head style[type="text/css"]'))
+      stylesTags.forEach(s=>{
+        s = s.cloneNode(true)
+        head.appendChild(s)
+      })
+    }
     applyGlobalCss()
   }
 
@@ -125,10 +133,4 @@ class EditorContent extends Component {
   }
 }
 
-let _export;
-if (process.env.NODE_ENV === 'production') {
-  _export = EditorContent
-} else {
-  _export = hot(module)(EditorContent);
-}
 export default EditorContent

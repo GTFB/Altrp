@@ -4,6 +4,7 @@ import {DateTime} from 'luxon'
 import {
   BaseModel,
   beforeDelete,
+  afterCreate,
   BelongsTo,
   belongsTo,
   column,
@@ -21,7 +22,7 @@ import ACTIONS_NAMES from '../../helpers/const/ACTIONS_NAMES'
 import * as _ from 'lodash'
 import ACTIONS_COMPONENTS from '../../helpers/const/ACTIONS_COMPONENTS'
 import Database from '@ioc:Adonis/Lucid/Database'
-import AltrpRouting from 'App/Middleware/AltrpRouting'
+import AltrpRouting from 'App/Controllers/Http/AltrpRouting'
 import User from 'App/Models/User';
 import {isString} from 'lodash';
 import PageRole from 'App/Models/PageRole';
@@ -34,6 +35,7 @@ import mbParseJSON from '../../helpers/mbParseJSON';
 import DEFAULT_REACT_ELEMENTS from '../../helpers/const/DEFAULT_REACT_ELEMENTS';
 import is_array from '../../helpers/is_array';
 import validGuid from '../../helpers/validGuid';
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -431,6 +433,12 @@ export default class Page extends BaseModel {
     datasource.forEach((source) => {
       source.delete()
     })
+    applyPluginsFiltersAsync('page_before_delete', page)
+  }
+
+  @afterCreate()
+  public static async afterCreate(page: Page) {
+    applyPluginsFiltersAsync('page_after_create', page)
   }
 
   async getPagesForFrontend(): Promise<Page[]> {
