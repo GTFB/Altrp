@@ -1075,7 +1075,7 @@ class InputSelectTreeWidget extends Component {
     if (content_label || label_icon) {
       label = (
         <div
-          className={`${classes} altrp-field-label-container classLabel`}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label
