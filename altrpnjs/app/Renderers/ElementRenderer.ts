@@ -14,7 +14,6 @@ import getAddingClasses from "../../helpers/getAddingClasses";
 import renderSection from "../../helpers/widgets-renders/renderSection";
 import getSectionWidthClass from "../../helpers/widgets-renders/getSectionWidthClass";
 import Role from "App/Models/Role";
-import Permission from "App/Models/Permission";
 
 export default class ElementRenderer {
   static straightRenderIgnore = [
@@ -30,7 +29,6 @@ export default class ElementRenderer {
     settingsLock: {},
     settings: {
       conditional_display_choose: string;
-      conditional_permissions?: [];
       conditional_roles?: [];
       text?: string;
       content?: string;
@@ -65,7 +63,6 @@ export default class ElementRenderer {
       advanced_element_id,
       conditional_display_choose,
       conditional_roles,
-      conditional_permissions,
     } = this.element.settings
     let children_content = ''
     for (const child of this.element.children) {
@@ -164,27 +161,24 @@ export default class ElementRenderer {
     }
     let allow_start_tag = ''
     let allow_end_tag = ''
-    if (conditional_display_choose ||
-      (conditional_permissions?.length || conditional_roles?.length)) {
-      conditional_roles = conditional_roles || []
+    conditional_roles = conditional_roles || []
+    if (conditional_roles?.length) {
       // @ts-ignore
       if(conditional_roles.length && Number(conditional_roles[0])) {
         // @ts-ignore
         conditional_roles = await Role.query().whereIn('id', conditional_roles)
-      }
-      // @ts-ignore
-      conditional_roles = conditional_roles.map(r => r.name)
-      conditional_permissions = conditional_permissions || []
-      // @ts-ignore
-      if(conditional_permissions.length && Number(conditional_permissions[0])) {
         // @ts-ignore
-        conditional_permissions = await Permission.query().whereIn('id', conditional_permissions)
+        conditional_roles = conditional_roles.map(r => r.name)
+
       }
       // @ts-ignore
-      conditional_permissions = conditional_permissions.map(p => p.name)
-      // @ts-ignore
-      allow_start_tag = `<allowedforuser type="${conditional_display_choose}" roles="${conditional_roles.join(",")}" permissions="${conditional_permissions.join(",")}">`
-      allow_end_tag = `</allowedforuser>`
+      conditional_roles.forEach(r=>{
+        classes += ` altrp-element-role_${r} `
+      })
+    }
+
+    if(conditional_display_choose){
+      classes += ` altrp-element-auth-type_${conditional_display_choose} `
     }
 
     let wrapper_attributes = `class="${classes}" style="${this.element.settings.default_hidden ? 'display:none;' : ''}"

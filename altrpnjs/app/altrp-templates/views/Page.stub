@@ -45,7 +45,7 @@
 <body class="front-app-body">
 {{{body_start}}}
 {{=<% %>=}}
-    <div id="front-app" class="front-app {{is_admin}}">
+    <div id="front-app" class="front-app {{access_classes}}">
 <%={{ }}=%>
         <div class="route-content" id="route-content">
             {{{children_content}}}

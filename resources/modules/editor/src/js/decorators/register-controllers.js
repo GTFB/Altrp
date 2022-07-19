@@ -548,18 +548,18 @@ export function advancedTabControllers(element) {
     isClearable: true,
   });
 
-  element.addControl('conditional_permissions', {
-    type: CONTROLLER_SELECT2,
-    label: 'Allowed for Permissions',
-    conditions: {
-      'conditional_display_choose': 'auth',
-    },
-    options_resource: '/admin/ajax/permissions_options?value=name',
-    isMulti: true,
-    responsive: false,
-    prefetch_options: true,
-    isClearable: true,
-  });
+  // element.addControl('conditional_permissions', {
+  //   type: CONTROLLER_SELECT2,
+  //   label: 'Allowed for Permissions',
+  //   conditions: {
+  //     'conditional_display_choose': 'auth',
+  //   },
+  //   options_resource: '/admin/ajax/permissions_options?value=name',
+  //   isMulti: true,
+  //   responsive: false,
+  //   prefetch_options: true,
+  //   isClearable: true,
+  // });
 
   element.addControl('conditional_other', {
     type: CONTROLLER_SWITCHER,

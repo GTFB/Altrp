@@ -15,7 +15,6 @@ import stringToObject from "../../../helpers/string/stringToObject";
 import resource_path from "../../../helpers/path/resource_path";
 import fs from "fs";
 import JSONStringifyEscape from "../../../helpers/string/JSONStringifyEscape";
-import filterAllowedForUser from "../../../helpers/string/filterAllowedForUser";
 import PagesCache from "App/Services/PagesCache";
 import Edge from "../../../helpers/edge";
 import data_get from "../../../helpers/data_get";
@@ -122,8 +121,25 @@ export default class AltrpRouting {
 
     // @ts-ignore
     const user: User = httpContext.auth.user
-    let is_admin = user && await user.isAdmin();
+    let access_classes = ''
+    if(user){
+      access_classes += ` front-app_auth-type-auth `
 
+      await user.load('roles')
+      await user.load('permissions')
+
+      user.roles && user.roles.forEach(role =>{
+        access_classes += ` front-app_role-${role.name} `
+        if(role.name === 'admin'){
+          access_classes += ` front-app_admin `
+        }
+      })
+      user.permissions && user.permissions.forEach(permission =>{
+        access_classes += ` front-app_permission-${permission} `
+      })
+    } else {
+      access_classes += ` front-app_auth-type-guest `
+    }
     let model_data = {}
     if (page.model) {
       try {
@@ -204,11 +220,10 @@ export default class AltrpRouting {
         content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
         PagesCache.setCache(page.guid, device, content)
       }
-      content = await filterAllowedForUser(content, user)
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
-        is_admin: is_admin ? 'front-app_admin' : '',
+        access_classes,
         user,
         csrfToken: httpContext.request.csrfToken,
         isProd: isProd(),
@@ -246,6 +261,8 @@ export default class AltrpRouting {
       console.error(`Error to View Custom Page \`${page.guid}\` : ${e.message}
          ${e.stack}
          `);
+      let is_admin = user && await user.isAdmin();
+
       try{
         return this.tryRenderEdgeTemplate({
           page,

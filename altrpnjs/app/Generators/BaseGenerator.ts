@@ -88,6 +88,8 @@ class BaseGenerator {
       screenName = `${screenName}/`
     }
     fileName = Application.publicPath(`altrp/css/${screenName}${fileName}`)
+    content = mustache.render(content,{})
+    mustache?.templateCache?.clear()
 
     if(! fs.existsSync(Application.publicPath(`altrp/css/${screenName}`))){
       fs.mkdirSync(Application.publicPath(`altrp/css/${screenName}`), {recursive:true})

@@ -669,6 +669,28 @@ export default class Page extends BaseModel {
     }
 
     styles = mustache.render(styles, {})
+    const roles = await Role.all()
+
+    styles += `<style id="access-styles">
+    .front-app:not(.front-app_auth-type-guest) .altrp-element-auth-type_guest{
+      display: none;
+    }
+    .front-app:not(.front-app_auth-type-auth) .altrp-element-auth-type_auth{
+      display: none;
+    }
+
+    ${roles.map(r=>{
+      return `
+      .altrp-element-role_${r.name}{
+              display: none;
+      }
+      .front-app_role-${r.name} .altrp-element-role_${r.name}{
+              display: flex;
+      }
+      `
+    }).join('')}
+
+    </style>`
 
     return styles
   }
@@ -731,7 +753,7 @@ export default class Page extends BaseModel {
       if(!fs.existsSync(public_path(cssHref))){
         cssHref = `/altrp/css/${footerGuid}.css`
       }
-      footerStyleLink = `<link href="${cssHref}?${footerHash}" id="altrp-content-css-link-${footerGuid}" rel="stylesheet"/>`
+      footerStyleLink = `<link href="${cssHref}?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>`
     }
 
     let result = `<div class="app-area app-area_header">
