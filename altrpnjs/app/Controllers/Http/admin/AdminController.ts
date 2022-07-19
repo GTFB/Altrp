@@ -112,8 +112,6 @@ export default class AdminController {
       try{
         await templateGenerator.run(template)
 
-        const used = process.memoryUsage().heapUsed / 1024 / 1024;
-        Logger.info(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
         console.error(`Error while Template ${template.guid} generate: ${e.message}`);
       }
@@ -227,8 +225,6 @@ export default class AdminController {
       try{
         await pageGenerator.run(page)
         await delay(100);
-        const used = process.memoryUsage().heapUsed / 1024 / 1024;
-        console.log(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
       }catch (e) {
 
         console.error(`Error while Page ${page.guid} generate: ${e.message}`,

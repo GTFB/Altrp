@@ -42,6 +42,7 @@ import fs from "fs";
 import app_path from "../../helpers/path/app_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import SCREENS from "../../helpers/const/SCREENS";
+import public_path from "../../helpers/path/public_path";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -589,7 +590,11 @@ export default class Page extends BaseModel {
         let _styles: string[] = []
 
         if(customStyles.important_styles){
-          _styles = [purifycss(html, customStyles.important_styles, purifycssOptions)]
+          let important_styles = customStyles.important_styles
+          if(_.isArray(important_styles)){
+            important_styles = important_styles.join('')
+          }
+          _styles = [purifycss(html, important_styles, purifycssOptions)]
         } else {
           _.forEach(customStyles, (style: string[], key) => {
             const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
@@ -612,7 +617,12 @@ export default class Page extends BaseModel {
       headerStyles = JSON.parse(headerStyles)
       let _styles:string[] = []
       if(headerStyles.important_styles){
-        _styles = [purifycss(html, headerStyles.important_styles, purifycssOptions)]
+
+        let important_styles = headerStyles.important_styles
+        if(_.isArray(important_styles)){
+          important_styles = important_styles.join('')
+        }
+        _styles = [purifycss(html, important_styles, purifycssOptions)]
       } else {
         _.forEach(headerStyles, (style:string[], key) => {
           const mediaQuery = SCREENS.find(s=>s.name === key)?.fullMediaQuery
@@ -635,7 +645,11 @@ export default class Page extends BaseModel {
       let _styles:string[] = []
       if(contentStyles.important_styles){
 
-        _styles = [purifycss(html, contentStyles.important_styles, purifycssOptions)]
+        let important_styles = contentStyles.important_styles
+        if(_.isArray(important_styles)){
+          important_styles = important_styles.join('')
+        }
+        _styles = [purifycss(html, important_styles, purifycssOptions)]
 
       } else {
         _.forEach(contentStyles, (style: string[], key) => {
@@ -700,17 +714,37 @@ export default class Page extends BaseModel {
     const footerHash =  encodeURI(md5(footerGuid ? footerContent : ''))
     const contentHash = encodeURI(md5(contentGuid ? contentContent : ''))
 
+    let contentStyleLink = ''
+
+    if(contentGuid){
+      let cssHref = `/altrp/css${cssPrefix}/${contentGuid}.css`
+      if(!fs.existsSync(public_path(cssHref))){
+        cssHref = `/altrp/css/${contentGuid}.css`
+      }
+      contentStyleLink = `<link href="${cssHref}?${contentHash}" id="altrp-content-css-link-${contentGuid}" rel="stylesheet"/>`
+    }
+
+    let footerStyleLink = ''
+
+    if(footerGuid){
+      let cssHref = `/altrp/css${cssPrefix}/${footerGuid}.css`
+      if(!fs.existsSync(public_path(cssHref))){
+        cssHref = `/altrp/css/${footerGuid}.css`
+      }
+      footerStyleLink = `<link href="${cssHref}?${footerHash}" id="altrp-content-css-link-${footerGuid}" rel="stylesheet"/>`
+    }
+
     let result = `<div class="app-area app-area_header">
       ${headerGuid ? headerContent : ''}
       </div>
       <div class="app-area app-area_content">
       ${contentGuid ? contentContent : ''}
       </div>
-      ${contentGuid ? `<link href="/altrp/css${cssPrefix}/${contentGuid}.css?${contentHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>` : ''}
+      ${contentStyleLink}
       <div class="app-area app-area_footer">
       ${footerGuid ? footerContent : ''}
       </div>
-      ${footerGuid ? `<link href="/altrp/css${cssPrefix}/${footerGuid}.css?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>` : ''}
+      ${footerStyleLink}
       `
 
     let areas = await Area.query().whereNotIn('name', [
@@ -827,7 +861,7 @@ export default class Page extends BaseModel {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames)
     }
     if (element.name === 'carousel'
-      && data_get(element, 'settings.slides_repeater').length > 0) {
+      && data_get(element, 'settings.slides_repeater', []).length > 0) {
 
       for (const el of data_get(element, 'settings.slides_repeater')) {
         if(el.card_slides_repeater) {

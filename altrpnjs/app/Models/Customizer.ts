@@ -308,7 +308,7 @@ export default class Customizer extends BaseModel {
     if(controller[customizer.name]) {
       await controller[customizer.name](HttpContext)
     } else {
-      console.log("customizer name invalid")
+      console.error("customizer name invalid")
     }
 
     this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())

@@ -205,11 +205,10 @@ export default class AltrpRouting {
         PagesCache.setCache(page.guid, device, content)
       }
       content = await filterAllowedForUser(content, user)
-
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
-        is_admin,
+        is_admin: is_admin ? 'front-app_admin' : '',
         user,
         csrfToken: httpContext.request.csrfToken,
         isProd: isProd(),
@@ -222,8 +221,9 @@ export default class AltrpRouting {
         container_width: get_altrp_setting('container_width', '1440'),
         device,
       })
-      let res = content
+      mustache?.templateCache?.clear()
 
+      let res = content
       console.log(performance.now() - start);
 
       /**

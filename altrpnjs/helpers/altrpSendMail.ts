@@ -22,10 +22,9 @@ export default async function altrpSendMail(
   port = port ? port : Env.get('MAIL_PORT');
   user = user ? user : Env.get('MAIL_USERNAME');
   pass = pass ? pass : Env.get('MAIL_PASSWORD');
+  from = from ? from : Env.get('MAIL_USERNAME');
 
 
-
-  from = Env.get('MAIL_FROM_ADDRESS')
   to = replaceContentWithData(to, context)
   subject = replaceContentWithData(subject, context)
   html = replaceContentWithData(html, context)

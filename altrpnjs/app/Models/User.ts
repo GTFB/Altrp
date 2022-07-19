@@ -165,7 +165,6 @@ export default class User extends BaseModel {
       .join('roles', 'role_user.role_id', 'roles.id')
       .where('roles.name', 'admin').select('users.id').first();
 
-    console.log(newAdmin?.id);
 
     const templates = await Template.query().where("user_id", user.id)
     for(const template of templates){

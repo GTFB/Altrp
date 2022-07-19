@@ -168,7 +168,6 @@ export default class PageGenerator extends BaseGenerator {
     for (let element of elementsList) {
       const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
       if (fs.existsSync(fileName)) {
-        console.log(fileName);
         let content = fs.readFileSync(fileName, {encoding: 'utf8'})
         content = content.replace(/\n/g, '')
         extraStyles.extra_header_styles += `

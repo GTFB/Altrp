@@ -40,6 +40,10 @@ class BaseGenerator {
     }
 
     content = mustache.render(content, vars)
+    mustache?.templateCache?.clear()
+
+    const used = process.memoryUsage().heapUsed / 1024 / 1024;
+    console.log(`Memory Usage: ${Math.round(used * 100) / 100} MB`)
 
     content = content.replace(/<<<ignore_start>>>/g,'{{=<% %>=}}')
     content = content.replace(/<<<ignore_end>>>/g,'<%={{ }}=%>')

@@ -82,10 +82,6 @@ export function actionsControllers(
         label: 'Form'
       },
       {
-        value: 'email',
-        label: 'Send Email'
-      },
-      {
         value: 'toggle_element',
         label: 'Toggle Elements'
       },
@@ -227,19 +223,6 @@ export function actionsControllers(
     }
   });
 
-  actionsRepeater.addControl('email_template', {
-    type: CONTROLLER_SELECT2,
-    prefetch_options: true,
-    label: 'Email Template',
-    isClearable: true,
-    options_resource:
-      '/admin/ajax/templates/options?template_type=email&value=guid',
-    nullable: true,
-    conditions: {
-      type: 'email'
-    },
-    locked: true,
-  });
 
   actionsRepeater.addControl('code', {
     type: CONTROLLER_TEXTAREA,
@@ -409,15 +392,6 @@ export function actionsControllers(
     locked: true,
   });
 
-  actionsRepeater.addControl('to', {
-    label: 'Email',
-    type: CONTROLLER_TEXT,
-    responsive: false,
-    conditions: {
-      type: 'email'
-    },
-    locked: true,
-  });
 
   actionsRepeater.addControl('subject', {
     label: 'Subject',

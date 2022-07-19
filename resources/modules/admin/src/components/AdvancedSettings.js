@@ -50,11 +50,7 @@ class AdvancedSettings extends Component {
     (await new Resource({route: '/admin/ajax/settings'}).get('body_end?decrypt=true')).body_end || ''
   ,
   ])
-    console.log(
-      headStart,
-      headEnd,
-      bodyStart,
-      bodyEnd,);
+
     this.setState(state => ({
       ...state,
       allSiteJavascript,

@@ -203,7 +203,7 @@ export default class ElementRenderer {
       `data-altrp-sticky="${getResponsiveSetting(settings, 'sticky', screenName)}"
     data-altrp-sticky-spacing="${getResponsiveSetting(settings, 'st_spacing', screenName)}"
     data-margin-top="${getResponsiveSetting(settings, 'st_spacing', screenName, 0)}"`}
-    data-altrp-id="${this.getId()}"
+    data-altrp-id="${this.getId()}" data-altrp-element="${this.getName()}"
     `
 
     wrapper_attributes = wrapper_attributes.replace(/\s+/g, ' ');
