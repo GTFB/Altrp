@@ -54,7 +54,7 @@
     "luxon": "^2.2.0",
     "md5": "^2.3.0",
     "mobile-detect": "^1.4.5",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "mustache": "^4.2.0",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.7",
