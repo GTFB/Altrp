@@ -18,6 +18,9 @@ import storage_path from "../helpers/storage_path";
 import httpsRequest from "../helpers/httpsRequest";
 import clearRequireCache from "../helpers/node-js/clearRequireCache";
 import isProd from "../helpers/isProd";
+import View from "@ioc:Adonis/Core/View";
+import {CacheManager} from "edge.js/build/src/CacheManager";
+import env from "../helpers/env";
 
 export default class Plugin {
 
@@ -138,6 +141,7 @@ export default class Plugin {
       }
     ])
 
+    View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
   }
 
   /**
