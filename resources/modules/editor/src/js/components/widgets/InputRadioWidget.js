@@ -15,6 +15,7 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import AltrpModel from "../../classes/AltrpModel";
 const Radio = window.altrpLibs.Blueprint.Radio;
 const RadioGroup = window.altrpLibs.Blueprint.RadioGroup;
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -356,7 +357,8 @@ textarea.altrp-field {
 }
 `)
 const AltrpFieldContainer = styled.div`
-  ${({ settings: { content_label_position_type } }) => {
+  ${(settings) => {
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
     switch (content_label_position_type) {
       case "left": {
         return "display: flex";
