@@ -6,6 +6,8 @@ const {
 } = window.altrpHelpers;
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpInput from "../altrp-input/AltrpInput";
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
+
 
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -348,7 +350,9 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${({settings: {content_label_position_type}}) => {
+  ${(settings) => {
+
+  const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')  
   switch (content_label_position_type) {
     case "left": {
       return "display: flex";
