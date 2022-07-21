@@ -8,26 +8,19 @@ window.altrpIo = io( {
   auth: {
   },
 })
-window.altrpIo.on("message", (data) => {
-  console.log(data);
+window.altrpIo.connect()
+window.altrpIo.on("message", loadFrontApp)
+
+function loadFrontApp(){
   if(window.__altrpLoading){
     return
   }
   window.__altrpLoading = true
   import('./_h-altrp')
-  console.log('SOCKET IO CONNECTED: ', performance.now());
-  window.altrpIo.disconnect()
 
-})
-window.altrpIo.on("connect_error", (data) => {
-  if(window.__altrpLoading){
-    return
-  }
-  window.__altrpLoading = true
-  import('./_h-altrp')
-  window.altrpIo.disconnect()
 
-})
+}
+window.altrpIo.on("connect_error", loadFrontApp)
 window.altrpIo.send('altrp-front-load')
 document.addEventListener('DOMContentLoaded',()=>{
   import('./js/helpers/dataRevealElements').then(cb=>cb.default())

@@ -84,9 +84,9 @@
   <style type="text/css">body{display:flex;}</style>
   {{{plugin_frontend_bottom}}}
     <link rel="dns-prefetch" href="/css/creative-link.css"/>
-{{{fonts}}}
 
 {{{body_end}}}
 
 </body>
+{{{fonts}}}
 </html>

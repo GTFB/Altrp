@@ -227,7 +227,7 @@ export default class AdminController {
         await delay(100);
       }catch (e) {
 
-        console.error(`Error while Page ${page.guid} generate: ${e.message}`,
+        console.error(`Error while Page ${page.id} generate: ${e.message}`,
           e.stack.split('\n'),
           );
       }

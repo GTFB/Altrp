@@ -3,7 +3,6 @@ import AdonisServer from '@ioc:Adonis/Core/Server'
 import User from "App/Models/User";
 import Role from "App/Models/Role";
 import _ from "lodash";
-import Logger from "@ioc:Adonis/Core/Logger";
 
 
 class AltrpSocket {
@@ -78,7 +77,7 @@ class AltrpSocket {
       }
     }
     if(_c.length){
-      Logger.info('WS Clients count: ' + _c.length || '0');
+      console.log('WS Clients count: ' + _c.length || '0');
     }
   }
 

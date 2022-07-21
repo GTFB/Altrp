@@ -30,5 +30,10 @@ export default function renderSectionBG(settings, element_id, device){
     <source src="${background_video_url || 'none'}" type="video/mp4" class="section-video-source"/>
       </video>`
     :
-    `<span class="${sectionBackground.join(" ")}" ${empty(revealOptions) ? '' : `data-reveal-options="${encode(JSON.stringify(revealOptions))}`}" ></span>`
+    `
+    <noscript>
+      <span class="${sectionBackground.join(" ")} altrp-background-image${element_id}"></span>
+    </noscript>
+    <span class="${sectionBackground.join(" ")}" ${empty(revealOptions) ? '' : `data-reveal-options="${encode(JSON.stringify(revealOptions))}`}" ></span>
+    `
 }
