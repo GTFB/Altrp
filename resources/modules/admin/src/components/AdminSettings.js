@@ -282,6 +282,7 @@ class AdminSettings extends Component {
               <Tab>Image settings</Tab>
             </TabList>
             <TabPanel>
+              <h4>Welcome to Altrp Settings Page</h4>
               <table>
                 <tbody className="admin-table-body">
                   {/*<tr className="admin-settings-table-row">*/}
@@ -355,62 +356,62 @@ class AdminSettings extends Component {
                   {/*  </tr>*/}
                   {/*)}*/}
 
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">
-                      Clear project cache
-                    </td>
-                    <td className="admin-settings-table__td ">
-                      <button
-                        className="btn btn_success btn_general"
-                        onClick={this.clearProjectCache}
-                      >
-                        Clear
-                      </button>
-                    </td>
-                  </tr>
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">
-                      Disable Default Fonts
-                    </td>
-                    <td className="admin-settings-table__td ">
-                      <input
-                        className="admin-table__td_check"
-                        type="checkbox"
-                      />
-                      Checking this box will disable Builder’s Default Fonts,
-                      and make Builder inherit the fonts from your CSS file
-                    </td>
-                  </tr>
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td header-text">
-                      Improve builder
-                    </td>
-                  </tr>
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">
-                      Usage Data Sharing
-                    </td>
-                    <td className="admin-settings-table__td ">
-                      <input
-                        className="admin-table__td_check"
-                        type="checkbox"
-                      />
-                      Become a super contributor by opting in to share
-                      non-sensitive plugin data and to get our updates. Learn
-                      more
-                    </td>
-                  </tr>
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">
-                      Open standard models
-                    </td>
-                    <td className="admin-settings-table__td ">
-                      <AutoUpdateCheckbox
-                        type="checkbox"
-                        className="admin-table__td_check"
-                      />
-                    </td>
-                  </tr>
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">*/}
+                  {/*    Clear project cache*/}
+                  {/*  </td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <button*/}
+                  {/*      className="btn btn_success btn_general"*/}
+                  {/*      onClick={this.clearProjectCache}*/}
+                  {/*    >*/}
+                  {/*      Clear*/}
+                  {/*    </button>*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">*/}
+                  {/*    Disable Default Fonts*/}
+                  {/*  </td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <input*/}
+                  {/*      className="admin-table__td_check"*/}
+                  {/*      type="checkbox"*/}
+                  {/*    />*/}
+                  {/*    Checking this box will disable Builder’s Default Fonts,*/}
+                  {/*    and make Builder inherit the fonts from your CSS file*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td header-text">*/}
+                  {/*    Improve builder*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">*/}
+                  {/*    Usage Data Sharing*/}
+                  {/*  </td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <input*/}
+                  {/*      className="admin-table__td_check"*/}
+                  {/*      type="checkbox"*/}
+                  {/*    />*/}
+                  {/*    Become a super contributor by opting in to share*/}
+                  {/*    non-sensitive plugin data and to get our updates. Learn*/}
+                  {/*    more*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">*/}
+                  {/*    Open standard models*/}
+                  {/*  </td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <AutoUpdateCheckbox*/}
+                  {/*      type="checkbox"*/}
+                  {/*      className="admin-table__td_check"*/}
+                  {/*    />*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
                   {resetEnable && <tr className="admin-settings-table-row">
                     <td className="admin-settings-table__td row-text">
                       Reset database
