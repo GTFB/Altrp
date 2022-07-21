@@ -26,6 +26,8 @@ import Template from "App/Models/Template";
 import data_set from "../../../helpers/data_set";
 import getLatestVersion from "../../../helpers/getLatestVersion";
 import FONTS, {SYSTEM_FONT} from "../../../helpers/const/FONTS";
+import {promisify} from "util";
+import storage_path from "../../../helpers/storage_path";
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -220,6 +222,7 @@ export default class AltrpRouting {
         content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
         PagesCache.setCache(page.guid, device, content)
       }
+
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
@@ -237,7 +240,15 @@ export default class AltrpRouting {
         device,
       })
       mustache?.templateCache?.clear()
-
+      const [page_areas, all_styles, ] = await Promise.all(
+        [
+          promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
+          promisify(fs.readFile)(storage_path(`pages-content/styles/${device}/${page.guid}.html`), 'utf8'),
+        ]
+      )
+      // @ts-ignore
+      content = content.replace('<<<page_areas>>>', page_areas)
+      content = content.replace('<<<all_styles>>>', all_styles)
       let res = content
       console.log(performance.now() - start);
 

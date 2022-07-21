@@ -7,13 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {{{favicons}}}
-    {{{front_app_css}}}
     <title>{{title}}</title>
 
 <script src="/data/current-user" defer></script>
-{{{fonts}}}
 {{{extra_header_styles}}}
-{{{all_styles}}}
+<<<all_styles>>>
 {{{plugin_frontend_head}}}
     <script>
         /* <![CDATA[ */
@@ -36,10 +34,8 @@
         /* ]]> */
     </script>
 
-    <!-- Scripts -->
 
-  <!-- Fonts -->
-  <link rel="dns-prefetch" href="//fonts.gstatic.com">
+  <link rel="dns-prefetch" href="//fonts.gstatic.com"/>
 {{{head_end}}}
 </head>
 <body class="front-app-body">
@@ -59,10 +55,8 @@
 <%={{ }}=%>
         window.page_id = {{ page_id }};
         window.altrp = {{{_altrp}}};
+        window.page_areas = <<<page_areas>>>;
         window.__altrp_settings__ = {{{altrp_settings}}};
-        <<<ignore_start>>>
-        window.page_areas = {{{page_areas}}};
-        <<<ignore_end>>>
         window.altrpPages = {{{pages}}};
         window.altrpElementsLists = [{{{elements_list}}}];
         window.currentPage = {{{_frontend_route}}};
@@ -89,6 +83,10 @@
   {{{all_site_js}}}
   <style type="text/css">body{display:flex;}</style>
   {{{plugin_frontend_bottom}}}
+    <link rel="dns-prefetch" href="/css/creative-link.css"/>
+{{{fonts}}}
+
 {{{body_end}}}
+
 </body>
 </html>

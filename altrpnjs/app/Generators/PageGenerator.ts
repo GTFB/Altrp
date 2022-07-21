@@ -1,3 +1,5 @@
+import * as mustache from'mustache'
+import {minify} from 'html-minifier'
 import fs from 'fs'
 import BaseGenerator from "./BaseGenerator";
 import Application from "@ioc:Adonis/Core/Application";
@@ -17,6 +19,7 @@ import FONTS, {GOOGLE_FONT} from "../../helpers/const/FONTS";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import {encode} from "html-entities";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
+import storage_path from "../../helpers/storage_path";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -93,8 +96,11 @@ export default class PageGenerator extends BaseGenerator {
     const all_site_js = this.getFrontAppJs()
     const pages = await this.page.getPagesForFrontend();
 
-    const page_areas = await page.renderPageAreas()
+    const pageAreas = await page.renderPageAreas()
+    const areasStore = storage_path(`pages-content/areas/${page.guid}.html`)
 
+    fs.mkdirSync(storage_path(`pages-content/areas`), {recursive: true})
+    fs.writeFileSync(areasStore, pageAreas)
 
     let plugin_frontend_head = ''
     plugin_frontend_head = await applyPluginsFiltersAsync('plugin_frontend_head',
@@ -115,6 +121,14 @@ export default class PageGenerator extends BaseGenerator {
       }catch (e) {
         console.error(e);
       }
+      const stylesStore = storage_path(`pages-content/styles/${screen.name}/${page.guid}.html`)
+      fs.mkdirSync(storage_path(`pages-content/styles/${screen.name}`), {recursive: true})
+      all_styles = minify(all_styles + front_app_css, {
+        collapseWhitespace:true,
+        minifyCSS: true,
+      })
+      fs.writeFileSync(stylesStore, all_styles )
+
 
       await this.addFile(fileName)
         .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
@@ -131,9 +145,7 @@ export default class PageGenerator extends BaseGenerator {
           _frontend_route: JSONStringifyEscape(_frontend_route),
           page_id: page.id,
           title: page.title,
-          front_app_css,
           version: getLatestVersion(),
-          page_areas,
           all_site_js,
           extra_header_styles,
           plugin_frontend_head,
@@ -144,7 +156,6 @@ export default class PageGenerator extends BaseGenerator {
           body_start,
           body_end,
           favicons,
-          all_styles,
           _altrp: JSONStringifyEscape({
             version: getLatestVersion(),
             pageGuid: page.guid,
@@ -202,7 +213,12 @@ export default class PageGenerator extends BaseGenerator {
   }
 
   private getFrontAppCss() {
-    return fs.readFileSync(base_path('resources/views/front-app-css.html'), 'utf8')
+    let content = fs.readFileSync(base_path('resources/views/front-app-css.html'), 'utf8')
+    const container_width = get_altrp_setting('container_width','1440')
+    content = mustache.render(content, {
+      container_width
+    })
+    return content
   }
 
   private getFrontAppJs() {

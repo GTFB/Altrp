@@ -12,6 +12,8 @@ import recurseEach from "../../helpers/recurse-each";
 import {MenuItem, Button, Tree as TreeBlueprint , Alignment, InputGroup} from "@blueprintjs/core";
 import {Popover2} from "@blueprintjs/popover2";
 let Popover = Popover2;
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
+
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 
@@ -416,7 +418,8 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${({settings: {content_label_position_type}}) => {
+  ${(settings) => {
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
   switch (content_label_position_type) {
     case "left": {
       return "display: flex";
