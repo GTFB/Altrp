@@ -157,7 +157,7 @@ export default class Page extends BaseModel {
     'content', 'footer', 'header', 'popups',
   ];
 
-  public async getAreas(deleteContent = false):Promise< {
+  public async getAreas(deleteContent = false): Promise<{
     area_name: string,
     id: string,
     settings: []
@@ -285,7 +285,7 @@ export default class Page extends BaseModel {
     for (const role_id of roles) {
       const duplicate = await PageRole.query().where("page_id", this.id).andWhere("role_id", role_id).first();
 
-      if(!duplicate) {
+      if (!duplicate) {
         await PageRole.create({
           page_id: this.id,
           role_id: role_id,
@@ -393,14 +393,14 @@ export default class Page extends BaseModel {
     altrpSettings.altrpMenus =
       (await Promise.all(altrpSettings.altrpMenus
         .map(async (menuGuid) => {
-          let menu
-          if(validGuid(menuGuid)){
-            menu = await Menu.query().where('guid', menuGuid).select('*').first()
-          } else{
-            menu = await Menu.query().where('id', menuGuid).select('*').first()
+            let menu
+            if (validGuid(menuGuid)) {
+              menu = await Menu.query().where('guid', menuGuid).select('*').first()
+            } else {
+              menu = await Menu.query().where('id', menuGuid).select('*').first()
+            }
+            return menu
           }
-          return menu
-        }
         ))).filter(menu => menu)
     pageGenerator.setGlobal('fonts', fonts)
 
@@ -535,12 +535,12 @@ export default class Page extends BaseModel {
     return styles;
   }
 
-  async getAllStyles( html) {
+  async getAllStyles(html) {
     let styles = ''
     const elements = await this.extractElementsNames()
     styles += `<style type="text/css" id="elements_static_styles">`
-    for(const elementName of elements) {
-      if(fs.existsSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`))){
+    for (const elementName of elements) {
+      if (fs.existsSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`))) {
         styles += fs.readFileSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`), 'utf8')
       }
     }
@@ -559,12 +559,12 @@ export default class Page extends BaseModel {
       }
 
       if (data_get(await Template.getTemplate(this.id, contentArea.name), 'guid')) {
-        customAreasCount ++
+        customAreasCount++
         contentAreas.push(contentArea)
       }
 
     }
-    if(customAreasCount){
+    if (customAreasCount) {
       styles += `
 <style id="altrp-generated-custom-areas-styles">${Page.getRouteStyles(contentAreas)}</style>`
     }
@@ -575,23 +575,24 @@ export default class Page extends BaseModel {
       'content', 'header', 'footer', 'card', 'popup', 'reports', 'email'
     ])
       .select('name')
-    areas = areas.filter((area:Area) => {
+    areas = areas.filter((area: Area) => {
       const settings = mbParseJSON(area.settings, {})
-      return ! _.get(settings, 'not_content')
+      return !_.get(settings, 'not_content')
     })
     const purifycssOptions = {
-      minify:true,
-      whitelist: [ '*:not*' ]
+      minify: true,
+      whitelist: ['*:not*']
     }
     for (let area of areas) {
       let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
       if (customStyles) {
-        customStyles = JSON.parse(customStyles)
+        try {
+          customStyles = JSON.parse(customStyles)
         let _styles: string[] = []
 
-        if(customStyles.important_styles){
+        if (customStyles.important_styles) {
           let important_styles = customStyles.important_styles
-          if(_.isArray(important_styles)){
+          if (_.isArray(important_styles)) {
             important_styles = important_styles.join('')
           }
           _styles = [purifycss(html, important_styles, purifycssOptions)]
@@ -610,68 +611,89 @@ export default class Page extends BaseModel {
 
         styles += `
 <style id="custom_area_styles_${area.name}">${_styles.join('')}</style>`
+        } catch (e) {
+          console.log(`Page ${this.id} Custom ${area.name} Styles Render Error:`);
+        }
       }
+
     }
 
     if (headerStyles) {
-      headerStyles = JSON.parse(headerStyles)
-      let _styles:string[] = []
-      if(headerStyles.important_styles){
+      try {
+        headerStyles = JSON.parse(headerStyles)
+        let _styles: string[] = []
+        if (headerStyles.important_styles) {
 
-        let important_styles = headerStyles.important_styles
-        if(_.isArray(important_styles)){
-          important_styles = important_styles.join('')
-        }
-        _styles = [purifycss(html, important_styles, purifycssOptions)]
-      } else {
-        _.forEach(headerStyles, (style:string[], key) => {
-          const mediaQuery = SCREENS.find(s=>s.name === key)?.fullMediaQuery
-          let _style = ''
-          _style = style.map(s=>purifycss(html, s, purifycssOptions)).join('');
-          if(mediaQuery && key !== 'DEFAULT_BREAKPOINT'){
-            _style = `${mediaQuery}{${_style}}`
+          let important_styles = headerStyles.important_styles
+          if (_.isArray(important_styles)) {
+            important_styles = important_styles.join('')
           }
-          _styles.push(_style)
-        })
-        _styles = _styles.filter(s=>s)
-      }
+          _styles = [purifycss(html, important_styles, purifycssOptions)]
+        } else {
+          _.forEach(headerStyles, (style: string[], key) => {
+            const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
+            let _style = ''
+            _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
+            if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
+              _style = `${mediaQuery}{${_style}}`
+            }
+            _styles.push(_style)
+          })
+          _styles = _styles.filter(s => s)
+        }
 
-      styles += `
+        styles += `
 <style id="header_styles">${_styles.join('')}</style>`
+      } catch (e) {
+        console.log(`Page ${this.id} Header Styles Render Error:`);
+      }
     }
     if (contentStyles) {
-      contentStyles = JSON.parse(contentStyles)
+      try {
 
-      let _styles:string[] = []
-      if(contentStyles.important_styles){
+        contentStyles = JSON.parse(contentStyles)
 
-        let important_styles = contentStyles.important_styles
-        if(_.isArray(important_styles)){
-          important_styles = important_styles.join('')
-        }
-        _styles = [purifycss(html, important_styles, purifycssOptions)]
+        let _styles: string[] = []
+        if (contentStyles.important_styles) {
 
-      } else {
-        _.forEach(contentStyles, (style: string[], key) => {
-          const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
-          let _style = ''
-          _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
-          if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
-            _style = `${mediaQuery}{${_style}}`
+          let important_styles = contentStyles.important_styles
+          if (_.isArray(important_styles)) {
+            important_styles = important_styles.join('')
           }
-          _styles.push(_style)
+          _styles = [purifycss(html, important_styles, purifycssOptions)]
 
-        })
-        _styles = _styles.filter(s => s)
-      }
-      styles += `
+        } else {
+          _.forEach(contentStyles, (style: string[], key) => {
+            const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
+            let _style = ''
+            _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
+            if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
+              _style = `${mediaQuery}{${_style}}`
+            }
+            _styles.push(_style)
+
+          })
+          _styles = _styles.filter(s => s)
+        }
+        styles += `
 <style id="content_style">${_styles.join('')}</style>`
+      } catch (e) {
+        console.log(`Page ${this.id} Content Styles Render Error:`);
+      }
     }
 
     styles = mustache.render(styles, {})
+
+    styles += await Page.generateAccessStyles()
+
+    return styles
+  }
+
+  static async generateAccessStyles(): Promise<string> {
+
     const roles = await Role.all()
 
-    styles += `<style id="access-styles">
+    return `<style id="access-styles">
     .front-app:not(.front-app_auth-type-guest) .altrp-element-auth-type_guest{
       display: none;
     }
@@ -679,34 +701,31 @@ export default class Page extends BaseModel {
       display: none;
     }
 
-    ${roles.map(r=>{
+    ${roles.map(r => {
       return `
-      .altrp-element-role_${r.name}{
+      .altrp-element-role_${r.name}.altrp-element-role_${r.name}{
               display: none;
       }
-      .front-app_role-${r.name} .altrp-element-role_${r.name}{
+      .front-app_role-${r.name} .altrp-element-role_${r.name}.altrp-element-role_${r.name}{
               display: flex;
       }
       `
     }).join('')}
-
     </style>`
-
-    return styles
   }
 
   async getChildrenContent(screenName = '') {
     let cssPrefix = ''
-    if(screenName){
+    if (screenName) {
       cssPrefix = `/${screenName}`
     }
 
     // @ts-ignore
-    let footer:{guid} | Template = await Template.getTemplate(this.id, 'footer')
+    let footer: { guid } | Template = await Template.getTemplate(this.id, 'footer')
     let footerContent = ''
-    if(footer instanceof Template){
+    if (footer instanceof Template) {
       footerContent = await footer.getChildrenContent(screenName)
-    } else if(footer?.guid){
+    } else if (footer?.guid) {
       const _template = await Template.query().where('guid', footer.guid).first()
       if (_template) {
         footerContent = await _template.getChildrenContent(screenName)
@@ -715,32 +734,32 @@ export default class Page extends BaseModel {
     let content = await Template.getTemplate(this.id, 'content')
     let contentGuid = data_get(content, 'guid')
     let contentContent = ''
-    if(content instanceof Template){
+    if (content instanceof Template) {
       contentContent = await content.getChildrenContent(screenName)
     }
     let footerGuid = data_get(footer, 'guid')
 
     // @ts-ignore
-    let header:{guid} | Template = await Template.getTemplate(this.id, 'header')
+    let header: { guid } | Template = await Template.getTemplate(this.id, 'header')
     let headerGuid = data_get(header, 'guid')
     let headerContent = ''
-    if(header instanceof Template){
+    if (header instanceof Template) {
       headerContent = await header.getChildrenContent(screenName)
-    } else if(header?.guid){
+    } else if (header?.guid) {
       const _template = await Template.query().where('guid', header.guid).first()
       if (_template) {
         headerContent = await _template.getChildrenContent(screenName)
       }
     }
     //@ts-ignore
-    const footerHash =  encodeURI(md5(footerGuid ? footerContent : ''))
+    const footerHash = encodeURI(md5(footerGuid ? footerContent : ''))
     const contentHash = encodeURI(md5(contentGuid ? contentContent : ''))
 
     let contentStyleLink = ''
 
-    if(contentGuid){
+    if (contentGuid) {
       let cssHref = `/altrp/css${cssPrefix}/${contentGuid}.css`
-      if(!fs.existsSync(public_path(cssHref))){
+      if (!fs.existsSync(public_path(cssHref))) {
         cssHref = `/altrp/css/${contentGuid}.css`
       }
       contentStyleLink = `<link href="${cssHref}?${contentHash}" id="altrp-content-css-link-${contentGuid}" rel="stylesheet"/>`
@@ -748,9 +767,9 @@ export default class Page extends BaseModel {
 
     let footerStyleLink = ''
 
-    if(footerGuid){
+    if (footerGuid) {
       let cssHref = `/altrp/css${cssPrefix}/${footerGuid}.css`
-      if(!fs.existsSync(public_path(cssHref))){
+      if (!fs.existsSync(public_path(cssHref))) {
         cssHref = `/altrp/css/${footerGuid}.css`
       }
       footerStyleLink = `<link href="${cssHref}?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>`
@@ -775,19 +794,19 @@ export default class Page extends BaseModel {
       .select('*')
 
     for (let area of areas) {
-      const template:Template | {} = await Template.getTemplate(this.id, area.name)
+      const template: Template | {} = await Template.getTemplate(this.id, area.name)
       // @ts-ignore
-      if(! template?.guid){
+      if (!template?.guid) {
         continue
       }
-      if(template instanceof Template){
+      if (template instanceof Template) {
         let content = await template.getChildrenContent(screenName)
         result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
           ${content ? content : ''}
           </div>`
       } else {
         const guid = _.get(template, 'guid')
-        if(guid){
+        if (guid) {
           // @ts-ignore
           const _template = await Template.query().where('guid', guid).first()
           if (_template) {
@@ -886,7 +905,7 @@ export default class Page extends BaseModel {
       && data_get(element, 'settings.slides_repeater', []).length > 0) {
 
       for (const el of data_get(element, 'settings.slides_repeater')) {
-        if(el.card_slides_repeater) {
+        if (el.card_slides_repeater) {
           await this.extractElementsNamesFromTemplate(el.card_slides_repeater, elementNames)
         }
       }
@@ -939,16 +958,16 @@ export default class Page extends BaseModel {
   }
 
 
-  async renderPageAreas():Promise<string> {
+  async renderPageAreas(): Promise<string> {
     const areas = await this.getAreas(true)
     // return JSONStringifyEscape(areas)
-    const _areas:any[] = []
-    for(const area of areas){
-      if(_.isArray(area.templates)){
+    const _areas: any[] = []
+    for (const area of areas) {
+      if (_.isArray(area.templates)) {
         // continue
 
       }
-      if(area?.template?.data){
+      if (area?.template?.data) {
         area.template.data = mbParseJSON(area.template.data, area.template.data)
 
         this.getDataDependencies(area.template.data)
@@ -968,29 +987,30 @@ export default class Page extends BaseModel {
 
     return JSONStringifyEscape(_areas)
   }
-  getDataDependencies(data){
-    if(! data){
+
+  getDataDependencies(data) {
+    if (!data) {
       return
     }
     let _data = _.cloneDeep(data)
     delete _data.children
-    for(let settingName in _data.settingsLock){
-      if(_data.settingsLock.hasOwnProperty(settingName)){
-        if(settingName.toLowerCase().indexOf('actions') > -1){
+    for (let settingName in _data.settingsLock) {
+      if (_data.settingsLock.hasOwnProperty(settingName)) {
+        if (settingName.toLowerCase().indexOf('actions') > -1) {
           delete _data.settingsLock[settingName]
         }
       }
     }
-    for(let settingName in _data.settings){
-      if(_data.settings.hasOwnProperty(settingName)){
-        if(settingName.toLowerCase().indexOf('actions') > -1){
+    for (let settingName in _data.settings) {
+      if (_data.settings.hasOwnProperty(settingName)) {
+        if (settingName.toLowerCase().indexOf('actions') > -1) {
           delete _data.settings[settingName]
         }
       }
     }
     _data = JSON.stringify(_data)
-    if(_.isArray(data.children)){
-      for(const child of data.children){
+    if (_.isArray(data.children)) {
+      for (const child of data.children) {
         this.getDataDependencies(child)
       }
     }
@@ -1001,14 +1021,15 @@ export default class Page extends BaseModel {
       'altrpmeta',
       'altrpresponses',
     ]
-    for (const d of dependenciesList){
-      if(_data.indexOf(d) > -1){
+    for (const d of dependenciesList) {
+      if (_data.indexOf(d) > -1) {
         (data.dependencies = data.dependencies || []).push(d)
       }
     }
   }
+
   async getPopupsGuids() {
-    const popups = await Template.getTemplates(this.id, 'popup' )
+    const popups = await Template.getTemplates(this.id, 'popup')
     return popups.map(popup => popup.guid)
   }
 }

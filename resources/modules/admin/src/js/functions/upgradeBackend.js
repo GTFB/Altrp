@@ -26,9 +26,9 @@ async function upgradeBackend(types = defaultTypes, ids ) {
   const delta = 3
   let count = types.filter(t=> ['pages', 'templates'].indexOf(t) === -1).length
   if(ids){
-    count += ids.length
+    count += ids.length / delta
   } else {
-    count += pages?.length
+    count += pages?.length / delta
   }
 
   let _i = 1

@@ -9,13 +9,21 @@ window.altrpIo = io( {
   },
 })
 window.altrpIo.on("message", (data) => {
-  if(data === 'altrpe'){
-    import('./_h-altrp')
-    console.log('SOCKET IO CONNECTED: ', performance.now());
-    window.altrpIo.disconnect()
+  console.log(data);
+  if(window.__altrpLoading){
+    return
   }
+  window.__altrpLoading = true
+  import('./_h-altrp')
+  console.log('SOCKET IO CONNECTED: ', performance.now());
+  window.altrpIo.disconnect()
+
 })
 window.altrpIo.on("connect_error", (data) => {
+  if(window.__altrpLoading){
+    return
+  }
+  window.__altrpLoading = true
   import('./_h-altrp')
   window.altrpIo.disconnect()
 
@@ -23,10 +31,7 @@ window.altrpIo.on("connect_error", (data) => {
 window.altrpIo.send('altrp-front-load')
 document.addEventListener('DOMContentLoaded',()=>{
   import('./js/helpers/dataRevealElements').then(cb=>cb.default())
-})
-document.addEventListener('DOMContentLoaded',()=>{
   if(document.querySelector('[data-async-content-load]')){
     import('./js/helpers/dataAsyncContentLoad').then(cb=>cb.default())
-
   }
 })
