@@ -1,7 +1,6 @@
 import documentCheckEvents from "./js/helpers/documentCheckEvents";
 import loadPageActions from "./js/functions/actions/load-page-actions";
 import loadDepends from "./js/functions/load-depends";
-import loadFontsManager from "./js/functions/load-fonts";
 import  queryString from 'query-string';
 import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
@@ -73,7 +72,6 @@ documentCheckEvents(() => {
     import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
       console.log('LOAD appStore: ', performance.now());
       loadingCallback();
-      loadFontsManager();
       loadDepends()
     });
 

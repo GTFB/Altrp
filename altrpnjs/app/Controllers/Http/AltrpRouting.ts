@@ -286,7 +286,7 @@ export default class AltrpRouting {
 
   getFonts(): string {
 
-    if (get_altrp_setting('google_fonts_disabled')) {
+    if (get_altrp_setting('altrp_google_fonts_disabled')) {
       return '';
     }
 
