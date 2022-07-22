@@ -22,6 +22,7 @@ class AdminSettings extends Component {
     this.onClickResetDatabase = this.onClickResetDatabase.bind(this)
     this.state = {
       SSREnabled: false,
+      GoogleFontsDisabled: false,
       SSRPort: "",
       SSRAlias: "",
       SSRConf: false,
@@ -47,6 +48,18 @@ class AdminSettings extends Component {
       SSREnabled: value
     }));
   };
+
+  toggleGoogleFontsDisabled = async e => {
+    let value = e.target.checked;
+    await new Resource({
+      route: "/admin/ajax/settings"
+    }).put("altrp_google_fonts_disabled", { value });
+    this.setState(state => ({
+      ...state,
+      GoogleFontsDisabled: value
+    }));
+  };
+
   setSSRPort = async e => {
     let value = e.target.value;
     new Resource({ route: "/admin/ajax/settings" }).put("ssr_port", { value });
@@ -129,6 +142,13 @@ class AdminSettings extends Component {
         "altrp_ssr_disabled"
       )
     ).altrp_ssr_disabled;
+
+    let GoogleFontsDisabled = !!(
+      await new Resource({ route: "/admin/ajax/settings" }).get(
+        "altrp_google_fonts_disabled"
+      )
+    ).altrp_google_fonts_disabled;
+
     let SSRPort = (
       await new Resource({ route: "/admin/ajax/settings" }).get("ssr_port")
     ).ssr_port;
@@ -144,6 +164,7 @@ class AdminSettings extends Component {
     this.setState(state => ({
       ...state,
       SSREnabled,
+      GoogleFontsDisabled,
       SSRPort,
       SSRAlias,
       SSRConf
@@ -285,6 +306,21 @@ class AdminSettings extends Component {
               <h4>Welcome to Altrp Settings Page</h4>
               <table>
                 <tbody className="admin-table-body">
+
+                  <tr className="admin-settings-table-row">
+                    <td className="admin-settings-table__td row-text">Google Fonts</td>
+                    <td className="admin-settings-table__td ">
+                      <input
+                        className="admin-table__td_check"
+                        checked={this.state.GoogleFontsDisabled}
+                        onChange={this.toggleGoogleFontsDisabled}
+                        type="checkbox"
+                      />
+                      Disable Google Fonts
+                    </td>
+                  </tr>
+
+
                   {/*<tr className="admin-settings-table-row">*/}
                   {/*  <td className="admin-settings-table__td row-text">SSR</td>*/}
                   {/*  <td className="admin-settings-table__td ">*/}

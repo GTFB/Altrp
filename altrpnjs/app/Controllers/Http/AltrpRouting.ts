@@ -285,6 +285,11 @@ export default class AltrpRouting {
   }
 
   getFonts(): string {
+
+    if (get_altrp_setting('google_fonts_disabled')) {
+      return '';
+    }
+
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
 
