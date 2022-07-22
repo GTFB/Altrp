@@ -21,6 +21,7 @@ import IGNORED_ROUTES from "../../../helpers/const/IGNORED_ROUTES"
 import get_altrp_setting from "../../../helpers/get_altrp_setting";
 import stringToObject from "../../../helpers/string/stringToObject";
 import FONTS, { SYSTEM_FONT} from "../../../helpers/const/FONTS";
+import isRobot from "../../../helpers/isRobot";
 
 
 export default class AltrpRouting {
@@ -61,7 +62,8 @@ export default class AltrpRouting {
     if(httpContext.request.completeUrl().split(modulesUrl).length > 1) {
       return
     }
-
+    const asCheck = isRobot(httpContext.request.headers())
+    console.log(asCheck);
     /**
      * Игнорим админку и ajax
      */
@@ -178,6 +180,7 @@ export default class AltrpRouting {
             altrpContext,
             is_admin,
             pages,
+            asCheck,
             user,
             csrfToken: httpContext.request.csrfToken,
             isProd: isProd(),

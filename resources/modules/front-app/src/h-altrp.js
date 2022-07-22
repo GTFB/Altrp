@@ -1,20 +1,7 @@
-import {io} from "socket.io-client";
 import loadPluginsHelpers from "./js/plugins/loadPluginsHelpers";
 window.altrp.loadPluginsHelpers = loadPluginsHelpers
 console.log('FIRST SCRIPT: ', performance.now());
 
-window.altrpIo = io( {
-  path: '/wsaltrp',
-  auth: {
-  },
-})
-window.altrpIo.on("connect", (data) => {
-  import('./_h-altrp')
-  console.log('SOCKET IO CONNECTED: ', performance.now());
-  window.altrpIo.disconnect()
-})
-window.altrpIo.on("connect_error", (data) => {
-  import('./_h-altrp')
-  window.altrpIo.disconnect()
-})
-window.altrpIo.send('altrp-front-load')
+if(! window.asCheck){
+  import('./_h-altrp.js')
+}
