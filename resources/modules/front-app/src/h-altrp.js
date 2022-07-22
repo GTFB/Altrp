@@ -8,8 +8,7 @@ window.altrpIo = io( {
   auth: {
   },
 })
-window.altrpIo.connect()
-window.altrpIo.on("message", loadFrontApp)
+window.altrpIo.send('altrp-front-load')
 
 function loadFrontApp(){
   if(window.__altrpLoading){
@@ -17,14 +16,19 @@ function loadFrontApp(){
   }
   window.__altrpLoading = true
   import('./_h-altrp')
+  window.altrpIo.disconnect()
 
-
-}
-window.altrpIo.on("connect_error", loadFrontApp)
-window.altrpIo.send('altrp-front-load')
-document.addEventListener('DOMContentLoaded',()=>{
-  import('./js/helpers/dataRevealElements').then(cb=>cb.default())
   if(document.querySelector('[data-async-content-load]')){
     import('./js/helpers/dataAsyncContentLoad').then(cb=>cb.default())
   }
+
+}
+window.altrpIo.on("connect_error", error=>{
+  console.error(error);
+  loadFrontApp()
+})
+window.altrpIo.on("message", loadFrontApp)
+
+document.addEventListener('DOMContentLoaded',()=>{
+  import('./js/helpers/dataRevealElements').then(cb=>cb.default())
 })

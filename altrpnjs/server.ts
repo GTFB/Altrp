@@ -14,31 +14,34 @@ import 'reflect-metadata'
 import sourceMapSupport from 'source-map-support'
 import { Ignitor } from '@adonisjs/core/build/standalone'
 
+new Ignitor(__dirname)
+  .httpServer()
+  .start()
 sourceMapSupport.install({ handleUncaughtExceptions: false })
 
 
-const   os = require('os'),
-  cluster = require('cluster');
-
-if (cluster.isMaster) {
-  let cpus = os.cpus().length;
-
-  for (let i = 0; i < cpus; i++) cluster.fork();
-
-  cluster.on('exit', (worker, code) => {
-    console.log(
-      `Worker ${worker.id} finished. Exit code: ${code}`
-    );
-
-    new Ignitor(__dirname)
-      .httpServer()
-      .start()
-  });
-} else {
-  new Ignitor(__dirname)
-    .httpServer()
-    .start()
-}
+// const   os = require('os'),
+//   cluster = require('cluster');
+//
+// if (cluster.isMaster) {
+//   let cpus = os.cpus().length;
+//
+//   for (let i = 0; i < cpus; i++) cluster.fork();
+//
+//   cluster.on('exit', (worker, code) => {
+//     console.log(
+//       `Worker ${worker.id} finished. Exit code: ${code}`
+//     );
+//
+//     new Ignitor(__dirname)
+//       .httpServer()
+//       .start()
+//   });
+// } else {
+//   new Ignitor(__dirname)
+//     .httpServer()
+//     .start()
+// }
 
 // for https tests
 // if you use windows open git terminal
