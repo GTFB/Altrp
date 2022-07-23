@@ -33,6 +33,26 @@ export default class AdminController {
   // async setSettings({params, response, request, }:HttpContextContract){
   //
   // }
+  public async restartAltrp({response,}: HttpContextContract){
+    const res : {
+      success:boolean,
+      message?:string,
+      trace?:[],
+    } = {success: true,
+    }
+    try {
+      if(isProd()){
+        await promisify(exec)('pm2 restart all --update-env')
+      }
+
+    }catch (e) {
+      res.message = 'Error server restarting: \n' + e.message
+      e.message = 'Error server restarting: \n' + e.message
+      console.error(e);
+    }
+    return response.json(res)
+
+  }
   public async upgradeAllResources({response,request}: HttpContextContract) {
     const res : {
       success:boolean,
@@ -71,17 +91,8 @@ export default class AdminController {
         await AdminController.upgradeTemplates(request)
 
       }
-      }
-      try {
-        if(isProd()){
-        await promisify(exec)('pm2 restart all --update-env')
-        }
-
-      }catch (e) {
-      res.message = 'Error server restarting: \n' + e.message
-      e.message = 'Error server restarting: \n' + e.message
-      console.error(e);
     }
+
 
     return response.json(res)
   }

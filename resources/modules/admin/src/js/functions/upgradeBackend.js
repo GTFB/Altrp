@@ -79,6 +79,24 @@ async function upgradeBackend(types = defaultTypes, ids ) {
     }while (ids.length)
     ids = null
   }
+  try {
+    await axios.post('/admin/ajax/restart-altrp',)
+
+  } catch (e) {
+    let serverRestarted = false
+    let i = 0
+    do {
+      ++i
+      try {
+        await delay(100)
+        await axios.get('/ajax/_token')
+        serverRestarted = true
+      } catch (e) {
+        console.error(e);
+      }
+    } while (!serverRestarted && i < 100)
+  }
+
 }
 
 export default upgradeBackend

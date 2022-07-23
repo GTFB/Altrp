@@ -5,6 +5,8 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import '../../../../../editor/src/sass/blueprint.scss'
+
 import {
   MenuItem,
   Menu} from '@blueprintjs/core'
@@ -369,7 +371,7 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${(settings) => {
+  ${({settings}) => {
     const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
   switch (content_label_position_type) {
     case "left": {

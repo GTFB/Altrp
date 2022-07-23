@@ -537,7 +537,7 @@ export default class Page extends BaseModel {
 
   async getAllStyles(html) {
     let styles = ''
-    const elements = await this.extractElementsNames()
+    const elements = await this.extractElementsNames(false)
     styles += `<style type="text/css" id="elements_static_styles">`
     for (const elementName of elements) {
       if (fs.existsSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`))) {
@@ -837,7 +837,6 @@ export default class Page extends BaseModel {
           area.template.data = data
         }
         await this._extractElementsNames(data, elementNames, _only_react_elements);
-      } else {
       }
     }))
 

@@ -12,6 +12,7 @@ import AltrpModel from "../../classes/AltrpModel";
 import {MultiSelect} from "@blueprintjs/select";
 import {MenuItem, Button} from "@blueprintjs/core";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
+import '../../../../../editor/src/sass/blueprint.scss'
 
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -383,7 +384,7 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${(settings) => {
+  ${({settings}) => {
     const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
   switch (content_label_position_type) {
     case "left": {

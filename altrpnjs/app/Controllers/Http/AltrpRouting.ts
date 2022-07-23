@@ -28,6 +28,8 @@ import getLatestVersion from "../../../helpers/getLatestVersion";
 import FONTS, {SYSTEM_FONT} from "../../../helpers/const/FONTS";
 import {promisify} from "util";
 import storage_path from "../../../helpers/storage_path";
+import isRobot from "../../../helpers/isRobot";
+
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -66,7 +68,8 @@ export default class AltrpRouting {
     if (httpContext.request.completeUrl().split(modulesUrl).length > 1) {
       return
     }
-
+    const asCheck = isRobot(httpContext.request.headers())
+    console.log(asCheck);
     /**
      * Игнорим админку и ajax
      */
@@ -225,6 +228,7 @@ export default class AltrpRouting {
         ...altrpContext,
         altrpContext,
         access_classes,
+        asCheck,
         user,
         csrfToken: httpContext.request.csrfToken,
         isProd: isProd(),
@@ -277,6 +281,7 @@ export default class AltrpRouting {
           page,
           httpContext,
           device,
+          asCheck,
           altrpContext,
           model_data,
           pageMatch,
@@ -300,6 +305,7 @@ export default class AltrpRouting {
                                 httpContext,
                                 altrpContext,
                                 model_data,
+                                asCheck,
                                 pageMatch,
                                 device,
                                 datasources,
@@ -325,6 +331,7 @@ export default class AltrpRouting {
           altrpContext,
           is_admin,
           pages,
+            asCheck,
           user,
           csrfToken: httpContext.request.csrfToken,
           isProd: isProd(),
@@ -379,6 +386,11 @@ export default class AltrpRouting {
   }
 
   getFonts(): string {
+
+    if (get_altrp_setting('altrp_google_fonts_disabled')) {
+      return '';
+    }
+
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
 

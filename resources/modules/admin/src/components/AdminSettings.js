@@ -21,10 +21,7 @@ class AdminSettings extends Component {
     this.switchTab = this.switchTab.bind(this);
     this.onClickResetDatabase = this.onClickResetDatabase.bind(this)
     this.state = {
-      SSREnabled: false,
-      SSRPort: "",
-      SSRAlias: "",
-      SSRConf: false,
+      GoogleFontsDisabled: false,
       activeTab: parseInt(window.location.hash[1]) || 0,
       modal: false,
       imageModal: false,
@@ -37,75 +34,15 @@ class AdminSettings extends Component {
     };
   }
 
-  toggleSSREnabled = async e => {
+  toggleGoogleFontsDisabled = async e => {
     let value = e.target.checked;
     await new Resource({
       route: "/admin/ajax/settings"
-    }).put("altrp_ssr_disabled", { value });
+    }).put("altrp_google_fonts_disabled", { value });
     this.setState(state => ({
       ...state,
-      SSREnabled: value
+      GoogleFontsDisabled: value
     }));
-  };
-  setSSRPort = async e => {
-    let value = e.target.value;
-    new Resource({ route: "/admin/ajax/settings" }).put("ssr_port", { value });
-    this.setState(state => ({
-      ...state,
-      SSRPort: value
-    }));
-  };
-
-  setSSRPort = async e => {
-    let value = e.target.value;
-    new Resource({ route: "/admin/ajax/settings" }).put("ssr_port", { value });
-    this.setState(state => ({
-      ...state,
-      SSRPort: value
-    }));
-  };
-
-  setSSRSettingsAlias = async e => {
-    let value = e.target.value;
-    new Resource({ route: "/admin/ajax/settings" }).put("ssr_settings_alias", {
-      value
-    });
-    this.setState(state => ({
-      ...state,
-      SSRAlias: value
-    }));
-  };
-
-  generateConfig = async e => {
-    new Resource({ route: "/admin/ajax/ssr/make" }).post().then(
-      success => {
-        alert(success.message);
-      },
-      error => {
-        alert(error);
-      }
-    );
-  };
-  restartSSR = async e => {
-    new Resource({ route: "/admin/ajax/ssr/restart" }).post().then(
-      success => {
-        alert(success.message);
-      },
-      error => {
-        alert(error);
-      }
-    );
-  };
-
-  clearProjectCache = async e => {
-    new Resource({ route: "/admin/ajax/cache/clear" }).post().then(
-      success => {
-        alert(success.message);
-      },
-      error => {
-        alert(error);
-      }
-    );
   };
 
   toggleModalCategory = () => {
@@ -124,29 +61,18 @@ class AdminSettings extends Component {
   }
 
   async componentDidMount() {
-    let SSREnabled = !!(
+
+    let GoogleFontsDisabled = !!(
       await new Resource({ route: "/admin/ajax/settings" }).get(
-        "altrp_ssr_disabled"
+        "altrp_google_fonts_disabled"
       )
-    ).altrp_ssr_disabled;
-    let SSRPort = (
-      await new Resource({ route: "/admin/ajax/settings" }).get("ssr_port")
-    ).ssr_port;
-    let SSRAlias = (
-      await new Resource({ route: "/admin/ajax/settings" }).get(
-        "ssr_settings_alias"
-      )
-    ).ssr_settings_alias;
-    let SSRConf = (
-      await new Resource({ route: "/admin/ajax/ssr/check" }).getAll()
-    ).file;
+    ).altrp_google_fonts_disabled;
+
+    console.log(GoogleFontsDisabled)
 
     this.setState(state => ({
       ...state,
-      SSREnabled,
-      SSRPort,
-      SSRAlias,
-      SSRConf
+      GoogleFontsDisabled,
     }));
   }
   switchTab(activeTab) {
@@ -246,8 +172,10 @@ class AdminSettings extends Component {
   }
 
   render() {
-    const { SSRPort, SSRAlias, SSRConf, idModal, modalResetHidden, emailReset, passwordReset, modalResetLoading } = this.state;
+    const { GoogleFontsDisabled, SSRPort, SSRAlias, SSRConf, idModal, modalResetHidden, emailReset, passwordReset, modalResetLoading } = this.state;
     const {resetEnable} = this.props.adminState
+
+    console.log(this.state)
 
     return (
       <div className="admin-settings admin-page">
@@ -285,6 +213,21 @@ class AdminSettings extends Component {
               <h4>Welcome to Altrp Settings Page</h4>
               <table>
                 <tbody className="admin-table-body">
+
+                  <tr className="admin-settings-table-row">
+                    <td className="admin-settings-table__td row-text">Google Fonts</td>
+                    <td className="admin-settings-table__td ">
+                      <input
+                        className="admin-table__td_check"
+                        checked={this.state.GoogleFontsDisabled}
+                        onChange={this.toggleGoogleFontsDisabled}
+                        type="checkbox"
+                      />
+                      Disable Google Fonts
+                    </td>
+                  </tr>
+
+
                   {/*<tr className="admin-settings-table-row">*/}
                   {/*  <td className="admin-settings-table__td row-text">SSR</td>*/}
                   {/*  <td className="admin-settings-table__td ">*/}

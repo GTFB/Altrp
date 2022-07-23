@@ -162,7 +162,7 @@ export default class ElementRenderer {
     let allow_start_tag = ''
     let allow_end_tag = ''
     conditional_roles = conditional_roles || []
-    if (conditional_roles?.length) {
+    if (conditional_roles?.length && conditional_display_choose === 'auth') {
       // @ts-ignore
       if(conditional_roles.length && Number(conditional_roles[0])) {
         // @ts-ignore

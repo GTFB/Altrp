@@ -12,6 +12,7 @@ import parseParamsFromString from "../../../../../front-app/src/js/functions/par
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import {Select} from "@blueprintjs/select";
+import '../../../../../editor/src/sass/blueprint.scss'
 import {MenuItem, Button} from "@blueprintjs/core";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
@@ -414,7 +415,7 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${(settings) => {
+  ${({settings}) => {
     const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
   switch (content_label_position_type) {
     case "left": {

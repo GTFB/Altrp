@@ -17,7 +17,6 @@ class MaskedInput extends React.Component {
       mask: _.clone(props.inputProps.settings.content_mask)
     }
 
-    this.inputRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.updateMask = this.updateMask.bind(this);
     this.handleBackspace = this.handleBackspace.bind(this);
@@ -183,13 +182,11 @@ class MaskedInput extends React.Component {
   }
 
   render() {
-    return React.createElement(this.props.input, {
-      ...this.props.inputProps,
-      inputRef: this.inputRef,
-      onChange: this.handleChange,
-      onKeyDown: this.handleBackspace,
-      value: this.state.previewValue
-    })
+    return <this.props.input
+      {...this.props.inputProps}
+      onChange={this.handleChange}
+      onKeyDown={this.handleBackspace}
+      value={this.state.previewValue}/>
   }
 }
 

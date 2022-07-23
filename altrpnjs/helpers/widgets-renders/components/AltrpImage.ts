@@ -9,7 +9,7 @@ export default function AltrpImage(props: any, device: string) {
   const {lazyload_disable,} = settings
   if (lazyload_disable) {
     if(image?.rawSVG){
-      let svg = image.rawSVG;
+      let svg = image?.rawSVG;
       let regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig'); //для работы с циклом
       let _props = {};
       let propsString = svg.match(/<svg(.*?)=\"(.*?)\">/gi)?svg.match(/<svg(.*?)=\"(.*?)\">/gi)[0] : '';

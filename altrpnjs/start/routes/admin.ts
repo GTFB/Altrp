@@ -216,6 +216,7 @@ Route.group(() => {
      * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
      */
     Route.post('update-all-resources', 'admin/AdminController.upgradeAllResources').name = 'admin.update-all-resources'
+    Route.post('restart-altrp', 'admin/AdminController.restartAltrp').name = 'admin.restart-altrp'
 
     Route.post('check_update', async (httpContext: HttpContextContract)=>{
       if(env('APP_ENV') !== 'production'){

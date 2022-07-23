@@ -113,3 +113,23 @@ input[type=checkbox] {
   width: 1em;
 }
 
+.altrp-input-wrapper, .altrp-field-select2 {
+  position: relative;
+  flex-grow: 1;
+}
+
+.bp3-input-group.bp3-fill {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.bp3-input-group {
+  display: block;
+  position: relative;
+  max-width: 100%;
+}
+
+.bp3-input-group .bp3-input {
+  position: relative;
+  width: 100%;
+}

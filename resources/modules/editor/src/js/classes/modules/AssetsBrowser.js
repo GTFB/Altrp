@@ -191,6 +191,7 @@ class AssetsBrowser extends Component {
   render() {
     const { videoAssets, activeTab } = this.state;
     const { rawEnable, } = this.props;
+
     let classes = "assets-browser";
     if (this.props.active) {
       classes += " assets-browser_active";
@@ -293,7 +294,7 @@ class AssetsBrowser extends Component {
             <button className={buttonClasses} onClick={this.chooseAsset}>
               Choose
             </button>
-            {rawEnable && <button className={buttonClasses + ' ml-3'} onClick={this.insertRaw}>Insert Raw</button>}
+            {rawEnable && activeTab === 'icons' && <button className={buttonClasses + ' ml-3'} onClick={this.insertRaw}>Insert Raw</button>}
           </div>
         </div>
       </div>

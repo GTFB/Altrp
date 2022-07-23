@@ -104,3 +104,23 @@
 .bp3-button:disabled::before, .bp3-button:disabled .bp3-icon, .bp3-button:disabled .bp3-icon-standard, .bp3-button:disabled .bp3-icon-large, .bp3-button.bp3-disabled::before, .bp3-button.bp3-disabled .bp3-icon, .bp3-button.bp3-disabled .bp3-icon-standard, .bp3-button.bp3-disabled .bp3-icon-large, .bp3-button[class*=bp3-intent-]::before, .bp3-button[class*=bp3-intent-] .bp3-icon, .bp3-button[class*=bp3-intent-] .bp3-icon-standard, .bp3-button[class*=bp3-intent-] .bp3-icon-large {
   color: inherit !important;
 }
+.altrp-input-wrapper, .altrp-field-select2 {
+  position: relative;
+  flex-grow: 1;
+}
+
+.bp3-input-group.bp3-fill {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.bp3-input-group {
+  display: block;
+  position: relative;
+  max-width: 100%;
+}
+
+.bp3-input-group .bp3-input {
+  position: relative;
+  width: 100%;
+}

@@ -145,17 +145,6 @@ class AdvancedSettings extends Component {
     await upgradeBackend()
     pageReload()
 
-    // try{
-    //   let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
-    //
-    //   if(res.success){
-    //     await alert('success');
-    //   }
-    //   store.dispatch(setAdminEnable());
-    // }catch (e) {
-    //   await delay(5000)
-    //   pageReload()
-    // }
   };
 
   render() {

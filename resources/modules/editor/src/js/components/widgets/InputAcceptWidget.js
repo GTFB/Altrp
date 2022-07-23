@@ -345,7 +345,7 @@ textarea.altrp-field {
 }
 `)
 const AltrpFieldContainer = styled.div`
-  ${(settings) => {
+  ${({settings}) => {
     const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')  
     switch (content_label_position_type) {
       case "left": {

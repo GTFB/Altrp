@@ -1,15 +1,35 @@
 import React, { Component } from "react";
-import ("./altrp-input.scss");
+//import ("./altrp-input.scss");
 import AltrpInputFile from "./AltrpInputFile";
 import validateEmail from "../../../../../front-app/src/js/functions/validateEmail";
 import MaskedInput from "./MaskedInput";
-import {InputGroup} from "@blueprintjs/core";
 
 class AltrpInput extends Component {
   state = {
     isValid: true
   };
 
+  rightElement = React.createRef()
+  maybeRenderLeftElement() {
+    const {  leftIcon } = this.props;
+
+    if (leftIcon != null) {
+      return leftIcon;
+    }
+
+    return undefined;
+  }
+  maybeRenderRightElement() {
+    const { rightElement } = this.props;
+    if (rightElement == null) {
+      return undefined;
+    }
+    return (
+      <span className="bp3-input-action" ref={this.rightElement}>
+                {rightElement}
+            </span>
+    );
+  }
   // checkValidity = mask => {
   //   if (! mask) return;
   //   let value = this.props.value.replace(/_/g, '');
@@ -29,25 +49,62 @@ class AltrpInput extends Component {
   //     _.set(this, 'props.element.maskIsValid', false);
   //   }
   // }
+
+  componentDidMount() {
+    this.updateInputWidth();
+  }
+
+  updateInputWidth() {
+    const {  rightElementWidth } = this.state;
+
+    if (this.rightElement.current != null) {
+      const { clientWidth } = this.rightElement.current;
+      // small threshold to prevent infinite loops
+      if (rightElementWidth === undefined || Math.abs(clientWidth - rightElementWidth) > 2) {
+        this.setState({ rightElementWidth: clientWidth });
+      }
+    } else {
+      this.setState({ rightElementWidth: undefined });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const { leftElement, rightElement } = this.props;
+    if (prevProps.leftElement !== leftElement || prevProps.rightElement !== rightElement) {
+      this.updateInputWidth();
+    }
+  }
+
   render() {
-    let Input = InputGroup;
     const { isValid } = this.state;
     const { content_type, content_mask, mask_mismatch_message } = this.props.settings;
+    const _inputProps = {
+      ...this.props,
+    };
     const inputProps = {
       ...this.props,
       inputRef: this.props.inputRef,
     };
+    delete _inputProps.leftIcon
+    delete _inputProps.rightElement
     switch (content_type) {
       case "file": {
         return <AltrpInputFile {...inputProps} />;
       }
     }
+    _inputProps.className += ' bp3-input'
+
     if (content_mask) {
       return (<>
           <MaskedInput
             mask={content_mask}
-            inputProps={inputProps}
-            input={Input}
+            inputProps={_inputProps}
+            input={props=>{
+              return<div className="bp3-input-group">
+                {this.maybeRenderLeftElement()}
+                <input {..._inputProps} {...props} ref={this.props.inputRef}/>
+                {this.maybeRenderRightElement()}
+              </div>}
+            }
           />
           {!isValid && mask_mismatch_message && <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
         </>
@@ -68,9 +125,18 @@ class AltrpInput extends Component {
       }
     }
 
-
+    if(this.state.rightElementWidth){
+      _inputProps.style= {
+        paddingRight: `${this.state.rightElementWidth}px`
+      }
+    }
     return <>
-      <Input {...inputProps} />
+
+    <div className="bp3-input-group">
+      {this.maybeRenderLeftElement()}
+      <input {..._inputProps} ref={this.props.inputRef}/>
+      {this.maybeRenderRightElement()}
+    </div>
       {!isValid && content_type === 'email' && mask_mismatch_message &&
       <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
     </>;
