@@ -81,7 +81,7 @@
       </script>
     <script src="/serviceWorker.js?{{PACKAGE_KEY}}"></script>
     <%={{ }}=%>
-    <script defer src="{{ hAltrp }}"></script>
+    <script defer src="{{hAltrp}}"></script>
     {{{extra_footer_styles}}}
   {{{all_site_js}}}
   <style type="text/css">body{display:flex;}</style>

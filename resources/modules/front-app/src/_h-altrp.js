@@ -141,6 +141,7 @@ document.addEventListener('scroll', e=>{
   })
 })
 document.body.addEventListener('click', e =>{
+  console.log(e);
   import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{
     module?.default(e);
   })

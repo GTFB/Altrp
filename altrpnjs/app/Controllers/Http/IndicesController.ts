@@ -16,14 +16,16 @@ export default class IndicesController {
     return view.render('admin', Edge({
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
-      url: Env.get("PATH_ENV") === "production" ? "/modules/admin/admin.js" : "http://localhost:3002/src/admin.js"
+      url: Env.get("PATH_ENV") === "production" ?
+        `/modules/admin/admin.js?${Env.get('PACKAGE_KEY')}` : "http://localhost:3002/src/admin.js"
     }))
   }
   async customizer({view}) {
     return view.render('customizer', Edge({
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
-      url: Env.get("PATH_ENV") === "production" ? "/modules/customizer/customizer.js" : "http://localhost:3002/src/customizer.js"
+      url: Env.get("PATH_ENV") === "production" ?
+        `/modules/customizer/customizer.js?${Env.get('PACKAGE_KEY')}` : "http://localhost:3002/src/customizer.js"
     }))
   }
 
@@ -31,8 +33,11 @@ export default class IndicesController {
     return view.render('editor', Edge({
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
-      url: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.js" : "http://127.0.0.1:3000/src/bundle.js",
-      css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
+      url: Env.get("PATH_ENV") === "production" ?
+        `/modules/editor/editor.js?${Env.get('PACKAGE_KEY')}` :
+        "http://127.0.0.1:3000/src/bundle.js",
+      css: Env.get("PATH_ENV") === "production" ?
+        `/modules/editor/editor.css?${Env.get('PACKAGE_KEY')}` : null
     }))
   }
 
@@ -47,7 +52,8 @@ export default class IndicesController {
 
   public editorContent({ view }) {
     return view.render('editor-content', Edge({
-      css: Env.get("PATH_ENV") === "production" ? "/modules/editor/editor.css" : null
+      css: Env.get("PATH_ENV") === "production" ?
+        `/modules/editor/editor.css${Env.get('PACKAGE_KEY')}` : null
     }))
   }
 

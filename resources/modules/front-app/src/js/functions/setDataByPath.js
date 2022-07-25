@@ -108,6 +108,7 @@ export default function setDataByPath(path = "", value, dispatch = null) {
     } else {
       appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true));
     }
+    return true;
   } else
   if (path.indexOf("altrpelements.") === 0) {
     const pathElements = path.split(".");
@@ -142,6 +143,7 @@ export default function setDataByPath(path = "", value, dispatch = null) {
       }
       area.setSetting(propName, value);
     }
+    return true;
   } else
   if (path.indexOf("altrpstorage.") === 0) {
     path = path.replace("altrpstorage.", "");

@@ -474,7 +474,7 @@ export default class TemplatesController {
     let template
 
     if(validGuid(params.id)){
-      template = await Template.query().where('guid', params.id).first()
+      template = await Template.query().where('guid', params.id).preload("currentArea").first()
       if(template){
         id=template.id
       } else {

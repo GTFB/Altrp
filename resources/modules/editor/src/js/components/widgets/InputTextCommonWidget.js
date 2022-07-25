@@ -656,27 +656,6 @@ class InputTextCommonWidget extends Component {
      * Обновляем хранилище только если не текстовое поле
      */
 
-    const change_actions = this.props.element.getLockedSettings("change_actions");
-    const change_change_end = this.props.element.getLockedSettings(
-      "change_change_end"
-    );
-    const change_change_end_delay = this.props.element.getLockedSettings(
-      "change_change_end_delay"
-    );
-
-    if (change_actions && !change_change_end && !isEditor()) {
-      this.debounceDispatch(
-        value !== undefined ? value : value
-      );
-    }
-    if (change_actions && change_change_end && !isEditor()) {
-      this.timeInput && clearTimeout(this.timeInput);
-      this.timeInput = setTimeout(() => {
-        this.debounceDispatch(
-          value !== undefined ? value : value
-        );
-      }, change_change_end_delay);
-    }
     if(isEditor()){
       this.setState(state=>({...state, value}))
     } else {
@@ -763,6 +742,7 @@ class InputTextCommonWidget extends Component {
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
               )
           ).default;
+
           await actionsManager.callAllWidgetActions(
             this.props.element.getIdForAction(),
             "change",

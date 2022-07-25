@@ -1,5 +1,3 @@
-import { v4 } from 'uuid';
-import elementSearchForAction from "../../helpers/element-search-for-action";
 import getActionsElement from "../../helpers/get-actions-element";
 
 const CLICK_EXCLUDE_TAG_NAMES = [
@@ -10,7 +8,6 @@ const CLICK_EXCLUDE_TAG_NAMES = [
   // 'select',
 ];
 
-const ACTIONS_CACHE = (window.altrp.ACTIONS_CACHE = window.altrp.ACTIONS_CACHE || {})
 
 /**
  *
@@ -28,6 +25,8 @@ export default function clickActions(e){
       'wrapper_click_actions',
       'clickActions'
     );
+  console.log(actions);
+  console.log(element);
   // let element
   // if(e.target.dataset.elementUuid && _.get(ACTIONS_CACHE, `.${e.target.dataset.elementUuid}`)){
   //   actions = _.get(ACTIONS_CACHE, `clickActions.${e.target.dataset.elementUuid}.actions`);
@@ -51,7 +50,7 @@ export default function clickActions(e){
   if(! actions){
     return;
   }
-  console.log(e);
+
   e.preventDefault();
   import(/* webpackChunkName: 'ActionsManager' */'../../classes/modules/ActionsManager').then(()=>{
     window.actionsManager.callAllWidgetActions(

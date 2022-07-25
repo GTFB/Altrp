@@ -11,6 +11,24 @@ const defaultTypes = [
 async function upgradeBackend(types = defaultTypes, ids ) {
 
   progressBar(.02)
+  try {
+    await axios.post('/admin/ajax/restart-altrp',)
+
+  } catch (e) {
+    let serverRestarted = false
+    let i = 0
+    do {
+      ++i
+      try {
+        await delay(100)
+        await axios.get('/ajax/_token')
+        serverRestarted = true
+      } catch (e) {
+        console.error(e);
+      }
+    } while (!serverRestarted && i < 100)
+  }
+
   let pages = ['']
   if(types.indexOf('pages') > -1){
     pages = (await axios.get('/admin/ajax/pages')).data

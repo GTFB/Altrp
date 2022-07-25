@@ -328,7 +328,7 @@ class FrontPopup extends Component {
           <div
             className="popup-window"
             // style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
-            onClick={e => e.stopPropagation()}
+            onClick={this.onClink}
           >
             {close_context !== 'window' && closeButton}
             {rootElement.getSettings("").height_popup_layout === 'fitToContent'
@@ -371,6 +371,16 @@ class FrontPopup extends Component {
   );
 
   }
+
+  onClink = e => {
+    // console.log(e.target.closest('[data-altrp-wrapper-click-actions]'));
+    if(e.target.closest('[data-altrp-wrapper-click-actions]')){
+      return
+    }
+    e.stopPropagation()
+  }
+
+
 }
 
 const mapStateToProps = state => {
