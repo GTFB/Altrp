@@ -34,10 +34,6 @@ export class TelegramBot {
       this.init(updated).catch(e => {
         Logger.trace(e)
       })
-    } else {
-      if(httpContext) {
-        httpContext.response.abort("token or webhookUrl is null")
-      }
     }
   }
 
@@ -126,12 +122,13 @@ export class TelegramBot {
       try {
 
 
-        global.telegramBot = new Telegraf(this.token, )
+        global.telegramBot = new Telegraf(this.token)
 
         global.telegramBot.start(async (ctx) => {
           await this.message(ctx, customizer)
         });
 
+        new Telegraf(this.token).telegram.sendMessage(1, "asdsa")
         global.telegramBot.use(async (ctx, next) => {
           await this.message(ctx, customizer, next)
         });
