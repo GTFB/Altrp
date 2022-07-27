@@ -267,6 +267,7 @@ class ElementWrapper extends Component {
   shouldComponentUpdate(newProps, newState){
     const {element} = this.props;
     let {dependencies} = element;
+
     if(isEditor()){
       return false
     }

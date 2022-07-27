@@ -88,7 +88,7 @@ export default class PageGenerator extends BaseGenerator {
     const head_end = get_altrp_setting('head_end', '', true)
     const body_start = get_altrp_setting('body_start', '', true)
     const body_end = get_altrp_setting('body_end', '', true)
-
+    console.log(head_start);
     elements_list = elements_list.join(',')
     const favicons = this.getFavicons()
     const front_app_css = this.getFrontAppCss()

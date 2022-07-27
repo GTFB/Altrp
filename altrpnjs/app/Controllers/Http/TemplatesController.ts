@@ -320,6 +320,13 @@ export default class TemplatesController {
       // @ts-ignore
       delete template.styles
     }
+
+    // @ts-ignore
+    template.data = mbParseJSON(template.data, template.data)
+    // @ts-ignore
+    Page.getDataDependencies(template.data)
+    // @ts-ignore
+    template.data = JSON.stringify(template.data)
     return template
   }
 
@@ -590,29 +597,5 @@ export default class TemplatesController {
     let res = template.serialize()
 
     return response.json(res)
-  }
-
-  async show_frontend({params,response}:HttpContextContract )
-{
-
-  // if (self::loadCachedTemplate( template_id )) {
-  //    return self::loadCachedTemplate( template_id );
-  // }
-  const template_id = params.template_id
-  let template
-  if ( validGuid( template_id ) ) {
-    template = await Template.query().where( 'guid', template_id ).first();
-  } else {
-    template = await Template.find( template_id );
-  }
-  if ( ! template ) {
-    response.status(404)
-    return response.json( { 'success' : false, 'message' : 'Template not found' })
-  }
-
-  template = template.serialize()
-  delete template.html_content
-  delete template.styles
-  return response.json({template});
   }
 }

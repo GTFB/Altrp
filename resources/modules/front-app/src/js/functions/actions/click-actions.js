@@ -25,8 +25,6 @@ export default function clickActions(e){
       'wrapper_click_actions',
       'clickActions'
     );
-  console.log(actions);
-  console.log(element);
   // let element
   // if(e.target.dataset.elementUuid && _.get(ACTIONS_CACHE, `.${e.target.dataset.elementUuid}`)){
   //   actions = _.get(ACTIONS_CACHE, `clickActions.${e.target.dataset.elementUuid}.actions`);

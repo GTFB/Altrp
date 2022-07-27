@@ -20,8 +20,6 @@ export function checkElementInViewBox(element, scrollbars){
   if(! view.contains(element)){
     return false
   }
-  // console.log(element);
-  // console.log(scrollbars.view);
   let offsetTop = getOffsetTopInElement(element, view);
   if(offsetTop === false){
     return false

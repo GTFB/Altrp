@@ -272,14 +272,9 @@ function MapDesigner({
   );
 
   const handleMapClick = (e, layer) => {
-    // e.DomEvent.stopPropagation();
-    // console.log(e);
-    // e.DomEvent.preventDefault();
     L.DomEvent.stopPropagation(e);
     L.DomEvent.preventDefault(e);
-    // e.originalEvent.view.L.DomEvent.stopPropagation(e);
     setSelected(null);
-    // console.log(layer);
   };
 
   const handleMarkerClick = (e, layer) => {

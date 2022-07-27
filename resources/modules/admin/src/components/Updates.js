@@ -7,6 +7,8 @@ import {connect} from "react-redux";
 import {pageReload} from "../js/helpers";
 import {markdown} from "markdown"
 import getAltrpLang from "../js/helpers/get-altrp-lang";
+import axios from "axios";
+import delay from "../../../front-app/src/js/functions/delay";
 
 /**
  * Компонент вкладки обновления админки
@@ -57,10 +59,44 @@ class Updates extends Component {
   }
 
   async installTestAltrp() {
+    try {
+      await axios.post('/admin/ajax/restart-altrp',)
 
+    } catch (e) {
+      let serverRestarted = false
+      let i = 0
+      do {
+        ++i
+        try {
+          await delay(100)
+          await axios.get('/ajax/_token')
+          serverRestarted = true
+        } catch (e) {
+          console.error(e);
+        }
+      } while (!serverRestarted && i < 100)
+    }
     store.dispatch(setAdminDisable());
     try {
       let res = await (new Resource({route: '/admin/ajax/install_test_altrp'})).post({});
+
+      try {
+        await axios.post('/admin/ajax/restart-altrp',)
+
+      } catch (e) {
+        let serverRestarted = false
+        let i = 0
+        do {
+          ++i
+          try {
+            await delay(100)
+            await axios.get('/ajax/_token')
+            serverRestarted = true
+          } catch (e) {
+            console.error(e);
+          }
+        } while (!serverRestarted && i < 100)
+      }
       setTimeout(() => {
           res.result ? pageReload() : this.setNeedUpdate();
         }
@@ -74,9 +110,44 @@ class Updates extends Component {
    * Отправляет запрос на обноление приложения
    */
   async updateAltrp() {
+    try {
+      await axios.post('/admin/ajax/restart-altrp',)
+
+    } catch (e) {
+      let serverRestarted = false
+      let i = 0
+      do {
+        ++i
+        try {
+          await delay(100)
+          await axios.get('/ajax/_token')
+          serverRestarted = true
+        } catch (e) {
+          console.error(e);
+        }
+      } while (!serverRestarted && i < 100)
+    }
     store.dispatch(setAdminDisable());
     try {
       let res = await (new Resource({route: '/admin/ajax/update_altrp'})).post({});
+
+      try {
+        await axios.post('/admin/ajax/restart-altrp',)
+
+      } catch (e) {
+        let serverRestarted = false
+        let i = 0
+        do {
+          ++i
+          try {
+            await delay(100)
+            await axios.get('/ajax/_token')
+            serverRestarted = true
+          } catch (e) {
+            console.error(e);
+          }
+        } while (!serverRestarted && i < 100)
+      }
       setTimeout(() => {
           alert('Updates Success');
           res.result ? pageReload() : this.setNeedUpdate();

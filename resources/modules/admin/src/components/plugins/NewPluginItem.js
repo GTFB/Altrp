@@ -48,7 +48,7 @@ class NewPluginItem extends Component {
             </div>
             <div className="col-8">
               <div className="title">{plugin.title} <pre>{plugin.version}</pre></div>
-              <div className="description">{plugin.description}</div>
+              <div className="description" dangerouslySetInnerHTML={{__html:plugin.description}}></div>
               {
                 // проверка плагина на скачанность
                 this.isPluginAdded(downloadedPlugins, plugin.name)
