@@ -447,11 +447,15 @@ class AltrpAction extends AltrpModel {
 
     let data = null;
     let customHeaders = null;
+    let emptyFieldMessage;
     if (this.getProperty('custom_headers')) {
       customHeaders = parseParamsFromString(
         this.getProperty('custom_headers'),
         this.getCurrentModel()
       );
+    }
+    if (this.getProperty('empty_field')) {
+      emptyFieldMessage = this.getProperty('empty_field')
     }
     if (this.getProperty('data')) {
       data = parseParamsFromString(
@@ -459,10 +463,6 @@ class AltrpAction extends AltrpModel {
         getAppContext(this.getCurrentModel()),
         true
       );
-      // if (!_.isEmpty(data)) {
-      //   return form.submit('', '', data);
-      // }
-      // return { success: true };
     }
     if (this.getProperty('forms_bulk')) {
       if (
@@ -504,7 +504,7 @@ class AltrpAction extends AltrpModel {
               customRoute: url
             }
           );
-          return  form.submit('', '', data, customHeaders);
+          return  form.submit('', '', data, customHeaders, emptyFieldMessage);
         });
         try {
           let res = await Promise.all(bulkRequests);
@@ -553,7 +553,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
     try {
-      const response = await form.submit('', '', data, customHeaders);
+      const response = await form.submit('', '', data, customHeaders, emptyFieldMessage);
       result = _.assign(result, response);
     } catch (error) {
       console.error(error);

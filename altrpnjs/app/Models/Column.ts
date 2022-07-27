@@ -147,6 +147,7 @@ decorate([
         },
         `
     }
+    return ''
   }
 
   renderForModel():string {
