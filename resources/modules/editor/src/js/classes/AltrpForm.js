@@ -96,13 +96,15 @@ class AltrpForm {
    * @param {string} submitText
    * @param {{} | null} data
    * @param {{} | null} customHeaders
+   * @param {string} emptyFieldMessage
    * @return {boolean}
    */
   async submit(
     modelID = null,
     submitText = "",
     data = null,
-    customHeaders = null
+    customHeaders = null,
+    emptyFieldMessage ,
   ) {
     let success = true;
     if (submitText) {
@@ -211,7 +213,12 @@ class AltrpForm {
         // this.
       }
     } else {
-      await alert("Пожалуйста, заполните все обязательные поля");
+      if(emptyFieldMessage === undefined){
+        await alert("Please fill in all required fields");
+      } else {
+        await alert(emptyFieldMessage || '');
+
+      }
       return { success: false };
     }
   }
