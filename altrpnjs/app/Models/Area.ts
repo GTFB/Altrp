@@ -5,6 +5,16 @@ import mbParseJSON from "../../helpers/mbParseJSON";
 import _ from "lodash"
 
 export default class Area extends BaseModel {
+  static defaultAreasNames = [
+    'card',
+    'header',
+    'mails',
+    'email',
+    'footer',
+    'content',
+    'popup',
+    'reports',
+  ]
   @column({ isPrimary: true })
   public id: number
 

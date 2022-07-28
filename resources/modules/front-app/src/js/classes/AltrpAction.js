@@ -1183,9 +1183,13 @@ class AltrpAction extends AltrpModel {
   async doActionCustomCode() {
     let code = this.getProperty('code');
     try {
+      let actionResult = {success: true}
       code = replaceContentWithData(code, this.getCurrentModel().getData())
-      eval(code);
-      return {success: true};
+      const evaluateResult = eval(code);
+      if(_.isFunction(evaluateResult)){
+        await evaluateResult()
+      }
+      return actionResult;
     } catch (error) {
       console.error('Evaluate error in doActionCustomCode: "' + error.message + '"');
       return {success: false};

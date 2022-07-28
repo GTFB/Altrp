@@ -474,14 +474,14 @@ class InputTextCommon extends BaseElement {
         unit: "px"
       },
       stateless:true,
-      units: ["px", "%", "vh"]
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       stateless:true,
-      units: ["px", "%", "vh"]
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl("position_z_index-wrapper", {
@@ -629,7 +629,7 @@ class InputTextCommon extends BaseElement {
         size: 2,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
       max: 60,
       min: 0,
       locked: true,
@@ -641,7 +641,7 @@ class InputTextCommon extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl("label_background_color", {
@@ -673,7 +673,7 @@ class InputTextCommon extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: -100
       // rules: {
@@ -692,7 +692,7 @@ class InputTextCommon extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: -100
       // rules: {

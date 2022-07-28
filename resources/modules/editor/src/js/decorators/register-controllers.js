@@ -318,7 +318,7 @@ export function advancedTabControllers(element) {
     element.addControl("positioning_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     element.addControl('positioning_margin', {
@@ -335,6 +335,7 @@ export function advancedTabControllers(element) {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 
@@ -379,6 +380,7 @@ export function advancedTabControllers(element) {
           'px',
           '%',
           'vh',
+          'vw',
         ],
         max: 1000,
         min: 0,
@@ -456,6 +458,7 @@ export function advancedTabControllers(element) {
         'px',
         '%',
         'vh',
+        'vw',
       ],
       max: 1000,
       min: -1000,
@@ -484,6 +487,7 @@ export function advancedTabControllers(element) {
         'px',
         '%',
         'vh',
+        'vw',
       ],
       max: 1000,
       min: -1000,

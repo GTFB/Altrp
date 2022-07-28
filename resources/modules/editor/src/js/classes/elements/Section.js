@@ -239,7 +239,7 @@ class Section extends BaseElement{
     this.addControl('layout_columns_gap-margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Columns gap',
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl('layout_height', {
@@ -406,7 +406,7 @@ class Section extends BaseElement{
       //   left: 0,
       //   unit: "px"
       // },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl('position_style_z_index', {
