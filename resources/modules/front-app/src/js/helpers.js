@@ -74,7 +74,6 @@ export {default as getResponsiveSetting} from "./functions/getResponsiveSetting"
 
 
 
-
 /**
  * Вспомогательные функции для работы с данными виджетов
  */

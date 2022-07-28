@@ -37,7 +37,15 @@ export default function altrpCompare(
       return _.isEqual(leftValue, rightValue);
     }
     case "<>": {
-      return !_.isEqual(leftValue, rightValue);
+
+      if (!leftValue && !rightValue) {
+        return false;
+      }
+      if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
+        return leftValue != rightValue;
+      } else {
+        return !_.isEqual(leftValue, rightValue);
+      }
     }
     case ">": {
       return Number(leftValue) > Number(rightValue);
