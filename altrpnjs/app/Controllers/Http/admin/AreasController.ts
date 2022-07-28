@@ -9,23 +9,27 @@ import LIKE from "../../../../helpers/const/LIKE";
 export default class AreasController {
   public async index({request}) {
     const params = request.qs()
-    const page = parseInt(params.page) || 1
-    const pageSize = parseInt(params.pageSize) || 10
     const searchWord = params.s
     let areas
 
     if (searchWord) {
-      areas = await Area.query().orWhere('name', LIKE, `%${searchWord}%`)
-        .orWhere('title', LIKE, `%${searchWord}%`).preload("categories").paginate(page, pageSize)
+      areas = Area.query().where(query=>{
+        query.orWhere('name', LIKE, `%${searchWord}%`)
+          .orWhere('title', LIKE, `%${searchWord}%`)
+      }).preload("categories").whereNotIn('name', Area.defaultAreasNames)
     } else {
-      areas = await Area.query().preload("categories").paginate(page, pageSize)
+      areas = Area.query().preload("categories")
+    }
+    if(params.custom === 'true'){
+      areas.whereNotIn('name', Area.defaultAreasNames)
     }
 
-
-    return areas.all()
+    areas = await areas.select('*')
+    return areas
       .filter(area => {
         const parsedSettings = JSON.parse(area?.settings)
         if (parsedSettings?.plugin || parsedSettings?.admin_hidden) return false
+
         return true
       })
       .map(area => {
@@ -36,8 +40,6 @@ export default class AreasController {
               category: category
             }
           }),
-          count: areas.getMeta().total,
-          pageCount: areas.getMeta().last_page,
         }
 
       })

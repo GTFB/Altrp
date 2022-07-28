@@ -435,7 +435,7 @@ class Column extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl('style_position_margin', {
@@ -448,6 +448,7 @@ class Column extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 

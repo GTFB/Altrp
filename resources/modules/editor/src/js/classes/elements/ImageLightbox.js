@@ -189,6 +189,7 @@ class ImageLightbox extends BaseElement {
       units: [
         'px',
         'vh',
+        'vw',
       ],
       max: 1000,
       min: 0,
@@ -203,6 +204,7 @@ class ImageLightbox extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
       max: 1000,
       min: 0,
@@ -224,6 +226,7 @@ class ImageLightbox extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 
@@ -235,6 +238,7 @@ class ImageLightbox extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 

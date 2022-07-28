@@ -72,16 +72,14 @@ class Areas extends Component {
     let areas = []
     if (urlCategories) {
       areas = await this.resource.getQueried({
+        custom: true,
         categories: urlCategories,
         s: urlS === null ?  this.state.areasSearch : urlS,
-        page: this.state.currentPage,
-        pageSize: this.itemsPerPage
       });
     } else {
       areas = await this.resource.getQueried({
+        custom: true,
         s: urlS === null ?  this.state.areasSearch : urlS,
-        page: this.state.currentPage,
-        pageSize: this.itemsPerPage
       });
     }
     //areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
@@ -91,8 +89,6 @@ class Areas extends Component {
       areas: areasFiltered,
       areasSearch: urlS === null ?  this.state.areasSearch : urlS,
       activeCategory: urlCategories === null ? 'All' : urlCategories,
-      pageCount: areas[0].pageCount,
-      count: areas[0].count
     }))
   }
 
@@ -229,7 +225,7 @@ class Areas extends Component {
           }}
           itemsCount={count}
 
-          openPagination={true}
+          openPagination={false}
         />
       </div>
     </div>
