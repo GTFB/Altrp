@@ -13,8 +13,8 @@ export default function renderAsset(asset, attrs:object | string  = {}) {
   if(asset.type === 'image' && asset.dataUrl){
     return `<img src="${asset.dataUrl}" ${attrs}/>`
   }
-  if (asset.url && asset.type === "svg") {
-    return asset?.rawSVG;
+  if (asset.rawSVG && asset.type === "svg") {
+    return asset.rawSVG;
   }
   switch (asset.assetType) {
     // case "icon": {
