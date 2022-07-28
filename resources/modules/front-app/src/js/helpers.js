@@ -403,6 +403,7 @@ export function conditionsChecker(
       result += conditionChecker(c, model, dataByPath);
     }
   });
+
   return !!result;
 }
 
@@ -414,7 +415,6 @@ export function conditionsChecker(
  * @return {boolean}
  */
 export function conditionChecker(c, model, dataByPath = true) {
-  let result = 0;
   const { operator } = c;
   let { modelField: left, value } = c;
   if (dataByPath) {
@@ -660,8 +660,14 @@ export function altrpCompare(
       return _.isEqual(leftValue, rightValue);
     }
     case "<>": {
-      return !_.isEqual(leftValue, rightValue);
-    }
+      if (!leftValue && !rightValue) {
+        return false;
+      }
+      if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
+        return leftValue != rightValue;
+      } else {
+        return _.isEqual(leftValue, rightValue);
+      }    }
     case ">": {
       return Number(leftValue) > Number(rightValue);
     }
