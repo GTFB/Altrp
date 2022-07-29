@@ -20,9 +20,8 @@ export default function renderAsset(asset, attrs:object | string  = {}) {
     // case "icon": {
     //   return iconsManager().renderIcon(asset.name, attrs);
     // }
-    case "image": {
-      return `<img src="${asset.url}" ${attrs}/>`
-    }
+    case "image":
+    case "icons":
     case "media": {
       return `<img src="${asset.url}" ${attrs}/>`
     }

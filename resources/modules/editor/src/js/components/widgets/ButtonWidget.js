@@ -74,43 +74,40 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
   .altrp-btn-icon-right img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .altrp-btn-icon-right svg {
     width: 100%;
     height: 100%;
-    object-fit: cover;
   }
 
   .altrp-btn-icon-left img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .altrp-btn-icon-left svg {
     width: 100%;
     height: 100%;
-    object-fit: cover;
   }
 
   .altrp-btn-icon-top img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .altrp-btn-icon-top svg {
     width: 100%;
     height: 100%;
-    object-fit: cover;
   }
 
   .altrp-btn-icon-bottom img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .altrp-btn-icon-bottom svg {

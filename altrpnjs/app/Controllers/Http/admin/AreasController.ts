@@ -16,14 +16,14 @@ export default class AreasController {
       areas = Area.query().where(query=>{
         query.orWhere('name', LIKE, `%${searchWord}%`)
           .orWhere('title', LIKE, `%${searchWord}%`)
-      }).preload("categories").whereNotIn('name', Area.defaultAreasNames)
+      })
     } else {
-      areas = Area.query().preload("categories")
+      areas = Area.query()
     }
     if(params.custom === 'true'){
       areas.whereNotIn('name', Area.defaultAreasNames)
     }
-
+    areas.preload("categories")
     areas = await areas.select('*')
     return areas
       .filter(area => {
