@@ -22,7 +22,6 @@ export default function renderButton(settings, device) {
   let buttonMediaLeft = { ...settings.button_icon_left }
   let buttonMediaTop = { ...settings.button_icon_top }
   let buttonMediaBottom = { ...settings.button_icon_bottom }
-
   const showIcon = buttonMediaRight?.url || buttonMediaLeft?.url || buttonMediaTop?.url || buttonMediaBottom?.url
 
   let existingIconsString = ''
@@ -210,7 +209,7 @@ export default function renderButton(settings, device) {
     <div class="btn-container-row">
       <span></span>
     ${buttonText}
-    <span class=$"altrp-btn-icon-right ">
+    <span class="altrp-btn-icon-right ">
       ${renderAsset(buttonMediaRight)}
     </span>
     </div>

@@ -113,7 +113,6 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
   .altrp-btn-icon-bottom svg {
     width: 100%;
     height: 100%;
-    object-fit: cover;
   }
 `);
 

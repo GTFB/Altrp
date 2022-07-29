@@ -82,6 +82,9 @@ function componentDidUpdate(prevProps, prevState) {
  * @return {*}
  */
 function getSettings(settingName, locked= false) {
+  if(! locked){
+    locked = !! this.props.locked;
+  }
   if (!this.props.currentElement) {
     return "";
   }
