@@ -15,6 +15,8 @@ const {
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import React from "react";
 import recurseEach from "../../helpers/recurse-each";
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
+
 const Button = window.altrpLibs.Blueprint.Button;
 const MenuItem = window.altrpLibs.Blueprint.MenuItem;
 const Popover = window.altrpLibs.Popover2;
@@ -425,7 +427,8 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${({settings: {content_label_position_type}}) => {
+  ${({settings}) => {
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
   switch (content_label_position_type) {
     case "left": {
       return "display: flex";
@@ -1075,7 +1078,7 @@ class InputSelectTreeWidget extends Component {
     if (content_label || label_icon) {
       label = (
         <div
-          className={`${classes} altrp-field-label-container classLabel`}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label

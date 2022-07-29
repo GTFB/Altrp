@@ -7,6 +7,8 @@ const {
   getDataFromLocalStorage
 } = window.altrpHelpers;
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
+
 const { DateInput, TimePrecision } = window.altrpLibs.BlueprintDatetime;
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-date-field-container .bp3-popover-wrapper, .altrp-date-field-container .bp3-popover-target {
@@ -23,7 +25,8 @@ const { DateInput, TimePrecision } = window.altrpLibs.BlueprintDatetime;
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${({ settings: { content_label_position_type } }) => {
+  ${({settings}) => {
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
     switch (content_label_position_type) {
       case "left": {
         return "display: flex";

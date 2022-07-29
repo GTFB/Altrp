@@ -241,6 +241,7 @@ class Column extends BaseElement {
 
     this.addControl('link_link', {
       type: CONTROLLER_LINK,
+      responsive:false,
       default: {
         url: "",
         attributes: "",
@@ -434,7 +435,7 @@ class Column extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl('style_position_margin', {
@@ -447,6 +448,7 @@ class Column extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 

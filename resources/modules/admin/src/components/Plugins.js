@@ -4,6 +4,7 @@ import UserTopPanel from "./UserTopPanel";
 import Resource from "../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
 import PluginItem from "./plugins/PluginItem";
+import mbParseJSON from "../../../front-app/src/js/functions/mb-parse-JSON";
 
 export default class Plugins extends Component {
   constructor(props) {
@@ -72,18 +73,23 @@ export default class Plugins extends Component {
 
     const pluginName = this.state.plugins[index].name;
     const value = event.target.checked;
+     let res
+    try{
 
-    const res = await (new Resource({route:'/admin/ajax/plugins/switch'})).post({
-      name: pluginName,
-      value: value
-    });
-
-    if(res.success){
-      const plugins = mutate.set(this.state.plugins, `${index}.enabled`, value);
-
-      this.setState({
-        plugins
+      res = await (new Resource({route:'/admin/ajax/plugins/switch'})).post({
+        name: pluginName,
+        value: value
       });
+    }catch (e) {
+      e?.res?.then(res=>{
+        console.log(res);
+        res = mbParseJSON(res, res)
+        res?.message && alert(`Error: ${res.message}`)
+      })
+    }
+
+    if(res?.success){
+      window.location.reload();
     }
   }
   render() {

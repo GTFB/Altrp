@@ -268,7 +268,7 @@ class SectionWidget extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "vh"],
+      units: ["px", "%", "vh", "vw"],
       max: 1440,
       min: 0,
     });
@@ -578,7 +578,7 @@ class SectionWidget extends BaseElement {
     this.addControl("section_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("section_style_border_color", {
@@ -618,7 +618,7 @@ class SectionWidget extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_style_position_padding", {
@@ -631,7 +631,7 @@ class SectionWidget extends BaseElement {
       //   left: 0,
       //   unit: "px"
       // },
-      units: ["px", "%", "vh"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_style_z_index", {

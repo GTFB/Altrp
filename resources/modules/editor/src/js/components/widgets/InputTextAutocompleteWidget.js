@@ -14,7 +14,7 @@ const {
   Popover2,
   } = window.altrpLibs.BlueprintPopover;
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -371,7 +371,8 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${({settings: {content_label_position_type}}) => {
+  ${({settings}) => {
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
   switch (content_label_position_type) {
     case "left": {
       return "display: flex";
@@ -1016,7 +1017,7 @@ class InputTextCommonWidget extends Component {
     if (content_label || label_icon) {
       label = (
         <div
-          className={`${classes} altrp-field-label-container classLabel`}
+          className={`${classes} altrp-field-label-container ${classLabel}`}
           style={styleLabel}
         >
           <label
@@ -1056,7 +1057,7 @@ class InputTextCommonWidget extends Component {
           fill={true}
           position="bottom"
           popoverRef={this.popoverRef}
-          usePortal={false}
+          usePortal={true}
           className={classes}
           content={<Menu>
             {options.map(this.itemRenderer)}

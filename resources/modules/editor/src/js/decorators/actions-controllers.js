@@ -399,6 +399,16 @@ export function actionsControllers(
     locked: true,
   });
 
+  actionsRepeater.addControl('empty_field', {
+    label: 'Empty Field Message',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    conditions: {
+      type: 'form'
+    },
+    locked: true,
+  });
+
   actionsRepeater.addControl('from', {
     label: 'From',
     type: CONTROLLER_TEXT,

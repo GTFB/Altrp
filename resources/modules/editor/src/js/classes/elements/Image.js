@@ -155,6 +155,7 @@ class Image extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 
@@ -169,6 +170,7 @@ class Image extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 
@@ -361,6 +363,7 @@ class Image extends BaseElement {
       units: [
         'px',
         'vh',
+        'vw',
       ],
       max: 1000,
       min: 0,
@@ -377,6 +380,7 @@ class Image extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
       max: 1000,
       min: 0,

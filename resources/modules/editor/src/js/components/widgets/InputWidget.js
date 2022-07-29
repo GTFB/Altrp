@@ -18,6 +18,7 @@ import AltrpModel from "../../classes/AltrpModel";
 import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 import AltrpInput from "../altrp-input/AltrpInput";
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 const {moment} = window.altrpHelpers;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -352,7 +353,8 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${({ settings: { content_label_position_type } }) => {
+  ${({settings}) => {
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
     switch (content_label_position_type) {
       case "left": {
         return "display: flex";

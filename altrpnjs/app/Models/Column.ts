@@ -143,7 +143,7 @@ decorate([
   renderProdPrepare(){
     if(this.type === 'json'){
       return `prepare: (data) => {
-            return JSON.stringify(data);
+            return data ? JSON.stringify(data) : null;
         },
         `
     }

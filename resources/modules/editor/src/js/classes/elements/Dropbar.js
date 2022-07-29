@@ -59,6 +59,7 @@ class Dropbar extends BaseElement {
     this.addControl('button_text', {
       type: CONTROLLER_TEXTAREA,
       label: 'Button Text',
+      responsive: false,
       default: `Show dropdown`,
       locked: true,
     });

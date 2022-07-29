@@ -14,6 +14,7 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
 import { TextArea } from "@blueprintjs/core";
+import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -336,7 +337,8 @@ textarea.altrp-field {
 }
 `)
 const AltrpFieldContainer = styled.div`
-  ${({ settings: { content_label_position_type } }) => {
+  ${({settings}) => {
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
     switch (content_label_position_type) {
       case "left": {
         return "display: flex";
@@ -1042,6 +1044,7 @@ class InputTextareaWidget extends Component {
     }
 
     let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    content_label = replaceContentWithData(content_label, this.props.element.getCurrentModel()?.getData())
     let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
 
     if (content_label || label_icon) {

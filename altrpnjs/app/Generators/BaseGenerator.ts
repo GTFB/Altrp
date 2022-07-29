@@ -37,6 +37,7 @@ export abstract class BaseGenerator{
     }
 
     content = mustache.render(content, vars)
+    mustache?.templateCache?.clear()
     if(! fs.existsSync(this.directory)){
       fs.mkdirSync(this.directory, {recursive:true})
     }
@@ -66,6 +67,7 @@ export abstract class BaseGenerator{
     }
     fileName = Application.publicPath(`altrp/css/${fileName}`)
     content = mustache.render(content,{})
+    mustache?.templateCache?.clear()
 
     if(! fs.existsSync(Application.publicPath(`altrp/css/`))){
       fs.mkdirSync(Application.publicPath(`altrp/css/`), {recursive:true})

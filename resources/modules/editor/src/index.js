@@ -115,7 +115,7 @@ import(/* webpackChunkName: 'Editor' */"./Editor.js")
     Editor = Editor.default;
 
     let editorTarget = document.getElementById("editor");
-
+    console.log(editorTarget);
     if (editorTarget) {
       window.ReactDOM.render(
         <Provider store={store}>

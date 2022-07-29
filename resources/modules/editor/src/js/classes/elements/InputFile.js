@@ -73,6 +73,7 @@ class InputFile extends BaseElement {
 
     this.addControl('button_text', {
       type: CONTROLLER_TEXT,
+      responsive: false,
       label: 'Button Text',
       locked: true,
     });
