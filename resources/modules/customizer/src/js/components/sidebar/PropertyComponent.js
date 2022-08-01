@@ -225,7 +225,7 @@ class PropertyComponent extends Component {
               setOptions={{
                 enableLiveAutocompletion: true,
                 useWorker: false,
-                maxLines: Infinity,
+                // maxLines: Infinity,
               }}
             />
           </Resizable>
