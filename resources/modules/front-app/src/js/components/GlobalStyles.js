@@ -341,6 +341,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEd
   styles += ` `;
   globalCssEditor && (styles += globalCssEditor.globalStylesCss)
 
+
   window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
 }}`

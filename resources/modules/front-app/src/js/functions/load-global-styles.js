@@ -1,4 +1,5 @@
 import {replaceAllSettings} from "../store/elements-settings/actions";
+import {StyleSheetManager} from "styled-components";
 
 /**
  * Загрузка отрисовщика стилей
@@ -10,7 +11,9 @@ export default function loadGlobalStyles(){
     document.body.appendChild(stylesContainer);
 
     window.ReactDOM.render(<window.Provider store={window.appStore}>
-      <GlobalStyles/>
+      <StyleSheetManager disableCSSOMInjection={true}>
+        <GlobalStyles/>
+      </StyleSheetManager>
     </window.Provider>, stylesContainer)
   });
 }

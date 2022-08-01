@@ -395,6 +395,9 @@ export default class AltrpRouting {
     let fonts: string[] = this.getGlobal('fonts', [])
     return fonts.map(font => {
 
+      if(! _.isString(font)){
+        return ''
+      }
       if(FONTS[font] === SYSTEM_FONT){
         return ''
       }

@@ -20,6 +20,7 @@ import Env from "@ioc:Adonis/Core/Env";
 import fs from "fs";
 import base_path from "../helpers/path/base_path";
 import guid from "../helpers/guid";
+import Plugin from "../app/Plugin";
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,9 @@ Server.middleware.register([
   () => import('App/Middleware/SilentAuth'),
   () => import('@ioc:Adonis/Addons/Shield'),
 ])
+const plugins = Plugin.getEnabledPlugins()
+
+plugins.forEach(plugin => plugin.callActivationHooks())
 
 
 Route.get('*', 'AltrpRouting.index')

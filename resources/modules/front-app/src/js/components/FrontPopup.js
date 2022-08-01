@@ -11,8 +11,18 @@ class FrontPopup extends Component {
   constructor(props) {
     super(props);
     this.ElementWrapper = props.ElementWrapper || window.ElementWrapper;
+    let isVisible = false
+    let popupID = Number(props.popupTrigger.popupID)
+    if(_.isNaN(popupID)){
+      isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
+    } else {
+      isVisible = popupID == _.get(this.props, "template.id")
+    }
+    this.setState({
+      isVisible
+    });
     this.state = {
-      isVisible: false,
+      isVisible,
       rootElement: window.frontElementsFabric.parseData(
         this.props.template.data,
         null,
