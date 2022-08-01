@@ -11,8 +11,18 @@ class FrontPopup extends Component {
   constructor(props) {
     super(props);
     this.ElementWrapper = props.ElementWrapper || window.ElementWrapper;
+    let isVisible = false
+    let popupID = Number(props.popupTrigger.popupID)
+    if(_.isNaN(popupID)){
+      isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
+    } else {
+      isVisible = popupID == _.get(this.props, "template.id")
+    }
+    this.setState({
+      isVisible
+    });
     this.state = {
-      isVisible: false,
+      isVisible,
       rootElement: window.frontElementsFabric.parseData(
         this.props.template.data,
         null,
@@ -296,6 +306,7 @@ class FrontPopup extends Component {
     const content_height = rootElement.getResponsiveSetting('content_height_custom_popup_layout')
     const size = content_height?.size
     const unit = content_height?.unit
+
     return (
       <CSSTransition
         in={isVisible}

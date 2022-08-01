@@ -125,7 +125,7 @@ const getIconStyles = (settings, id) => {
             break;
     }
 
-       `${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '') , "padding")}
+  styles += `${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_margin') , "margin")}
         ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity') )}
     }`
@@ -145,7 +145,7 @@ const getIconStyles = (settings, id) => {
         break;
     }
 
-    `${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '.state-disabled') , "padding")}
+    styles += `${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '.state-disabled') , "padding")}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_margin', '.state-disabled') , "margin")}
           ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity', '.state-disabled') )}
       }`
@@ -165,7 +165,7 @@ const getIconStyles = (settings, id) => {
         break;
     }
 
-    `${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '.active') , "padding")}
+    styles += `${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '.active') , "padding")}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_margin', '.active') , "margin")}
             ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity', '.active') )}
     }`
