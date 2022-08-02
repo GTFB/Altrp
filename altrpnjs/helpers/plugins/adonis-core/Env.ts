@@ -1,3 +1,3 @@
-import Env from "@ioc:Adonis/Core/Env";
+import Env from '@ioc:Adonis/Core/Env';
 
-export default Env
+export default Env;

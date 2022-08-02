@@ -1,31 +1,31 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon';
+import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
 
 export default class PagesTemplate extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public page_id: number
+  public page_id: number;
 
   @column()
-  public template_id: number
+  public template_id: number;
 
   @column()
-  public template_type: string
+  public template_type: string;
 
   @column()
-  public condition_type: string
+  public condition_type: string;
 
   @column()
-  public 	page_guid: string
+  public page_guid: string;
 
   @column()
-  public 	template_guid: string
+  public template_guid: string;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }

@@ -7,11 +7,11 @@
 | boot.
 |
 */
-import Event from '@ioc:Adonis/Core/Event'
+import Event from '@ioc:Adonis/Core/Event';
 
 Event.on('model:updating', 'Model.updating');
 Event.on('model:updated', 'Model.updated');
 Event.on('model:deleting', 'Model.deleting');
 Event.on('model:deleted', 'Model.deleted');
-Event.on('altrp:message', 'Message.receiver')
-Event.on('altrp_event', "AltrpEvent.listener")
+Event.on('altrp:message', 'Message.receiver');
+Event.on('altrp_event', 'AltrpEvent.listener');

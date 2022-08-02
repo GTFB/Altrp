@@ -1,79 +1,80 @@
-import { DateTime } from 'luxon'
-import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany,} from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon';
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm';
 import User from 'App/Models/User';
 import Source from 'App/Models/Source';
 import Model from 'App/Models/Model';
-import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import NotFoundException from 'App/Exceptions/NotFoundException';
 import base_path from '../../helpers/path/base_path';
 import * as _ from 'lodash';
-import isProd from "../../helpers/isProd";
+import isProd from '../../helpers/isProd';
 
 export default class Controller extends BaseModel {
-  public static table = 'altrp_controllers'
+  public static table = 'altrp_controllers';
 
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public namespace: string
+  public namespace: string;
 
   @column()
-  public prefix: string
+  public prefix: string;
 
   @column()
-  public model_id: number
+  public model_id: number;
 
   @belongsTo(() => Model, {
-    foreignKey: 'model_id'
+    foreignKey: 'model_id',
   })
-  public altrp_model: BelongsTo<typeof Model>
+  public altrp_model: BelongsTo<typeof Model>;
 
   @column()
-  public description: string
-
+  public description: string;
 
   @belongsTo(() => User, {
-    foreignKey: 'author'
+    foreignKey: 'author',
   })
-  public user: BelongsTo<typeof User>
-
+  public user: BelongsTo<typeof User>;
 
   @hasMany(() => Source, {
     foreignKey: 'controller_id',
-    localKey: 'id'
+    localKey: 'id',
   })
-  public sources: HasMany<typeof Source>
-
+  public sources: HasMany<typeof Source>;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 
-
-  static async callControllerMethod(modelId: number|Model|null,
-                                    method: string,
-                                    httpContext: HttpContextContract):Promise<any>{
-    let model
-    if(modelId instanceof Model){
-      model = modelId
-    } else{
-      model = await Model.find(modelId)
+  static async callControllerMethod(
+    modelId: number | Model | null,
+    method: string,
+    httpContext: HttpContextContract
+  ): Promise<any> {
+    let model;
+    if (modelId instanceof Model) {
+      model = modelId;
+    } else {
+      model = await Model.find(modelId);
     }
-    if(! model){
+    if (!model) {
       throw new NotFoundException('Model not Found', 404, NotFoundException.code);
     }
-    const controllerName = base_path(`/app/AltrpControllers/${model.name}Controller`)
-    if(isProd()){
-      Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+    const controllerName = base_path(`/app/AltrpControllers/${model.name}Controller`);
+    if (isProd()) {
+      Object.keys(require.cache).forEach(function (key) {
+        delete require.cache[key];
+      });
     }
-    let controller = isProd() ? new (require(controllerName).default)
-      :  (new (await import(controllerName)).default)
-    if( ! _.isFunction(controller[method])){
+    let controller = isProd()
+      ? new (require(controllerName).default)()
+      : new (await import(controllerName)).default();
+    if (!_.isFunction(controller[method])) {
       throw new NotFoundException('Model not Found', 404, NotFoundException.code);
     }
-    return await controller[method](httpContext)
+    return await controller[method](httpContext);
   }
 }

@@ -1,7 +1,7 @@
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
-export default function objectToAttributesString(attrs = {}){
-  return _.map(attrs, (value, key)=>{
-    return `${key}="${value}"`
-  }).join(' ')
+export default function objectToAttributesString(attrs = {}) {
+  return _.map(attrs, (value, key) => {
+    return `${key}="${value}"`;
+  }).join(' ');
 }

@@ -1,6 +1,5 @@
-import AltrpStore from "App/Providers/AltrpStore";
+import AltrpStore from 'App/Providers/AltrpStore';
 
-const altrpStore:AltrpStore = new AltrpStore()
+const altrpStore: AltrpStore = new AltrpStore();
 
-export default altrpStore
-
+export default altrpStore;

@@ -53,8 +53,8 @@ const DEFAULT_REACT_ELEMENTS = [
   'list',
   'stars',
   'progress-bar',
-  'tournament',//todo: move to plugin
+  'tournament', //todo: move to plugin
   'feedback',
-  'input-pagination'
-]
-export default DEFAULT_REACT_ELEMENTS
+  'input-pagination',
+];
+export default DEFAULT_REACT_ELEMENTS;

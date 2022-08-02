@@ -5,7 +5,7 @@
  * file.
  */
 
-import { AuthConfig } from '@ioc:Adonis/Addons/Auth'
+import { AuthConfig } from '@ioc:Adonis/Addons/Auth';
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +81,6 @@ const authConfig: AuthConfig = {
       },
     },
   },
-}
+};
 
-export default authConfig
+export default authConfig;

@@ -1,4 +1,4 @@
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 
 /**
  * Auth middleware is meant to restrict un-authenticated access to a given route
@@ -8,25 +8,20 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
  * of named middleware.
  */
 export default class CatchUnhandledJson {
-
-
   /**
    * Handle request
    */
-  public async handle (
-    { response }: HttpContextContract,
-    next: () => Promise<void>,
-  ) {
+  public async handle({ response }: HttpContextContract, next: () => Promise<void>) {
     try {
-      await next()
-    }catch (e) {
-      response.status(500)
+      await next();
+    } catch (e) {
+      response.status(500);
       console.error(e);
       return response.json({
         success: false,
         message: 'Unhandled Exception: ' + e.message,
         trace: e.stack.split('\n'),
-      })
+      });
     }
   }
 }

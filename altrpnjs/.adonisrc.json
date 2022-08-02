@@ -20,15 +20,11 @@
     "./start/kernel",
     {
       "file": "./start/repl",
-      "environment": [
-        "repl"
-      ]
+      "environment": ["repl"]
     },
     {
       "file": "./start/events",
-      "environment": [
-        "web"
-      ]
+      "environment": ["web"]
     }
   ],
   "providers": [
@@ -41,9 +37,7 @@
     "@adonisjs/shield",
     "@adonisjs/mail"
   ],
-  "aceProviders": [
-    "@adonisjs/repl"
-  ],
+  "aceProviders": ["@adonisjs/repl"],
   "metaFiles": [
     {
       "pattern": "resources/views/**/*.edge",

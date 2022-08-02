@@ -17,26 +17,26 @@
 | import './routes/customer'
 |
 */
-import './admin'
-import Route from '@ioc:Adonis/Core/Route'
-import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import Table from "App/Models/Table";
-import isProd from "../../helpers/isProd";
-import Drive from '@ioc:Adonis/Core/Drive'
-import path from "path";
-import app_path from "../../helpers/path/app_path";
-import Customizer from "App/Models/Customizer";
-import fs from 'fs'
-import Model from "App/Models/Model";
-import Plugin from "App/Plugin"
-import _ from "lodash";
+import './admin';
+import Route from '@ioc:Adonis/Core/Route';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import Table from 'App/Models/Table';
+import isProd from '../../helpers/isProd';
+import Drive from '@ioc:Adonis/Core/Drive';
+import path from 'path';
+import app_path from '../../helpers/path/app_path';
+import Customizer from 'App/Models/Customizer';
+import fs from 'fs';
+import Model from 'App/Models/Model';
+import Plugin from 'App/Plugin';
+import _ from 'lodash';
 
 // import {UserFactory} from "Database/factories";
-Route.get("/altrp-login", "IndicesController.loginView")
-Route.post("/login", "IndicesController.login").name = 'post.login'
-Route.post("/logout", "IndicesController.logout").name = 'logout'
+Route.get('/altrp-login', 'IndicesController.loginView');
+Route.post('/login', 'IndicesController.login').name = 'post.login';
+Route.post('/logout', 'IndicesController.logout').name = 'logout';
 
-Route.post("/sockets", "SocketsController.handle")
+Route.post('/sockets', 'SocketsController.handle');
 
 // Route.get("/userr", async () => {
 //   const user = await User.query().where("id", 1).firstOrFail();
@@ -44,251 +44,264 @@ Route.post("/sockets", "SocketsController.handle")
 //   return user.can([1, 2]);
 // })
 
-const fromBuildDir = isProd() ? "../" : ""
+const fromBuildDir = isProd() ? '../' : '';
 
-Route.get("sw.js", "IndicesController.serviceWorker")
+Route.get('sw.js', 'IndicesController.serviceWorker');
 
-Route.get("/modules/*", async ({request, response}) => {
-  const url = request.url()
+Route.get('/modules/*', async ({ request, response }) => {
+  const url = request.url();
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
+  const pathToModules = path.join(__dirname, '../', '../', '../', fromBuildDir, 'public');
 
-  const file = await Drive.get(pathToModules + url)
+  const file = await Drive.get(pathToModules + url);
 
-  const splitUrl = url.split(".");
+  const splitUrl = url.split('.');
 
   switch (splitUrl[splitUrl.length - 1]) {
-    case "js":
-      response.header("Content-Type", "text/javascript")
-      break
-    case "css":
-      response.header("Content-Type", "text/css")
-      break
+    case 'js':
+      response.header('Content-Type', 'text/javascript');
+      break;
+    case 'css':
+      response.header('Content-Type', 'text/css');
+      break;
   }
 
-  return file
-})
+  return file;
+});
 
-Route.get("/service-worker-files", async ({}) => {
+Route.get('/service-worker-files', async ({}) => {
+  const pathToFrontApp = path.join(
+    __dirname,
+    '../',
+    '../',
+    '../',
+    fromBuildDir,
+    'public',
+    'modules',
+    'front-app'
+  );
 
-  const pathToFrontApp = path.join(__dirname, "../", "../", "../", fromBuildDir, "public", "modules", "front-app");
+  let files = fs.readdirSync(pathToFrontApp);
 
-  let files = fs.readdirSync(pathToFrontApp)
+  const variants = ['.js.map', '.txt'];
 
-  const variants = [
-    ".js.map",
-    ".txt"
-  ]
+  files = files.filter((file) => {
+    if ('node_modules' === file) return false;
 
-  files = files.filter(file => {
-
-    if("node_modules" === file) return false
-
-    for(const variant of variants) {
-      if(file.split(variant).length > 1) {
-        return false
+    for (const variant of variants) {
+      if (file.split(variant).length > 1) {
+        return false;
       }
     }
 
-    return true
-  })
-  return files
-})
+    return true;
+  });
+  return files;
+});
 
-Route.get("/serviceWorker.js", async ({request, response}) => {
-  const url = request.url()
+Route.get('/serviceWorker.js', async ({ request, response }) => {
+  const url = request.url();
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
+  const pathToModules = path.join(__dirname, '../', '../', '../', fromBuildDir, 'public');
 
-  const file = await Drive.get(pathToModules + url)
+  const file = await Drive.get(pathToModules + url);
 
-  response.header("Content-Type", "text/javascript")
+  response.header('Content-Type', 'text/javascript');
 
-  return file
-})
+  return file;
+});
 
-Route.get("/sw/*", async ({request, response}) => {
-  const url = request.url()
+Route.get('/sw/*', async ({ request, response }) => {
+  const url = request.url();
 
-  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
+  const pathToModules = path.join(__dirname, '../', '../', '../', fromBuildDir, 'public');
 
-  const file = await Drive.get(pathToModules + url)
+  const file = await Drive.get(pathToModules + url);
 
-  const splitUrl = url.split(".");
+  const splitUrl = url.split('.');
 
   switch (splitUrl[splitUrl.length - 1]) {
-    case "js":
-      response.header("Content-Type", "text/javascript")
-      break
-    case "css":
-      response.header("Content-Type", "text/css")
-      break
+    case 'js':
+      response.header('Content-Type', 'text/javascript');
+      break;
+    case 'css':
+      response.header('Content-Type', 'text/css');
+      break;
   }
 
-  return file
-})
+  return file;
+});
 
-
-Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
-  response.header('Content-Type', 'application/javascript')
-  let user = auth.user
+Route.get('/data/current-user', async ({ response, auth }: HttpContextContract) => {
+  response.header('Content-Type', 'application/javascript');
+  let user = auth.user;
   if (!user) {
     return response.send(`
-window.current_user = ${JSON.stringify({is_guest: true})}
+window.current_user = ${JSON.stringify({ is_guest: true })}
   `);
   }
   // @ts-ignore
-  await user.load('roles')
+  await user.load('roles');
   // @ts-ignore
-  await user.load('permissions')
+  await user.load('permissions');
   // @ts-ignore
   return response.send(`window.current_user = ${JSON.stringify(user.toObject())}`);
-})
+});
 
 Route.group(() => {
-  Route.get("/menus/:id", "admin/MenusController.show")
+  Route.get('/menus/:id', 'admin/MenusController.show');
 
-  Route.get("/pages/:id", "admin/PagesController.getAreas")
+  Route.get('/pages/:id', 'admin/PagesController.getAreas');
 
-  Route.get("/current-user", "users/UsersController.getCurrentUser")
+  Route.get('/current-user', 'users/UsersController.getCurrentUser');
 
-  Route.get("favicon/:path", "IndicesController.favicons")
+  Route.get('favicon/:path', 'IndicesController.favicons');
 
-  Route.get("/_token", ({request}) => {
+  Route.get('/_token', ({ request }) => {
     return {
       success: true,
-      _token: request.csrfToken
-    }
-  })
+      _token: request.csrfToken,
+    };
+  });
 
-  Route.get("/models/queries/galleries/get_galley", () => {
+  Route.get('/models/queries/galleries/get_galley', () => {
     return {
-      data: []
-    }
-  })
+      data: [],
+    };
+  });
   /**
    * роут для обработка кастомных ajax запросов
    */
   Route.any('models/*', async (httpContext: HttpContextContract) => {
-    const segments = httpContext.request.url().split('/').filter(segment => segment)
+    const segments = httpContext.request
+      .url()
+      .split('/')
+      .filter((segment) => segment);
     if (httpContext.request.method() === 'OPTIONS' && segments[3] === 'customizers') {
-      httpContext.response.header( 'Access-Control-Allow-Origin', '*' )
-      httpContext.response.header( 'Access-Control-Allow-Methods', 'GET, OPTIONS' )
-      httpContext.response.header( 'Access-Control-Allow-Credentials', 'true' )
-      httpContext.response.header( 'Access-Control-Allow-Headers', 'Content-Type, Authorization' )
+      httpContext.response.header('Access-Control-Allow-Origin', '*');
+      httpContext.response.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+      httpContext.response.header('Access-Control-Allow-Credentials', 'true');
+      httpContext.response.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       return httpContext.response.json({ success: true });
     }
     if (httpContext.request.method() === 'GET' && segments[3] === 'customizers') {
-      httpContext.response.header( 'Access-Control-Allow-Origin', '*' )
+      httpContext.response.header('Access-Control-Allow-Origin', '*');
     }
     /**
      * delete `altrp_ajax` from request body
      */
-    let methodName
-    if(httpContext.request.input('altrp_ajax') !== undefined){
+    let methodName;
+    if (httpContext.request.input('altrp_ajax') !== undefined) {
       const body = httpContext.request.all();
-      delete body['altrp_ajax']
-      httpContext.request.updateBody(body)
+      delete body['altrp_ajax'];
+      httpContext.request.updateBody(body);
     }
-    let tableName = segments[2]
+    let tableName = segments[2];
     if (['queries', 'data_sources', 'filters'].indexOf(tableName) !== -1) {
-      tableName = segments[3]
-      methodName = segments[4]
+      tableName = segments[3];
+      methodName = segments[4];
     }
-    let table = await Table.query().preload('altrp_model').where('name', tableName).first()
+    let table = await Table.query().preload('altrp_model').where('name', tableName).first();
     /**
      * In get options case
      */
-    if(! table && segments[2].indexOf('_options') !== -1){
-      let model = await Model.query().preload('table').where('name', segments[2].replace('_options','')).first()
-      if(model){
-        table = model.table
-        await table.load('altrp_model')
+    if (!table && segments[2].indexOf('_options') !== -1) {
+      let model = await Model.query()
+        .preload('table')
+        .where('name', segments[2].replace('_options', ''))
+        .first();
+      if (model) {
+        table = model.table;
+        await table.load('altrp_model');
       }
     }
     if (!table) {
       return httpContext.response.status(404).json({
         success: false,
-        message: 'Table Not Found'
-      })
+        message: 'Table Not Found',
+      });
     }
     if (['users', 'media'].indexOf(tableName) !== -1) {
-
       return httpContext.response.status(403).json({
         success: false,
-        message: 'Access Denied'
-      })
+        message: 'Access Denied',
+      });
     }
-    const model = table.altrp_model
+    const model = table.altrp_model;
     if (!model) {
       return httpContext.response.status(404).json({
         success: false,
-        message: 'Model Not Found'
-      })
+        message: 'Model Not Found',
+      });
     }
 
-    const controllerName = app_path(`AltrpControllers/${model.name}Controller`)
+    const controllerName = app_path(`AltrpControllers/${model.name}Controller`);
     try {
-      if(isProd()){
-        Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+      if (isProd()) {
+        Object.keys(require.cache).forEach(function (key) {
+          delete require.cache[key];
+        });
       }
-      const ControllerClass = isProd() ? (await require(controllerName)).default
-        // @ts-ignore
-        : (await import(controllerName)).default
-      const controller = new ControllerClass()
+      const ControllerClass = isProd()
+        ? (await require(controllerName)).default
+        : // @ts-ignore
+          (await import(controllerName)).default;
+      const controller = new ControllerClass();
 
       if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
-        methodName = segments[4]
-        const customizer = await Customizer.query().where('name', methodName).first()
-        if( !customizer ){
+        methodName = segments[4];
+        const customizer = await Customizer.query().where('name', methodName).first();
+        if (!customizer) {
           return httpContext.response.status(404).json({
             success: false,
-            message: 'Customizer Not Found'
-          })
+            message: 'Customizer Not Found',
+          });
         }
 
-        if(! customizer.allowMethod(httpContext.request.method())){
+        if (!customizer.allowMethod(httpContext.request.method())) {
           return httpContext.response.status(405).json({
             success: false,
-            message: 'Method not Allowed'
-          })
+            message: 'Method not Allowed',
+          });
         }
-      }else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
-        methodName = segments[2].indexOf('_options') === -1 ? 'index'  : 'options'
-
-      }else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
-        methodName = 'add'
-      }else if  (segments[4] === undefined
-        && Number(segments[3])
-        && httpContext.request.method() === 'GET') {
-        methodName = 'show'
-        httpContext.params[model.name] = Number(segments[3])
-      }else if  (segments[4] === undefined
-        && Number(segments[3])
-        && httpContext.request.method() === 'DELETE') {
-        methodName = 'destroy'
-        httpContext.params[model.name] = Number(segments[3])
-      }else if  (segments[4] === undefined
-        && Number(segments[3])
-        && httpContext.request.method() === 'PUT') {
-        methodName = 'update'
-        httpContext.params[model.name] = Number(segments[3])
-      }else if  (segments[5] === undefined
-        && Number(segments[3])
-        && segments[4]
+      } else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
+        methodName = segments[2].indexOf('_options') === -1 ? 'index' : 'options';
+      } else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
+        methodName = 'add';
+      } else if (
+        segments[4] === undefined &&
+        Number(segments[3]) &&
+        httpContext.request.method() === 'GET'
       ) {
-        methodName = 'update_column'
-        httpContext.params[model.name] = Number(segments[3])
-        httpContext.params.column = Number(segments[4])
+        methodName = 'show';
+        httpContext.params[model.name] = Number(segments[3]);
+      } else if (
+        segments[4] === undefined &&
+        Number(segments[3]) &&
+        httpContext.request.method() === 'DELETE'
+      ) {
+        methodName = 'destroy';
+        httpContext.params[model.name] = Number(segments[3]);
+      } else if (
+        segments[4] === undefined &&
+        Number(segments[3]) &&
+        httpContext.request.method() === 'PUT'
+      ) {
+        methodName = 'update';
+        httpContext.params[model.name] = Number(segments[3]);
+      } else if (segments[5] === undefined && Number(segments[3]) && segments[4]) {
+        methodName = 'update_column';
+        httpContext.params[model.name] = Number(segments[3]);
+        httpContext.params.column = Number(segments[4]);
       }
-      if(! methodName){
+      if (!methodName) {
         return httpContext.response.status(404).json({
           success: false,
           message: `Controller ${controllerName}; Method: ${methodName}
-  Method Not Found`
-        })
+  Method Not Found`,
+        });
       }
-      return await controller[methodName](httpContext)
+      return await controller[methodName](httpContext);
     } catch (e) {
       return httpContext.response.status(500).json({
         success: false,
@@ -296,52 +309,64 @@ Route.group(() => {
         message: `Controller ${controllerName}; Method: ${methodName}
 ${e.message}`,
         trace: e.stack.split('\n'),
-      })
+      });
     }
-  })
+  });
   /**
    * plugins ajax requests START
    */
-  const methods = [
-    'get', 'post', 'put', 'delete'
-  ]
-  for(const method of methods) {
+  const methods = ['get', 'post', 'put', 'delete'];
+  for (const method of methods) {
     /**
      * handle all 4 HTTP methods
      */
     Route[method]('plugins-handlers/*', async (httpContext: HttpContextContract) => {
-      const plugins = await Plugin.getEnabledPlugins()
-      const segments = httpContext.request.url().split('/').filter(segment => segment)
-      const plugin = plugins.find(plugin => {
-        return plugin.name === segments[2]
-      })
-      if(! plugin){
-        httpContext.response.status(404)
-        return httpContext.response.json({success: false, message: `Plugin \`${segments[2]}\` Not Found`})
+      const plugins = await Plugin.getEnabledPlugins();
+      const segments = httpContext.request
+        .url()
+        .split('/')
+        .filter((segment) => segment);
+      const plugin = plugins.find((plugin) => {
+        return plugin.name === segments[2];
+      });
+      if (!plugin) {
+        httpContext.response.status(404);
+        return httpContext.response.json({
+          success: false,
+          message: `Plugin \`${segments[2]}\` Not Found`,
+        });
       }
-      const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/${method}/${segments[3]}.${isProd() ? 'js' : 'ts'}`)
+      const fileName = app_path(
+        `AltrpPlugins/${plugin.name}/request-handlers/${method}/${segments[3]}.${
+          isProd() ? 'js' : 'ts'
+        }`
+      );
 
-      if(fs.existsSync(fileName)){
-        try{
-          if(isProd()){
-            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+      if (fs.existsSync(fileName)) {
+        try {
+          if (isProd()) {
+            Object.keys(require.cache).forEach(function (key) {
+              delete require.cache[key];
+            });
           }
-          const module = isProd() ? await require(fileName).default : (await import(fileName)).default
-          if(_.isFunction(module)){
-            return await module(httpContext)
+          const module = isProd()
+            ? await require(fileName).default
+            : (await import(fileName)).default;
+          if (_.isFunction(module)) {
+            return await module(httpContext);
           }
-        }catch (e) {
-          httpContext.response.status(500)
+        } catch (e) {
+          httpContext.response.status(500);
           return httpContext.response.json({
             success: false,
             message: e.message,
             trace: e.stack.split('\n'),
-          })
+          });
         }
       }
-      httpContext.response.status(404)
-      return httpContext.response.json({success: false, message: 'Not Found'})
-    })
+      httpContext.response.status(404);
+      return httpContext.response.json({ success: false, message: 'Not Found' });
+    });
   }
   /**
    * plugins ajax requests END
@@ -350,20 +375,21 @@ ${e.message}`,
   /**
    * Templates for front
    */
-  Route.get('/templates/:template_id', 'TemplatesController.getTemplate')
+  Route.get('/templates/:template_id', 'TemplatesController.getTemplate');
   /**
    * media for front
    */
-  Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
-  Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
+  Route.post('media', 'admin/MediaController.store_from_frontend').name = 'front.media.store';
+  Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name =
+    'front.media.delete';
 
-  Route.get("storage/media/:year/:month/:name", "admin/MediaController.show")
+  Route.get('storage/media/:year/:month/:name', 'admin/MediaController.show');
 
-  Route.post("cookie", "IndicesController.setCookie")
+  Route.post('cookie', 'IndicesController.setCookie');
 
-  Route.get('routes', async ({response}:HttpContextContract)=>{
-    return response.json({success: true, pages: []})
-  })
-}).middleware('catch_unhandled_json')
-  .prefix("/ajax")
-
+  Route.get('routes', async ({ response }: HttpContextContract) => {
+    return response.json({ success: true, pages: [] });
+  });
+})
+  .middleware('catch_unhandled_json')
+  .prefix('/ajax');

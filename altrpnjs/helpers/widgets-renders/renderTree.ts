@@ -1,27 +1,27 @@
-import getResponsiveSetting from "../getResponsiveSetting"
-import _ from 'lodash'
+import getResponsiveSetting from '../getResponsiveSetting';
+import _ from 'lodash';
 
 export default function renderTree(settings, device, context) {
-  const type = getResponsiveSetting(settings, 'type', device)
-  let element : any = {}
+  const type = getResponsiveSetting(settings, 'type', device);
+  let element: any = {};
 
   if (type === 'repeater') {
-    const repeater = getResponsiveSetting(settings, 'tree_repeater', device)
+    const repeater = getResponsiveSetting(settings, 'tree_repeater', device);
 
-    element = repeater[0]
-  } else if (type === "datasource") {
+    element = repeater[0];
+  } else if (type === 'datasource') {
     let path = getResponsiveSetting(settings, 'tree_from_datasource', device, '');
     path = path.replace(/}}/g, '').replace(/{{/g, '');
     const data = _.get(path, context, []);
 
-    element = data[0]
+    element = data[0];
   }
 
   if (!element?.label) {
     if (type === 'repeater') {
-      return `<div style="height: 75px; display: flex; justify-content: center; align-items: center; background-color: #C4C4C4;">Add a branch</div>`
+      return `<div style="height: 75px; display: flex; justify-content: center; align-items: center; background-color: #C4C4C4;">Add a branch</div>`;
     }
-    return ``
+    return ``;
   }
 
   return `
@@ -47,5 +47,5 @@ export default function renderTree(settings, device, context) {
         </li>
       </ul>
     </div>
-  `
+  `;
 }

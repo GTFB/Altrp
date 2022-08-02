@@ -1,36 +1,33 @@
-import {BaseModel, column, computed} from "@ioc:Adonis/Lucid/Orm"
-
+import { BaseModel, column, computed } from '@ioc:Adonis/Lucid/Orm';
 
 export default class Category extends BaseModel {
-  public static table = 'altrp_categories'
+  public static table = 'altrp_categories';
 
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public guid: string
+  public guid: string;
 
   @column()
-  public title: string
+  public title: string;
 
   @column()
-  public name: string
+  public name: string;
 
   @column()
-  public description: string
+  public description: string;
 
   @computed()
-  public get category(){
+  public get category() {
     return {
       title: this.title,
       name: this.name,
       description: this.description,
       guid: this.guid,
-    }
+    };
   }
   public getGuid() {
-    return this.guid
+    return this.guid;
   }
-
-
 }

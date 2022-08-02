@@ -1,28 +1,27 @@
-import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import BaseSchema from '@ioc:Adonis/Lucid/Schema';
 
 export default class AltrpGlobalTemplateStyles extends BaseSchema {
-  protected tableName = 'altrp_global_template_styles'
+  protected tableName = 'altrp_global_template_styles';
 
-  public async up () {
-
+  public async up() {
     if (await this.schema.hasTable(this.tableName)) {
-      return
+      return;
     }
     this.schema.createTable(this.tableName, (table) => {
-      table.bigIncrements('id')
-      table.text('settings', 'longtext')
-      table.string('type')
-      table.string('guid', 36)
+      table.bigIncrements('id');
+      table.text('settings', 'longtext');
+      table.string('type');
+      table.string('guid', 36);
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
-    })
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
   }
 
-  public async down () {
-    this.schema.dropTable(this.tableName)
+  public async down() {
+    this.schema.dropTable(this.tableName);
   }
 }

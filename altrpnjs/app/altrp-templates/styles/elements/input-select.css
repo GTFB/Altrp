@@ -28,16 +28,23 @@
   justify-content: flex-end;
 }
 
-.bp3-button:not([class*=bp3-intent-]) {
+.bp3-button:not([class*='bp3-intent-']) {
   background-color: #f5f8fa;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(255, 255, 255, 0.8)),
+    to(rgba(255, 255, 255, 0))
+  );
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
   -webkit-box-shadow: inset 0 0 0 1px rgb(16 22 26 / 20%), inset 0 -1px 0 rgb(16 22 26 / 10%);
   box-shadow: inset 0 0 0 1px rgb(16 22 26 / 20%), inset 0 -1px 0 rgb(16 22 26 / 10%);
   color: #182026;
 }
 
-.bp3-button:not([class*=bp3-intent-]):disabled, .bp3-button:not([class*=bp3-intent-]).bp3-disabled {
+.bp3-button:not([class*='bp3-intent-']):disabled,
+.bp3-button:not([class*='bp3-intent-']).bp3-disabled {
   background-color: rgba(206, 217, 224, 0.5);
   background-image: none;
   -webkit-box-shadow: none;
@@ -47,7 +54,7 @@
   outline: none;
 }
 
-.bp3-button:not([class*=bp3-intent-]):hover {
+.bp3-button:not([class*='bp3-intent-']):hover {
   background-clip: padding-box;
   background-color: #ebf1f5;
   -webkit-box-shadow: inset 0 0 0 1px rgb(16 22 26 / 20%), inset 0 -1px 0 rgb(16 22 26 / 10%);
@@ -82,7 +89,9 @@
   margin: 0;
 }
 
-.bp3-button .bp3-icon, .bp3-button .bp3-icon-standard, .bp3-button .bp3-icon-large {
+.bp3-button .bp3-icon,
+.bp3-button .bp3-icon-standard,
+.bp3-button .bp3-icon-large {
   color: #5c7080;
 }
 .bp3-icon {
@@ -101,6 +110,17 @@
   fill: currentColor;
 }
 
-.bp3-button:disabled::before, .bp3-button:disabled .bp3-icon, .bp3-button:disabled .bp3-icon-standard, .bp3-button:disabled .bp3-icon-large, .bp3-button.bp3-disabled::before, .bp3-button.bp3-disabled .bp3-icon, .bp3-button.bp3-disabled .bp3-icon-standard, .bp3-button.bp3-disabled .bp3-icon-large, .bp3-button[class*=bp3-intent-]::before, .bp3-button[class*=bp3-intent-] .bp3-icon, .bp3-button[class*=bp3-intent-] .bp3-icon-standard, .bp3-button[class*=bp3-intent-] .bp3-icon-large {
+.bp3-button:disabled::before,
+.bp3-button:disabled .bp3-icon,
+.bp3-button:disabled .bp3-icon-standard,
+.bp3-button:disabled .bp3-icon-large,
+.bp3-button.bp3-disabled::before,
+.bp3-button.bp3-disabled .bp3-icon,
+.bp3-button.bp3-disabled .bp3-icon-standard,
+.bp3-button.bp3-disabled .bp3-icon-large,
+.bp3-button[class*='bp3-intent-']::before,
+.bp3-button[class*='bp3-intent-'] .bp3-icon,
+.bp3-button[class*='bp3-intent-'] .bp3-icon-standard,
+.bp3-button[class*='bp3-intent-'] .bp3-icon-large {
   color: inherit !important;
 }

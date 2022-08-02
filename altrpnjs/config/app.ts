@@ -5,12 +5,12 @@
  * file.
  */
 
-import proxyAddr from 'proxy-addr'
-import Env from '@ioc:Adonis/Core/Env'
-import { ServerConfig } from '@ioc:Adonis/Core/Server'
-import { LoggerConfig } from '@ioc:Adonis/Core/Logger'
-import { ProfilerConfig } from '@ioc:Adonis/Core/Profiler'
-import { ValidatorConfig } from '@ioc:Adonis/Core/Validator'
+import proxyAddr from 'proxy-addr';
+import Env from '@ioc:Adonis/Core/Env';
+import { ServerConfig } from '@ioc:Adonis/Core/Server';
+import { LoggerConfig } from '@ioc:Adonis/Core/Logger';
+import { ProfilerConfig } from '@ioc:Adonis/Core/Profiler';
+import { ValidatorConfig } from '@ioc:Adonis/Core/Validator';
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ import { ValidatorConfig } from '@ioc:Adonis/Core/Validator'
 | be decrypted.
 |
 */
-export const appKey: string = Env.get('APP_KEY').replace('base64:', '')
+export const appKey: string = Env.get('APP_KEY').replace('base64:', '');
 
 /*
 |--------------------------------------------------------------------------
@@ -127,7 +127,7 @@ export const http: ServerConfig = {
   |
   */
   forceContentNegotiationTo: 'application/json',
-}
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -181,7 +181,7 @@ export const logger: LoggerConfig = {
   |
   */
   prettyPrint: Env.get('NODE_ENV') === 'development',
-}
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -220,7 +220,7 @@ export const profiler: ProfilerConfig = {
   |
   */
   whitelist: [],
-}
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -231,8 +231,7 @@ export const profiler: ProfilerConfig = {
 | to the default config https://git.io/JT0WE
 |
 */
-export const validator: ValidatorConfig = {
-}
+export const validator: ValidatorConfig = {};
 
-export const altrp_version:string = '1.2.1'
-export const url:string  = Env.get('APP_URL')
+export const altrp_version: string = '1.2.1';
+export const url: string = Env.get('APP_URL');

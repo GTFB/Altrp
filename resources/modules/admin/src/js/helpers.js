@@ -47,11 +47,19 @@ export function transliterate(str) {
 /**
  * Парсит строку в name для БД
  * @param {string}str
+ * @param {boolean}withoutLowerCase
  * @return {string}
  */
-export function titleToName(str) {
+export function titleToName(str, withoutLowerCase) {
   str = transliterate(str);
-  return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
+
+  let editedSting = str
+
+  if(!withoutLowerCase) {
+    editedSting = editedSting.toLowerCase()
+  }
+
+  return editedSting.replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
 
 }
 

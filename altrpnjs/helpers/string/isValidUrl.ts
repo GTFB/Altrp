@@ -6,4 +6,4 @@ export default function isValidUrl(url) {
     return false;
   }
   return true;
-};
+}

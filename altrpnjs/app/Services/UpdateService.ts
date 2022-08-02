@@ -1,22 +1,21 @@
-import AdmZip from "adm-zip"
+import AdmZip from 'adm-zip';
 import env from '../../helpers/env';
 import axios from 'axios';
 import base_path from '../../helpers/path/base_path';
-import fs from 'fs'
-import { exec } from'child_process'
-import {promisify} from 'util'
-import public_path from "../../helpers/path/public_path";
-import clearRequireCache from "../../helpers/node-js/clearRequireCache";
-import View from "@ioc:Adonis/Core/View";
-import {CacheManager} from "edge.js/build/src/CacheManager";
-import guid from "../../helpers/guid";
-import Env from "@ioc:Adonis/Core/Env";
+import fs from 'fs';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import public_path from '../../helpers/path/public_path';
+import clearRequireCache from '../../helpers/node-js/clearRequireCache';
+import View from '@ioc:Adonis/Core/View';
+import { CacheManager } from 'edge.js/build/src/CacheManager';
+import guid from '../../helpers/guid';
+import Env from '@ioc:Adonis/Core/Env';
 
 export default class UpdateService {
+  private static UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/';
 
-  private static UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/'
-
-  private static ARCHIVE_PATH = base_path('temp.zip')
+  private static ARCHIVE_PATH = base_path('temp.zip');
 
   /**
    * @return string
@@ -27,57 +26,58 @@ export default class UpdateService {
       return true;
     }
 
-    console.log("Starting Update")
-    let file = ''
+    console.log('Starting Update');
+    let file = '';
     try {
-      file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
-        responseType: 'arraybuffer',
-      }))?.data || '';
+      file =
+        (
+          await axios.get(UpdateService.UPDATE_DOMAIN + version, {
+            responseType: 'arraybuffer',
+          })
+        )?.data || '';
     } catch (e) {
       return false;
     }
-    if (!await UpdateService.write_public_permissions()) {
+    if (!(await UpdateService.write_public_permissions())) {
       console.error('Failed to update file read mode');
     }
 
     if (!file) {
       throw new Error('Archive is empty');
     }
-    UpdateService.save_archive(file)
+    UpdateService.save_archive(file);
 
+    UpdateService.update_files();
 
-    UpdateService.update_files()
-
-    if (!await UpdateService.write_public_permissions('public')) {
+    if (!(await UpdateService.write_public_permissions('public'))) {
       console.error('Failed to update file reading mode after unzipping');
     }
-    UpdateService.delete_archive()
+    UpdateService.delete_archive();
     // Upgrade the Database
-    await UpdateService.upgradePackages()
-    await UpdateService.upgradeDatabase()
+    await UpdateService.upgradePackages();
+    await UpdateService.upgradeDatabase();
     /**
      * clear all view cached pages
      */
-    View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
-    clearRequireCache()
+    View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'));
+    clearRequireCache();
     UpdateService.setPackageKey();
-    console.log("End Update")
+    console.log('End Update');
     return true;
   }
-  static setPackageKey(){
-
+  static setPackageKey() {
     /**
      * set package key
      */
-    let packageKey
-    if(fs.existsSync(base_path('.package_key'))){
-      packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
-      console.log("Setting package key by File")
+    let packageKey;
+    if (fs.existsSync(base_path('.package_key'))) {
+      packageKey = fs.readFileSync(base_path('.package_key'), { encoding: 'utf8' });
+      console.log('Setting package key by File');
     } else {
-      packageKey = guid()
-      console.log("Setting package key by random guid")
+      packageKey = guid();
+      console.log('Setting package key by random guid');
     }
-    Env.set('PACKAGE_KEY', packageKey)
+    Env.set('PACKAGE_KEY', packageKey);
   }
   /**
    * @param {string} file_content
@@ -88,20 +88,20 @@ export default class UpdateService {
   }
 
   private static update_files() {
-    let archive = new AdmZip(UpdateService.ARCHIVE_PATH)
-    if(!archive.test()){
-      throw 'Archive no pass a test'
+    let archive = new AdmZip(UpdateService.ARCHIVE_PATH);
+    if (!archive.test()) {
+      throw 'Archive no pass a test';
     }
     if (fs.existsSync(public_path('modules'))) {
-      fs.rmSync(public_path('modules'), {recursive: true});
-      fs.rmSync(base_path('database', ), {recursive: true});
+      fs.rmSync(public_path('modules'), { recursive: true });
+      fs.rmSync(base_path('database'), { recursive: true });
     }
     archive.extractAllTo(base_path(), true);
   }
 
   private static async write_public_permissions(path = '') {
     try {
-      await promisify(exec)('chmod -R 0775  ' + base_path(path))
+      await promisify(exec)('chmod -R 0775  ' + base_path(path));
       return true;
     } catch (e) {
       return false;
@@ -112,13 +112,12 @@ export default class UpdateService {
     fs.rmSync(UpdateService.ARCHIVE_PATH);
   }
 
-
   /**
    * Upgrade the Database & Apply actions
    *
    */
   private static async upgradeDatabase() {
-    await promisify(exec)(`node ${base_path('ace')} migration:run --force`)
+    await promisify(exec)(`node ${base_path('ace')} migration:run --force`);
     return true;
   }
 
@@ -127,7 +126,7 @@ export default class UpdateService {
    *
    */
   private static async upgradePackages() {
-    await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
+    await promisify(exec)(`npm --prefix ${base_path()} ci --production`);
     return true;
   }
 }

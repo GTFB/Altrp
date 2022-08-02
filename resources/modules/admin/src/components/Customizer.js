@@ -147,11 +147,13 @@ class Customizer extends Component {
       title: "Add new Customizer",
       submitButton: "Add",
       submit: data =>{
-        data.name = titleToName(data.title);
 
-        console.log(data)
+
         if(!data.is_method) {
+          data.name = titleToName(data.title)
           data.name += `_${altrpRandomId()}`
+        } else {
+          data.name = titleToName(data.title, true);
         }
         return  this.resource.post( data )
       },

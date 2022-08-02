@@ -1,10 +1,10 @@
-import Application from "@ioc:Adonis/Core/Application";
-import _path from "path"
+import Application from '@ioc:Adonis/Core/Application';
+import _path from 'path';
 
 export default function storage_path(path: string) {
-  if(!path){
-    return Application.makePath('storage')
+  if (!path) {
+    return Application.makePath('storage');
   }
-  path = 'storage' + _path.sep + path
+  path = 'storage' + _path.sep + path;
   return Application.makePath(path);
 }

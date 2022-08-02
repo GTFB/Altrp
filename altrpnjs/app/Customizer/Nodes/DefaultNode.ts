@@ -1,46 +1,38 @@
-import BaseNode from 'App/Customizer/Nodes/BaseNode'
-import NodeInterface from "App/Customizer/Nodes/NodeInterface"
-import data_get from "../../../helpers/data_get"
-import * as _ from "lodash"
+import BaseNode from 'App/Customizer/Nodes/BaseNode';
+import NodeInterface from 'App/Customizer/Nodes/NodeInterface';
+import data_get from '../../../helpers/data_get';
+import * as _ from 'lodash';
 
-export default class DefaultNode extends BaseNode implements NodeInterface
-{
-
-
-
-  public getChildren(): []
-  {
+export default class DefaultNode extends BaseNode implements NodeInterface {
+  public getChildren(): [] {
     // TODO: Implement getChildren() method.
-    return []
+    return [];
   }
-  public getContent(): string
-  {
+  public getContent(): string {
     // TODO: Implement getContent() method.
-    return ''
+    return '';
   }
-  parseCustomizerData( data  ): boolean
-  {
+  parseCustomizerData(data): boolean {
     // TODO: Implement parseData() method.
-    if( ! data ) {
-      data = []
+    if (!data) {
+      data = [];
     }
-    this.data = data.find( ( item )=> {
-      return data_get( item, 'type' ) === 'start'
-    })
-    return true
+    this.data = data.find((item) => {
+      return data_get(item, 'type') === 'start';
+    });
+    return true;
   }
-
 
   /**
    * парсим  массив в строку
    * @return string
    */
-  public parseArray(data = []){
-    let JSContent = ''
-    for (let item of data){
-      let _JSContent = data_get( item, 'JSContent' )
-      if( ! _.isString(JSContent) || ! JSContent ) {
-        continue
+  public parseArray(data = []) {
+    let JSContent = '';
+    for (let item of data) {
+      let _JSContent = data_get(item, 'JSContent');
+      if (!_.isString(JSContent) || !JSContent) {
+        continue;
       }
 
       // preg_match_all('/{{([\s\S]+?)(?=}})/', _JSContent, matches)
@@ -60,19 +52,19 @@ export default class DefaultNode extends BaseNode implements NodeInterface
       //   _JSContent = str_replace(`{{${path}}}`, item, _JSContent)
       //
       // }
-      JSContent += _JSContent
+      JSContent += _JSContent;
     }
-    return JSContent
+    return JSContent;
   }
 
   /**
    * парсим ассоциативный массив в строку
    * @return string
    */
-  public parseObject( item ){
-    let JSContent = data_get( item, 'JSContent' )
-    if( ! _.isString(JSContent) || ! JSContent ) {
-      return ''
+  public parseObject(item) {
+    let JSContent = data_get(item, 'JSContent');
+    if (!_.isString(JSContent) || !JSContent) {
+      return '';
     }
     // preg_match_all('/{{([\s\S]+?)(?=}})/', JSContent, matches)
     // if( ! isset( matches ) || ! isset( matches[1] )){
@@ -90,7 +82,7 @@ export default class DefaultNode extends BaseNode implements NodeInterface
     //   }
     //   JSContent = str_replace(`{{${path}}}`, item, JSContent)
     // }
-    return JSContent
+    return JSContent;
   }
 
   /**
@@ -98,8 +90,7 @@ export default class DefaultNode extends BaseNode implements NodeInterface
    * которое является шаблоном js-кода
    * @return string
    */
-  public getJSContent(): string
-  {
-    return this.parseObject( this.data )
+  public getJSContent(): string {
+    return this.parseObject(this.data);
   }
 }

@@ -1,6 +1,5 @@
-
-
-.bp3-slider-track, .bp3-slider-progress {
+.bp3-slider-track,
+.bp3-slider-progress {
   height: 6px;
   left: 0;
   right: 0;
@@ -35,15 +34,23 @@
 .bp3-slider-handle .bp3-slider-label {
   background: #394b59;
   border-radius: 3px;
-  -webkit-box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 2px 4px rgb(16 22 26 / 20%), 0 8px 24px rgb(16 22 26 / 20%);
-  box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 2px 4px rgb(16 22 26 / 20%), 0 8px 24px rgb(16 22 26 / 20%);
+  -webkit-box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 2px 4px rgb(16 22 26 / 20%),
+    0 8px 24px rgb(16 22 26 / 20%);
+  box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 2px 4px rgb(16 22 26 / 20%),
+    0 8px 24px rgb(16 22 26 / 20%);
   color: #f5f8fa;
   margin-left: 8px;
 }
 
 .bp3-slider-handle {
   background-color: #f5f8fa;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(255, 255, 255, 0.8)),
+    to(rgba(255, 255, 255, 0))
+  );
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
   -webkit-box-shadow: inset 0 0 0 1px rgb(16 22 26 / 20%), inset 0 -1px 0 rgb(16 22 26 / 10%);
   box-shadow: inset 0 0 0 1px rgb(16 22 26 / 20%), inset 0 -1px 0 rgb(16 22 26 / 10%);
@@ -87,7 +94,8 @@
   margin-left: 8px;
 }
 
-.bp3-slider-handle.bp3-start, .bp3-slider-handle.bp3-end {
+.bp3-slider-handle.bp3-start,
+.bp3-slider-handle.bp3-end {
   width: 8px;
 }
 
@@ -95,7 +103,8 @@
   margin-left: 0;
 }
 
-.bp3-slider.bp3-vertical .bp3-slider-track, .bp3-slider.bp3-vertical .bp3-slider-progress {
+.bp3-slider.bp3-vertical .bp3-slider-track,
+.bp3-slider.bp3-vertical .bp3-slider-progress {
   bottom: 0;
   height: auto;
   left: 5px;
@@ -121,7 +130,8 @@
   margin-bottom: 8px;
 }
 
-.bp3-slider.bp3-vertical .bp3-slider-handle.bp3-end, .bp3-slider.bp3-vertical .bp3-slider-handle.bp3-start {
+.bp3-slider.bp3-vertical .bp3-slider-handle.bp3-end,
+.bp3-slider.bp3-vertical .bp3-slider-handle.bp3-start {
   height: 8px;
   margin-left: 0;
   width: 16px;

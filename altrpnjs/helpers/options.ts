@@ -1,12 +1,12 @@
 const options = (model, values) => {
   return model.map((page) => {
-    page = page.serialize()
+    page = page.serialize();
 
     return {
       value: page[values.value],
-      label: page[values.label]
-    }
-  })
-}
+      label: page[values.label],
+    };
+  });
+};
 
-export default options
+export default options;

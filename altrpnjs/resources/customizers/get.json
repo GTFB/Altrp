@@ -41,7 +41,8 @@
                 "parameters": []
               },
               "size": "120px",
-              "JSExpression": "await require('../AltrpModels/{{model_name}}').default.all()"},
+              "JSExpression": "await require('../AltrpModels/{{model_name}}').default.all()"
+            },
             "left": {
               "path": "data.data"
             }

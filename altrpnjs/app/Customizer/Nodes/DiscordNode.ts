@@ -1,42 +1,37 @@
-import BaseNode from 'App/Customizer/Nodes/BaseNode'
-import NodeInterface from "App/Customizer/Nodes/NodeInterface"
-import data_get from "../../../helpers/data_get"
+import BaseNode from 'App/Customizer/Nodes/BaseNode';
+import NodeInterface from 'App/Customizer/Nodes/NodeInterface';
+import data_get from '../../../helpers/data_get';
 
-export default class DiscordNode extends BaseNode implements NodeInterface
-{
-
-  public getChildren(): []
-  {
+export default class DiscordNode extends BaseNode implements NodeInterface {
+  public getChildren(): [] {
     // TODO: Implement getChildren() method.
-    return []
+    return [];
   }
-  public getContent(): string
-  {
+  public getContent(): string {
     // TODO: Implement getContent() method.
-    return ''
+    return '';
   }
-  parseCustomizerData( data  ): boolean
-  {
+  parseCustomizerData(data): boolean {
     // TODO: Implement parseData() method.
-    if( ! data ) {
-      data = []
+    if (!data) {
+      data = [];
     }
-    this.data = data.find( ( item )=> {
-      return data_get( item, 'type' ) === 'start'
-    })
-    return true
+    this.data = data.find((item) => {
+      return data_get(item, 'type') === 'start';
+    });
+    return true;
   }
 
   public getJSContent(): string {
-    let JSContent = "";
+    let JSContent = '';
 
     const data = JSON.stringify(this.data.data?.props?.nodeData?.data || []);
 
-    JSContent += this.customizer.changeToJS("discord", data)
+    JSContent += this.customizer.changeToJS('discord', data);
 
     JSContent += `await this.discord()
-    `
+    `;
 
-    return JSContent
+    return JSContent;
   }
 }

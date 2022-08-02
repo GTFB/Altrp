@@ -1,3 +1,3 @@
-export default function getFavicons(){
-  return ''
+export default function getFavicons() {
+  return '';
 }

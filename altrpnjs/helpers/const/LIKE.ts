@@ -1,5 +1,5 @@
-import env from "../env";
+import env from '../env';
 
-const LIKE = env('DB_CONNECTION') === 'mysql' ? 'LIKE' : 'ILIKE'
+const LIKE = env('DB_CONNECTION') === 'mysql' ? 'LIKE' : 'ILIKE';
 
-export default LIKE
+export default LIKE;

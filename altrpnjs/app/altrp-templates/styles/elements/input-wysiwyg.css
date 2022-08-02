@@ -1,11 +1,11 @@
-.ck.ck-editor__editable_inline[dir=ltr] {
-    text-align: left;
+.ck.ck-editor__editable_inline[dir='ltr'] {
+  text-align: left;
 }
 
-.ck.ck-editor__editable_inline>:last-child {
-    margin-bottom: 0.9em;
+.ck.ck-editor__editable_inline > :last-child {
+  margin-bottom: 0.9em;
 }
 
-.ck.ck-editor__editable_inline>:first-child {
-    margin-top: 0.9em;
+.ck.ck-editor__editable_inline > :first-child {
+  margin-top: 0.9em;
 }

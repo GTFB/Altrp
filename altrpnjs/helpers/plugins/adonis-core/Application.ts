@@ -1,3 +1,3 @@
-import Application from "@ioc:Adonis/Core/Application";
+import Application from '@ioc:Adonis/Core/Application';
 
-export default Application
+export default Application;

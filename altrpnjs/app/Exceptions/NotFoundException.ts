@@ -1,5 +1,5 @@
-import { Exception } from '@adonisjs/core/build/standalone'
-import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
+import { Exception } from '@adonisjs/core/build/standalone';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +14,9 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 |
 */
 export default class NotFoundException extends Exception {
-
-  public static code = 'E_NOT_FOUND'
+  public static code = 'E_NOT_FOUND';
 
   public async handle(error: this, ctx: HttpContextContract) {
-    ctx.response.status(error.status).send(error.message)
+    ctx.response.status(error.status).send(error.message);
   }
-
 }

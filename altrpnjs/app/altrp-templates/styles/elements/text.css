@@ -3,15 +3,14 @@
   margin: 0;
   opacity: 1;
   font-size: 16px;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
   border-radius: 0;
 }
 
-.altrp-text a{
-  font-family: "Open Sans", sans-serif;
-
+.altrp-text a {
+  font-family: 'Open Sans', sans-serif;
 }
 .altrp-text blockquote {
   overflow: hidden;
@@ -22,28 +21,28 @@
   font-style: italic;
   border-left: solid 5px hsl(0, 0%, 80%);
 }
-.altrp-text p{
+.altrp-text p {
   margin-top: 16px;
   margin-bottom: 16px;
 }
 
-.altrp-text img{
+.altrp-text img {
   max-width: 100%;
 }
 
-.ck.ck-editor__editable_inline{
+.ck.ck-editor__editable_inline {
   padding: 0;
 }
 
-.ck.ck-editor__editable_inline>:last-child {
+.ck.ck-editor__editable_inline > :last-child {
   margin-bottom: calc(0.6em * 1.5);
 }
 
-.ck.ck-editor__editable_inline>:first-child {
+.ck.ck-editor__editable_inline > :first-child {
   margin-top: calc(0.6em * 1.5);
 }
 
-.ck.ck-editor__editable_inline[dir=ltr] {
+.ck.ck-editor__editable_inline[dir='ltr'] {
   text-align: left;
 }
 

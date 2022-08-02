@@ -1,16 +1,14 @@
 // import Database from '@ioc:Adonis/Lucid/Database'
-import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import BaseSchema from '@ioc:Adonis/Lucid/Schema';
 
 export default class UpdatePageRoles extends BaseSchema {
-  protected tableName = 'page_role'
+  protected tableName = 'page_role';
 
-  public async up () {
+  public async up() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.foreign('page_id').references('pages.id')
-    })
+      table.foreign('page_id').references('pages.id');
+    });
   }
 
-  public async down () {
-    
-  }
+  public async down() {}
 }

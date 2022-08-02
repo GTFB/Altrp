@@ -1,3 +1,3 @@
-import Logger from "@ioc:Adonis/Core/Logger";
+import Logger from '@ioc:Adonis/Core/Logger';
 
-export default Logger
+export default Logger;

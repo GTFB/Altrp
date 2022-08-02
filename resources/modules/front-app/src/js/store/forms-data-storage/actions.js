@@ -30,4 +30,3 @@ export function clearFormStorage(formId = null) {
     formId,
   };
 }
-

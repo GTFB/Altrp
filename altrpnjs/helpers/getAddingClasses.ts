@@ -1,6 +1,6 @@
-import getResponsiveSetting from "./getResponsiveSetting";
+import getResponsiveSetting from './getResponsiveSetting';
 
-export default function getAddingClasses(settings:any, screen){
+export default function getAddingClasses(settings: any, screen) {
   const {
     hide_on_wide_screen,
     hide_on_desktop,
@@ -10,7 +10,7 @@ export default function getAddingClasses(settings:any, screen){
     hide_on_small_phone,
     isFixed,
   } = settings;
-  let classes = ''
+  let classes = '';
 
   if (hide_on_wide_screen) {
     classes += ' hide_on_wide_screen';
@@ -37,7 +37,7 @@ export default function getAddingClasses(settings:any, screen){
     classes += ' altrp-invisible ';
   }
   if (getResponsiveSetting(settings, 'css_class', screen)) {
-    classes += ` ${getResponsiveSetting(settings, 'css_class', screen)} `
+    classes += ` ${getResponsiveSetting(settings, 'css_class', screen)} `;
   }
-  return classes
+  return classes;
 }

@@ -1,153 +1,150 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import validGuid from '../../../helpers/validGuid';
 
-import { v4 as uuid } from "uuid";
-import Template from "App/Models/Template";
-import TemplateSetting from "App/Models/TemplateSetting";
-import Page from "App/Models/Page";
-import PagesTemplate from "App/Models/PagesTemplate";
-import Category from "App/Models/Category";
-import CategoryObject from "App/Models/CategoryObject";
-import AltrpMeta from "App/Models/AltrpMeta";
-import GlobalStyle from "App/Models/GlobalStyle";
-import filtration from "../../../helpers/filtration";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
-import Area from "App/Models/Area";
-import mbParseJSON from "../../../helpers/mbParseJSON";
+import { v4 as uuid } from 'uuid';
+import Template from 'App/Models/Template';
+import TemplateSetting from 'App/Models/TemplateSetting';
+import Page from 'App/Models/Page';
+import PagesTemplate from 'App/Models/PagesTemplate';
+import Category from 'App/Models/Category';
+import CategoryObject from 'App/Models/CategoryObject';
+import AltrpMeta from 'App/Models/AltrpMeta';
+import GlobalStyle from 'App/Models/GlobalStyle';
+import filtration from '../../../helpers/filtration';
+import TemplateGenerator from 'App/Generators/TemplateGenerator';
+import Area from 'App/Models/Area';
+import mbParseJSON from '../../../helpers/mbParseJSON';
 
 export default class TemplatesController {
   public async getAllIds({ response }) {
-    let templates =await Template.query().where('type', 'template').select('id')
-    return response.json({data: templates, success: true})
+    let templates = await Template.query().where('type', 'template').select('id');
+    return response.json({ data: templates, success: true });
   }
   public async index({ request }) {
     const params = request.qs();
-     const page = parseInt(params.page) || 1
+    const page = parseInt(params.page) || 1;
     // const search = params.s
     // const orderType = params.order || "DESC"
     // const orderBy = params.order_by || "id"
 
-     const pageSize = params.pageSize || 20
+    const pageSize = params.pageSize || 20;
 
-    const templatesQuery = Template.query()
+    const templatesQuery = Template.query();
 
-    filtration(templatesQuery, request, [
-      "title",
-    ])
+    filtration(templatesQuery, request, ['title']);
 
     const templates = await templatesQuery
-      .preload("user")
-      .preload("currentArea")
+      .preload('user')
+      .preload('currentArea')
       .whereNotNull('guid')
       .whereNull('deleted_at')
-      .where("type", "template")
-      .preload("categories")
-      .whereHas("currentArea", (query) => {
-        if(params.area) {
-          query.where("name", params.area)
+      .where('type', 'template')
+      .preload('categories')
+      .whereHas('currentArea', (query) => {
+        if (params.area) {
+          query.where('name', params.area);
         }
       })
       .orderBy('title')
-      .paginate(page, pageSize)
+      .paginate(page, pageSize);
 
-    const modTemplates = templates.all().map( template => {
+    const modTemplates = templates.all().map((template) => {
       return {
-        categories: template.categories.map(category => {
-          return category
+        categories: template.categories.map((category) => {
+          return category;
         }),
         author: template.getAuthor(),
         area: template.getArea(),
         id: template.id,
         name: template.name,
         title: template.title,
-        url: `/admin/editor?template_id=${template.id}`
-      }
-    })
+        url: `/admin/editor?template_id=${template.id}`,
+      };
+    });
 
     return {
       count: templates.getMeta().total,
       pageCount: templates.getMeta().last_page,
-      templates: modTemplates
-    }
+      templates: modTemplates,
+    };
   }
 
   public async settingsGet({ request, params }) {
     const setting = await TemplateSetting.query()
-      .where("template_id", parseInt(params.id))
-      .andWhere("setting_name", request.input("setting_name"))
-      .firstOrFail()
-    return setting
+      .where('template_id', parseInt(params.id))
+      .andWhere('setting_name', request.input('setting_name'))
+      .firstOrFail();
+    return setting;
   }
 
-  public async settingsSet({ params, request, response}) {
+  public async settingsSet({ params, request, response }) {
     const templateQuery = Template.query();
 
-    if(isNaN(params.id)) {
-      templateQuery.where("guid", params.id)
+    if (isNaN(params.id)) {
+      templateQuery.where('guid', params.id);
     } else {
-      templateQuery.where("id", parseInt(params.id))
+      templateQuery.where('id', parseInt(params.id));
     }
 
-    const template = await templateQuery.firstOrFail()
+    const template = await templateQuery.firstOrFail();
 
-
-    const settingName = request.input("setting_name");
+    const settingName = request.input('setting_name');
 
     let setting = await TemplateSetting.query()
-      .where("template_id", template.id)
-      .andWhere("setting_name", settingName)
-      .first()
+      .where('template_id', template.id)
+      .andWhere('setting_name', settingName)
+      .first();
 
-    if(!setting) {
-      setting = new TemplateSetting()
+    if (!setting) {
+      setting = new TemplateSetting();
 
       setting.fill({
         template_id: template.id,
         //@ts-ignore
         template_guid: template.guid,
         setting_name: settingName,
-        data: request.input("data")
-      })
+        data: request.input('data'),
+      });
     } else {
-      setting.data = request.input("data")
+      setting.data = request.input('data');
     }
 
-    if(!await setting.save()) {
-      response.status(500)
+    if (!(await setting.save())) {
+      response.status(500);
       return {
-        message: "Setting not saved"
-      }
+        message: 'Setting not saved',
+      };
     }
 
     return {
-      success: true
-    }
+      success: true,
+    };
   }
 
   public async create({ auth, request, response }) {
-
     const guid = uuid();
 
-    const body = request.body()
-    let template
+    const body = request.body();
+    let template;
 
-    if (body.type === "review") {
-
-
-      const {name, title, type, data, styles} = body
-      let {parent_template} =  body
-      if(validGuid(parent_template)){
-        parent_template = await Template.query().where('guid', parent_template).first()
-        if(! parent_template){
-          response.status(404)
-          return response.json({success:false, message: `Template ${parent_template} not found!`})
+    if (body.type === 'review') {
+      const { name, title, type, data, styles } = body;
+      let { parent_template } = body;
+      if (validGuid(parent_template)) {
+        parent_template = await Template.query().where('guid', parent_template).first();
+        if (!parent_template) {
+          response.status(404);
+          return response.json({
+            success: false,
+            message: `Template ${parent_template} not found!`,
+          });
         }
-        parent_template = parent_template.id
+        parent_template = parent_template.id;
       }
 
-      const stringyfiedData = JSON.stringify(data)
-      const stringyfiedStyles = JSON.stringify(styles)
+      const stringyfiedData = JSON.stringify(data);
+      const stringyfiedStyles = JSON.stringify(styles);
       // console.log(name, title, 'parent_template:', +parent_template, type,)
       // template = await Template.create({name, title, type, data: stringyfiedData, styles: stringyfiedStyles, parent_template: +parent_template, area: 1})
 
@@ -161,222 +158,229 @@ export default class TemplatesController {
         parent_template: Number(parent_template),
         guid,
         user_id: auth.user?.id,
-      })
-      let q = await Template.query().where('parent_template', parent_template)
-        .where('type', "review").orderBy('updated_at', 'desc')
-        .offset(Template.historyLimit)
+      });
+      let q = await Template.query()
+        .where('parent_template', parent_template)
+        .where('type', 'review')
+        .orderBy('updated_at', 'desc')
+        .offset(Template.historyLimit);
 
-      for(const t of q){
-        await t.delete()
+      for (const t of q) {
+        await t.delete();
       }
-       } else {
+    } else {
       let data = {
-        area: parseInt(request.input("area")),
-        data: JSON.stringify(request.input("data")),
-        name: request.input("name"),
-        title: request.input("title"),
-        type: "template",
+        area: parseInt(request.input('area')),
+        data: JSON.stringify(request.input('data')),
+        name: request.input('name'),
+        title: request.input('title'),
+        type: 'template',
         guid,
         user_id: auth.user?.id,
-      }
+      };
 
-       template = await Template.create(data);
+      template = await Template.create(data);
     }
 
-
-    if(request.input("categories")) {
-      for (const option of request.input("categories")) {
-        const category = await Category.query().where("guid", option.value).first();
+    if (request.input('categories')) {
+      for (const option of request.input('categories')) {
+        const category = await Category.query().where('guid', option.value).first();
 
         if (!category) {
-          response.status(404)
+          response.status(404);
           return {
-            message: "Category not Found"
-          }
+            message: 'Category not Found',
+          };
         } else {
           await CategoryObject.create({
             category_guid: category.guid,
-            object_type: "Template",
+            object_type: 'Template',
             //@ts-ignore
-            object_guid: template.guid
-          })
+            object_guid: template.guid,
+          });
         }
       }
     }
-    let templateGenerator = new TemplateGenerator()
-    await templateGenerator.run(template)
+    let templateGenerator = new TemplateGenerator();
+    await templateGenerator.run(template);
 
     return {
-      message: "Success",
+      message: 'Success',
       redirect: true,
       data: JSON.parse(template.data),
-      url: `/admin/editor?template_id=${template.id}`
-    }
+      url: `/admin/editor?template_id=${template.id}`,
+    };
   }
 
-  public async options({ request}:HttpContextContract) {
-    const query = Template.query().whereNull('deleted_at')
-    query.where('type', 'template')
-    const qs = request.qs()
-    if(qs.template_type){
-      let area = await Area.query().where('name', qs.template_type).first()
-      if(area){
-        query.where('area', area.id)
+  public async options({ request }: HttpContextContract) {
+    const query = Template.query().whereNull('deleted_at');
+    query.where('type', 'template');
+    const qs = request.qs();
+    if (qs.template_type) {
+      let area = await Area.query().where('name', qs.template_type).first();
+      if (area) {
+        query.where('area', area.id);
       }
     }
-    const key = request.qs().value || 'id'
-    const templates = await query.select('*')
+    const key = request.qs().value || 'id';
+    const templates = await query.select('*');
     return templates.map((template) => ({
       value: template[key] || template.id,
-      label: template.title
-    }))
+      label: template.title,
+    }));
   }
 
   public async get({ params }) {
     const templateQuery = Template.query();
 
-    if(isNaN(params.id)) {
-      templateQuery.where("guid", params.id)
+    if (isNaN(params.id)) {
+      templateQuery.where('guid', params.id);
     } else {
-      templateQuery.where("id", parseInt(params.id))
+      templateQuery.where('id', parseInt(params.id));
     }
 
-    const template = await templateQuery.firstOrFail()
-    await template.load('currentArea')
-    return template
+    const template = await templateQuery.firstOrFail();
+    await template.load('currentArea');
+    return template;
   }
 
   public async getTemplate({ params, response, request }) {
-    const templateQuery = Template.query()
+    const templateQuery = Template.query();
 
-    if(validGuid(params.template_id)) {
-      templateQuery.where("guid", params.template_id)
+    if (validGuid(params.template_id)) {
+      templateQuery.where('guid', params.template_id);
     } else {
-      templateQuery.where("id", parseInt(params.template_id))
+      templateQuery.where('id', parseInt(params.template_id));
     }
 
-    let template = await templateQuery.first()
+    let template = await templateQuery.first();
 
     if (!template) {
-      response.status(404)
+      response.status(404);
       return {
-        success: false
-      }
+        success: false,
+      };
     }
 
     // @ts-ignore
-    template = template.serialize()
+    template = template.serialize();
     // @ts-ignore
-    delete template.html_content
-    if(request.qs()?.withStyles && template?.styles){
-      let styles = mbParseJSON(template.styles, template.styles)
+    delete template.html_content;
+    if (request.qs()?.withStyles && template?.styles) {
+      let styles = mbParseJSON(template.styles, template.styles);
 
-      if(styles.all_styles){
-        styles = styles.all_styles.join('')
+      if (styles.all_styles) {
+        styles = styles.all_styles.join('');
       }
-      template.styles = styles
+      template.styles = styles;
     } else {
       // @ts-ignore
-      delete template.styles
+      delete template.styles;
     }
-    return template
+    return template;
   }
 
   public async delete({ params }) {
     const templateQuery = Template.query();
 
-    if(isNaN(params.id)) {
-      templateQuery.where("guid", params.id)
+    if (isNaN(params.id)) {
+      templateQuery.where('guid', params.id);
     } else {
-      templateQuery.where("id", parseInt(params.id))
+      templateQuery.where('id', parseInt(params.id));
     }
 
-    const template = await templateQuery.firstOrFail()
+    const template = await templateQuery.firstOrFail();
 
-    let templateGenerator = new TemplateGenerator()
-    await templateGenerator.deleteFile(template)
-    await template.delete()
+    let templateGenerator = new TemplateGenerator();
+    await templateGenerator.deleteFile(template);
+    await template.delete();
     return {
-      success: true
-    }
+      success: true,
+    };
   }
 
   public async update({ params, request }) {
     const templateQuery = Template.query();
 
-    if(isNaN(params.id)) {
-      templateQuery.where("guid", params.id)
+    if (isNaN(params.id)) {
+      templateQuery.where('guid', params.id);
     } else {
-      templateQuery.where("id", parseInt(params.id))
+      templateQuery.where('id', parseInt(params.id));
     }
 
-    const template = await templateQuery.firstOrFail()
+    const template = await templateQuery.firstOrFail();
 
-    if(template) {
+    if (template) {
       //@ts-ignore
       const data = template.serialize();
 
-      delete data.created_at
-      delete data.updated_at
-      delete data.id
+      delete data.created_at;
+      delete data.updated_at;
+      delete data.id;
 
+      template.data = JSON.stringify(request.input('data'));
+      template.styles = JSON.stringify(request.input('styles'));
+      template.html_content = request.input('html_content');
+      await template.save();
 
-      template.data = JSON.stringify(request.input("data"));
-      template.styles = JSON.stringify(request.input("styles"));
-      template.html_content = request.input("html_content");
-      await template.save()
-
-      let templateGenerator = new TemplateGenerator()
-      await templateGenerator.run(template)
-
+      let templateGenerator = new TemplateGenerator();
+      await templateGenerator.run(template);
 
       return {
-        success: true
-      }
+        success: true,
+      };
     }
   }
 
-  public async deleteReviews({ params, }) {
-     Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id)).delete();
+  public async deleteReviews({ params }) {
+    Template.query()
+      .where('type', 'review')
+      .andWhere('parent_template', parseInt(params.id))
+      .delete();
 
     return {
       success: true,
-    }
+    };
   }
 
-  public async deleteAllReviews({  }) {
-    if((await Template.query().where("type", "review").limit(20).select("id")).length){
-      await Template.query().where("type", "review").limit(20).delete();
+  public async deleteAllReviews({}) {
+    if ((await Template.query().where('type', 'review').limit(20).select('id')).length) {
+      await Template.query().where('type', 'review').limit(20).delete();
     }
 
     return {
       success: true,
-    }
+    };
   }
 
-  public async getAllReviews({  }) {
-    return await Template.query().where("type", "review");
+  public async getAllReviews({}) {
+    return await Template.query().where('type', 'review');
   }
 
   public async getReviews({ params, response }) {
-    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id))
+    const templates = await Template.query()
+      .where('type', 'review')
+      .andWhere('parent_template', parseInt(params.id));
     console.log(parseInt(params.id));
-    if(templates.length > 0) {
-      return templates
+    if (templates.length > 0) {
+      return templates;
     } else {
-      response.status(404)
-      return templates
+      response.status(404);
+      return templates;
     }
   }
 
   public async getReview({ params, response }) {
-    const templates = await Template.query().where("type", "review").andWhere("parent_template", parseInt(params.id)).andWhere("id", parseInt(params.review_id));
+    const templates = await Template.query()
+      .where('type', 'review')
+      .andWhere('parent_template', parseInt(params.id))
+      .andWhere('id', parseInt(params.review_id));
 
-    if(templates.length > 0) {
-      return templates
+    if (templates.length > 0) {
+      return templates;
     } else {
-      response.status(404)
-      return templates
+      response.status(404);
+      return templates;
     }
   }
 
@@ -386,34 +390,35 @@ export default class TemplatesController {
    * @param Request $request
    * @return JsonResponse
    */
-  public async conditions({params,response}) {
+  public async conditions({ params, response }) {
     let id = parseInt(params.id);
-    if(validGuid(params.id)){
-      let template = await Template.query().where('guid', params.id).first()
-      if(template){
-        id=template.id
+    if (validGuid(params.id)) {
+      let template = await Template.query().where('guid', params.id).first();
+      if (template) {
+        id = template.id;
       } else {
-        response.status(404)
-        return response.json({success:false, message: 'Template not found'})
+        response.status(404);
+        return response.json({ success: false, message: 'Template not found' });
       }
     }
     let res = {
       data: [],
-      success: true
-    }
-    const setting = await TemplateSetting.query().where("template_id", id).andWhere("setting_name", "conditions").first();
+      success: true,
+    };
+    const setting = await TemplateSetting.query()
+      .where('template_id', id)
+      .andWhere('setting_name', 'conditions')
+      .first();
 
-    if(setting){
-      if(typeof setting.data === 'string'){
-        res.data = JSON.parse(setting.data)
+    if (setting) {
+      if (typeof setting.data === 'string') {
+        res.data = JSON.parse(setting.data);
       } else {
-        res.data = setting.data
+        res.data = setting.data;
       }
     }
 
-
-
-    return res
+    return res;
   }
 
   /**
@@ -423,87 +428,86 @@ export default class TemplatesController {
    * @param Request $request
    * @return JsonResponse
    */
-  public async conditionsSet({params, response, request}) {
-
+  public async conditionsSet({ params, response, request }) {
     let id = parseInt(params.id);
-    const data = JSON.stringify(request.input("data"));
+    const data = JSON.stringify(request.input('data'));
 
-    let template
+    let template;
 
-    if(validGuid(params.id)){
-      template = await Template.query().where('guid', params.id).first()
-      if(template){
-        id=template.id
+    if (validGuid(params.id)) {
+      template = await Template.query().where('guid', params.id).first();
+      if (template) {
+        id = template.id;
       } else {
-        response.status(404)
-        return response.json({success:false, message: 'Template not found'})
+        response.status(404);
+        return response.json({ success: false, message: 'Template not found' });
       }
     } else {
-      template = await Template.query().where("id", id).preload("currentArea").first();
+      template = await Template.query().where('id', id).preload('currentArea').first();
     }
-    if(!template) {
-      response.status(404)
+    if (!template) {
+      response.status(404);
       return {
-        message: "Template not Found"
-      }
+        message: 'Template not Found',
+      };
     }
 
-    let setting = await TemplateSetting.query().where("template_id", id).first()
+    let setting = await TemplateSetting.query().where('template_id', id).first();
 
-    if(!setting) {
+    if (!setting) {
       setting = await TemplateSetting.create({
         template_id: id,
-        setting_name: "conditions",
+        setting_name: 'conditions',
         //@ts-ignore
         template_guid: template.getGuid(),
-        data
-      })
+        data,
+      });
     } else {
-      setting.data = data
+      setting.data = data;
 
-      if(!setting.save()) {
+      if (!setting.save()) {
         response.status(500);
 
         return {
-          message: "Conditions not Saved"
-        }
+          message: 'Conditions not Saved',
+        };
       }
     }
 
-    if(template) {
-      template.all_site = false
+    if (template) {
+      template.all_site = false;
 
-      if(!template.save()) {
-        response.status(500)
+      if (!template.save()) {
+        response.status(500);
         return {
-          message: "Conditions all_site not Saved"
-        }
+          message: 'Conditions all_site not Saved',
+        };
       }
 
-      await template.related("pages").detach()
+      await template.related('pages').detach();
 
-      request.input("data").forEach(condition => {
+      request.input('data').forEach((condition) => {
         switch (condition.object_type) {
-          case "all_site":
-            template.all_site = condition.condition_type === "include";
+          case 'all_site':
+            template.all_site = condition.condition_type === 'include';
 
-            if(!template.save()) {
-              response.status(500)
+            if (!template.save()) {
+              response.status(500);
               return {
-                message: "Conditions all_site not Saved"
-              }
+                message: 'Conditions all_site not Saved',
+              };
             }
-            break
-          case "report":
-          case "page":
-            condition.object_ids.forEach(async objectId => {
-              const page = await Page.find(objectId)
+            break;
+          case 'report':
+          case 'page':
+            condition.object_ids.forEach(async (objectId) => {
+              const page = await Page.find(objectId);
 
-              if(!page) {
-                response.status(500)
+              if (!page) {
+                response.status(500);
                 return {
-                  message: "Page not found and pages template not saved"
-                }
+                  message: 'Page not found and pages template not saved',
+                };
               }
 
               const pages_template = await PagesTemplate.create({
@@ -513,77 +517,70 @@ export default class TemplatesController {
                 //@ts-ignore
                 template_guid: template.getGuid(),
                 condition_type: condition.condition_type,
-                template_type: template.currentArea.name
-              })
+                template_type: template.currentArea.name,
+              });
 
-              if(!pages_template) {
-                response.status(500)
+              if (!pages_template) {
+                response.status(500);
                 return {
-                  message: "Conditions page not Saved"
-                }
+                  message: 'Conditions page not Saved',
+                };
               }
-            })
-            break
+            });
+            break;
         }
-      })
+      });
     }
 
     return {
-      success: true
-    }
+      success: true,
+    };
   }
 
-
-  public async exportCustomizer( {params, response}: HttpContextContract )
-  {
-
-    let template
+  public async exportCustomizer({ params, response }: HttpContextContract) {
+    let template;
     if (validGuid(params.id)) {
-      template = await Template.query().where('guid', params.id).first()
+      template = await Template.query().where('guid', params.id).first();
     } else {
-      template = await Template.find(params.id)
+      template = await Template.find(params.id);
     }
     if (!template) {
-      response.status(404)
+      response.status(404);
       return response.json({
-          'success':
-            false, 'message':
-            'Template not found'
-        },
-      )
+        success: false,
+        message: 'Template not found',
+      });
     }
 
-    template.__exported_metas__ = {}
-    template.__exported_metas__.styles_presets = AltrpMeta.getGlobalStyles()
-    template.__exported_metas__ = {}
+    template.__exported_metas__ = {};
+    template.__exported_metas__.styles_presets = AltrpMeta.getGlobalStyles();
+    template.__exported_metas__ = {};
     template.__exported_metas__.global_styles = GlobalStyle.all();
 
-    let res = template.serialize()
+    let res = template.serialize();
 
-    return response.json(res)
+    return response.json(res);
   }
 
-  async show_frontend({params,response}:HttpContextContract )
-{
+  async show_frontend({ params, response }: HttpContextContract) {
+    // if (self::loadCachedTemplate( template_id )) {
+    //    return self::loadCachedTemplate( template_id );
+    // }
+    const template_id = params.template_id;
+    let template;
+    if (validGuid(template_id)) {
+      template = await Template.query().where('guid', template_id).first();
+    } else {
+      template = await Template.find(template_id);
+    }
+    if (!template) {
+      response.status(404);
+      return response.json({ success: false, message: 'Template not found' });
+    }
 
-  // if (self::loadCachedTemplate( template_id )) {
-  //    return self::loadCachedTemplate( template_id );
-  // }
-  const template_id = params.template_id
-  let template
-  if ( validGuid( template_id ) ) {
-    template = await Template.query().where( 'guid', template_id ).first();
-  } else {
-    template = await Template.find( template_id );
-  }
-  if ( ! template ) {
-    response.status(404)
-    return response.json( { 'success' : false, 'message' : 'Template not found' })
-  }
-
-  template = template.serialize()
-  delete template.html_content
-  delete template.styles
-  return response.json({template});
+    template = template.serialize();
+    delete template.html_content;
+    delete template.styles;
+    return response.json({ template });
   }
 }

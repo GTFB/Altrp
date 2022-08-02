@@ -5,9 +5,9 @@
  * file.
  */
 
-import Env from '@ioc:Adonis/Core/Env'
-import { DriveConfig } from '@ioc:Adonis/Core/Drive'
-import public_path from "../helpers/path/public_path";
+import Env from '@ioc:Adonis/Core/Env';
+import { DriveConfig } from '@ioc:Adonis/Core/Drive';
+import public_path from '../helpers/path/public_path';
 
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +122,7 @@ const driveConfig: DriveConfig = {
     //   keyFilename: Env.get('GCS_KEY_FILENAME'),
     //   bucket: Env.get('GCS_BUCKET'),
 
-      /*
+    /*
       |--------------------------------------------------------------------------
       | Uniform ACL - Google cloud storage only
       |--------------------------------------------------------------------------
@@ -143,6 +143,6 @@ const driveConfig: DriveConfig = {
     //   usingUniformAcl: false
     // },
   },
-}
+};
 
-export default driveConfig
+export default driveConfig;

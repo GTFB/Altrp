@@ -5,8 +5,8 @@
  * file.
  */
 
-import Env from '@ioc:Adonis/Core/Env'
-import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
+import Env from '@ioc:Adonis/Core/Env';
+import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database';
 
 const databaseConfig: DatabaseConfig = {
   /*
@@ -36,7 +36,6 @@ const databaseConfig: DatabaseConfig = {
     mysql: {
       client: 'mysql',
       connection: {
-
         charset: Env.get('DB_CHARSET', 'utf8mb4'),
         host: Env.get('DB_HOST'),
         port: Env.get('DB_PORT'),
@@ -62,15 +61,12 @@ const databaseConfig: DatabaseConfig = {
       },
       migrations: {
         naturalSort: true,
-        paths: [
-          './database/pg_migrations'
-        ]
+        paths: ['./database/pg_migrations'],
       },
       healthCheck: false,
       debug: false,
     },
+  },
+};
 
-  }
-}
-
-export default databaseConfig
+export default databaseConfig;

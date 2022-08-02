@@ -1,3 +1,3 @@
-export default function print_statics():string{
-  return ''
+export default function print_statics(): string {
+  return '';
 }

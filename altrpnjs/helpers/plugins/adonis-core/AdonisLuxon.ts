@@ -1,2 +1,2 @@
-import * as AdonisLuxon from 'luxon'
-export default AdonisLuxon
+import * as AdonisLuxon from 'luxon';
+export default AdonisLuxon;

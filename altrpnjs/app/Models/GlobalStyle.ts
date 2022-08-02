@@ -1,28 +1,28 @@
-import { DateTime } from 'luxon'
-import {BaseModel, column} from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon';
+import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
 
 export default class GlobalStyle extends BaseModel {
-  public static table = "altrp_global_template_styles";
+  public static table = 'altrp_global_template_styles';
 
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column({
     serialize: (value: string) => {
-      return JSON.parse(value)
-    }
+      return JSON.parse(value);
+    },
   })
-  public settings: string
+  public settings: string;
 
   @column()
-  public type: string
+  public type: string;
 
   @column()
-  public guid: string
+  public guid: string;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }

@@ -4,13 +4,13 @@ const getNextWeek = (count) => {
 
   let nextWeek = (6 - today.getDay()) * oneDay;
 
-  nextWeek += oneDay - today.getTime() % oneDay
+  nextWeek += oneDay - (today.getTime() % oneDay);
 
-  if(count > 0) {
-    nextWeek += (oneDay * 7) - (count - 1)
+  if (count > 0) {
+    nextWeek += oneDay * 7 - (count - 1);
   }
 
   return nextWeek;
-}
+};
 
-export default getNextWeek
+export default getNextWeek;

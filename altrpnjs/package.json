@@ -4,9 +4,42 @@
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch ",
-    "build": "node --max-old-space-size=8144 ace build --production",
+    "build": "node --max-old-space-size=8144 ace build --production --ignore-ts-errors",
     "start": "node server.ts",
-    "lint": "eslint . --ext=.ts"
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write ."
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:adonis/typescriptApp",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error"
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "build",
+    "app/AltrpControllers",
+    "app/AltrpListeners",
+    "app/AltrpModels",
+    "app/AltrpOther",
+    "public"
+  ],
+  "prettier": {
+    "trailingComma": "es5",
+    "semi": true,
+    "singleQuote": true,
+    "useTabs": false,
+    "quoteProps": "consistent",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "printWidth": 100
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.3.9",
@@ -16,6 +49,9 @@
     "eslint-plugin-adonis": "^2.1.0",
     "exceljs": "^4.3.0",
     "typescript": "~4.5",
+    "prettier": "^2.6.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-config-prettier": "^8.5.0",
     "youch": "^2.2.2",
     "youch-terminal": "^1.1.1"
   },
@@ -76,7 +112,7 @@
     "source-map-support": "^0.5.21",
     "styled-components": "^5.3.3",
     "tar": "^6.1.11",
-    "telegraf": "^4.7.0",
+    "telegraf": "^4.8.3",
     "uuid": "^8.3.2",
     "xml2js": "^0.4.23"
   }

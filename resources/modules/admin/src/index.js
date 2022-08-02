@@ -5,11 +5,6 @@ import checkPackageKey from "./js/functions/checkPackageKey";
 import {withRouter} from "react-router-dom";
 import {io} from "socket.io-client";
 
-window.altrpIo = io( {
-  path: '/wsaltrp',
-  auth: {
-  },
-})
 window.withRouter = withRouter;
 
 window.React = React;

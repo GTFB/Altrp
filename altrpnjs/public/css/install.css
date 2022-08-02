@@ -1,4 +1,4 @@
-*:focus{
+*:focus {
   outline: none;
 }
 .mt-100 {
@@ -16,7 +16,7 @@
   width: 320px;
   padding: 20px;
   margin-top: 20px;
-  border: 1px solid #D5D7DE;
+  border: 1px solid #d5d7de;
   box-sizing: border-box;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.04);
   border-radius: 2px;
@@ -25,14 +25,14 @@
   background-color: white;
   width: 600px;
   margin-top: 20px;
-  border: 1px solid #D5D7DE;
+  border: 1px solid #d5d7de;
   box-sizing: border-box;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.04);
   border-radius: 2px;
 }
 .row {
   display: flex;
-  border-bottom: 1px solid #D5D7DE;
+  border-bottom: 1px solid #d5d7de;
 }
 .row-heading {
   padding: 20px 20px 0;
@@ -57,12 +57,12 @@
   font-weight: normal;
   font-size: 13px;
   line-height: 162%;
-  color: #8E94AA;
+  color: #8e94aa;
   margin: 10px 0 5px;
   text-decoration: none;
 }
 .line {
-  border: 1px solid #D5D7DE;
+  border: 1px solid #d5d7de;
   box-sizing: border-box;
   border-radius: 2px;
   width: 100%;
@@ -72,16 +72,16 @@
   margin-left: 0;
 }
 .but {
-  background: #87CA00;
-  border-radius: 2px ;
+  background: #87ca00;
+  border-radius: 2px;
   padding: 7px 15px;
   margin-bottom: 20px;
   font-weight: bold;
   cursor: pointer;
   border: none;
 }
-.but:active{
-  -webkit-box-shadow: inset -2px 2px  0 0 rgba(0,0,0,.2);
-  -moz-box-shadow: inset -2px 2px  0 0 rgba(0,0,0,.2);
-  box-shadow: inset -2px 2px  0 0 rgba(0,0,0,.2);
+.but:active {
+  -webkit-box-shadow: inset -2px 2px 0 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset -2px 2px 0 0 rgba(0, 0, 0, 0.2);
+  box-shadow: inset -2px 2px 0 0 rgba(0, 0, 0, 0.2);
 }

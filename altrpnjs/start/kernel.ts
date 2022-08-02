@@ -9,18 +9,18 @@
 |
 */
 
-import Server from '@ioc:Adonis/Core/Server'
-import Route from "@ioc:Adonis/Core/Route"
-import './view'
-import './events'
-import "../app/Services/TelegramBot"
-import "../app/Services/DiscordBot"
+import Server from '@ioc:Adonis/Core/Server';
+import Route from '@ioc:Adonis/Core/Route';
+import './view';
+import './events';
+import '../app/Services/TelegramBot';
+import '../app/Services/DiscordBot';
 //import "../app/Services/Timers";
-import Env from "@ioc:Adonis/Core/Env";
-import fs from "fs";
-import base_path from "../helpers/path/base_path";
-import guid from "../helpers/guid";
-import applyPluginsFiltersAsync from "../helpers/plugins/applyPluginsFiltersAsync";
+import Env from '@ioc:Adonis/Core/Env';
+import fs from 'fs';
+import base_path from '../helpers/path/base_path';
+import guid from '../helpers/guid';
+import applyPluginsFiltersAsync from '../helpers/plugins/applyPluginsFiltersAsync';
 
 /*
 |--------------------------------------------------------------------------
@@ -36,12 +36,11 @@ Server.middleware.register([
   () => import('App/Middleware/ConvertEmptyString'),
   () => import('App/Middleware/SilentAuth'),
   () => import('@ioc:Adonis/Addons/Shield'),
-])
+]);
 
-applyPluginsFiltersAsync('config', '')
+applyPluginsFiltersAsync('on_start', '');
 
-Route.get('*', 'AltrpRouting.index')
-
+Route.get('*', 'AltrpRouting.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -60,22 +59,21 @@ Route.get('*', 'AltrpRouting.index')
 |
 */
 Server.middleware.registerNamed({
-  auth: () => import("App/Middleware/Auth"),
-  admin: () => import("App/Middleware/IsAdmin"),
-  cors: () => import("App/Middleware/Cors"),
-  catch_unhandled_json: () => import("App/Middleware/CatchUnhandledJson"),
-})
-
+  auth: () => import('App/Middleware/Auth'),
+  admin: () => import('App/Middleware/IsAdmin'),
+  cors: () => import('App/Middleware/Cors'),
+  catch_unhandled_json: () => import('App/Middleware/CatchUnhandledJson'),
+});
 
 /**
  * set package key
  */
-let packageKey
-if(fs.existsSync(base_path('.package_key'))){
-  packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
-  console.log("Setting package key by File")
+let packageKey;
+if (fs.existsSync(base_path('.package_key'))) {
+  packageKey = fs.readFileSync(base_path('.package_key'), { encoding: 'utf8' });
+  console.log('Setting package key by File');
 } else {
-  packageKey = guid()
-  console.log("Setting package key by random guid")
+  packageKey = guid();
+  console.log('Setting package key by random guid');
 }
-Env.set('PACKAGE_KEY', packageKey)
+Env.set('PACKAGE_KEY', packageKey);

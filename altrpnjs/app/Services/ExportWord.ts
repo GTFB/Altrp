@@ -1,59 +1,68 @@
-import Application from '@ioc:Adonis/Core/Application'
-import {Document, HeadingLevel, Packer, Paragraph, Table, TableCell, TableRow, VerticalAlign} from "docx";
-import fs from "fs";
-import _ from "lodash";
+import Application from '@ioc:Adonis/Core/Application';
+import {
+  Document,
+  HeadingLevel,
+  Packer,
+  Paragraph,
+  Table,
+  TableCell,
+  TableRow,
+  VerticalAlign,
+} from 'docx';
+import fs from 'fs';
+import _ from 'lodash';
 
 export default class ExportWord {
-  static serverNameDir = "/word";
+  static serverNameDir = '/word';
   static serverDir = Application.tmpPath(ExportWord.serverNameDir);
-  doc
+  doc;
 
   constructor(content, columns, settings) {
-
-    const tableName = settings.name || "table"
+    const tableName = settings.name || 'table';
     // { header: "sadsa", key: "asdsadsa", width: 10 },
-    if(!fs.existsSync(ExportWord.serverDir)) {
-      fs.mkdirSync(ExportWord.serverDir)
+    if (!fs.existsSync(ExportWord.serverDir)) {
+      fs.mkdirSync(ExportWord.serverDir);
     }
 
     const table = new Table({
       rows: [
         new TableRow({
           children: [
-            ...columns.map(col => (
-              new TableCell({
-                children: [
-                  new Paragraph({
-                    text: col,
-                    heading: HeadingLevel.HEADING_2
-                  })
-                ],
-                verticalAlign: VerticalAlign.CENTER
-              })
-            ))
-          ]
+            ...columns.map(
+              (col) =>
+                new TableCell({
+                  children: [
+                    new Paragraph({
+                      text: col,
+                      heading: HeadingLevel.HEADING_2,
+                    }),
+                  ],
+                  verticalAlign: VerticalAlign.CENTER,
+                })
+            ),
+          ],
         }),
         ...content.map((item) => {
-          const serialized = item.serialize()
+          const serialized = item.serialize();
           return new TableRow({
-            children: _.keys(serialized).map(key => {
-              let value = serialized[key]
+            children: _.keys(serialized).map((key) => {
+              let value = serialized[key];
 
-              if(_.isNumber(value)) {
-                value = value.toString()
+              if (_.isNumber(value)) {
+                value = value.toString();
               }
               return new TableCell({
                 children: [
                   new Paragraph({
                     text: value,
-                  })
-                ]
-              })
-            })
-          })
-        })
-      ]
-    })
+                  }),
+                ],
+              });
+            }),
+          });
+        }),
+      ],
+    });
 
     this.doc = new Document({
       sections: [
@@ -61,18 +70,18 @@ export default class ExportWord {
           children: [
             new Paragraph({
               text: tableName,
-              heading: HeadingLevel.TITLE
+              heading: HeadingLevel.TITLE,
             }),
-            table
+            table,
           ],
-        }
-      ]
-    })
+        },
+      ],
+    });
   }
 
   public export(filename) {
     Packer.toBuffer(this.doc).then((buffer) => {
-      fs.writeFileSync(ExportWord.serverDir + "/" + filename + ".docx", buffer)
-    })
+      fs.writeFileSync(ExportWord.serverDir + '/' + filename + '.docx', buffer);
+    });
   }
 }

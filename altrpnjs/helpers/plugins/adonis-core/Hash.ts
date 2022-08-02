@@ -1,2 +1,2 @@
-import Hash from '@ioc:Adonis/Core/Hash'
-export default Hash
+import Hash from '@ioc:Adonis/Core/Hash';
+export default Hash;

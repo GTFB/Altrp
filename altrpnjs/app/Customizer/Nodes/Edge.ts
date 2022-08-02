@@ -1,6 +1,3 @@
-import BaseNode from 'App/Customizer/Nodes/BaseNode'
+import BaseNode from 'App/Customizer/Nodes/BaseNode';
 
-
-export default class Edge extends BaseNode
-{
-}
+export default class Edge extends BaseNode {}

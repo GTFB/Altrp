@@ -1,47 +1,49 @@
-import getResponsiveSetting from "../getResponsiveSetting";
-import renderAsset from "../renderAsset";
-import objectToStylesString from "../objectToStylesString";
+import getResponsiveSetting from '../getResponsiveSetting';
+import renderAsset from '../renderAsset';
+import objectToStylesString from '../objectToStylesString';
 
 export default function renderDivider(settings, device) {
   let style = {};
   let styleSeparator = {};
 
-  let dividerAlignment = getResponsiveSetting(settings,"divider_alignment", device, "center");
+  let dividerAlignment = getResponsiveSetting(settings, 'divider_alignment', device, 'center');
   switch (dividerAlignment) {
-    case "flex-start":
+    case 'flex-start':
       styleSeparator = {
-        marginRight: "auto",
-      }
+        marginRight: 'auto',
+      };
       break;
-    case "flex-end":
+    case 'flex-end':
       styleSeparator = {
-        marginLeft: "auto"
-      }
+        marginLeft: 'auto',
+      };
       break;
-    case "center":
+    case 'center':
       styleSeparator = {
-        marginRight: "auto",
-        marginLeft: "auto"
-      }
+        marginRight: 'auto',
+        marginLeft: 'auto',
+      };
       break;
   }
   let divider = `<div class="altrp-divider" style="${objectToStylesString(style)}">
   <span class="altrp-divider-separator" style="${objectToStylesString(styleSeparator)}"></span>
-  </div>`
+  </div>`;
 
-  const dividerImage = getResponsiveSetting(settings,"divider_image", device)
-  const dividerText = getResponsiveSetting(settings,"divider_text", device)
+  const dividerImage = getResponsiveSetting(settings, 'divider_image', device);
+  const dividerText = getResponsiveSetting(settings, 'divider_text', device);
 
   if (dividerText || dividerImage?.id) {
-    const dividerLabel = `${dividerImage?.id ? `<div class="altrp-divider-image">${renderAsset(dividerImage)}</div>` : ''}
-    ${dividerText ? `<div class='altrp-divider-label'>${dividerText}</div>` : ''}`
-    let labelPositionHtml = ''
-    const labelPosition = settings.label_position || 'center'
+    const dividerLabel = `${
+      dividerImage?.id ? `<div class="altrp-divider-image">${renderAsset(dividerImage)}</div>` : ''
+    }
+    ${dividerText ? `<div class='altrp-divider-label'>${dividerText}</div>` : ''}`;
+    let labelPositionHtml = '';
+    const labelPosition = settings.label_position || 'center';
 
     if (labelPosition !== 'left') {
-      labelPositionHtml = `<span class="altrp-divider-separator divider-separator-left"></span>`
+      labelPositionHtml = `<span class="altrp-divider-separator divider-separator-left"></span>`;
     } else if (labelPosition !== 'right') {
-      labelPositionHtml = `<span class="altrp-divider-separator divider-separator-right"></span>`
+      labelPositionHtml = `<span class="altrp-divider-separator divider-separator-right"></span>`;
     }
 
     return `<div class="altrp-divider" style="${objectToStylesString(style)}">
@@ -50,9 +52,8 @@ export default function renderDivider(settings, device) {
       ${dividerLabel}
       </div>
     ${labelPositionHtml}
-    </div>`
+    </div>`;
   }
 
-  return divider
-
+  return divider;
 }

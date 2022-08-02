@@ -1,10 +1,7 @@
+export default interface NodeInterface {
+  getContent(): string;
 
-export default interface NodeInterface
-{
-    getContent():string
+  getChildren(): [];
 
-    getChildren(): []
-
-
-   parseCustomizerData(  data  ):boolean
+  parseCustomizerData(data): boolean;
 }

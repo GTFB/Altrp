@@ -1,23 +1,21 @@
-import AltrpSocket from 'App/Services/AltrpSocket'
-import applyPluginsFiltersAsync from "../helpers/plugins/applyPluginsFiltersAsync";
+import AltrpSocket from 'App/Services/AltrpSocket';
+import applyPluginsFiltersAsync from '../helpers/plugins/applyPluginsFiltersAsync';
 
-AltrpSocket.boot()
+AltrpSocket.boot();
 
-AltrpSocket.io.on("connection", async (socket) => {
-  applyPluginsFiltersAsync('after_socket_connect', socket)
-  socket.on("message", (message) => {
-    if(message === 'altrp-front-load'){
-      socket.send('altrpe')
+AltrpSocket.io.on('connection', async (socket) => {
+  applyPluginsFiltersAsync('after_socket_connect', socket);
+  socket.on('message', (message) => {
+    if (message === 'altrp-front-load') {
+      socket.send('altrpe');
     } else {
-      applyPluginsFiltersAsync('socket_receive_message', message, socket)
+      applyPluginsFiltersAsync('socket_receive_message', message, socket);
     }
-  })
+  });
 
-  const guid = await AltrpSocket.pushClient(socket)
+  const guid = await AltrpSocket.pushClient(socket);
 
-  socket.on("disconnect", () => {
-    AltrpSocket.removeClient(guid, socket)
-  })
-
-
-})
+  socket.on('disconnect', () => {
+    AltrpSocket.removeClient(guid, socket);
+  });
+});

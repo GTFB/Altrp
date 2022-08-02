@@ -5,8 +5,8 @@
  * file.
  */
 
-import Env from '@ioc:Adonis/Core/Env'
-import { HashConfig } from '@ioc:Adonis/Core/Hash'
+import Env from '@ioc:Adonis/Core/Env';
+import { HashConfig } from '@ioc:Adonis/Core/Hash';
 
 /*
 |--------------------------------------------------------------------------
@@ -69,10 +69,10 @@ const hashConfig: HashConfig = {
       driver: 'bcrypt',
       rounds: 10,
     },
-    altrpHasher:{
+    altrpHasher: {
       driver: 'altrpHasher',
     },
   },
-}
+};
 
-export default hashConfig
+export default hashConfig;

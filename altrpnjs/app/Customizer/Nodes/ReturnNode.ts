@@ -1,58 +1,52 @@
-import BaseNode from 'App/Customizer/Nodes/BaseNode'
-import NodeInterface from 'App/Customizer/Nodes/NodeInterface'
-import data_get from "../../../helpers/data_get"
+import BaseNode from 'App/Customizer/Nodes/BaseNode';
+import NodeInterface from 'App/Customizer/Nodes/NodeInterface';
+import data_get from '../../../helpers/data_get';
 
-export default class ReturnNode extends BaseNode implements NodeInterface
-{
-
-  public getChildren(): []
-  {
-    return []
+export default class ReturnNode extends BaseNode implements NodeInterface {
+  public getChildren(): [] {
+    return [];
   }
-  public getContent(): string
-  {
+  public getContent(): string {
     // TODO: Implement getContent() method.
-    return ''
+    return '';
   }
-  parseCustomizerData( data:any[]  ): boolean
-  {
-    if( ! data ) {
-      data = []
+  parseCustomizerData(data: any[]): boolean {
+    if (!data) {
+      data = [];
     }
-    this.data = data.find( ( item ) =>{
-      return data_get( item, 'type' ) === 'start'
-    })
-    return true
+    this.data = data.find((item) => {
+      return data_get(item, 'type') === 'start';
+    });
+    return true;
   }
 
   /**
    * @return string
    */
-  public getRequestType():string{
-    return data_get( this.data, 'data.request_type', 'get' )
+  public getRequestType(): string {
+    return data_get(this.data, 'data.request_type', 'get');
   }
 
   getStatus() {
-    return data_get( this.data, 'data.status')
+    return data_get(this.data, 'data.status');
   }
 
-  public getJSContent(): string
-  {
-    let property:object |null|string = this.getProperty()
+  public getJSContent(): string {
+    let property: object | null | string = this.getProperty();
 
-    const status = this.getStatus()
+    const status = this.getStatus();
 
-    let content = "";
+    let content = '';
 
-    if(status) {
+    if (status) {
       content += `httpContext.response.status(${status});
-      `
+      `;
     }
 
-    property = this.customizer.propertyToJS( property )
+    property = this.customizer.propertyToJS(property);
 
-    content += `return ${property};`
+    content += `return ${property};`;
 
-    return content
+    return content;
   }
 }

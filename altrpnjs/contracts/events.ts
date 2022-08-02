@@ -25,21 +25,21 @@ declare module '@ioc:Adonis/Core/Event' {
   | an instance of the the UserModel only.
   |
   */
-  import Model from "App/Models/Model";
+  import Model from 'App/Models/Model';
 
   interface EventsList {
-    'model:updating': Model,
-    'model:updated': Model,
-    'model:deleting': Model,
-    'model:deleted': Model,
+    'model:updating': Model;
+    'model:updated': Model;
+    'model:deleting': Model;
+    'model:deleted': Model;
     'altrp:message': {
-      type: string,
-      body: any,
-      clients: string[]
-    },
+      type: string;
+      body: any;
+      clients: string[];
+    };
     'altrp:models': {
-      type: string
-      model: any
-    }
+      type: string;
+      model: any;
+    };
   }
 }

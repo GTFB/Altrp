@@ -1,9 +1,6 @@
 {
   "extends": "./node_modules/adonis-preset-ts/tsconfig",
-  "include": [
-    "**/*",
-    "../node_modules/laravel-echo/typings/index.d.ts"
-  ],
+  "include": ["**/*", "../node_modules/laravel-echo/typings/index.d.ts"],
   "exclude": [
     "node_modules",
     "app/AltrpModels",
@@ -25,18 +22,10 @@
     "sourceMap": false,
     "esModuleInterop": true,
     "paths": {
-      "App/*": [
-        "./app/*"
-      ],
-      "Config/*": [
-        "./config/*"
-      ],
-      "Contracts/*": [
-        "./contracts/*"
-      ],
-      "Database/*": [
-        "./database/*"
-      ]
+      "App/*": ["./app/*"],
+      "Config/*": ["./config/*"],
+      "Contracts/*": ["./contracts/*"],
+      "Database/*": ["./database/*"]
     },
     "types": [
       "@adonisjs/core",
@@ -49,8 +38,6 @@
       "@adonisjs/shield"
     ],
     "jsx": "react",
-    "lib": [
-      "dom"
-    ]
+    "lib": ["dom"]
   }
 }

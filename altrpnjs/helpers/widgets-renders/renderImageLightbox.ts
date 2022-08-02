@@ -1,6 +1,6 @@
-import getResponsiveSetting from "../getResponsiveSetting"
-import _ from 'lodash'
-import renderAsset from "../renderAsset";
+import getResponsiveSetting from '../getResponsiveSetting';
+import _ from 'lodash';
+import renderAsset from '../renderAsset';
 
 export default function renderImageLightbox(settings, device, context) {
   const getMedia = () => {
@@ -16,10 +16,10 @@ export default function renderImageLightbox(settings, device, context) {
       /**
        * Проверим массив ли с файлами content_path
        */
-      if (_.get(media, "0") instanceof File) {
-        media = _.get(media, "0");
+      if (_.get(media, '0') instanceof File) {
+        media = _.get(media, '0');
       } else {
-        media.assetType = "media";
+        media.assetType = 'media';
       }
     } else if (
       getResponsiveSetting(settings, 'content_path', device) &&
@@ -27,26 +27,26 @@ export default function renderImageLightbox(settings, device, context) {
     ) {
       media = _.get(getResponsiveSetting(settings, 'content_path', device), context);
       media = {
-        assetType: "media",
+        assetType: 'media',
         url: media,
-        name: "null"
+        name: 'null',
       };
     } else if (getResponsiveSetting(settings, 'default_url', device)) {
       media = {
-        assetType: "media",
+        assetType: 'media',
         url: getResponsiveSetting(settings, 'default_url', device),
-        name: "default"
+        name: 'default',
       };
     }
-    return media
-  }
+    return media;
+  };
 
-  const cursorPointer = getResponsiveSetting(settings, "cursor_pointer", device, false);
-  const background_image = getResponsiveSetting(settings, "background_image", device, {});
-  const media = getMedia() || {}
-  let classNames = "altrp-image-container";
+  const cursorPointer = getResponsiveSetting(settings, 'cursor_pointer', device, false);
+  const background_image = getResponsiveSetting(settings, 'background_image', device, {});
+  const media = getMedia() || {};
+  let classNames = 'altrp-image-container';
   if (cursorPointer) {
-    classNames += " cursor-pointer"
+    classNames += ' cursor-pointer';
   }
 
   let width = getResponsiveSetting(settings, 'width_size', device);
@@ -54,8 +54,8 @@ export default function renderImageLightbox(settings, device, context) {
   width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
   height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
 
-  if (_.get(getResponsiveSetting(settings, 'height_size', device), 'size', '100') === "0") {
-    height = ""
+  if (_.get(getResponsiveSetting(settings, 'height_size', device), 'size', '100') === '0') {
+    height = '';
   }
 
   media.url = media?.url || '/img/nullImage.png';
@@ -63,7 +63,7 @@ export default function renderImageLightbox(settings, device, context) {
   media.assetType = media.assetType || undefined;
 
   let image = renderAsset(media, {
-    'class': " altrp-image" + (background_image ? " altrp-background-image" : "")
+    class: ' altrp-image' + (background_image ? ' altrp-background-image' : ''),
   });
 
   return `

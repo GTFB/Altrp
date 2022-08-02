@@ -1,34 +1,32 @@
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import Font from "App/Models/Font";
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm';
+import Font from 'App/Models/Font';
 
 export default class FontSetting extends BaseModel {
+  public static table = 'altrp_font_settings';
 
-  public static table = 'altrp_font_settings'
-  
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public src: string
+  public src: string;
 
   @column()
-  public font_weight: string
+  public font_weight: string;
 
   @column()
-  public font_style: string
+  public font_style: string;
 
   @column()
-  public font_variant: string
+  public font_variant: string;
 
   @column()
-  public font_stretch: string
+  public font_stretch: string;
 
   @column()
-  public font_guid: string
+  public font_guid: string;
 
   @belongsTo(() => Font, {
-    foreignKey: 'font_guid'
+    foreignKey: 'font_guid',
   })
-  public altrp_font: BelongsTo<typeof Font>
-
+  public altrp_font: BelongsTo<typeof Font>;
 }

@@ -1,8 +1,13 @@
 import getResponsiveSetting from '../getResponsiveSetting';
 
 export default function renderInputDateRange(settings, device) {
-  const startInputPlaceholder = getResponsiveSetting(settings, "start_placeholder", device, "start date")
-  const endInputPlaceholder = getResponsiveSetting(settings, "end_placeholder", device, "end date")
+  const startInputPlaceholder = getResponsiveSetting(
+    settings,
+    'start_placeholder',
+    device,
+    'start date'
+  );
+  const endInputPlaceholder = getResponsiveSetting(settings, 'end_placeholder', device, 'end date');
 
   return `
     <span class="bp3-popover-wrapper">
@@ -17,5 +22,5 @@ export default function renderInputDateRange(settings, device) {
         </div>
       </span>
     </span>
-  `
+  `;
 }

@@ -1,2 +1,2 @@
-import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
-export default HttpContextContract
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+export default HttpContextContract;

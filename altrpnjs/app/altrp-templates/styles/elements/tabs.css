@@ -1,212 +1,214 @@
 .bp3-tab-panel {
-    margin-top: 20px !important;
+  margin-top: 20px !important;
 }
 
-.bp3-tab[aria-selected="true"] {
-    border-radius:0;
-    -webkit-box-shadow:inset 0 -3px 0 #106ba3;
-    box-shadow:inset 0 -3px 0 #106ba3; 
+.bp3-tab[aria-selected='true'] {
+  border-radius: 0;
+  -webkit-box-shadow: inset 0 -3px 0 #106ba3;
+  box-shadow: inset 0 -3px 0 #106ba3;
 }
 
-.bp3-tab[aria-selected="true"], .bp3-tab:not([aria-disabled="true"]):hover {
-    color:#106ba3; 
+.bp3-tab[aria-selected='true'],
+.bp3-tab:not([aria-disabled='true']):hover {
+  color: #106ba3;
 }
 
-
-.bp3-dark .bp3-tab[aria-selected="true"] {
-    -webkit-box-shadow:inset 0 -3px 0 #48aff0;
-    box-shadow:inset 0 -3px 0 #48aff0; 
+.bp3-dark .bp3-tab[aria-selected='true'] {
+  -webkit-box-shadow: inset 0 -3px 0 #48aff0;
+  box-shadow: inset 0 -3px 0 #48aff0;
 }
 
-.bp3-dark .bp3-tab[aria-selected="true"], .bp3-dark .bp3-tab:not([aria-disabled="true"]):hover {
-    color:#48aff0; 
+.bp3-dark .bp3-tab[aria-selected='true'],
+.bp3-dark .bp3-tab:not([aria-disabled='true']):hover {
+  color: #48aff0;
 }
 
 .bp3-tab:focus {
-    outline: rgba(19, 124, 189, 0.6) auto 2px;
-    outline-offset: 2px;
+  outline: rgba(19, 124, 189, 0.6) auto 2px;
+  outline-offset: 2px;
 }
 
 .bp3-tab-list {
-    align-items: flex-end;
-    border: none;
-    display: flex;
-    flex: 0 0 auto;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
+  align-items: flex-end;
+  border: none;
+  display: flex;
+  flex: 0 0 auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
 }
 
 .bp3-tab {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    word-wrap: normal;
-    color: #182026;
-    cursor: pointer;
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 auto;
-    flex: 0 0 auto;
-    font-size: 14px;
-    line-height: 30px;
-    max-width: 100%;
-    position: relative;
-    vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  color: #182026;
+  cursor: pointer;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 14px;
+  line-height: 30px;
+  max-width: 100%;
+  position: relative;
+  vertical-align: top;
 }
 
 .bp3-tab {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 }
 
-.bp3-tab[aria-selected=true], .bp3-tab:not([aria-disabled=true]):hover {
-    color: #106ba3;
+.bp3-tab[aria-selected='true'],
+.bp3-tab:not([aria-disabled='true']):hover {
+  color: #106ba3;
 }
 
 .altrp-tab-show {
-    display: block
+  display: block;
 }
 
 .altrp-tab-btn-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .altrp-tab-btn {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin: 0
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 }
 
 .altrp-tab-btn p {
-    margin: 0;
-    white-space: nowrap
+  margin: 0;
+  white-space: nowrap;
 }
 
 .altrp-tab-btn-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .altrp-tabs-left {
-    display: flex;
-    flex-direction: row
+  display: flex;
+  flex-direction: row;
 }
 
 .altrp-tabs-left .altrp-tab-btn-container {
-    display: flex;
-    flex-direction: column
+  display: flex;
+  flex-direction: column;
 }
 
 .altrp-tabs-right {
-    display: flex;
-    flex-direction: row
+  display: flex;
+  flex-direction: row;
 }
 
 .altrp-tabs-right .altrp-tab-btn-container {
-    margin-left: auto;
-    display: flex;
-    flex-direction: column
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .altrp-tab-btn-column:last-child {
-    margin-right: 0px !important
+  margin-right: 0px !important;
 }
 
 .altrp-tab-btn-row:last-child {
-    margin-bottom: 0px !important
+  margin-bottom: 0px !important;
 }
 
 .altrp-tab-btn-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .altrp-tab-btn p {
-    margin: 0;
-    white-space: nowrap;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .altrp-tab-btn-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .altrp-tab-btn-icon img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .altrp-tabs-left {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .altrp-tabs-left .altrp-tab-btn-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .altrp-tabs-right {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .altrp-tabs-right .altrp-tab-btn-container {
-    margin-left: auto;
-    display: flex;
-    flex-direction: column;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .altrp-tab-btn-column:last-child {
-    margin-right: 0px !important;
+  margin-right: 0px !important;
 }
 
 .altrp-tab-btn-row:last-child {
-    margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 .bp3-tab-indicator-wrapper {
-    z-index: 9999
+  z-index: 9999;
 }
 
 .altrp-tab-btn-icon {
-    height: 20px;
-    width: 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .altrp-tab-vertical p {
-    margin: 0;
+  margin: 0;
 }
 
 .altrp-tab-vertical.bp3-tab.bp3-tab.bp3-tab:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .altrp-tab-horizontal.bp3-tab.bp3-tab.bp3-tab:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .altrp-tab {
-    width: 100%;
-    display: block !important;
+  width: 100%;
+  display: block !important;
 }
 
 .bp3-tab-list > *:not(:last-child) {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .altrp-tab-btn {
-    cursor: pointer;
+  cursor: pointer;
 }

@@ -1,160 +1,155 @@
-import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany,} from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm';
 import User from 'App/Models/User';
 import Source from 'App/Models/Source';
 import Model from 'App/Models/Model';
-import isProd from "../../helpers/isProd";
-
+import isProd from '../../helpers/isProd';
 
 export default class Relationship extends BaseModel {
-  public static table = 'altrp_relationships'
+  public static table = 'altrp_relationships';
 
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public name: string
+  public name: string;
 
   @column()
-  public type: string
+  public type: string;
 
   @column()
-  public title: string
+  public title: string;
 
   @column()
-  public model_class: string
+  public model_class: string;
 
   @column()
-  public foreign_key: string
+  public foreign_key: string;
 
   @column()
-  public local_key: string
+  public local_key: string;
 
   @column()
-  public description: string
+  public description: string;
 
   @column()
-  public path: boolean
+  public path: boolean;
 
   @column()
-  public model_id: number
+  public model_id: number;
 
   @belongsTo(() => Model, {
-    foreignKey: 'model_id'
+    foreignKey: 'model_id',
   })
-  public altrp_model: BelongsTo<typeof Model>
+  public altrp_model: BelongsTo<typeof Model>;
 
   @column()
-  public target_model_id: number
+  public target_model_id: number;
 
   @belongsTo(() => Model, {
     localKey: 'id',
     foreignKey: 'target_model_id',
   })
-  public altrp_target_model: BelongsTo<typeof Model>
+  public altrp_target_model: BelongsTo<typeof Model>;
 
   @column()
-  public add_belong_to: boolean
+  public add_belong_to: boolean;
 
   @column()
-  public always_with: boolean
+  public always_with: boolean;
 
   @column()
-  public editable: boolean
+  public editable: boolean;
 
   @column({
-    columnName: 'onDelete'
+    columnName: 'onDelete',
   })
-  public  	onDelete: string
+  public onDelete: string;
 
   @column({
-    columnName: 'onUpdate'
+    columnName: 'onUpdate',
   })
-  public  	onUpdate: string
+  public onUpdate: string;
 
   @column()
-  public user_id: number
+  public user_id: number;
 
   @belongsTo(() => User, {
-    foreignKey: 'author'
+    foreignKey: 'author',
   })
-  public user: BelongsTo<typeof User>
-
+  public user: BelongsTo<typeof User>;
 
   @hasMany(() => Source, {
-    foreignKey: 'id'
+    foreignKey: 'id',
   })
-  public altrp_table: HasMany<typeof Source>
+  public altrp_table: HasMany<typeof Source>;
 
-  renderForModelDev():string {
+  renderForModelDev(): string {
     return `
   ${this.renderDecoratorDev()}(() => ${this.renderRelatedModel()}, ${this.renderOptions()})
-  public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>`
+  public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>`;
   }
 
-  renderForModelProd():string {
+  renderForModelProd(): string {
     return `
 decorate([
   (0, ${this.renderType()})(() => ${this.renderRelatedModel()}.default, ${this.renderOptions()}),
   metadata("design:type", Object)
-], ${this.altrp_model?.name}.prototype, "${this.name}", void 0);`
+], ${this.altrp_model?.name}.prototype, "${this.name}", void 0);`;
   }
 
-  renderForModel():string {
-    return isProd() ? this.renderForModelProd() : this.renderForModelDev()
+  renderForModel(): string {
+    return isProd() ? this.renderForModelProd() : this.renderForModelDev();
   }
 
-  private renderOptions():string {
-    let options:{
+  private renderOptions(): string {
+    let options: {
       localKey?: string;
       foreignKey?: string;
-    } = {
-
+    } = {};
+    if (this.foreign_key) {
+      options.foreignKey = this.foreign_key;
     }
-    if(this.foreign_key){
-      options.foreignKey = this.foreign_key
+    if (this.local_key) {
+      options.localKey = this.local_key;
     }
-    if(this.local_key){
-      options.localKey = this.local_key
-    }
-    return JSON.stringify(options)
+    return JSON.stringify(options);
   }
 
   private renderDecoratorDev() {
-    switch (this.type){
-      case 'hasOne':{
-        return '@Orm.hasOne'
+    switch (this.type) {
+      case 'hasOne': {
+        return '@Orm.hasOne';
       }
-      case 'belongsTo':{
-        return '@Orm.belongsTo'
+      case 'belongsTo': {
+        return '@Orm.belongsTo';
       }
-      case 'hasMany':{
-        return '@Orm.hasMany'
+      case 'hasMany': {
+        return '@Orm.hasMany';
       }
-      default:{
-        return '@Orm.hasOne'
+      default: {
+        return '@Orm.hasOne';
       }
     }
   }
 
   private renderType() {
-    switch (this.type){
-      case 'hasOne':{
-        return isProd() ? 'Orm.hasOne':'Orm.HasOne'
+    switch (this.type) {
+      case 'hasOne': {
+        return isProd() ? 'Orm.hasOne' : 'Orm.HasOne';
       }
-      case 'belongsTo':{
-        return isProd() ? 'Orm.belongsTo':'Orm.BelongsTo'
+      case 'belongsTo': {
+        return isProd() ? 'Orm.belongsTo' : 'Orm.BelongsTo';
       }
-      case 'hasMany':{
-        return isProd() ? 'Orm.hasMany':'Orm.HasMany'
+      case 'hasMany': {
+        return isProd() ? 'Orm.hasMany' : 'Orm.HasMany';
       }
-      default:{
-        return isProd() ? 'Orm.hasOne':'Orm.HasOne'
+      default: {
+        return isProd() ? 'Orm.hasOne' : 'Orm.HasOne';
       }
     }
-
   }
 
-  private renderRelatedModel():string {
-    return this?.altrp_target_model?.name || ''
+  private renderRelatedModel(): string {
+    return this?.altrp_target_model?.name || '';
   }
 }

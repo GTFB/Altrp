@@ -1,4 +1,4 @@
-import AltrpHashDriver from "App/Providers/AltrpHashDriver";
+import AltrpHashDriver from 'App/Providers/AltrpHashDriver';
 
 /**
  * Contract source: https://git.io/Jfefs
@@ -10,18 +10,18 @@ import AltrpHashDriver from "App/Providers/AltrpHashDriver";
 declare module '@ioc:Adonis/Core/Hash' {
   interface HashersList {
     bcrypt: {
-      config: BcryptConfig,
-      implementation: BcryptContract,
-    },
+      config: BcryptConfig;
+      implementation: BcryptContract;
+    };
     argon: {
-      config: ArgonConfig,
-      implementation: ArgonContract,
-    },
+      config: ArgonConfig;
+      implementation: ArgonContract;
+    };
     altrpHasher: {
       config: {
-        driver: 'altrpHasher',
-      },
-      implementation: AltrpHashDriver,
-    },
+        driver: 'altrpHasher';
+      };
+      implementation: AltrpHashDriver;
+    };
   }
 }

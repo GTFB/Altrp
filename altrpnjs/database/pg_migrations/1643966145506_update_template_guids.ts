@@ -1,29 +1,28 @@
-import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import Template from "App/Models/Template";
-import guid from "../../helpers/guid";
+import BaseSchema from '@ioc:Adonis/Lucid/Schema';
+import Template from 'App/Models/Template';
+import guid from '../../helpers/guid';
 
 export default class UpdateTemplateGuids extends BaseSchema {
-  protected tableName = 'templates'
+  protected tableName = 'templates';
 
-  public async up () {
+  public async up() {
     const templates = await Template.all();
 
-    for(const template of templates) {
-      if(template.type === "review") {
+    for (const template of templates) {
+      if (template.type === 'review') {
         template.guid = null;
-        await template.save()
-      } else if( template.type === 'template' && ! template.guid  ) {
-        template.guid = guid()
-        await template.save()
+        await template.save();
+      } else if (template.type === 'template' && !template.guid) {
+        template.guid = guid();
+        await template.save();
       }
     }
-
   }
 
-  public async down () {
+  public async down() {
     this.schema.alterTable(this.tableName, (table) => {
       //@ts-ignore
-      table.dropUnique("guid")
-    })
+      table.dropUnique('guid');
+    });
   }
 }

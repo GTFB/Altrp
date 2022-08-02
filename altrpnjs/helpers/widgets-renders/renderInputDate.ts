@@ -1,95 +1,111 @@
 import objectToStylesString from '../objectToStylesString';
 import getResponsiveSetting from '../getResponsiveSetting';
-import renderAsset from "../renderAsset";
-import moment from 'moment'
+import renderAsset from '../renderAsset';
+import moment from 'moment';
 
-const AltrpFieldContainer = (settings, child) => { 
-  const { content_label_position_type, className } = settings
+const AltrpFieldContainer = (settings, child) => {
+  const { content_label_position_type, className } = settings;
 
   return `
     <div
       style="
         ${content_label_position_type == 'left' ? 'display: flex;' : ''}
-        ${content_label_position_type == 'right' ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;' : ''}
+        ${
+          content_label_position_type == 'right'
+            ? 'display:flex;flex-direction:row-reverse;justify-content:flex-end;'
+            : ''
+        }
       "
       class="${className}"
     >
       ${child}
     </div>
-  `
-}
+  `;
+};
 
 export default function renderInputDate(settings, device) {
   let label = '';
-  let classLabel = "";
+  let classLabel = '';
   let styleLabel = {};
 
-  const label_icon = getResponsiveSetting(settings, "label_icon", device);
+  const label_icon = getResponsiveSetting(settings, 'label_icon', device);
 
-  const content_label_position_type = getResponsiveSetting(settings, "content_label_position_type", device);
+  const content_label_position_type = getResponsiveSetting(
+    settings,
+    'content_label_position_type',
+    device
+  );
 
-  const label_style_spacing = getResponsiveSetting(settings, "label_style_spacing", device);
+  const label_style_spacing = getResponsiveSetting(settings, 'label_style_spacing', device);
 
-  const labelSpacing = label_style_spacing ? label_style_spacing.size + label_style_spacing.unit : '2px'
+  const labelSpacing = label_style_spacing
+    ? label_style_spacing.size + label_style_spacing.unit
+    : '2px';
 
   switch (content_label_position_type) {
-    case "top":
+    case 'top':
       styleLabel = {
-        marginBottom: labelSpacing
+        marginBottom: labelSpacing,
       };
-      classLabel = "";
+      classLabel = '';
       break;
-    case "bottom":
+    case 'bottom':
       styleLabel = {
-        marginTop: labelSpacing
+        marginTop: labelSpacing,
       };
-      classLabel = "";
+      classLabel = '';
       break;
-    case "left":
+    case 'left':
       styleLabel = {
-        marginRight: labelSpacing
+        marginRight: labelSpacing,
       };
-      classLabel = "altrp-field-label-container-left";
+      classLabel = 'altrp-field-label-container-left';
       break;
-    case "absolute":
+    case 'absolute':
       styleLabel = {
-        position: "absolute",
-        zIndex: 2
+        position: 'absolute',
+        zIndex: 2,
       };
-      classLabel = "";
+      classLabel = '';
       break;
   }
 
-  const content_label = getResponsiveSetting(settings, "content_label", device);
-  const content_required = getResponsiveSetting(settings, "content_required", device);
+  const content_label = getResponsiveSetting(settings, 'content_label', device);
+  const content_required = getResponsiveSetting(settings, 'content_required', device);
 
   if (content_label) {
     label = `
-        <div class="altrp-field-label-container ${classLabel}" style="${objectToStylesString(styleLabel)}">
+        <div class="altrp-field-label-container ${classLabel}" style="${objectToStylesString(
+      styleLabel
+    )}">
           <label class="altrp-field-label ${content_required}">
             ${content_label}
           </label>
-          ${label_icon && label_icon.type && `
+          ${
+            label_icon &&
+            label_icon.type &&
+            `
             <span class="altrp-label-icon">
               ${renderAsset(label_icon)}
             </span>
-          `}
+          `
+          }
         </div>
       `;
   } else {
     label = '';
   }
 
-  const defaultValue = getResponsiveSetting(settings, "content_default_value", device) || '';
-  const locale = getResponsiveSetting(settings, "content_locale", device, "en");
+  const defaultValue = getResponsiveSetting(settings, 'content_default_value', device) || '';
+  const locale = getResponsiveSetting(settings, 'content_locale', device, 'en');
 
   let value: any = moment().locale(locale).toDate();
   const format = getResponsiveSetting(settings, 'content_format', device) || 'YYYY-MM-DD';
 
   if (defaultValue) {
-    value = moment(defaultValue, format)
+    value = moment(defaultValue, format);
   } else {
-    value = moment()
+    value = moment();
   }
 
   value = value.isValid() ? value.format(format) : '';
@@ -106,12 +122,15 @@ export default function renderInputDate(settings, device) {
       </div>
     `;
 
-  return AltrpFieldContainer({
-    className: "altrp-field-container altrp-date-field-container ",
-    content_label_position_type,
-  }, `
-      ${content_label_position_type !== "bottom" ? label : ''}
+  return AltrpFieldContainer(
+    {
+      className: 'altrp-field-container altrp-date-field-container ',
+      content_label_position_type,
+    },
+    `
+      ${content_label_position_type !== 'bottom' ? label : ''}
       ${input}
-      ${content_label_position_type === "bottom" ? label : ''}
-    `)
+      ${content_label_position_type === 'bottom' ? label : ''}
+    `
+  );
 }

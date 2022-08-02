@@ -1,51 +1,42 @@
-import BaseNode from 'App/Customizer/Nodes/BaseNode'
-import NodeInterface from "App/Customizer/Nodes/NodeInterface"
-import data_get from "../../../helpers/data_get"
+import BaseNode from 'App/Customizer/Nodes/BaseNode';
+import NodeInterface from 'App/Customizer/Nodes/NodeInterface';
+import data_get from '../../../helpers/data_get';
 
-export default class DocumentNode extends BaseNode implements NodeInterface
-{
-
-  public getChildren(): []
-  {
+export default class DocumentNode extends BaseNode implements NodeInterface {
+  public getChildren(): [] {
     // TODO: Implement getChildren() method.
-    return []
+    return [];
   }
-  public getContent(): string
-  {
+  public getContent(): string {
     // TODO: Implement getContent() method.
-    return ''
+    return '';
   }
-  parseCustomizerData( data  ): boolean
-  {
+  parseCustomizerData(data): boolean {
     // TODO: Implement parseData() method.
-    if( ! data ) {
-      data = []
+    if (!data) {
+      data = [];
     }
-    this.data = data.find( ( item )=> {
-      return data_get( item, 'type' ) === 'start'
-    })
-    return true
+    this.data = data.find((item) => {
+      return data_get(item, 'type') === 'start';
+    });
+    return true;
   }
 
-  public getJSContent(): string
-  {
-
-    let JSContent = ''
+  public getJSContent(): string {
+    let JSContent = '';
     const item = this.data.data.props.nodeData;
 
     // let docData = data_get(item, "data.docData");
-    const type = data_get(item, "data.type");
-    const fileName = data_get(item, "data.fileName");
+    const type = data_get(item, 'data.type');
+    const fileName = data_get(item, 'data.fileName');
     // const template = data_get(item, "data.template");
 
-
-
     // JSContent += this.customizer.changeToJS("document.data", docData)
-    JSContent += this.customizer.changeToJS("document.type", type)
-    JSContent += this.customizer.changeToJS("document.fileName", fileName)
+    JSContent += this.customizer.changeToJS('document.type', type);
+    JSContent += this.customizer.changeToJS('document.fileName', fileName);
     // JSContent += this.customizer.changeToJS("document.template", template)
     JSContent += `await this.toDocument()
-    `
+    `;
 
     // for(let item of items){
     //   let action = data_get( item, 'action', 'set')
@@ -68,9 +59,9 @@ export default class DocumentNode extends BaseNode implements NodeInterface
     //   }
     //   JSContent += leftJSProperty
     // }
-    for(const child of this.children){
-      JSContent += child.getJSContent()
+    for (const child of this.children) {
+      JSContent += child.getJSContent();
     }
-    return JSContent
+    return JSContent;
   }
 }

@@ -1,3 +1,3 @@
-import Database from "@ioc:Adonis/Lucid/Database";
+import Database from '@ioc:Adonis/Lucid/Database';
 
-export default Database
+export default Database;

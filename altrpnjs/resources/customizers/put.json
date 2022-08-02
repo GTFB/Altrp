@@ -70,7 +70,7 @@
                 "parameters": []
               },
               "size": "120px",
-              "JSExpression":"await require('../AltrpModels/{{model_name}}').default.find(httpContext.request.qs().id)"
+              "JSExpression": "await require('../AltrpModels/{{model_name}}').default.find(httpContext.request.qs().id)"
             },
             "left": {
               "path": "data.data"

@@ -1,5 +1,5 @@
-import Application from "@ioc:Adonis/Core/Application";
+import Application from '@ioc:Adonis/Core/Application';
 
-export default function public_path(path: string):string {
-  return Application.publicPath(path) ;
+export default function public_path(path: string): string {
+  return Application.publicPath(path);
 }

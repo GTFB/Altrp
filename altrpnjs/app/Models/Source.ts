@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon'
+import { DateTime } from 'luxon';
 import {
   BaseModel,
   BelongsTo,
@@ -7,83 +7,83 @@ import {
   computed,
   manyToMany,
   ManyToMany,
-} from '@ioc:Adonis/Lucid/Orm'
+} from '@ioc:Adonis/Lucid/Orm';
 import Model from 'App/Models/Model';
 import Controller from 'App/Models/Controller';
-import config from "../../helpers/config";
-import data_get from "../../helpers/data_get";
-import Role from "App/Models/Role";
-import Permission from "App/Models/Permission";
-import Customizer from "App/Models/Customizer";
-import SQLEditor from "App/Models/SQLEditor";
-import _ from "lodash";
-import app_path from "../../helpers/path/app_path";
-import isProd from "../../helpers/isProd";
-import Logger from "@ioc:Adonis/Core/Logger";
-import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import PageDatasource from "App/Models/PageDatasource";
-import altrpRandomId from "../../helpers/altrpRandomId";
+import config from '../../helpers/config';
+import data_get from '../../helpers/data_get';
+import Role from 'App/Models/Role';
+import Permission from 'App/Models/Permission';
+import Customizer from 'App/Models/Customizer';
+import SQLEditor from 'App/Models/SQLEditor';
+import _ from 'lodash';
+import app_path from '../../helpers/path/app_path';
+import isProd from '../../helpers/isProd';
+import Logger from '@ioc:Adonis/Core/Logger';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import PageDatasource from 'App/Models/PageDatasource';
+import altrpRandomId from '../../helpers/altrpRandomId';
 
 export default class Source extends BaseModel {
-  public static table = 'altrp_sources'
+  public static table = 'altrp_sources';
 
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public url: string
+  public url: string;
 
   @column()
-  public api_url: string
+  public api_url: string;
 
   @column()
-  public type: string
+  public type: string;
 
   @column()
-  public request_type: string
+  public request_type: string;
 
   @column()
-  public name : string
+  public name: string;
 
   @column()
-  public title: string
+  public title: string;
 
   @column()
-  public auth: boolean
+  public auth: boolean;
 
   @column()
-  public model_id: number
+  public model_id: number;
 
   @column()
-  public sourceable_id: number
+  public sourceable_id: number;
 
   @column()
-  public controller_id: number
+  public controller_id: number;
 
   @column()
-  public headers: string
+  public headers: string;
 
   @column()
-  public description: string
+  public description: string;
 
   @column()
-  public sourceable_type: string
+  public sourceable_type: string;
 
   @column()
-  public bodies: string
+  public bodies: string;
 
   @column()
-  public need_all_roles: boolean
+  public need_all_roles: boolean;
 
   @belongsTo(() => Model, {
-    foreignKey: 'model_id'
+    foreignKey: 'model_id',
   })
-  public altrp_model: BelongsTo<typeof Model>
+  public altrp_model: BelongsTo<typeof Model>;
 
   @belongsTo(() => Model, {
-    foreignKey: 'model_id'
+    foreignKey: 'model_id',
   })
-  public model: BelongsTo<typeof Model>
+  public model: BelongsTo<typeof Model>;
 
   @manyToMany(() => Role, {
     pivotTable: 'altrp_sources_roles',
@@ -92,7 +92,7 @@ export default class Source extends BaseModel {
     pivotForeignKey: 'source_id',
     pivotRelatedForeignKey: 'role_id',
   })
-  public roles: ManyToMany<typeof Role>
+  public roles: ManyToMany<typeof Role>;
 
   @manyToMany(() => Permission, {
     pivotTable: 'altrp_sources_permissions',
@@ -101,7 +101,7 @@ export default class Source extends BaseModel {
     pivotForeignKey: 'permission_id',
     pivotRelatedForeignKey: 'source_id',
   })
-  public permissions: ManyToMany<typeof Permission>
+  public permissions: ManyToMany<typeof Permission>;
 
   @manyToMany(() => Permission, {
     pivotTable: 'altrp_sources_permissions',
@@ -110,76 +110,85 @@ export default class Source extends BaseModel {
     pivotForeignKey: 'permission_id',
     pivotRelatedForeignKey: 'source_id',
   })
-  public source_permissions: ManyToMany<typeof Permission>
+  public source_permissions: ManyToMany<typeof Permission>;
 
-  public customizer: Customizer| null
+  public customizer: Customizer | null;
 
-  public sQLEditor: SQLEditor| null
+  public sQLEditor: SQLEditor | null;
 
-  private methodBody: string = ''
+  private methodBody: string = '';
 
   @computed()
-  public get notice_settings(){
-    return []
+  public get notice_settings() {
+    return [];
   }
 
   @computed()
-  public get web_url(){
-
-    switch ( this.sourceable_type ){
+  public get web_url() {
+    switch (this.sourceable_type) {
       case SQLEditor.sourceable_type:
       case 'App\\Altrp\\Query': {
-        let url = data_get(this, 'url', '')
-        if(! url){
-          Logger.warn(`Source id:${this.id} has not url`)
+        let url = data_get(this, 'url', '');
+        if (!url) {
+          Logger.warn(`Source id:${this.id} has not url`);
         }
-        url = url.replace(`/${this.model?.table?.name}`, '')
+        url = url.replace(`/${this.model?.table?.name}`, '');
         return config('app.url') + '/ajax/models/queries/' + this.model?.table?.name + url;
       }
       case 'App\\Altrp\\Customizer':
       case Customizer.sourceable_type:
-        return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
-      default:{
-        let url = data_get( this, 'url', '' )
-        if(url.indexOf('{') !== -1){
-          url = url.replace(/{/g, '').replace(/}/g, '')
+        return (
+          config('app.url') +
+          '/ajax/models/' +
+          this.model?.table?.name +
+          '/customizers' +
+          data_get(this, 'url')
+        );
+      default: {
+        let url = data_get(this, 'url', '');
+        if (url.indexOf('{') !== -1) {
+          url = url.replace(/{/g, '').replace(/}/g, '');
         }
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + url
-          : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
+          : config('app.url') +
+              '/ajax/models/data_sources/' +
+              this.model?.table?.name +
+              '/' +
+              data_get(this, 'name');
       }
     }
   }
 
   @belongsTo(() => Controller, {
-    foreignKey: 'controller_id'
+    foreignKey: 'controller_id',
   })
-  public controller: BelongsTo<typeof Controller>
+  public controller: BelongsTo<typeof Controller>;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 
-
-  async getControllerInstance(){
+  async getControllerInstance() {
     // @ts-ignore
-    await this.load(`altrp_model`)
-    if(!this.altrp_model?.name){
-      return null
+    await this.load(`altrp_model`);
+    if (!this.altrp_model?.name) {
+      return null;
     }
-    const path = app_path(`AltrpControllers/${this.altrp_model.name}Controller`)
-    try{
-      let controller = isProd() ? require(path).default : (await  import(path)).default
-      return new controller()
-    }catch (e) {
+    const path = app_path(`AltrpControllers/${this.altrp_model.name}Controller`);
+    try {
+      let controller = isProd() ? require(path).default : (await import(path)).default;
+      return new controller();
+    } catch (e) {
       console.error(e);
     }
   }
 
-  renderForController(modelClassName:string):string {
-    this.prepareContent()
+  renderForController(modelClassName: string): string {
+    this.prepareContent();
+
     return `
   async ${this.getMethodName()}(httpContext){
     ${this.renderRolesCheck()}
@@ -188,78 +197,77 @@ export default class Source extends BaseModel {
   }
     `;
   }
-  private renderRolesCheck():string{
-    if(! this.roles.length){
-      return ''
+  private renderRolesCheck(): string {
+    if (!this.roles.length) {
+      return '';
     }
     return `
-    if(! await httpContext.auth?.user?.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
+    if(! await httpContext.auth?.user?.hasRole([${this.roles.map((r) => `'${r.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false,  message: 'Permission denied'});
     }
-    `
+    `;
   }
 
-  private renderPermissionsCheck():string {
-    if(! this.permissions.length){
-      return ''
+  private renderPermissionsCheck(): string {
+    if (!this.permissions.length) {
+      return '';
     }
     return `
-    if(! await httpContext.auth?.user?.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
+    if(! await httpContext.auth?.user?.hasPermission([${this.permissions.map(
+      (p) => `'${p.name}'`
+    )}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false, message: 'Permission denied'});
     }
-    `
+    `;
   }
-  getMethodName():string{
-    if(!this.sourceable_type){
-      switch ( this.type) {
-        case 'get':{
-          return 'index'
+  getMethodName(): string {
+    if (!this.sourceable_type) {
+      switch (this.type) {
+        case 'get': {
+          return 'index';
         }
-        case 'delete':{
-          return 'destroy'
+        case 'delete': {
+          return 'destroy';
         }
 
         default: {
-          return   this.type
+          return this.type;
         }
       }
     } else {
-      switch ( this.sourceable_type) {
-        case Customizer.sourceable_type:{
-          if(!this.customizer?.name){
+      switch (this.sourceable_type) {
+        case Customizer.sourceable_type: {
+          if (!this.customizer?.name) {
             Logger.trace(`Customizer Not found method name type
              Source: ${this.name}`);
           }
-          return this.customizer?.name || `_${altrpRandomId()}`
+          return this.customizer?.name || `_${altrpRandomId()}`;
         }
-        case SQLEditor.sourceable_type:{
-
-          if(!this.sQLEditor?.name){
+        case SQLEditor.sourceable_type: {
+          if (!this.sQLEditor?.name) {
             console.error(`SQLEditor Not found method name type
              Source: ${this.name}`);
           }
-          return this.sQLEditor?.name || `_${altrpRandomId()}`
+          return this.sQLEditor?.name || `_${altrpRandomId()}`;
         }
       }
-      if(!this.sQLEditor?.name){
+      if (!this.sQLEditor?.name) {
         console.error(`Not found method name type
              Source: ${this.name}`);
       }
-      return `_${altrpRandomId()}`
+      return `_${altrpRandomId()}`;
     }
   }
 
-  private renderMethodBody(modelClassName:string):string {
-
-    if(!this.sourceable_type){
-
+  private renderMethodBody(modelClassName: string): string {
+    if (!this.sourceable_type) {
       switch (this.type) {
         case 'show': {
           return `
     return httpContext.response.json((await ${modelClassName}.find(httpContext.params.${modelClassName}))?.serialize());
-        `
+        `;
         }
         case 'add': {
           return `
@@ -271,10 +279,10 @@ export default class Source extends BaseModel {
     newModel.fill(newModelData);
     await newModel.save();
     return httpContext.response.json({success: true, data: newModel.serialize()});
-        `
+        `;
         }
         case 'options': {
-          return this.renderOptionsBody(modelClassName)
+          return this.renderOptionsBody(modelClassName);
         }
         case 'update': {
           return `
@@ -286,7 +294,7 @@ export default class Source extends BaseModel {
     oldModel.merge(httpContext.request.all());
     await oldModel.save();
     return httpContext.response.json({success:true, data: oldModel.serialize()});
-          `
+          `;
         }
         case 'delete': {
           return `
@@ -297,7 +305,7 @@ export default class Source extends BaseModel {
     }
     await oldModel.delete();
     return httpContext.response.json({success:true,});
-          `
+          `;
         }
         case 'update_column': {
           return `
@@ -309,27 +317,27 @@ export default class Source extends BaseModel {
     oldModel[httpContext.params.column] = httpContext.request.input('column_value');
     await oldModel.save();
     return httpContext.response.json({success:true,});
-          `
+          `;
         }
         case 'get': {
-          return this.renderIndexMethodBody(modelClassName)
+          return this.renderIndexMethodBody(modelClassName);
         }
       }
     } else {
       switch (this.sourceable_type) {
         case Customizer.sourceable_type: {
-          return this.renderCustomizerMethodBody()
+          return this.renderCustomizerMethodBody();
         }
         case SQLEditor.sourceable_type: {
-          return this.renderSQLEditorMethodBody()
+          return this.renderSQLEditorMethodBody();
         }
       }
     }
-    return ''
+    return '';
   }
 
-  private renderOptionsBody(modelClassName:string):string{
-    return   `
+  private renderOptionsBody(modelClassName: string): string {
+    return `
     let query = ${modelClassName}.query();
 
     let filters = {};
@@ -362,10 +370,10 @@ export default class Source extends BaseModel {
     )).map(result => result.$extras);
 
     return httpContext.response.json(result);
-        `
+        `;
   }
 
-  private renderIndexMethodBody(modelClassName: string):string {
+  private renderIndexMethodBody(modelClassName: string): string {
     return `
     const query = ${modelClassName}.query();
 
@@ -389,9 +397,14 @@ export default class Source extends BaseModel {
     }
 
     if(search){
-      ${this.altrp_model.getIndexedColumns().map(column => `
+      ${this.altrp_model
+        .getIndexedColumns()
+        .map(
+          (column) => `
       query.orWhere('${column.name}', 'like', \`%\${search}%\`);
-      `).join('')}
+      `
+        )
+        .join('')}
     }
 
     const order = httpContext.request.qs()?.order === 'asc' ? 'asc' : 'desc';
@@ -422,10 +435,10 @@ export default class Source extends BaseModel {
   }
 
   private prepareContent() {
-
     switch (this.type) {
-      case 'customizer': {
-        this.methodBody = `
+      case 'customizer':
+        {
+          this.methodBody = `
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
     this.setCustomizerData('context.request', httpContext.request);
     this.setCustomizerData('httpContext', httpContext);
@@ -437,37 +450,42 @@ export default class Source extends BaseModel {
     this.setCustomizerData('current_user', httpContext.auth?.user);
     this.setCustomizerData('context.current_user', httpContext.auth?.user);
     ${this?.customizer?.getMethodContent() || ''}
-    `}
-      break;
-      default : return
+    `;
+        }
+        break;
+      default:
+        return;
     }
   }
 
   private renderSQLEditorMethodBody() {
-    let sql = this.sQLEditor?.sql || ''
-    sql = sql.replace(/`/g, '\\`')
-    sql = sql.replace(/{{PREFIX}}/g, '')
+    let sql = this.sQLEditor?.sql || '';
+    sql = sql.replace(/`/g, '\\`');
+    sql = sql.replace(/{{PREFIX}}/g, '');
     let paths = _.isString(sql) ? sql.match(/{{([\s\S]+?)(?=}})/g) : null;
     if (_.isArray(paths)) {
-      paths.forEach(path => {
-        path = path.replace("{{", "");
-        let [namespace = '',prop = ''] = path.split(':');
-        prop = prop.trim()
-        namespace = namespace.trim()
-        switch (namespace){
-          case 'REQUEST':{
-            namespace = 'httpContext.request.qs()'
-          }
+      paths.forEach((path) => {
+        path = path.replace('{{', '');
+        let [namespace = '', prop = ''] = path.split(':');
+        prop = prop.trim();
+        namespace = namespace.trim();
+        switch (namespace) {
+          case 'REQUEST':
+            {
+              namespace = 'httpContext.request.qs()';
+            }
             break;
-          case 'CURRENT_USER':{
-            namespace = '_.get(httpContext, \'auth.user\', {})'
-          }
+          case 'CURRENT_USER':
+            {
+              namespace = "_.get(httpContext, 'auth.user', {})";
+            }
             break;
-          default: return
+          default:
+            return;
         }
-        let value = `\${${namespace}.${prop} ? ${namespace}.${prop} : ''}`
-        path = Source.escapeRegExp(path)
-        sql = sql.replace(new RegExp(`{{${path}}}`, "g"), value || "")
+        let value = `\${${namespace}.${prop} ? ${namespace}.${prop} : ''}`;
+        path = Source.escapeRegExp(path);
+        sql = sql.replace(new RegExp(`{{${path}}}`, 'g'), value || '');
       });
     }
     return `
@@ -480,25 +498,28 @@ export default class Source extends BaseModel {
     `;
   }
   static escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
   }
-  static async fetchDatasourcesForPage(id: number, httpContext: HttpContextContract, altrpContext: any):Promise<{}> {
-
-    const datasources:any = {}
-    if(! id){
-      return datasources
+  static async fetchDatasourcesForPage(
+    id: number,
+    httpContext: HttpContextContract,
+    altrpContext: any
+  ): Promise<{}> {
+    const datasources: any = {};
+    if (!id) {
+      return datasources;
     }
 
-    const pageDatasources:any[] = await PageDatasource.query()
+    const pageDatasources: any[] = await PageDatasource.query()
       .where('page_id', id)
       .preload('source')
       .where('server_side', true)
-      .select('*')
-    for(const pageDatasource of pageDatasources){
+      .select('*');
+    for (const pageDatasource of pageDatasources) {
       const newHttpContext = {
         params: httpContext.params,
-        auth:{
-          user: httpContext.auth.user
+        auth: {
+          user: httpContext.auth.user,
         },
         request: httpContext.request,
         response: httpContext.response,
@@ -506,36 +527,37 @@ export default class Source extends BaseModel {
         profiler: httpContext.profiler,
         route: httpContext.route,
         routeKey: httpContext.routeKey,
-      }
-      const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
+      };
+      const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext);
 
-      if(data?.data){
-        datasources[pageDatasource.alias] = data.data
-
-      } else if(data){
-        datasources[pageDatasource.alias] = data
+      if (data?.data) {
+        datasources[pageDatasource.alias] = data.data;
+      } else if (data) {
+        datasources[pageDatasource.alias] = data;
       }
     }
 
-    return datasources
+    return datasources;
   }
-  async preloadSourceable(){
-    if(this.sourceable_id){
-      switch (this.sourceable_type){
-        case Customizer.sourceable_type:{
-          this.customizer = await Customizer.find( this.sourceable_id)
-          if(this.customizer){
-            await this.customizer.load('source')
+  async preloadSourceable() {
+    if (this.sourceable_id) {
+      switch (this.sourceable_type) {
+        case Customizer.sourceable_type:
+          {
+            this.customizer = await Customizer.find(this.sourceable_id);
+            if (this.customizer) {
+              await this.customizer.load('source');
+            }
           }
-        }
-          break
-        case SQLEditor.sourceable_type:{
-          this.sQLEditor = await SQLEditor.find( this.sourceable_id)
-          if(this.sQLEditor){
-            await this.sQLEditor.load('source')
+          break;
+        case SQLEditor.sourceable_type:
+          {
+            this.sQLEditor = await SQLEditor.find(this.sourceable_id);
+            if (this.sQLEditor) {
+              await this.sQLEditor.load('source');
+            }
           }
-        }
-          break
+          break;
       }
     }
   }

@@ -1,63 +1,65 @@
 span.bp3-popover-target {
-    display: inline-block;
+  display: inline-block;
 }
 
 .bp3-control-group {
-    transform: translateZ(0);
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+  transform: translateZ(0);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 .bp3-control-group:not(.bp3-vertical) > *:not(.bp3-divider) {
-    margin-right: -1px;
+  margin-right: -1px;
 }
 
 .bp3-control-group > :first-child {
-    border-radius: 3px 0 0 3px;
+  border-radius: 3px 0 0 3px;
 }
 
 .bp3-input-group {
-    display: block;
-    position: relative;
+  display: block;
+  position: relative;
   max-width: 100%;
 }
 
 .bp3-control-group > * {
-    flex-grow: 0;
-    flex-shrink: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .bp3-control-group > :last-child {
-    border-radius: 0 3px 3px 0;
-    margin-right: 0;
+  border-radius: 0 3px 3px 0;
+  margin-right: 0;
 }
 
 .bp3-input-group .bp3-input {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .bp3-control-group .bp3-input {
-    border-radius: inherit;
-    z-index: 2;
+  border-radius: inherit;
+  z-index: 2;
 }
 
 .bp3-input {
-    appearance: none;
-    background: #ffffff;
-    border: none;
-    border-radius: 3px;
-    box-shadow: 0 0 0 0 rgb(16 107 163 / 0%), 0 0 0 0 rgb(16 107 163 / 0%), inset 0 0 0 1px rgb(16 22 26 / 15%), inset 0 1px 1px rgb(16 22 26 / 20%);
-    color: #182026;
-    font-size: 14px;
-    font-weight: 400;
-    height: 30px;
-    line-height: 30px;
-    outline: none;
-    padding: 0 10px;
-    transition: -webkit-box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-    transition: box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-    transition: box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9), -webkit-box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-    vertical-align: middle;
+  appearance: none;
+  background: #ffffff;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 0 0 0 rgb(16 107 163 / 0%), 0 0 0 0 rgb(16 107 163 / 0%),
+    inset 0 0 0 1px rgb(16 22 26 / 15%), inset 0 1px 1px rgb(16 22 26 / 20%);
+  color: #182026;
+  font-size: 14px;
+  font-weight: 400;
+  height: 30px;
+  line-height: 30px;
+  outline: none;
+  padding: 0 10px;
+  transition: -webkit-box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+  transition: box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+  transition: box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9),
+    -webkit-box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+  vertical-align: middle;
 }

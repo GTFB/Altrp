@@ -1,30 +1,27 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
-
+import { DateTime } from 'luxon';
+import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
 
 export default class Diagram extends BaseModel {
-  public  static table = 'altrp_diagrams'
+  public static table = 'altrp_diagrams';
 
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public settings: string
+  public settings: string;
 
   @column()
-  public title: string
+  public title: string;
 
   @column()
-  public guid: string
+  public guid: string;
 
   @column()
-  public author: number | null
-
-
+  public author: number | null;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }

@@ -1,46 +1,46 @@
-import { DateTime } from 'luxon'
-import {BaseModel, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
-import Permission from "App/Models/Permission";
-import User from "App/Models/User";
+import { DateTime } from 'luxon';
+import { BaseModel, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm';
+import Permission from 'App/Models/Permission';
+import User from 'App/Models/User';
 
 export default class Role extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public name: string
+  public name: string;
 
   @column()
-  public display_name: string
+  public display_name: string;
 
   @column()
-  public description: string
+  public description: string;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
-  public async hasPermission(value: Permission|number): Promise<boolean> {
+  public async hasPermission(value: Permission | number): Promise<boolean> {
     //@ts-ignore
-    const relation = this.related("permissions");
+    const relation = this.related('permissions');
 
-    if(typeof value === "object") {
-        const permission = await relation.query().where("id", value.id).first();
+    if (typeof value === 'object') {
+      const permission = await relation.query().where('id', value.id).first();
 
-        return !!permission
-    } else if(typeof value === "number") {
-      const permission = await relation.query().where("id", value).first();
+      return !!permission;
+    } else if (typeof value === 'number') {
+      const permission = await relation.query().where('id', value).first();
 
-      return !!permission
+      return !!permission;
     }
 
-    return false
+    return false;
   }
 
   @manyToMany(() => Permission, {
-    pivotTable: "permission_role",
-    pivotForeignKey: "role_id",
+    pivotTable: 'permission_role',
+    pivotForeignKey: 'role_id',
   })
-  permissions: ManyToMany<typeof Permission>
+  permissions: ManyToMany<typeof Permission>;
 
   @manyToMany(() => User, {
     pivotTable: 'role_user',
@@ -49,8 +49,8 @@ export default class Role extends BaseModel {
     pivotForeignKey: 'role_id',
     pivotRelatedForeignKey: 'user_id',
   })
-  public users: ManyToMany<typeof User>
+  public users: ManyToMany<typeof User>;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }
