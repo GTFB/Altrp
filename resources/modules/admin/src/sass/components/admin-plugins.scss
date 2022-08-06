@@ -1,0 +1,123 @@
+.search-plugins {
+  background-color: white;
+  padding: 30px 20px;
+  border-radius: 20px;
+
+  &__form {
+    position: relative;
+    margin-bottom: 40px;
+
+    svg {
+      position: absolute;
+      left: 15px;
+      top: 12px;
+    }
+
+    .form-tables {
+      width: 50%;
+      min-width: 200px;
+    }
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 40px;
+    width: 100%;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+
+    &-img {
+      min-height: 200px;
+      width: 100%;
+      margin-bottom: 20px;
+
+      img {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+        object-position: center;
+      }
+    }
+
+    &-nv {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    &-title {
+      font-weight: 600;
+      font-size: 26px;
+      color: black;
+      margin-bottom: 0;
+      margin-right: 10px;
+    }
+
+    &-version {
+      font-weight: 400;
+      font-size: 18px;
+      color: black;
+    }
+
+    &-description {
+      flex-grow: 1;
+      overflow-wrap: break-word;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      font-size: 18px;
+      color: black;
+      opacity: 0.6;
+      margin-bottom: 40px;
+    }
+
+    &-btn {
+
+    }
+  }
+}
+
+.plugin__btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+
+  &-install {
+    background-color: #87CA00;
+    transition: background-color 0.3s ease;
+  }
+
+  &-install:hover {
+    background-color: #7CA727;
+  }
+
+  &-update {
+    background-color: #315EFB;
+    transition: background-color 0.3s ease;
+  }
+
+  &-update:hover {
+    background-color: #274BC8;
+  }
+
+  &-reinstall {
+    background-color: #FF4E6E;
+    transition: background-color 0.3s ease;
+  }
+
+  &-reinstall:hover {
+    background-color: #CF0025;
+  }
+}

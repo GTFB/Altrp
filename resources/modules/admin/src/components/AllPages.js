@@ -200,7 +200,6 @@ class AllPages extends Component {
       hasCaret = false
       childPage = []
     }
-    console.log(page);
     treePage = {
       id: page.id,
       key: page.id,

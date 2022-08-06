@@ -126,6 +126,20 @@ class InputMultiSelect extends BaseElement {
       locked: true,
     });
 
+    this.addControl("no_results_text", {
+      type: CONTROLLER_TEXT,
+      label: "no results text",
+      responsive: false,
+      locked: true,
+    });
+
+    this.addControl("reset__input", {
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      label: "reset input",
+      locked: true,
+    });
+
     this.addControl("minimal", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
@@ -479,18 +493,27 @@ class InputMultiSelect extends BaseElement {
       units: ["px", "%", "vw"]
     });
 
+    this.addControl("field_height-m", {
+      type: CONTROLLER_SLIDER,
+      stateless: true,
+      label: "Height",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vw"]
+    });
+
     this.addControl("position_margin", {
       stateless: true,
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh"]
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl("position_padding", {
       stateless: true,
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh"]
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.endControlSection();

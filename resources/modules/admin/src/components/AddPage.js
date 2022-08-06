@@ -473,14 +473,15 @@ class AddPage extends Component {
             </span>
             </div>
             {this.props.match.params.id && (
-              <button onClick={() => this.deletePages(id)} className="btn btn_failure btn_mrRight">
-                Delete Page
-              </button>
-            )}
-            {this.props.match.params.id && (
-              <a href={`${this.state.value.path}`} className="btn btn_add btn_mrRight" target="_blank">
-                Go To Page
-              </a>
+              <>
+                <button onClick={() => this.deletePages(id)} className="btn btn_failure btn_mrRight">
+                  Delete Page
+                </button>
+
+                <a href={`${this.state.value.path}`} className="btn btn_add btn_mrRight" target="_blank">
+                  Go To Page
+                </a>
+              </>
             )}
             {(this.props.match.params.id && this.state.currentTab === "Datasource") && (
               <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
@@ -509,6 +510,16 @@ class AddPage extends Component {
                 onClick={this.changeCurrentTab('Datasource')}
               >
                 Datasource
+              </button>
+            )}
+            {(this.props.match.params.id && this.props.alt_seo) && (
+              <button
+                className={this.state.currentTab === this.props.alt_seo.name ?
+                  "custom-tab__tab custom-tab__tab--selected" :
+                  "custom-tab__tab"}
+                onClick={this.changeCurrentTab(this.props.alt_seo.name)}
+              >
+                {this.props.alt_seo.title}
               </button>
             )}
           </div>
@@ -814,6 +825,9 @@ class AddPage extends Component {
                 />
               </div>
             )}
+            {(this.props.alt_seo && this.state.currentTab === this.props.alt_seo.name) && (
+              this.props.alt_seo.component
+            )}
           </div>
 
           {/*{Boolean(dataSources.length) && this.state.currentTab === "content" && <AdminTable*/}
@@ -859,6 +873,7 @@ const mapStateToProps = (state) => {
   return {
     standardModels: state.modelsState.standardModels,
     modelsState: state.modelsState.toggleModels,
+    alt_seo: state.pluginsState.alt_seo
   }
 }
 

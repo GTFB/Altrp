@@ -9,6 +9,7 @@ import { websocketsReducer } from "./websockets-storage/reducers";
 import {customFontsReduser} from "./custom-fonts/reducers";
 import {modelsReducer} from "./models-state/reducers";
 import {routesReducer} from "./routes-state/reducers";
+import {pluginsReducer} from "./plugins-state/reducers";
 
 
 export default combineReducers({
@@ -21,5 +22,6 @@ export default combineReducers({
   websocketStore: websocketsReducer,
   customFonts: customFontsReduser,
   modelsState: modelsReducer,
-  routesState: routesReducer
+  routesState: routesReducer,
+  pluginsState: pluginsReducer
 });
