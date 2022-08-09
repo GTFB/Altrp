@@ -158,11 +158,7 @@ class InputDateRange extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_radius', {
@@ -172,11 +168,7 @@ class InputDateRange extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -203,11 +195,7 @@ class InputDateRange extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('popover_border_radius', {
@@ -217,11 +205,7 @@ class InputDateRange extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('popover_dividers', {
@@ -293,11 +277,7 @@ class InputDateRange extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('caption_arrow_color', {
@@ -308,9 +288,7 @@ class InputDateRange extends BaseElement {
     this.addControl('caption_arrow_size', {
       type: CONTROLLER_SLIDER,
       label: 'Arrow size',
-      units: [
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0,
     });

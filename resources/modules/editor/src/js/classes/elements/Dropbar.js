@@ -431,11 +431,7 @@ class Dropbar extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('position_padding', {
@@ -449,11 +445,7 @@ class Dropbar extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('position_z_index', {
@@ -614,11 +606,7 @@ class Dropbar extends BaseElement {
       conditions: {
         'background_size': [''],
       },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -691,11 +679,7 @@ class Dropbar extends BaseElement {
         default: {
           bind: true,
         },
-        units: [
-          'px',
-          '%',
-          'vh',
-        ],
+      units: ['px', '%', 'vh', 'vw'],
       }
     );
 
@@ -712,11 +696,7 @@ class Dropbar extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('style_background_shadow', {
@@ -771,11 +751,7 @@ class Dropbar extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('icon_color', {
@@ -799,11 +775,7 @@ class Dropbar extends BaseElement {
       label: 'Icon Size',
       default: {
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -880,7 +852,7 @@ class Dropbar extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("width_dropbar_options", {
@@ -889,11 +861,7 @@ class Dropbar extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        "px",
-        "%",
-        "vw"
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
       locked: true,
@@ -957,7 +925,7 @@ class Dropbar extends BaseElement {
     this.addControl("border_width_dropbar_content_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color_dropbar_content_style", {
@@ -975,7 +943,7 @@ class Dropbar extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('box_shadow_dropbar_content_style', {

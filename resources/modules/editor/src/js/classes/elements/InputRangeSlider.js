@@ -192,11 +192,7 @@ class InputRangeSlider extends BaseElement{
     this.addControl('width', {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 500,
       min: 0,
       conditions: {
@@ -207,10 +203,7 @@ class InputRangeSlider extends BaseElement{
     this.addControl('height', {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      units: [
-        'px',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       conditions: {
@@ -221,11 +214,7 @@ class InputRangeSlider extends BaseElement{
     this.addControl('thickness', {
       type: CONTROLLER_SLIDER,
       label: 'thickness',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       conditions: {
@@ -236,10 +225,7 @@ class InputRangeSlider extends BaseElement{
     this.addControl('length', {
       type: CONTROLLER_SLIDER,
       label: 'length',
-      units: [
-        'px',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 500,
       min: 0,
       conditions: {
@@ -296,9 +282,7 @@ class InputRangeSlider extends BaseElement{
     this.addControl("handle_size", {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      units: [
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0,
     });
@@ -306,9 +290,7 @@ class InputRangeSlider extends BaseElement{
     this.addControl("handle_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      units: [
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0,
       locked: true,
@@ -327,21 +309,13 @@ class InputRangeSlider extends BaseElement{
     this.addControl('handle_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius first',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('handle_radius_second', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius second',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
 

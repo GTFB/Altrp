@@ -343,11 +343,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        'vw',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -358,10 +354,7 @@ class Carousel extends BaseElement {
       default: {
         unit: '%',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -657,6 +650,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0,
     });
@@ -704,7 +698,7 @@ class Carousel extends BaseElement {
     this.addControl("border_width_slides_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color_slides_style", {
@@ -722,7 +716,7 @@ class Carousel extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_radius_slides_style", {
@@ -731,7 +725,7 @@ class Carousel extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -759,6 +753,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -797,11 +792,7 @@ class Carousel extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_radius_arrows_navigation_style', {
@@ -814,11 +805,7 @@ class Carousel extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('horizontal_offset_arrows_navigation_style', {
@@ -831,6 +818,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 400,
       min: 0,
     });
@@ -844,6 +832,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 200,
       min: -200,
     });
@@ -867,6 +856,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -904,6 +894,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 200,
       min: -200,
     });
@@ -917,6 +908,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 200,
       min: -200,
     });

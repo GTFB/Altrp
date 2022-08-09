@@ -188,11 +188,7 @@ class InputCropImage extends BaseElement {
       conditions: {
         'background_size': [''],
       },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -239,7 +235,8 @@ class InputCropImage extends BaseElement {
 
     this.addControl('text_margin', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Margin'
+      label: 'Margin',
+      units: ['px', '%', 'vh', 'vw'],
     })
 
     this.endControlSection()
@@ -255,7 +252,7 @@ class InputCropImage extends BaseElement {
       max: 1000,
       stateless: true,
       min: 0,
-      units: ['px', '%', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('height', {
@@ -264,7 +261,7 @@ class InputCropImage extends BaseElement {
       max: 1000,
       stateless: true,
       min: 0,
-      units: ['px', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -280,7 +277,7 @@ class InputCropImage extends BaseElement {
       max: 1500,
       stateless: true,
       min: 0,
-      units: ['px', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('crop_height', {
@@ -289,7 +286,7 @@ class InputCropImage extends BaseElement {
       max: 1500,
       stateless: true,
       min: 0,
-      units: ['px', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();

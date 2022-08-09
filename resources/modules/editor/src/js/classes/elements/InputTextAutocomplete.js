@@ -655,7 +655,7 @@ class InputTextCommon extends BaseElement {
     this.addControl("label_width", {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
-      units: ["%", "px", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0
     });
@@ -663,7 +663,7 @@ class InputTextCommon extends BaseElement {
     this.addControl("label_style_spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 60,
       min: 0,
       locked: true,
@@ -672,7 +672,7 @@ class InputTextCommon extends BaseElement {
     this.addControl("label_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("label_background_color", {
@@ -696,7 +696,7 @@ class InputTextCommon extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
       locked: true,
@@ -712,7 +712,7 @@ class InputTextCommon extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100
       // rules: {
@@ -764,7 +764,7 @@ class InputTextCommon extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("field_height", {
@@ -773,7 +773,7 @@ class InputTextCommon extends BaseElement {
       label: "Height",
       max: 100,
       min: 0,
-      units: ["px", "%", "vw"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -800,14 +800,14 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       stateless:true,
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       stateless:true,
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -933,7 +933,7 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       // stateless:true,
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color", {
@@ -948,8 +948,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
-      units: ["px", "%", "vh"]
+      label: "Border Radius",
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -999,26 +999,26 @@ class InputTextCommon extends BaseElement {
     this.addControl('input_icons_size', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      units: ["px", "%", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
     })
 
     this.addControl('input_icons_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      units: ["px", "%", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
     })
     this.addControl('input_icons_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      units: ["px", "%", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
     })
     this.addControl('input_icons_radius', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Radius',
-      units: ["px", "%", "vw"],
+      label: 'Border Radius',
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
     })
 

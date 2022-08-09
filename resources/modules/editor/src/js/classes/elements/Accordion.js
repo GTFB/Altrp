@@ -199,7 +199,15 @@ class Accordion extends BaseElement {
     this.addControl('spacing_item_style', {
       type: CONTROLLER_SLIDER,
       label: 'Item spacing',
-
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -214,11 +222,14 @@ class Accordion extends BaseElement {
     this.addControl('padding_title_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -283,12 +294,15 @@ class Accordion extends BaseElement {
       'border_width_title_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
-
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+        default: {
+          unit: 'px',
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
     }
     );
 
@@ -302,11 +316,14 @@ class Accordion extends BaseElement {
     this.addControl('border_radius_title_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -328,6 +345,15 @@ class Accordion extends BaseElement {
     this.addControl('spacing_icon_size', {
       type: CONTROLLER_SLIDER,
       label: 'Size icon',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 128,
       min: 16,
     });
@@ -356,6 +382,15 @@ class Accordion extends BaseElement {
     this.addControl('spacing_icon_style', {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -370,10 +405,14 @@ class Accordion extends BaseElement {
     this.addControl('padding_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -424,12 +463,15 @@ class Accordion extends BaseElement {
     this.addControl('border_width_content_style', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
-
-        units: [
-          'px',
-          '%',
-          'vh',
-        ],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       }
     );
 
@@ -441,10 +483,14 @@ class Accordion extends BaseElement {
     this.addControl('border_radius_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -455,6 +501,15 @@ class Accordion extends BaseElement {
     this.addControl('spacing_content_style', {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });

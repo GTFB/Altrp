@@ -194,6 +194,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -208,6 +209,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -402,6 +404,7 @@ class Button extends BaseElement {
       units: [
         'px',
         '%',
+        'vh',
         'vw',
       ],
       max: 1000,
@@ -457,6 +460,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     }
     );
@@ -478,6 +482,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -537,6 +542,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -551,6 +557,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -565,6 +572,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -579,6 +587,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -593,6 +602,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -607,6 +617,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -621,6 +632,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -635,6 +647,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -661,6 +674,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -673,6 +687,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -685,6 +700,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -697,6 +713,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,

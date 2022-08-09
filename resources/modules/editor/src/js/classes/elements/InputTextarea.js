@@ -338,7 +338,15 @@ class InputTextarea extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -364,18 +372,28 @@ class InputTextarea extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       default: {
-        unit: "px"
+        unit: 'px',
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        unit: "px"
+        unit: 'px',
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("position_z_index", {
@@ -457,7 +475,15 @@ class InputTextarea extends BaseElement {
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"]
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("disable_box_shadow", {
@@ -474,9 +500,14 @@ class InputTextarea extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Radius",
       default: {
-        unit: "px"
+        unit: 'px',
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("box_shadow", {
@@ -507,10 +538,15 @@ class InputTextarea extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
       default: {
-        unit: "%",
+        unit: "px",
         size: null
       },
-      units: ["%", "px", "vw"],
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0
     });
@@ -522,7 +558,12 @@ class InputTextarea extends BaseElement {
         size: 2,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 60,
       min: 0,
       locked: true,
@@ -534,7 +575,12 @@ class InputTextarea extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("label_background_color", {
@@ -570,7 +616,7 @@ class InputTextarea extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: -100
       // rules: {
@@ -589,7 +635,7 @@ class InputTextarea extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: -100
       // rules: {

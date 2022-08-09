@@ -394,6 +394,7 @@ class Section extends BaseElement{
         'px',
         '%',
         'vh',
+        "vw"
       ],
     });
 
@@ -594,6 +595,7 @@ class Section extends BaseElement{
       units: [
         'px',
         '%',
+        'vh',
         'vw',
       ],
       max: 1000,
@@ -646,7 +648,7 @@ class Section extends BaseElement{
     this.addControl("section_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("section_style_border_color", {
@@ -665,6 +667,7 @@ class Section extends BaseElement{
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 

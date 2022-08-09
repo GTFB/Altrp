@@ -48,15 +48,15 @@ export default function valueFormatControllers(element, options) {
         {
           label: 'Multiply by 100, and then decimal notation with a percent sign',
           value: '%',
-        }, 
+        },
         {
           label: "Multiply by 100, round to significant digits, and then decimal notation with a percent sign",
           value: "p",
-        }, 
+        },
         {
           label: "Binary notation, rounded to integer",
           value: "b",
-        }, 
+        },
         {
           label: "Octal notation, rounded to integer",
           value: "o",
@@ -88,15 +88,15 @@ export default function valueFormatControllers(element, options) {
         {
           label: "Nothing for zero or positive and a minus sign for negative",
           value: "-",
-        }, 
+        },
         {
           label: "A plus sign for zero or positive and a minus sign for negative",
           value: "+",
-        }, 
+        },
         {
           label: "Nothing for zero or positive and parentheses for negative",
           value: "(",
-        }, 
+        },
         {
           label: "A space for zero or positive and a minus sign for negative",
           value: " ",
@@ -206,15 +206,15 @@ export default function valueFormatControllers(element, options) {
         {
           label: "Force the field to be right-aligned within the available space",
           value: ">",
-        }, 
+        },
         {
           label: "Force the field to be left-aligned within the available space",
           value: "<",
-        }, 
+        },
         {
           label: "Force the field to be centered within the available space",
           value: "^",
-        }, 
+        },
         {
           label: "Force the field to be right-aligned within the available space, but with any sign and symbol to the left of any padding",
           value: "=",

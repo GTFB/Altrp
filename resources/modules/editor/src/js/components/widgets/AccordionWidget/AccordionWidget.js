@@ -23,6 +23,7 @@ const {renderAssetIcon} = window.altrpHelpers;
   }
 
   .altrp-accordion-item-content {
+    overflow: hidden;
     background-color: rgb(79, 90, 114);
     color: #ffffff;
     position: relative;

@@ -63,8 +63,15 @@ class Text extends BaseElement {
     this.addControl("text_style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     });
 
@@ -150,7 +157,15 @@ class Text extends BaseElement {
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_style_border_color", {
@@ -169,6 +184,7 @@ class Text extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -285,7 +301,15 @@ class Text extends BaseElement {
     this.addControl("text_paragraph_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_paragraph_color", {
@@ -301,7 +325,15 @@ class Text extends BaseElement {
     this.addControl("text_paragraph_indent", {
       type: CONTROLLER_SLIDER,
       label: "Text Indent",
-      units: ["px", "%", "vh"],
+        default: {
+          unit: 'px',
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
       max: 100,
       min: 0,
     });
@@ -316,13 +348,29 @@ class Text extends BaseElement {
     this.addControl("text_blockquote_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_blockquote_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_blockquote_background_color", {
@@ -373,7 +421,15 @@ class Text extends BaseElement {
     this.addControl("text_blockquote_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_blockquote_border_color", {
@@ -391,6 +447,7 @@ class Text extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -420,7 +477,15 @@ class Text extends BaseElement {
       this.addControl("text_table_margin", {
         type: CONTROLLER_DIMENSIONS,
         label: "Margin",
-        units: ["px", "%", "vh"],
+        default: {
+          unit: 'px',
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
       });
 
       this.addControl("text_table_rows_color", {
@@ -467,7 +532,15 @@ class Text extends BaseElement {
       this.addControl("text_table_border_width", {
         type: CONTROLLER_DIMENSIONS,
         label: "Border Width",
-        units: ["px", "%", "vh"],
+        default: {
+          unit: 'px',
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
       });
 
       this.addControl("text_table_border_color", {
@@ -499,7 +572,15 @@ class Text extends BaseElement {
       this.addControl("text_table_padding", {
         type: CONTROLLER_DIMENSIONS,
         label: "Padding",
-        units: ["px", "%", "vh"],
+        default: {
+          unit: 'px',
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
       });
 
       this.addControl("text_table_cells_border_type", {
@@ -536,7 +617,15 @@ class Text extends BaseElement {
       this.addControl("text_table_cells_border_width", {
         type: CONTROLLER_DIMENSIONS,
         label: "Border Width",
-        units: ["px", "%", "vh"],
+        default: {
+          unit: 'px',
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
       });
 
       this.addControl("text_table_cells_border_color", {
@@ -610,15 +699,30 @@ class Text extends BaseElement {
     this.addControl("text_numbered_list_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "List Margin",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     });
 
     this.addControl("text_numbered_list_item_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Element Margin",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_numbered_list_style_type", {
@@ -675,16 +779,30 @@ class Text extends BaseElement {
     this.addControl("text_unordered_list_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "List Margin",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     });
 
     this.addControl("text_unordered_list_item_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Element Margin",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_unordered_list_style_type", {

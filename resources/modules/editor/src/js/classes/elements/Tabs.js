@@ -151,7 +151,15 @@ class Tabs extends BaseElement {
     this.addControl("spacing_column_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Tab Spacing",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -159,7 +167,15 @@ class Tabs extends BaseElement {
     this.addControl("spacing_content_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Content Spacing",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -175,7 +191,15 @@ class Tabs extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       stateless: true,
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("background_tab_style", {
@@ -202,7 +226,6 @@ class Tabs extends BaseElement {
     this.addControl("border_type_tab_style", {
       type: CONTROLLER_SELECT,
       label: "Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -234,7 +257,15 @@ class Tabs extends BaseElement {
     this.addControl("border_width_tab_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("border_color_tab_style", {
@@ -245,10 +276,14 @@ class Tabs extends BaseElement {
     this.addControl("border_radius_tab_style", {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      units:[
+      default: {
+        unit: 'px',
+      },
+      units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -281,7 +316,15 @@ class Tabs extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       stateless: true,
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("background_content_style", {
@@ -331,7 +374,15 @@ class Tabs extends BaseElement {
     this.addControl("border_width_content_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("border_color_content_style", {
@@ -342,10 +393,14 @@ class Tabs extends BaseElement {
     this.addControl("border_radius_content_style", {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      units:[
+      default: {
+        unit: 'px',
+      },
+      units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -366,7 +421,15 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Size",
       stateless: true,
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -392,7 +455,15 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
       stateless: true,
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
       locked: true,

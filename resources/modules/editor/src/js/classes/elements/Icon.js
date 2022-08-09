@@ -215,12 +215,30 @@ class Icon extends BaseElement {
 
     this.addControl('title_padding', {
       label: 'Padding',
-      type: CONTROLLER_DIMENSIONS
+      type: CONTROLLER_DIMENSIONS,
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw',
+      ],
     })
 
     this.addControl('title_margin', {
       label: 'Margin',
-      type: CONTROLLER_DIMENSIONS
+      type: CONTROLLER_DIMENSIONS,
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw',
+      ],
     })
 
     this.endControlSection()
@@ -242,12 +260,30 @@ class Icon extends BaseElement {
 
     this.addControl('description_padding', {
       label: 'Padding',
-      type: CONTROLLER_DIMENSIONS
+      type: CONTROLLER_DIMENSIONS,
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw',
+      ],
     })
 
     this.addControl('description_margin', {
       label: 'Margin',
-      type: CONTROLLER_DIMENSIONS
+      type: CONTROLLER_DIMENSIONS,
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw',
+      ],
     })
 
     this.endControlSection()
@@ -260,7 +296,16 @@ class Icon extends BaseElement {
 
     this.addControl('icon_margin', {
       label: 'Margin',
-      type: CONTROLLER_DIMENSIONS
+      type: CONTROLLER_DIMENSIONS,
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw',
+      ],
     })
 
     this.addControl("icon_height", {
@@ -269,6 +314,8 @@ class Icon extends BaseElement {
       units: [
         'px',
         '%',
+        'vh',
+        'vw'
       ],
       max: 1000,
       min: 0,

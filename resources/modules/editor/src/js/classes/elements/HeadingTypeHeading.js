@@ -163,6 +163,7 @@ class HeadingTypeHeading extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw',
       ],
     });
 
@@ -176,7 +177,7 @@ class HeadingTypeHeading extends BaseElement {
         // left: 0,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl('position_z_index', {
@@ -419,7 +420,7 @@ class HeadingTypeHeading extends BaseElement {
     this.addControl("style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("style_border_color", {
@@ -438,6 +439,7 @@ class HeadingTypeHeading extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 

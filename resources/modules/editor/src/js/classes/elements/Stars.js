@@ -117,7 +117,7 @@ class Stars extends BaseElement {
     this.addControl('gap', {
       type: CONTROLLER_SLIDER,
       label: 'Gap',
-      units: ["px"],
+      units: ['px', '%', 'vh', 'vw'],
       min: 0,
       max: 50,
     });
@@ -151,7 +151,7 @@ class Stars extends BaseElement {
     this.addControl('size', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      units: ["px"],
+      units: ['px', '%', 'vh', 'vw'],
       min: 0,
       max: 100,
     });

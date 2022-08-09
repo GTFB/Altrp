@@ -330,10 +330,15 @@ class InputCheckbox extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
       default: {
-        unit: "%",
+        unit: "px",
         size: null
       },
-      units: ["%", "px", "vw"],
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0
     });
@@ -345,7 +350,12 @@ class InputCheckbox extends BaseElement {
         size: 2,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 60,
       min: 0,
       locked: true,
@@ -357,7 +367,12 @@ class InputCheckbox extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("label_background_color", {
@@ -393,7 +408,12 @@ class InputCheckbox extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: -100,
       locked: true,
@@ -413,7 +433,12 @@ class InputCheckbox extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: -100
       // rules: {
@@ -493,7 +518,15 @@ class InputCheckbox extends BaseElement {
       label: "Size",
       max: 100,
       min: 0,
-      units: ["px", "%", "vw"]
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("field_alignment", {
@@ -521,7 +554,12 @@ class InputCheckbox extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("position_padding", {
@@ -530,7 +568,12 @@ class InputCheckbox extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("position_z_index", {
@@ -666,7 +709,15 @@ class InputCheckbox extends BaseElement {
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"]
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("border_color", {
@@ -692,11 +743,16 @@ class InputCheckbox extends BaseElement {
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
+      label: "Border Radius",
       default: {
-        unit: "px"
+        unit: 'px',
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.endControlSection();

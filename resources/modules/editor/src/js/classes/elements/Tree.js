@@ -197,11 +197,7 @@ class Tree extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 2000,
       min: 100,
     });
@@ -219,10 +215,7 @@ class Tree extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 16,
     });
@@ -277,11 +270,7 @@ class Tree extends BaseElement {
         default: {
           bind: true,
         },
-        units: [
-          'px',
-          '%',
-          'vh',
-        ],
+      units: ['px', '%', 'vh', 'vw'],
       }
     );
 
@@ -298,11 +287,7 @@ class Tree extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_shadow', {
@@ -355,10 +340,7 @@ class Tree extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -374,10 +356,7 @@ class Tree extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -395,10 +374,7 @@ class Tree extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -427,11 +403,7 @@ class Tree extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('heading_margin', {
@@ -441,11 +413,7 @@ class Tree extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('heading_background', {
@@ -460,21 +428,13 @@ class Tree extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('heading_gap', {
       type: CONTROLLER_SLIDER,
       label: 'Gap',
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -533,11 +493,7 @@ class Tree extends BaseElement {
         default: {
           bind: true,
         },
-        units: [
-          'px',
-          '%',
-          'vh',
-        ],
+      units: ['px', '%', 'vh', 'vw'],
       }
     );
 
@@ -554,11 +510,7 @@ class Tree extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('heading_border_shadow', {
@@ -576,11 +528,7 @@ class Tree extends BaseElement {
     this.addControl('column_gap', {
       type: CONTROLLER_SLIDER,
       label: 'Gap',
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });

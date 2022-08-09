@@ -232,15 +232,28 @@ class Menu extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Padding',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     })
 
     this.addControl('menu_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     })
 
@@ -275,8 +288,14 @@ class Menu extends BaseElement {
     this.addControl('caret_size', {
       type: CONTROLLER_SLIDER,
       label: 'Caret size',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
+        '%',
+        'vh',
+        'vw'
       ],
       max: 50,
       min: 5,
@@ -301,10 +320,14 @@ class Menu extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Padding',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     })
 
@@ -313,12 +336,12 @@ class Menu extends BaseElement {
       label: 'Border Radius',
       default: {
         unit: 'px',
-        bind: true,
       },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -348,10 +371,14 @@ class Menu extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Padding',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     })
 
@@ -363,10 +390,14 @@ class Menu extends BaseElement {
     this.addControl('sub_menu_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     })
 
@@ -381,12 +412,12 @@ class Menu extends BaseElement {
       label: 'Popover border radius',
       default: {
         unit: 'px',
-        bind: true,
       },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -402,10 +433,14 @@ class Menu extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Padding',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     })
 
@@ -463,20 +498,28 @@ class Menu extends BaseElement {
     this.addControl('border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     })
 
     this.addControl('button_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     })
 

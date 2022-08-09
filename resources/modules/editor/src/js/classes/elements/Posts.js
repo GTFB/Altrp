@@ -205,6 +205,7 @@ class Table extends BaseElement {
         size: 20,
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 120,
       min: 0,
       locked: true,
@@ -378,11 +379,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("posts_bottom_space", {
@@ -391,11 +388,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh'
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0
     });
@@ -456,11 +449,7 @@ class Table extends BaseElement {
       default: {
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+        units: ['px', '%', 'vh', 'vw'],
     }
     );
 
@@ -476,11 +465,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('style_background_shadow', {
@@ -637,11 +622,7 @@ class Table extends BaseElement {
       conditions: {
         'background_size': [''],
       },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -701,11 +682,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('table_style_pagination_typographic', {
@@ -732,11 +709,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('posts_prev_padding', {
@@ -746,11 +719,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("posts_prev_color", {
@@ -806,11 +775,7 @@ class Table extends BaseElement {
           default: {
             bind: true
           },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
+          units: ['px', '%', 'vh', 'vw'],
         }
     );
 
@@ -826,11 +791,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('style_prev_background_shadow', {
@@ -883,11 +844,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('posts_next_padding', {
@@ -897,11 +854,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("posts_next_color", {
@@ -957,11 +910,7 @@ class Table extends BaseElement {
           default: {
             bind: true
           },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
+          units: ['px', '%', 'vh', 'vw'],
         }
     );
 
@@ -977,11 +926,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('style_next_background_shadow', {

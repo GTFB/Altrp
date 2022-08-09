@@ -154,9 +154,7 @@ class Gallery extends BaseElement {
       },
       type: CONTROLLER_SLIDER,
       label: "Spacing",
-      units:[
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       default: {unit: "px"},
       max: 100,
       min: 0,
@@ -227,9 +225,7 @@ class Gallery extends BaseElement {
       },
       type: CONTROLLER_SLIDER,
       label: "Row height",
-      units:[
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       default: { size: "220", unit: "px"},
       max: 500,
       min: 50,
@@ -241,9 +237,7 @@ class Gallery extends BaseElement {
       },
       type: CONTROLLER_SLIDER,
       label: "Spacing",
-      units:[
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -340,11 +334,7 @@ class Gallery extends BaseElement {
         default: {
           bind: true
         },
-        units: [
-          'px',
-          '%',
-          'vh',
-        ],
+        units: ['px', '%', 'vh', 'vw'],
       }
     );
 
@@ -361,11 +351,7 @@ class Gallery extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
 
@@ -412,11 +398,7 @@ class Gallery extends BaseElement {
         size: 800,
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 3000,
       min: 0,
       locked: true,
@@ -578,11 +560,7 @@ class Gallery extends BaseElement {
         size: 800,
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 3000,
       min: 0,
       locked: true,
@@ -639,11 +617,7 @@ class Gallery extends BaseElement {
         bind: true
       },
 
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('overlay_title_label', {
@@ -665,11 +639,7 @@ class Gallery extends BaseElement {
     this.addControl('overlay_title_spacing', {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });

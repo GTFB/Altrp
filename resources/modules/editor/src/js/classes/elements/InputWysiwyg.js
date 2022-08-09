@@ -322,7 +322,7 @@ class InputWysiwyg extends BaseElement {
         size: 2,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 60,
       min: 0,
       locked: true,
@@ -343,7 +343,7 @@ class InputWysiwyg extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("label_style_font_color", {
@@ -370,7 +370,7 @@ class InputWysiwyg extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
       locked: true,
@@ -390,7 +390,7 @@ class InputWysiwyg extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100
       // rules: {
@@ -406,7 +406,7 @@ class InputWysiwyg extends BaseElement {
         unit: "%",
         size: null
       },
-      units: ["%", "px", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0
     });
@@ -503,7 +503,7 @@ class InputWysiwyg extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -531,7 +531,7 @@ class InputWysiwyg extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_padding", {
@@ -540,7 +540,7 @@ class InputWysiwyg extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_z_index", {
@@ -672,7 +672,7 @@ class InputWysiwyg extends BaseElement {
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color", {
@@ -698,11 +698,11 @@ class InputWysiwyg extends BaseElement {
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
+      label: "Border Radius",
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();

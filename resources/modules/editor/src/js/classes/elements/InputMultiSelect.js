@@ -355,7 +355,7 @@ class InputMultiSelect extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
 
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0
     });
@@ -364,7 +364,7 @@ class InputMultiSelect extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
 
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 60,
       min: 0,
       locked: true,
@@ -374,7 +374,7 @@ class InputMultiSelect extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
 
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("label_background_color", {
@@ -401,7 +401,7 @@ class InputMultiSelect extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
       locked: true,
@@ -417,7 +417,7 @@ class InputMultiSelect extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100
       // rules: {
@@ -490,7 +490,7 @@ class InputMultiSelect extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("field_height-m", {
@@ -499,7 +499,7 @@ class InputMultiSelect extends BaseElement {
       label: "Height",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_margin", {
@@ -527,14 +527,14 @@ class InputMultiSelect extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: "Margin",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("tags_pa", {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: "Padding",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
 
@@ -542,14 +542,14 @@ class InputMultiSelect extends BaseElement {
       type: CONTROLLER_SLIDER,
       stateless: true,
       label: "Tag Delete Size",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("delete_ma", {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: "Tag Delete Margin",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -585,21 +585,21 @@ class InputMultiSelect extends BaseElement {
       type: CONTROLLER_SLIDER,
       stateless: true,
       label: "Size",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("clear_ma", {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: "Margin",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("clear_pa", {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: "Padding",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("clear_color", {
@@ -752,7 +752,7 @@ class InputMultiSelect extends BaseElement {
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color", {
@@ -767,8 +767,8 @@ class InputMultiSelect extends BaseElement {
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
-      units: ["px", "%", "vh"]
+      label: "Border Radius",
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -817,14 +817,14 @@ class InputMultiSelect extends BaseElement {
 
     this.addControl("a_size", {
       type:   CONTROLLER_SLIDER,
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Icon Size"
     });
 
     this.addControl("a_margin", {
       type:   CONTROLLER_DIMENSIONS,
-      units: ["px","%", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Icon Margin"
     });

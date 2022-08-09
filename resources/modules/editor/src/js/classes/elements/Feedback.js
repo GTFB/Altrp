@@ -52,11 +52,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       conditions: {
         'custom_position': true,
       },
@@ -75,11 +71,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_radius-frame', {
@@ -88,11 +80,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('background_color', {
@@ -139,11 +127,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_radius-btn-frame', {
@@ -152,11 +136,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('font_typographic-btn', {
@@ -204,9 +184,7 @@ class Feedback extends BaseElement {
     this.addControl("messenger__width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      units: [
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -217,11 +195,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_radius-messenger', {
@@ -230,11 +204,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('background_color-messenger', {
@@ -281,11 +251,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_radius-messenger-btn', {
@@ -294,11 +260,7 @@ class Feedback extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('font_typographic-messenger-btn', {

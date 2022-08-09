@@ -60,7 +60,8 @@ class Tournament extends BaseElement {
 
         this.addControl('headers_padding', {
             label: 'Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.endControlSection();
@@ -73,6 +74,7 @@ class Tournament extends BaseElement {
         this.addControl('player_height', {
             label: 'Height',
             type: CONTROLLER_SLIDER,
+          units: ['px', '%', 'vh', 'vw'],
             min: 20,
             max: 100,
             step: 1
@@ -80,7 +82,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_padding', {
             label: 'Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_background_color', {
@@ -90,7 +93,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_score_padding', {
             label: 'Score Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_score_color', {
@@ -105,7 +109,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_seed_padding', {
             label: 'Seed Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_seed_color', {
@@ -162,11 +167,7 @@ class Tournament extends BaseElement {
         this.addControl('players_border_width', {
             type: CONTROLLER_DIMENSIONS,
             label: 'Border Width',
-            units: [
-                'px',
-                '%',
-                'vh',
-            ],
+          units: ['px', '%', 'vh', 'vw'],
         });
 
         this.addControl('players_border_color', {
@@ -177,11 +178,7 @@ class Tournament extends BaseElement {
         this.addControl('players_border_radius', {
             type: CONTROLLER_DIMENSIONS,
             label: 'Border radius',
-            units: [
-                'px',
-                '%',
-                'vh',
-            ],
+          units: ['px', '%', 'vh', 'vw'],
             max: 100,
             min: 0,
         });
@@ -195,7 +192,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_winners_padding', {
             label: 'Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_winners_background_color', {
@@ -205,7 +203,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_winners_score_padding', {
             label: 'Score Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_winners_score_color', {
@@ -220,7 +219,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_winners_seed_padding', {
             label: 'Seed Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_winners_seed_color', {
@@ -277,11 +277,7 @@ class Tournament extends BaseElement {
         this.addControl('players_winners_border_width', {
             type: CONTROLLER_DIMENSIONS,
             label: 'Border Width',
-            units: [
-                'px',
-                '%',
-                'vh',
-            ],
+          units: ['px', '%', 'vh', 'vw'],
         });
 
         this.addControl('players_winners_border_color', {
@@ -292,11 +288,7 @@ class Tournament extends BaseElement {
         this.addControl('players_winners_border_radius', {
             type: CONTROLLER_DIMENSIONS,
             label: 'Border radius',
-            units: [
-                'px',
-                '%',
-                'vh',
-            ],
+          units: ['px', '%', 'vh', 'vw'],
             max: 100,
             min: 0,
         });
@@ -310,7 +302,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_highlighted_padding', {
             label: 'Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_highlighted_background_color', {
@@ -320,7 +313,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_highlighted_score_padding', {
             label: 'Score Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_highlighted_score_color', {
@@ -335,7 +329,8 @@ class Tournament extends BaseElement {
 
         this.addControl('players_highlighted_seed_padding', {
             label: 'Seed Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.addControl('players_highlighted_seed_color', {
@@ -392,11 +387,7 @@ class Tournament extends BaseElement {
         this.addControl('players_highlighted_border_width', {
             type: CONTROLLER_DIMENSIONS,
             label: 'Border Width',
-            units: [
-                'px',
-                '%',
-                'vh',
-            ],
+          units: ['px', '%', 'vh', 'vw'],
         });
 
         this.addControl('players_highlighted_border_color', {
@@ -407,11 +398,7 @@ class Tournament extends BaseElement {
         this.addControl('players_highlighted_border_radius', {
             type: CONTROLLER_DIMENSIONS,
             label: 'Border radius',
-            units: [
-                'px',
-                '%',
-                'vh',
-            ],
+          units: ['px', '%', 'vh', 'vw'],
             max: 100,
             min: 0,
         });
@@ -455,6 +442,7 @@ class Tournament extends BaseElement {
         this.addControl('line_width', {
             label: 'Width',
             type: CONTROLLER_SLIDER,
+          units: ['px', '%', 'vh', 'vw'],
             max: 20,
             min: 1,
             step: 1,
@@ -480,6 +468,7 @@ class Tournament extends BaseElement {
         this.addControl('match_id_padding', {
             label: 'Padding',
             type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.endControlSection()
@@ -491,7 +480,8 @@ class Tournament extends BaseElement {
 
         this.addControl('image_padding', {
             label: 'Padding',
-            type: CONTROLLER_DIMENSIONS
+            type: CONTROLLER_DIMENSIONS,
+          units: ['px', '%', 'vh', 'vw'],
         })
 
         this.endControlSection();
