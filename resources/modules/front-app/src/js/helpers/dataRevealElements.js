@@ -14,7 +14,7 @@ export default function dataRevealElements(){
 
 function doRevealAction(revealElements){
   for(const element of revealElements){
-    if(checkAppearTopElement(element)){
+    //if(checkAppearTopElement(element)){
       let options = element.dataset.revealOptions
       element.removeAttribute('data-reveal-options')
       options = mbParseJSON(options, {})
@@ -36,6 +36,6 @@ function doRevealAction(revealElements){
           }
         }
       }
-    }
+    //}
   }
 }
