@@ -419,7 +419,6 @@ export default class Page extends BaseModel {
   async allowedForUser(altrpRouting: AltrpRouting): Promise<boolean> {
     const currentUser: User | null = data_get(altrpRouting, '__altrp_global__.currentUser')
 
-
     let allowed = false
 
     /** @var User $user */
@@ -437,11 +436,10 @@ export default class Page extends BaseModel {
     if (!currentUser) {
       return false
     }
+
     for (let pageRole of pageRoles) {
-
-
       let role = await Role.find(pageRole.role_id)
-      if (role && await currentUser.hasRole(role.id)) {
+      if (role && await currentUser.hasRole(parseInt(role.id))) {
         allowed = true
       }
     }
