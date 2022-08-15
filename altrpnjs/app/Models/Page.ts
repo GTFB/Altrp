@@ -253,10 +253,18 @@ export default class Page extends BaseModel {
     const rolesValues: number[] = []
     let for_guest = false
     roles.forEach(role => {
+      // if (!isString(role.value)) {
+      //   rolesValues.push(role.value)
+      // } else if (role.value === 'guest') {
+      //   for_guest = true
+      // }
       if (!isString(role.value)) {
-        rolesValues.push(role.value)
-      } else if (role.value === 'guest') {
+        
+      }
+      if (role.value === 'guest') {
         for_guest = true
+      } else {
+        rolesValues.push(parseInt(role.value))
       }
     })
     await this.attachRoles(rolesValues)
@@ -284,12 +292,12 @@ export default class Page extends BaseModel {
 
     for (const role_id of roles) {
       const duplicate = await PageRole.query().where("page_id", this.id).andWhere("role_id", role_id).first();
-
       if (!duplicate) {
-        await PageRole.create({
-          page_id: this.id,
-          role_id: role_id,
-        })
+        await Database.table('page_role')
+          .insert({
+            page_id: this.id,
+            role_id: parseInt(role_id),
+          })
       }
     }
   }
