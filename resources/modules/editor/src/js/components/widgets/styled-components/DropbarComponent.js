@@ -40,7 +40,7 @@ export default styled.div`
       ["", "typographic_text_dropbar_content_style", "typographic", ".state-disabled"],
       "}",
       //state active
-      "&.altrp-dropbar-btn-containter",
+      "&.active.altrp-dropbar-btn-containter",
       ["width", "width_dropbar_options-content", "slider", ".active"],
 
       ["padding", "padding_dropbar_content_style", "dimensions", ".active"],
@@ -52,7 +52,7 @@ export default styled.div`
       ["box-shadow", "box_shadow_dropbar_content_style", "shadow", ".active"],
       "}",
 
-      "altrp-dropbar-btn-content",
+      ".active.altrp-dropbar-btn-content",
       ["color", "text_color_dropbar_content_style", "color", ".active"],
       ["", "typographic_text_dropbar_content_style", "typographic", ".active"],
       "}",

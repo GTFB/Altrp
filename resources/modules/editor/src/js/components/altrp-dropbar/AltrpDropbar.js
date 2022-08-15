@@ -74,8 +74,8 @@ class Dropbar extends Component {
 
 
     return (
-      <div className={"altrp-dropbar " + mainClass}>
-        <span className={"altrp-dropbar-children-wrapper " + (mainClass ? mainClass + "-wrapper" : '')}
+      <div className={this.props.conditionalClasses + "altrp-dropbar " + mainClass}>
+        <span className={this.props.conditionalClasses + "altrp-dropbar-children-wrapper " + (mainClass ? mainClass + "-wrapper" : '')}
               style={{width: '100%'}}
               onMouseEnter={this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null}
               onMouseLeave={this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null}
@@ -104,7 +104,7 @@ class Dropbar extends Component {
             }}
           >
             <DropbarComponent settings={this.props.element.getSettings()}
-                              className={"altrp-dropbar-container " +
+                              className={this.props.conditionalClasses + "altrp-dropbar-container " +
                               (` ${this.props.elemenentId}-altrp-dropbar `) +
                               "altrp-dropbar-btn-containter " +
                               (mainClass ? mainClass + "-containter" : '') +
@@ -114,7 +114,7 @@ class Dropbar extends Component {
                 type === "text" ? (
                   React.createElement("div",
                     {
-                      className: "altrp-dropbar-content " + "altrp-dropbar-btn-content " + (mainClass ? mainClass + "-content" : ''),
+                      className: this.props.conditionalClasses + "altrp-dropbar-content " + "altrp-dropbar-btn-content " + (mainClass ? mainClass + "-content" : ''),
                       dangerouslySetInnerHTML: {
                         __html: content_dropbar_section || ''
                       },

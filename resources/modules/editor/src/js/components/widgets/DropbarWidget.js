@@ -250,7 +250,8 @@ class DropbarWidget extends Component {
 
 
   render() {
-    let classesState = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+    let classesState = (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+    let getActiveOrDisabledClasses = this.getClasses()
     const buttonText = this.props.element.getResponsiveLockedSetting("button_text", "", "");
     const id = this.props.element.getResponsiveLockedSetting("position_css_id", "", "")
     const customClasses = this.props.element.getResponsiveLockedSetting("position_css_classes", "", null);
@@ -305,6 +306,7 @@ class DropbarWidget extends Component {
         elemenentId={this.props.element.getId()}
         settings={this.props.element.getLockedSettings()}
         className={classesState}
+        conditionalClasses={getActiveOrDisabledClasses}
         element={this.props.element}
         getContent={this.getLockedContent}
         showDelay={dropbarDelay}
