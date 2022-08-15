@@ -153,7 +153,7 @@ export default function getInputMultiSelectStyles(settings, elementId) {
     ['width', 'field_width', 'slider'],
     ['margin', 'position_margin', 'dimensions'],
     '}',
-    '.bp3-multi-select',
+    '.bp3-multi-select-tag-input-input',
     ['height', 'field_height-m', 'slider'],
     '}',
     '.bp3-tag-input-values.bp3-tag-input-values',

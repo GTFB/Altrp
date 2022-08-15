@@ -537,6 +537,14 @@ class InputSelect extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
     });
 
+    this.addControl("field_height", {
+      type: CONTROLLER_SLIDER,
+      label: "Height",
+      max: 500,
+      min: 0,
+      units: ['px', '%', 'vh', 'vw'],
+    });
+
     this.addControl("position_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",

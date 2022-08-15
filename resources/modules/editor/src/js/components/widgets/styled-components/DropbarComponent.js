@@ -6,7 +6,7 @@ export default styled.div`
   ${({settings}) => {
   const styles = [
     "&.altrp-dropbar-btn-containter",
-      ["width", "width_dropbar_options", "slider"],
+      ["width", "width_dropbar_options-content", "slider"],
 
       ["padding", "padding_dropbar_content_style", "dimensions"],
       ["background-color", "background_dropbar_content_style", "color"],
@@ -24,7 +24,7 @@ export default styled.div`
 
     //state disabled
     "&.altrp-dropbar-btn-containter",
-    ["width", "width_dropbar_options", "slider", ".state-disabled"],
+    ["width", "width_dropbar_options-content", "slider", ".state-disabled"],
 
     ["padding", "padding_dropbar_content_style", "dimensions", ".state-disabled"],
     ["background-color", "background_dropbar_content_style", "color", ".state-disabled"],
@@ -41,7 +41,7 @@ export default styled.div`
     "}",
     //state active
     "&.altrp-dropbar-btn-containter",
-    ["width", "width_dropbar_options", "slider", ".active"],
+    ["width", "width_dropbar_options-content", "slider", ".active"],
 
     ["padding", "padding_dropbar_content_style", "dimensions", ".active"],
     ["background-color", "background_dropbar_content_style", "color", ".active"],

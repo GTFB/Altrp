@@ -855,7 +855,7 @@ class Dropbar extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
     });
 
-    this.addControl("width_dropbar_options", {
+    this.addControl("width_dropbar_options-content", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
       default: {
