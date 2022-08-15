@@ -174,7 +174,7 @@ class Scheduler extends BaseElement {
     this.addControl("switcher_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("switcher_border_color", {
@@ -421,7 +421,7 @@ class Scheduler extends BaseElement {
     this.addControl("event_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("event_border_color", {
@@ -432,11 +432,7 @@ class Scheduler extends BaseElement {
     this.addControl("event_border_radius", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });

@@ -63,8 +63,15 @@ class Text extends BaseElement {
     this.addControl("text_style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     });
 
@@ -150,7 +157,15 @@ class Text extends BaseElement {
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_style_border_color", {
@@ -169,6 +184,7 @@ class Text extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -285,7 +301,15 @@ class Text extends BaseElement {
     this.addControl("text_paragraph_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_paragraph_color", {
@@ -301,7 +325,15 @@ class Text extends BaseElement {
     this.addControl("text_paragraph_indent", {
       type: CONTROLLER_SLIDER,
       label: "Text Indent",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -316,13 +348,29 @@ class Text extends BaseElement {
     this.addControl("text_blockquote_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_blockquote_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_blockquote_background_color", {
@@ -373,7 +421,15 @@ class Text extends BaseElement {
     this.addControl("text_blockquote_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_blockquote_border_color", {
@@ -391,6 +447,7 @@ class Text extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -405,168 +462,200 @@ class Text extends BaseElement {
       }
     );
 
-      this.addControl('text_blockquote_text_shadow', {
+    this.addControl('text_blockquote_text_shadow', {
         type: CONTROLLER_SHADOW,
         label: 'Text Shadow',
       }
     );
-      this.endControlSection();
+    this.endControlSection();
 
-      this.startControlSection("text_table_settings", {
-        tab: TAB_STYLE,
-        label: "Table"
-      });
+    this.startControlSection("text_table_settings", {
+      tab: TAB_STYLE,
+      label: "Table"
+    });
 
-      this.addControl("text_table_margin", {
-        type: CONTROLLER_DIMENSIONS,
-        label: "Margin",
-        units: ["px", "%", "vh"],
-      });
+    this.addControl("text_table_margin", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Margin",
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+    });
 
-      this.addControl("text_table_rows_color", {
-        type: CONTROLLER_COLOR,
-        label: "Rows Color",
-      });
+    this.addControl("text_table_rows_color", {
+      type: CONTROLLER_COLOR,
+      label: "Rows Color",
+    });
 
-      this.addControl("text_table_odd_rows_color", {
-        type: CONTROLLER_COLOR,
-        label: "Odd Rows Color",
-      });
+    this.addControl("text_table_odd_rows_color", {
+      type: CONTROLLER_COLOR,
+      label: "Odd Rows Color",
+    });
 
-      this.addControl("text_table_border_type", {
-        type: CONTROLLER_SELECT,
-        label: "Border Type",
-        options: [
-          {
-            value: "none",
-            label: "None"
-          },
-          {
-            value: "solid",
-            label: "Solid"
-          },
-          {
-            value: "double",
-            label: "Double"
-          },
-          {
-            value: "dotted",
-            label: "Dotted"
-          },
-          {
-            value: "dashed",
-            label: "Dashed"
-          },
-          {
-            value: "groove",
-            label: "Groove"
-          }
-        ],
-      });
+    this.addControl("text_table_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+    });
 
-      this.addControl("text_table_border_width", {
-        type: CONTROLLER_DIMENSIONS,
-        label: "Border Width",
-        units: ["px", "%", "vh"],
-      });
+    this.addControl("text_table_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width",
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+    });
 
-      this.addControl("text_table_border_color", {
-        type: CONTROLLER_COLOR,
-        label: "Border Color",
-      });
+    this.addControl("text_table_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border Color",
+    });
 
-      // this.addControl("text_table_border_radius", {
-      //   type: CONTROLLER_SLIDER,
-      //   label: 'Border radius',
-      //   default:{
-      //     size: 0,
-      //     unit: 'px',
-      //   },
-      //   units:[
-      //     'px',
-      //     '%',
-      //     'vh',
-      //   ],
-      //   max: 100,
-      //   min: 0,
-      // });
+    // this.addControl("text_table_border_radius", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Border radius',
+    //   default:{
+    //     size: 0,
+    //     unit: 'px',
+    //   },
+    //   units:[
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   max: 100,
+    //   min: 0,
+    // });
 
-      this.addControl('text_table_cells_settings', {
-        type: CONTROLLER_HEADING,
-        label: 'Cells',
-      });
+    this.addControl('text_table_cells_settings', {
+      type: CONTROLLER_HEADING,
+      label: 'Cells',
+    });
 
-      this.addControl("text_table_padding", {
-        type: CONTROLLER_DIMENSIONS,
-        label: "Padding",
-        units: ["px", "%", "vh"],
-      });
+    this.addControl("text_table_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+    });
 
-      this.addControl("text_table_cells_border_type", {
-        type: CONTROLLER_SELECT,
-        label: "Border Type",
-        options: [
-          {
-            value: "none",
-            label: "None"
-          },
-          {
-            value: "solid",
-            label: "Solid"
-          },
-          {
-            value: "double",
-            label: "Double"
-          },
-          {
-            value: "dotted",
-            label: "Dotted"
-          },
-          {
-            value: "dashed",
-            label: "Dashed"
-          },
-          {
-            value: "groove",
-            label: "Groove"
-          }
-        ],
-      });
+    this.addControl("text_table_cells_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+    });
 
-      this.addControl("text_table_cells_border_width", {
-        type: CONTROLLER_DIMENSIONS,
-        label: "Border Width",
-        units: ["px", "%", "vh"],
-      });
+    this.addControl("text_table_cells_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width",
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+    });
 
-      this.addControl("text_table_cells_border_color", {
-        type: CONTROLLER_COLOR,
-        label: "Border Color",
+    this.addControl("text_table_cells_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border Color",
 
-      });
+    });
 
-      // this.addControl("text_table_cells_border_radius", {
-      //   type: CONTROLLER_SLIDER,
-      //   label: 'Border radius',
-      //   default:{
-      //     size: 0,
-      //     unit: 'px',
-      //   },
-      //   units:[
-      //     'px',
-      //     '%',
-      //     'vh',
-      //   ],
-      //   max: 100,
-      //   min: 0,
-      // });
+    // this.addControl("text_table_cells_border_radius", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Border radius',
+    //   default:{
+    //     size: 0,
+    //     unit: 'px',
+    //   },
+    //   units:[
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   max: 100,
+    //   min: 0,
+    // });
 
-      this.addControl("text_table_cells_font_typographic", {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: "Typographic",
-      });
+    this.addControl("text_table_cells_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+    });
 
-      this.addControl('text_table_cells_text_shadow', {
+    this.addControl('text_table_cells_text_shadow', {
         type: CONTROLLER_SHADOW,
         label: 'Text Shadow',
 
@@ -610,15 +699,30 @@ class Text extends BaseElement {
     this.addControl("text_numbered_list_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "List Margin",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     });
 
     this.addControl("text_numbered_list_item_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Element Margin",
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_numbered_list_style_type", {
@@ -675,16 +779,30 @@ class Text extends BaseElement {
     this.addControl("text_unordered_list_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "List Margin",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     });
 
     this.addControl("text_unordered_list_item_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Element Margin",
-
-      units: ["px", "%", "vh"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("text_unordered_list_style_type", {

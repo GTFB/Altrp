@@ -57,6 +57,7 @@ import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPlug
 import {io} from "socket.io-client";
 import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-state/action";
 import getAltrpLang from "./js/helpers/get-altrp-lang";
+import {addAltSeoSettings} from "./js/store/plugins-state/action";
 
 
 window.React = React;
@@ -88,6 +89,12 @@ class Admin extends Component {
   filterMainMenu(filterFn){
     if(_.isFunction(filterFn)){
       this.props.setMainMenu(filterFn(store.getState()?.routesState?.mainMenu || []))
+    }
+  }
+
+  addAltSeo(filterFn){
+    if(_.isFunction(filterFn)){
+      this.props.addAltSeoSettings(filterFn())
     }
   }
 
@@ -345,7 +352,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/plugins"
-                            className={location.pathname.includes('/plugins')  ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            className={location.pathname.includes('/plugins') || location.pathname.includes('/search-plugins')  ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 5 })}
                           >
                             <PluginSvg className="icon" />
@@ -538,7 +545,7 @@ class Admin extends Component {
                         <li>
                           <Link
                             to="/admin/plugins"
-                            className={location.pathname.includes('/plugins') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            className={location.pathname.includes('/plugins') || location.pathname.includes('/search-plugins') ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 5 })}
                           >
                             <PluginSvg className="icon-mini" />
@@ -628,6 +635,7 @@ const mapDispatchToProps = dispatch => {
     addRoute: route => dispatch(addRoute(route)),
     setRoutes: routes => dispatch(setRoutes(routes)),
     setMainMenu: routes => dispatch(setMainMenu(routes)),
+    addAltSeoSettings: settings => dispatch(addAltSeoSettings(settings)),
   }
 };
 

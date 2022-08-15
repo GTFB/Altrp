@@ -143,7 +143,7 @@ class InputFile extends BaseElement {
       max: 500,
       stateless: true,
       min: 0,
-      units: ['px', '%', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('height', {
@@ -152,7 +152,7 @@ class InputFile extends BaseElement {
       max: 500,
       stateless: true,
       min: 0,
-      units: ['px', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('alignment', {
@@ -183,7 +183,7 @@ class InputFile extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       stateless: true,
-      units: ['px', '%', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -216,7 +216,7 @@ class InputFile extends BaseElement {
       max: 500,
       min: 0,
       stateless: true,
-      units: ['px', '%', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('b_height', {
@@ -225,21 +225,21 @@ class InputFile extends BaseElement {
       max: 500,
       min: 0,
       stateless: true,
-      units: ['px', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('b_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       stateless: true,
-      units: ['px', '%', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('b_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       stateless: true,
-      units: ['px', '%', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('b_typographic', {
@@ -315,7 +315,7 @@ class InputFile extends BaseElement {
     this.addControl('border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Input Border Width',
-      units: ['px', '%', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_color', {
@@ -358,7 +358,7 @@ class InputFile extends BaseElement {
     this.addControl('b_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Button Border Width',
-      units: ['px', '%', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('b_border_color', {
@@ -379,14 +379,14 @@ class InputFile extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Input Radius',
-      units: ['px', '%', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('b_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Button Radius',
       stateless: true,
-      units: ['px', '%', 'vh']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();

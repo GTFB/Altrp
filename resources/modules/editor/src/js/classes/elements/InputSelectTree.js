@@ -303,7 +303,7 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
 
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0
     });
@@ -312,7 +312,7 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
 
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 60,
       min: 0,
       locked: true,
@@ -322,7 +322,7 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
 
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("label_background_color", {
@@ -349,7 +349,7 @@ class InputSelectTree extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
       locked: true,
@@ -365,7 +365,7 @@ class InputSelectTree extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100
       // rules: {
@@ -437,19 +437,19 @@ class InputSelectTree extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -552,7 +552,7 @@ class InputSelectTree extends BaseElement {
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color", {
@@ -568,7 +568,7 @@ class InputSelectTree extends BaseElement {
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
       label: "Radius",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -617,12 +617,14 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("i_size", {
       type:   CONTROLLER_SLIDER,
-      label: "Size"
+      label: "Size",
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("i_margin", {
       type:   CONTROLLER_DIMENSIONS,
-      label: "Margin"
+      label: "Margin",
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("i_color", {
@@ -639,14 +641,14 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("si_size", {
       type:   CONTROLLER_SLIDER,
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Height"
     });
 
     this.addControl("si_padding", {
       type:   CONTROLLER_DIMENSIONS,
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Padding"
     });
@@ -663,14 +665,14 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("sii_size", {
       type:   CONTROLLER_SLIDER,
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Icon Size"
     });
 
     this.addControl("sii_margin", {
       type:   CONTROLLER_DIMENSIONS,
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Icon Margin"
     });
@@ -689,14 +691,14 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("a_size", {
       type:   CONTROLLER_SLIDER,
-      units: ["px","%",  "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Icon Size"
     });
 
     this.addControl("a_margin", {
       type:   CONTROLLER_DIMENSIONS,
-      units: ["px","%", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       stateless: true,
       label: "Icon Margin"
     });
@@ -716,13 +718,13 @@ class InputSelectTree extends BaseElement {
     this.addControl("tree_item_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Tree Item Padding",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("tree_menu_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Menu Padding",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection()
@@ -753,10 +755,7 @@ class InputSelectTree extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 16,
     });
@@ -811,11 +810,7 @@ class InputSelectTree extends BaseElement {
         default: {
           bind: true,
         },
-        units: [
-          'px',
-          '%',
-          'vh',
-        ],
+        units: ['px', '%', 'vh', 'vw'],
       }
     );
 
@@ -832,11 +827,7 @@ class InputSelectTree extends BaseElement {
         unit: 'px',
         bind: true,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('tree_border_shadow', {
@@ -875,10 +866,7 @@ class InputSelectTree extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });

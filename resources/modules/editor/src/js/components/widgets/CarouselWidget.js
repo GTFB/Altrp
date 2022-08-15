@@ -256,6 +256,7 @@ class CarouselWidget extends Component {
   render(){
     const carouselProps = {
       ...this.props.element.getSettings(),
+      elementSettings: this.props.element,
       currentScreen: this.props.currentScreen,
       elementId: this.props.element.getId(),
       classes: this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")

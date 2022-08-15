@@ -195,6 +195,15 @@ class TabsSwitcher extends BaseElement{
     this.addControl('size', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       min: 0,
       max: 100,
     });
@@ -204,7 +213,15 @@ class TabsSwitcher extends BaseElement{
       label: 'Spacing',
       min: 0,
       max: 100,
-      units: ['px', 'vw', '%'],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl('margin_bottom', {
@@ -212,14 +229,28 @@ class TabsSwitcher extends BaseElement{
       label: 'Margin Bottom',
       min: 0,
       max: 100,
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("box_border_radius", {
       type: CONTROLLER_SLIDER,
       label: "Box Around Border Radius",
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
+        'vh',
+        'vw'
       ],
       max: 50,
       min: 0,
@@ -228,9 +259,14 @@ class TabsSwitcher extends BaseElement{
     this.addControl("switch_border_radius", {
       type: CONTROLLER_SLIDER,
       label: "Switch Border Radius",
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
+        'vh',
+        'vw'
       ],
       max: 50,
       min: 0,
@@ -275,6 +311,15 @@ class TabsSwitcher extends BaseElement{
     this.addControl('switch_button_outline_width', {
       type: CONTROLLER_SLIDER,
       label: 'Outline Width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       min: 1,
       max: 10,
       step: 0.1
@@ -283,6 +328,15 @@ class TabsSwitcher extends BaseElement{
     this.addControl('switch_button_outline_offset', {
       type: CONTROLLER_SLIDER,
       label: 'Outline Offset',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       min: 0,
       max: 15,
       step: 0.1

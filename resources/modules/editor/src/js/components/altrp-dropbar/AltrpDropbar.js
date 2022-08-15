@@ -66,8 +66,7 @@ class Dropbar extends Component {
   render() {
     const children = React.Children.only(this.props.children);
 
-    let mainClass = "altrp-dropbar-" +
-      this.props.className;
+    let mainClass = this.props.className ? `altrp-dropbar-${this.props.className}` : '';
     let type = this.props.settings.type_dropbar_section || "text";
     let content_dropbar_section = this.props.getContent('content_dropbar_section');
 
@@ -75,8 +74,9 @@ class Dropbar extends Component {
 
 
     return (
-      <div className={"altrp-dropbar altrp-dropbar-" + mainClass}>
-        <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}
+      <div className={"altrp-dropbar " + mainClass}>
+        <span className={"altrp-dropbar-children-wrapper " + (mainClass ? mainClass + "-wrapper" : '')}
+              style={{width: '100%'}}
               onMouseEnter={this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null}
               onMouseLeave={this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null}
         >
@@ -106,15 +106,15 @@ class Dropbar extends Component {
             <DropbarComponent settings={this.props.element.getSettings()}
                               className={"altrp-dropbar-container " +
                               (` ${this.props.elemenentId}-altrp-dropbar `) +
-                              mainClass +
-                              "-containter" +
+                              "altrp-dropbar-btn-containter " +
+                              (mainClass ? mainClass + "-containter" : '') +
                               (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
             >
               {
                 type === "text" ? (
                   React.createElement("div",
                     {
-                      className: "altrp-dropbar-content " + mainClass + "-content",
+                      className: "altrp-dropbar-content " + "altrp-dropbar-btn-content " + (mainClass ? mainClass + "-content" : ''),
                       dangerouslySetInnerHTML: {
                         __html: content_dropbar_section || ''
                       },

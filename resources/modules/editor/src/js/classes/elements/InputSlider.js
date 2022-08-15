@@ -151,17 +151,14 @@ class InputSlider extends BaseElement{
 
     this.addControl('slider_padding', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding'
+      label: 'Padding',
+      units: ['px', '%', 'vh', 'vw'],
     })
 
     this.addControl('width', {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 500,
       min: 0,
       conditions: {
@@ -173,10 +170,7 @@ class InputSlider extends BaseElement{
     this.addControl('height', {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      units: [
-        'px',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       conditions: {
@@ -187,11 +181,7 @@ class InputSlider extends BaseElement{
     this.addControl('thickness', {
       type: CONTROLLER_SLIDER,
       label: 'thickness',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       conditions: {
@@ -202,10 +192,7 @@ class InputSlider extends BaseElement{
     this.addControl('length', {
       type: CONTROLLER_SLIDER,
       label: 'length',
-      units: [
-        'px',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 500,
       min: 0,
       conditions: {
@@ -262,9 +249,7 @@ class InputSlider extends BaseElement{
     this.addControl("handle_size", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      units: [
-        'px',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0,
       locked: true,
@@ -283,11 +268,7 @@ class InputSlider extends BaseElement{
     this.addControl('handle_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('handle_color', {

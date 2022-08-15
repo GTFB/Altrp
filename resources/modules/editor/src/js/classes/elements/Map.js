@@ -135,7 +135,7 @@ class Map extends BaseElement {
         size: 400,
         unit: "px",
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
       locked: true,
@@ -152,7 +152,7 @@ class Map extends BaseElement {
         unit: "px",
         bind: true,
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       locked: true,
     });
 

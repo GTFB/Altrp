@@ -435,7 +435,15 @@ class InputTextCommon extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("field_height", {
@@ -444,7 +452,15 @@ class InputTextCommon extends BaseElement {
       label: "Height",
       max: 100,
       min: 0,
-      units: ["px", "%", "vw"]
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -565,7 +581,15 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       // stateless:true,
-      units: ["px", "%", "vh"]
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("disable_box_shadow", {
@@ -582,9 +606,14 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Radius",
       default: {
-        unit: "px"
+        unit: 'px',
       },
-      units: ["px", "%", "vh"]
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
     });
 
     this.addControl("box_shadow", {
@@ -614,10 +643,15 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
       default: {
-        unit: "%",
+        unit: "px",
         size: null
       },
-      units: ["%", "px", "vw"],
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0
     });
@@ -839,26 +873,58 @@ class InputTextCommon extends BaseElement {
     this.addControl('input_icons_size', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      units: ["px", "%", "vw"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     })
 
     this.addControl('input_icons_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      units: ["px", "%", "vw"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     })
     this.addControl('input_icons_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      units: ["px", "%", "vw"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     })
     this.addControl('input_icons_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
-      units: ["px", "%", "vw"],
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       stateless: true,
     })
 

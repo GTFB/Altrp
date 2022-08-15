@@ -97,6 +97,7 @@ class InputNumber extends BaseElement {
       label: 'Gap',
       min: 0,
       max: 100,
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -112,7 +113,7 @@ class InputNumber extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("color", {
@@ -175,7 +176,7 @@ class InputNumber extends BaseElement {
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color", {
@@ -201,11 +202,11 @@ class InputNumber extends BaseElement {
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
+      label: "Border Radius",
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();

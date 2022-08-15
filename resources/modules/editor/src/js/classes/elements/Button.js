@@ -194,6 +194,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -208,6 +209,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -402,6 +404,7 @@ class Button extends BaseElement {
       units: [
         'px',
         '%',
+        'vh',
         'vw',
       ],
       max: 1000,
@@ -416,55 +419,56 @@ class Button extends BaseElement {
     });
 
     this.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl('border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      default: {
-        bind: true,
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    }
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true,
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
+      }
     );
 
     this.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
     );
 
     this.addControl('border_radius', {
@@ -478,6 +482,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -537,6 +542,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -551,6 +557,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -565,6 +572,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -579,6 +587,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -593,6 +602,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -607,6 +617,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -621,6 +632,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -635,6 +647,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -649,9 +662,9 @@ class Button extends BaseElement {
     });
 
     this.addControl('icon_color_background', {
-      type: CONTROLLER_COLOR,
-      label: 'Background Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Background Color',
+      }
     );
 
     this.addControl('icon_size_right', {
@@ -661,6 +674,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -673,6 +687,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -685,6 +700,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -697,6 +713,7 @@ class Button extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -765,10 +782,10 @@ class Button extends BaseElement {
 
     this.startControlSection(
       'creative_link', {
-      hideOnEmail: true,
-      tab: TAB_STYLE,
-      label: 'Creative Link',
-    }
+        hideOnEmail: true,
+        tab: TAB_STYLE,
+        label: 'Creative Link',
+      }
     );
 
 

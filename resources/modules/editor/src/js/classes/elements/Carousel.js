@@ -343,11 +343,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        'vw',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -358,10 +354,7 @@ class Carousel extends BaseElement {
       default: {
         unit: '%',
       },
-      units: [
-        'px',
-        '%',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -535,76 +528,76 @@ class Carousel extends BaseElement {
     });
 
     this.addControl('overlay_animation_text_heading_additional_content', {
-      type: CONTROLLER_SELECT,
-      label: 'Animation',
-      default: 'fade',
-      options: [
-        {
-          'value': 'none',
-          'label': 'none',
-        },
-        {
-          'value': 'fade',
-          'label': 'fade',
-        },
-        {
-          'value': 'scaleUp',
-          'label': 'scale up',
-        },
-        {
-          'value': 'scaleDown',
-          'label': 'scale down',
-        },
-        {
-          'value': 'slideTop',
-          'label': 'slide top',
-        },
-        {
-          'value': 'slideBottom',
-          'label': 'slide bottom',
-        },
-        {
-          'value': 'slideLeft',
-          'label': 'slide left',
-        },
-        {
-          'value': 'slideRight',
-          'label': 'slide right',
-        },
-        {
-          'value': 'slideTopSmall',
-          'label': 'slide top small',
-        },
-        {
-          'value': 'slideBottomSmall',
-          'label': 'slide bottom small',
-        },
-        {
-          'value': 'slideLeftSmall',
-          'label': 'slide left small',
-        },
-        {
-          'value': 'slideRightSmall',
-          'label': 'slide right small',
-        },
-        {
-          'value': 'slideTopMedium',
-          'label': 'slide top medium',
-        },
-        {
-          'value': 'slideBottomMedium',
-          'label': 'slide bottom medium',
-        },
-        {
-          'value': 'slideLeftMedium',
-          'label': 'slide left medium',
-        },
-        {
-          'value': 'slideRightMedium',
-          'label': 'slide right medium',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Animation',
+        default: 'fade',
+        options: [
+          {
+            'value': 'none',
+            'label': 'none',
+          },
+          {
+            'value': 'fade',
+            'label': 'fade',
+          },
+          {
+            'value': 'scaleUp',
+            'label': 'scale up',
+          },
+          {
+            'value': 'scaleDown',
+            'label': 'scale down',
+          },
+          {
+            'value': 'slideTop',
+            'label': 'slide top',
+          },
+          {
+            'value': 'slideBottom',
+            'label': 'slide bottom',
+          },
+          {
+            'value': 'slideLeft',
+            'label': 'slide left',
+          },
+          {
+            'value': 'slideRight',
+            'label': 'slide right',
+          },
+          {
+            'value': 'slideTopSmall',
+            'label': 'slide top small',
+          },
+          {
+            'value': 'slideBottomSmall',
+            'label': 'slide bottom small',
+          },
+          {
+            'value': 'slideLeftSmall',
+            'label': 'slide left small',
+          },
+          {
+            'value': 'slideRightSmall',
+            'label': 'slide right small',
+          },
+          {
+            'value': 'slideTopMedium',
+            'label': 'slide top medium',
+          },
+          {
+            'value': 'slideBottomMedium',
+            'label': 'slide bottom medium',
+          },
+          {
+            'value': 'slideLeftMedium',
+            'label': 'slide left medium',
+          },
+          {
+            'value': 'slideRightMedium',
+            'label': 'slide right medium',
+          },
+        ],
+      }
     );
 
     this.addControl('image_heading_additional_content', {
@@ -613,23 +606,23 @@ class Carousel extends BaseElement {
     });
 
     this.addControl('image_fit_additional_content', {
-      type: CONTROLLER_SELECT,
-      label: 'Image fit',
-      options: [
-        {
-          'value': 'cover',
-          'label': 'cover',
-        },
-        {
-          'value': 'contain',
-          'label': 'contain',
-        },
-        {
-          'value': 'auto',
-          'label': 'auto',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Image fit',
+        options: [
+          {
+            'value': 'cover',
+            'label': 'cover',
+          },
+          {
+            'value': 'contain',
+            'label': 'contain',
+          },
+          {
+            'value': 'auto',
+            'label': 'auto',
+          },
+        ],
+      }
     );
 
     this.endControlSection();
@@ -657,6 +650,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0,
     });
@@ -704,7 +698,7 @@ class Carousel extends BaseElement {
     this.addControl("border_width_slides_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color_slides_style", {
@@ -722,7 +716,7 @@ class Carousel extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_radius_slides_style", {
@@ -731,7 +725,7 @@ class Carousel extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -759,6 +753,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -797,11 +792,7 @@ class Carousel extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('border_radius_arrows_navigation_style', {
@@ -814,11 +805,7 @@ class Carousel extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('horizontal_offset_arrows_navigation_style', {
@@ -831,6 +818,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 400,
       min: 0,
     });
@@ -844,6 +832,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 200,
       min: -200,
     });
@@ -867,6 +856,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });
@@ -904,6 +894,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 200,
       min: -200,
     });
@@ -917,6 +908,7 @@ class Carousel extends BaseElement {
       default: {
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 200,
       min: -200,
     });
@@ -929,13 +921,13 @@ class Carousel extends BaseElement {
     });
 
     this.addControl('background_color_overlay', {
-      type: CONTROLLER_COLOR,
-      label: 'Background color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+        default: {
+          color: "",
+          colorPickedHex: "",
+        },
+      }
     );
 
     this.addControl("font_color_overlay", {
@@ -948,9 +940,9 @@ class Carousel extends BaseElement {
     });
 
     this.addControl('typographic_overlay', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-    }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
     );
 
     this.endControlSection();

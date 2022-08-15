@@ -244,6 +244,7 @@ class Image extends BaseElement {
           'px',
           '%',
           'vh',
+          'vw'
         ],
       }
     );
@@ -265,6 +266,7 @@ class Image extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -276,32 +278,32 @@ class Image extends BaseElement {
     });
 
     this.addControl('image_fit_size', {
-          type: CONTROLLER_SELECT,
-          label: 'Image fit',
-          // default: "cover",
-          options: [
-            {
-              'value': 'fill',
-              'label': 'Fill',
-            },
-            {
-              'value': 'contain',
-              'label': 'Contain',
-            },
-            {
-              'value': 'cover',
-              'label': 'Cover',
-            },
-            {
-              'value': 'none',
-              'label': 'None',
-            },
-            {
-              'value': 'scale-down',
-              'label': 'Scale down',
-            }
-          ],
-        }
+        type: CONTROLLER_SELECT,
+        label: 'Image fit',
+        // default: "cover",
+        options: [
+          {
+            'value': 'fill',
+            'label': 'Fill',
+          },
+          {
+            'value': 'contain',
+            'label': 'Contain',
+          },
+          {
+            'value': 'cover',
+            'label': 'Cover',
+          },
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'scale-down',
+            'label': 'Scale down',
+          }
+        ],
+      }
     );
 
     // this.addControl('aspect_ratio_off', {
@@ -313,40 +315,40 @@ class Image extends BaseElement {
 
 
     this.addControl('aspect_ratio_size', {
-          type: CONTROLLER_SELECT,
-          label: 'Aspect Ratio',
-          default: '0',
-          options: [
-            {
-              'value': '0',
-              'label': 'None',
-            },
-            {
-              'value': '100',
-              'label': '1:1',
-            },
-            {
-              'value': '56.25',
-              'label': '16:9',
-            },
-            {
-              'value': '75',
-              'label': '4:3',
-            },
-            {
-              'value': '133.33',
-              'label': '3:4',
-            },
-            {
-              'value': '177.78',
-              'label': '9:16',
-            },
-            {
-              'value': 'custom',
-              'label': 'Custom',
-            },
-          ],
-        }
+        type: CONTROLLER_SELECT,
+        label: 'Aspect Ratio',
+        default: '0',
+        options: [
+          {
+            'value': '0',
+            'label': 'None',
+          },
+          {
+            'value': '100',
+            'label': '1:1',
+          },
+          {
+            'value': '56.25',
+            'label': '16:9',
+          },
+          {
+            'value': '75',
+            'label': '4:3',
+          },
+          {
+            'value': '133.33',
+            'label': '3:4',
+          },
+          {
+            'value': '177.78',
+            'label': '9:16',
+          },
+          {
+            'value': 'custom',
+            'label': 'Custom',
+          },
+        ],
+      }
     );
 
     this.addControl('custom_aspect', {
@@ -362,6 +364,7 @@ class Image extends BaseElement {
       label: 'Height',
       units: [
         'px',
+        '%',
         'vh',
         'vw',
       ],
@@ -607,9 +610,9 @@ class Image extends BaseElement {
     });
 
     this.addControl('creative_hover_controller', {
-      type: CONTROLLER_CREATIVE_HOVER,
-      label: 'Creative Hover',
-    }
+        type: CONTROLLER_CREATIVE_HOVER,
+        label: 'Creative Hover',
+      }
     );
 
     this.endControlSection();

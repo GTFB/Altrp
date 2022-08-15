@@ -166,8 +166,8 @@ class AltrpCarousel extends Component {
     // настройки слайдера
 
     let infinite = this.props.infinite_loop_additional_content;
-    let maxView = Number(this.props.per_view_slides_content) || 1;
-    let rows = Number(this.props.per_row_slides_content) || 1;
+    let maxView = Number(this.props.elementSettings.getResponsiveLockedSetting('per_view_slides_content')) || 1;
+    let rows = Number(this.props.elementSettings.getResponsiveLockedSetting('per_row_slides_content')) || 1;
 
     if(rows > 1) {
       maxView = maxView * rows
@@ -197,8 +197,8 @@ class AltrpCarousel extends Component {
       className: sliderClasses,
       autoplaySpeed: Number(this.props.transition_autoplay_duration_additional_content),
       speed: Number(this.props.transition_duration_additional_content),
-      slidesToShow: Number(this.props.per_view_slides_content),
-      slidesToScroll: Number(this.props.to_scroll_slides_content),
+      slidesToShow: Number(this.props.elementSettings.getResponsiveLockedSetting('per_view_slides_content')),
+      slidesToScroll: Number(this.props.elementSettings.getResponsiveLockedSetting('to_scroll_slides_content')),
       rows,
       afterChange: current => this.setState({ activeSlide: current }),
       beforeChange: (current, next) => {

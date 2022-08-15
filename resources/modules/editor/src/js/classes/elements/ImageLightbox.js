@@ -186,11 +186,7 @@ class ImageLightbox extends BaseElement {
     this.addControl('height_size', {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      units: [
-        'px',
-        'vh',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
       locked: true,
@@ -422,11 +418,7 @@ class ImageLightbox extends BaseElement {
       conditions: {
         'background_size': [''],
       },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -502,11 +494,7 @@ class ImageLightbox extends BaseElement {
     this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
-        units: [
-          'px',
-          '%',
-          'vh',
-        ],
+        units: ['px', '%', 'vh', 'vw'],
       }
     );
 
@@ -519,11 +507,7 @@ class ImageLightbox extends BaseElement {
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
     });

@@ -1212,11 +1212,7 @@ class Table extends BaseElement {
     this.addControl('replace_image_width', {
       type: CONTROLLER_SLIDER,
       label: 'Image Width',
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
     });
@@ -1224,11 +1220,7 @@ class Table extends BaseElement {
     this.addControl('replace_image_height', {
       type: CONTROLLER_SLIDER,
       label: 'Image Height',
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
     });

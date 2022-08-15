@@ -103,12 +103,14 @@ class InputGallery extends BaseElement {
 
     this.addControl('delete_s', {
       type: CONTROLLER_SLIDER,
-      label: 'Delete Size'
+      label: 'Delete Size',
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('delete_o', {
       type: CONTROLLER_SLIDER,
-      label: 'Delete Offset'
+      label: 'Delete Offset',
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -151,7 +153,7 @@ class InputGallery extends BaseElement {
       max: 500,
       stateless: true,
       min: 0,
-      units: ['px', 'vw']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('v_gap', {
@@ -160,7 +162,7 @@ class InputGallery extends BaseElement {
       max: 50,
       stateless: true,
       min: 0,
-      units: ['px', 'vw', '%']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('h_gap', {
@@ -169,7 +171,7 @@ class InputGallery extends BaseElement {
       max: 50,
       stateless: true,
       min: 0,
-      units: ['px', 'vw', '%']
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();
@@ -297,7 +299,7 @@ class InputGallery extends BaseElement {
     this.addControl('b_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border width',
-      units: ['px', '%', 'vh'],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('b_color', {
@@ -317,8 +319,8 @@ class InputGallery extends BaseElement {
     this.addControl('radius', {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
-      label: 'Radius',
-      units: ['px', '%', 'vh']
+      label: 'Border Radius',
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();

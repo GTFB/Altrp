@@ -82,47 +82,47 @@ class Section extends BaseElement{
     );
 
     this.addControl('layout_column_position', {
-      type: CONTROLLER_SELECT,
-      label: 'Vertical Align',
-      options: [
-        {
-          'value': 'stretch',
-          'label': 'Stretch'
-        },
-        {
-          'value': 'baseline',
-          'label': 'Baseline'
-        },
-        {
-          'value': 'center',
-          'label': 'Center'
-        },
-        {
-          'value': 'flex-start',
-          'label': 'Flex Start'
-        },
-        {
-          'value': 'flex-end',
-          'label': 'Flex End'
-        },
-        {
-          'value': 'space-around',
-          'label': 'Space Around'
-        },
-        {
-          'value': 'space-between',
-          'label': 'Space Between'
-        },
-        {
-          'value': 'space-evenly',
-          'label': 'Space Evenly'
-        },
-        {
-          'value': 'unset',
-          'label': 'Unset'
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Vertical Align',
+        options: [
+          {
+            'value': 'stretch',
+            'label': 'Stretch'
+          },
+          {
+            'value': 'baseline',
+            'label': 'Baseline'
+          },
+          {
+            'value': 'center',
+            'label': 'Center'
+          },
+          {
+            'value': 'flex-start',
+            'label': 'Flex Start'
+          },
+          {
+            'value': 'flex-end',
+            'label': 'Flex End'
+          },
+          {
+            'value': 'space-around',
+            'label': 'Space Around'
+          },
+          {
+            'value': 'space-between',
+            'label': 'Space Between'
+          },
+          {
+            'value': 'space-evenly',
+            'label': 'Space Evenly'
+          },
+          {
+            'value': 'unset',
+            'label': 'Unset'
+          },
+        ],
+      }
     );
 
     this.addControl('layout_justify_content', {
@@ -260,6 +260,7 @@ class Section extends BaseElement{
           label: 'min height'
         }
       ],
+      locked: true,
     });
 
     this.addControl("label_style_min_height", {
@@ -393,6 +394,7 @@ class Section extends BaseElement{
         'px',
         '%',
         'vh',
+        "vw"
       ],
     });
 
@@ -593,6 +595,7 @@ class Section extends BaseElement{
       units: [
         'px',
         '%',
+        'vh',
         'vw',
       ],
       max: 1000,
@@ -639,13 +642,13 @@ class Section extends BaseElement{
           value: "groove",
           label: "Groove"
         }
-        ]
+      ]
     });
 
     this.addControl("section_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("section_style_border_color", {
@@ -664,6 +667,7 @@ class Section extends BaseElement{
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 

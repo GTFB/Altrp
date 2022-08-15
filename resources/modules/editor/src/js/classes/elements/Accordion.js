@@ -199,7 +199,15 @@ class Accordion extends BaseElement {
     this.addControl('spacing_item_style', {
       type: CONTROLLER_SLIDER,
       label: 'Item spacing',
-
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -214,11 +222,14 @@ class Accordion extends BaseElement {
     this.addControl('padding_title_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
@@ -229,93 +240,99 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('color_title_style', {
-      type: CONTROLLER_COLOR,
-      label: 'Color',
+        type: CONTROLLER_COLOR,
+        label: 'Color',
 
-    }
+      }
     );
 
     this.addControl('box_shadow_title_style', {
-      type: CONTROLLER_SHADOW,
-      label: 'Box shadow',
+        type: CONTROLLER_SHADOW,
+        label: 'Box shadow',
 
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
-    }
+        presetColors: [
+          '#eaeaea',
+          '#9c18a8'
+        ],
+      }
     );
 
 
     this.addControl('border_type_title_style', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl(
       'border_width_title_style', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    }
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          unit: 'px',
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
+      }
     );
 
     this.addControl('border_color_title_style', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
 
-    }
+      }
     );
 
     this.addControl('border_radius_title_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
     });
 
     this.addControl('font_typographic_title_style', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-    }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
     );
 
     this.endControlSection();
@@ -328,6 +345,15 @@ class Accordion extends BaseElement {
     this.addControl('spacing_icon_size', {
       type: CONTROLLER_SLIDER,
       label: 'Size icon',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 128,
       min: 16,
     });
@@ -348,14 +374,23 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('color_icon_style', {
-      type: CONTROLLER_COLOR,
-      label: 'Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Color',
+      }
     );
 
     this.addControl('spacing_icon_style', {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
@@ -370,81 +405,92 @@ class Accordion extends BaseElement {
     this.addControl('padding_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
     });
 
     this.addControl('background_color_content_style', {
-      type: CONTROLLER_COLOR,
-      label: 'Background color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+      }
     );
 
     this.addControl('color_content_style', {
-      type: CONTROLLER_COLOR,
-      label: 'Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Color',
+      }
     );
 
     this.addControl('border_type_content_style', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl('border_width_content_style', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
-
+        default: {
+          unit: 'px',
+        },
         units: [
           'px',
           '%',
           'vh',
+          'vw'
         ],
       }
     );
 
     this.addControl('border_color_content_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
     });
 
     this.addControl('border_radius_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
+      default: {
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 100,
       min: 0,
@@ -455,14 +501,23 @@ class Accordion extends BaseElement {
     this.addControl('spacing_content_style', {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
       max: 100,
       min: 0,
     });
 
     this.addControl('typographic_content_style', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-    }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
     );
 
     this.endControlSection();

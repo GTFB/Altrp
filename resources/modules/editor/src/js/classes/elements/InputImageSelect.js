@@ -119,7 +119,7 @@ class InputImageSelect extends BaseElement {
       label: "Item Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       default: { unit: "px" }
     });
 
@@ -128,7 +128,7 @@ class InputImageSelect extends BaseElement {
       label: "Item Height",
       max: 500,
       min: 0,
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       default: { unit: "px" }
     });
 
@@ -458,7 +458,7 @@ class InputImageSelect extends BaseElement {
         size: 2,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 60,
       min: 0,
       locked: true,
@@ -479,7 +479,7 @@ class InputImageSelect extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("label_style_font_color", {
@@ -506,7 +506,7 @@ class InputImageSelect extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
       locked: true,
@@ -526,7 +526,7 @@ class InputImageSelect extends BaseElement {
       conditions: {
         content_label_position_type: ["absolute"]
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100
       // rules: {
@@ -542,7 +542,7 @@ class InputImageSelect extends BaseElement {
         unit: "%",
         size: null
       },
-      units: ["%", "px", "vw"],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0
     });
@@ -639,7 +639,7 @@ class InputImageSelect extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -667,7 +667,7 @@ class InputImageSelect extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_padding", {
@@ -676,7 +676,7 @@ class InputImageSelect extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("position_z_index", {
@@ -817,7 +817,7 @@ class InputImageSelect extends BaseElement {
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("border_color", {
@@ -843,11 +843,11 @@ class InputImageSelect extends BaseElement {
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
+      label: "Border Radius",
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"]
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.endControlSection();

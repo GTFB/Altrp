@@ -85,6 +85,7 @@ class Divider extends BaseElement {
       units: [
         'px',
         '%',
+        'vh',
         'vw',
       ],
     });
@@ -195,8 +196,15 @@ class Divider extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Weight",
       default: {
+        unit: "px",
         size: 3
       },
+      units: [
+        'px',
+        '%',
+        'vh',
+        "vw"
+      ],
       max: 15,
       min: 1,
       step: 0.1,
@@ -222,6 +230,15 @@ class Divider extends BaseElement {
     this.addControl("divider_style_gap", {
       type: CONTROLLER_SLIDER,
       label: "Gap",
+      default: {
+        unit: "px"
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        "vw"
+      ],
       max: 50,
       min: 2,
     });
@@ -257,6 +274,15 @@ class Divider extends BaseElement {
     this.addControl('image_size', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
+      default: {
+        unit: "px"
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        "vw"
+      ],
       min: 10,
       max: 300,
       step: 1

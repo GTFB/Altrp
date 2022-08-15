@@ -45,8 +45,8 @@ class Table extends BaseElement {
     }
 
     this.startControlSection("posts_content_datasource", {
-        tab: TAB_CONTENT,
-        label: "Data Source"
+      tab: TAB_CONTENT,
+      label: "Data Source"
     });
 
     this.addControl("choose_datasource", {
@@ -205,6 +205,7 @@ class Table extends BaseElement {
         size: 20,
         unit: 'px',
       },
+      units: ['px', '%', 'vh', 'vw'],
       max: 120,
       min: 0,
       locked: true,
@@ -378,11 +379,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("posts_bottom_space", {
@@ -391,11 +388,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px',
       },
-      units: [
-        'px',
-        '%',
-        'vh'
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 50,
       min: 0
     });
@@ -419,55 +412,51 @@ class Table extends BaseElement {
     });
 
     this.addControl('posts_border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl('posts_border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      default: {
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    }
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units: ['px', '%', 'vh', 'vw'],
+      }
     );
 
     this.addControl('posts_border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
     );
 
     this.addControl('border_radius', {
@@ -476,11 +465,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('style_background_shadow', {
@@ -637,11 +622,7 @@ class Table extends BaseElement {
       conditions: {
         'background_size': [''],
       },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
     });
@@ -701,11 +682,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('table_style_pagination_typographic', {
@@ -732,11 +709,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('posts_prev_padding', {
@@ -746,11 +719,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("posts_prev_color", {
@@ -763,61 +732,57 @@ class Table extends BaseElement {
     });
 
     this.addControl('posts_prev_typographic', {
-          type: CONTROLLER_TYPOGRAPHIC,
-          label: 'Typographic',
-        }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
     );
 
     this.addControl('posts_prev_border_type', {
-          type: CONTROLLER_SELECT,
-          label: 'Border Type',
-          options: [
-            {
-              'value': 'none',
-              'label': 'None',
-            },
-            {
-              'value': 'solid',
-              'label': 'Solid',
-            },
-            {
-              'value': 'double',
-              'label': 'Double',
-            },
-            {
-              'value': 'dotted',
-              'label': 'Dotted',
-            },
-            {
-              'value': 'dashed',
-              'label': 'Dashed',
-            },
-            {
-              'value': 'groove',
-              'label': 'Groove',
-            },
-          ],
-        }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl('posts_prev_border_width', {
-          type: CONTROLLER_DIMENSIONS,
-          label: 'Border Width',
-          default: {
-            bind: true
-          },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
-        }
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units: ['px', '%', 'vh', 'vw'],
+      }
     );
 
     this.addControl('posts_prev_border_color', {
-          type: CONTROLLER_COLOR,
-          label: 'Border Color',
-        }
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
     );
 
     this.addControl('border_prev_radius', {
@@ -826,11 +791,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('style_prev_background_shadow', {
@@ -883,11 +844,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('posts_next_padding', {
@@ -897,11 +854,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl("posts_next_color", {
@@ -914,61 +867,57 @@ class Table extends BaseElement {
     });
 
     this.addControl('posts_next_typographic', {
-          type: CONTROLLER_TYPOGRAPHIC,
-          label: 'Typographic',
-        }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
     );
 
     this.addControl('posts_next_border_type', {
-          type: CONTROLLER_SELECT,
-          label: 'Border Type',
-          options: [
-            {
-              'value': 'none',
-              'label': 'None',
-            },
-            {
-              'value': 'solid',
-              'label': 'Solid',
-            },
-            {
-              'value': 'double',
-              'label': 'Double',
-            },
-            {
-              'value': 'dotted',
-              'label': 'Dotted',
-            },
-            {
-              'value': 'dashed',
-              'label': 'Dashed',
-            },
-            {
-              'value': 'groove',
-              'label': 'Groove',
-            },
-          ],
-        }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl('posts_next_border_width', {
-          type: CONTROLLER_DIMENSIONS,
-          label: 'Border Width',
-          default: {
-            bind: true
-          },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
-        }
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units: ['px', '%', 'vh', 'vw'],
+      }
     );
 
     this.addControl('posts_next_border_color', {
-          type: CONTROLLER_COLOR,
-          label: 'Border Color',
-        }
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
     );
 
     this.addControl('border_next_radius', {
@@ -977,11 +926,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('style_next_background_shadow', {

@@ -1245,6 +1245,7 @@ class InputMultiSelectWidget extends Component {
     const placeholder = element.getResponsiveLockedSetting('content_placeholder');
     const content_readonly = element.getResponsiveLockedSetting('content_readonly');
     const no_results_text = element.getResponsiveLockedSetting('no_results_text');
+    const reset_input = element.getResponsiveLockedSetting('reset__input');
 
     const inputProps = {
     };
@@ -1264,6 +1265,7 @@ class InputMultiSelectWidget extends Component {
         onQueryChange={this.onQueryChange}
         itemsEqual={this.itemsEqual}
         disabled={content_readonly}
+        resetOnSelect={reset_input}
         popoverProps={this.popoverProps}
         createNewItemFromQuery={element.getResponsiveLockedSetting('create') ? this.createNewItemFromQuery : null}
         createNewItemRenderer={this.createNewItemRenderer}
@@ -1287,7 +1289,7 @@ class InputMultiSelectWidget extends Component {
         }}
         items={itemsOptions}
         // itemRenderer={({label})=>label}
-        noResults={<MenuItem disabled={true} text={no_results_text}/>}
+        noResults={<MenuItem disabled={true} text={no_results_text || 'No results'}/>}
         name={this.getName()}
         onItemSelect={this.onItemSelect}
         selectedItems={selectedItems}

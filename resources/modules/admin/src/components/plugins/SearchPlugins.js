@@ -13,7 +13,7 @@ export default class SearchPlugins extends Component {
     this.state = {
       plugins: [],
       downloadedPlugins: [],
-      activeHeader: 4,
+      activeHeader: 0,
     };
     this.searchResource = new Resource({
       route:'https://altrp.market/ajax/models/market_plugins/customizers/search_plugins_for_user_ac58fmi3g'
@@ -24,6 +24,7 @@ export default class SearchPlugins extends Component {
   }
 
   async componentDidMount() {
+    window.addEventListener("scroll", this.listenScrollHeader)
 
     let result = await  this.searchResource.getAll( {
       'Authorization': window.altrpMarketApiToken || ''
@@ -41,6 +42,10 @@ export default class SearchPlugins extends Component {
 
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.listenScrollHeader)
+  }
+
   listenScrollHeader = () => {
     if (window.scrollY > 4 && this.state.activeHeader !== 1) {
       this.setState({
@@ -48,8 +53,7 @@ export default class SearchPlugins extends Component {
       })
     } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
       this.setState({
-        activeHeader: 0,
-        plugins: []
+        activeHeader: 0
       })
     }
   }
@@ -80,16 +84,16 @@ export default class SearchPlugins extends Component {
           <UserTopPanel />
         </div>
         <div className="admin-content">
-          <div className="row">
-            <form className="admin-table-top admin-table-top__search-plugin" onSubmit={(e)=>e.preventDefault()}>
+          <div className="search-plugins">
+            <form className="search-plugins__form" onSubmit={(e)=>e.preventDefault()}>
               <InputGroup className="form-tables"
-              onChange={this.onChange}/>
+                          onChange={this.onChange}/>
               <Search />
             </form>
-            <div className="plugins-search-list row align-items-stretch">
+            <div className="search-plugins__list">
               {
                 updating ? '' :
-                  plugins.map((plugin, idx)=>{
+                  plugins.map(plugin => {
                     return <NewPluginItem key={plugin.id} plugin={plugin} downloadedPlugins={downloadedPlugins} />
                   })
 

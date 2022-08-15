@@ -287,6 +287,7 @@ class DropbarWidget extends Component {
       <button
         onClick={this.onClick}
         className={_.join(classes, " ")}
+        style={{width: '100%'}}
         id={id}
       >
         {buttonText}
@@ -303,7 +304,7 @@ class DropbarWidget extends Component {
       <AltrpDropbar
         elemenentId={this.props.element.getId()}
         settings={this.props.element.getLockedSettings()}
-        className={`btn ${classesState}`}
+        className={classesState}
         element={this.props.element}
         getContent={this.getLockedContent}
         showDelay={dropbarDelay}
