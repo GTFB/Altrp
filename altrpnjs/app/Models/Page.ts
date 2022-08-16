@@ -439,6 +439,7 @@ export default class Page extends BaseModel {
 
     for (let pageRole of pageRoles) {
       let role = await Role.find(pageRole.role_id)
+      // @ts-ignore
       if (role && await currentUser.hasRole(parseInt(role.id))) {
         allowed = true
       }
