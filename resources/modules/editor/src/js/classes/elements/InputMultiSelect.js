@@ -502,6 +502,15 @@ class InputMultiSelect extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
     });
 
+    this.addControl("field_height-m", {
+      type: CONTROLLER_SLIDER,
+      stateless: true,
+      label: "Height",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vw"]
+    });
+
     this.addControl("position_margin", {
       stateless: true,
       type: CONTROLLER_DIMENSIONS,
