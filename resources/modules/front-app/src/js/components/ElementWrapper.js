@@ -271,6 +271,9 @@ class ElementWrapper extends Component {
     if(isEditor()){
       return false
     }
+    if(newState.elementDisplay !== this.state.elementDisplay){
+      return true
+    }
     dependencies = dependencies || []
 
     if(newProps.altrpPageState !== this.props.altrpPageState

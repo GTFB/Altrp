@@ -260,6 +260,10 @@ class SimpleElementWrapper extends Component {
     }
     dependencies = dependencies || []
 
+    if(newState.elementDisplay !== this.state.elementDisplay){
+      return true
+    }
+
     if(newProps.altrpPageState !== this.props.altrpPageState
       && dependencies.indexOf('altrppagestate') === -1){
       ++window.countReduced
