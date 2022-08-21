@@ -14,13 +14,11 @@ class FrontPopup extends Component {
     let isVisible = false
     let popupID = Number(props.popupTrigger.popupID)
     if(_.isNaN(popupID)){
-      isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
+      isVisible = props.popupTrigger.popupID === _.get(this.props, "template.guid")
     } else {
       isVisible = popupID == _.get(this.props, "template.id")
     }
-    this.setState({
-      isVisible
-    });
+
     this.state = {
       isVisible,
       rootElement: window.frontElementsFabric.parseData(
@@ -306,6 +304,12 @@ class FrontPopup extends Component {
     const content_height = rootElement.getResponsiveSetting('content_height_custom_popup_layout')
     const size = content_height?.size
     const unit = content_height?.unit
+    let height
+    if(! size){
+      height = 'auto'
+    } else {
+      height = size+unit
+    }
 
     return (
       <CSSTransition
@@ -339,7 +343,7 @@ class FrontPopup extends Component {
           >
             {close_context !== 'window' && closeButton}
             {rootElement.getSettings("").height_popup_layout === 'fitToContent'
-              ? <div className="popup-content" style={{height: size+unit}}>
+              ? <div className="popup-content" style={{height}}>
                 {React.createElement(rootElement.componentClass, {
                   element: rootElement,
                   ElementWrapper :this.ElementWrapper,
@@ -363,7 +367,7 @@ class FrontPopup extends Component {
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
-                <div className="popup-content" style={{height: size+unit}}>
+                <div className="popup-content" style={{height}}>
                   {React.createElement(rootElement.componentClass, {
                     element: rootElement,
                     ElementWrapper :this.ElementWrapper,

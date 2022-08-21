@@ -100,7 +100,7 @@ export default function renderInputSelect2(settings, device, context) {
           try {
             value = moment.unix(value / 1000).format("YYYY-MM-DD");
           } catch (error) {
-            console.log(error);
+            console.error(error);
           }
         }
       }
