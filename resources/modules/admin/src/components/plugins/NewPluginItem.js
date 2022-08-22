@@ -7,7 +7,6 @@ class NewPluginItem extends Component {
   state = {};
   installPluginResource = new Resource({route: '/admin/ajax/plugins/install'})
   installPlugin = async (action = null) => {
-    console.log('reerere')
     const {plugin,} = this.props
     let res
     try{
