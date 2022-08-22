@@ -201,7 +201,6 @@ class AllPages extends Component {
       hasCaret = false
       childPage = []
     }
-
     treePage = {
       id: page.id,
       key: page.id,
