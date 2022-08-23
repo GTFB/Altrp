@@ -45,8 +45,7 @@ class AllPages extends Component {
         order_by: 'title',
       });
     }
-
-    let treePagesNew = res.map(page => {
+    let treePagesNew = res.filter(item => item.parent_page_id === null).map(page => {
       return this.treePagesMap(page)
     })
     let treePagesSlice = treePagesNew
@@ -68,7 +67,6 @@ class AllPages extends Component {
       return {...state, pagesDidMount: res};
     });
   }
-
 
   async componentDidMount() {
     await this.getPagesDidMount();
