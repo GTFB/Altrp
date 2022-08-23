@@ -11,6 +11,7 @@ import renderInputAccept from '../helpers/widgets-renders/renderInputAccept';
 import renderInputHidden from '../helpers/widgets-renders/renderInputHidden';
 import renderInputFile from '../helpers/widgets-renders/renderInputFile';
 import renderMap from '../helpers/widgets-renders/renderMap';
+import renderLocation from '../helpers/widgets-renders/renderLocation';
 import renderHeadingTypeAnimating from '../helpers/widgets-renders/renderHeadingTypeAnimating';
 import renderImageLightbox from '../helpers/widgets-renders/renderImageLightbox';
 import renderTree from '../helpers/widgets-renders/renderTree';
@@ -119,6 +120,7 @@ View.global('renderInputHidden', renderInputHidden)
 View.global('renderInputFile', renderInputFile)
 View.global('renderInputPagination', renderInputPagination)
 View.global('renderMap', renderMap)
+View.global('renderLocation', renderLocation)
 View.global('renderHeadingTypeAnimating', renderHeadingTypeAnimating)
 View.global('renderImageLightbox', renderImageLightbox)
 View.global('renderTree', renderTree)
