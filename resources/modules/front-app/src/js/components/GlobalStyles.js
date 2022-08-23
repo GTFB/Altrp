@@ -26,6 +26,7 @@ import getRouteStyles from "../functions/get-route-styles";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
+import LocationComponent from "../../../../editor/src/js/components/widgets/styled-components/LocationComponent";
 import TabsSwitcherComponent
   from "../../../../editor/src/js/components/widgets/styled-components/TabsSwitcherComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
@@ -304,6 +305,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEd
           break;
         case "map_builder":
           styles += `.${prefix}${id} {${MapConstructorComponent(item.settings)}}`;
+          break;
+        case "location":
+          styles += `.${prefix}${id} {${LocationComponent(item.settings)}}`;
           break;
         case "scheduler":
           styles += `.${prefix}${id} {${getSchedulerStyles(item.settings, id)}}`;

@@ -32,6 +32,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'carousel',
   'map',
   'map_builder',
+  'location',
   'menu',
   'pie-diagram',
   'line-diagram',

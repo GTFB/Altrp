@@ -265,6 +265,12 @@ export const defaultState = [
     }
   },
   {
+    name: "location",
+    import: async () => {
+      return await import(/* webpackChunkName: 'LocationWidget' */ "../../../../../editor/src/js/components/widgets/LocationWidget");
+    }
+  },
+  {
     name: "menu",
     import: async () => {
       return await import(/* webpackChunkName: 'MenuWidget' */ "../../../../../editor/src/js/components/widgets/MenuWidget");

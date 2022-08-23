@@ -36,6 +36,7 @@ import { getPostsStyles } from "../../../../front-app/src/js/components/helpers/
 import FormComponent from "./widgets/styled-components/FormComponent";
 import MapComponent from "./widgets/styled-components/MapComponent";
 import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
+import LocationComponent from "./widgets/styled-components/LocationComponent";
 import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
 import {
   getEditor,
@@ -325,6 +326,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "map_builder":
       styles += `.${prefix}${elementId} {${MapConstructorComponent(settings)}}`;
+      break;
+    case "location":
+      styles += `.${prefix}${elementId} {${LocationComponent(settings)}}`;
       break;
     case "scheduler":
       styles += `.${prefix}${elementId} {${getSchedulerStyles(settings, elementId)}}`;

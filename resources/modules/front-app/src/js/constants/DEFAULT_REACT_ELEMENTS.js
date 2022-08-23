@@ -29,6 +29,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'breadcrumbs',
   'map',
   'map_builder',
+  'location',
   'menu',
   'pie-diagram',
   'line-diagram',

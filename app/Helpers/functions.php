@@ -1050,6 +1050,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'map',
     'text',
     'map_builder',
+    'location',
     'menu',
     'pie-diagram',
     'line-diagram',
