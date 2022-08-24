@@ -6,10 +6,14 @@ import Select from "react-select";
 import controllerDecorate from "../../decorators/controller";
 import {
   addFont,
-  removeFont
+  removeFont,
 } from "../../../../../front-app/src/js/store/fonts-storage/actions";
 import { renderScrollbar } from "../../../../../admin/src/components/altrp-select/AltrpSelect";
-import {altrpFontsSet, GOOGLE_FONT, SYSTEM_FONT} from "../../../../../front-app/src/js/constants/fonts";
+import {
+  altrpFontsSet,
+  GOOGLE_FONT,
+  SYSTEM_FONT,
+} from "../../../../../front-app/src/js/constants/fonts";
 import PresetGlobalFonts from "./PresetGlobalFonts";
 import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
@@ -34,28 +38,32 @@ class TypographicController extends Component {
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
     const familyOptions = [
       {
-        label: 'System Fonts',
-        options: _.toPairs(altrpFontsSet).map(([font, type]) => {
-          if(type === SYSTEM_FONT){
-            return {
-              label: font,
-              value: font
-            };
-          }
-        }).filter(f => f)
+        label: "System Fonts",
+        options: _.toPairs(altrpFontsSet)
+          .map(([font, type]) => {
+            if (type === SYSTEM_FONT) {
+              return {
+                label: font,
+                value: font,
+              };
+            }
+          })
+          .filter((f) => f),
       },
       {
-        label: 'Google Fonts',
-        options: _.toPairs(altrpFontsSet).map(([font, type]) => {
-          if(type === GOOGLE_FONT){
-            return {
-              label: font,
-              value: font
-            };
-          }
-        }).filter(f => f)
+        label: "Google Fonts",
+        options: _.toPairs(altrpFontsSet)
+          .map(([font, type]) => {
+            if (type === GOOGLE_FONT) {
+              return {
+                label: font,
+                value: font,
+              };
+            }
+          })
+          .filter((f) => f),
       },
-    ]
+    ];
     // const familyOptions = _.toPairs(altrpFontsSet).map(([font, type]) => {
     //   return {
     //     label: font,
@@ -81,12 +89,12 @@ class TypographicController extends Component {
       lineHeightMin: this.props.lineHeightMax || 0.1,
       //spacing
       spacingMax: this.props.spacingMax || 10,
-      spacingMin: this.props.spacingMin || -5
+      spacingMin: this.props.spacingMin || -5,
     };
   }
   getDefaultValue() {
     return {
-      family: {}
+      family: null,
     };
   }
 
@@ -96,7 +104,7 @@ class TypographicController extends Component {
 
   setGlobal(guid) {
     const globalFonts = this.props.globalFonts;
-    const guidFont = globalFonts.filter(font => font.guid == guid)[0];
+    const guidFont = globalFonts.filter((font) => font.guid == guid)[0];
     const {
       decoration,
       family,
@@ -107,7 +115,7 @@ class TypographicController extends Component {
       sizeUnit,
       weight,
       style,
-      transform
+      transform,
     } = guidFont;
     const fontValue = {
       decoration: decoration,
@@ -119,7 +127,7 @@ class TypographicController extends Component {
       sizeUnit: sizeUnit,
       weight: weight,
       style: style,
-      transform: transform
+      transform: transform,
     };
     if (guidFont) {
       if (family) {
@@ -143,6 +151,7 @@ class TypographicController extends Component {
         );
         getCurrentElement().removeFont(this.props.controller.getSettingName());
       }
+
       this._changeValue(fontValue);
       getCurrentElement().setGlobalStyle(
         guid,
@@ -159,7 +168,7 @@ class TypographicController extends Component {
     // shadowContainer.classList.toggle("control-shadow-active");
 
     this.setState({
-      activeTypographic: !this.state.activeTypographic
+      activeTypographic: !this.state.activeTypographic,
     });
 
     if (shadowContentIcon.getAttribute("fill") === "#8E94AA") {
@@ -198,10 +207,11 @@ class TypographicController extends Component {
       );
       currentElement.removeFont(this.props.controller.getSettingName());
     }
+
     this._changeValue({
       ..._value,
       family: value ? value.value : "",
-      label: value ? value.label : ""
+      label: value ? value.label : "",
     });
   }
   //конец select2
@@ -211,25 +221,25 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      size: e.target.value
+      size: e.target.value,
     });
   }
 
-  changeSizeUnit = unit => {
+  changeSizeUnit = (unit) => {
     let value =
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      sizeUnit: unit
+      sizeUnit: unit,
     });
   };
 
-  changeLineHeightUnit = unit => {
+  changeLineHeightUnit = (unit) => {
     let value =
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      lineHeightUnit: unit
+      lineHeightUnit: unit,
     });
   };
 
@@ -238,7 +248,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      size: e.target.value
+      size: e.target.value,
     });
   }
   //конец size
@@ -248,7 +258,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      weight: e.target.value
+      weight: e.target.value,
     });
   }
   //конец weight
@@ -258,7 +268,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      transform: e.target.value
+      transform: e.target.value,
     });
   }
   //конец transform
@@ -268,7 +278,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      style: e.target.value
+      style: e.target.value,
     });
   }
   //конец style
@@ -278,7 +288,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      decoration: e.target.value
+      decoration: e.target.value,
     });
   }
   //конец decoration
@@ -288,7 +298,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      lineHeight: e.target.value
+      lineHeight: e.target.value,
     });
   }
 
@@ -297,7 +307,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      lineHeight: e.target.value
+      lineHeight: e.target.value,
     });
   }
   //конец lineHeight
@@ -307,7 +317,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      spacing: e.target.value
+      spacing: e.target.value,
     });
   }
 
@@ -316,7 +326,7 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
       ...value,
-      spacing: e.target.value
+      spacing: e.target.value,
     });
   }
   //конец letter spacing
@@ -328,123 +338,124 @@ class TypographicController extends Component {
     let value =
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     const { familyOptions } = this.state;
+
     const weightOptions = [
       {
         value: "100",
-        label: "100"
+        label: "100",
       },
       {
         value: "200",
-        label: "200"
+        label: "200",
       },
       {
         value: "300",
-        label: "300"
+        label: "300",
       },
       {
         value: "400",
-        label: "400"
+        label: "400",
       },
       {
         value: "500",
-        label: "500"
+        label: "500",
       },
       {
         value: "600",
-        label: "600"
+        label: "600",
       },
       {
         value: "700",
-        label: "700"
+        label: "700",
       },
       {
         value: "800",
-        label: "800"
+        label: "800",
       },
       {
         value: "900",
-        label: "900"
+        label: "900",
       },
       {
         value: "bold",
-        label: "bold"
+        label: "bold",
       },
       {
         value: "normal",
-        label: "normal"
+        label: "normal",
       },
       {
         value: "bolder",
-        label: "bolder"
+        label: "bolder",
       },
       {
         value: "lighter",
-        label: "lighter"
-      }
+        label: "lighter",
+      },
     ];
 
     const transformOptions = [
       {
         value: "none",
         label: "default",
-        key: 0
+        key: 0,
       },
       {
         value: "capitalize",
         label: "capitalize",
-        key: 1
+        key: 1,
       },
       {
         value: "uppercase",
         label: "uppercase",
-        key: 2
+        key: 2,
       },
       {
         value: "lowercase",
         label: "lowercase",
-        key: 3
-      }
+        key: 3,
+      },
     ];
 
     const styleOptions = [
       {
         value: "normal",
         label: "normal",
-        key: 0
+        key: 0,
       },
       {
         value: "italic",
         label: "italic",
-        key: 1
+        key: 1,
       },
       {
         value: "oblique",
         label: "oblique",
-        key: 2
-      }
+        key: 2,
+      },
     ];
 
     const decorationOptions = [
       {
         value: "none",
         label: "none",
-        key: 0
+        key: 0,
       },
       {
         value: "underline",
         label: "underline",
-        key: 1
+        key: 1,
       },
       {
         value: "overline",
         label: "overline",
-        key: 3
+        key: 3,
       },
       {
         value: "line-through",
         label: "line-through",
-        key: 4
-      }
+        key: 4,
+      },
     ];
     // стили для select2
     const customStyles = {
@@ -454,7 +465,7 @@ class TypographicController extends Component {
         backgroundColor: state.isSelected ? "#5897fb" : "#FFF",
         fontSize: 13,
         padding: 5,
-        height: 20
+        height: 20,
       }),
 
       menu: () => ({
@@ -467,15 +478,15 @@ class TypographicController extends Component {
         borderStyle: "solid",
         borderColor: "#E5E6EA",
         position: "absolute",
-        zIndex: 100
+        zIndex: 100,
       }),
 
       menuList: () => ({
         margin: 0,
-        padding: 0
+        padding: 0,
       }),
 
-      control: state => ({
+      control: (state) => ({
         display: "flex",
         height: 28,
         borderRadius: 3,
@@ -483,22 +494,22 @@ class TypographicController extends Component {
         borderStyle: "solid",
         borderColor: "#E5E6EA",
         color: "#8E94AA",
-        fontSize: 13
+        fontSize: 13,
       }),
 
       placeholder: () => ({
         color: "#8E94AA",
         fontSize: 13,
-        opacity: 1
+        opacity: 1,
       }),
 
       indicatorSeparator: () => ({
-        display: "none !important"
+        display: "none !important",
       }),
 
       singleValue: () => ({
-        color: "#8E94AA"
-      })
+        color: "#8E94AA",
+      }),
     };
     // конец стилей для select2
 
@@ -522,10 +533,10 @@ class TypographicController extends Component {
             <div className="control-container_select2-wrapper">
               <Select
                 onChange={this.changeFamily}
-                value={_.get(value, "family.label", "")}
+                value={value.family || null}
                 options={familyOptions}
                 styles={customStyles}
-                placeholder={value.label}
+                placeholder={value.family || "Select font"}
                 isClearable={true}
                 components={{ MenuList: renderScrollbar }}
                 noOptionsMessage={() => "no fonts found"}
@@ -537,7 +548,7 @@ class TypographicController extends Component {
             <div className="control-slider-label control-slider-label--typographic">
               Size
               <div className="control-slider-type-label__wrapper">
-                {this.units.map(unit => (
+                {this.units.map((unit) => (
                   <button
                     onClick={() => this.changeSizeUnit(unit)}
                     key={unit}
@@ -588,7 +599,7 @@ class TypographicController extends Component {
                 className="control-select control-field"
                 onChange={this.weightChange}
               >
-                {weightOptions.map(option => {
+                {weightOptions.map((option) => {
                   return (
                     <option value={option.value} key={option.value}>
                       {option.label}
@@ -611,7 +622,7 @@ class TypographicController extends Component {
                 className="control-select control-field"
                 onChange={this.transformChange}
               >
-                {transformOptions.map(option => {
+                {transformOptions.map((option) => {
                   return (
                     <option value={option.value} key={option.key}>
                       {option.label}
@@ -634,7 +645,7 @@ class TypographicController extends Component {
                 className="control-select control-field"
                 onChange={this.styleChange}
               >
-                {styleOptions.map(option => {
+                {styleOptions.map((option) => {
                   return (
                     <option value={option.value} key={option.key}>
                       {option.label}
@@ -657,7 +668,7 @@ class TypographicController extends Component {
                 className="control-select control-field"
                 onChange={this.decorationChange}
               >
-                {decorationOptions.map(option => {
+                {decorationOptions.map((option) => {
                   return (
                     <option value={option.value} key={option.key}>
                       {option.label}
@@ -780,7 +791,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
-    currentScreen: state.currentScreen
+    currentScreen: state.currentScreen,
   };
 }
 export default connect(controllerMapStateToProps)(TypographicController);
