@@ -22,6 +22,7 @@ class AdminSettings extends Component {
     this.onClickResetDatabase = this.onClickResetDatabase.bind(this)
     this.state = {
       GoogleFontsDisabled: false,
+      IndexingDisabled: false,
       activeTab: parseInt(window.location.hash[1]) || 0,
       modal: false,
       imageModal: false,
@@ -42,6 +43,17 @@ class AdminSettings extends Component {
     this.setState(state => ({
       ...state,
       GoogleFontsDisabled: value
+    }));
+  };
+
+  toggleIndexingDisabled = async e => {
+    let value = e.target.checked;
+    await new Resource({
+      route: "/admin/ajax/settings"
+    }).put("altrp_indexing_disabled", { value });
+    this.setState(state => ({
+      ...state,
+      IndexingDisabled: value
     }));
   };
 
@@ -68,11 +80,18 @@ class AdminSettings extends Component {
       )
     ).altrp_google_fonts_disabled;
 
-    console.log(GoogleFontsDisabled)
+    let IndexingDisabled = !!(
+      await new Resource({ route: "/admin/ajax/settings" }).get(
+        "altrp_indexing_disabled"
+      )
+    ).altrp_indexing_disabled;
+
+    //console.log(GoogleFontsDisabled)
 
     this.setState(state => ({
       ...state,
       GoogleFontsDisabled,
+      IndexingDisabled,
     }));
   }
   switchTab(activeTab) {
@@ -172,10 +191,10 @@ class AdminSettings extends Component {
   }
 
   render() {
-    const { GoogleFontsDisabled, SSRPort, SSRAlias, SSRConf, idModal, modalResetHidden, emailReset, passwordReset, modalResetLoading } = this.state;
+    const { GoogleFontsDisabled, IndexingDisabled, SSRPort, SSRAlias, SSRConf, idModal, modalResetHidden, emailReset, passwordReset, modalResetLoading } = this.state;
     const {resetEnable} = this.props.adminState
 
-    console.log(this.state)
+    //console.log(this.state)
 
     return (
       <div className="admin-settings admin-page">
@@ -223,7 +242,20 @@ class AdminSettings extends Component {
                         onChange={this.toggleGoogleFontsDisabled}
                         type="checkbox"
                       />
-                      Disable Google Fonts
+                      Disable
+                    </td>
+                  </tr>
+
+                  <tr className="admin-settings-table-row">
+                    <td className="admin-settings-table__td row-text">Website Indexing</td>
+                    <td className="admin-settings-table__td ">
+                      <input
+                        className="admin-table__td_check"
+                        checked={this.state.IndexingDisabled}
+                        onChange={this.toggleIndexingDisabled}
+                        type="checkbox"
+                      />
+                      Disable
                     </td>
                   </tr>
 

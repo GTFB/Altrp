@@ -259,7 +259,7 @@ export default class Page extends BaseModel {
       //   for_guest = true
       // }
       if (!isString(role.value)) {
-        
+
       }
       if (role.value === 'guest') {
         for_guest = true
@@ -971,21 +971,20 @@ export default class Page extends BaseModel {
     for (const area of areas) {
       if (_.isArray(area.templates)) {
         // continue
+        for(const template of area.templates){
 
+          if (template?.data) {
+            template.data = mbParseJSON(template.data, template.data)
+
+            Page.getDataDependencies(template.data)
+
+          }
+        }
       }
       if (area?.template?.data) {
         area.template.data = mbParseJSON(area.template.data, area.template.data)
 
         Page.getDataDependencies(area.template.data)
-        // area.template.data = JSON.stringify(area.template.data)
-
-        // const data = {...area.template.data}
-        // delete area.template.data
-        // for(const key in data){
-        //   if(data.hasOwnProperty(key)){
-        //
-        //   }
-        // }
 
       }
       _areas.push(area)

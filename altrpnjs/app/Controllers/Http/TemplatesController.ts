@@ -344,6 +344,9 @@ export default class TemplatesController {
     let templateGenerator = new TemplateGenerator()
     templateGenerator.deleteFile(template)
     templateGenerator.deleteFiles(template)
+
+    await TemplateSetting.query().where("template_id", template.id).delete()
+
     await template.delete()
     return {
       success: true

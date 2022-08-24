@@ -82,7 +82,7 @@ class NewPluginItem extends Component {
               ? this.checkVersion(plugin)
                 ? <button className="plugin__btn plugin__btn-update" onClick={() => this.installPlugin('update')}>Update</button>
                 :  <button className="plugin__btn plugin__btn-reinstall" onClick={this.installPlugin}>Reinstall</button>
-              : <button className="plugin__btn plugin__btn-install" onClick={() => this.installPlugin}>Install</button>
+              : <button className="plugin__btn plugin__btn-install" onClick={this.installPlugin}>Install</button>
           }
         </div>
       </div>

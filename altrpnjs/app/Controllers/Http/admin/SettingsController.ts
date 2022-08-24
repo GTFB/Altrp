@@ -8,6 +8,8 @@ import Role from "App/Models/Role"
 import {promisify} from "util";
 import isProd from "../../../../helpers/isProd";
 import {TelegramBot} from "App/Services/TelegramBot";
+import { writeFileSync } from 'fs';
+import Application from '@ioc:Adonis/Core/Application'
 
 export default class SettingsController {
   async saveSettings(httpContext: HttpContextContract) {
@@ -30,6 +32,16 @@ export default class SettingsController {
     } catch (e) {
       logger.error(e.message)
       return response.json({})
+    }
+
+    if(params.setting_name === "altrp_indexing_disabled") {
+      let robotsTXT = ``;
+      if (request.input('value')) {
+        robotsTXT = `User-agent: *\rDisallow: /`
+      } else {
+        robotsTXT = ``
+      }
+      writeFileSync(Application.publicPath('robots.txt'), robotsTXT);
     }
 
     return response.json({result: true})

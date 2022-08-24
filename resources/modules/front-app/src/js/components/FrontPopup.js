@@ -14,13 +14,11 @@ class FrontPopup extends Component {
     let isVisible = false
     let popupID = Number(props.popupTrigger.popupID)
     if(_.isNaN(popupID)){
-      isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
+      isVisible = props.popupTrigger.popupID === _.get(this.props, "template.guid")
     } else {
       isVisible = popupID == _.get(this.props, "template.id")
     }
-    this.setState({
-      isVisible
-    });
+
     this.state = {
       isVisible,
       rootElement: window.frontElementsFabric.parseData(
