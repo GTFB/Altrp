@@ -80,7 +80,7 @@ class TemplateStylesModule {
     styles = {};
     stylesElements = _.uniq(stylesElements)
 
-    for (const screen of CONSTANTS.SCREENS) {
+    for (const screen of [...CONSTANTS.SCREENS, ...CONSTANTS.SCREENS_ADDITIONAL]) {
 
       let styledTag = window.altrpEditorContent.editorWindow.current
         .getRootNode()

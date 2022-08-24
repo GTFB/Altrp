@@ -37,11 +37,11 @@ export default function getResponsiveSetting(
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
   if (setting === undefined) {
-    for (let screen of [...CONSTANTS.SCREENS].reverse()) {
+    for (let screen of [...CONSTANTS.SCREENS, ...CONSTANTS.SCREENS_ADDITIONAL].reverse()) {
       if (
         currentScreen.id < screen.id
-        // ||
-        // screen.name === CONSTANTS.DEFAULT_BREAKPOINT
+        ||
+        screen.name === 'screen_2K+'
       ) {
         continue;
       }
