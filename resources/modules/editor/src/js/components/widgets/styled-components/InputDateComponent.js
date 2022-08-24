@@ -6,7 +6,7 @@ import {
   colorPropertyStyled,
   borderWidthStyled,
   shadowControllerToStyles,
-  sizeStyled
+  sizeStyled,
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 /**
@@ -14,12 +14,15 @@ import {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const inputWrapperStyle = settings => {
+const inputWrapperStyle = (settings) => {
   let styles = `&& .altrp-input-wrapper {`;
   let width;
   //width begin
   settings && (width = getResponsiveSetting(settings, "field_width"));
   width && (styles += sizeStyled(width, "width"));
+
+  settings && (width = getResponsiveSetting(settings, "field_height"));
+  width && (styles += sizeStyled(width, "height"));
   //width end
   styles += "}";
   return styles;
@@ -30,7 +33,7 @@ const inputWrapperStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const containerStyle = settings => {
+const containerStyle = (settings) => {
   let styles = `&& .altrp-field-container {`;
   let margin;
 
@@ -48,7 +51,7 @@ const containerStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldStyle = settings => {
+const fieldStyle = (settings) => {
   let styles = `& .altrp-field, & .bp3-input {`;
   let padding,
     color,
@@ -59,7 +62,8 @@ const fieldStyle = settings => {
     borderColor,
     borderRadius,
     boxShadow,
-    toggle;
+    toggle,
+    height;
 
   const {
     placeholder_and_value_alignment_position_section,
@@ -71,14 +75,20 @@ const fieldStyle = settings => {
     image_select_item_height,
     image_select_image_fit,
     image_select_image_position,
-    cross_size
+    cross_size,
   } = settings;
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (height = getResponsiveSetting(settings, "field_height"));
+  height && (styles += sizeStyled(height, "height"));
+
   settings && (toggle = getResponsiveSetting(settings, "disable_box_shadow"));
-  toggle && (styles += 'box-shadow: none;');
+  toggle && (styles += "box-shadow: none;");
 
   settings &&
     (typographic = getResponsiveSetting(settings, "field_font_typographic"));
@@ -167,11 +177,11 @@ const fieldStyle = settings => {
 };
 
 /**
-* Стили для класса altrp-field:hover
-* @param {Object} settings style settings of element
-* @returns {String} CSS style string
-*/
-const fieldStyleHover = settings => {
+ * Стили для класса altrp-field:hover
+ * @param {Object} settings style settings of element
+ * @returns {String} CSS style string
+ */
+const fieldStyleHover = (settings) => {
   let styles = `&& .altrp-field:hover, && .bp3-input:hover {`;
   let color,
     backgroundColor,
@@ -181,42 +191,46 @@ const fieldStyleHover = settings => {
     borderRadius,
     boxShadow;
 
-  const {
-  } = settings;
+  const {} = settings;
 
-  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
+  settings &&
+    (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
-  settings && (color = getResponsiveSetting(settings, "field_font_color", ":hover"));
+  settings &&
+    (color = getResponsiveSetting(settings, "field_font_color", ":hover"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings && (borderType = getResponsiveSetting(settings, "border_type", ":hover"));
+  settings &&
+    (borderType = getResponsiveSetting(settings, "border_type", ":hover"));
   borderType &&
-  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
 
-  settings && (borderColor = getResponsiveSetting(settings, "border_color", ":hover"));
+  settings &&
+    (borderColor = getResponsiveSetting(settings, "border_color", ":hover"));
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
 
-  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ":hover"));
+  settings &&
+    (borderWidth = getResponsiveSetting(settings, "border_width", ":hover"));
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-  (borderRadius = getResponsiveSetting(
-    settings,
-    "global_filter_input_border_radius",
-    ":hover"
-  ));
+    (borderRadius = getResponsiveSetting(
+      settings,
+      "global_filter_input_border_radius",
+      ":hover"
+    ));
   borderRadius &&
-  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
   settings &&
-  (backgroundColor = getResponsiveSetting(
-    settings,
-    "background_style_background_color",
-    ":hover"
-  ));
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color",
+      ":hover"
+    ));
   backgroundColor &&
-  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   styles += "&& .input-clear-btn{";
 
@@ -236,7 +250,7 @@ const fieldStyleHover = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldStyleFocus = settings => {
+const fieldStyleFocus = (settings) => {
   let styles = `&& .altrp-field:focus, && .bp3-input:focus {`;
   let padding,
     color,
@@ -248,42 +262,46 @@ const fieldStyleFocus = settings => {
     borderRadius,
     boxShadow;
 
-  const {
-  } = settings;
+  const {} = settings;
 
-  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ":focus"));
+  settings &&
+    (boxShadow = getResponsiveSetting(settings, "box_shadow", ":focus"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
-  settings && (color = getResponsiveSetting(settings, "field_font_color", ":focus"));
+  settings &&
+    (color = getResponsiveSetting(settings, "field_font_color", ":focus"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings && (borderType = getResponsiveSetting(settings, "border_type", ":focus"));
+  settings &&
+    (borderType = getResponsiveSetting(settings, "border_type", ":focus"));
   borderType &&
-  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
 
-  settings && (borderColor = getResponsiveSetting(settings, "border_color", ":focus"));
+  settings &&
+    (borderColor = getResponsiveSetting(settings, "border_color", ":focus"));
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
 
-  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ":focus"));
+  settings &&
+    (borderWidth = getResponsiveSetting(settings, "border_width", ":focus"));
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-  (borderRadius = getResponsiveSetting(
-    settings,
-    "global_filter_input_border_radius",
-    ":focus"
-  ));
+    (borderRadius = getResponsiveSetting(
+      settings,
+      "global_filter_input_border_radius",
+      ":focus"
+    ));
   borderRadius &&
-  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
   settings &&
-  (backgroundColor = getResponsiveSetting(
-    settings,
-    "background_style_background_color",
-    ":focus"
-  ));
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color",
+      ":focus"
+    ));
   backgroundColor &&
-  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   styles += "&& .input-clear-btn{";
 
@@ -298,13 +316,12 @@ const fieldStyleFocus = settings => {
   return styles;
 };
 
-
 /**
  * Стили для класса altrp-image-select__label
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const imageSelectLabel = settings => {
+const imageSelectLabel = (settings) => {
   let styles = `&& .altrp-image-select__label {`;
   let color, typographic;
 
@@ -328,7 +345,7 @@ const imageSelectLabel = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldSelect2SingleValueStyle = settings => {
+const fieldSelect2SingleValueStyle = (settings) => {
   let styles = `&& .altrp-field-select2__single-value {`;
   let typographic, color;
 
@@ -347,7 +364,7 @@ const fieldSelect2SingleValueStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldLabel = settings => {
+const fieldLabel = (settings) => {
   let styles = `&& .altrp-field-label {`;
   let color, typographic;
 
@@ -366,19 +383,16 @@ const fieldLabel = settings => {
 
   styles += `& .altrp-field-label-container {`;
   let backgroundColor, padding, width;
-  const {
-    label_position_top,
-    label_position_left,
-    label_icon_position
-  } = settings;
+  const { label_position_top, label_position_left, label_icon_position } =
+    settings;
 
   settings &&
-  (backgroundColor = getResponsiveSetting(
-    settings,
-    "label_background_color"
-  ));
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "label_background_color"
+    ));
   backgroundColor &&
-  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   settings && (padding = getResponsiveSetting(settings, "label_padding"));
   padding && (styles += dimensionsControllerToStyles(padding, "padding"));
@@ -399,7 +413,7 @@ const fieldLabel = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const labelIconStyle = settings => {
+const labelIconStyle = (settings) => {
   let styles = `&& .altrp-label-icon {`;
   let padding, backgroundColor, iconSize;
 
@@ -446,7 +460,7 @@ const labelIconStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const placeholderStyle = settings => {
+const placeholderStyle = (settings) => {
   let styles = `&& .altrp-field, && .bp3-input::placeholder{`;
   let color,
     typographic,
@@ -544,7 +558,7 @@ const placeholderStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldLabelRequired = settings => {
+const fieldLabelRequired = (settings) => {
   let styles = `&& .altrp-field-label--required::after{`;
   let color, typographic;
 
@@ -651,75 +665,74 @@ const maskMismatchMessage = (settings, id) => {
 };
 //Точка входа
 function InputDateComponent(settings, elementId, prefix) {
-
   let styles = "";
   const { background_section_opacity } = settings;
   //for all element
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   background_section_opacity &&
     (styles += `opacity:${background_section_opacity.size};`);
   //altrp-input-wrapper
   styles += `}`;
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const inputWrapperStyles = inputWrapperStyle(settings);
   inputWrapperStyles && (styles += inputWrapperStyles);
   styles += `}`;
   //altrp-field-container
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const containerStyles = containerStyle(settings);
   containerStyles && (styles += containerStyles);
   styles += `}`;
   //altrp-field
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);
   styles += `}`;
   //altrp-field:hover
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const fieldStylesHover = fieldStyleHover(settings);
   fieldStylesHover && (styles += fieldStylesHover);
   styles += `}`;
   //altrp-field:focus
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const fieldStylesFocus = fieldStyleFocus(settings);
   fieldStylesFocus && (styles += fieldStylesFocus);
   styles += `}`;
   //altrp-image-select__label
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const imageSelectLabelStyles = imageSelectLabel(settings);
   imageSelectLabelStyles && (styles += imageSelectLabelStyles);
   styles += `}`;
   //altrp-field-select2__single-value
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const fieldSelect2SingleValueStyles = fieldSelect2SingleValueStyle(settings);
   fieldSelect2SingleValueStyles && (styles += fieldSelect2SingleValueStyles);
   styles += `}`;
   //altrp-field-label
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const fieldLabelStyles = fieldLabel(settings);
   fieldLabelStyles && (styles += fieldLabelStyles);
   styles += `}`;
   //altrp-label-icon
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const labelIconStyles = labelIconStyle(settings);
   labelIconStyles && (styles += labelIconStyles);
   styles += `}`;
   //altrp-field::placeholder altrp-field-select2__placeholder altrp-field-file__placeholder
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const placeholderStyles = placeholderStyle(settings);
   placeholderStyles && (styles += placeholderStyles);
   styles += `}`;
   //altrp-field-label--required::after
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const fieldLabelRequiredStyles = fieldLabelRequired(settings);
   fieldLabelRequiredStyles && (styles += fieldLabelRequiredStyles);
   styles += `}`;
   //mask-mismatch-message
-  styles += `.${prefix}${elementId} {`
+  styles += `.${prefix}${elementId} {`;
   const maskMismatchMessageStyles = maskMismatchMessage(settings);
   maskMismatchMessageStyles && (styles += maskMismatchMessageStyles);
   styles += `}`;
   //finish
   return styles;
 }
-export default InputDateComponent
+export default InputDateComponent;

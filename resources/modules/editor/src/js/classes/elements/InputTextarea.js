@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA,
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { actionsControllers } from "../../decorators/actions-controllers";
@@ -43,17 +43,17 @@ class InputTextarea extends BaseElement {
 
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
-      label: "Content"
+      label: "Content",
     });
 
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
-      label: "Form ID"
+      label: "Form ID",
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
-      label: "Field ID (Column Name)"
+      label: "Field ID (Column Name)",
     });
 
     this.addControl("textarea_resize", {
@@ -62,20 +62,20 @@ class InputTextarea extends BaseElement {
       options: [
         {
           label: "Both",
-          value: "both"
+          value: "both",
         },
         {
           label: "None",
-          value: "none"
+          value: "none",
         },
         {
           label: "Horizontal",
-          value: "horizontal"
+          value: "horizontal",
         },
         {
           label: "Vertical",
-          value: "vertical"
-        }
+          value: "vertical",
+        },
       ],
     });
 
@@ -83,17 +83,17 @@ class InputTextarea extends BaseElement {
 
     optionsRepeater.addControl("label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
     });
 
     optionsRepeater.addControl("value", {
       type: CONTROLLER_TEXT,
-      label: "Value"
+      label: "Value",
     });
 
     optionsRepeater.addControl("image", {
       type: CONTROLLER_MEDIA,
-      label: "Image"
+      label: "Image",
     });
 
     this.addControl("content_label", {
@@ -109,24 +109,24 @@ class InputTextarea extends BaseElement {
       options: [
         {
           value: "top",
-          label: "Top"
+          label: "Top",
         },
         {
           value: "bottom",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "left",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "right",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "absolute",
-          label: "Absolute"
-        }
+          label: "Absolute",
+        },
       ],
       locked: true,
     });
@@ -144,21 +144,21 @@ class InputTextarea extends BaseElement {
       options: [
         {
           value: "row",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "row-reverse",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "column",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "column-reverse",
-          label: "Top"
-        }
-      ]
+          label: "Top",
+        },
+      ],
     });
 
     this.addControl("content_placeholder", {
@@ -182,7 +182,7 @@ class InputTextarea extends BaseElement {
     this.addControl("content_timestamp", {
       type: CONTROLLER_SWITCHER,
       label: "Timestamp",
-      default: false
+      default: false,
     });
 
     this.addControl("content_default_value", {
@@ -194,7 +194,8 @@ class InputTextarea extends BaseElement {
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      description: "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+      description:
+        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
       locked: true,
     });
 
@@ -204,13 +205,13 @@ class InputTextarea extends BaseElement {
       tab: TAB_CONTENT,
       label: "Create Options Settings",
       conditions: {
-        content_type: ["select2"]
-      }
+        content_type: ["select2"],
+      },
     });
 
     this.addControl("create_allowed", {
       type: CONTROLLER_SWITCHER,
-      label: "Allowed"
+      label: "Allowed",
     });
 
     this.addControl("create_url", {
@@ -219,7 +220,7 @@ class InputTextarea extends BaseElement {
       responsive: false,
       description: "/ajax/models/tests",
       conditions: {
-        create_allowed: true
+        create_allowed: true,
       },
       locked: true,
     });
@@ -229,7 +230,7 @@ class InputTextarea extends BaseElement {
       dynamic: false,
       responsive: false,
       conditions: {
-        create_allowed: true
+        create_allowed: true,
       },
       locked: true,
     });
@@ -238,9 +239,10 @@ class InputTextarea extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       label: "Data",
       conditions: {
-        create_allowed: true
+        create_allowed: true,
       },
-      description: 'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+      description:
+        'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
       locked: true,
     });
 
@@ -339,14 +341,21 @@ class InputTextarea extends BaseElement {
       max: 500,
       min: 0,
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
+    });
+
+    this.addControl("field_height", {
+      type: CONTROLLER_SLIDER,
+      stateless: true,
+      label: "Height",
+      max: 100,
+      min: 0,
+      default: {
+        unit: "px",
+      },
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -355,51 +364,41 @@ class InputTextarea extends BaseElement {
       options: [
         {
           icon: "left",
-          value: "left"
+          value: "left",
         },
         {
           icon: "center",
-          value: "center"
+          value: "center",
         },
         {
           icon: "right",
-          value: "right"
-        }
-      ]
+          value: "right",
+        },
+      ],
     });
 
     this.addControl("position_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_z_index", {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
-      default: 0
+      default: 0,
     });
 
     this.addControl("position_css_id", {
@@ -419,26 +418,26 @@ class InputTextarea extends BaseElement {
       label: "Opacity",
       max: 1,
       min: 0,
-      step: 0.01
+      step: 0.01,
     });
 
     this.endControlSection();
 
     this.startControlSection("background_section", {
       tab: TAB_STYLE,
-      label: "Background"
+      label: "Background",
     });
 
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background Color"
+      label: "Background Color",
     });
 
     this.endControlSection();
 
     this.startControlSection("border_section", {
       tab: TAB_STYLE,
-      label: "Border"
+      label: "Border",
     });
 
     this.addControl("border_type", {
@@ -447,43 +446,38 @@ class InputTextarea extends BaseElement {
       options: [
         {
           value: "none",
-          label: "None"
+          label: "None",
         },
         {
           value: "solid",
-          label: "Solid"
+          label: "Solid",
         },
         {
           value: "double",
-          label: "Double"
+          label: "Double",
         },
         {
           value: "dotted",
-          label: "Dotted"
+          label: "Dotted",
         },
         {
           value: "dashed",
-          label: "Dashed"
+          label: "Dashed",
         },
         {
           value: "groove",
-          label: "Groove"
-        }
-      ]
+          label: "Groove",
+        },
+      ],
     });
 
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("disable_box_shadow", {
@@ -493,21 +487,16 @@ class InputTextarea extends BaseElement {
 
     this.addControl("border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color"
+      label: "Border Color",
     });
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Radius",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("box_shadow", {
@@ -522,16 +511,15 @@ class InputTextarea extends BaseElement {
         colorRGB: "rgb(0, 0, 0)",
         color: "rgb(0, 0, 0)",
         colorPickedHex: "#000000",
-        type: " "
-      }
+        type: " ",
+      },
     });
 
     this.endControlSection();
 
-
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
-      label: "Label"
+      label: "Label",
     });
 
     this.addControl("label_width", {
@@ -539,16 +527,11 @@ class InputTextarea extends BaseElement {
       label: "Label Width",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("label_style_spacing", {
@@ -556,14 +539,9 @@ class InputTextarea extends BaseElement {
       label: "Spacing",
       default: {
         size: 2,
-        unit: "px"
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
       max: 60,
       min: 0,
       locked: true,
@@ -573,14 +551,9 @@ class InputTextarea extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        unit: "px"
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("label_background_color", {
@@ -588,8 +561,8 @@ class InputTextarea extends BaseElement {
       label: "Background Color",
       default: {
         color: "",
-        colorPickedHex: ""
-      }
+        colorPickedHex: "",
+      },
     });
 
     this.addControl("label_style_font_color", {
@@ -597,13 +570,13 @@ class InputTextarea extends BaseElement {
       label: "Font Color",
       default: {
         color: "",
-        colorPickedHex: ""
-      }
+        colorPickedHex: "",
+      },
     });
 
     this.addControl("label_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("label_position_top", {
@@ -611,14 +584,14 @@ class InputTextarea extends BaseElement {
       label: "Label Y Position",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: -100
+      min: -100,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "top: {{SIZE}}{{UNIT}};"
@@ -630,14 +603,14 @@ class InputTextarea extends BaseElement {
       label: "Label X Position",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: -100
+      min: -100,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "left: {{SIZE}}{{UNIT}};"
@@ -649,18 +622,18 @@ class InputTextarea extends BaseElement {
       label: "Icon Size",
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("icon_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Icon Padding",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon Color"
+      label: "Icon Color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -668,7 +641,7 @@ class InputTextarea extends BaseElement {
 
     this.addControl("icon_color_background", {
       type: CONTROLLER_COLOR,
-      label: "Background Color"
+      label: "Background Color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
@@ -679,11 +652,11 @@ class InputTextarea extends BaseElement {
       label: "Cross Color",
       default: {
         color: "",
-        colorPickedHex: ""
+        colorPickedHex: "",
       },
       conditions: {
-        content_clearable: [true]
-      }
+        content_clearable: [true],
+      },
     });
 
     this.addControl("cross_size", {
@@ -691,13 +664,13 @@ class InputTextarea extends BaseElement {
       label: "Cross Size",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_clearable: [true]
+        content_clearable: [true],
       },
       max: 50,
-      min: 0
+      min: 0,
       // rules: {
       //   "{{ELEMENT}} .input-clear-btn{{STATE}}": "font-size: {{SIZE}}px;"
       // }
@@ -705,15 +678,14 @@ class InputTextarea extends BaseElement {
 
     this.endControlSection();
 
-
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
-      label: "Font"
+      label: "Font",
     });
 
     this.addControl("field_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("field_font_color", {
@@ -721,37 +693,37 @@ class InputTextarea extends BaseElement {
       label: "Font Color",
       default: {
         color: "",
-        colorPickedHex: ""
-      }
+        colorPickedHex: "",
+      },
     });
 
     this.endControlSection();
 
     this.startControlSection("placeholder_style_section", {
       tab: TAB_STYLE,
-      label: "Placeholder"
+      label: "Placeholder",
     });
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Font Color"
+      label: "Font Color",
     });
 
     this.addControl("placeholder_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.endControlSection();
 
     this.startControlSection("required_style_section", {
       tab: TAB_STYLE,
-      label: "Required"
+      label: "Required",
     });
 
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color"
+      label: "font color",
     });
 
     this.addControl("required_style_font_typographic", {
@@ -763,8 +735,8 @@ class InputTextarea extends BaseElement {
         // size: 13,
         weight: "normal",
         family: "Open Sans",
-        decoration: ""
-      }
+        decoration: "",
+      },
     });
 
     this.endControlSection();
@@ -772,31 +744,31 @@ class InputTextarea extends BaseElement {
     this.startControlSection("mismatch_message_styles", {
       tab: TAB_STYLE,
       label: "Validation Error Message",
-      conditions: { "mask_mismatch_message!": [""] }
+      conditions: { "mask_mismatch_message!": [""] },
     });
 
     this.addControl("mismatch_message_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("mismatch_message_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("mismatch_message_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Font Color"
+      label: "Font Color",
     });
 
     this.addControl("mismatch_message_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.endControlSection();
