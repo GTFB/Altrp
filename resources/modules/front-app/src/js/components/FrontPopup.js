@@ -11,22 +11,23 @@ class FrontPopup extends Component {
   constructor(props) {
     super(props);
     this.ElementWrapper = props.ElementWrapper || window.ElementWrapper;
-    let isVisible = false
+    let isVisible
     let popupID = Number(props.popupTrigger.popupID)
+    const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template
     if(_.isNaN(popupID)){
-      isVisible = props.popupTrigger.popupID === _.get(this.props, "template.guid")
+      isVisible = props.popupTrigger.popupID === _.get(template, "guid")
     } else {
-      isVisible = popupID == _.get(this.props, "template.id")
+      isVisible = popupID == _.get(template, "id")
     }
 
+    this.rootElement = window.frontElementsFabric.parseData(
+      template.data,
+      null,
+      this.props.page,
+      this.props.models
+    )
     this.state = {
       isVisible,
-      rootElement: window.frontElementsFabric.parseData(
-        this.props.template.data,
-        null,
-        this.props.page,
-        this.props.models
-      ),
       isShownOnScroll: false
     };
     this.close = this.close.bind(this);
@@ -35,17 +36,18 @@ class FrontPopup extends Component {
 
 
   componentDidUpdate(prevProps) {
+    const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template
     let { popupTrigger } = this.props;
-    switch (this.state.rootElement.getSettings("type_popup", "popup")) {
+    switch (this.rootElement.getSettings("type_popup", "popup")) {
       case "popup":
       case "offcanvas":
         if (popupTrigger !== prevProps.popupTrigger) {
           let isVisible
           let popupID = Number(popupTrigger.popupID)
           if(_.isNaN(popupID)){
-            isVisible = popupTrigger.popupID === _.get(this.props, "template.guid")
+            isVisible = popupTrigger.popupID === _.get(template, "guid")
           } else {
-            isVisible = popupID == _.get(this.props, "template.id")
+            isVisible = popupID == _.get(template, "id")
           }
           this.setState({
             isVisible
@@ -64,7 +66,7 @@ class FrontPopup extends Component {
     window.dispatchEvent(new Event('resize'));
   }
   onExit = ()=>{
-    const rootElement = this.state.rootElement;
+    const rootElement = this.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
     const appContainer = document.getElementById('front-app')
@@ -98,7 +100,7 @@ class FrontPopup extends Component {
   onExiting = ()=>{
   }
   onEntering = ()=>{
-    const rootElement = this.state.rootElement;
+    const rootElement = this.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
     const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
@@ -133,7 +135,7 @@ class FrontPopup extends Component {
   onEnter = ()=> {
     document.body.classList.add('overflow-hidden');
     window.dispatchEvent(new Event('resize'));
-    const rootElement = this.state.rootElement;
+    const rootElement = this.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
     const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
@@ -164,10 +166,11 @@ class FrontPopup extends Component {
   }
 
   render() {
+    const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template
     const { isVisible } = this.state;
     let classes = [`app-popup`];
-    const rootElement = this.state.rootElement;
-    rootElement.popupGUID = _.get(this.props, "template.guid");
+    const rootElement = this.rootElement;
+    rootElement.popupGUID = _.get(template, "guid");
     const rootElementSettings = rootElement.getSettings("");
     let  popup_close_icon =  rootElement.getResponsiveSetting('popup_close_icon')
     let  popup_close_icon_width_size =  rootElement.getResponsiveSetting('popup_close_icon_width_size')
@@ -308,6 +311,8 @@ class FrontPopup extends Component {
     if(size && unit){
       style['height'] = size+unit;
     }
+
+
     return (
       <CSSTransition
         in={isVisible}
@@ -332,6 +337,7 @@ class FrontPopup extends Component {
             }
           }}
         >
+          <link rel="stylesheet" href={`/altrp/css/DEFAULT_BREAKPOINT/${rootElement.popupGUID}.css`}/>
           {close_context === 'window' && closeButton}
           <div
             className="popup-window"

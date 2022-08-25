@@ -18,7 +18,6 @@ class FrontElement {
     this.settings = data.settings;
     this.settingsLock = data.settingsLock;
     this.lazySection = data.lazySection;
-    this.lazySection = data.lazySection;
     this.dependencies = data.dependencies;
     window.elementsCount++
     this.cssClassStorage = data.cssClassStorage;
@@ -64,9 +63,9 @@ class FrontElement {
      *  * @type {array}
      */
     this.modelsList = []
-    if(this.getId()){
-      appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}, this?.children?.length || 0))
-    }
+    // if(this.getId()){
+    //   appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}, this?.children?.length || 0))
+    // }
   }
 
   /**
@@ -123,7 +122,6 @@ class FrontElement {
    */
   update(){
     this.updateStyles();
-
     let widgetsForForm = [
         'button',
       ...INPUT_WIDGETS
@@ -163,6 +161,7 @@ class FrontElement {
       this.formInit();
       return;
     }
+
   }
   async registerActions(){
     if(this.actionsRegistered){
@@ -191,6 +190,7 @@ class FrontElement {
     /**
      * @member {FormsManager} formsManager
      */
+
     if(! this.component){
       return;
     }
@@ -388,10 +388,6 @@ class FrontElement {
       /**
        * @member {Styles} stylesModule
        * */
-      // console.log(this.id);
-      // console.log(this.getId());
-      // console.log(this.getName());
-      // console.log(this.getType());
       stylesModule.addElementStyles(this.getId(), this.getStringifyStyles());
     });
   }
