@@ -17,7 +17,7 @@ import {
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
   CONTROLLER_REPEATER,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA,
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
@@ -46,7 +46,7 @@ class InputTextCommon extends BaseElement {
 
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
-      label: "Content"
+      label: "Content",
     });
 
     this.addControl("content_type", {
@@ -57,23 +57,23 @@ class InputTextCommon extends BaseElement {
       options: [
         {
           value: "text",
-          label: "Text"
+          label: "Text",
         },
         {
           value: "password",
-          label: "Password"
+          label: "Password",
         },
         {
           value: "number",
-          label: "Number"
+          label: "Number",
         },
         {
           value: "email",
-          label: "Email"
+          label: "Email",
         },
         {
           value: "tel",
-          label: "Tel"
+          label: "Tel",
         },
       ],
       locked: true,
@@ -82,14 +82,14 @@ class InputTextCommon extends BaseElement {
     this.addControl("form_id", {
       responsive: false,
       type: CONTROLLER_TEXT,
-      label: "Form ID"
+      label: "Form ID",
     });
 
     this.addControl("max_number", {
       type: CONTROLLER_NUMBER,
       label: "Max number",
       conditions: {
-        content_type: ["number"]
+        content_type: ["number"],
       },
     });
 
@@ -97,39 +97,38 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Min number",
       conditions: {
-        content_type: ["number"]
+        content_type: ["number"],
       },
     });
-
 
     this.addControl("field_id", {
       responsive: false,
       type: CONTROLLER_TEXT,
-      label: "Field ID (Column Name)"
+      label: "Field ID (Column Name)",
     });
 
     this.addControl("invalid_email_message", {
       responsive: false,
       type: CONTROLLER_TEXT,
       label: "Invalid Email Message",
-      conditions: { content_type: ["email"] }
+      conditions: { content_type: ["email"] },
     });
 
     const optionsRepeater = new Repeater();
 
     optionsRepeater.addControl("label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
     });
 
     optionsRepeater.addControl("value", {
       type: CONTROLLER_TEXT,
-      label: "Value"
+      label: "Value",
     });
 
     optionsRepeater.addControl("image", {
       type: CONTROLLER_MEDIA,
-      label: "Image"
+      label: "Image",
     });
 
     this.addControl("content_label", {
@@ -145,24 +144,24 @@ class InputTextCommon extends BaseElement {
       options: [
         {
           value: "top",
-          label: "Top"
+          label: "Top",
         },
         {
           value: "bottom",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "left",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "right",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "absolute",
-          label: "Absolute"
-        }
+          label: "Absolute",
+        },
       ],
       locked: true,
     });
@@ -180,20 +179,20 @@ class InputTextCommon extends BaseElement {
       options: [
         {
           value: "row",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "row-reverse",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "column",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "column-reverse",
-          label: "Top"
-        }
+          label: "Top",
+        },
       ],
       locked: true,
     });
@@ -208,7 +207,7 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "Mask",
       conditions: {
-        content_type: ["text", "tel"]
+        content_type: ["text", "tel"],
       },
       locked: true,
     });
@@ -217,7 +216,7 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "Validation Error Message",
       conditions: {
-        content_type: ["text", "tel", "email"]
+        content_type: ["text", "tel", "email"],
       },
       locked: true,
     });
@@ -226,7 +225,7 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Read only",
       conditions: {
-        content_type: "wysiwyg"
+        content_type: "wysiwyg",
       },
       locked: true,
     });
@@ -247,7 +246,7 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Autocomplete",
       conditions: {
-        content_type: ["text", "password", "email"]
+        content_type: ["text", "password", "email"],
       },
       locked: true,
     });
@@ -255,17 +254,17 @@ class InputTextCommon extends BaseElement {
     this.addControl("content_timestamp", {
       type: CONTROLLER_SWITCHER,
       label: "Timestamp",
-      default: false
+      default: false,
     });
 
     this.addControl("params_for_update", {
       type: CONTROLLER_TEXTAREA,
       label: "Params for Update Options",
       conditions: {
-        "model_for_options!": ""
+        "model_for_options!": "",
       },
       description:
-        'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
+        'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
     });
 
     this.addControl("params_as_filters", {
@@ -273,8 +272,8 @@ class InputTextCommon extends BaseElement {
       label: "Use Params as Filters",
       default: false,
       conditions: {
-        "params_for_update!": ""
-      }
+        "params_for_update!": "",
+      },
     });
 
     // this.addControl('is_select_all_allowed', {
@@ -301,44 +300,44 @@ class InputTextCommon extends BaseElement {
       label: "Calculation",
       locked: true,
       description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
     });
 
     this.endControlSection();
 
-    this.startControlSection('icons', {
-      label: 'Input Icons'
-    })
+    this.startControlSection("icons", {
+      label: "Input Icons",
+    });
 
-    this.addControl('left_icon', {
+    this.addControl("left_icon", {
       type: CONTROLLER_MEDIA,
-      label: 'Left Icon',
+      label: "Left Icon",
       locked: true,
-    })
+    });
 
-    this.addControl('password_show_left_icon', {
+    this.addControl("password_show_left_icon", {
       type: CONTROLLER_MEDIA,
-      conditions:{
-        content_type: 'password'
+      conditions: {
+        content_type: "password",
       },
-      label: 'Password Show Left Icon',
+      label: "Password Show Left Icon",
       locked: true,
-    })
+    });
 
-    this.addControl('right_icon', {
+    this.addControl("right_icon", {
       type: CONTROLLER_MEDIA,
-      label: 'Right Icon',
+      label: "Right Icon",
       locked: true,
-    })
+    });
 
-    this.addControl('password_show_right_icon', {
+    this.addControl("password_show_right_icon", {
       type: CONTROLLER_MEDIA,
-      conditions:{
-        content_type: 'password'
+      conditions: {
+        content_type: "password",
       },
-      label: 'Password Show Right Icon',
+      label: "Password Show Right Icon",
       locked: true,
-    })
+    });
 
     this.endControlSection();
 
@@ -426,84 +425,74 @@ class InputTextCommon extends BaseElement {
 
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Input Position"
+      label: "Input Position",
     });
 
     this.addControl("field_width", {
       type: CONTROLLER_SLIDER,
-      stateless:true,
+      stateless: true,
       label: "Width",
       max: 500,
       min: 0,
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("field_height", {
       type: CONTROLLER_SLIDER,
-      stateless:true,
+      stateless: true,
       label: "Height",
       max: 100,
       min: 0,
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
       type: CONTROLLER_CHOOSE,
       label: "Alignment",
-      stateless:true,
+      stateless: true,
       options: [
         {
           icon: "left",
-          value: "left"
+          value: "left",
         },
         {
           icon: "center",
-          value: "center"
+          value: "center",
         },
         {
           icon: "right",
-          value: "right"
-        }
-      ]
+          value: "right",
+        },
+      ],
     });
 
     this.addControl("position_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       default: {
-        unit: "px"
+        unit: "px",
       },
-      stateless:true,
-      units: ["px", "%", "vh", "vw"]
+      stateless: true,
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      stateless:true,
-      units: ["px", "%", "vh", "vw"]
+      stateless: true,
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_z_index-wrapper", {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
-      default: 0
+      default: 0,
     });
 
     this.addControl("position_css_id", {
@@ -523,26 +512,26 @@ class InputTextCommon extends BaseElement {
       label: "Opacity",
       max: 1,
       min: 0,
-      step: 0.01
+      step: 0.01,
     });
 
     this.endControlSection();
 
     this.startControlSection("background_section", {
       tab: TAB_STYLE,
-      label: "Background"
+      label: "Background",
     });
 
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background Color"
+      label: "Background Color",
     });
 
     this.endControlSection();
 
     this.startControlSection("border_section", {
       tab: TAB_STYLE,
-      label: "Border"
+      label: "Border",
     });
 
     this.addControl("border_type", {
@@ -551,28 +540,28 @@ class InputTextCommon extends BaseElement {
       options: [
         {
           value: "none",
-          label: "None"
+          label: "None",
         },
         {
           value: "solid",
-          label: "Solid"
+          label: "Solid",
         },
         {
           value: "double",
-          label: "Double"
+          label: "Double",
         },
         {
           value: "dotted",
-          label: "Dotted"
+          label: "Dotted",
         },
         {
           value: "dashed",
-          label: "Dashed"
+          label: "Dashed",
         },
         {
           value: "groove",
-          label: "Groove"
-        }
+          label: "Groove",
+        },
       ],
       // stateless: true,
     });
@@ -582,14 +571,9 @@ class InputTextCommon extends BaseElement {
       label: "Border Width",
       // stateless:true,
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("disable_box_shadow", {
@@ -599,21 +583,16 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color"
+      label: "Border Color",
     });
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Radius",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("box_shadow", {
@@ -628,15 +607,15 @@ class InputTextCommon extends BaseElement {
         colorRGB: "rgb(0, 0, 0)",
         color: "rgb(0, 0, 0)",
         colorPickedHex: "#000000",
-        type: " "
-      }
+        type: " ",
+      },
     });
 
     this.endControlSection();
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
-      label: "Label"
+      label: "Label",
     });
 
     this.addControl("label_width", {
@@ -644,16 +623,11 @@ class InputTextCommon extends BaseElement {
       label: "Label Width",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("label_style_spacing", {
@@ -661,7 +635,7 @@ class InputTextCommon extends BaseElement {
       label: "Spacing",
       default: {
         size: 2,
-        unit: "px"
+        unit: "px",
       },
       units: ["px", "%", "vh", "vw"],
       max: 60,
@@ -673,9 +647,9 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        unit: "px"
+        unit: "px",
       },
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("label_background_color", {
@@ -688,13 +662,13 @@ class InputTextCommon extends BaseElement {
       label: "Font Color",
       default: {
         color: "",
-        colorPickedHex: ""
-      }
+        colorPickedHex: "",
+      },
     });
 
     this.addControl("label_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("label_position_top", {
@@ -702,14 +676,14 @@ class InputTextCommon extends BaseElement {
       label: "Label Y Position",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: -100
+      min: -100,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "top: {{SIZE}}{{UNIT}};"
@@ -721,14 +695,14 @@ class InputTextCommon extends BaseElement {
       label: "Label X Position",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: -100
+      min: -100,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "left: {{SIZE}}{{UNIT}};"
@@ -740,18 +714,18 @@ class InputTextCommon extends BaseElement {
       label: "Icon Size",
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("icon_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Icon Padding",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon color"
+      label: "Icon color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -759,7 +733,7 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("icon_color_background", {
       type: CONTROLLER_COLOR,
-      label: "Background Color"
+      label: "Background Color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
@@ -769,12 +743,12 @@ class InputTextCommon extends BaseElement {
 
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
-      label: "Font"
+      label: "Font",
     });
 
     this.addControl("field_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("field_font_color", {
@@ -791,19 +765,19 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("placeholder_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Font Color"
+      label: "Font Color",
     });
 
     this.endControlSection();
 
     this.startControlSection("required_style_section", {
       tab: TAB_STYLE,
-      label: "Required"
+      label: "Required",
     });
 
     this.addControl("required_style_font_typographic", {
@@ -822,15 +796,14 @@ class InputTextCommon extends BaseElement {
 
     this.startControlSection("overlay_section", {
       tab: TAB_STYLE,
-      label: "Overlay"
+      label: "Overlay",
     });
 
     this.endControlSection();
 
-
     this.startControlSection("transform_section", {
       tab: TAB_STYLE,
-      label: "Transform"
+      label: "Transform",
     });
 
     this.endControlSection();
@@ -838,110 +811,90 @@ class InputTextCommon extends BaseElement {
     this.startControlSection("mismatch_message_styles", {
       tab: TAB_STYLE,
       label: "Validation Error Message",
-      conditions: { "mask_mismatch_message!": [""] }
+      conditions: { "mask_mismatch_message!": [""] },
     });
 
     this.addControl("mismatch_message_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("mismatch_message_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("mismatch_message_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Font Color"
+      label: "Font Color",
     });
 
     this.addControl("mismatch_message_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.endControlSection();
 
-    this.startControlSection('input_icons', {
+    this.startControlSection("input_icons", {
       tab: TAB_STYLE,
-      label: 'Input Icons Settings'
-    })
+      label: "Input Icons Settings",
+    });
 
-    this.addControl('input_icons_size', {
+    this.addControl("input_icons_size", {
       type: CONTROLLER_SLIDER,
-      label: 'Size',
+      label: "Size",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-    })
+    });
 
-    this.addControl('input_icons_margin', {
+    this.addControl("input_icons_margin", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
+      label: "Margin",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-    })
-    this.addControl('input_icons_padding', {
+    });
+    this.addControl("input_icons_padding", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
+      label: "Padding",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-    })
-    this.addControl('input_icons_radius', {
+    });
+    this.addControl("input_icons_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
+      label: "Border Radius",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-        'vw'
-      ],
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-    })
+    });
 
-    this.addControl('input_icons_fill', {
+    this.addControl("input_icons_fill", {
       type: CONTROLLER_COLOR,
-      label: 'Fill',
-    })
+      label: "Fill",
+    });
 
-    this.addControl('input_icons_stroke', {
+    this.addControl("input_icons_stroke", {
       type: CONTROLLER_COLOR,
-      label: 'Stroke',
-    })
+      label: "Stroke",
+    });
 
-    this.addControl('input_icons_background', {
+    this.addControl("input_icons_background", {
       type: CONTROLLER_COLOR,
-      label: 'Background Color',
-    })
+      label: "Background Color",
+    });
 
     this.endControlSection();
 

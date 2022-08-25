@@ -59,6 +59,14 @@ const SCREENS:{
     fullMediaQuery: "@media screen and (max-width: 320px)",
     width: "320px",
     mediaQuery: "@media screen and (max-width: 320px)"
-  }
+  },
+  {
+    icon: "2K+",
+    name: "screen_2K+",
+    id: 7,
+    width: "100%",
+    fullMediaQuery: "@media screen and (min-width: 1921px)",
+    mediaQuery: "@media screen and (min-width: 1921px)"
+  },
 ]
 export default SCREENS

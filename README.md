@@ -13,6 +13,16 @@
 [comment]: <> (* Optimize Css Load for Front App)
 [comment]: <> (* Add Mustache Support for Inputs Labels)
 
+### 1.2.2
+* Added disable/enable website indexing
+* Fixed duplication pages
+* Fixed install plugins
+* Fixed dependencies for popup's elements
+* Updated popup rendering
+* Fixed page role settings
+* Fixed textarea background
+* Fixed global fonts inheritance
+
 ### 1.2.1
 * Add Changes in Related Models Before Users Delete
 * Add page_after_create and page_before_delete Hooks

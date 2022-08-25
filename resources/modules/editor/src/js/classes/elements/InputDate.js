@@ -15,7 +15,8 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA, CONTROLLER_HEADING
+  CONTROLLER_MEDIA,
+  CONTROLLER_HEADING,
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { actionsControllers } from "../../decorators/actions-controllers";
@@ -43,7 +44,7 @@ class InputDate extends BaseElement {
 
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
-      label: "Content"
+      label: "Content",
     });
 
     this.addControl("content_time_type", {
@@ -53,16 +54,16 @@ class InputDate extends BaseElement {
       options: [
         {
           value: "date",
-          label: "date"
+          label: "date",
         },
         {
           value: "time",
-          label: "time"
+          label: "time",
         },
         {
           value: "dateTime",
-          label: "date and time"
-        }
+          label: "date and time",
+        },
       ],
       locked: true,
     });
@@ -74,24 +75,24 @@ class InputDate extends BaseElement {
       options: [
         {
           value: "en",
-          label: "EN"
+          label: "EN",
         },
         {
           value: "ru",
-          label: "RU"
-        }
+          label: "RU",
+        },
       ],
       locked: true,
     });
 
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
-      label: "Form ID"
+      label: "Form ID",
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
-      label: "Field ID (Column Name)"
+      label: "Field ID (Column Name)",
     });
 
     this.addControl("nullable", {
@@ -105,17 +106,17 @@ class InputDate extends BaseElement {
 
     optionsRepeater.addControl("label", {
       type: CONTROLLER_TEXT,
-      label: "Label"
+      label: "Label",
     });
 
     optionsRepeater.addControl("value", {
       type: CONTROLLER_TEXT,
-      label: "Value"
+      label: "Value",
     });
 
     optionsRepeater.addControl("image", {
       type: CONTROLLER_MEDIA,
-      label: "Image"
+      label: "Image",
     });
 
     this.addControl("content_label", {
@@ -131,24 +132,24 @@ class InputDate extends BaseElement {
       options: [
         {
           value: "top",
-          label: "Top"
+          label: "Top",
         },
         {
           value: "bottom",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "left",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "right",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "absolute",
-          label: "Absolute"
-        }
+          label: "Absolute",
+        },
       ],
       locked: true,
     });
@@ -166,21 +167,21 @@ class InputDate extends BaseElement {
       options: [
         {
           value: "row",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "row-reverse",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "column",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "column-reverse",
-          label: "Top"
-        }
-      ]
+          label: "Top",
+        },
+      ],
     });
 
     this.addControl("content_placeholder", {
@@ -193,10 +194,11 @@ class InputDate extends BaseElement {
     this.addControl("content_format", {
       type: CONTROLLER_TEXT,
       label: "Format",
-      placeholder: 'YYYY-MM-DD',
+      placeholder: "YYYY-MM-DD",
       responsive: false,
       stateless: true,
-      description : '<a href="https://momentjs.com/" target="_blank">Documentation</a>',
+      description:
+        '<a href="https://momentjs.com/" target="_blank">Documentation</a>',
       locked: true,
     });
 
@@ -239,13 +241,13 @@ class InputDate extends BaseElement {
       tab: TAB_CONTENT,
       label: "Create Options Settings",
       conditions: {
-        content_type: ["select2"]
-      }
+        content_type: ["select2"],
+      },
     });
 
     this.addControl("create_allowed", {
       type: CONTROLLER_SWITCHER,
-      label: "Allowed"
+      label: "Allowed",
     });
 
     this.addControl("create_url", {
@@ -254,8 +256,8 @@ class InputDate extends BaseElement {
       responsive: false,
       description: "/ajax/models/tests",
       conditions: {
-        create_allowed: true
-      }
+        create_allowed: true,
+      },
     });
 
     this.addControl("create_label", {
@@ -263,18 +265,18 @@ class InputDate extends BaseElement {
       dynamic: false,
       responsive: false,
       conditions: {
-        create_allowed: true
-      }
+        create_allowed: true,
+      },
     });
 
     this.addControl("create_data", {
       type: CONTROLLER_TEXTAREA,
       label: "Data",
       conditions: {
-        create_allowed: true
+        create_allowed: true,
       },
       description:
-        'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
+        'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
     });
 
     this.endControlSection();
@@ -359,7 +361,7 @@ class InputDate extends BaseElement {
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
-      label: "Label"
+      label: "Label",
     });
 
     this.addControl("label_style_spacing", {
@@ -367,9 +369,9 @@ class InputDate extends BaseElement {
       label: "Spacing",
       default: {
         size: 2,
-        unit: "px"
+        unit: "px",
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 60,
       min: 0,
       locked: true,
@@ -380,17 +382,17 @@ class InputDate extends BaseElement {
       label: "Background Color",
       default: {
         color: "",
-        colorPickedHex: ""
-      }
+        colorPickedHex: "",
+      },
     });
 
     this.addControl("label_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        unit: "px"
+        unit: "px",
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("label_style_font_color", {
@@ -398,13 +400,13 @@ class InputDate extends BaseElement {
       label: "Font Color",
       default: {
         color: "",
-        colorPickedHex: ""
-      }
+        colorPickedHex: "",
+      },
     });
 
     this.addControl("label_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("label_position_top", {
@@ -412,12 +414,12 @@ class InputDate extends BaseElement {
       label: "Label Y Position",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: -100,
       locked: true,
@@ -432,14 +434,14 @@ class InputDate extends BaseElement {
       label: "Label X Position",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: -100
+      min: -100,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "left: {{SIZE}}{{UNIT}};"
@@ -451,22 +453,22 @@ class InputDate extends BaseElement {
       label: "Label Width",
       default: {
         unit: "%",
-        size: null
+        size: null,
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("icon_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Icon Padding",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon color"
+      label: "Icon color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -474,7 +476,7 @@ class InputDate extends BaseElement {
 
     this.addControl("icon_color_background", {
       type: CONTROLLER_COLOR,
-      label: "Background Color"
+      label: "Background Color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
@@ -485,7 +487,7 @@ class InputDate extends BaseElement {
       label: "Icon Size",
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("cross_color", {
@@ -493,11 +495,11 @@ class InputDate extends BaseElement {
       label: "Cross Color",
       default: {
         color: "",
-        colorPickedHex: ""
+        colorPickedHex: "",
       },
       conditions: {
-        content_clearable: [true]
-      }
+        content_clearable: [true],
+      },
     });
 
     this.addControl("cross_size", {
@@ -505,13 +507,13 @@ class InputDate extends BaseElement {
       label: "Cross Size",
       default: {
         unit: "px",
-        size: null
+        size: null,
       },
       conditions: {
-        content_clearable: [true]
+        content_clearable: [true],
       },
       max: 50,
-      min: 0
+      min: 0,
       // rules: {
       //   "{{ELEMENT}} .input-clear-btn{{STATE}}": "font-size: {{SIZE}}px;"
       // }
@@ -521,12 +523,12 @@ class InputDate extends BaseElement {
 
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
-      label: "Font"
+      label: "Font",
     });
 
     this.addControl("field_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("field_font_color", {
@@ -534,15 +536,15 @@ class InputDate extends BaseElement {
       label: "Font Color",
       default: {
         color: "",
-        colorPickedHex: ""
-      }
+        colorPickedHex: "",
+      },
     });
 
     this.endControlSection();
 
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Position"
+      label: "Position",
     });
 
     this.addControl("field_width", {
@@ -550,7 +552,19 @@ class InputDate extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
+    });
+
+    this.addControl("field_height", {
+      type: CONTROLLER_SLIDER,
+      stateless: true,
+      label: "Height",
+      max: 100,
+      min: 0,
+      default: {
+        unit: "px",
+      },
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -559,80 +573,80 @@ class InputDate extends BaseElement {
       options: [
         {
           icon: "left",
-          value: "left"
+          value: "left",
         },
         {
           icon: "center",
-          value: "center"
+          value: "center",
         },
         {
           icon: "right",
-          value: "right"
-        }
-      ]
+          value: "right",
+        },
+      ],
     });
 
     this.addControl("position_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       default: {
-        unit: "px"
+        unit: "px",
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        unit: "px"
+        unit: "px",
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_z_index", {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
-      default: 0
+      default: 0,
     });
 
     this.addControl("position_css_id", {
       type: CONTROLLER_TEXT,
-      label: "CSS ID"
+      label: "CSS ID",
     });
 
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
-      label: "CSS Classes"
+      label: "CSS Classes",
     });
 
     this.endControlSection();
 
     this.startControlSection("placeholder_style_section", {
       tab: TAB_STYLE,
-      label: "Placeholder"
+      label: "Placeholder",
     });
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color"
+      label: "font color",
     });
 
     this.addControl("placeholder_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.endControlSection();
 
     this.startControlSection("required_style_section", {
       tab: TAB_STYLE,
-      label: "Required"
+      label: "Required",
     });
 
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color"
+      label: "font color",
     });
 
     this.addControl("required_style_font_typographic", {
@@ -644,45 +658,45 @@ class InputDate extends BaseElement {
         // size: 13,
         weight: "normal",
         family: "Open Sans",
-        decoration: ""
-      }
+        decoration: "",
+      },
     });
 
     this.endControlSection();
 
     this.startControlSection("overlay_section", {
       tab: TAB_STYLE,
-      label: "Overlay"
+      label: "Overlay",
     });
 
     this.endControlSection();
 
     this.startControlSection("background_section", {
       tab: TAB_STYLE,
-      label: "Background"
+      label: "Background",
     });
 
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background Color"
+      label: "Background Color",
     });
 
     this.addControl("background_section_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
       default: {
-        size: 1
+        size: 1,
       },
       max: 1,
       min: 0,
-      step: 0.01
+      step: 0.01,
     });
 
     this.endControlSection();
 
     this.startControlSection("border_section", {
       tab: TAB_STYLE,
-      label: "Border"
+      label: "Border",
     });
 
     this.addControl("border_type", {
@@ -691,35 +705,35 @@ class InputDate extends BaseElement {
       options: [
         {
           value: "none",
-          label: "None"
+          label: "None",
         },
         {
           value: "solid",
-          label: "Solid"
+          label: "Solid",
         },
         {
           value: "double",
-          label: "Double"
+          label: "Double",
         },
         {
           value: "dotted",
-          label: "Dotted"
+          label: "Dotted",
         },
         {
           value: "dashed",
-          label: "Dashed"
+          label: "Dashed",
         },
         {
           value: "groove",
-          label: "Groove"
-        }
-      ]
+          label: "Groove",
+        },
+      ],
     });
 
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("disable_box_shadow", {
@@ -729,7 +743,7 @@ class InputDate extends BaseElement {
 
     this.addControl("border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color"
+      label: "Border Color",
     });
 
     this.addControl("box_shadow", {
@@ -744,222 +758,204 @@ class InputDate extends BaseElement {
         colorRGB: "rgb(0, 0, 0)",
         color: "rgb(0, 0, 0)",
         colorPickedHex: "#000000",
-        type: " "
-      }
+        type: " ",
+      },
     });
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
       label: "Radius",
       default: {
-        unit: "px"
+        unit: "px",
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.endControlSection();
 
     this.startControlSection("date_picker", {
       tab: TAB_STYLE,
-      label: "Date picker"
+      label: "Date picker",
     });
 
-    this.addControl('picker_minimal', {
+    this.addControl("picker_minimal", {
       type: CONTROLLER_SWITCHER,
-      label: 'Minimal',
+      label: "Minimal",
       locked: true,
     });
 
-    this.addControl('picker_padding', {
+    this.addControl("picker_padding", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
+      label: "Padding",
       default: {
-        unit: 'px',
-        bind: true
+        unit: "px",
+        bind: true,
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
-    this.addControl('picker_background', {
+    this.addControl("picker_background", {
       type: CONTROLLER_COLOR,
-      label: 'Background color',
+      label: "Background color",
       // default: {
       //   color: "rgb(52,59,76)",
       //   colorPickedHex: "#343B4C",
       // },
     });
 
-    this.addControl('picker_border_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options: [
-          {
-            'value': 'none',
-            'label': 'None',
-          },
-          {
-            'value': 'solid',
-            'label': 'Solid',
-          },
-          {
-            'value': 'double',
-            'label': 'Double',
-          },
-          {
-            'value': 'dotted',
-            'label': 'Dotted',
-          },
-          {
-            'value': 'dashed',
-            'label': 'Dashed',
-          },
-          {
-            'value': 'groove',
-            'label': 'Groove',
-          },
-        ],
-      }
-    );
-
-    this.addControl('picker_border_width', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        default: {
-          bind: true,
+    this.addControl("picker_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      options: [
+        {
+          value: "none",
+          label: "None",
         },
-        units: ['px', '%', 'vh', 'vw'],
-      }
-    );
-
-    this.addControl('picker_border_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-      }
-    );
-
-    this.addControl('picker_border_radius', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
-      default: {
-        unit: 'px',
-        bind: true,
-      },
-      units: ['px', '%', 'vh', 'vw'],
+        {
+          value: "solid",
+          label: "Solid",
+        },
+        {
+          value: "double",
+          label: "Double",
+        },
+        {
+          value: "dotted",
+          label: "Dotted",
+        },
+        {
+          value: "dashed",
+          label: "Dashed",
+        },
+        {
+          value: "groove",
+          label: "Groove",
+        },
+      ],
     });
 
-    this.addControl('picker_shadow', {
+    this.addControl("picker_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width",
+      default: {
+        bind: true,
+      },
+      units: ["px", "%", "vh", "vw"],
+    });
+
+    this.addControl("picker_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border Color",
+    });
+
+    this.addControl("picker_border_radius", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Radius",
+      default: {
+        unit: "px",
+        bind: true,
+      },
+      units: ["px", "%", "vh", "vw"],
+    });
+
+    this.addControl("picker_shadow", {
       type: CONTROLLER_SHADOW,
-      label: 'Shadow',
+      label: "Shadow",
     });
 
-    this.addControl('picker_month_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Month typographic',
-      }
-    );
+    this.addControl("picker_month_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Month typographic",
+    });
 
-    this.addControl('picker_month_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Month font color',
-      }
-    );
+    this.addControl("picker_month_color", {
+      type: CONTROLLER_COLOR,
+      label: "Month font color",
+    });
 
-    this.addControl('picker_year_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Year Typographic',
-      }
-    );
+    this.addControl("picker_year_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Year Typographic",
+    });
 
-    this.addControl('picker_year_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Year font color',
-      }
-    );
+    this.addControl("picker_year_color", {
+      type: CONTROLLER_COLOR,
+      label: "Year font color",
+    });
 
-    this.addControl('picker_icons_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Icons color',
-      }
-    );
+    this.addControl("picker_icons_color", {
+      type: CONTROLLER_COLOR,
+      label: "Icons color",
+    });
 
-    this.addControl('picker_heading_date', {
+    this.addControl("picker_heading_date", {
       type: CONTROLLER_HEADING,
-      label: 'Date',
+      label: "Date",
     });
 
-    this.addControl('date_weekday_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Weekday typographic',
-      }
-    );
+    this.addControl("date_weekday_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Weekday typographic",
+    });
 
-    this.addControl('date_weekday_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Weekday font color',
-      }
-    );
+    this.addControl("date_weekday_color", {
+      type: CONTROLLER_COLOR,
+      label: "Weekday font color",
+    });
 
-    this.addControl('date_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-      }
-    );
+    this.addControl("date_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+    });
 
-    this.addControl('date_background_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Background color',
-      }
-    );
+    this.addControl("date_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+    });
 
-    this.addControl('date_font_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Font color',
-      }
-    );
+    this.addControl("date_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font color",
+    });
 
-    this.addControl('date_outside_background_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Outside background color',
-      }
-    );
+    this.addControl("date_outside_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Outside background color",
+    });
 
-    this.addControl('date_outside_font_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Outside font color',
-      }
-    );
+    this.addControl("date_outside_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Outside font color",
+    });
 
-    this.addControl('date_selected_background_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Selected background color',
-      }
-    );
+    this.addControl("date_selected_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Selected background color",
+    });
 
-    this.addControl('date_selected_font_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Selected font color',
-      }
-    );
+    this.addControl("date_selected_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Selected font color",
+    });
 
-    this.addControl('date_radius', {
+    this.addControl("date_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
+      label: "Border Radius",
       default: {
-        unit: 'px',
+        unit: "px",
         bind: true,
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.endControlSection();
 
     this.startControlSection("transform_section", {
       tab: TAB_STYLE,
-      label: "Transform"
+      label: "Transform",
     });
 
     this.endControlSection();
-
 
     advancedTabControllers(this);
   }

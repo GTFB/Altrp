@@ -6,7 +6,7 @@ import {
   colorPropertyStyled,
   borderWidthStyled,
   shadowControllerToStyles,
-  sizeStyled
+  sizeStyled,
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 /**
@@ -14,13 +14,16 @@ import {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const inputWrapperStyle = settings => {
+const inputWrapperStyle = (settings) => {
   let styles = `&& .altrp-input-wrapper {`;
-  let width;
+  let width, height;
   //width begin
   settings && (width = getResponsiveSetting(settings, "field_width"));
   width && (styles += sizeStyled(width, "width"));
   //width end
+
+  console.log(height);
+
   styles += "}";
   return styles;
 };
@@ -30,7 +33,7 @@ const inputWrapperStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const containerStyle = settings => {
+const containerStyle = (settings) => {
   let styles = `&& .altrp-field-container {`;
   let margin;
 
@@ -43,7 +46,7 @@ const containerStyle = settings => {
   return styles;
 };
 
-const wysiwygStyle = settings => {
+const wysiwygStyle = (settings) => {
   let padding,
     fontColor,
     widthWysiwyg,
@@ -54,211 +57,345 @@ const wysiwygStyle = settings => {
     borderWidth,
     borderColor,
     boxShadow,
-    borderRadius
-
-  const {
-    placeholder_and_value_alignment_position_section,
-    position_z_index,
-  } = settings
-
-  let styles = `&& .ck-content, .ck.ck-editor__editable_inline[dir=ltr], .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-rounded-corners {`
-
-      settings && (padding = getResponsiveSetting(settings, "position_padding"))
-      padding && (styles += dimensionsControllerToStyles(padding, "padding"))
-
-      settings && (fontColor = getResponsiveSetting(settings, "field_font_color"))
-      fontColor && (styles += colorPropertyStyled(fontColor, "color"))
-
-      settings && (widthWysiwyg = getResponsiveSetting(settings, "field_width"))
-      widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"))
-
-      placeholder_and_value_alignment_position_section &&
-      (styles += `text-align:${placeholder_and_value_alignment_position_section};`)
-
-      position_z_index && (styles += `z-index:${position_z_index};`)
-
-      settings &&
-      (placeholderColor = getResponsiveSetting(settings, "placeholder_style_font_color"))
-      placeholderColor && (styles += colorPropertyStyled(placeholderColor, "color"))
-
-      settings &&
-      (reqColor = getResponsiveSetting(settings, "required_style_font_color"))
-      reqColor && (styles += colorPropertyStyled(reqColor, "color"))
-
-      settings && (backgroundColor = getResponsiveSetting(settings, "background_style_background_color"))
-
-      backgroundColor &&
-      (styles += colorPropertyStyled(backgroundColor, "background-color"))
-
-      settings && (borderType = getResponsiveSetting(settings, "border_type"))
-      borderType &&
-      (styles += simplePropertyStyled(borderType, "border-style", "!important"))
-
-      settings && (borderWidth = getResponsiveSetting(settings, "border_width"))
-      borderWidth && (styles += borderWidthStyled(borderWidth))
-
-      settings && (borderColor = getResponsiveSetting(settings, "border_color"))
-      borderColor && (styles += colorPropertyStyled(borderColor, "border-color"))
-
-      settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"))
-      boxShadow && (styles += shadowControllerToStyles(boxShadow))
-
-      settings &&
-      (borderRadius = getResponsiveSetting(settings, 'border_radius') ||  getResponsiveSetting(settings, "global_filter_input_border_radius" ))
-
-      borderRadius &&
-      (styles += dimensionsControllerToStyles(borderRadius, "border-radius"))
-
-      //state-disabled
-      settings && (padding = getResponsiveSetting(settings, "position_padding", ".state-disabled"))
-      padding && (styles += dimensionsControllerToStyles(padding, "padding"))
-
-      settings && (fontColor = getResponsiveSetting(settings, "field_font_color", ".state-disabled"))
-      fontColor && (styles += colorPropertyStyled(fontColor, "color"))
-
-      settings && (widthWysiwyg = getResponsiveSetting(settings, "field_width", ".state-disabled"))
-      widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"))
-
-      settings &&
-      (placeholderColor = getResponsiveSetting(settings, "placeholder_style_font_color", ".state-disabled"))
-      placeholderColor && (styles += colorPropertyStyled(placeholderColor, "color"))
-
-      settings &&
-      (reqColor = getResponsiveSetting(settings, "required_style_font_color", ".state-disabled"))
-      reqColor && (styles += colorPropertyStyled(reqColor, "color"))
-
-      settings && (backgroundColor = getResponsiveSetting(settings, "background_style_background_color", ".state-disabled"))
-
-      backgroundColor &&
-      (styles += colorPropertyStyled(backgroundColor, "background-color"))
-
-      settings && (borderType = getResponsiveSetting(settings, "border_type", ".state-disabled"))
-      borderType &&
-      (styles += simplePropertyStyled(borderType, "border-style", "!important"))
-
-      settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".state-disabled"))
-      borderWidth && (styles += borderWidthStyled(borderWidth))
-
-      settings && (borderColor = getResponsiveSetting(settings, "border_color", ".state-disabled"))
-      borderColor && (styles += colorPropertyStyled(borderColor, "border-color"))
-
-      settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".state-disabled"))
-      boxShadow && (styles += shadowControllerToStyles(boxShadow))
-
-      settings &&
-      (borderRadius = getResponsiveSetting(settings, 'border_radius', ".state-disabled") ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ".state-disabled" ))
-
-      borderRadius &&
-      (styles += dimensionsControllerToStyles(borderRadius, "border-radius"))
-
-      //state active
-
-      settings && (padding = getResponsiveSetting(settings, "position_padding", ".active"))
-      padding && (styles += dimensionsControllerToStyles(padding, "padding"))
-
-      settings && (fontColor = getResponsiveSetting(settings, "field_font_color", ".active"))
-      fontColor && (styles += colorPropertyStyled(fontColor, "color"))
-
-      settings && (widthWysiwyg = getResponsiveSetting(settings, "field_width", ".active"))
-      widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"))
-
-      settings &&
-      (placeholderColor = getResponsiveSetting(settings, "placeholder_style_font_color", ".active"))
-      placeholderColor && (styles += colorPropertyStyled(placeholderColor, "color"))
-
-      settings &&
-      (reqColor = getResponsiveSetting(settings, "required_style_font_color", ".active"))
-      reqColor && (styles += colorPropertyStyled(reqColor, "color"))
-
-      settings && (backgroundColor = getResponsiveSetting(settings, "background_style_background_color", ".active"))
-
-      backgroundColor &&
-      (styles += colorPropertyStyled(backgroundColor, "background-color"))
-
-      settings && (borderType = getResponsiveSetting(settings, "border_type", ".active"))
-      borderType &&
-      (styles += simplePropertyStyled(borderType, "border-style", "!important"))
-
-      settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".active"))
-      borderWidth && (styles += borderWidthStyled(borderWidth))
-
-      settings && (borderColor = getResponsiveSetting(settings, "border_color", ".active"))
-      borderColor && (styles += colorPropertyStyled(borderColor, "border-color"))
-
-      settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"))
-      boxShadow && (styles += shadowControllerToStyles(boxShadow))
-
-      settings &&
-      (borderRadius = getResponsiveSetting(settings, 'border_radius', ".active") ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ".active" ))
-
-      borderRadius &&
-      (styles += dimensionsControllerToStyles(borderRadius, "border-radius"))
-
-
-
-  styles += "}"
-
-  styles += `&& .ck-content:hover, .ck.ck-editor__editable_inline[dir=ltr]:hover, .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-rounded-corners:hover {`
-
-      settings && (padding = getResponsiveSetting(settings, "position_padding", ':hover'))
-      padding && (styles += dimensionsControllerToStyles(padding, "padding"))
-
-      settings && (fontColor = getResponsiveSetting(settings, "field_font_color", ':hover'))
-      fontColor && (styles += colorPropertyStyled(fontColor, "color"))
-
-      settings && (widthWysiwyg = getResponsiveSetting(settings, "field_width", ':hover'))
-      widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"))
-
-
-      // hover alignment and hover z-index
-      // placeholder_and_value_alignment_position_section &&
-      // (styles += `text-align:${placeholder_and_value_alignment_position_section};`)
-      //
-      // position_z_index && (styles += `z-index:${position_z_index};`)
-
-      settings &&
-      (placeholderColor = getResponsiveSetting(settings, "placeholder_style_font_color", ':hover'))
-      placeholderColor && (styles += colorPropertyStyled(placeholderColor, "color"))
-
-      settings &&
-      (reqColor = getResponsiveSetting(settings, "required_style_font_color", ':hover'))
-      reqColor && (styles += colorPropertyStyled(reqColor, "color"))
-
-      settings && (backgroundColor = getResponsiveSetting(settings, "background_style_background_color", ':hover'))
-
-      backgroundColor &&
-      (styles += colorPropertyStyled(backgroundColor, "background-color"))
-
-      settings && (borderType = getResponsiveSetting(settings, "border_type", ':hover'))
-      borderType &&
-      (styles += simplePropertyStyled(borderType, "border-style", "!important"))
-
-      settings && (borderWidth = getResponsiveSetting(settings, "border_width", ':hover'))
-      borderWidth && (styles += borderWidthStyled(borderWidth))
-
-      settings && (borderColor = getResponsiveSetting(settings, "border_color", ':hover'))
-      borderColor && (styles += colorPropertyStyled(borderColor, "border-color"))
-
-      settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ':hover'))
-      boxShadow && (styles += shadowControllerToStyles(boxShadow))
-
-      settings &&
-      (borderRadius = getResponsiveSetting(settings, 'border_radius', ':hover') ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ':hover' ))
-
-      borderRadius &&
-      (styles += dimensionsControllerToStyles(borderRadius, "border-radius"))
-
-  styles += "}"
-
-  return styles
-}
+    borderRadius,
+    height;
+
+  const { placeholder_and_value_alignment_position_section, position_z_index } =
+    settings;
+
+  let styles = `&& .ck-content, .ck.ck-editor__editable_inline[dir=ltr], .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-rounded-corners {`;
+
+  settings && (padding = getResponsiveSetting(settings, "position_padding"));
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  settings && (fontColor = getResponsiveSetting(settings, "field_font_color"));
+  fontColor && (styles += colorPropertyStyled(fontColor, "color"));
+
+  settings && (widthWysiwyg = getResponsiveSetting(settings, "field_width"));
+  widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"));
+
+  settings && (height = getResponsiveSetting(settings, "field_height"));
+  height && (styles += sizeStyled(height, "height"));
+
+  placeholder_and_value_alignment_position_section &&
+    (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+
+  position_z_index && (styles += `z-index:${position_z_index};`);
+
+  settings &&
+    (placeholderColor = getResponsiveSetting(
+      settings,
+      "placeholder_style_font_color"
+    ));
+  placeholderColor &&
+    (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  settings &&
+    (reqColor = getResponsiveSetting(settings, "required_style_font_color"));
+  reqColor && (styles += colorPropertyStyled(reqColor, "color"));
+
+  settings &&
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color"
+    ));
+
+  backgroundColor &&
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type"));
+  borderType &&
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings &&
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius") ||
+      getResponsiveSetting(settings, "global_filter_input_border_radius"));
+
+  borderRadius &&
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  //state-disabled
+  settings &&
+    (padding = getResponsiveSetting(
+      settings,
+      "position_padding",
+      ".state-disabled"
+    ));
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  settings &&
+    (fontColor = getResponsiveSetting(
+      settings,
+      "field_font_color",
+      ".state-disabled"
+    ));
+  fontColor && (styles += colorPropertyStyled(fontColor, "color"));
+
+  settings &&
+    (widthWysiwyg = getResponsiveSetting(
+      settings,
+      "field_width",
+      ".state-disabled"
+    ));
+  widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"));
+
+  settings &&
+    (height = getResponsiveSetting(
+      settings,
+      "field_height",
+      ".state-disabled"
+    ));
+  height && (styles += sizeStyled(height, "height"));
+
+  settings &&
+    (placeholderColor = getResponsiveSetting(
+      settings,
+      "placeholder_style_font_color",
+      ".state-disabled"
+    ));
+  placeholderColor &&
+    (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  settings &&
+    (reqColor = getResponsiveSetting(
+      settings,
+      "required_style_font_color",
+      ".state-disabled"
+    ));
+  reqColor && (styles += colorPropertyStyled(reqColor, "color"));
+
+  settings &&
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color",
+      ".state-disabled"
+    ));
+
+  backgroundColor &&
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  settings &&
+    (borderType = getResponsiveSetting(
+      settings,
+      "border_type",
+      ".state-disabled"
+    ));
+  borderType &&
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings &&
+    (borderWidth = getResponsiveSetting(
+      settings,
+      "border_width",
+      ".state-disabled"
+    ));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+    (borderColor = getResponsiveSetting(
+      settings,
+      "border_color",
+      ".state-disabled"
+    ));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings &&
+    (boxShadow = getResponsiveSetting(
+      settings,
+      "box_shadow",
+      ".state-disabled"
+    ));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings &&
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius", ".state-disabled") ||
+      getResponsiveSetting(
+        settings,
+        "global_filter_input_border_radius",
+        ".state-disabled"
+      ));
+
+  borderRadius &&
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  //state active
+
+  settings &&
+    (padding = getResponsiveSetting(settings, "position_padding", ".active"));
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  settings &&
+    (fontColor = getResponsiveSetting(settings, "field_font_color", ".active"));
+  fontColor && (styles += colorPropertyStyled(fontColor, "color"));
+
+  settings &&
+    (widthWysiwyg = getResponsiveSetting(settings, "field_width", ".active"));
+  widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"));
+
+  settings &&
+    (height = getResponsiveSetting(settings, "field_height", ".active"));
+  height && (styles += sizeStyled(height, "height"));
+
+  settings &&
+    (placeholderColor = getResponsiveSetting(
+      settings,
+      "placeholder_style_font_color",
+      ".active"
+    ));
+  placeholderColor &&
+    (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  settings &&
+    (reqColor = getResponsiveSetting(
+      settings,
+      "required_style_font_color",
+      ".active"
+    ));
+  reqColor && (styles += colorPropertyStyled(reqColor, "color"));
+
+  settings &&
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color",
+      ".active"
+    ));
+
+  backgroundColor &&
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  settings &&
+    (borderType = getResponsiveSetting(settings, "border_type", ".active"));
+  borderType &&
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings &&
+    (borderWidth = getResponsiveSetting(settings, "border_width", ".active"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+    (borderColor = getResponsiveSetting(settings, "border_color", ".active"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings &&
+    (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings &&
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius", ".active") ||
+      getResponsiveSetting(
+        settings,
+        "global_filter_input_border_radius",
+        ".active"
+      ));
+
+  borderRadius &&
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  styles += "}";
+
+  styles += `&& .ck-content:hover, .ck.ck-editor__editable_inline[dir=ltr]:hover, .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-rounded-corners:hover {`;
+
+  settings &&
+    (padding = getResponsiveSetting(settings, "position_padding", ":hover"));
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  settings &&
+    (fontColor = getResponsiveSetting(settings, "field_font_color", ":hover"));
+  fontColor && (styles += colorPropertyStyled(fontColor, "color"));
+
+  settings &&
+    (widthWysiwyg = getResponsiveSetting(settings, "field_width", ":hover"));
+  widthWysiwyg && (styles += sizeStyled(widthWysiwyg, "width"));
+
+  settings &&
+    (height = getResponsiveSetting(settings, "field_height", ":hover"));
+  height && (styles += sizeStyled(height, "height"));
+
+  // hover alignment and hover z-index
+  // placeholder_and_value_alignment_position_section &&
+  // (styles += `text-align:${placeholder_and_value_alignment_position_section};`)
+  //
+  // position_z_index && (styles += `z-index:${position_z_index};`)
+
+  settings &&
+    (placeholderColor = getResponsiveSetting(
+      settings,
+      "placeholder_style_font_color",
+      ":hover"
+    ));
+  placeholderColor &&
+    (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  settings &&
+    (reqColor = getResponsiveSetting(
+      settings,
+      "required_style_font_color",
+      ":hover"
+    ));
+  reqColor && (styles += colorPropertyStyled(reqColor, "color"));
+
+  settings &&
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color",
+      ":hover"
+    ));
+
+  backgroundColor &&
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  settings &&
+    (borderType = getResponsiveSetting(settings, "border_type", ":hover"));
+  borderType &&
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings &&
+    (borderWidth = getResponsiveSetting(settings, "border_width", ":hover"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+    (borderColor = getResponsiveSetting(settings, "border_color", ":hover"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings &&
+    (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings &&
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius", ":hover") ||
+      getResponsiveSetting(
+        settings,
+        "global_filter_input_border_radius",
+        ":hover"
+      ));
+
+  borderRadius &&
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  styles += "}";
+
+  return styles;
+};
 
 /**
  * Стили для класса altrp-field
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldStyle = settings => {
+const fieldStyle = (settings) => {
   let styles = `&& .altrp-field {`;
   let padding,
     color,
@@ -270,7 +407,8 @@ const fieldStyle = settings => {
     borderRadius,
     widthTextArea,
     boxShadow,
-    toggle;
+    toggle,
+    height;
 
   const {
     placeholder_and_value_alignment_position_section,
@@ -282,17 +420,21 @@ const fieldStyle = settings => {
     image_select_item_height,
     image_select_image_fit,
     image_select_image_position,
-    cross_size
+    cross_size,
   } = settings;
 
-  settings && (widthTextArea = getResponsiveSetting(settings, "field_width_textarea"));
+  settings &&
+    (widthTextArea = getResponsiveSetting(settings, "field_width_textarea"));
   widthTextArea && (styles += sizeStyled(widthTextArea, "width"));
+
+  settings && (height = getResponsiveSetting(settings, "field_height"));
+  height && (styles += sizeStyled(height, "height"));
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
   settings && (toggle = getResponsiveSetting(settings, "disable_box_shadow"));
-  toggle && (styles += 'box-shadow: none;');
+  toggle && (styles += "box-shadow: none;");
 
   settings &&
     (typographic = getResponsiveSetting(settings, "field_font_typographic"));
@@ -315,7 +457,9 @@ const fieldStyle = settings => {
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-    (borderRadius = getResponsiveSetting(settings, 'border_radius') ||  getResponsiveSetting(settings, "global_filter_input_border_radius" ));
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius") ||
+      getResponsiveSetting(settings, "global_filter_input_border_radius"));
 
   borderRadius &&
     (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
@@ -376,24 +520,37 @@ const fieldStyle = settings => {
 
   styles += `&& .altrp-field:hover {`;
 
-  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ':hover'));
+  settings &&
+    (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
   settings &&
-    (typographic = getResponsiveSetting(settings, "field_font_typographic", ':hover'));
+    (typographic = getResponsiveSetting(
+      settings,
+      "field_font_typographic",
+      ":hover"
+    ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   settings && (color = getResponsiveSetting(settings, "field_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings && (borderColor = getResponsiveSetting(settings, "border_color", ':hover'));
+  settings &&
+    (borderColor = getResponsiveSetting(settings, "border_color", ":hover"));
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
 
-  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ':hover'));
+  settings &&
+    (borderWidth = getResponsiveSetting(settings, "border_width", ":hover"));
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-    (borderRadius = getResponsiveSetting(settings, 'border_radius', ':hover') ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ':hover'));
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius", ":hover") ||
+      getResponsiveSetting(
+        settings,
+        "global_filter_input_border_radius",
+        ":hover"
+      ));
   borderRadius &&
     (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
@@ -401,34 +558,47 @@ const fieldStyle = settings => {
     (backgroundColor = getResponsiveSetting(
       settings,
       "background_style_background_color",
-      ':hover'
+      ":hover"
     ));
   backgroundColor &&
     (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   styles += "}";
-
 
   styles += `&& .altrp-field:focus {`;
 
-  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ':focus'));
+  settings &&
+    (boxShadow = getResponsiveSetting(settings, "box_shadow", ":focus"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
   settings &&
-    (typographic = getResponsiveSetting(settings, "field_font_typographic", ':focus'));
+    (typographic = getResponsiveSetting(
+      settings,
+      "field_font_typographic",
+      ":focus"
+    ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   settings && (color = getResponsiveSetting(settings, "field_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings && (borderColor = getResponsiveSetting(settings, "border_color", ':focus'));
-  borderColor && (styles += colorPropertyStyled(borderColor, "border-color", '!important'));
+  settings &&
+    (borderColor = getResponsiveSetting(settings, "border_color", ":focus"));
+  borderColor &&
+    (styles += colorPropertyStyled(borderColor, "border-color", "!important"));
 
-  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ':focus'));
+  settings &&
+    (borderWidth = getResponsiveSetting(settings, "border_width", ":focus"));
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-    (borderRadius = getResponsiveSetting(settings, 'border_radius', ':focus') ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ':focus'));
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius", ":focus") ||
+      getResponsiveSetting(
+        settings,
+        "global_filter_input_border_radius",
+        ":focus"
+      ));
   borderRadius &&
     (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
@@ -436,61 +606,116 @@ const fieldStyle = settings => {
     (backgroundColor = getResponsiveSetting(
       settings,
       "background_style_background_color",
-      ':focus'
+      ":focus"
     ));
   backgroundColor &&
     (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   styles += "}";
 
-  styles += `&& .state-disabled {`
-
-  settings && (widthTextArea = getResponsiveSetting(settings, "field_width_textarea", ".state-disabled"));
-  widthTextArea && (styles += sizeStyled(widthTextArea, "width"));
-
-  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".state-disabled"));
-  boxShadow && (styles += shadowControllerToStyles(boxShadow));
-
-  settings && (toggle = getResponsiveSetting(settings, "disable_box_shadow", ".state-disabled"));
-  toggle && (styles += 'box-shadow: none;');
+  styles += `&& .state-disabled {`;
 
   settings &&
-  (typographic = getResponsiveSetting(settings, "field_font_typographic", ".state-disabled"));
+    (widthTextArea = getResponsiveSetting(
+      settings,
+      "field_width_textarea",
+      ".state-disabled"
+    ));
+  widthTextArea && (styles += sizeStyled(widthTextArea, "width"));
+
+  settings &&
+    (boxShadow = getResponsiveSetting(
+      settings,
+      "box_shadow",
+      ".state-disabled"
+    ));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings &&
+    (toggle = getResponsiveSetting(
+      settings,
+      "disable_box_shadow",
+      ".state-disabled"
+    ));
+  toggle && (styles += "box-shadow: none;");
+
+  settings &&
+    (typographic = getResponsiveSetting(
+      settings,
+      "field_font_typographic",
+      ".state-disabled"
+    ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
-  settings && (padding = getResponsiveSetting(settings, "position_padding", ".state-disabled"));
-  padding && (styles += dimensionsControllerToStyles(padding, "padding", ".state-disabled"));
+  settings &&
+    (padding = getResponsiveSetting(
+      settings,
+      "position_padding",
+      ".state-disabled"
+    ));
+  padding &&
+    (styles += dimensionsControllerToStyles(
+      padding,
+      "padding",
+      ".state-disabled"
+    ));
 
-  settings && (color = getResponsiveSetting(settings, "field_font_color", ".state-disabled"));
+  settings &&
+    (color = getResponsiveSetting(
+      settings,
+      "field_font_color",
+      ".state-disabled"
+    ));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings && (borderType = getResponsiveSetting(settings, "border_type", ".state-disabled"));
+  settings &&
+    (borderType = getResponsiveSetting(
+      settings,
+      "border_type",
+      ".state-disabled"
+    ));
   borderType &&
-  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
 
-  settings && (borderColor = getResponsiveSetting(settings, "border_color", ".state-disabled"));
+  settings &&
+    (borderColor = getResponsiveSetting(
+      settings,
+      "border_color",
+      ".state-disabled"
+    ));
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
 
-  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".state-disabled"));
+  settings &&
+    (borderWidth = getResponsiveSetting(
+      settings,
+      "border_width",
+      ".state-disabled"
+    ));
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-  (borderRadius = getResponsiveSetting(settings, 'border_radius', ".state-disabled") ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ".state-disabled"));
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius", ".state-disabled") ||
+      getResponsiveSetting(
+        settings,
+        "global_filter_input_border_radius",
+        ".state-disabled"
+      ));
 
   borderRadius &&
-  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
   settings &&
-  (backgroundColor = getResponsiveSetting(
-    settings,
-    "background_style_background_color",
-    ".state-disabled"
-  ));
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color",
+      ".state-disabled"
+    ));
   backgroundColor &&
-  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   placeholder_and_value_alignment_position_section &&
-  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+    (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
   textarea_resize && (styles += `resize:${textarea_resize};`);
@@ -512,75 +737,98 @@ const fieldStyle = settings => {
   styles += "&& .altrp-image-select> .state-disabled{";
 
   image_select_item_width &&
-  (styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`);
+    (styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`);
 
   image_select_item_height &&
-  (styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`);
+    (styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`);
 
   styles += "}";
 
   styles += "&& .altrp-image-select img{";
   image_select_image_fit && (styles += `object-fit:${image_select_image_fit};`);
   image_select_image_position &&
-  (styles += `object-position:${image_select_image_position};`);
+    (styles += `object-position:${image_select_image_position};`);
   styles += "}";
 
   styles += "&& .input-clear-btn{";
 
-  settings && (color = getResponsiveSetting(settings, "cross_color", ".state-disabled"));
+  settings &&
+    (color = getResponsiveSetting(settings, "cross_color", ".state-disabled"));
   color && (styles += colorPropertyStyled(color, "color"));
-
 
   styles += "}";
 
-  styles += `&& .active {`
-
-  settings && (widthTextArea = getResponsiveSetting(settings, "field_width_textarea", ".active"));
-  widthTextArea && (styles += sizeStyled(widthTextArea, "width"));
-
-  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
-  boxShadow && (styles += shadowControllerToStyles(boxShadow));
-
-  settings && (toggle = getResponsiveSetting(settings, "disable_box_shadow", ".active"));
-  toggle && (styles += 'box-shadow: none;');
+  styles += `&& .active {`;
 
   settings &&
-  (typographic = getResponsiveSetting(settings, "field_font_typographic", ".active"));
+    (widthTextArea = getResponsiveSetting(
+      settings,
+      "field_width_textarea",
+      ".active"
+    ));
+  widthTextArea && (styles += sizeStyled(widthTextArea, "width"));
+
+  settings &&
+    (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings &&
+    (toggle = getResponsiveSetting(settings, "disable_box_shadow", ".active"));
+  toggle && (styles += "box-shadow: none;");
+
+  settings &&
+    (typographic = getResponsiveSetting(
+      settings,
+      "field_font_typographic",
+      ".active"
+    ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
-  settings && (padding = getResponsiveSetting(settings, "position_padding", ".active"));
-  padding && (styles += dimensionsControllerToStyles(padding, "padding", ".active"));
+  settings &&
+    (padding = getResponsiveSetting(settings, "position_padding", ".active"));
+  padding &&
+    (styles += dimensionsControllerToStyles(padding, "padding", ".active"));
 
-  settings && (color = getResponsiveSetting(settings, "field_font_color", ".active"));
+  settings &&
+    (color = getResponsiveSetting(settings, "field_font_color", ".active"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings && (borderType = getResponsiveSetting(settings, "border_type", ".active"));
+  settings &&
+    (borderType = getResponsiveSetting(settings, "border_type", ".active"));
   borderType &&
-  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
 
-  settings && (borderColor = getResponsiveSetting(settings, "border_color", ".active"));
+  settings &&
+    (borderColor = getResponsiveSetting(settings, "border_color", ".active"));
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
 
-  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".active"));
+  settings &&
+    (borderWidth = getResponsiveSetting(settings, "border_width", ".active"));
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-  (borderRadius = getResponsiveSetting(settings, 'border_radius', ".active") ||  getResponsiveSetting(settings, "global_filter_input_border_radius", ".active"));
+    (borderRadius =
+      getResponsiveSetting(settings, "border_radius", ".active") ||
+      getResponsiveSetting(
+        settings,
+        "global_filter_input_border_radius",
+        ".active"
+      ));
 
   borderRadius &&
-  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
   settings &&
-  (backgroundColor = getResponsiveSetting(
-    settings,
-    "background_style_background_color",
-    ".active"
-  ));
+    (backgroundColor = getResponsiveSetting(
+      settings,
+      "background_style_background_color",
+      ".active"
+    ));
   backgroundColor &&
-  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+    (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   placeholder_and_value_alignment_position_section &&
-  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+    (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
   textarea_resize && (styles += `resize:${textarea_resize};`);
@@ -602,22 +850,23 @@ const fieldStyle = settings => {
   styles += "&& .altrp-image-select> .active{";
 
   image_select_item_width &&
-  (styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`);
+    (styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`);
 
   image_select_item_height &&
-  (styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`);
+    (styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`);
 
   styles += "}";
 
   styles += "&& .altrp-image-select img{";
   image_select_image_fit && (styles += `object-fit:${image_select_image_fit};`);
   image_select_image_position &&
-  (styles += `object-position:${image_select_image_position};`);
+    (styles += `object-position:${image_select_image_position};`);
   styles += "}";
 
   styles += "&& .input-clear-btn{";
 
-  settings && (color = getResponsiveSetting(settings, "cross_color", ".active"));
+  settings &&
+    (color = getResponsiveSetting(settings, "cross_color", ".active"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   //TODO не нашел как активировать эту штуку
@@ -628,13 +877,12 @@ const fieldStyle = settings => {
   return styles;
 };
 
-
 /**
  * Стили для класса altrp-field-select2__control
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldSelect2ControlStyle = settings => {
+const fieldSelect2ControlStyle = (settings) => {
   let styles = `&& .altrp-field-select2__control {`;
   let padding,
     color,
@@ -645,10 +893,8 @@ const fieldSelect2ControlStyle = settings => {
     borderRadius,
     boxShadow;
 
-  const {
-    placeholder_and_value_alignment_position_section,
-    position_z_index
-  } = settings;
+  const { placeholder_and_value_alignment_position_section, position_z_index } =
+    settings;
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
@@ -698,7 +944,7 @@ const fieldSelect2ControlStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const imageSelectLabel = settings => {
+const imageSelectLabel = (settings) => {
   let styles = `&& .altrp-image-select__label {`;
   let color, typographic;
 
@@ -722,7 +968,7 @@ const imageSelectLabel = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldSelect2SingleValueStyle = settings => {
+const fieldSelect2SingleValueStyle = (settings) => {
   let styles = `&& .altrp-field-select2__single-value {`;
   let typographic, color;
 
@@ -741,14 +987,11 @@ const fieldSelect2SingleValueStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldLabelContainerStyle = settings => {
+const fieldLabelContainerStyle = (settings) => {
   let styles = `&& .altrp-field-label-container {`;
   let backgroundColor, padding, width;
-  const {
-    label_position_top,
-    label_position_left,
-    label_icon_position
-  } = settings;
+  const { label_position_top, label_position_left, label_icon_position } =
+    settings;
 
   settings &&
     (backgroundColor = getResponsiveSetting(
@@ -770,21 +1013,20 @@ const fieldLabelContainerStyle = settings => {
 
   styles += "}";
 
-  styles += `&& .altrp-field-container:hover .altrp-field-label-container {`
+  styles += `&& .altrp-field-container:hover .altrp-field-label-container {`;
 
   settings &&
     (backgroundColor = getResponsiveSetting(
       settings,
       "label_background_color",
-      ':hover'
+      ":hover"
     ));
   backgroundColor &&
     (styles += colorPropertyStyled(backgroundColor, "background-color"));
-  styles += '}'
+  styles += "}";
 
   return styles;
 };
-
 
 let styles = `&& .altrp-field-label-container {`;
 /**
@@ -792,14 +1034,19 @@ let styles = `&& .altrp-field-label-container {`;
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldLabel = settings => {
+const fieldLabel = (settings) => {
   let styles = `&& .altrp-field-label {`;
   let color, typographic;
 
-  settings && (color = getResponsiveSetting(settings, "label_style_font_color"));
+  settings &&
+    (color = getResponsiveSetting(settings, "label_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings && (typographic = getResponsiveSetting(settings, "label_style_font_typographic"));
+  settings &&
+    (typographic = getResponsiveSetting(
+      settings,
+      "label_style_font_typographic"
+    ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
@@ -807,14 +1054,18 @@ const fieldLabel = settings => {
   styles += `&& .altrp-field-container:hover .altrp-field-label {`;
 
   settings &&
-    (color = getResponsiveSetting(settings, "label_style_font_color", ':hover'));
+    (color = getResponsiveSetting(
+      settings,
+      "label_style_font_color",
+      ":hover"
+    ));
   color && (styles += colorPropertyStyled(color, "color"));
 
   settings &&
     (typographic = getResponsiveSetting(
       settings,
       "label_style_font_typographic",
-      ':hover'
+      ":hover"
     ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
@@ -827,7 +1078,7 @@ const fieldLabel = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const labelIconStyle = settings => {
+const labelIconStyle = (settings) => {
   let styles = `&& .altrp-label-icon {`;
   let padding, backgroundColor, iconSize;
 
@@ -874,7 +1125,7 @@ const labelIconStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const placeholderStyle = settings => {
+const placeholderStyle = (settings) => {
   let styles = `&& .altrp-field::placeholder{`;
   let color,
     typographic,
@@ -896,13 +1147,13 @@ const placeholderStyle = settings => {
     (color = getResponsiveSetting(settings, "placeholder_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
-  settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "background_style_background_color"
-    ));
-  backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  // settings &&
+  //   (backgroundColor = getResponsiveSetting(
+  //     settings,
+  //     "background_style_background_color"
+  //   ));
+  // backgroundColor &&
+  //   (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   styles += "}";
 
@@ -972,7 +1223,7 @@ const placeholderStyle = settings => {
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
-const fieldLabelRequired = settings => {
+const fieldLabelRequired = (settings) => {
   let styles = `&& .altrp-field-label--required::after{`;
   let color, typographic;
 
@@ -992,14 +1243,18 @@ const fieldLabelRequired = settings => {
   styles += `&& .altrp-field-container:hover .altrp-field-label--required::after {`;
 
   settings &&
-    (color = getResponsiveSetting(settings, "required_style_font_color", ':hover'));
+    (color = getResponsiveSetting(
+      settings,
+      "required_style_font_color",
+      ":hover"
+    ));
   color && (styles += colorPropertyStyled(color, "color"));
 
   settings &&
     (typographic = getResponsiveSetting(
       settings,
       "required_style_font_typographic",
-      ':hover'
+      ":hover"
     ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
@@ -1097,10 +1352,13 @@ const maskMismatchMessage = (settings, id) => {
 //Точка входа
 function FormComponent(settings) {
   let styles = "";
-  const background_section_opacity = getResponsiveSetting(settings, 'background_section_opacity');
+  const background_section_opacity = getResponsiveSetting(
+    settings,
+    "background_section_opacity"
+  );
   //for all element
   if (background_section_opacity && background_section_opacity?.size) {
-    styles += `opacity:${background_section_opacity.size};`
+    styles += `opacity:${background_section_opacity.size};`;
   } else {
     styles += "";
   }
@@ -1148,5 +1406,5 @@ function FormComponent(settings) {
 }
 export default {
   FormComponent: FormComponent,
-  select2Options: fieldSelect2Option
+  select2Options: fieldSelect2Option,
 };

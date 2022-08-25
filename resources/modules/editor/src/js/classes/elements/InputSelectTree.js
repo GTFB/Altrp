@@ -16,7 +16,8 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA, CONTROLLER_GRADIENT
+  CONTROLLER_MEDIA,
+  CONTROLLER_GRADIENT,
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { actionsControllers } from "../../decorators/actions-controllers";
@@ -40,17 +41,17 @@ class InputSelectTree extends BaseElement {
   _registerControls() {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
-      label: "Content"
+      label: "Content",
     });
 
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
-      label: "Form ID"
+      label: "Form ID",
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
-      label: "Field ID (Column Name)"
+      label: "Field ID (Column Name)",
     });
 
     this.addControl("content_label", {
@@ -65,24 +66,24 @@ class InputSelectTree extends BaseElement {
       options: [
         {
           value: "top",
-          label: "Top"
+          label: "Top",
         },
         {
           value: "bottom",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "left",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "right",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "absolute",
-          label: "Absolute"
-        }
+          label: "Absolute",
+        },
       ],
       locked: true,
     });
@@ -90,7 +91,7 @@ class InputSelectTree extends BaseElement {
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
       label: "Choose Icon",
-      locked: true
+      locked: true,
     });
 
     this.addControl("label_icon_position", {
@@ -99,21 +100,21 @@ class InputSelectTree extends BaseElement {
       options: [
         {
           value: "row",
-          label: "Right"
+          label: "Right",
         },
         {
           value: "row-reverse",
-          label: "Left"
+          label: "Left",
         },
         {
           value: "column",
-          label: "Bottom"
+          label: "Bottom",
         },
         {
           value: "column-reverse",
-          label: "Top"
-        }
-      ]
+          label: "Top",
+        },
+      ],
     });
 
     this.addControl("content_placeholder", {
@@ -155,7 +156,7 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "Nulled Option Label",
       responsive: false,
-      conditions:{
+      conditions: {
         content_options_nullable: true,
       },
       locked: true,
@@ -169,42 +170,42 @@ class InputSelectTree extends BaseElement {
       options: [
         {
           value: "",
-          label: "None"
+          label: "None",
         },
         {
           value: "asc",
-          label: "ASC"
+          label: "ASC",
         },
         {
           value: "desc",
-          label: "DESC"
-        }
-      ]
+          label: "DESC",
+        },
+      ],
     });
 
     this.addControl("sort_default", {
       type: CONTROLLER_SWITCHER,
       locked: true,
-      label: "Sort Default"
+      label: "Sort Default",
     });
 
     this.addControl("params_for_update", {
       type: CONTROLLER_TEXTAREA,
       label: "Params for Update Options",
       conditions: {
-        "model_for_options!": ""
+        "model_for_options!": "",
       },
       locked: true,
       description:
-        'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
+        'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
     });
 
     this.addControl("params_as_filters", {
       type: CONTROLLER_SWITCHER,
       label: "Use Params as Filters",
       conditions: {
-        "params_for_update!": ""
-      }
+        "params_for_update!": "",
+      },
     });
 
     this.addControl("content_options", {
@@ -222,62 +223,63 @@ class InputSelectTree extends BaseElement {
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      description: "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+      description:
+        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
       locked: true,
     });
 
     this.endControlSection();
 
-    this.startControlSection('button_content', {
-      label: 'Button',
-    })
+    this.startControlSection("button_content", {
+      label: "Button",
+    });
 
-    this.addControl('alignment', {
+    this.addControl("alignment", {
       type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
+      label: "Alignment",
       options: [
         {
-          icon: 'left',
-          value: 'flex-start',
+          icon: "left",
+          value: "flex-start",
         },
         {
-          icon: 'center',
-          value: 'center',
+          icon: "center",
+          value: "center",
         },
         {
-          icon: 'right',
-          value: 'flex-end',
+          icon: "right",
+          value: "flex-end",
         },
         {
-          icon: 'in_width',
-          value: 'stretch',
-        }
+          icon: "in_width",
+          value: "stretch",
+        },
       ],
     });
 
-    this.addControl('right_icon', {
-      label: 'Right Icon',
+    this.addControl("right_icon", {
+      label: "Right Icon",
       type: CONTROLLER_MEDIA,
       locked: true,
-    })
+    });
 
-    this.addControl('left_icon', {
-      label: 'Left Icon',
+    this.addControl("left_icon", {
+      label: "Left Icon",
       type: CONTROLLER_MEDIA,
       locked: true,
-    })
+    });
 
     this.endControlSection();
 
-    this.startControlSection('search', {
-      label: 'Search',
-    })
+    this.startControlSection("search", {
+      label: "Search",
+    });
 
-    this.addControl('s_off', {
+    this.addControl("s_off", {
       type: CONTROLLER_SWITCHER,
-      label: 'Search Off',
+      label: "Search Off",
       locked: true,
-    })
+    });
 
     this.addControl("no_results_text", {
       type: CONTROLLER_TEXT,
@@ -296,23 +298,23 @@ class InputSelectTree extends BaseElement {
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
-      label: "Label"
+      label: "Label",
     });
 
     this.addControl("label_width", {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
 
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("label_style_spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
 
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 60,
       min: 0,
       locked: true,
@@ -322,24 +324,22 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
 
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("label_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background Color",
-
     });
 
     this.addControl("label_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Font Color",
-
     });
 
     this.addControl("label_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("label_position_top", {
@@ -347,9 +347,9 @@ class InputSelectTree extends BaseElement {
       label: "Label Y Position",
 
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: -100,
       locked: true,
@@ -363,11 +363,11 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Label X Position",
       conditions: {
-        content_label_position_type: ["absolute"]
+        content_label_position_type: ["absolute"],
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: -100
+      min: -100,
       // rules: {
       //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
       //     "left: {{SIZE}}{{UNIT}};"
@@ -379,18 +379,18 @@ class InputSelectTree extends BaseElement {
       label: "Icon Size",
       units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0
+      min: 0,
     });
 
     this.addControl("icon_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Icon Padding",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: "Icon color"
+      label: "Icon color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
       // }
@@ -398,7 +398,7 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("icon_color_background", {
       type: CONTROLLER_COLOR,
-      label: "Background Color"
+      label: "Background Color",
       // rules: {
       //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
       // }
@@ -408,18 +408,18 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Cross Color",
       conditions: {
-        content_clearable: [true]
-      }
+        content_clearable: [true],
+      },
     });
 
     this.addControl("cross_size", {
       type: CONTROLLER_SLIDER,
       label: "Cross Size",
       conditions: {
-        content_clearable: [true]
+        content_clearable: [true],
       },
       max: 50,
-      min: 0
+      min: 0,
       // rules: {
       //   "{{ELEMENT}} .input-clear-btn{{STATE}}": "font-size: {{SIZE}}px;"
       // }
@@ -429,7 +429,7 @@ class InputSelectTree extends BaseElement {
 
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Button Position"
+      label: "Button Position",
     });
 
     this.addControl("field_width", {
@@ -437,31 +437,43 @@ class InputSelectTree extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
+    });
+
+    this.addControl("field_height", {
+      type: CONTROLLER_SLIDER,
+      stateless: true,
+      label: "Height",
+      max: 100,
+      min: 0,
+      default: {
+        unit: "px",
+      },
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.endControlSection();
 
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
-      label: "Font"
+      label: "Font",
     });
 
     this.addControl("field_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.addControl("field_font_color", {
@@ -478,24 +490,24 @@ class InputSelectTree extends BaseElement {
 
     this.startControlSection("overlay_section", {
       tab: TAB_STYLE,
-      label: "Overlay"
+      label: "Overlay",
     });
 
     this.endControlSection();
 
     this.startControlSection("background_section", {
       tab: TAB_STYLE,
-      label: "Background"
+      label: "Background",
     });
 
     this.addControl("button_gradient", {
       type: CONTROLLER_GRADIENT,
-      label: "Button Gradient"
+      label: "Button Gradient",
     });
 
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Items Background Color"
+      label: "Items Background Color",
     });
 
     this.addControl("background_section_opacity", {
@@ -503,19 +515,19 @@ class InputSelectTree extends BaseElement {
       label: "Opacity",
       max: 1,
       min: 0,
-      step: 0.01
+      step: 0.01,
     });
 
-    this.addControl('tree_menu_background', {
+    this.addControl("tree_menu_background", {
       type: CONTROLLER_COLOR,
-      label: 'Drop Menu Background',
+      label: "Drop Menu Background",
     });
 
     this.endControlSection();
 
     this.startControlSection("border_section", {
       tab: TAB_STYLE,
-      label: "Border"
+      label: "Border",
     });
 
     this.addControl("border_type", {
@@ -524,40 +536,40 @@ class InputSelectTree extends BaseElement {
       options: [
         {
           value: "none",
-          label: "None"
+          label: "None",
         },
         {
           value: "solid",
-          label: "Solid"
+          label: "Solid",
         },
         {
           value: "double",
-          label: "Double"
+          label: "Double",
         },
         {
           value: "dotted",
-          label: "Dotted"
+          label: "Dotted",
         },
         {
           value: "dashed",
-          label: "Dashed"
+          label: "Dashed",
         },
         {
           value: "groove",
-          label: "Groove"
-        }
-      ]
+          label: "Groove",
+        },
+      ],
     });
 
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color"
+      label: "Border Color",
     });
 
     this.addControl("box_shadow", {
@@ -568,14 +580,14 @@ class InputSelectTree extends BaseElement {
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
       label: "Radius",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.endControlSection();
 
     this.startControlSection("transform_section", {
       tab: TAB_STYLE,
-      label: "Transform"
+      label: "Transform",
     });
 
     this.endControlSection();
@@ -583,160 +595,160 @@ class InputSelectTree extends BaseElement {
     this.startControlSection("mismatch_message_styles", {
       tab: TAB_STYLE,
       label: "Validation Error Message",
-      conditions: { "mask_mismatch_message!": [""] }
+      conditions: { "mask_mismatch_message!": [""] },
     });
 
     this.addControl("mismatch_message_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("mismatch_message_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      units: ["px", "%", "vh", "vw"]
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("mismatch_message_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Font Color"
+      label: "Font Color",
     });
 
     this.addControl("mismatch_message_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
+      label: "Typographic",
     });
 
     this.endControlSection();
 
     this.startControlSection("icons", {
       tab: TAB_STYLE,
-      label: "Button Icons"
+      label: "Button Icons",
     });
 
     this.addControl("i_size", {
-      type:   CONTROLLER_SLIDER,
+      type: CONTROLLER_SLIDER,
       label: "Size",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("i_margin", {
-      type:   CONTROLLER_DIMENSIONS,
+      type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("i_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Color"
+      type: CONTROLLER_COLOR,
+      label: "Color",
     });
 
     this.endControlSection();
 
     this.startControlSection("search_input", {
       tab: TAB_STYLE,
-      label: "Search Input"
+      label: "Search Input",
     });
 
     this.addControl("si_size", {
-      type:   CONTROLLER_SLIDER,
-      units: ['px', '%', 'vh', 'vw'],
+      type: CONTROLLER_SLIDER,
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-      label: "Height"
+      label: "Height",
     });
 
     this.addControl("si_padding", {
-      type:   CONTROLLER_DIMENSIONS,
-      units: ['px', '%', 'vh', 'vw'],
+      type: CONTROLLER_DIMENSIONS,
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-      label: "Padding"
+      label: "Padding",
     });
 
     this.addControl("si_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Color"
+      type: CONTROLLER_COLOR,
+      label: "Color",
     });
 
     this.addControl("si_bg_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Background Color"
+      type: CONTROLLER_COLOR,
+      label: "Background Color",
     });
 
     this.addControl("sii_size", {
-      type:   CONTROLLER_SLIDER,
-      units: ['px', '%', 'vh', 'vw'],
+      type: CONTROLLER_SLIDER,
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-      label: "Icon Size"
+      label: "Icon Size",
     });
 
     this.addControl("sii_margin", {
-      type:   CONTROLLER_DIMENSIONS,
-      units: ['px', '%', 'vh', 'vw'],
+      type: CONTROLLER_DIMENSIONS,
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-      label: "Icon Margin"
+      label: "Icon Margin",
     });
 
     this.addControl("sii_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Icon Color"
+      type: CONTROLLER_COLOR,
+      label: "Icon Color",
     });
 
     this.endControlSection();
 
     this.startControlSection("add_icon", {
       tab: TAB_STYLE,
-      label: "Add Icon"
+      label: "Add Icon",
     });
 
     this.addControl("a_size", {
-      type:   CONTROLLER_SLIDER,
-      units: ['px', '%', 'vh', 'vw'],
+      type: CONTROLLER_SLIDER,
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-      label: "Icon Size"
+      label: "Icon Size",
     });
 
     this.addControl("a_margin", {
-      type:   CONTROLLER_DIMENSIONS,
-      units: ['px', '%', 'vh', 'vw'],
+      type: CONTROLLER_DIMENSIONS,
+      units: ["px", "%", "vh", "vw"],
       stateless: true,
-      label: "Icon Margin"
+      label: "Icon Margin",
     });
 
     this.addControl("a_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Icon Color"
+      type: CONTROLLER_COLOR,
+      label: "Icon Color",
     });
 
     this.endControlSection();
 
-    this.startControlSection('padding_section', {
-      label: 'Padding',
-      tab: TAB_STYLE
-    })
+    this.startControlSection("padding_section", {
+      label: "Padding",
+      tab: TAB_STYLE,
+    });
 
     this.addControl("tree_item_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Tree Item Padding",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
     this.addControl("tree_menu_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Menu Padding",
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
-    this.endControlSection()
+    this.endControlSection();
 
     this.startControlSection("required_style_section", {
       tab: TAB_STYLE,
-      label: "Required"
+      label: "Required",
     });
 
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color"
+      label: "font color",
     });
 
     this.addControl("required_style_font_typographic", {
@@ -744,147 +756,142 @@ class InputSelectTree extends BaseElement {
       label: "Typographic",
     });
 
-    this.startControlSection('tree_item_section', {
+    this.startControlSection("tree_item_section", {
       tab: TAB_STYLE,
-      label: 'Tree item',
+      label: "Tree item",
     });
 
     this.addControl("tree_item_height", {
       type: CONTROLLER_SLIDER,
-      label: 'Height',
+      label: "Height",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 16,
     });
 
-    this.addControl('tree_item_background', {
+    this.addControl("tree_item_background", {
       type: CONTROLLER_COLOR,
-      label: 'Background',
+      label: "Background",
     });
 
     this.endControlSection();
 
-    this.startControlSection('tree_border_section', {
+    this.startControlSection("tree_border_section", {
       tab: TAB_STYLE,
-      label: 'Tree border',
+      label: "Tree border",
     });
 
-    this.addControl('tree_border_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options: [
-          {
-            'value': 'none',
-            'label': 'None',
-          },
-          {
-            'value': 'solid',
-            'label': 'Solid',
-          },
-          {
-            'value': 'double',
-            'label': 'Double',
-          },
-          {
-            'value': 'dotted',
-            'label': 'Dotted',
-          },
-          {
-            'value': 'dashed',
-            'label': 'Dashed',
-          },
-          {
-            'value': 'groove',
-            'label': 'Groove',
-          },
-        ],
-      }
-    );
-
-    this.addControl('tree_border_width', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        default: {
-          bind: true,
+    this.addControl("tree_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      options: [
+        {
+          value: "none",
+          label: "None",
         },
-        units: ['px', '%', 'vh', 'vw'],
-      }
-    );
+        {
+          value: "solid",
+          label: "Solid",
+        },
+        {
+          value: "double",
+          label: "Double",
+        },
+        {
+          value: "dotted",
+          label: "Dotted",
+        },
+        {
+          value: "dashed",
+          label: "Dashed",
+        },
+        {
+          value: "groove",
+          label: "Groove",
+        },
+      ],
+    });
 
-    this.addControl('tree_border_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-      }
-    );
-
-    this.addControl('tree_border_radius', {
+    this.addControl("tree_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
+      label: "Border Width",
       default: {
-        unit: 'px',
         bind: true,
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
     });
 
-    this.addControl('tree_border_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Shadow',
-    });
-
-    this.endControlSection();
-
-    this.startControlSection('tree_typographic_section', {
-      tab: TAB_STYLE,
-      label: 'Tree typographic',
-    });
-
-    this.addControl('tree_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-      }
-    );
-
-    this.addControl('tree_typographic_color', {
+    this.addControl("tree_border_color", {
       type: CONTROLLER_COLOR,
-      label: 'Color',
+      label: "Border Color",
+    });
+
+    this.addControl("tree_border_radius", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Radius",
+      default: {
+        unit: "px",
+        bind: true,
+      },
+      units: ["px", "%", "vh", "vw"],
+    });
+
+    this.addControl("tree_border_shadow", {
+      type: CONTROLLER_SHADOW,
+      label: "Shadow",
     });
 
     this.endControlSection();
 
-    this.startControlSection('tree_icon_section', {
+    this.startControlSection("tree_typographic_section", {
       tab: TAB_STYLE,
-      label: 'Tree icon',
+      label: "Tree typographic",
+    });
+
+    this.addControl("tree_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+    });
+
+    this.addControl("tree_typographic_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("tree_icon_section", {
+      tab: TAB_STYLE,
+      label: "Tree icon",
     });
 
     this.addControl("tree_icon_size", {
       type: CONTROLLER_SLIDER,
-      label: 'Size',
+      label: "Size",
       default: {
-        unit: 'px',
+        unit: "px",
       },
-      units: ['px', '%', 'vh', 'vw'],
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 0,
     });
 
-    this.addControl('tree_icon_fill', {
+    this.addControl("tree_icon_fill", {
       type: CONTROLLER_COLOR,
-      label: 'Fill',
+      label: "Fill",
     });
 
-    this.addControl('tree_icon_stroke', {
+    this.addControl("tree_icon_stroke", {
       type: CONTROLLER_COLOR,
-      label: 'Stroke',
+      label: "Stroke",
     });
 
     this.endControlSection();
 
     advancedTabControllers(this);
-  };
-
+  }
 }
 export default InputSelectTree;
