@@ -36,7 +36,10 @@ export default async function loadPopups(){
 
   window.ReactDOM.render(<window.Provider store={window.appStore}>
     {templates.map(template => {
-      return <FrontPopup key={template.id} ElementWrapper={ElementWrapper} template={template} />;
+
+      return <FrontPopup key={template.id}
+                         getTemplate={()=>template}
+                         ElementWrapper={ElementWrapper}/>;
     })}
   </window.Provider>, window.popupsContainer)
 

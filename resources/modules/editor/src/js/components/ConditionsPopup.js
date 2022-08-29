@@ -124,8 +124,10 @@ function ConditionsPopup() {
     let value = _.cloneDeep(state.value);
     value.forEach(v => {
       if (v.id === conditionId) {
-        v.object_ids = [...v.object_ids, current];
+        v.object_ids = [...v.object_ids, current]
       }
+      v.object_ids = v.object_ids.map(id => `${id}`)
+      v.object_ids = _.uniq(v.object_ids)
     });
     setState(state => ({
       ...state,

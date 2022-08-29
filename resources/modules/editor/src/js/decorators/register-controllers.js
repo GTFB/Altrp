@@ -30,10 +30,12 @@ export function advancedTabControllers(element) {
 
   element.addControl('css_class', {
     label: 'CSS Class',
+    responsive: false,
   });
 
   element.addControl('advanced_element_id', {
     label: 'CSS ID',
+    responsive: false,
   });
 
 

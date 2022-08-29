@@ -525,9 +525,13 @@ export default class TemplatesController {
           message: "Conditions all_site not Saved"
         }
       }
+      await template.load('pages')
+       console.log(template.pages);
 
       await template.related("pages").detach()
 
+      await template.load('pages')
+      console.log(template.pages);
       await Promise.all(request.input("data").map(async condition => {
         switch (condition.object_type) {
           case "all_site":
@@ -545,7 +549,6 @@ export default class TemplatesController {
                   message: "Page not found and pages template not saved"
                 }
               }
-
               const pages_template = await PagesTemplate.create({
                 page_id: objectId,
                 page_guid: page.getGuid(),
