@@ -8,7 +8,7 @@ class ResponsiveDdFooter extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      screens: CONSTANTS.SCREENS,
+      screens: [...CONSTANTS.SCREENS_ADDITIONAL, ...CONSTANTS.SCREENS],
       open: false,
     }
   };

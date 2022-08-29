@@ -24,7 +24,7 @@ const CONSTANTS = {
     {
       icon: "desktop",
       name: "Desktop",
-      id: 2,
+      id: 3,
       width: "1440px",
       fullMediaQuery:
         "@media screen and (max-width: 1440px) and (min-width: 1025px)",
@@ -33,7 +33,7 @@ const CONSTANTS = {
     {
       icon: "laptop",
       name: "Laptop",
-      id: 3,
+      id: 4,
       fullMediaQuery:
         "@media screen and (max-width: 1024px) and (min-width: 769px)",
       width: "1024px",
@@ -42,7 +42,7 @@ const CONSTANTS = {
     {
       icon: "tablet",
       name: "Tablet",
-      id: 4,
+      id: 5,
       fullMediaQuery:
         "@media screen and (max-width: 768px) and (min-width: 451px)",
       width: "768px",
@@ -51,7 +51,7 @@ const CONSTANTS = {
     {
       icon: "big_phone",
       name: "Big-Phone",
-      id: 5,
+      id: 6,
       width: "450px",
       fullMediaQuery:
         "@media screen and (max-width: 450px) and (min-width: 321px)",
@@ -60,11 +60,21 @@ const CONSTANTS = {
     {
       icon: "small_phone",
       name: "Small-Phone",
-      id: 6,
+      id: 7,
       fullMediaQuery: "@media screen and (max-width: 320px)",
       width: "320px",
       mediaQuery: "@media screen and (max-width: 320px)"
     }
+  ],
+  SCREENS_ADDITIONAL: [
+    {
+      icon: "2K+",
+      name: "screen_2K+",
+      id: 2,
+      width: "100%",
+      fullMediaQuery: "@media screen and (min-width: 1921px)",
+      mediaQuery: "@media screen and (min-width: 1921px)"
+    },
   ]
 };
 export default CONSTANTS;
