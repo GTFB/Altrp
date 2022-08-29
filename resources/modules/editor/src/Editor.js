@@ -1,4 +1,3 @@
-import "./sass/editor-style.scss";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { hot } from "react-hot-loader";
