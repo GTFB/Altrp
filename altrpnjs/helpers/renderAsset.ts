@@ -14,7 +14,10 @@ export default function renderAsset(asset, attrs:object | string  = {}) {
     return `<img src="${asset.dataUrl}" ${attrs}/>`
   }
   if (asset.rawSVG && asset.type === "svg") {
-    return asset.rawSVG;
+    const startSvgTag = asset.rawSVG.indexOf('<svg')
+    const endSvgTag = asset.rawSVG.indexOf('</svg') + 6
+
+    return asset.rawSVG.slice(0, endSvgTag).slice(startSvgTag);
   }
   switch (asset.assetType) {
     // case "icon": {
