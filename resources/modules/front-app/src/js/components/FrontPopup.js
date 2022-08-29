@@ -299,7 +299,7 @@ class FrontPopup extends Component {
     );
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
 
-    let timeout = _.get(rootElement.getResponsiveSetting('time'), 'size', 0)
+    let timeout = _.get(rootElement.getResponsiveSetting('time'), 'size', 100)
     if(type_popup === 'popup' && timeout && animations_offcanvas === 'slide'){
       classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
     }

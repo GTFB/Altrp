@@ -4,14 +4,16 @@
 ## Test Version
 ## Changelog
 
-[//]: <> (### 1.2.2)
-[//]: <> (* Asynchronous Custom JavaScript Code Loading)
-[//]: <> (* Add page_after_create and page_before_delete Hooks)
-[//]: <> (* Front App Hooks for Plugins)
-[comment]: <> (* Fix Global Styles Duplicate Issue)
-[comment]: <> (* Fix Popup Height by Content Bug)
-[comment]: <> (* Optimize Css Load for Front App)
-[comment]: <> (* Add Mustache Support for Inputs Labels)
+### 1.2.3
+* Asynchronous Custom JavaScript Code Loading
+* Add page_after_create and page_before_delete Hooks
+* Front App Hooks for Plugins
+* Fix Global Styles Duplicate Issue
+* Fix Popup Height by Content Bug
+* Optimize Css Load for Front App
+* Add Mustache Support for Inputs Labels
+* Add Mailgun Packages for Node 
+* Fixed Issues with Pages-Templates Relations After Migration to PostgreSQL
 
 ### 1.2.2
 * Added disable/enable website indexing
