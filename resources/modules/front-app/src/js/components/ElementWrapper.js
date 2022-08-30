@@ -275,6 +275,9 @@ class ElementWrapper extends Component {
       return true
     }
     dependencies = dependencies || []
+    // console.log(dependencies);
+    // console.log(newProps);
+    // console.log(this.props);
 
     if(newProps.altrpPageState !== this.props.altrpPageState
       && dependencies.indexOf('altrppagestate') === -1){
