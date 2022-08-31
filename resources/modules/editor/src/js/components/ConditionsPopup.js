@@ -126,7 +126,6 @@ function ConditionsPopup() {
       if (v.id === conditionId) {
         v.object_ids = [...v.object_ids, current]
       }
-      v.object_ids = v.object_ids.map(id => `${id}`)
       v.object_ids = _.uniq(v.object_ids)
     });
     setState(state => ({
