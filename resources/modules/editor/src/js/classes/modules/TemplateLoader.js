@@ -2,7 +2,7 @@ import Resource from "../Resource";
 import AltrpModel from "../AltrpModel";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
-
+import delay from "../../../../../front-app/src/js/functions/delay"
 /**
  * @class TemplateLoader
  */
@@ -123,10 +123,25 @@ export class TemplateLoader {
     }
     templateId = Number(templateId) ? Number(templateId) : templateId;
 
-    let templateData = _.get((await this.loadTemplate(templateId, force)), 'data');
-    templateData = JSON.parse(templateData);
+    const template = await this.loadTemplate(templateId, force)
+    return new Promise(resolve => {
+      const link = document.createElement('link')
+      link.setAttribute('rel', 'stylesheet')
+      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${template.guid}.css`)
+      document.head.appendChild(link)
 
-    return frontElementsFabric.parseData(templateData);
+      link.addEventListener('error',(e)=>{
+        console.log(e);
+        link.setAttribute('href',  `/altrp/css/${template.guid}.css`)
+
+      })
+      link.addEventListener('load',()=>{
+        let templateData = _.get(template, 'data');
+        templateData = JSON.parse(templateData);
+        resolve(frontElementsFabric.parseData(templateData))
+      })
+      console.log(link);
+    })
   }
 
   /**

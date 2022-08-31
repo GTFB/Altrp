@@ -4,6 +4,15 @@
 ## Test Version
 ## Changelog
 
+### 1.2.6
+* Fix and Optimize Styles Loading for Popups 
+
+### 1.2.5
+* Fix and Optimize Styles for Cards Templates 
+
+### 1.2.4
+* Fix Svg Render Issue in Some Cases
+
 ### 1.2.3
 * Asynchronous Custom JavaScript Code Loading
 * Add page_after_create and page_before_delete Hooks

@@ -259,6 +259,9 @@ class SimpleElementWrapper extends Component {
       return false
     }
     dependencies = dependencies || []
+    // console.log(dependencies);
+    // console.log(newProps);
+    // console.log(this.props);
 
     if(newState.elementDisplay !== this.state.elementDisplay){
       return true
