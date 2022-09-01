@@ -13,7 +13,6 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_QUERY,
   CONTROLLER_REPEATER,
   CONTROLLER_FILTERS,
   CONTROLLER_HEADING,
@@ -156,10 +155,6 @@ class Table extends BaseElement {
       label: 'Choose Data Source',
       options: [
         {
-          label: 'Query',
-          value: 'query'
-        },
-        {
           label: 'From Page Data Source',
           value: 'datasource'
         },
@@ -183,14 +178,6 @@ class Table extends BaseElement {
       conditions: {
         'choose_datasource': 'query',
       },
-    });
-
-    this.addControl('table_query', {
-      type: CONTROLLER_QUERY,
-      conditions: {
-        'choose_datasource': 'query',
-      },
-      locked: true,
     });
 
     this.endControlSection();

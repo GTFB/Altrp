@@ -2,7 +2,6 @@ import Resource from "../Resource";
 import AltrpModel from "../AltrpModel";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
-import delay from "../../../../../front-app/src/js/functions/delay"
 /**
  * @class TemplateLoader
  */
@@ -128,10 +127,14 @@ export class TemplateLoader {
       const link = document.createElement('link')
       link.setAttribute('rel', 'stylesheet')
       link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${template.guid}.css`)
-      document.head.appendChild(link)
+      if(isEditor()){
+        let iframe = document.getElementById("editorContent")
+        iframe.contentDocument.head.appendChild(link)
+      } else {
+        document.head.appendChild(link)
+      }
 
       link.addEventListener('error',(e)=>{
-        console.log(e);
         link.setAttribute('href',  `/altrp/css/${template.guid}.css`)
 
       })
@@ -140,7 +143,6 @@ export class TemplateLoader {
         templateData = JSON.parse(templateData);
         resolve(frontElementsFabric.parseData(templateData))
       })
-      console.log(link);
     })
   }
 
