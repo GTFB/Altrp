@@ -35,7 +35,6 @@ class TemplateStylesModule {
         return false
       }
       const rect = htmlElement.getBoundingClientRect();
-      console.log(rect.y);
       return rect.y < maxTop
     }
 
@@ -98,14 +97,12 @@ class TemplateStylesModule {
           elements = elements.map(e=>{
             return _.cloneDeep(e)
           })
-          console.log(elements);
           store.dispatch(setSections(elements))
         }
         let css = stringifyStylesheet(
           getSheet(styledTag, contentDocument)
         );
         // let css = styledTag.innerHTML
-// console.log(editorStore.getState().currentScreen);
         const _stylesElements = [...stylesElements]
         _stylesElements.push(css);
         styles[screen.name] = _stylesElements;

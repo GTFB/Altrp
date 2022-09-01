@@ -18,7 +18,7 @@ import {
   CONTROLLER_SHADOW,
   CONTROLLER_GRADIENT,
   CONTROLLER_MEDIA,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_SELECT2
+  CONTROLLER_WYSIWYG, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_SELECT2
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -54,10 +54,6 @@ class Table extends BaseElement {
       label: 'Choose Data Source',
       options:[
         {
-          label: 'Query',
-          value: 'query'
-        },
-        {
           label: 'From Page Data Source',
           value: 'datasource'
         },
@@ -78,13 +74,6 @@ class Table extends BaseElement {
     this.addControl("posts_query_heading", {
       type: CONTROLLER_HEADING,
       label: 'Query',
-      conditions: {
-        'choose_datasource': 'query',
-      },
-    });
-
-    this.addControl("posts_query", {
-      type: CONTROLLER_QUERY,
       conditions: {
         'choose_datasource': 'query',
       },
