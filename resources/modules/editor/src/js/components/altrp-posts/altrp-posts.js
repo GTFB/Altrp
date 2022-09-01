@@ -12,6 +12,7 @@ import setAltrpIndex from "../../../../../front-app/src/js/functions/setAltrpInd
 import getResponsiveSetting from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import PostsWrapper from "./components/PostsWrapper";
 import Pagination from "../altrp-table/components/Pagination";
+import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -90,23 +91,27 @@ class AltrpPosts extends React.Component {
     const { settings } = this.props;
     const { simpleTemplateId, hoverSimpleTemplateId } = this.state;
     const newSimpleTemplateId = _.get(settings, "posts_card_template");
+
     const newHoverSimpleTemplateId = _.get(
       settings,
       "posts_card_hover_template"
     );
     // if(prevProps.posts !== this.state.posts)
     if (!_.isEqual(prevProps.data, this.props.data)) {
-      this.setState((state) => ({ ...state, posts: prevProps.data }));
+      this.setState((state) => ({
+        ...state,
+        posts: prevProps.data,
+      }));
     }
     if (this.props.data !== prevProps.data) {
       this.postsComponents = {};
     }
+
     if (newSimpleTemplateId !== simpleTemplateId) {
       if (!newSimpleTemplateId) {
         this.setState((state) => ({
           ...state,
-          posts: prevProps.data,
-          simpleTemplateId: newSimpleTemplateId,
+          simpleTemplateId: undefined,
           simpleTemplate: null,
         }));
         return;
@@ -114,7 +119,6 @@ class AltrpPosts extends React.Component {
       this.setState(
         (state) => ({
           ...state,
-          posts: prevProps.data,
           simpleTemplateId: newSimpleTemplateId,
         }),
         async () => {
@@ -123,7 +127,6 @@ class AltrpPosts extends React.Component {
           );
           this.setState((state) => ({
             ...state,
-            posts: prevProps.data,
             simpleTemplate: template,
           }));
         }
@@ -133,7 +136,6 @@ class AltrpPosts extends React.Component {
       if (!newHoverSimpleTemplateId) {
         this.setState((state) => ({
           ...state,
-          posts: prevProps.data,
           hoverSimpleTemplateId: newHoverSimpleTemplateId,
           hoverSimpleTemplate: null,
         }));
@@ -142,7 +144,6 @@ class AltrpPosts extends React.Component {
       this.setState(
         (state) => ({
           ...state,
-          posts: prevProps.data,
           hoverSimpleTemplateId: newHoverSimpleTemplateId,
         }),
         async () => {
@@ -151,7 +152,6 @@ class AltrpPosts extends React.Component {
           );
           this.setState((state) => ({
             ...state,
-            posts: prevProps.data,
             hoverSimpleTemplate: hoverTemplate,
           }));
         }
@@ -183,7 +183,7 @@ class AltrpPosts extends React.Component {
       );
 
       if (!_.isEqual(this.state.posts[idx], this.props.data[idx])) {
-        post.altrpUpdate = true;
+        post.altrpRandomKey = altrpRandomId();
       }
 
       template.setCardModel(new AltrpModel(post), idx);
@@ -239,11 +239,10 @@ class AltrpPosts extends React.Component {
       );
     }
 
+    let key = post.altrpRandomKey || post.id || post.altrpIndex;
+
     return (
-      <div
-        className={`${this.props?.className} altrp-post`}
-        key={post.id || post.altrpIndex}
-      >
+      <div className={`${this.props?.className} altrp-post`} key={key}>
         {PostContentComponent}
         {this.state.hoverSimpleTemplateId && (
           <div
