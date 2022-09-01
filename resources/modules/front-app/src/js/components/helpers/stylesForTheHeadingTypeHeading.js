@@ -345,8 +345,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   if (borderRadius) {
     styles += dimensionsStyled(borderRadius, "border-radius");
   }
-  //fix display with <strong> and <b> tags
-  styles += "display:block;";
+
   styles += `} `;
 
   //state disabled
