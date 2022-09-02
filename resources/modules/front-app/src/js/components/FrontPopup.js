@@ -1,8 +1,8 @@
 import {CSSTransition} from "react-transition-group";
 
 import iconsManager from "../functions/iconsManager";
-import { Scrollbars } from "react-custom-scrollbars";
-import { togglePopup } from "../store/popup-trigger/actions";
+import {Scrollbars} from "react-custom-scrollbars";
+import {togglePopup} from "../store/popup-trigger/actions";
 import AltrpImage from "../../../../editor/src/js/components/altrp-image/AltrpImage";
 import FrontPopupWrapper from "./FrontPopupWrapper";
 import '../../sass/altrp-popup.scss'
@@ -14,7 +14,7 @@ class FrontPopup extends Component {
     let isVisible
     let popupID = Number(props.popupTrigger.popupID)
     const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template
-    if(_.isNaN(popupID)){
+    if (_.isNaN(popupID)) {
       isVisible = props.popupTrigger.popupID === _.get(template, "guid")
     } else {
       isVisible = popupID == _.get(template, "id")
@@ -28,23 +28,23 @@ class FrontPopup extends Component {
     )
     this.state = {
       isVisible,
+      stylesUrl: `/altrp/css/DEFAULT_BREAKPOINT/${template.guid}.css`,
       isShownOnScroll: false
     };
     this.close = this.close.bind(this);
   }
 
 
-
   componentDidUpdate(prevProps) {
     const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template
-    let { popupTrigger } = this.props;
+    let {popupTrigger} = this.props;
     switch (this.rootElement.getSettings("type_popup", "popup")) {
       case "popup":
       case "offcanvas":
         if (popupTrigger !== prevProps.popupTrigger) {
           let isVisible
           let popupID = Number(popupTrigger.popupID)
-          if(_.isNaN(popupID)){
+          if (_.isNaN(popupID)) {
             isVisible = popupTrigger.popupID === _.get(template, "guid")
           } else {
             isVisible = popupID == _.get(template, "id")
@@ -57,49 +57,53 @@ class FrontPopup extends Component {
     }
   }
 
-  close = ()=> {
-    this.setState({ isVisible: false, isShownOnScroll: false });
+  close = () => {
+    this.setState({isVisible: false, isShownOnScroll: false});
     this.props.closePopup();
   }
-  onExited = ()=> {
+  onExited = () => {
     document.body.classList.remove('overflow-hidden');
     window.dispatchEvent(new Event('resize'));
   }
-  onExit = ()=>{
+  onExit = () => {
     const rootElement = this.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
     const appContainer = document.getElementById('front-app')
     const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
     const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
-    if(type_popup === 'offcanvas' && animations_offcanvas === 'push' ) {
+    if (type_popup === 'offcanvas' && animations_offcanvas === 'push') {
       switch (vertical_position_popup_layout) {
-        case 'top':{
+        case 'top': {
           appContainer.style.top = 0
           appContainer.style.bottom = 'auto'
-        }break;
-        case 'bottom':{
+        }
+          break;
+        case 'bottom': {
           appContainer.style.bottom = 0
           appContainer.style.top = 'auto'
-        }break;
+        }
+          break;
       }
       switch (horizontal_position_popup_layout) {
-        case 'left':{
+        case 'left': {
           appContainer.style.left = 0
           appContainer.style.right = 'auto'
-        }break;
-        case 'right':{
+        }
+          break;
+        case 'right': {
           appContainer.style.right = 0
           appContainer.style.left = 'auto'
-        }break;
+        }
+          break;
       }
     }
   }
-  onEntered = ()=>{
+  onEntered = () => {
   }
-  onExiting = ()=>{
+  onExiting = () => {
   }
-  onEntering = ()=>{
+  onEntering = () => {
     const rootElement = this.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
@@ -108,31 +112,35 @@ class FrontPopup extends Component {
     const height_custom_popup_layout = rootElement.getResponsiveSetting('height_custom_popup_layout')
     const appContainer = document.getElementById('front-app')
     const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
-    if(type_popup === 'offcanvas' && animations_offcanvas === 'push'){
-      appContainer.style.transitionDuration =  _.get(rootElement.getResponsiveSetting('time'), 'size', 0) + 'ms'
+    if (type_popup === 'offcanvas' && animations_offcanvas === 'push') {
+      appContainer.style.transitionDuration = _.get(rootElement.getResponsiveSetting('time'), 'size', 0) + 'ms'
       switch (vertical_position_popup_layout) {
-        case 'top':{
+        case 'top': {
           appContainer.style.top = height_custom_popup_layout?.size + (height_custom_popup_layout?.unit || 'px')
           appContainer.style.bottom = 'auto'
-        }break;
-        case 'bottom':{
+        }
+          break;
+        case 'bottom': {
           appContainer.style.bottom = height_custom_popup_layout?.size + (height_custom_popup_layout?.unit || 'px')
           appContainer.style.top = 'auto'
-        }break;
+        }
+          break;
       }
       switch (horizontal_position_popup_layout) {
-        case 'left':{
+        case 'left': {
           appContainer.style.left = width_popup_layout?.size + (width_popup_layout?.unit || 'px')
           appContainer.style.right = 'auto'
-        }break;
-        case 'right':{
+        }
+          break;
+        case 'right': {
           appContainer.style.right = width_popup_layout?.size + (width_popup_layout?.unit || 'px')
           appContainer.style.left = 'auto'
-        }break;
+        }
+          break;
       }
     }
   }
-  onEnter = ()=> {
+  onEnter = () => {
     document.body.classList.add('overflow-hidden');
     window.dispatchEvent(new Event('resize'));
     const rootElement = this.rootElement;
@@ -141,57 +149,72 @@ class FrontPopup extends Component {
     const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
     const appContainer = document.getElementById('front-app')
     const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
-    if(type_popup === 'offcanvas' && animations_offcanvas === 'push' ) {
+    if (type_popup === 'offcanvas' && animations_offcanvas === 'push') {
       switch (vertical_position_popup_layout) {
-        case 'top':{
+        case 'top': {
           appContainer.style.top = 0
           appContainer.style.bottom = 0
-        }break;
-        case 'bottom':{
+        }
+          break;
+        case 'bottom': {
           appContainer.style.bottom = 0
           appContainer.style.top = 0
-        }break;
+        }
+          break;
       }
       switch (horizontal_position_popup_layout) {
-        case 'left':{
+        case 'left': {
           appContainer.style.left = 0
           appContainer.style.right = 0
-        }break;
-        case 'right':{
+        }
+          break;
+        case 'right': {
           appContainer.style.right = 0
           appContainer.style.left = 0
-        }break;
+        }
+          break;
       }
     }
   }
 
+  onError = e =>{
+    const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template
+    e.preventDefault()
+    e.stopPropagation()
+    this.setState(state =>({...state,
+      stylesUrl: `/altrp/css/${template.guid}.css`,
+    }))
+  }
+  componentDidCatch = ()=>{
+    console.log(this);
+  }
   render() {
     const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template
-    const { isVisible } = this.state;
+    const {isVisible, stylesUrl} = this.state;
     let classes = [`app-popup`];
     const rootElement = this.rootElement;
     rootElement.popupGUID = _.get(template, "guid");
     const rootElementSettings = rootElement.getSettings("");
-    let  popup_close_icon =  rootElement.getResponsiveSetting('popup_close_icon')
-    let  popup_close_icon_width_size =  rootElement.getResponsiveSetting('popup_close_icon_width_size')
-    let  popup_close_icon_height_size =  rootElement.getResponsiveSetting('popup_close_icon_height_size')
-    if(! popup_close_icon_height_size){
+    let popup_close_icon = rootElement.getResponsiveSetting('popup_close_icon')
+    let popup_close_icon_width_size = rootElement.getResponsiveSetting('popup_close_icon_width_size')
+    let popup_close_icon_height_size = rootElement.getResponsiveSetting('popup_close_icon_height_size')
+    if (!popup_close_icon_height_size) {
       popup_close_icon_height_size = '50px'
     } else {
       popup_close_icon_height_size = `${popup_close_icon_height_size.size || '0'}${popup_close_icon_height_size.unit}`
     }
 
-    if(! popup_close_icon_width_size){
+    if (!popup_close_icon_width_size) {
       popup_close_icon_width_size = '50px'
     } else {
       popup_close_icon_width_size = `${popup_close_icon_width_size.size || '0'}${popup_close_icon_width_size.unit}`
     }
     const type_popup = rootElement.getResponsiveSetting('type_popup')
-    if(type_popup === 'offcanvas'){
+    if (type_popup === 'offcanvas') {
       classes.push("app-popup_offcanvas")
     }
     const rootElementId = rootElement.getId();
-    const close_context = rootElement.getResponsiveSetting( 'close_context')
+    const close_context = rootElement.getResponsiveSetting('close_context')
 
     classes.push(`${rootElementId}-app-popup`);
     const overlayCondition =
@@ -246,7 +269,7 @@ class FrontPopup extends Component {
 
     const closeButtonCondition =
       rootElement.getResponsiveSetting('switcher_close_button_popup_layout');
-    let { popup_close_icon_alignment } = rootElementSettings;
+    let {popup_close_icon_alignment} = rootElementSettings;
     popup_close_icon_alignment = popup_close_icon_alignment || "right";
     const closeButton = closeButtonCondition ? (
       <button
@@ -257,7 +280,7 @@ class FrontPopup extends Component {
             : " popup-close-button-left")
         }
         onClick={() => {
-          this.setState({ isVisible: false });
+          this.setState({isVisible: false});
           this.props.closePopup();
         }}
       >
@@ -283,13 +306,13 @@ class FrontPopup extends Component {
             : " popup-close-button-left")
         }
         onClick={() => {
-          this.setState({ isVisible: false });
+          this.setState({isVisible: false});
           this.props.closePopup();
         }}
       >
-        {iconsManager().renderIcon('times' ,{
-          width:popup_close_icon_width_size,
-          height:popup_close_icon_height_size,
+        {iconsManager().renderIcon('times', {
+          width: popup_close_icon_width_size,
+          height: popup_close_icon_height_size,
           className: "popup-close-button-icon"
         })}
       </button>
@@ -300,7 +323,7 @@ class FrontPopup extends Component {
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
 
     let timeout = _.get(rootElement.getResponsiveSetting('time'), 'size', 100)
-    if(type_popup === 'popup' && timeout && animations_offcanvas === 'slide'){
+    if (type_popup === 'popup' && timeout && animations_offcanvas === 'slide') {
       classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
     }
 
@@ -308,87 +331,91 @@ class FrontPopup extends Component {
     const size = content_height?.size
     const unit = content_height?.unit
     const style = {}
-    if(size && unit){
-      style['height'] = size+unit;
+    if (size && unit) {
+      style['height'] = size + unit;
     }
 
 
     return (
-      <CSSTransition
-        in={isVisible}
-        timeout={Number(timeout)}
-        onEnter={this.onEnter}
-        onEntering={this.onEntering}
-        onEntered={this.onEntered}
-        onExit={this.onExit}
-        onExiting={this.onExiting}
-        onExited={this.onExited}
-        unmountOnExit={true}
-        classNames="popup-transition-state">
-        <FrontPopupWrapper
-          settings={rootElementSettings}
-          className={classes.join(" ")}
-          onClick={() => {
-            if (
-              overlayCondition
-            ) {
-              this.setState({ isVisible: false });
-              this.props.closePopup();
-            }
-          }}
-        >
-          <link rel="stylesheet" href={`/altrp/css/DEFAULT_BREAKPOINT/${rootElement.popupGUID}.css`}/>
-          {close_context === 'window' && closeButton}
-          <div
-            className="popup-window"
-            // style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
-            onClick={this.onClink}
+      <>
+        <link rel="stylesheet"
+              onError={this.onError}
+              href={stylesUrl}/>
+        <CSSTransition
+          in={isVisible}
+          timeout={Number(timeout)}
+          onEnter={this.onEnter}
+          onEntering={this.onEntering}
+          onEntered={this.onEntered}
+          onExit={this.onExit}
+          onExiting={this.onExiting}
+          onExited={this.onExited}
+          unmountOnExit={true}
+          classNames="popup-transition-state">
+          <FrontPopupWrapper
+            settings={rootElementSettings}
+            className={classes.join(" ")}
+            onClick={() => {
+              if (
+                overlayCondition
+              ) {
+                this.setState({isVisible: false});
+                this.props.closePopup();
+              }
+            }}
           >
-            {close_context !== 'window' && closeButton}
-            {rootElement.getSettings("").height_popup_layout === 'fitToContent'
-              ? <div className="popup-content" style={style}>
-                {React.createElement(rootElement.componentClass, {
-                  element: rootElement,
-                  ElementWrapper :this.ElementWrapper,
-                  children: rootElement.children
-                })}
-              </div>
-              : <Scrollbars
-                autoHide
-                renderThumbHorizontal={props => (
-                  <div {...props} className="popup-scrollbar-vertical" />
-                )}
-                renderTrackHorizontal={() => (
-                  <div className="popup-scrollbar-track-horizontal" />
-                )}
-                renderTrackVertical={props => (
-                  <div {...props} className="popup-scrollbar-track-vertical" />
-                )}
-                className="popup-scrollbar"
-                autoHeight
-                autoHeightMax="100vh"
-                autoHideTimeout={1000}
-                autoHideDuration={200}
-              >
-                <div className="popup-content" style={style}>
+            {close_context === 'window' && closeButton}
+            <div
+              className="popup-window"
+              // style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
+              onClick={this.onClink}
+            >
+              {close_context !== 'window' && closeButton}
+              {rootElement.getSettings("").height_popup_layout === 'fitToContent'
+                ? <div className="popup-content" style={style}>
                   {React.createElement(rootElement.componentClass, {
                     element: rootElement,
-                    ElementWrapper :this.ElementWrapper,
+                    ElementWrapper: this.ElementWrapper,
                     children: rootElement.children
                   })}
                 </div>
-              </Scrollbars>
-            }
-          </div>
-        </FrontPopupWrapper>
-      </CSSTransition>
-  );
+                : <Scrollbars
+                  autoHide
+                  renderThumbHorizontal={props => (
+                    <div {...props} className="popup-scrollbar-vertical"/>
+                  )}
+                  renderTrackHorizontal={() => (
+                    <div className="popup-scrollbar-track-horizontal"/>
+                  )}
+                  renderTrackVertical={props => (
+                    <div {...props} className="popup-scrollbar-track-vertical"/>
+                  )}
+                  className="popup-scrollbar"
+                  autoHeight
+                  autoHeightMax="100vh"
+                  autoHideTimeout={1000}
+                  autoHideDuration={200}
+                >
+                  <div className="popup-content" style={style}>
+                    {React.createElement(rootElement.componentClass, {
+                      element: rootElement,
+                      ElementWrapper: this.ElementWrapper,
+                      children: rootElement.children
+                    })}
+                  </div>
+                </Scrollbars>
+              }
+            </div>
+          </FrontPopupWrapper>
+        </CSSTransition>
+      </>
+    );
 
   }
 
   onClink = e => {
     // console.log(e.target.closest('[data-altrp-wrapper-click-actions]'));
-    if(e.target.closest('[data-altrp-wrapper-click-actions]')){
+    if (e.target.closest('[data-altrp-wrapper-click-actions]')) {
       return
     }
     e.stopPropagation()

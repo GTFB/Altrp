@@ -526,12 +526,10 @@ export default class TemplatesController {
         }
       }
       await template.load('pages')
-       console.log(template.pages);
 
       await template.related("pages").detach()
 
       await template.load('pages')
-      console.log(template.pages);
       await Promise.all(request.input("data").map(async condition => {
         switch (condition.object_type) {
           case "all_site":

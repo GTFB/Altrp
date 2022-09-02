@@ -47,7 +47,7 @@ export default function getResponsiveSetting(
       }
 
       if (screen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
-        _settingName = `${settingName}_${elementState}_`;
+        _settingName = elementState ? `${settingName}_${elementState}_` : settingName;
       } else {
         _settingName = `${settingName}_${elementState}_${screen.name}`;
       }
