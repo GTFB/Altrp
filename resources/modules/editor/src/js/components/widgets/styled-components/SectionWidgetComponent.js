@@ -387,7 +387,7 @@ function altrpSectionColumnsHeight(settings) {
 
   if (Number(height)) {
     styles += `height: ${height}%; `;
-  } else {
+  } else if (height !== null) {
     styles += `height: ${height}; `;
   }
 
