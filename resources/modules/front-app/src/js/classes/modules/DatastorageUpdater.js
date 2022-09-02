@@ -191,18 +191,6 @@ class DataStorageUpdater extends AltrpModel {
               this.setProperty("updated", true);
             }
 
-            if (_.isArray(res)) {
-              appStore.dispatch(
-                changeCurrentDataStorage(
-                  dataSource.getAlias(),
-                  { data: [] },
-                  true
-                )
-              );
-            }
-
-            console.log(appStore.getState());
-
             appStore.dispatch(
               changeCurrentDataStorage(dataSource.getAlias(), res, true)
             );
