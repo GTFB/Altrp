@@ -19,32 +19,34 @@ const Global = createGlobalStyle`
   width:100%;
 }
 ${({elementId})=>`.altrp-element${elementId} .altrp-image-placeholder`} {
-  position: relative;
-  max-width: 100%;
-  overflow: hidden;
 
 ${(props) => {
   const {settings} = props;
   const aspect_ratio_size = getResponsiveSetting(settings, 'aspect_ratio_size');
   if(Number(aspect_ratio_size) !== 0 && aspect_ratio_size === 'custom'|| Number(aspect_ratio_size)){
-    return 'height:auto;'
+    return ''
   }
   if(! props.height || props.height.indexOf('%') !== -1) {
-    return 'height:auto;'
+    return ''
   }
-  return `height:${props.height ? props.height : 'auto'};`;
+  if (props.height) {
+    return `height:${props.height};`;
+  }
+  return '';
 }}
   width:${props => {
   if (_.isNumber(props.width)) {
     return props.width + 'px';
   }
-  return props.width ? props.width : '100%'
+
+  if (props.width) {
+    return props.width;
+  }
+  return '';
 }};
 }
 ${({elementId})=>`.altrp-element${elementId}`} .altrp-image-placeholder::before{
-  display: block;
-  content: '';
-  width: 100%;
+
 ${(props) => {
   const {settings, height} = props;
   let style = '';
@@ -166,8 +168,8 @@ class AltrpImage extends Component {
         height={height}
         width={width}
         style={placeholderStyles}
-        mediaWidth={media.width || 100}
-        mediaHeight={media.height || 75}
+        mediaWidth={media.width}
+        mediaHeight={media.height}
       />
       <ImagePlaceholder color={media.main_color}
                                         className={'altrp-image-placeholder '}
@@ -177,8 +179,8 @@ class AltrpImage extends Component {
                                         width={width}
                                         elementId={this.props.elementId}
                                         style={placeholderStyles}
-                                        mediaWidth={media.width || 100}
-                                        mediaHeight={media.height || 75}>
+                                        mediaWidth={media.width}
+                                        mediaHeight={media.height}>
       {window.altrpImageLazy === 'skeleton'
         && ! visible
         &&

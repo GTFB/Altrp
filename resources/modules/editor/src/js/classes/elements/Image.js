@@ -96,7 +96,6 @@ class Image extends BaseElement {
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -375,10 +374,6 @@ class Image extends BaseElement {
     this.addControl('width_size', {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: '%',
-      },
       units: [
         'px',
         '%',
