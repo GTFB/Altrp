@@ -47,17 +47,6 @@ class ModelPage extends Component {
     } catch (error) {
       console.error(error)
     }
-
-    // new Resource({ route: '/admin/ajax/custom_models/' + id }).getQueried(params)
-    //   .then(({ data, pageCount }) => this.setState({ data, pageCount }))
-    //   .catch(error => console.log(error));
-    // new Resource({ route: `/admin/ajax/models/${id}/fields` }).getAll()
-    //   .then(fields => this.setState({ fields }))
-    //   .catch(error => console.log(error));
-    // new Resource({ route: "/admin/ajax/models"}).get(id).then(({title}) => this.setState(state => ({
-    //   ...state,
-    //   title
-    // }))).catch(error => console.log(error));
   }
 
   sortingHandler = (order_by, order) => {
@@ -90,10 +79,6 @@ class ModelPage extends Component {
         </div>
       </div>
       <div className="admin-content">
-        {/*<form className="admin-panel py-2" onSubmit={this.searchModelData}>*/}
-        {/*  <input className="input-sm mr-2" value={search} onChange={e => this.setState({ search: e.target.value })} />*/}
-        {/*  <button className="btn btn_bare admin-users-button">Search</button>*/}
-        {/*</form>*/}
         {Boolean(data.length) && <>
           <AdminTable
             columns={fields}
