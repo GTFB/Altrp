@@ -21,6 +21,9 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
     display: block;
     height: 1px;
     width: 100%;
+    border-style: solid;
+    border-width: 0;
+    border-top-width: 3px;
   }
 
   .altrp-divider-label {

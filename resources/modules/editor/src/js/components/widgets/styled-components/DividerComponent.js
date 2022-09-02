@@ -11,9 +11,9 @@ export default function DividerComponent(settings) {
       ["width", "divider_width", "slider"],
       ['border-style', 'divider_style_type'],
       () => {
-        const borderWidth = (getResponsiveSetting(settings, "divider_style_weight", null)?.size || 1) + "px"
+        const borderWidthValue = getResponsiveSetting(settings, "divider_style_weight", null)?.size;
+        const borderWidth = borderWidthValue ? borderWidthValue + "px" : "";
         return `
-          border-width: 0;
           border-top-width: ${borderWidth};
         `
       },

@@ -48,7 +48,6 @@ class Divider extends BaseElement {
     this.addControl('divider_style_type', {
       type: CONTROLLER_SELECT,
       label: 'Style',
-      default: 'solid',
       options: [
         {
           value: 'solid',
@@ -195,10 +194,6 @@ class Divider extends BaseElement {
     this.addControl("divider_style_weight", {
       type: CONTROLLER_SLIDER,
       label: "Weight",
-      default: {
-        unit: "px",
-        size: 3
-      },
       units: [
         'px',
         '%',
