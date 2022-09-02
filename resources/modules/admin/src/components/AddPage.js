@@ -293,9 +293,9 @@ class AddPage extends Component {
 
     let redirect = this.state.value.redirect;
     redirect = (redirect || "").split("\\").join("/");
-    if (redirect) {
-      redirect = redirect[0] !== "/" ? `/${redirect}` : redirect;
-    }
+    // if (redirect) {
+    //   redirect = redirect[0] !== "/" ? `/${redirect}` : redirect;
+    // }
     this.state.value.redirect = redirect;
     this.state.value.path = path;
     progressBar(.01)
@@ -336,9 +336,9 @@ class AddPage extends Component {
     }
     if (field === "redirect") {
       value = value.split("\\").join("/");
-      if (value) {
-        value = value[0] !== "/" ? `/${value}` : value;
-      }
+      // if (value) {
+      //   value = value[0] !== "/" ? `/${value}` : value;
+      // }
     }
     if (field === "param_name" && value) {
       value = value.replace(/\W/g, '');

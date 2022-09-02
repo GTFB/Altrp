@@ -92,6 +92,16 @@ export default class AdminController {
 
       }
     }
+    try {
+      if(isProd()){
+        await promisify(exec)('pm2 restart all --update-env')
+      }
+
+    }catch (e) {
+      res.message = 'Error server restarting: \n' + e.message
+      e.message = 'Error server restarting: \n' + e.message
+      console.error(e);
+    }
 
 
     return response.json(res)

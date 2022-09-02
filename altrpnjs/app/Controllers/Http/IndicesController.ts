@@ -53,7 +53,7 @@ export default class IndicesController {
   public editorContent({ view }) {
     return view.render('editor-content', Edge({
       css: Env.get("PATH_ENV") === "production" ?
-        `/modules/editor/editor.css${Env.get('PACKAGE_KEY')}` : null
+        `/modules/editor/editor.css` : null
     }))
   }
 

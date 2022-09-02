@@ -35,7 +35,6 @@ class TemplateStylesModule {
         return false
       }
       const rect = htmlElement.getBoundingClientRect();
-      console.log(rect.y);
       return rect.y < maxTop
     }
 
@@ -98,14 +97,13 @@ class TemplateStylesModule {
           elements = elements.map(e=>{
             return _.cloneDeep(e)
           })
-          console.log(elements);
           store.dispatch(setSections(elements))
         }
         let css = stringifyStylesheet(
           getSheet(styledTag, contentDocument)
         );
+
         // let css = styledTag.innerHTML
-// console.log(editorStore.getState().currentScreen);
         const _stylesElements = [...stylesElements]
         _stylesElements.push(css);
         styles[screen.name] = _stylesElements;
@@ -137,8 +135,8 @@ class TemplateStylesModule {
      */
 
     // window.top.document.getElementById("editorContent").contentWindow.document.querySelector('[data-styled]').inn()
-    editorStore.dispatch(setCurrentScreen(currentScreen))
     store.dispatch(changeStateByName('ignoreUpdate', false))
+    editorStore.dispatch(setCurrentScreen(currentScreen))
     if (templateType === 'header') {
       for (const screen of CONSTANTS.SCREENS) {
         if (_.isArray(styles[screen.name])) {

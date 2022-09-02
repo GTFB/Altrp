@@ -1104,5 +1104,4 @@ export default class ModelsController {
     let data_sources = await Source.query().where('model_id', params.model_id).select(['title as label', 'id as value'])
     return response.json(data_sources)
   }
-
 }

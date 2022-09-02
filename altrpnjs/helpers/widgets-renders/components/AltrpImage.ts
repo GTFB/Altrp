@@ -22,6 +22,10 @@ export default function AltrpImage(props: any, device: string) {
       svg = svg.replace(/<![\s\S]*?>/g, '')
       svg = svg.replace(/<\?[\s\S]*?\?>/g, '')
       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+      const startSvgTag = svg.indexOf('<svg')
+      const endSvgTag = svg.indexOf('</svg') + 6
+
+      svg = svg.slice(0, endSvgTag).slice(startSvgTag);
       return `<svg xmlns="http://www.w3.org/2000/" class="altrp-image" ${objectToAttributesString(_props)}>${svg}</svg>`
     }
     let src = _.get(settings, 'content_media.dataUrl') || _.get(settings, 'content_media.url')

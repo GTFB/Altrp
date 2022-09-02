@@ -25,8 +25,12 @@ class TopMemoryUsage extends Component{
 
     const {testEnable} = this.props.adminState;
     if(testEnable){
-      const res = await this.resource.getAll()
-      this.setState(state=>({...state, used: res.data.used}))
+      try {
+        const res = await this.resource.getAll()
+        this.setState(state=>({...state, used: res.data.used}))
+      }catch (e) {
+        console.error(e);
+      }
     }
   }
   componentWillUnmount() {
