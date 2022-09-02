@@ -47,13 +47,24 @@ class StylesSettings extends Component {
     e.persist();
     e.preventDefault();
     e.stopPropagation();
-    this.setState(state => {
-      return {
+    let file = e.dataTransfer.files[0]
+    let reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      this.setState((state) => ({
         ...state,
+        image: reader.result,
+        iconFile: file,
         uploaderClasses: "admin-assets__uploader uploader",
-        iconFile: e.dataTransfer.files[0]
-      };
-    });
+      }));
+    }
+    // this.setState(state => {
+    //   return {
+    //     ...state,
+    //     uploaderClasses: "admin-assets__uploader uploader",
+    //     iconFile: e.dataTransfer.files[0]
+    //   };
+    // });
   };
 
   onDragOver = e => {
@@ -97,13 +108,14 @@ class StylesSettings extends Component {
   };
 
   inputFileImage = (e) => {
-    this.setState({iconFile: e.target.files[0]})
+    // this.setState({iconFile: e.target.files[0]})
     let reader = new FileReader()
     reader.readAsDataURL(e.target.files[0])
     reader.onload = () => {
       this.setState((state) => ({
         ...state,
-        image: reader.result
+        image: reader.result,
+        iconFile: e.target.files[0]
       }));
     }
   }

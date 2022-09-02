@@ -15,14 +15,12 @@ class ModelPage extends Component {
     itemsPerPage: 20,
     isModalOpened: false,
     editingItem: null,
-    fields: []
+    fields: [],
+    title: ''
   }
 
   componentDidMount() {
     this.getModelData();
-    new Resource({ route: `/admin/ajax/models/${this.props.match.params.id}/fields` }).getAll()
-      .then(fields => this.setState({ fields }))
-      .catch(error => console.log(error));
   }
 
   componentDidUpdate(prevProps) {
@@ -31,14 +29,35 @@ class ModelPage extends Component {
     }
   }
 
-  getModelData = () => {
+  getModelData = async () => {
     const { id } = this.props.match.params;
     const { currentPage: page, search: s, itemsPerPage: pageSize, sorting } = this.state;
     const params = { page, s, pageSize, ...sorting };
+    try {
+      const {data, pageCount} = await new Resource({ route: '/admin/ajax/custom_models/' + id }).getQueried(params)
+      const fields = await new Resource({ route: `/admin/ajax/models/${id}/fields` }).getAll()
+      const {title} = await new Resource({ route: "/admin/ajax/models"}).get(id)
+      this.setState(state => ({
+        ...state,
+        data,
+        pageCount,
+        fields,
+        title
+      }))
+    } catch (error) {
+      console.error(error)
+    }
 
-    new Resource({ route: '/admin/ajax/custom_models/' + id }).getQueried(params)
-      .then(({ data, pageCount }) => this.setState({ data, pageCount }))
-      .catch(error => console.log(error));
+    // new Resource({ route: '/admin/ajax/custom_models/' + id }).getQueried(params)
+    //   .then(({ data, pageCount }) => this.setState({ data, pageCount }))
+    //   .catch(error => console.log(error));
+    // new Resource({ route: `/admin/ajax/models/${id}/fields` }).getAll()
+    //   .then(fields => this.setState({ fields }))
+    //   .catch(error => console.log(error));
+    // new Resource({ route: "/admin/ajax/models"}).get(id).then(({title}) => this.setState(state => ({
+    //   ...state,
+    //   title
+    // }))).catch(error => console.log(error));
   }
 
   sortingHandler = (order_by, order) => {
@@ -67,14 +86,14 @@ class ModelPage extends Component {
         <div className="admin-breadcrumbs">
           <Link className="admin-breadcrumbs__link" to="/admin/pages">Model</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">{this.props.location.propsSearch}</span>
+          <span className="admin-breadcrumbs__current">{this.state.title}</span>
         </div>
       </div>
       <div className="admin-content">
-        <form className="admin-panel py-2" onSubmit={this.searchModelData}>
-          <input className="input-sm mr-2" value={search} onChange={e => this.setState({ search: e.target.value })} />
-          <button className="btn btn_bare admin-users-button">Search</button>
-        </form>
+        {/*<form className="admin-panel py-2" onSubmit={this.searchModelData}>*/}
+        {/*  <input className="input-sm mr-2" value={search} onChange={e => this.setState({ search: e.target.value })} />*/}
+        {/*  <button className="btn btn_bare admin-users-button">Search</button>*/}
+        {/*</form>*/}
         {Boolean(data.length) && <>
           <AdminTable
             columns={fields}
@@ -112,7 +131,7 @@ class ModelPage extends Component {
           />
         </>}
 
-        <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
+        <button style={{marginTop: 20}} onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
           Add New
         </button>
 
