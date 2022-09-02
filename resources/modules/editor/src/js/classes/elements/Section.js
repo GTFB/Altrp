@@ -579,7 +579,6 @@ class Section extends BaseElement{
           label: "set width"
         },
       ],
-      default: "unset",
       label: 'Background Size',
     });
 
