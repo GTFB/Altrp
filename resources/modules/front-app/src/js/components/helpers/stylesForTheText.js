@@ -974,18 +974,6 @@ export function getTextStyles(settings, id) {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-text img {`;
-
-  styles += `max-width: 100%; `
-
-  styles += `} `;
-
-  styles += `${parentClass} .ck.ck-editor__editable_inline {`;
-
-  styles += `padding: 0; `
-
-  styles += `} `;
-
   styles += `${parentClass} .altrp-text:hover {
     ${colorPropertyStyled(getResponsiveSetting(settings, 'text_style_background_color', ':hover'), 'background-color')};
     ${opacityStyled(getResponsiveSetting(settings, 'text_style_background_opacity', ':hover'), 'opacity')};
