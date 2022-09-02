@@ -6,46 +6,35 @@ const getIconStyles = (settings, id) => {
     let styles = ``
 
     styles += `.icon-widget-wrapper {
-        display: flex;
         ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '', 'column') , 'flex-direction')}
     }`
 
     styles += `.icon-widget__icon * {
-        width: auto;
         height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height') )};
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '', 'rgb(0, 0, 0)') , 'fill')}
     }`
 
     styles += `.state-disabled .icon-widget-wrapper {
-          display: flex;
           ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '.state-disabled', 'column') , 'flex-direction')}
       }`
 
     styles += `.state-disabled .icon-widget__icon * {
-          width: auto;
           height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', '.state-disabled') )};
           ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '.state-disabled', 'rgb(0, 0, 0)') , 'fill')}
       }`
 
     styles += `.active .icon-widget-wrapper {
-            display: flex;
             ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '.active', 'column') , 'flex-direction')}
         }`
 
     styles += `.active .icon-widget__icon * {
-            width: auto;
             height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', '.active') )};
             ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '.active', 'rgb(0, 0, 0)') , 'fill')}
         }`
 
     styles += `.icon-widget__icon *:hover {
-        width: auto;
         height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', ':hover') )};
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
-    }`
-
-    styles += `.content {
-        width: 100%;
     }`
 
     styles += `.title {
@@ -110,11 +99,9 @@ const getIconStyles = (settings, id) => {
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', ':hover') , "margin")}
     }`
 
-    styles += `.icon-widget__icon {
-        width: auto;
-        display: flex;`
+    styles += `.icon-widget__icon {`
 
-    switch (getResponsiveSetting(settings, 'icon_position', '', 'column')) {
+    switch (getResponsiveSetting(settings, 'icon_position', '')) {
         case 'column':
         case 'column-reverse':
             styles += simplePropertyStyled( getResponsiveSetting(settings, 'icon_horizontal_alignment', '', 'center') , 'justify-content')
@@ -130,9 +117,7 @@ const getIconStyles = (settings, id) => {
         ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity') )}
     }`
 
-    styles += `.state-disabled .icon-widget__icon {
-          width: auto;
-          display: flex;`
+    styles += `.state-disabled .icon-widget__icon {`
 
     switch (getResponsiveSetting(settings, 'icon_position', '.state-disabled', 'column')) {
       case 'column':
@@ -150,9 +135,7 @@ const getIconStyles = (settings, id) => {
           ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity', '.state-disabled') )}
       }`
 
-    styles += `.active .icon-widget__icon {
-            width: auto;
-            display: flex;`
+    styles += `.active .icon-widget__icon {`
 
     switch (getResponsiveSetting(settings, 'icon_position', '.active', 'column')) {
       case 'column':

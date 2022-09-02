@@ -1,6 +1,26 @@
 import DefaultIcon from '../../../svgs/icon.svg'
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .icon-widget-wrapper {
+    display: flex;
+  }
+
+  .icon-widget__icon {
+    width: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .icon-widget__icon * {
+    width: auto;
+  }
+
+  .content {
+    width: 100%;
+  }
+`);
+
 class IconWidget extends Component {
   constructor(props) {
     super(props);
