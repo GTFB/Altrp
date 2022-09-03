@@ -665,7 +665,7 @@ const fieldLabelContainerStyle = settings => {
   padding && (styles += dimensionsControllerToStyles(padding, "padding"));
 
   settings && (width = getResponsiveSetting(settings, "label_width"));
-  width && (styles += `${sizeStyled(width, "width")};flex-shrink: 0;`);
+  width && (styles += `${sizeStyled(width, "width")};`);
 
   label_position_top && (styles += `top:${label_position_top};`);
   label_position_left && (styles += `left:${label_position_left};`);

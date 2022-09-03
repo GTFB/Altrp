@@ -335,6 +335,7 @@ textarea.altrp-field {
 .altrp-field-label-container {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
 }
 .altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
   padding: 0 8px;
