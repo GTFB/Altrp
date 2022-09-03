@@ -76,7 +76,8 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['color', 'field_font_color', 'color'],
       ['background-color', 'background_style_background_color', 'color'],
       () => {
-        return `opacity: ${getResponsiveSetting(settings, 'background_section_opacity')?.size};`
+        const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity');
+        return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
       },
       ['border-style', 'border_type',],
       ['border-width', 'border_width', 'dimensions'],
@@ -99,7 +100,8 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['color', 'field_font_color', 'color', '.state-disabled'],
       ['background-color', 'background_style_background_color', 'color', '.state-disabled'],
       () => {
-        return `opacity: ${getResponsiveSetting(settings, 'background_section_opacity', '.state-disabled')?.size};`
+        const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity', '.state-disabled');
+        return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
       },
       ['border-style', 'border_type', '', '.state-disabled'],
       ['border-width', 'border_width', 'dimensions', '.state-disabled'],
@@ -122,7 +124,8 @@ export default function getInputTextCommonStyles(settings, elementId) {
     ['color', 'field_font_color', 'color', '.active'],
     ['background-color', 'background_style_background_color', 'color', '.active'],
     () => {
-      return `opacity: ${getResponsiveSetting(settings, 'background_section_opacity', '.active')?.size};`
+      const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity', '.active');
+      return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
     },
     ['border-style', 'border_type', '', '.active'],
     ['border-width', 'border_width', 'dimensions', '.active'],
@@ -150,7 +153,8 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['border-radius', 'border_radius', 'dimensions',':hover'],
       ['', 'box_shadow', 'shadow',':hover'],
       () => {
-        return `opacity: ${getResponsiveSetting(settings, 'background_section_opacity', ':hover')?.size};`
+        const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity', ':hover');
+        return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
       },
     '}',
     '.bp3-input.bp3-input.bp3-input.bp3-input:focus',
@@ -161,7 +165,8 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['border-radius', 'border_radius', 'dimensions',':focus'],
       ['', 'box_shadow', 'shadow',':focus'],
       () => {
-        return `opacity: ${getResponsiveSetting(settings, 'background_section_opacity', ':focus')?.size};`
+        const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity', ':focus');
+        return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
       },
     '}',
     '.bp3-input.bp3-input.bp3-input.bp3-input:hover::placeholder',
