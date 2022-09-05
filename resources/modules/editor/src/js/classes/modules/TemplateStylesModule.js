@@ -102,6 +102,7 @@ class TemplateStylesModule {
         let css = stringifyStylesheet(
           getSheet(styledTag, contentDocument)
         );
+
         // let css = styledTag.innerHTML
         const _stylesElements = [...stylesElements]
         _stylesElements.push(css);
@@ -134,8 +135,8 @@ class TemplateStylesModule {
      */
 
     // window.top.document.getElementById("editorContent").contentWindow.document.querySelector('[data-styled]').inn()
-    editorStore.dispatch(setCurrentScreen(currentScreen))
     store.dispatch(changeStateByName('ignoreUpdate', false))
+    editorStore.dispatch(setCurrentScreen(currentScreen))
     if (templateType === 'header') {
       for (const screen of CONSTANTS.SCREENS) {
         if (_.isArray(styles[screen.name])) {

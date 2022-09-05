@@ -15,7 +15,7 @@ class AdminModelsDropList extends React.Component {
                 {
                     this.props.menu ? (
                         modelsState ? (
-                            <ul
+                            <ul style={{marginBottom: 80}}
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist_active" : "admin-nav-list admin-nav-list--sublist models-sublist__item "}>
                                 {this.props.models
                                     .sort((a, b) => {
@@ -41,7 +41,7 @@ class AdminModelsDropList extends React.Component {
                                     ))}
                             </ul>
                         ) : (
-                            <ul
+                            <ul style={{marginBottom: 80}}
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist_active"
                                     : (this.props.models.filter(item => !this.props.standardModels.some(model => model.label === item.label)).length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
 
@@ -73,7 +73,7 @@ class AdminModelsDropList extends React.Component {
                         )
                     ) : (
                         modelsState ? (
-                            <ul
+                            <ul style={{marginBottom: 80}}
                                 className="admin-nav-list admin-nav-list--sublist models-sublist__item ">
                                 {this.props.models
                                     .sort((a, b) => {
@@ -99,7 +99,7 @@ class AdminModelsDropList extends React.Component {
                                     ))}
                             </ul>
                         ) : (
-                            <ul
+                            <ul style={{marginBottom: 80}}
                                 className={pathmanHaveAsssets ? "admin-nav-list admin-nav-list--sublist models-sublist__item"
                                     : (this.props.models.filter(item => !this.props.standardModels.some(model => model.label === item.label)).length > 0 ? "admin-nav-list admin-nav-list--sublist models-sublist__item" : "admin-nav-list admin-nav-list--sublist_noItem")}>
                                 {

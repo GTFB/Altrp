@@ -73,6 +73,7 @@ const getImageStyles = (settings,id)=>{
       if (height) {
         if(height.size !== "0") {
           styles += sizeStyled(height, 'height');
+
         } else {
 
         }
@@ -836,6 +837,55 @@ const getImageStyles = (settings,id)=>{
         }
       }
 
+  height = getResponsiveSetting(settings, 'height_size');
+  if (height) {
+    if(height.size !== "0") {
+      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(height, 'height')}}`
+    }
+  }
+  height = getResponsiveSetting(settings, 'height_size');
+  if (height) {
+    if(height.size !== "0") {
+      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder:hover {${sizeStyled(height, 'height',':hover')}}`
+    }
+  }
+  height = getResponsiveSetting(settings, 'height_size', '.active');
+  if (height) {
+    if(height.size !== "0") {
+      styles += `${parentClass} .active .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(height, 'height')}}`
+    }
+  }
+  height = getResponsiveSetting(settings, 'height_size');
+  if (height) {
+    if(height.size !== "0") {
+      styles += `${parentClass} .state-disabled .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(height, 'height', '.state-disabled')}}`
+    }
+  }
+
+  width = getResponsiveSetting(settings, 'width_size');
+  if (width) {
+    if(width.size !== "0") {
+      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(width, 'width')}}`
+    }
+  }
+  width = getResponsiveSetting(settings, 'width_size');
+  if (width) {
+    if(width.size !== "0") {
+      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder:hover {${sizeStyled(width, 'width',':hover')}}`
+    }
+  }
+  width = getResponsiveSetting(settings, 'width_size', '.active');
+  if (width) {
+    if(width.size !== "0") {
+      styles += `${parentClass} .active .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(width, 'width')}}`
+    }
+  }
+  width = getResponsiveSetting(settings, 'width_size');
+  if (width) {
+    if(width.size !== "0") {
+      styles += `${parentClass} .state-disabled .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(width, 'width', '.state-disabled')}}`
+    }
+  }
       return styles;
 }
 

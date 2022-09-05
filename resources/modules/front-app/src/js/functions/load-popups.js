@@ -29,7 +29,7 @@ export default async function loadPopups(){
     import(/* webpackChunkName: 'ElementWrapper' */'../components/ElementWrapper')
   ])
   ElementWrapper = ElementWrapper.default
-  await frontElementsManager.loadNotUsedComponent()
+  // await frontElementsManager.loadNotUsedComponent()
 
   document.body.appendChild(window.popupsContainer);
   const FrontPopup = module.default;

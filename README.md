@@ -4,6 +4,10 @@
 ## Test Version
 ## Changelog
 
+### 1.2.7
+* Added the Ability to Set Up Redirects to Other Sites for Pages
+* Fix Image Widget Responsive Size Issue
+
 ### 1.2.6
 * Fix and Optimize Styles Loading for Popups 
 
