@@ -14,6 +14,7 @@ import filtration from "../../../helpers/filtration";
 import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
 import mbParseJSON from "../../../helpers/mbParseJSON";
+import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class TemplatesController {
   public async getAllIds({ response }) {
@@ -202,7 +203,7 @@ export default class TemplatesController {
     }
     let templateGenerator = new TemplateGenerator()
     await templateGenerator.run(template)
-
+    applyPluginsFiltersAsync('template_updated', template)
     return {
       message: "Success",
       redirect: true,
@@ -246,6 +247,7 @@ export default class TemplatesController {
 
     let templateGenerator = new TemplateGenerator()
     await templateGenerator.run(template)
+    applyPluginsFiltersAsync('template_updated', template)
 
     return {
       message: "Success",
@@ -344,6 +346,7 @@ export default class TemplatesController {
     let templateGenerator = new TemplateGenerator()
     templateGenerator.deleteFile(template)
     templateGenerator.deleteFiles(template)
+    applyPluginsFiltersAsync('template_before_delete', template)
 
     await TemplateSetting.query().where("template_id", template.id).delete()
 
@@ -380,6 +383,7 @@ export default class TemplatesController {
 
       let templateGenerator = new TemplateGenerator()
       await templateGenerator.run(template)
+      applyPluginsFiltersAsync('template_updated', template)
 
 
       return {

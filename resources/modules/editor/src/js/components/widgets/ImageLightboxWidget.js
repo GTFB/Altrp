@@ -212,4 +212,18 @@ class ImageLightboxWidget extends Component {
   }
 }
 
-export default ImageLightboxWidget;
+
+let _export;
+if (isEditor()) {
+
+  function mapStateToProps(state) {
+    return {
+      currentScreen: state.currentScreen,
+    };
+  }
+
+  _export = window.reactRedux.connect(mapStateToProps)(ImageLightboxWidget)
+} else {
+  _export = (ImageLightboxWidget);
+}
+export default _export;

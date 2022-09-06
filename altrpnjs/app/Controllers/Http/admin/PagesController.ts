@@ -196,9 +196,9 @@ export default class PagesController {
   }
 
   public async delete({params}) {
-    const page = await Page.query().where("id", parseInt(params.id)).firstOrFail();
-
-    page.delete()
+    const page = await Page.query().preload('roles').where("id", parseInt(params.id)).firstOrFail();
+    await page.related('roles').detach()
+    await page.delete()
     return {
       success: true
     }

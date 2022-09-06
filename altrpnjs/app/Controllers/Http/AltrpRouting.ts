@@ -102,10 +102,10 @@ export default class AltrpRouting {
     this.setGlobal('altrpSettings', altrpSettings)
     let pageMatch: any = {}
     let page: Page | undefined | null = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
-      if (matchPath(url, page.path,)?.isExact) {
-        pageMatch = matchPath(url, page.path,)
+      if (matchPath(decodeURI(url), page.path,)?.isExact) {
+        pageMatch = matchPath(decodeURI(url), page.path,)
       }
-      return matchPath(url, page.path,)?.isExact
+      return matchPath(decodeURI(url), page.path,)?.isExact
     });
     httpContext.params = pageMatch.params
 
