@@ -69,6 +69,7 @@ export class TemplateLoader {
       } else {
         template = this.templatesCache.getProperty(templateId);
       }
+      console.log(document.querySelector(`[data-template-styles="${template.guid}"]`));
       if(! isEditor() && ! document.querySelector(`[data-template-styles="${template.guid}"]`)){
         const resource = new Resource({route: `/ajax/templates/${templateId}`});
         let template = await resource.getQueried({withStyles: true});

@@ -1006,6 +1006,9 @@ export default class Page extends BaseModel {
         }
       }
     }
+    if(data.settings?.styles){
+      delete data.settings.styles
+    }
     for (let settingName in _data.settings) {
       if (_data.settings.hasOwnProperty(settingName)) {
         if (settingName.toLowerCase().indexOf('actions') > -1) {
