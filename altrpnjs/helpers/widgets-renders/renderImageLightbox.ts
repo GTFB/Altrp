@@ -44,7 +44,7 @@ export default function renderImageLightbox(settings, device, context) {
   const cursorPointer = getResponsiveSetting(settings, "cursor_pointer", device, false);
   const background_image = getResponsiveSetting(settings, "background_image", device, {});
   const media = getMedia() || {}
-  let classNames = "altrp-image-container altrp-image-placeholder";
+  let classNames = "altrp-image-placeholder";
   if (cursorPointer) {
     classNames += " cursor-pointer"
   }
@@ -67,10 +67,12 @@ export default function renderImageLightbox(settings, device, context) {
   });
 
   return `
+  <div class="altrp-image-container">
     <div class="${classNames}">
       <div class="altrp-image-placeholder" height="${height}" width="${width}">
         ${image}
       </div>
     </div>
+  </div>
   `;
 }
