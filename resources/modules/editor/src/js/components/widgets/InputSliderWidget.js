@@ -14,13 +14,18 @@ import {Slider} from "@blueprintjs/core";
 .bp3-slider-label{
     z-index: 1;
 }
+.altrp-field-slider .bp3-slider-handle {
+  background-image: none;
+}
+.altrp-field-slider-horizontal .bp3-slider-label {
+  transform: translate(-50%, 20px);
+}
+.altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label {
+  transform: translate(20px, 50%);
+}
 `);
 
 const SliderWrapper = styled.div`
-  .altrp-field-slider .bp3-slider-handle {
-    background-image: none;
-  }
-
   ${(props) => {
     let styles = "";
 
