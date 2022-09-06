@@ -4,9 +4,15 @@
 ## Test Version
 ## Changelog
 
+### 1.2.8
+* Fix Page Deleting With Roles 
+* Fix `Empty` Conditions in Robotizers 
+* Fix Some Server Render Issues in Input Widgets 
+
 ### 1.2.7
 * Added the Ability to Set Up Redirects to Other Sites for Pages
 * Fix Image Widget Responsive Size Issue
+* Added Decoding When Searching for URL Matches for Pages
 
 ### 1.2.6
 * Fix and Optimize Styles Loading for Popups 

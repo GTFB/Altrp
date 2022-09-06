@@ -86,6 +86,7 @@ class BaseGenerator {
 
 
   static async generateCssFile(fileName:string, content:string, screenName: string = ''):Promise<void >{
+
     if(fileName.indexOf('.css') !== fileName.length - 4){
       fileName += '.css'
     }

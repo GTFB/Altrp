@@ -76,7 +76,6 @@ export default class TemplateGenerator extends BaseGenerator {
 
       }
 
-      let fileName = this.getFilename(template)
       if (!template.currentArea?.name) {
         console.error(`Template ${template.id} render error. Need Area name`);
         return
@@ -85,17 +84,16 @@ export default class TemplateGenerator extends BaseGenerator {
         console.error(`Template ${template.id} render error. Need guid`);
         return
       }
-      let children_content = await template.getChildrenContent(screen.name)
 
-      await this.addFile(fileName)
-        .destinationDir(this.getDirectory(template, screen.name))
-        .stub(TemplateGenerator.template)
-        .apply({
-          children_content,
-          all_styles: '',
-          screen_name: screen.name,
-          area_name: template.currentArea?.name,
-        }, true)
+      // await this.addFile(fileName)
+      //   .destinationDir(this.getDirectory(template, screen.name))
+      //   .stub(TemplateGenerator.template)
+      //   .apply({
+      //     children_content,
+      //     all_styles: '',
+      //     screen_name: screen.name,
+      //     area_name: template.currentArea?.name,
+      //   }, true)
     }
     if (template.guid) {
       for (const screen of SCREENS) {

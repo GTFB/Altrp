@@ -62,7 +62,7 @@ export default function renderInputSelect2(settings, device) {
 
   if (settings.content_label) {
     label = `<div class="${"altrp-field-label-container " + classLabel}" style="${objectToStylesString(styleLabel)}">
-   <label class="${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}">${settings.content_label}</label>
+   <label class="${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}">${settings.content_label || ''}</label>
     ${label_icon && label_icon.assetType && `
       <span class="altrp-label-icon">
         ${renderAsset(label_icon)}

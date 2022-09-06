@@ -839,14 +839,16 @@ const getImageStyles = (settings,id)=>{
 
   height = getResponsiveSetting(settings, 'height_size');
   if (height) {
-    if(height.size !== "0") {
+    if(height.size !== "0" && height.size ) {
       styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(height, 'height')}}`
+    } else {
+      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder {height:auto;}`
     }
   }
-  height = getResponsiveSetting(settings, 'height_size');
+  height = getResponsiveSetting(settings, 'height_size',':hover');
   if (height) {
     if(height.size !== "0") {
-      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder:hover {${sizeStyled(height, 'height',':hover')}}`
+      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder:hover {${sizeStyled(height, 'height')}}`
     }
   }
   height = getResponsiveSetting(settings, 'height_size', '.active');
@@ -855,10 +857,10 @@ const getImageStyles = (settings,id)=>{
       styles += `${parentClass} .active .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(height, 'height')}}`
     }
   }
-  height = getResponsiveSetting(settings, 'height_size');
+  height = getResponsiveSetting(settings, 'height_size', '.state-disabled');
   if (height) {
     if(height.size !== "0") {
-      styles += `${parentClass} .state-disabled .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(height, 'height', '.state-disabled')}}`
+      styles += `${parentClass} .state-disabled .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(height, 'height')}}`
     }
   }
 
@@ -868,10 +870,10 @@ const getImageStyles = (settings,id)=>{
       styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(width, 'width')}}`
     }
   }
-  width = getResponsiveSetting(settings, 'width_size');
+  width = getResponsiveSetting(settings, 'width_size',':hover');
   if (width) {
     if(width.size !== "0") {
-      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder:hover {${sizeStyled(width, 'width',':hover')}}`
+      styles += `${parentClass} .altrp-image-placeholder.altrp-image-placeholder:hover {${sizeStyled(width, 'width')}}`
     }
   }
   width = getResponsiveSetting(settings, 'width_size', '.active');
@@ -880,10 +882,10 @@ const getImageStyles = (settings,id)=>{
       styles += `${parentClass} .active .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(width, 'width')}}`
     }
   }
-  width = getResponsiveSetting(settings, 'width_size');
+  width = getResponsiveSetting(settings, 'width_size', '.state-disabled');
   if (width) {
     if(width.size !== "0") {
-      styles += `${parentClass} .state-disabled .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(width, 'width', '.state-disabled')}}`
+      styles += `${parentClass} .state-disabled .altrp-image-placeholder.altrp-image-placeholder {${sizeStyled(width, 'width')}}`
     }
   }
       return styles;

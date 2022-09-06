@@ -69,7 +69,7 @@ export class TemplateLoader {
       } else {
         template = this.templatesCache.getProperty(templateId);
       }
-      if(! isEditor() && ! document.querySelector(`[data-template-styles="${template.guid}]"`)){
+      if(! isEditor() && ! document.querySelector(`[data-template-styles="${template.guid}"]`)){
         const resource = new Resource({route: `/ajax/templates/${templateId}`});
         let template = await resource.getQueried({withStyles: true});
         if(_.isString(template.styles)){
@@ -116,32 +116,47 @@ export class TemplateLoader {
    * @param {*} templateId
    */
   async loadParsedTemplate(templateId, force = false){
-
     if(! templateId){
       return null;
     }
     templateId = Number(templateId) ? Number(templateId) : templateId;
 
     const template = await this.loadTemplate(templateId, force)
+    /**
+     * for loading the styles before loading the html
+     */
     return new Promise(resolve => {
-      const link = document.createElement('link')
-      link.setAttribute('rel', 'stylesheet')
-      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${template.guid}.css`)
-      if(isEditor()){
-        let iframe = document.getElementById("editorContent")
-        iframe.contentDocument.head.appendChild(link)
-      } else {
-        document.head.appendChild(link)
-      }
-
-      link.addEventListener('error',(e)=>{
-        link.setAttribute('href',  `/altrp/css/${template.guid}.css`)
-
-      })
+      const _doc = isEditor() ?
+        document.getElementById("editorContent").contentDocument :
+        document
+      let link = _doc.createElement('link')
       link.addEventListener('load',()=>{
         let templateData = _.get(template, 'data');
         templateData = JSON.parse(templateData);
         resolve(frontElementsFabric.parseData(templateData))
+      })
+      link.setAttribute('rel', 'stylesheet')
+      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${template.guid}.css`)
+
+      _doc.head.appendChild(link)
+
+
+      link.addEventListener('error',(e)=>{
+        link.remove()
+        /**
+         * New link element
+         * @type {HTMLLinkElement}
+         */
+        link = _doc.createElement('link')
+        link.addEventListener('load',()=>{
+          let templateData = _.get(template, 'data');
+          templateData = JSON.parse(templateData);
+          resolve(frontElementsFabric.parseData(templateData))
+        })
+        link.setAttribute('rel', 'stylesheet')
+        link.setAttribute('href',  `/altrp/css/${template.guid}.css`)
+        _doc.head.appendChild(link)
+
       })
     })
   }

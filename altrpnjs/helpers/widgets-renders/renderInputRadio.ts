@@ -124,7 +124,7 @@ export default function renderInputRadio(settings, device, context) {
 
   if (settings.content_label) {
     label = `<div class="${"altrp-field-label-container " + classLabel}" style=${objectToStylesString(styleLabel)}>
-    <label class="${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}">${settings.content_label}</label>
+    <label class="${"altrp-field-label" + (settings.content_required ? " altrp-field-label--required" : "")}">${settings.content_label || ''}</label>
     ${labelIcon}
     </div>`
   }
