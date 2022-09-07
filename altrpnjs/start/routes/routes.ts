@@ -294,8 +294,8 @@ Route.group(() => {
       return httpContext.response.status(500).json({
         success: false,
 
-        message: `Controller ${controllerName}; Method: ${methodName}
-${e.message}`,
+        message: methodName ? `Controller ${controllerName}; Method: ${methodName}
+${e.message}` : `Controller ${controllerName} require error:`,
         trace: e.stack.split('\n'),
       })
     }

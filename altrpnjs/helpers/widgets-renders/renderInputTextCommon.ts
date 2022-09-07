@@ -77,7 +77,7 @@ export default function renderInputTextCommon(settings, device) {
 
   if (settings.content_label || label_icon ) {
     label = `<div class='${"altrp-field-label-container " + classLabel}' style='${objectToStylesString(styleLabel)}'>
-    <label for='${getName()}' style='${"display: flex, flex-direction: " + label_icon_position}' class='${"altrp-field-label altrp-field-label_text-widget" + (settings.content_required ? " altrp-field-label--required" : "")}'>${settings.content_label}</label>
+    <label for='${getName()}' style='${"display: flex, flex-direction: " + label_icon_position}' class='${"altrp-field-label altrp-field-label_text-widget" + (settings.content_required ? " altrp-field-label--required" : "")}'>${settings.content_label || ''}</label>
     ${labelIcon}
     </div>`
   }

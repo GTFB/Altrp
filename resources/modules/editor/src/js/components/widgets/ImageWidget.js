@@ -229,11 +229,17 @@ class ImageWidget extends Component {
   }
 }
 
-// const path = window.location.pathname;
-// let _export;
-// if (path.includes("reports")) {
-//   _export = ImageWidget;
-// } else {
-//   _export = withRouter(ImageWidget);
-// }
-export default ImageWidget;
+let _export;
+if (isEditor()) {
+
+  function mapStateToProps(state) {
+    return {
+      currentScreen: state.currentScreen,
+    };
+  }
+
+  _export = window.reactRedux.connect(mapStateToProps)(ImageWidget)
+} else {
+  _export = (ImageWidget);
+}
+export default _export;

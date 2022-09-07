@@ -33,9 +33,6 @@ class AltrpPosts extends React.Component {
     const { settings } = this.props;
     let simpleTemplateId = _.get(settings, "posts_card_template");
     if (simpleTemplateId) {
-      if (!simpleTemplateId) {
-        return;
-      }
       this.setState(
         (state) => ({ ...state, simpleTemplateId }),
         async () => {
@@ -61,6 +58,7 @@ class AltrpPosts extends React.Component {
       return true;
     }
     if (!_.isEqual(this.state.simpleTemplate, nextState.simpleTemplate)) {
+
       return true;
     }
     if (
@@ -81,7 +79,7 @@ class AltrpPosts extends React.Component {
     if (this.state.currentPage !== nextState.currentPage) {
       return true;
     }
-    return true;
+    return false;
   }
   /**
    * Компонент обновился
@@ -106,7 +104,6 @@ class AltrpPosts extends React.Component {
     if (this.props.data !== prevProps.data) {
       this.postsComponents = {};
     }
-
     if (newSimpleTemplateId !== simpleTemplateId) {
       if (!newSimpleTemplateId) {
         this.setState((state) => ({
@@ -122,6 +119,8 @@ class AltrpPosts extends React.Component {
           simpleTemplateId: newSimpleTemplateId,
         }),
         async () => {
+
+
           let template = await templateLoader.loadParsedTemplate(
             newSimpleTemplateId
           );
@@ -171,7 +170,6 @@ class AltrpPosts extends React.Component {
     );
 
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
-
     let PostContentComponent = post.component || "";
     let HoverPostContentComponent = post.component || "";
     if (
@@ -240,7 +238,6 @@ class AltrpPosts extends React.Component {
     }
 
     let key = post.altrpRandomKey || post.id || post.altrpIndex;
-
     return (
       <div className={`${this.props?.className} altrp-post`} key={key}>
         {PostContentComponent}
