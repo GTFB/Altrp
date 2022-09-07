@@ -107,7 +107,9 @@ class InputDateWidget extends Component {
 
 
     let value = this.state.value;
-
+    // setTimeout(() => {
+    //   this.onChange(this.getValue());
+    // }, 0)
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getLockedContent для получение этого динамического значения
@@ -186,6 +188,7 @@ class InputDateWidget extends Component {
         state => ({ ...state, value, contentLoaded: true }),
         () => {
           this.dispatchFieldValueToStore(value);
+          this.onChange(this.getValue());
         }
       );
       return;

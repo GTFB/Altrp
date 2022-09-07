@@ -182,11 +182,19 @@ class MaskedInput extends React.Component {
   }
 
   render() {
-    return <this.props.input
-      {...this.props.inputProps}
-      onChange={this.handleChange}
-      onKeyDown={this.handleBackspace}
-      value={this.state.previewValue}/>
+
+    return (
+      <div className="bp3-input-group">
+        {this.props.maybeRenderLeftElement()}
+        <input
+          {...this.props.inputProps}
+          onChange={this.handleChange}
+          value={this.state.previewValue}
+          onKeyDown={this.handleBackspace}
+        />
+        {this.props.maybeRenderRightElement()}
+      </div>
+    )
   }
 }
 
