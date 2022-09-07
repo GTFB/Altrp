@@ -22,7 +22,11 @@ export default function parseOptionsFromSettings(string) {
     if (valuePath) {
       value = getDataByPath(valuePath);
     }
+    if(value !== '' && ! Number.isNaN(Number(value))){
+      value = Number(value);
+    }
     let label = option.split("|")[1] || value || "";
+    _.isNumber(label) && (label += "")
     !_.isString(label) && (label = "");
     label = label.trim();
     let labelPath = extractPathFromString(label);

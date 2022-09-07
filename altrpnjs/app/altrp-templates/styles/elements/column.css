@@ -1,0 +1,7 @@
+
+.altrp-column {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  align-content: flex-start;
+}

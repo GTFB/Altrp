@@ -940,7 +940,12 @@ class InputMultiSelectWidget extends Component {
       options = convertData(optionsDynamicSetting, options);
     }
     if (!this.props.element.getSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
+      options = _.sortBy(options, o => {
+        if(!_.isNaN(Number(o))){
+          return Number(o)
+        }
+        return o && (o.label ? o.label.toString() : o)
+      });
       if (this.props.element.getSettings("options_sorting") === 'desc') {
         options = _.reverse(options)
       }
