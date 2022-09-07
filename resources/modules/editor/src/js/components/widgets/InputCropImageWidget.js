@@ -24,6 +24,9 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
   .crop-image-background {
     width: 100%;
     height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
   .crop-image-text {
     pointer-events: none;
@@ -31,6 +34,7 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    color: rgb(0,0,0);
   }
 
   .ReactCrop {
