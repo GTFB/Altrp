@@ -1,5 +1,6 @@
 const IGNORED_ROUTES = [
   "/altrp-login",
+  "/altrp-redirect",
   "/data/current-user",
   "/modules/admin/admin.js",
   "/modules/front-app/front-app.css",

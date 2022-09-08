@@ -70,7 +70,7 @@ export default class AltrpRouting {
       return
     }
     const asCheck = isRobot(httpContext.request.headers())
-    console.log(asCheck);
+
     /**
      * Игнорим админку и ajax
      */
@@ -125,7 +125,7 @@ export default class AltrpRouting {
       })
       return httpContext.response.redirect(page.redirect || '/')
     }
-    console.log(httpContext.request.cookie('__altrp_redirect_from'))
+
     await page.load('model');
 
 

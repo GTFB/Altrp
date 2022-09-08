@@ -9,13 +9,12 @@
     "app/AltrpModels",
     "app/AltrpControllers",
     "app/AltrpListeners",
+    "app/AltrpPlugins",
     "public",
     "app/altrp-listeners",
     ".env",
     "resources/views/altrp",
-    "build",
-    "app/AltrpPlugins/**/node_modules",
-    "app/AltrpPlugins/**/build",
+    "build"
   ],
 
   "compilerOptions": {

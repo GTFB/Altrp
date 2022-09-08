@@ -4,6 +4,10 @@
 ## Test Version
 ## Changelog
 
+### 1.2.10
+* Feature: Altrp Keeps URLs for Redirecting After Login
+* Added Transparent Background for Select Widget
+
 ### 1.2.9
 * Added new Plugins Hooks
   1. `template_updated`
