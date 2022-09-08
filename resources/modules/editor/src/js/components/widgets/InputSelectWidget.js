@@ -412,6 +412,30 @@ textarea.altrp-field {
   justify-content: space-between
 }
 
+#editor-content .altrp-section .btn_transparent {
+   box-shadow: none;
+   background-image: initial;
+   background-color: transparent;
+}
+
+.altrp-section .btn_transparent {
+   box-shadow: none;
+   background-image: initial;
+   background-color: transparent;
+}
+
+.altrp-section .btn_transparent:hover {
+   box-shadow: none;
+   background-image: initial;
+   background-color: transparent;
+}
+
+.altrp-section .btn_transparent:active {
+   box-shadow: none;
+   background-image: initial;
+   background-color: transparent;
+}
+
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -1385,6 +1409,7 @@ class InputSelectWidget extends Component {
     const placeholder = element.getResponsiveLockedSetting('content_placeholder');
     const content_readonly = element.getResponsiveLockedSetting('content_readonly');
     const no_results_text = element.getResponsiveLockedSetting('no_results_text');
+    const transparentBG = element.getResponsiveLockedSetting('background_transparent_btn');
 
     const inputProps = {
       placeholder,
@@ -1468,6 +1493,7 @@ class InputSelectWidget extends Component {
             onClick={this.onClick}
             icon={this.renderLeftIcon()}
             rightIcon={this.renderRightIcon()}
+            className={transparentBG ? "btn_transparent" : ''}
           >
             <span dangerouslySetInnerHTML={{__html: value}}/>
           </Button>
