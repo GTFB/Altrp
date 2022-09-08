@@ -615,6 +615,12 @@ class InputSelect extends BaseElement {
       label: 'Button Background Color'
     })
 
+    this.addControl('background_transparent_btn', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Button Transparent Background Color',
+      locked: true,
+    });
+
     this.addControl("button_gradient", {
       type: CONTROLLER_GRADIENT,
       label: "Button Gradient"
