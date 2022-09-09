@@ -11,7 +11,7 @@ class AltrpInput extends Component {
 
   rightElement = React.createRef()
 
-  maybeRenderLeftElement() {
+  maybeRenderLeftElement = () => {
     const {leftIcon} = this.props;
 
     if (leftIcon != null) {
@@ -21,7 +21,7 @@ class AltrpInput extends Component {
     return undefined;
   }
 
-  maybeRenderRightElement() {
+  maybeRenderRightElement = () => {
     const {rightElement} = this.props;
     if (rightElement == null) {
       return undefined;
@@ -102,14 +102,8 @@ class AltrpInput extends Component {
           <MaskedInput
             mask={content_mask}
             inputProps={_inputProps}
-            input={props => {
-              return <div className="bp3-input-group">
-                {this.maybeRenderLeftElement()}
-                <input {..._inputProps} {...props} ref={this.props.inputRef}/>
-                {this.maybeRenderRightElement()}
-              </div>
-            }
-            }
+            maybeRenderLeftElement={this.maybeRenderLeftElement}
+            maybeRenderRightElement={this.maybeRenderRightElement}
           />
           {!isValid && mask_mismatch_message && <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
         </>

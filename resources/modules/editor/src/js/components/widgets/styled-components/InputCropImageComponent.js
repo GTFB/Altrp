@@ -18,11 +18,11 @@ export default function InputCropImageComponent(settings) {
 
   styles += `.crop-image-background {
     ${backgroundImageControllerToStyles(getSetting('background_image'))}
-    ${simplePropertyStyled(getSetting('background_position', '', 'center'), 'background-position')}
+    ${simplePropertyStyled(getSetting('background_position', ''), 'background-position')}
     ${simplePropertyStyled(getSetting('background_attachment'), 'background-attachment')}
-    ${simplePropertyStyled(getSetting('background_repeat', '', 'no-repeat'), 'background-repeat')}
+    ${simplePropertyStyled(getSetting('background_repeat', ''), 'background-repeat')}
     ${simplePropertyStyled(sliderStyled(getSetting('background_image_width')), 'background-image-width')}
-    ${simplePropertyStyled(getSetting('background_size', '', 'contain'), 'background-size')}
+    ${simplePropertyStyled(getSetting('background_size', ''), 'background-size')}
   }`
 
   styles += `.crop-image-background:hover {
@@ -36,13 +36,13 @@ export default function InputCropImageComponent(settings) {
 
   styles += `.crop-image-text {
     ${typographicControllerToStyles(getSetting('text_typographic'))}
-    ${colorPropertyStyled(getSetting('text_color', '', {color: 'rgb(0, 0, 0)'}), 'color')}
+    ${colorPropertyStyled(getSetting('text_color', ''), 'color')}
     ${dimensionsControllerToStyles(getSetting('text_margin'), 'margin')}
   }`
 
   styles += `.crop-image-text:hover {
     ${typographicControllerToStyles(getSetting('text_typographic', ':hover'))}
-    ${colorPropertyStyled(getSetting('text_color', ':hover', {color: 'rgb(0, 0, 0)'}), 'color')}
+    ${colorPropertyStyled(getSetting('text_color', ':hover'), 'color')}
     ${dimensionsControllerToStyles(getSetting('text_margin', ':hover'), 'margin')}
   }`
 
@@ -59,16 +59,16 @@ export default function InputCropImageComponent(settings) {
 
   styles += `.state-disabled .crop-image-background {
     ${backgroundImageControllerToStyles(getSetting('background_image', '.state-disabled'))}
-    ${simplePropertyStyled(getSetting('background_position', '.state-disabled', 'center'), 'background-position')}
+    ${simplePropertyStyled(getSetting('background_position', '.state-disabled'), 'background-position')}
     ${simplePropertyStyled(getSetting('background_attachment', '.state-disabled'), 'background-attachment')}
-    ${simplePropertyStyled(getSetting('background_repeat', '.state-disabled', 'no-repeat'), 'background-repeat')}
+    ${simplePropertyStyled(getSetting('background_repeat', '.state-disabled'), 'background-repeat')}
     ${simplePropertyStyled(sliderStyled(getSetting('background_image_width', '.state-disabled')), 'background-image-width')}
-    ${simplePropertyStyled(getSetting('background_size', '.state-disabled', 'contain'), 'background-size')}
+    ${simplePropertyStyled(getSetting('background_size', '.state-disabled'), 'background-size')}
   }`
 
   styles += `.state-disabled .crop-image-text {
     ${typographicControllerToStyles(getSetting('text_typographic', '.state-disabled'))}
-    ${colorPropertyStyled(getSetting('text_color', '.state-disabled', {color: 'rgb(0, 0, 0)'}), 'color')}
+    ${colorPropertyStyled(getSetting('text_color', '.state-disabled'), 'color')}
     ${dimensionsControllerToStyles(getSetting('text_margin', '.state-disabled'), 'margin')}
   }`
   //state active
@@ -84,16 +84,16 @@ export default function InputCropImageComponent(settings) {
 
   styles += `.active .crop-image-background {
     ${backgroundImageControllerToStyles(getSetting('background_image', '.active'))}
-    ${simplePropertyStyled(getSetting('background_position', '.active', 'center'), 'background-position')}
+    ${simplePropertyStyled(getSetting('background_position', '.active'), 'background-position')}
     ${simplePropertyStyled(getSetting('background_attachment', '.active'), 'background-attachment')}
-    ${simplePropertyStyled(getSetting('background_repeat', '.active', 'no-repeat'), 'background-repeat')}
+    ${simplePropertyStyled(getSetting('background_repeat', '.active'), 'background-repeat')}
     ${simplePropertyStyled(sliderStyled(getSetting('background_image_width', '.active')), 'background-image-width')}
-    ${simplePropertyStyled(getSetting('background_size', '.active', 'contain'), 'background-size')}
+    ${simplePropertyStyled(getSetting('background_size', '.active'), 'background-size')}
   }`
 
   styles += `.active .crop-image-text {
     ${typographicControllerToStyles(getSetting('text_typographic', '.active'))}
-    ${colorPropertyStyled(getSetting('text_color', '.active', {color: 'rgb(0, 0, 0)'}), 'color')}
+    ${colorPropertyStyled(getSetting('text_color', '.active'), 'color')}
     ${dimensionsControllerToStyles(getSetting('text_margin', '.active'), 'margin')}
   }`
 

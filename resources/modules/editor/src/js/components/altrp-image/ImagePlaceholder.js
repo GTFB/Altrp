@@ -2,14 +2,11 @@ import styled from 'styled-components';
 import getResponsiveSetting from '../../../../../front-app/src/js/helpers/get-responsive-setting'
 
 const ImagePlaceholder = styled.div`&{
-  position: relative;
-  max-width: 100%;
-  overflow: hidden;
-  width:${props => {
+  ${props => {
   if (_.isNumber(props.width)) {
-    return props.width + 'px';
+    return 'width:' + props.width + 'px';
   }
-  return props.width ? props.width : '100%'
+  return props.width ? `width: ${props.width}` : ''
 }};
 ${(props) => {
   if(props.color){
@@ -19,9 +16,6 @@ ${(props) => {
 }}
 }
 &::before{
-  display: block;
-  content: '';
-  width: 100%;
 ${(props) => {
   const {settings, height} = props;
   let style = '';

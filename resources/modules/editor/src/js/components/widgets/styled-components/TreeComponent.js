@@ -21,7 +21,6 @@ export default function TreeComponent(settings, prefix) {
     "bp3-tree-node-caret-none",
     ["width", "icon_size", "slider"],
     ["height", "icon_size", "slider"],
-    () => "z-index: 99",
     "}",
 
     "bp3-tree",
