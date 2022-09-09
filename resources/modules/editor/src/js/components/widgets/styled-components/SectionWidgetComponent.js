@@ -738,7 +738,7 @@ export default function SectionWidgetComponent(settings, childrenLength, element
     ${altrpSectionBoxedHover(settings)}
   }
 
-  & > .altrp-section_section-boxed.altrp-section_section-boxed{
+  & > .altrp-section_section-boxed.altrp-section_section-boxed.altrp-section_section-boxed{
     ${altrpSectionSectionBoxed(settings)}
   }
 

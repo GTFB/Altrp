@@ -1001,8 +1001,15 @@ class InputSelectWidget extends Component {
     } else {
       options = [...options]
     }
+    console.log(this.props.element.getLockedSettings("sort_default"));
     if (!this.props.element.getLockedSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
+
+      options = _.sortBy(options, o => {
+        if(!_.isNaN(Number(o.label))){
+          return Number(o.label)
+        }
+        return o && (o.label ? o.label.toString() : o)
+      });
       if(this.props.element.getLockedSettings("options_sorting") === 'desc'){
         options = _.reverse(options)
       }

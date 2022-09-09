@@ -4,10 +4,16 @@
 ## Test Version
 ## Changelog
 
-### 1.2.8
+### 1.2.10
+* Feature: Altrp Keeps URLs for Redirecting After Login
+* Added Transparent Background for Select Widget
+
+### 1.2.9
 * Added new Plugins Hooks
   1. `template_updated`
   2. `template_before_delete`
+* Optimize Default Styles for Elements & Widgets: Button, Column, Divider, Section, Text
+* Fix Sorting Custom Numeric Options
 
 ### 1.2.8
 * Fix Page Deleting With Roles 

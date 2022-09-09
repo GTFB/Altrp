@@ -80,7 +80,7 @@ export default class TemplatesController {
     return setting
   }
 
-  public async settingsSet({ params, request, response}) {
+  public async settingsSet({ params, request, }) {
     const templateQuery = Template.query();
 
     if(isNaN(params.id)) {
@@ -113,12 +113,7 @@ export default class TemplatesController {
       setting.data = request.input("data")
     }
 
-    if(!await setting.save()) {
-      response.status(500)
-      return {
-        message: "Setting not saved"
-      }
-    }
+    await setting.save()
 
     return {
       success: true
@@ -523,12 +518,7 @@ export default class TemplatesController {
     if(template) {
       template.all_site = 0
 
-      if(!template.save()) {
-        response.status(500)
-        return {
-          message: "Conditions all_site not Saved"
-        }
-      }
+      await template.save()
       await template.load('pages')
 
       await template.related("pages").detach()
@@ -544,12 +534,8 @@ export default class TemplatesController {
           case "page":
             await Promise.all(condition.object_ids.map(async objectId => {
               const page = await Page.find(objectId)
-
               if(!page) {
-                response.status(500)
-                return {
-                  message: "Page not found and pages template not saved"
-                }
+                return
               }
               const pages_template = await PagesTemplate.create({
                 page_id: objectId,
@@ -562,7 +548,6 @@ export default class TemplatesController {
               })
 
               if(!pages_template) {
-                response.status(500)
                 return {
                   message: "Conditions page not Saved"
                 }

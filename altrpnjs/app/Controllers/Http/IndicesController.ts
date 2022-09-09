@@ -118,7 +118,9 @@ export default class IndicesController {
     await auth.use('web').authenticate()
 
     if (await auth?.user?.isAdmin()) {
-      return response.redirect( '/admin')
+      const url = request.cookie('__altrp_admin_redirect_from', '/admin')
+      response.clearCookie('__altrp_admin_redirect_from')
+      return response.redirect(url)
     } else {
       return response.redirect( '/')
     }

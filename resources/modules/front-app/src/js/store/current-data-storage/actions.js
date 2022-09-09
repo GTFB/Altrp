@@ -7,6 +7,7 @@ export const SET_CURRENT_DATASOURCE_LOADING = "SET_CURRENT_DATASOURCE_LOADING";
  *
  * @param {string}dataStorageName
  * @param {{}} data
+ * @param {boolean} withOptions
  * @return {{}} -
  *   {
  *     type: {string},
@@ -19,6 +20,10 @@ export function changeCurrentDataStorage(
   data = {},
   withOptions = false
 ) {
+  console.error(
+    dataStorageName,
+    data,
+    withOptions);
   const value = {
     type: CHANGE_CURRENT_DATASOURCE,
     data,

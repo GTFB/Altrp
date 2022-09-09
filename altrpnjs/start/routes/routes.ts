@@ -32,6 +32,13 @@ import Plugin from "App/Plugin"
 import _ from "lodash";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 
+
+Route.get('/altrp-redirect', async ({response, request}:HttpContextContract)=>{
+  const url = request.cookie('__altrp_redirect_from', '/')
+  response.clearCookie('__altrp_redirect_from')
+  return response.redirect(url)
+})
+
 // import {UserFactory} from "Database/factories";
 Route.get("/altrp-login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login").name = 'post.login'
@@ -371,4 +378,3 @@ ${e.message}` : `Controller ${controllerName} require error:`,
   })
 }).middleware('catch_unhandled_json')
   .prefix("/ajax")
-

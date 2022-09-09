@@ -423,7 +423,7 @@ export default class Page extends BaseModel {
 
     /** @var User $user */
     const pageRoleTable = await Database.from('page_role').select('*')
-    const pageRoles = pageRoleTable.filter(item => item.page_id === this.id)
+    const pageRoles = pageRoleTable.filter(item => item.page_id == this.id)
     /**
      * Если никаких ролей не указано и for_guest false, то всегда доступно
      */

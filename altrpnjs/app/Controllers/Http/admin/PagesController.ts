@@ -176,8 +176,10 @@ export default class PagesController {
   }
 
   public async show({ params }) {
-    const page = await Page.query().preload("roles").preload('categories').where("id", parseInt(params.id)).firstOrFail();
-
+    const page = await Page.query()
+      .where("id", parseInt(params.id)).firstOrFail();
+    await page.load('roles')
+    await page.load('categories')
     let data = page.serialize()
     const roles = data.roles.map(role => {
       return ({value:role.id, label:role.display_name})
