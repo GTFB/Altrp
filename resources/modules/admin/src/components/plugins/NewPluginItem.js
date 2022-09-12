@@ -71,8 +71,9 @@ class NewPluginItem extends Component {
           <h2 className="search-plugins__item-title">{plugin.title}</h2>
           <div className="search-plugins__item-version">{plugin.version}</div>
         </div>
-        <p className="search-plugins__item-description">
-          {plugin.description}
+        <p className="search-plugins__item-description" dangerouslySetInnerHTML={{
+          __html:plugin.description
+        }}>
         </p>
         <div className="search-plugins__item-btn">
           {

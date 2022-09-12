@@ -104,7 +104,10 @@ class Editor extends Component {
     this.showGlobalEffectsPanel = this.showGlobalEffectsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
-    // store.subscribe(this.templateStatus.bind(this));
+
+    _.set(window, 'altrp.editorLoaded', true)
+    const EditorLoadedEvent = new Event('altrp-editor-loaded')
+    window.dispatchEvent(EditorLoadedEvent);
   }
   /**
    * Метод подписчик на изменение состояния Редактора из Редакс хранилища
@@ -297,9 +300,6 @@ class Editor extends Component {
         })) || []
       )
     );
-    _.set(window, 'altrp.editorLoaded', true)
-    const EditorLoadedEvent = new Event('altrp-editor-loaded')
-    window.dispatchEvent(EditorLoadedEvent);
   }
 
   /**
