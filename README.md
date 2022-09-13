@@ -4,6 +4,9 @@
 ## Test Version
 ## Changelog
 
+### 1.2.11
+* Added Support for `Soft Deletes` Models
+
 ### 1.2.10
 * Feature: Altrp Keeps URLs for Redirecting After Login
 * Added Transparent Background for Select Widget
