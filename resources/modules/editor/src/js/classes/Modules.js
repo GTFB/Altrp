@@ -17,7 +17,6 @@ class Modules {
     this.templateDataStorage = new TemplateDataStorage(this);
   }
   loaded(){
-    console.error('t');
     this.saveImportModule.load();
   }
 }

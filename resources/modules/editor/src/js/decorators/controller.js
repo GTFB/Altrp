@@ -8,7 +8,7 @@ function componentDidUpdate(prevProps, prevState) {
   if(this.props.controlId === '__template_name'){
     return false
   }
-  if (!this.props.repeater) {
+  if (!this.props.repeater && ! this.props.group) {
     let elementValue = this.props.currentElement.getSettings(
       this.props.controlId
     );
@@ -115,6 +115,20 @@ function getSettings(settingName, locked= false) {
      * проблему, вроде решил, но на всякий случай оставим
      */
     return _.isFunction(this.getDefaultValue) ? this.getDefaultValue() : "";
+  } else if (this.props.controller.data.group){
+
+    if (
+      this.props.controller.data.group.getSettings(
+        this.props.controller.data.group.props.controlId
+      )
+    ) {
+      // console.log(this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true));
+      return this.props.controller.data.group.getSettings(
+        this.props.controller.data.group.props.controlId
+      )[ this.props.controller.data.controlId +
+      getElementSettingsSuffix(this.props.controller, true)
+        ];
+    }
   }
   /**
    * Repeater не может менять своё значение при смене разрешения
@@ -156,9 +170,9 @@ function getSettings(settingName, locked= false) {
  * @param {boolean} updateElement - по умолчанию обновляем текущий элемент тоже
  */
 function _changeValue(value, updateElement = true) {
-  if (typeof value === "object" && value.length !== undefined) {
+  if (_.isArray(value)) {
     value = [...value];
-  } else if (typeof value === "object") {
+  } else if (_.isObject(value)) {
     value = { ...value };
   }
 

@@ -187,7 +187,7 @@ class Updates extends Component {
         <button className="btn_success btn" onClick={this.installTestAltrp}>Install Test</button>
       </React.Fragment>}
       {changelog && <React.Fragment>
-        <h4 className="mt-4 mb-2">Changelog:</h4>
+        <h4 className="mt-4 mb-2">Current Version Changelog:</h4>
         <Scrollbars
           style={{ height:500}}
         >

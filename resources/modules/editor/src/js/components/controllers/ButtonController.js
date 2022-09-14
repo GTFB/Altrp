@@ -25,7 +25,7 @@ class ButtonController extends Component {
       <div className="controller-container__label textcontroller-responsive">
         {this.props.label || ''}
       </div>
-      <div className="control-group control-button-container" id="buttonList">
+      <div className="control-group control-button-container">
        <button onClick={this.onClick}
                className='btn btn_success' >{buttonText}</button>
 

@@ -40,6 +40,10 @@ class ControlStack extends FrontElement {
     window.controllersManager.setControlsCache(this.getName() + controlId, {...args, controlId});
     this.controlsIds.push(controlId);
   }
+
+  addGroup(controlId, args){
+
+  }
 }
 
 export default ControlStack

@@ -137,10 +137,10 @@ export function actionsControllers(
         value: 'table_to_xml',
         label: 'Table to XML'
       },
-      {
-        value: 'table_to_xls',
-        label: 'Table to XLS'
-      },
+      // {
+      //   value: 'table_to_xls',
+      //   label: 'Table to XLS'
+      // },
       {
         value: 'login',
         label: 'Login'

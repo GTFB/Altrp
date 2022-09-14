@@ -147,7 +147,9 @@ export function iconsManager() {
  */
 export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
-  if (controller.type === "repeater" || controller.isStateless()) {
+  if (controller.type === "repeater" ||
+    controller.type === "group" ||
+    controller.isStateless()) {
     suffix_1 = "";
   }
   let suffix_2 =

@@ -38,7 +38,7 @@ export default async function dataToCSV(data = {}, filename) {
         return line;
       })
       .join("\n");
-  let blob = new Blob([csvContent], {
+  let blob = new Blob(['\ufeff' +csvContent], {
     type: "text/csv",
     charset: "windows-1251"
     // charset: 'utf-8',

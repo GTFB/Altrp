@@ -23,14 +23,10 @@ class FrontElement {
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
-    // if(! this.getName()){
-    //   console.log(this);
-    // }
     if(isEditor() && ! withoutComponent && this.getName()){
       this.componentClass = window.elementsManager.getComponentClass(this.getName());
     } else if(window.frontElementsManager && ! withoutComponent){
 
-      console.log(this);
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
     this.parent = null;
@@ -115,8 +111,6 @@ class FrontElement {
     }
     if(! this.parent){
       return null;
-      // console.log(type);
-      // console.log(this);
     }
     return this.parent.findClosestByType(type)
   }

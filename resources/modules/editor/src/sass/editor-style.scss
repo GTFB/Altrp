@@ -852,7 +852,51 @@ button {
 .controller-container__label {
   text-transform: capitalize;
 }
+.controller-container__group{
+  display:flex;
+  position: relative;
+  align-items: center;
+}
+.controller-container__group-popover{
+  margin: -4px auto 5px;
+  left: 0;
+  right: 0;
+  top: calc(100% + 20px);
+  width: 90%;
+  z-index: 10000;
+  background-color: #fff;
+  position: absolute;
+  padding: 15px;
+  -webkit-box-shadow: 0 2px 15px rgb(0 0 0 / 30%);
+  box-shadow: 0 2px 15px rgb(0 0 0 / 30%);
 
+}
+.controller-container__undo{
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+  path{
+    fill: $grey;
+  }
+}
+.controller-container__button-group{
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  border-radius: 3px;
+  background-color: $grey;
+  margin-left: 10px;
+  svg{
+    width: 13px;
+    height: 13px;
+    path{
+      fill: #fff;
+    }
+  }
+  &_active{
+    background-color: $turquoise;
+  }
+}
 .control-slider-label {
   text-transform: capitalize;
   font-size: 12px;

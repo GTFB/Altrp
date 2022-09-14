@@ -1,6 +1,6 @@
 /**
  * Генерация и загрузка XLS-файла
- * @param {Object data} Объект данных
+ * @param {{}} data
  * @param {String} filename Имя файла
  */
 export default async function dataToXLS(data, filename = "table", templateName = "") {

@@ -176,15 +176,16 @@ export default class PageGenerator extends BaseGenerator {
       extra_header_styles: '',
       extra_footer_styles: '',
     }
+    extraStyles.extra_header_styles += `<style id="extra_header_styles">`
     for (let element of elementsList) {
       const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
       if (fs.existsSync(fileName)) {
         let content = fs.readFileSync(fileName, {encoding: 'utf8'})
         content = content.replace(/\n/g, '')
-        extraStyles.extra_header_styles += `
-<style id="extra_header_styles">${content}</style>`
+        extraStyles.extra_header_styles += content
       }
     }
+    extraStyles.extra_header_styles += `</style>`
     let global_styles_editor: AltrpMeta | string | null = await AltrpMeta.query().where('meta_name', 'global_styles_editor').first()
     if (global_styles_editor) {
       global_styles_editor = global_styles_editor.meta_value
