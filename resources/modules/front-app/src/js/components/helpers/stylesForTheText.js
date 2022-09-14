@@ -810,17 +810,6 @@ export function getTextStyles(settings, id) {
   const startNumber = getResponsiveSetting(settings, 'start_number')
   styles += `${parentClass} .altrp-text ol {`;
 
-  styles += `counter-reset:list-number ${startNumber};`
-
-  styles += `li {
-    list-style:none;
-  }`;
-  styles += `li::before{
-      margin: 0px 5px 0px 0px;
-      content:counter(list-number) ".";
-      counter-increment:list-number;
-   }`;
-
   const numberedListMargin = getResponsiveSetting(settings, 'text_numbered_list_margin');
 
   if (numberedListMargin) {
