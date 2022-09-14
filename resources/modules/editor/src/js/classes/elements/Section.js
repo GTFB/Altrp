@@ -767,7 +767,6 @@ class Section extends BaseElement{
     this.addControl('object_fit_select', {
       type: CONTROLLER_SELECT,
       label: 'object-fit',
-      default: 'cover',
       options: [
         {
           value: 'initial',

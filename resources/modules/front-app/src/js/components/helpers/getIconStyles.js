@@ -6,7 +6,7 @@ const getIconStyles = (settings, id) => {
     let styles = ``
 
     styles += `.icon-widget-wrapper {
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '', 'column') , 'flex-direction')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '') , 'flex-direction')}
     }`
 
     styles += `.icon-widget__icon * {
@@ -38,63 +38,63 @@ const getIconStyles = (settings, id) => {
     }`
 
     styles += `.title {
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '', 'center') , 'text-align')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '') , 'text-align')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin') , "margin")}
     }`
 
     styles += `.state-disabled .title {
-          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled', 'center') , 'text-align')}
+          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled') , 'text-align')}
           ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography', '.state-disabled') )}
-          ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.state-disabled', {color: 'rgb(0, 0, 0)'}) , 'color')}
+          ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.state-disabled') , 'color')}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding', '.state-disabled') , "padding")}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin', '.state-disabled') , "margin")}
     }`
 
     styles += `.active .title {
-            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active', 'center') , 'text-align')}
+            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active') , 'text-align')}
             ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography', '.active') )}
-            ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.active', {color: 'rgb(0, 0, 0)'}) , 'color')}
+            ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.active') , 'color')}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding', '.active') , "padding")}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin', '.active') , "margin")}
     }`
 
     styles += `.title:hover {
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography', ':hover') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', ':hover', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', ':hover') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding', ':hover') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin', ':hover') , "margin")}
     }`
 
     styles += `.description {
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '', 'center') , 'text-align')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '') , 'text-align')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin') , "margin")}
     }`
 
     styles += `.state-disabled .description {
-          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled', 'center') , 'text-align')}
+          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled') , 'text-align')}
           ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography', '.state-disabled') )}
-          ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.state-disabled', {color: 'rgb(0, 0, 0)'}) , 'color')}
+          ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.state-disabled') , 'color')}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding', '.state-disabled') , "padding")}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', '.state-disabled') , "margin")}
     }`
 
     styles += `.active .description {
-            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active', 'center') , 'text-align')}
+            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active') , 'text-align')}
             ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography', '.active') )}
-            ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.active', {color: 'rgb(0, 0, 0)'}) , 'color')}
+            ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.active') , 'color')}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding', '.active') , "padding")}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', '.active') , "margin")}
     }`
 
     styles += `.description:hover {
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography', ':hover') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', ':hover', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', ':hover') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding', ':hover') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', ':hover') , "margin")}
     }`

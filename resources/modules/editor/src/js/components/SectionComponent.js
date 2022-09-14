@@ -64,6 +64,10 @@ import redirect from "../../../../front-app/src/js/functions/redirect";
     padding-left: 0;
     padding-right: 0;
   }
+
+  .altrp-section .section-video-controllers {
+    object-fit:cover;
+  }
 `);
 
 class SectionComponent extends Component {

@@ -374,8 +374,6 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   if (borderRadiusDisabled) {
     styles += dimensionsStyled(borderRadiusDisabled, "border-radius");
   }
-  //fix display with <strong> and <b> tags
-  styles += "display:block;";
   styles += `} `;
   //end of state disabled
   //start state active
@@ -404,7 +402,6 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   if (borderRadiusActive) {
     styles += dimensionsStyled(borderRadiusActive, "border-radius");
   }
-  styles += "display:block;";
   styles += `} `;
   //end state active
 

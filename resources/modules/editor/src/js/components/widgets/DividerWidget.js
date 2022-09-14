@@ -43,6 +43,15 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
     display: flex;
     justify-content: center;
   }
+
+  .altrp-divider-image {
+    height:20px;
+  }
+
+  .altrp-divider-container-label {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
 `);
 
 class DividerWidget extends Component {

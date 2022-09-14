@@ -51,6 +51,25 @@ import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURL
   align-items: center;
 }
 
+.altrp-heading {
+  display: block;
+}
+
+.active .altrp-heading {
+  display: block;
+}
+
+.state-disabled .altrp-heading {
+  display: block;
+}
+
+.altrp-heading.altrp-background-image {
+  background-position: top left;
+  background-attachment: scroll;
+  background-repeat: repeat;
+  background-size: unset;
+}
+
 .altrp-heading-wrapper {
   display: flex;
   flex-direction: column;

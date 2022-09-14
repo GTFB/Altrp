@@ -688,8 +688,6 @@ export function getHeadingStyles(settings, id) {
   if (borderRadius) {
     styles += sizeStyled(borderRadius, "border-radius");
   }
-  //fix display with <strong> and <b> tags
-  styles += "display:block;";
   styles += `} `;
   //hover
   styles += `${parentClass} .altrp-heading:hover {`;
