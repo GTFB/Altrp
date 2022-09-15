@@ -23,6 +23,10 @@ import '../../../../../editor/src/sass/blueprint.scss'
   align-items: flex-start;
 }
 
+.altrp-field-radio.bp3-control.bp3-radio input:checked ~ .bp3-control-indicator::before {
+  background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 28%, rgba(0, 0, 0, 0) calc(28% + 6%));
+}
+
 .altrp-field-container .bp3-radio {
   margin-bottom: 0;
 }
@@ -81,6 +85,9 @@ import '../../../../../editor/src/sass/blueprint.scss'
   color: red;
   font-size: inherit;
   padding-left: 10px;
+  line-height: 1.5;
+  font-weight: normal;
+  font-family: Open Sans;
 }
 .altrp-field-label {
   font-size: 16px;

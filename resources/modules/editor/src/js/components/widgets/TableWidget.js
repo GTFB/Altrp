@@ -181,6 +181,12 @@ import {setGlobalElementTable} from "../../../../../front-app/src/js/store/eleme
 .altrp_table-zIndex {
   z-index: 1;
 }
+.replace-text {
+  line-height: 0.8;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: "Open Sans";
+}
 `)
 
 class TableWidget extends Component {

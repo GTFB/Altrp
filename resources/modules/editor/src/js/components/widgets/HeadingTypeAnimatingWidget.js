@@ -2,6 +2,7 @@ import Animating from "../altrp-heading/Animating";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-heading {
+  display: block;
   margin-top: 5px;
   margin-right: 0;
   margin-bottom: 5px;
@@ -86,6 +87,10 @@ import Animating from "../altrp-heading/Animating";
 
 .altrp-animating-rotating {
   display: flex;
+}
+
+.altrp-animating-highlighted-svg svg path {
+  stroke-width: 8;
 }
 
 `)

@@ -298,10 +298,6 @@ class HeadingTypeAnimating extends BaseElement {
     this.addControl("width_shape_animating", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 8,
-        unit: '',
-      },
       max: 20,
       min: 0,
     });

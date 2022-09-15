@@ -582,15 +582,7 @@ class InputAccept extends BaseElement {
 
     this.addControl("required_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        // size: 13,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      }
+      label: "Typographic"
     });
 
     this.endControlSection();
@@ -615,9 +607,6 @@ class InputAccept extends BaseElement {
     this.addControl("background_section_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
       max: 1,
       min: 0,
       step: 0.01
