@@ -119,14 +119,8 @@ class AltrpImage extends Component {
     if (prevProps.scrollPosition === this.props.scrollPosition && prevState.update === this.state.update) {
       return;
     }
-    let scroller = window.mainScrollbars;
-    if(! scroller){
-      scroller = document.querySelector('.front-app-content');
-    }
-    if(! scroller){
-      scroller = document.querySelector('.front-app');
-    }
-    if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, scroller)) {
+    return
+    if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, document.documentElement)) {
       clearTimeout(this.timeoutId);
       this.setState(state => ({...state, visible: true}));
     }
@@ -135,6 +129,7 @@ class AltrpImage extends Component {
   render() {
     let media = {...this.props.image};
     const {visible} = this.state;
+
     const noDefault = this.props.noDefault || false;
     const placeholderStyles = {};
 

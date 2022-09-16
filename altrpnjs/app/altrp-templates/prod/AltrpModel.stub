@@ -16,7 +16,7 @@ const _ = __importStar(require("lodash"));
 {{{imports}}}
 
 class {{{classname}}} extends Orm.BaseModel {
-
+  {{{constructor}}}
   {{{properties}}}
   {{{computed}}}
   {{{methods}}}

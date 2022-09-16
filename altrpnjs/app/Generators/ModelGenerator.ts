@@ -91,6 +91,7 @@ export default class ModelGenerator extends BaseGenerator {
         computed: this.getComputedContent(),
         relations: this.getRelationsContent(),
         methods: this.getMethodsContent(),
+        constructor: this.getConstructorContent(),
         custom,
         custom_end,
       })
@@ -103,8 +104,11 @@ export default class ModelGenerator extends BaseGenerator {
   }
   private _getProdImportsContent(): string {
     return `
-    const Event =__importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Event"));
 
+const Event =__importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Event"));
+${this.model.soft_deletes ? `
+const delete_1 = require("../../helpers/delete");
+` : ''}
 ${_.uniqBy(
   this.altrp_relationships
       .filter(relationship => relationship?.altrp_target_model?.name),
@@ -119,7 +123,6 @@ ${_.uniqBy(
     return `import * as luxon from 'luxon'
 import * as Orm from '@ioc:Adonis/Lucid/Orm'
 import Event from '@ioc:Adonis/Core/Event'
-import { softDelete, forceDelete } from "../../helpers/delete"
 ${_.uniqBy(
   this.altrp_relationships
       .filter(relationship => relationship?.altrp_target_model?.name),
@@ -128,6 +131,9 @@ ${_.uniqBy(
         `import ${relationship?.altrp_target_model?.name} from './${relationship?.altrp_target_model?.name}'`)
       .join('\n')
     }
+${this.model.soft_deletes ? `
+import {softDeleteQuery, softDelete} from "../../helpers/delete";
+` : ''}
 `
   }
 
@@ -161,6 +167,16 @@ decorate([
   metadata("design:type", Number)
 ], ${this.model.name}.prototype, "id", void 0);
 ${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').join('')}
+${this.model.soft_deletes ? `
+decorate([
+    (0, Orm.beforeFind)(),
+    __metadata("design:type", Object)
+], ${this.model.name}, "softDeletesFind", void 0);
+decorate([
+    (0, Orm.beforeFetch)(),
+    __metadata("design:type", Object)
+], ${this.model.name}, "softDeletesFetch", void 0);
+` : ''}
 `
   }
 
@@ -174,6 +190,34 @@ ${columns.map(column => column.renderForModel()).join('')}
   }
 
   private getMethodsContent(): string {
+    if(this.model.soft_deletes && ! isProd()){
+      return `
+  @Orm.beforeFind()
+  public static softDeletesFind = softDeleteQuery;
+
+  @Orm.beforeFetch()
+  public static softDeletesFetch = softDeleteQuery;
+
+
+  public delete = async ()=>{
+    await softDelete(this)
+  }
+
+
+  public forceDelete = async ()=>{
+
+    try {
+      await super.delete()
+
+      return true
+    } catch (e) {
+      console.error(e)
+
+      return false
+    }
+  }
+      `
+    }
     return ''
   }
 
@@ -194,6 +238,34 @@ ${this.altrp_relationships.map(relationship => relationship.renderForModel()).jo
   private getProdStaticPropertiesContent() {
     return `
 ${this.model.name}.table = '${this.table.name}';
+${this.model.soft_deletes ? `
+${this.model.name}.softDeletesFind = delete_1.softDeleteQuery;
+${this.model.name}.softDeletesFetch = delete_1.softDeleteQuery;
+` : ''}
 `;
+  }
+
+  private getConstructorContent(): string {
+    if(this.model.soft_deletes){
+      return`
+  constructor() {
+    super(...arguments);
+    this.delete = async () => {
+        await (0, delete_1.softDelete)(this);
+    };
+    this.forceDelete = async () => {
+      try {
+        await super.delete();
+        return true;
+      }
+      catch (e) {
+        console.error(e);
+        return false;
+      }
+    };
+  }
+      `
+    }
+    return  ''
   }
 }

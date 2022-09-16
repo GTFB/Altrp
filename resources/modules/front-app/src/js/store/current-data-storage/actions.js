@@ -20,10 +20,6 @@ export function changeCurrentDataStorage(
   data = {},
   withOptions = false
 ) {
-  console.error(
-    dataStorageName,
-    data,
-    withOptions);
   const value = {
     type: CHANGE_CURRENT_DATASOURCE,
     data,

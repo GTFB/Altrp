@@ -1,7 +1,8 @@
 
 import { DateTime } from 'luxon'
-import {BaseModel, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, beforeFetch, beforeFind, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import Category from "App/Models/Category";
+import { softDelete, softDeleteQuery} from "../../helpers/delete";
 
 export default class Menu extends BaseModel {
   @column({ isPrimary: true })
@@ -43,4 +44,27 @@ export default class Menu extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @beforeFind()
+  public static softDeletesFind = softDeleteQuery;
+
+  @beforeFetch()
+  public static softDeletesFetch = softDeleteQuery;
+
+  public delete = async ()=>{
+    await softDelete(this)
+  }
+
+  public forceDelete = async ()=>{
+
+    try {
+      await super.delete()
+
+      return true
+    } catch (e) {
+      console.error(e)
+
+      return false
+    }
+  }
 }

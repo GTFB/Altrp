@@ -81,5 +81,5 @@ ${function () {
   </style>
 `
   placeholderStyles = objectToStylesString(placeholderStyles)
-  return `${addingStyles}<div class="altrp-image-placeholder" width="${props.width}" style="${placeholderStyles}" height="${props.height}"> <span class="altrp-skeleton__span"></span></div>`
+  return `${addingStyles} <span class="altrp-skeleton__span"></span>`
 }

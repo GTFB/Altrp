@@ -78,8 +78,7 @@ export default class PageGenerator extends BaseGenerator {
         })
       })
     })
-    const _frontend_route = page.serialize()
-    _.set(_frontend_route, 'templates', [])
+
     let elements_list: string[] | string = await page.extractElementsNames()
     const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
     elements_list = elements_list.map(e => `'${e}'`)
@@ -88,7 +87,7 @@ export default class PageGenerator extends BaseGenerator {
     const head_end = get_altrp_setting('head_end', '', true)
     const body_start = get_altrp_setting('body_start', '', true)
     const body_end = get_altrp_setting('body_end', '', true)
-    console.log(head_start);
+
     elements_list = elements_list.join(',')
     const favicons = this.getFavicons()
     const front_app_css = this.getFrontAppCss()
@@ -142,7 +141,6 @@ export default class PageGenerator extends BaseGenerator {
           elements_list,
           pages: JSONStringifyEscape(pages),
           altrp_settings: JSONStringifyEscape(altrp_settings),
-          _frontend_route: JSONStringifyEscape(_frontend_route),
           page_id: page.id,
           title: page.title,
           version: getLatestVersion(),
@@ -176,15 +174,16 @@ export default class PageGenerator extends BaseGenerator {
       extra_header_styles: '',
       extra_footer_styles: '',
     }
+    extraStyles.extra_header_styles += `<style id="extra_header_styles">`
     for (let element of elementsList) {
       const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
       if (fs.existsSync(fileName)) {
         let content = fs.readFileSync(fileName, {encoding: 'utf8'})
         content = content.replace(/\n/g, '')
-        extraStyles.extra_header_styles += `
-<style id="extra_header_styles">${content}</style>`
+        extraStyles.extra_header_styles += content
       }
     }
+    extraStyles.extra_header_styles += `</style>`
     let global_styles_editor: AltrpMeta | string | null = await AltrpMeta.query().where('meta_name', 'global_styles_editor').first()
     if (global_styles_editor) {
       global_styles_editor = global_styles_editor.meta_value

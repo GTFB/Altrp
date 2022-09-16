@@ -5,7 +5,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_SLIDER,
   CONTROLLER_SHADOW,
-  CONTROLLER_CHOOSE,
+  CONTROLLER_GROUP,
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
   CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER,
@@ -77,11 +77,264 @@ export function advancedTabControllers(element) {
   // });
 
   element.endControlSection();
-
+  /*
   element.startControlSection(
-    'motions_effect', {
+    'scrolling_effects', {
       tab: TAB_ADVANCED,
-      label: 'Motion Effects',
+      label: 'Scrolling Effects',
+    }
+  );
+
+  element.addControl('vertical_scroll', {
+    label: 'Vertical Scroll',
+    type: CONTROLLER_GROUP,
+    fields: [
+      {
+        controlId: 'direction',
+        label : 'Direction',
+        type: CONTROLLER_SELECT,
+        options: [
+          {
+            value: 'up',
+            label: 'Up',
+          },
+          {
+            value: 'down',
+            label: 'Down',
+          },
+        ]
+      },
+      {
+        controlId: 'speed',
+        label : 'Speed',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 4
+        },
+        max: 10,
+        min: 0,
+        step: 0.1
+      },
+      {
+        controlId: 'viewport_top',
+        label : 'Viewport Top',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 0
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+      {
+        controlId: 'viewport_bottom',
+        label : 'Viewport Bottom',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 100
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+    ],
+  })
+
+  element.addControl('horizontal_scroll', {
+    label: 'Horizontal Scroll',
+    type: CONTROLLER_GROUP,
+    fields: [
+      {
+        controlId: 'direction',
+        label : 'Direction',
+        type: CONTROLLER_SELECT,
+        options: [
+          {
+            value: 'up',
+            label: 'Up',
+          },
+          {
+            value: 'down',
+            label: 'Down',
+          },
+        ]
+      },
+      {
+        controlId: 'speed',
+        label : 'Speed',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 4
+        },
+        max: 10,
+        min: 0,
+        step: 0.1
+      },
+      {
+        controlId: 'viewport_top',
+        label : 'Viewport Top',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 0
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+      {
+        controlId: 'viewport_bottom',
+        label : 'Viewport Bottom',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 100
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+    ],
+  })
+
+  element.addControl('transparency', {
+    label: 'Transparency',
+    type: CONTROLLER_GROUP,
+    fields: [
+      {
+        controlId: 'direction',
+        label : 'Direction',
+        type: CONTROLLER_SELECT,
+        options: [
+          {
+            value: 'out-in',
+            label: 'Fade In',
+          },
+          {
+            value: 'in-out',
+            label: 'Fade Out',
+          },
+          {
+            value: 'in-out-in',
+            label: 'Fade Out In',
+          },
+          {
+            value: 'out-in-out',
+            label: 'Fade In Out',
+          },
+        ]
+      },
+      {
+        controlId: 'level',
+        label : 'Level',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 10
+        },
+        max: 10,
+        min: 0,
+        step: 0.1
+      },
+      {
+        controlId: 'viewport_top',
+        label : 'Viewport Top',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 20
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+      {
+        controlId: 'viewport_bottom',
+        label : 'Viewport Bottom',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 80
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+    ],
+  })
+
+  element.addControl('blur', {
+    label: 'Blur',
+    type: CONTROLLER_GROUP,
+    fields: [
+      {
+        controlId: 'direction',
+        label : 'Direction',
+        type: CONTROLLER_SELECT,
+        options: [
+          {
+            value: 'out-in',
+            label: 'Fade In',
+          },
+          {
+            value: 'in-out',
+            label: 'Fade Out',
+          },
+          {
+            value: 'in-out-in',
+            label: 'Fade Out In',
+          },
+          {
+            value: 'out-in-out',
+            label: 'Fade In Out',
+          },
+        ]
+      },
+      {
+        controlId: 'level',
+        label : 'Level',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 10
+        },
+        max: 10,
+        min: 0,
+        step: 0.1
+      },
+      {
+        controlId: 'viewport_top',
+        label : 'Viewport Top',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 20
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+      {
+        controlId: 'viewport_bottom',
+        label : 'Viewport Bottom',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 80
+        },
+        units: ['%'],
+        max: 100,
+        min: 0,
+        step: 1
+      },
+    ],
+  })
+
+  element.endControlSection();
+*/
+  element.startControlSection(
+    'entrance_animation', {
+      tab: TAB_ADVANCED,
+      label: 'Entrance Animation',
     }
   );
 
@@ -1077,14 +1330,81 @@ export function advancedTabControllers(element) {
     label: 'Skeleton Settings',
   });
 
-  element.addControl('skeleton_width', {
+  element.addControl('skeleton:enable', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Skeleton Enable',
+    responsive: false
+  })
+
+  element.addControl('skeleton:preview', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Preview Enable',
+    responsive: false
+  })
+
+  element.addControl('skeleton:width', {
     label: "Width",
     dynamic: false,
   });
 
-  element.addControl('skeleton_height', {
+  element.addControl('skeleton:height', {
     label: "Height",
     dynamic: false,
+  });
+
+  element.addControl('skeleton:radius', {
+    label: "Radius",
+    type: CONTROLLER_DIMENSIONS,
+  });
+
+  element.addControl('skeleton:columns', {
+    label: "Columns",
+    type: CONTROLLER_SLIDER,
+  });
+
+  element.addControl('skeleton:rows', {
+    label: "Rows",
+    type: CONTROLLER_NUMBER,
+  });
+
+  element.addControl('skeleton:gap', {
+    label: "Gap",
+    type: CONTROLLER_SLIDER,
+    units: ['px','%', 'vw', 'vh'],
+    max: 100,
+    min: 0,
+    default: {
+      unit: 'ms',
+      size: 2000
+    }
+  });
+
+  element.addControl('skeleton:shimmer', {
+    type: CONTROLLER_SWITCHER,
+    default: true,
+    label: 'Skeleton Shimmer',
+  })
+
+  element.addControl('skeleton:speed', {
+    type: CONTROLLER_SLIDER,
+    label: 'Shimmer Speed',
+    units: ['ms'],
+    max: 5000,
+    min: 0,
+    default: {
+      unit: 'ms',
+      size: 2000
+    }
+  })
+
+  element.addControl('skeleton:primary_color', {
+    label: "Primary Color",
+    type: CONTROLLER_COLOR,
+  });
+
+  element.addControl('skeleton:secondary_color', {
+    label: "Secondary Color",
+    type: CONTROLLER_COLOR,
   });
 
   element.endControlSection();

@@ -1001,7 +1001,6 @@ class InputSelectWidget extends Component {
     } else {
       options = [...options]
     }
-    console.log(this.props.element.getLockedSettings("sort_default"));
     if (!this.props.element.getLockedSettings("sort_default")) {
 
       options = _.sortBy(options, o => {

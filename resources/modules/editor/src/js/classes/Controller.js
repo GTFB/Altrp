@@ -70,7 +70,7 @@ class Controller {
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (! this.data.repeater) {
+    if (! this.data.repeater && ! this.data.group) {
       if (updateElement) {
         currentElement.setSettingValue(this.getSettingName(), value, true, this.data.locked);
       }
@@ -93,13 +93,23 @@ class Controller {
         );
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
-    } else {
+    } else if(this.data.repeater ){
       /**
        * @type {RepeaterController}
        * @public
        */
       this.data.repeater.changeValue(
         this.data.itemIndex,
+        this.data.controlId + getElementSettingsSuffix(this, true),
+        value
+      );
+      // console.error(this.data.controlId + getElementSettingsSuffix(this, true));
+    } else if(this.data.group ){
+      /**
+       * @type {GroupController}
+       * @public
+       */
+      this.data.group.changeValue(
         this.data.controlId + getElementSettingsSuffix(this, true),
         value
       );

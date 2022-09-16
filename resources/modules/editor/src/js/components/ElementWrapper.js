@@ -382,6 +382,9 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
+    if(this.element.settings['skeleton:preview'] && this.element.settings['skeleton:enable']){
+      return <AltrpSkeleton element={this.element}/>
+    }
     const element = this.props.element
     let {
       isFixed,

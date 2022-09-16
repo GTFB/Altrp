@@ -60,7 +60,7 @@
         <<<ignore_start>>>
         window.altrpPages = {{{pages}}};
         window.altrpElementsLists = [{{{elements_list}}}];
-        window.currentPage = {{{_frontend_route}}};
+        window.currentPage = window.altrpPages[0];
         <<<ignore_end>>>
 {{=<% %>=}}
         window.pageStorage = {};

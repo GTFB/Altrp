@@ -211,6 +211,10 @@ export default class Page extends BaseModel {
 
         const template = await Template.getTemplate(this.id, contentArea.name)
         if (template) {
+          if (deleteContent) {
+            _.set(template, 'html_content', null)
+            _.set(template, 'styles', null)
+          }
           data.push({
             area_name: contentArea.name,
             id: contentArea.name,
@@ -219,7 +223,6 @@ export default class Page extends BaseModel {
           })
         }
       }
-
 
     }
     let popups = await Template.getTemplates(this.id, 'popup')
@@ -1009,6 +1012,7 @@ export default class Page extends BaseModel {
     if(data.settings?.styles){
       delete data.settings.styles
     }
+
     for (let settingName in _data.settings) {
       if (_data.settings.hasOwnProperty(settingName)) {
         if (settingName.toLowerCase().indexOf('actions') > -1) {
@@ -1033,6 +1037,38 @@ export default class Page extends BaseModel {
       if (_data.indexOf(d) > -1) {
         (data.dependencies = data.dependencies || []).push(d)
       }
+    }
+    Page.purgeSettings(data)
+  }
+
+  static purgeSettings(data:{
+    settings?:object,
+    settingsLock?:object,
+  } = {
+  }){
+    const prefixes = [
+      'skeleton',
+    ]
+    if(_.isObject(data.settings)){
+      prefixes.forEach((prefix)=>{
+        prefix += ':'
+        for(let key in data.settings){
+          if(data.settings.hasOwnProperty(key) && key.startsWith(prefix)){
+            console.log(data.settings[key]);
+            delete data.settings[key]
+          }
+        }
+      })
+    }
+    if(_.isObject(data.settingsLock)){
+      prefixes.forEach((prefix)=>{
+        prefix += ':'
+        for(let key in data.settingsLock){
+          if(data.settingsLock.hasOwnProperty(key) && key.startsWith(prefix)){
+            delete data.settingsLock[key]
+          }
+        }
+      })
     }
   }
 

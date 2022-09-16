@@ -8,7 +8,6 @@ import {
 } from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
-import {addSettings} from "../store/elements-settings/actions";
 import INPUT_WIDGETS from "../constants/INPUT_WIDGETS";
 window.elementsCount = 0
 class FrontElement {
@@ -23,10 +22,10 @@ class FrontElement {
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
-
     if(isEditor() && ! withoutComponent && this.getName()){
       this.componentClass = window.elementsManager.getComponentClass(this.getName());
     } else if(window.frontElementsManager && ! withoutComponent){
+
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
     this.parent = null;
@@ -111,8 +110,6 @@ class FrontElement {
     }
     if(! this.parent){
       return null;
-      // console.log(type);
-      // console.log(this);
     }
     return this.parent.findClosestByType(type)
   }

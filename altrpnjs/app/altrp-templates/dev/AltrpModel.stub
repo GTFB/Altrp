@@ -53,21 +53,13 @@ export default class {{{classname}}} extends Orm.BaseModel {
     }
 
   @Orm.afterFind()
-    public static afterFind(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterFind", data: model})
-    }
-
-  @Orm.afterPaginate()
-    public static afterFind(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterPaginate", data: model})
-    }
-
-  public softDelete(column) {
-    softDelete(this, column)
+  public static afterFind(model) {
+    Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterFind", data: model})
   }
 
-  public async forceDelete() {
-    forceDelete(this)
+  @Orm.afterPaginate()
+  public static afterFind(model) {
+    Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterPaginate", data: model})
   }
 
   {{{properties}}}

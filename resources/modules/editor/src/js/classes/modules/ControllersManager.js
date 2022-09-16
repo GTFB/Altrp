@@ -1,10 +1,10 @@
 import TextareaController from "../../components/controllers/TextareaController";
+import GroupController from "../../components/controllers/GroupController";
 import TextController from "../../components/controllers/TextController";
 import NumberController from "../../components/controllers/NumberController";
 import SwitcherController from "../../components/controllers/SwitcherController";
 import DateController from "../../components/controllers/DateController";
 import RangeController from "../../components/controllers/RangeController";
-import Controller from "../Controller";
 import DimensionsController from "../../components/controllers/DimensionsController";
 import SelectController from "../../components/controllers/SelectController";
 import ChooseController from "../../components/controllers/ChooseController";
@@ -56,6 +56,8 @@ export const CONTROLLER_DIMENSIONS = "dimensions";
 window.CONTROLLERS.CONTROLLER_DIMENSIONS = CONTROLLER_DIMENSIONS
 export const CONTROLLER_SELECT = "select";
 window.CONTROLLERS.CONTROLLER_SELECT = CONTROLLER_SELECT
+export const CONTROLLER_GROUP = "group";
+window.CONTROLLERS.CONTROLLER_GROUP = CONTROLLER_GROUP
 export const CONTROLLER_CHOOSE = "choose";
 window.CONTROLLERS.CONTROLLER_CHOOSE = CONTROLLER_CHOOSE
 export const CONTROLLER_SLIDER = "slider";
@@ -106,6 +108,7 @@ window.CONTROLLERS.CONTROLLER_ELEMENTS = CONTROLLER_ELEMENTS
 class ControllersManager {
   constructor() {
     this.conttrollers = {};
+    this.conttrollers[CONTROLLER_GROUP] = GroupController;
     this.conttrollers[CONTROLLER_TEXTAREA] = TextareaController;
     this.conttrollers[CONTROLLER_WYSIWYG] = WysiwygController;
     this.conttrollers[CONTROLLER_TEXT] = TextController;
@@ -155,7 +158,6 @@ class ControllersManager {
 
   registerControls() {
     let elementClasses = window.appStore.getState().widgetsManager.elements;
-
     this.elementsControls = {};
     for (let elementClassName in elementClasses) {
       if (elementClasses.hasOwnProperty(elementClassName) && ! this.elementsControls[elementClassName]) {

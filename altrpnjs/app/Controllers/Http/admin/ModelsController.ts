@@ -701,7 +701,7 @@ export default class ModelsController {
       await client.schema.createTableIfNotExists(table.name, table => {
         table.bigIncrements('id')
         if (modelData.soft_deletes) {
-          table.timestamp('deleted_at')
+          table.timestamp('deleted_at').nullable().defaultTo(null)
         }
         if (modelData.time_stamps) {
           table.timestamp('updated_at')
