@@ -863,7 +863,6 @@ class Heading extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
     });
 
     this.addControl('background_attachment', {
@@ -883,7 +882,6 @@ class Heading extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
     });
 
     this.addControl('background_repeat', {
@@ -915,7 +913,6 @@ class Heading extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
     });
 
     this.addControl("background_image_width", {
@@ -958,7 +955,6 @@ class Heading extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
     });
 
 

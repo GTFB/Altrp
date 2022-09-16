@@ -99,14 +99,12 @@ export default function DividerComponent(settings) {
         if (imageSize?.size) {
           return `height: ${imageSize?.size}${imageSize?.unit || 'px'}`
         }
-
-        return 'height: 20px;'
       },
     '}',
 
     'altrp-divider-container-label',
       () => {
-        const textStylePosition = getResponsiveSetting(settings, 'label_position') || 'center'
+        const textStylePosition = getResponsiveSetting(settings, 'label_position')
         const textStyleSpacing = getResponsiveSetting(settings, 'label_spacing')
 
         const spacing = (textStyleSpacing?.size ? textStyleSpacing?.size : 0) + (textStyleSpacing?.unit || 'px')
@@ -160,7 +158,7 @@ export default function DividerComponent(settings) {
         () => {
           const borderWidth = getResponsiveSetting(settings, "divider_style_weight", ':hover')
 
-          if (borderWidth?.size) {
+          if (!borderWidth?.size) {
             return ''
           }
 

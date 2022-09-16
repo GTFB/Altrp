@@ -4,6 +4,7 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 (window.globalDefaults = window.globalDefaults || []).push(`
   .icon-widget-wrapper {
     display: flex;
+    flex-direction: column;
   }
 
   .icon-widget__icon {
@@ -14,6 +15,16 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 
   .icon-widget__icon * {
     width: auto;
+  }
+
+  .title {
+    text-align: center;
+    color: rgb(0,0,0);
+  }
+
+  .description {
+    text-align: center;
+    color: rgb(0,0,0);
   }
 
   .content {

@@ -548,10 +548,18 @@ export function getInputSelectPopoverStyles(settings, elementId) {
     ["padding", "item_padding", "dimensions"],
     "}",
     ".bp3-popover-content",
-    () =>
-      `background-color: ${
-        getResponsiveSetting(settings, "drop_menu_background_color")?.color
-      } !important;`,
+    () => {
+      const dropMenuBackgroundColorSetting =
+        getResponsiveSetting(settings, "drop_menu_background_color");
+
+      if (dropMenuBackgroundColorSetting?.color) {
+        return (
+          `background-color: ${
+            dropMenuBackgroundColorSetting.color
+          } !important;`
+        );
+      }
+    },
     "}",
     ".bp3-menu",
     ["padding", "menu_padding", "dimensions"],
@@ -643,11 +651,16 @@ export function getInputSelectPopoverStyles(settings, elementId) {
     ["padding", "item_padding", "dimensions", ".active"],
     "}",
     ".active .bp3-popover-content",
-    () =>
-      `background-color: ${
-        getResponsiveSetting(settings, "drop_menu_background_color", ".active")
-          ?.color
-      } !important;`,
+    () => {
+      const activeDropMenuBackgroundColorSetting =
+        getResponsiveSetting(settings, "drop_menu_background_color", ".active");
+
+      if (activeDropMenuBackgroundColorSetting?.color) {
+        returnn (
+          `background-color: ${activeDropMenuBackgroundColorSetting.color} !important;`
+        );
+      }
+    },
     "}",
     ".active .bp3-menu",
     ["padding", "menu_padding", "dimensions", ".active"],

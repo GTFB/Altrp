@@ -12,6 +12,8 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
       cursor: pointer;
     }
     position: relative;
+    width:100%;
+    height:300px;
   }
 
   .image-crop-container {
@@ -20,6 +22,7 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
     justify-content: center;
     align-items: center;
     width: 100%;
+    height:300px;
   }
   .crop-image-background {
     width: 100%;

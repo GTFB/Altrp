@@ -32,10 +32,12 @@ import {FileInput} from "@blueprintjs/core";
     right: 0;
     cursor: pointer;
 }
-.input-gallery-wrapper{
-    display: grid;
-    grid-auto-flow: row dense;
-    }
+.input-gallery-wrapper {
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(6, 16.666666666666668%);
+}
+
 `)
 
 class InputGalleryWidget extends Component {

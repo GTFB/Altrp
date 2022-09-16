@@ -81,12 +81,6 @@ export function getHeadingTypeAnimatingStyles(settings, id) {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-heading {`;
-
-  //fix display with <strong> and <b> tags
-  styles += "display:block;";
-  styles += `} `;
-
   styles += `${parentClass} .altrp-animating-text {`;
 
   const typographicAnimating = getResponsiveSetting(

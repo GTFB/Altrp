@@ -16,6 +16,7 @@ import ElementsManager from "./js/classes/modules/ElementsManager";
 import ControllersManager from "./js/classes/modules/ControllersManager";
 import store from "../src/js/store/store";
 import IconsManager from "./js/classes/modules/IconsManager";
+import "./sass/editor-style.scss";
 import controllerHistory from "./js/classes/ControllerHistory";
 import {io} from "socket.io-client";
 
@@ -123,15 +124,6 @@ import(/* webpackChunkName: 'Editor' */"./Editor.js")
         editorTarget
       );
     }
-
-    if (parent.styleLoaded) {
-      return null;
-    }
-
-    return import("./sass/editor-style.scss");
-  })
-  .then(() => {
-    parent.styleLoaded = true;
 
     return import(/* webpackChunkName: 'EditorContent' */"./EditorContent");
   })

@@ -114,6 +114,10 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
     width: 100%;
     height: 100%;
   }
+
+  .altrp-background-image_btn{
+    background-size: unset;
+  }
 `);
 
 const Link = window.Link;

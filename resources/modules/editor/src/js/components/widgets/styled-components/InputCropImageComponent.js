@@ -7,13 +7,13 @@ export default function InputCropImageComponent(settings) {
   let styles = ``
 
   styles += `.image-to-crop-container {
-    ${simplePropertyStyled(sliderStyled(getSetting('width', '', {size: 100, unit: '%'})), 'width')}
-    ${simplePropertyStyled(sliderStyled(getSetting('height', '', {size: 300, unit: 'px'})), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('width', '',)), 'width')}
+    ${simplePropertyStyled(sliderStyled(getSetting('height', '')), 'height')}
   }`
 
   styles += `.image-crop-container {
-    ${simplePropertyStyled(sliderStyled(getSetting('crop_height') || getSetting('height', '', {size: 300, unit: 'px'})), 'height')}
-    ${simplePropertyStyled(sliderStyled(getSetting('crop_width') || getSetting('width', '', {})), 'width')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_height') || getSetting('height', '')), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_width') || getSetting('width', '')), 'width')}
   }`
 
   styles += `.crop-image-background {
@@ -48,13 +48,13 @@ export default function InputCropImageComponent(settings) {
 
   //state disabled
   styles += `.state-disabled .image-to-crop-container {
-    ${simplePropertyStyled(sliderStyled(getSetting('width', '.state-disabled', {size: 100, unit: '%'})), 'width')}
-    ${simplePropertyStyled(sliderStyled(getSetting('height', '.state-disabled', {size: 300, unit: 'px'})), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('width', '.state-disabled')), 'width')}
+    ${simplePropertyStyled(sliderStyled(getSetting('height', '.state-disabled')), 'height')}
   }`
 
   styles += `.state-disabled .image-crop-container {
-    ${simplePropertyStyled(sliderStyled(getSetting('crop_height', '.state-disabled') || getSetting('height', '.state-disabled', {size: 300, unit: 'px'})), 'height')}
-    ${simplePropertyStyled(sliderStyled(getSetting('crop_width', '.state-disabled') || getSetting('width', '.state-disabled', {})), 'width')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_height', '.state-disabled') || getSetting('height', '.state-disabled')), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_width', '.state-disabled') || getSetting('width', '.state-disabled')), 'width')}
   }`
 
   styles += `.state-disabled .crop-image-background {
@@ -73,13 +73,13 @@ export default function InputCropImageComponent(settings) {
   }`
   //state active
   styles += `.active .image-to-crop-container {
-    ${simplePropertyStyled(sliderStyled(getSetting('width', '.active', {size: 100, unit: '%'})), 'width')}
-    ${simplePropertyStyled(sliderStyled(getSetting('height', '.active', {size: 300, unit: 'px'})), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('width', '.active')), 'width')}
+    ${simplePropertyStyled(sliderStyled(getSetting('height', '.active')), 'height')}
   }`
 
   styles += `.active .image-crop-container {
-    ${simplePropertyStyled(sliderStyled(getSetting('crop_height', '.active') || getSetting('height', '.active', {size: 300, unit: 'px'})), 'height')}
-    ${simplePropertyStyled(sliderStyled(getSetting('crop_width', '.active') || getSetting('width', '.active', {})), 'width')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_height', '.active') || getSetting('height', '.active')), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_width', '.active') || getSetting('width', '.active')), 'width')}
   }`
 
   styles += `.active .crop-image-background {
