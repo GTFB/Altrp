@@ -185,8 +185,8 @@ class FrontPopup extends Component {
       stylesUrl: `/altrp/css/${template.guid}.css`,
     }))
   }
-  componentDidCatch = ()=>{
-    console.log(this);
+  componentDidCatch = (e)=>{
+    console.log(e);
   }
   render() {
     const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template

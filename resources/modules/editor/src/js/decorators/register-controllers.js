@@ -77,7 +77,7 @@ export function advancedTabControllers(element) {
   // });
 
   element.endControlSection();
-
+  /*
   element.startControlSection(
     'scrolling_effects', {
       tab: TAB_ADVANCED,
@@ -330,7 +330,7 @@ export function advancedTabControllers(element) {
   })
 
   element.endControlSection();
-
+*/
   element.startControlSection(
     'entrance_animation', {
       tab: TAB_ADVANCED,
@@ -1330,14 +1330,81 @@ export function advancedTabControllers(element) {
     label: 'Skeleton Settings',
   });
 
-  element.addControl('skeleton_width', {
+  element.addControl('skeleton:enable', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Skeleton Enable',
+    responsive: false
+  })
+
+  element.addControl('skeleton:preview', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Preview Enable',
+    responsive: false
+  })
+
+  element.addControl('skeleton:width', {
     label: "Width",
     dynamic: false,
   });
 
-  element.addControl('skeleton_height', {
+  element.addControl('skeleton:height', {
     label: "Height",
     dynamic: false,
+  });
+
+  element.addControl('skeleton:radius', {
+    label: "Radius",
+    type: CONTROLLER_DIMENSIONS,
+  });
+
+  element.addControl('skeleton:columns', {
+    label: "Columns",
+    type: CONTROLLER_SLIDER,
+  });
+
+  element.addControl('skeleton:rows', {
+    label: "Rows",
+    type: CONTROLLER_NUMBER,
+  });
+
+  element.addControl('skeleton:gap', {
+    label: "Gap",
+    type: CONTROLLER_SLIDER,
+    units: ['px','%', 'vw', 'vh'],
+    max: 100,
+    min: 0,
+    default: {
+      unit: 'ms',
+      size: 2000
+    }
+  });
+
+  element.addControl('skeleton:shimmer', {
+    type: CONTROLLER_SWITCHER,
+    default: true,
+    label: 'Skeleton Shimmer',
+  })
+
+  element.addControl('skeleton:speed', {
+    type: CONTROLLER_SLIDER,
+    label: 'Shimmer Speed',
+    units: ['ms'],
+    max: 5000,
+    min: 0,
+    default: {
+      unit: 'ms',
+      size: 2000
+    }
+  })
+
+  element.addControl('skeleton:primary_color', {
+    label: "Primary Color",
+    type: CONTROLLER_COLOR,
+  });
+
+  element.addControl('skeleton:secondary_color', {
+    label: "Secondary Color",
+    type: CONTROLLER_COLOR,
   });
 
   element.endControlSection();

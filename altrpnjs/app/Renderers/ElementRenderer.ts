@@ -37,6 +37,7 @@ export default class ElementRenderer {
       advanced_element_id?: string,
       layout_html_tag?: string
       react_element?: boolean
+      'skeleton:enable'?: boolean
       layout_content_width_type?: string
       isFixed?: boolean
       default_hidden: boolean
@@ -53,7 +54,10 @@ export default class ElementRenderer {
 
   async render(screenName: string): Promise<string> {
     const settings = this.element.settings
-    const reactElement = this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
+    let reactElement = this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
+    if(! reactElement && this.element.settings['skeleton:enable']){
+      reactElement = true
+    }
     const layout_html_tag = this.element.settings?.layout_html_tag || 'div'
     this.element.settingsLock = this.element.settingsLock || {}
     this.element.settings = {
@@ -122,7 +126,7 @@ export default class ElementRenderer {
         let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
           : await import(base_path(`helpers/widgets-renders/${filename}`))
         render = render.default
-        element_content = render(this.element.settings, screenName)
+        element_content = render(this.element.settings, screenName, )
       }
       if (this.getName() === 'section_widget') {
         element_content =

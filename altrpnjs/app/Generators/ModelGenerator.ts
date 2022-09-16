@@ -168,15 +168,14 @@ decorate([
 ], ${this.model.name}.prototype, "id", void 0);
 ${columns.map(column => column.altrp_model ? column.renderProdForModel() : '').join('')}
 ${this.model.soft_deletes ? `
-__decorate([
+decorate([
     (0, Orm.beforeFind)(),
     __metadata("design:type", Object)
 ], ${this.model.name}, "softDeletesFind", void 0);
-__decorate([
+decorate([
     (0, Orm.beforeFetch)(),
     __metadata("design:type", Object)
 ], ${this.model.name}, "softDeletesFetch", void 0);
-exports.default = ${this.model.name};
 ` : ''}
 `
   }

@@ -1,7 +1,6 @@
 # ALTRP
 
 
-## Test Version
 ## Changelog
 
 ### 1.2.11

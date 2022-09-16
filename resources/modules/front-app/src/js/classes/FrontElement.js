@@ -8,7 +8,6 @@ import {
 } from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
-import {addSettings} from "../store/elements-settings/actions";
 import INPUT_WIDGETS from "../constants/INPUT_WIDGETS";
 window.elementsCount = 0
 class FrontElement {

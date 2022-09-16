@@ -6,7 +6,7 @@
  */
 export function checkElementInViewBox(element, scrollbars){
   let view;
-  if(scrollbars instanceof HTMLElement){
+  if(scrollbars instanceof HTMLElement || scrollbars instanceof HTMLHtmlElement){
     view = scrollbars;
   } else {
     view = scrollbars.view;
@@ -30,7 +30,9 @@ export function checkElementInViewBox(element, scrollbars){
   } else {
     scrollTop = view.scrollTop;
   }
-  return offsetTop < (scrollTop + view.offsetHeight + 50);
+  console.log(offsetTop);
+  console.log(scrollTop ,view.offsetHeight );
+  return offsetTop < (scrollTop + view.offsetHeight + 150);
 }
 
 /**

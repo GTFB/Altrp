@@ -281,10 +281,10 @@ class ElementWrapper extends Component {
       ++window.countReduced
       return false
     }
-    if(newProps.currentDataStorage !== this.props.currentDataStorage){
-      console.error(this);
-
-    }
+    // if(newProps.currentDataStorage !== this.props.currentDataStorage){
+    //   console.error(this);
+    //
+    // }
     if(newProps.currentDataStorage !== this.props.currentDataStorage
       && dependencies.indexOf('altrpdata') === -1){
       ++window.countReduced
