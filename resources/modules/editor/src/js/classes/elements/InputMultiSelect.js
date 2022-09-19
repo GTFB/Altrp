@@ -140,6 +140,13 @@ class InputMultiSelect extends BaseElement {
       locked: true,
     });
 
+    this.addControl("open_popover_on_key_down", {
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      label: "Open popover on key down",
+      locked: true,
+    });
+
     this.addControl("minimal", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
