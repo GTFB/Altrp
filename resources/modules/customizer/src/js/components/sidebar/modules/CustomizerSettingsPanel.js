@@ -123,7 +123,13 @@ class CustomizerSettingsPanel extends React.Component {
     let modelsOptions = this.getModelOptions();
     console.log(modelsOptions);
     const {customizer} = this.props;
-    const {type, model_id, settings = {}} = customizer
+    const {
+      type,
+      model_id,
+      event_type: eventType,
+      event_hook_type: eventHookType,
+      settings = {}
+    } = customizer;
 
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
@@ -189,6 +195,14 @@ class CustomizerSettingsPanel extends React.Component {
                                      {
                                        label: 'Model Class Method',
                                        value: 'method'
+                                     },
+                                     {
+                                       value: 'crud',
+                                       label: 'CRUD'
+                                     },
+                                     {
+                                       value: 'schedule',
+                                       label: 'Schedule'
                                      }
                                      // {
                                      //   value: 'before',
@@ -197,7 +211,7 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {(type === 'api' || type === 'method') && <>
+                    {['api', 'method', 'crud'].includes(type) && <>
                     {/*  <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>*/}
                     {/*  <div className="controller-container__label control-select__label controller-label">Middlewares:</div>*/}
                     {/*  <AltrpSelect id="crud-fields"*/}
@@ -225,6 +239,64 @@ class CustomizerSettingsPanel extends React.Component {
                       />
                     </div>
                     </>
+                    }
+                    {
+                      !!model_id && (
+                        <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                          <div className="controller-container__label control-select__label controller-label">Event Type:</div>
+
+                          <AltrpSelect
+                            id="event-type"
+                            className="controller-field"
+                            isMulti={false}
+                            value={eventType}
+                            onChange={this.changeEventType}
+                            options={[
+                              {
+                                label: 'Create',
+                                value: 'create'
+                              },
+                              {
+                                label: 'Update',
+                                value: 'update'
+                              },
+                              {
+                                label: 'Read',
+                                value: 'read'
+                              },
+                              {
+                                label: 'Delete',
+                                value: 'delete'
+                              }
+                            ]}
+                          />
+                        </div>
+                      )
+                    }
+                    {
+                      !!model_id && !!eventType && (
+                        <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                          <div className="controller-container__label control-select__label controller-label">Event Hook Type:</div>
+
+                          <AltrpSelect
+                            id="event-hook-type"
+                            className="controller-field"
+                            isMulti={false}
+                            value={eventHookType}
+                            onChange={this.changeEventHookType}
+                            options={[
+                              {
+                                label: 'Before',
+                                value: 'before'
+                              },
+                              {
+                                label: 'After',
+                                value: 'after'
+                              }
+                            ]}
+                          />
+                        </div>
+                      )
                     }
                     {
                       type === "listener" && (
@@ -355,6 +427,18 @@ class CustomizerSettingsPanel extends React.Component {
     customizer = mutate.set(customizer, 'model_id', e.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   };
+  changeEventType = (e) => {
+    let { customizer } = this.props;
+
+    customizer = mutate.set(customizer, 'event_type', e.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeEventHookType = (e) => {
+    let { customizer } = this.props;
+
+    customizer = mutate.set(customizer, 'event_hook_type', e.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
   changeHookType = (e)=>{
     let {customizer} = this.props;
     if(_.isArray(_.get(customizer, 'settings'))){
