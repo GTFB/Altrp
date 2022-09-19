@@ -622,7 +622,7 @@ export default class Page extends BaseModel {
         styles += `
 <style id="custom_area_styles_${area.name}">${_styles.join('')}</style>`
         } catch (e) {
-          console.log(`Page ${this.id} Custom ${area.name} Styles Render Error:`);
+          console.error(`Page ${this.id} Custom ${area.name} Styles Render Error:`, e);
         }
       }
 
@@ -655,7 +655,7 @@ export default class Page extends BaseModel {
         styles += `
 <style id="header_styles">${_styles.join('')}</style>`
       } catch (e) {
-        console.log(`Page ${this.id} Header Styles Render Error:`);
+        console.error(`Page ${this.id} Header Styles Render Error:`, e);
       }
     }
     if (contentStyles) {
@@ -872,11 +872,17 @@ export default class Page extends BaseModel {
     if (!element.name || !_.isString(element.name)) {
       return
     }
+
     if (!(only_react_elements
       && !(data_get(element, 'settings.react_element')
+        || data_get(element, 'settings.skeleton:enable')
         || (reactElements.indexOf(element.name) !== -1)))) {
       elementNames.push(element.name)
-      if (element.name === 'section' || element.name === 'column' || element.name === 'section_widget') {
+
+
+      if (element.name === 'section'
+        || element.name === 'column'
+        || element.name === 'section_widget') {
 
         recurseMapElements(element, function (element) {
             if (element.name && elementNames.indexOf(element.name) === -1) {
@@ -897,6 +903,7 @@ export default class Page extends BaseModel {
     }
     if (element.name === 'posts' && data_get(element, 'settings.posts_card_template')) {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_template'), elementNames)
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames)
     }
     if (element.name === 'posts' && data_get(element, 'settings.posts_card_hover_template')) {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames)
@@ -1054,7 +1061,7 @@ export default class Page extends BaseModel {
         prefix += ':'
         for(let key in data.settings){
           if(data.settings.hasOwnProperty(key) && key.startsWith(prefix)){
-            console.log(data.settings[key]);
+
             delete data.settings[key]
           }
         }

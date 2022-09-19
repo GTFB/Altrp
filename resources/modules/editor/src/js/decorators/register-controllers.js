@@ -1345,11 +1345,13 @@ export function advancedTabControllers(element) {
   element.addControl('skeleton:width', {
     label: "Width",
     dynamic: false,
+    description: 'E. g.: <code>100px or calc(100% - 10px)</code>'
   });
 
   element.addControl('skeleton:height', {
     label: "Height",
     dynamic: false,
+    description: 'E. g.: <code>100px or calc(100% - 10px)</code>'
   });
 
   element.addControl('skeleton:radius', {
@@ -1359,7 +1361,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('skeleton:columns', {
     label: "Columns",
-    type: CONTROLLER_SLIDER,
+    type: CONTROLLER_NUMBER,
   });
 
   element.addControl('skeleton:rows', {
@@ -1369,20 +1371,24 @@ export function advancedTabControllers(element) {
 
   element.addControl('skeleton:gap', {
     label: "Gap",
-    type: CONTROLLER_SLIDER,
-    units: ['px','%', 'vw', 'vh'],
-    max: 100,
-    min: 0,
-    default: {
-      unit: 'ms',
-      size: 2000
-    }
+    type: CONTROLLER_TEXT,
+    description: 'E. g.: <code>100px or calc(100% - 10px)</code>. <a href="https://developer.mozilla.org/ru/docs/Web/CSS/gap" target="_blank">Docs</a>'
   });
 
   element.addControl('skeleton:shimmer', {
     type: CONTROLLER_SWITCHER,
     default: true,
     label: 'Skeleton Shimmer',
+  })
+
+  element.addControl('skeleton:shimmer_size', {
+    label: 'Shimmer Size',
+    description: 'E. g.: <code>100px or calc(100% - 10px)</code>'
+  })
+
+  element.addControl('skeleton:shimmer_end_position', {
+    label: 'Shimmer End Position',
+    description: 'E. g.: <code>100px or calc(100% - 10px)</code>'
   })
 
   element.addControl('skeleton:speed', {
@@ -1401,11 +1407,30 @@ export function advancedTabControllers(element) {
     label: "Primary Color",
     type: CONTROLLER_COLOR,
   });
+  //
+  // element.addControl('skeleton:secondary_color', {
+  //   label: "Secondary Color",
+  //   type: CONTROLLER_COLOR,
+  // });
 
-  element.addControl('skeleton:secondary_color', {
-    label: "Secondary Color",
-    type: CONTROLLER_COLOR,
-  });
+  // element.addControl('skeleton:fade_speed', {
+  //   type: CONTROLLER_SLIDER,
+  //   label: 'Fade Speed',
+  //   units: ['ms'],
+  //   max: 5000,
+  //   min: 0,
+  //   default: {
+  //     unit: 'ms',
+  //     size: 0
+  //   }
+  // })
+
+  element.addControl('skeleton_pending_path', {
+    type: CONTROLLER_TEXTAREA,
+    label: 'Skeleton Pending Path',
+    responsive: false,
+    description: 'Like: <code>altrpdata.data</code>'
+  })
 
   element.endControlSection();
 

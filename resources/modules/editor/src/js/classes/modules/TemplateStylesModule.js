@@ -31,10 +31,13 @@ class TemplateStylesModule {
         return false
       }
       const htmlElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName(`altrp-element${e.getId()}`)[0]
+
       if(! htmlElement){
         return false
       }
       const rect = htmlElement.getBoundingClientRect();
+      console.log(rect.y , maxTop);
+      console.log(rect.y < maxTop);
       return rect.y < maxTop
     }
 

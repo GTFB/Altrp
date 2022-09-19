@@ -80,6 +80,7 @@ export default class PageGenerator extends BaseGenerator {
     })
 
     let elements_list: string[] | string = await page.extractElementsNames()
+
     const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
     elements_list = elements_list.map(e => `'${e}'`)
 

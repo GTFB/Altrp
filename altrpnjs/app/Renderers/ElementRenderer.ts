@@ -15,6 +15,7 @@ import renderSection from "../../helpers/widgets-renders/renderSection";
 import getSectionWidthClass from "../../helpers/widgets-renders/getSectionWidthClass";
 import Role from "App/Models/Role";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
+import AltrpSkeletonBox from "../../helpers/widgets-renders/components/AltrpSkeletonBox";
 
 
 export default class ElementRenderer {
@@ -78,90 +79,94 @@ export default class ElementRenderer {
     let element_content = '';
     const columns_count = this.element.children.length;
 
-
-    let section_background
-    switch (this.getName()) {
-      case 'section_widget':
-      case 'section': {
-        section_background = renderSectionBG(settings, this.getId(), screenName)
-      }
-        break;
-      default: {
-        section_background = ''
-
-      }
-        break
-    }
-    let styles: {} | string = {}
-    const {layout_content_width_type: widthType, isFixed} = this.element.settings
-    let section_classes = ''
-
-    const fitToContent = getResponsiveSetting(settings,"layout_height", screenName)
-    if (fitToContent === "fit") {
-      section_classes +=" section-fit-to-content ";
-    }
-    switch (this.getName()) {
-      case 'section': {
-        if (widthType === "boxed" && !isFixed) {
-          section_classes += " altrp-section_boxed ";
-        }
-        if (widthType === "section_boxed" && !isFixed) {
-          section_classes += " altrp-section_section-boxed "
-        }
-
-        if (widthType === "full" && !isFixed) {
-        }
-        section_classes += getSectionWidthClass(settings)
-
-      }
-        break;
-    }
-
-    styles = objectToStylesString(styles)
-    const text_widget_content = this.getTextWidgetContent(screenName)
-    if (this.getType() === 'widget') {
-      const filename = string.camelCase(`render_${this.getName()}`)
-        + (isProd() ? '.js' : '.ts')
-      if (fs.existsSync(base_path(`helpers/widgets-renders/${filename}`))) {
-        let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
-          : await import(base_path(`helpers/widgets-renders/${filename}`))
-        render = render.default
-        element_content = render(this.element.settings, screenName, )
-      }
-      if (this.getName() === 'section_widget') {
-        element_content =
-          renderSection(
-            settings,
-            screenName,
-            this.element.children.length,
-            this.isLink() ? 'altrp-pointer' : '',
-            children_content,
-            section_background
-          );
-      }
-      element_content =
-        await applyPluginsFiltersAsync(
-          `after_render_widget_${this.getName()}`,
-          element_content,
-          settings)
+    if(settings['skeleton:enable']){
+      element_content = AltrpSkeletonBox(settings, screenName)
     } else {
-      element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
-      element_content = mustache.render(element_content, {
-        settings: JSON.stringify(this.element.settings),
-        id: this.element.id,
-        children_content,
-        element_styles: styles,
-        section_classes,
-        column_classes: getColumnClasses(settings, screenName),
-        section_background,
-        layout_html_tag,
-        text_widget_content,
-        link_class: this.isLink() ? 'altrp-pointer' : '',
-        columns_count,
-      })
+      let section_background
+      switch (this.getName()) {
+        case 'section_widget':
+        case 'section': {
+          section_background = renderSectionBG(settings, this.getId(), screenName)
+        }
+          break;
+        default: {
+          section_background = ''
 
+        }
+          break
+      }
+      let styles: {} | string = {}
+      const {layout_content_width_type: widthType, isFixed} = this.element.settings
+      let section_classes = ''
+
+      const fitToContent = getResponsiveSetting(settings, "layout_height", screenName)
+      if (fitToContent === "fit") {
+        section_classes += " section-fit-to-content ";
+      }
+      switch (this.getName()) {
+        case 'section': {
+          if (widthType === "boxed" && !isFixed) {
+            section_classes += " altrp-section_boxed ";
+          }
+          if (widthType === "section_boxed" && !isFixed) {
+            section_classes += " altrp-section_section-boxed "
+          }
+
+          if (widthType === "full" && !isFixed) {
+          }
+          section_classes += getSectionWidthClass(settings)
+
+        }
+          break;
+      }
+
+      styles = objectToStylesString(styles)
+      const text_widget_content = this.getTextWidgetContent(screenName)
+
+      if (this.getType() === 'widget') {
+        const filename = string.camelCase(`render_${this.getName()}`)
+          + (isProd() ? '.js' : '.ts')
+        if (fs.existsSync(base_path(`helpers/widgets-renders/${filename}`))) {
+          let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
+            : await import(base_path(`helpers/widgets-renders/${filename}`))
+          render = render.default
+          element_content = render(this.element.settings, screenName,)
+        }
+        if (this.getName() === 'section_widget') {
+          element_content =
+            renderSection(
+              settings,
+              screenName,
+              this.element.children.length,
+              this.isLink() ? 'altrp-pointer' : '',
+              children_content,
+              section_background
+            );
+        }
+        element_content =
+          await applyPluginsFiltersAsync(
+            `after_render_widget_${this.getName()}`,
+            element_content,
+            settings,
+            screenName)
+      } else {
+        element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
+        element_content = mustache.render(element_content, {
+          settings: JSON.stringify(this.element.settings),
+          id: this.element.id,
+          children_content,
+          element_styles: styles,
+          section_classes,
+          column_classes: getColumnClasses(settings, screenName),
+          section_background,
+          layout_html_tag,
+          text_widget_content,
+          link_class: this.isLink() ? 'altrp-pointer' : '',
+          columns_count,
+        })
+
+      }
     }
-
 
     let content = fs.readFileSync(ElementRenderer.wrapperStub, {encoding: 'utf8'});
     let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} ${getAddingClasses(settings, screenName)} `;

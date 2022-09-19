@@ -4,6 +4,11 @@
 ## Changelog
 ##Test Version
 
+### 1.3.0
+* Added Extended Skeleton Features Support for All Elements
+* Change Empty Image PlaceHolder
+* Change Default Font Family To `Arial`
+
 ### 1.2.11
 * Added Support for `Soft Deletes` Models
 * Fixed `Table to CSV` Coding Issue

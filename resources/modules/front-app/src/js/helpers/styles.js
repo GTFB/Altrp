@@ -467,7 +467,7 @@ export function typographicControllerToStyles(data = {}) {
     styles += `font-size: ${size ? size + (sizeUnit || "px") : ""}; `;
   }
   if (!_.isEmpty(family)) {
-    styles += `font-family: ${family}; `;
+    styles += `font-family: ${family}, Arial, sans-serif;`;
   }
   return styles;
 }
@@ -477,7 +477,6 @@ export function typographicControllerToStyles(data = {}) {
  * @return {string}
  * @param {{}} controller
  * @param {string} style
- * @param {string} important
  */
 export function colorStyled(controller, style) {
   if (controller) {
