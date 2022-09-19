@@ -32,7 +32,7 @@ export default function AltrpImage(props: any, device: string) {
     if (src) {
       src = `src="${src}"`
     } else {
-      src = `scr="/img/nullImage.png"`
+      src = `src="/img/nullImage.png"`
     }
 
     return `<img class="altrp-image" width="${props.width}" height="${props.height}" ${src}/>`

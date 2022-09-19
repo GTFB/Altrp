@@ -53,7 +53,7 @@ documentCheckEvents( () => {
       console.log('h-altrp LOADED: ', performance.now());
 
       const hAltrpLoadedEvent = new Event('h-altrp-loaded');
-      console.log('h-altrp-loaded');
+      // console.log('h-altrp-loaded');
       window.dispatchEvent(hAltrpLoadedEvent);
 
       let actionComponents = _.get(__altrp_settings__, 'action_components', [])
@@ -78,9 +78,9 @@ documentCheckEvents( () => {
       loadDepends()
     });
 
-    import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
+    import (/* webpackChunkName: 'SingleElementWrapper' */'./js/components/SingleElementWrapper').then(module => {
       window.ElementWrapper = module.default;
-      console.log('LOAD SimpleElementWrapper: ', performance.now());
+      console.log('LOAD SingleElementWrapper: ', performance.now());
       loadingCallback();
     });
 

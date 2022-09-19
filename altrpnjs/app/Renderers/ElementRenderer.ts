@@ -80,7 +80,7 @@ export default class ElementRenderer {
     const columns_count = this.element.children.length;
 
     if(settings['skeleton:enable']){
-      element_content = AltrpSkeletonBox()
+      element_content = AltrpSkeletonBox(settings, screenName)
     } else {
       let section_background
       switch (this.getName()) {

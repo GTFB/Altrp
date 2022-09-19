@@ -1361,7 +1361,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('skeleton:columns', {
     label: "Columns",
-    type: CONTROLLER_SLIDER,
+    type: CONTROLLER_NUMBER,
   });
 
   element.addControl('skeleton:rows', {
@@ -1372,7 +1372,7 @@ export function advancedTabControllers(element) {
   element.addControl('skeleton:gap', {
     label: "Gap",
     type: CONTROLLER_TEXT,
-    description: 'E. g.: <code>100px or calc(100% - 10px)</code>'
+    description: 'E. g.: <code>100px or calc(100% - 10px)</code>. <a href="https://developer.mozilla.org/ru/docs/Web/CSS/gap" target="_blank">Docs</a>'
   });
 
   element.addControl('skeleton:shimmer', {
@@ -1403,31 +1403,32 @@ export function advancedTabControllers(element) {
     }
   })
 
-  // element.addControl('skeleton:primary_color', {
-  //   label: "Primary Color",
-  //   type: CONTROLLER_COLOR,
-  // });
+  element.addControl('skeleton:primary_color', {
+    label: "Primary Color",
+    type: CONTROLLER_COLOR,
+  });
   //
   // element.addControl('skeleton:secondary_color', {
   //   label: "Secondary Color",
   //   type: CONTROLLER_COLOR,
   // });
 
-  element.addControl('skeleton:fade_in_speed', {
-    type: CONTROLLER_SLIDER,
-    label: 'Fade In Speed',
-    units: ['ms'],
-    max: 5000,
-    min: 0,
-    default: {
-      unit: 'ms',
-      size: 0
-    }
-  })
+  // element.addControl('skeleton:fade_speed', {
+  //   type: CONTROLLER_SLIDER,
+  //   label: 'Fade Speed',
+  //   units: ['ms'],
+  //   max: 5000,
+  //   min: 0,
+  //   default: {
+  //     unit: 'ms',
+  //     size: 0
+  //   }
+  // })
 
   element.addControl('skeleton_pending_path', {
     type: CONTROLLER_TEXTAREA,
     label: 'Skeleton Pending Path',
+    responsive: false,
     description: 'Like: <code>altrpdata.data</code>'
   })
 

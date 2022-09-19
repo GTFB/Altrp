@@ -13,15 +13,18 @@ import setTitle from "../functions/setTitle";
 import altrpRandomId from "../functions/altrpRandomId";
 import conditionsChecker from "../functions/conditionsChecker";
 import altrpCompare from "../functions/altrpCompare";
+import AltrpSkeletonBoxFrontApp from "./AltrpSkeletonBoxFrontApp";
+import getDataByPath from "../functions/getDataByPath";
 
 const TransparentDiv = styled.div`
 `;
 
-class SimpleElementWrapper extends Component {
+class SingleElementWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      elementDisplay: !this.props.element.getSettings("default_hidden")
+      elementDisplay: !this.props.element.getSettings("default_hidden"),
+      withSkeleton: this.props.withSkeleton
     };
     props.element.wrapper = this;
     this.elementWrapperRef = this.props.elementWrapperRef;
@@ -34,7 +37,6 @@ class SimpleElementWrapper extends Component {
     this.tooltipOnMouseLeave = this.tooltipOnMouseLeave.bind(this);
     appStore.dispatch(addElement(this));
     this.elementId = props.element.getId();
-
   }
 
   /**
@@ -54,6 +56,18 @@ class SimpleElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
+    let skeleton_pending_path = this.props.element.settings?.skeleton_pending_path;
+    if(this.props.withSkeleton){
+      setTimeout(()=>{
+        if(skeleton_pending_path){
+          if(getDataByPath(skeleton_pending_path)){
+            this.setState(state =>({...state, withSkeleton: false}))
+          }
+        }else {
+          this.setState(state =>({...state, withSkeleton: false}))
+        }
+      }, 500)
+    }
     !isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
@@ -198,6 +212,14 @@ class SimpleElementWrapper extends Component {
         appStore.dispatch(changeCurrentPageProperty("title", title));
       }
       setTitle(title);
+    }
+    if(prevProps.currentDataStorage !== this.props.currentDataStorage){
+      let skeleton_pending_path = this.props.element.settings?.skeleton_pending_path;
+      if(this.state.withSkeleton && getDataByPath(skeleton_pending_path)){
+        setTimeout(()=>{
+          this.setState(state =>({...state, withSkeleton: false}))
+        }, 500)
+      }
     }
   }
   /**
@@ -349,6 +371,9 @@ class SimpleElementWrapper extends Component {
     /**
      * @member {FrontElement} element
      */
+    if(this.state.withSkeleton){
+      return <AltrpSkeletonBoxFrontApp itemsCount={this.props.skeletonItems}/>
+    }
     const {
       element
     } = this.props;
@@ -533,4 +558,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default window.reactRedux.connect(mapStateToProps)(SimpleElementWrapper);
+export default window.reactRedux.connect(mapStateToProps)(SingleElementWrapper);
