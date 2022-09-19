@@ -17,6 +17,7 @@ import Overlay from "./Overlay";
 const { connect } = window.reactRedux;
 import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 import ElementWrapperGlobalStyles from "./ElementWrapperGlobalStyles";
+import AltrpSkeletonBox from "./altrp-skeleton-box/AltrpSkeletonBox";
 
 
 class ElementWrapper extends Component {
@@ -382,9 +383,7 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
-    if(this.element.settings['skeleton:preview'] && this.element.settings['skeleton:enable']){
-      return <AltrpSkeleton element={this.element}/>
-    }
+    const showSkeleton = this.element.settings['skeleton:preview'] && this.element.settings['skeleton:enable']
     const element = this.props.element
     let {
       isFixed,
@@ -522,7 +521,11 @@ class ElementWrapper extends Component {
           >
             <Overlay element={this.element}/>
             {
-              errorContent || React.createElement(this.props.component, elementProps)
+              errorContent
+              || <>
+                <AltrpSkeletonBox
+                  element={this.element}/>
+                {! showSkeleton && React.createElement(this.props.component, elementProps)}</>
             }
             {emptyColumn}
             <ElementWrapperGlobalStyles
