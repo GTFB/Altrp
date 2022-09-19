@@ -1,6 +1,12 @@
 import {connect} from "react-redux";
-import {StyleSheetManager} from "styled-components";
+import {StyleSheetManager, createGlobalStyle} from "styled-components";
 import ElementWrapper from "./ElementWrapper";
+
+const GlobalDefaults = createGlobalStyle`
+${()=>{
+  return window.globalDefaults.join('')
+}}
+`
 
 class ImportantStylesManager extends Component {
   componentDidMount() {
@@ -11,6 +17,7 @@ class ImportantStylesManager extends Component {
     const {primarySections} = this.props;
     return <StyleSheetManager target={document.getElementsByClassName("important_styles")[0]}>
       <div className="important_styles_manger">
+        <GlobalDefaults />
         {primarySections.map(section => {
           return <ElementWrapper
             key={`important_styles_manger${section.getId()}`}
@@ -24,6 +31,8 @@ class ImportantStylesManager extends Component {
     </StyleSheetManager>
   }
 }
+
+
 
 export default connect(state => ({
   primarySections: state.primarySections
