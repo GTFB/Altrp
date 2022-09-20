@@ -358,13 +358,7 @@ class ElementWrapper extends Component {
     if(!needUpdate){
       return false;
     }
-    // if(this.state.children) {
-    //   if(this.state.children.component) {
-    //     if(this.state.children.component.settings.button_text) {
-    //       console.log(this.state.children.component.settings.button_text)
-    //     }
-    //   }
-    // }
+
 
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
@@ -473,7 +467,6 @@ class ElementWrapper extends Component {
       CKEditor: CKEditor,
       wrapper: this,
     };
-
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
       case "nav":
@@ -521,11 +514,14 @@ class ElementWrapper extends Component {
           >
             <Overlay element={this.element}/>
             {
-              errorContent
-              || <>
+              errorContent ||
+              <>
+              {this.element.settings['skeleton:enable'] &&
                 <AltrpSkeletonBox
-                  element={this.element}/>
-                {! showSkeleton && React.createElement(this.props.component, elementProps)}</>
+                  settings={{...this.element.settings}}
+                  element={this.element}/>}
+              {! showSkeleton && React.createElement(this.props.component, elementProps)}
+              </>
             }
             {emptyColumn}
             <ElementWrapperGlobalStyles

@@ -1,9 +1,9 @@
 import {createGlobalStyle} from "styled-components";
 import {dimensionsControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
-import {connect} from "react-redux";
 
 const Styles = createGlobalStyle`
-${({element}) => {
+${({element, settings}) => {
+  console.log(settings);
   let elementStyles = ''
   let afterStyles = ''
   let keyFrames = ''
@@ -94,7 +94,7 @@ ${({element}) => {
   const elementId = element.getId()
 
   const styles =  `
-  ${preview && enable ? `` : `#editor-content .altrp-element${elementId} > .altrp-skeleton-box{display:none;}`}
+    ${preview && enable ? `` : `#editor-content .altrp-element${elementId} > .altrp-skeleton-box{display:none;}`}
     ${elementStyles ? `.altrp-element${elementId} > .altrp-skeleton-box,
     .altrp-element${elementId} > .altrp-skeleton-box > .altrp-skeleton-box__item
     {
@@ -128,6 +128,4 @@ ${({element}) => {
 
 }}
 `
-export default connect(state=>{
-  return {currentScreen: state.currentScreen}
-})(Styles)
+export default Styles
