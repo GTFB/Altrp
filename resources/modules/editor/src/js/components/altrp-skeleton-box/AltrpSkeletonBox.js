@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import AltrpSkeletonBoxFrontApp from "../../../../../front-app/src/js/components/AltrpSkeletonBoxFrontApp";
 import Styles from "./Styles";
+import {connect} from "react-redux";
 
 class AltrpSkeletonBox extends Component {
   render() {
@@ -11,11 +12,16 @@ class AltrpSkeletonBox extends Component {
       rows = 1
     }
     const itemsCount = columns * rows
+
     return <>
-      <Styles element={element} />
+      <Styles element={element}
+              settings={this.props.settings}
+              currentScreen={this.props.currentScreen} />
       <AltrpSkeletonBoxFrontApp itemsCount={itemsCount}/>
     </>
   }
 }
 
-export default AltrpSkeletonBox
+export default connect(state=>{
+  return {currentScreen: state.currentScreen}
+})(AltrpSkeletonBox)
