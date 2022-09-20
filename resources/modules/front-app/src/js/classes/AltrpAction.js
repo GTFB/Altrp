@@ -25,6 +25,7 @@ import delay from "../functions/delay"
 import altrpCompare from "../functions/altrpCompare"
 import getWrapperHTMLElementByElement from "../functions/getWrapperHTMLElementByElement"
 import Resource from "../../../../editor/src/js/classes/Resource"
+import replacePageContent from "../helpers/replace-page-content";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -594,7 +595,7 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty('back')) {
         history.back()
       } else {
-        window.location.href = URL;
+        replacePageContent(URL)
       }
     }
     return {

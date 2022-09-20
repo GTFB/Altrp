@@ -37,7 +37,6 @@ export default function mountElements(){
     window.ReactDOM.render(<window.Provider store={window.appStore}>
       <window.ElementWrapper {...props} />
     </window.Provider>,  container, ()=>{
-      console.log('Load Element:', performance.now());
     })
   })
   import('../classes/modules/HAltrp');

@@ -8,6 +8,7 @@ import CategoryObject from "App/Models/CategoryObject";
 import PageGenerator from "App/Generators/PageGenerator";
 import validGuid from "../../../../helpers/validGuid";
 import LIKE from "../../../../helpers/const/LIKE";
+import AltrpRouting from "App/Controllers/Http/AltrpRouting";
 
 export default class PagesController {
   public async getTemplatePagesIds({ request, response}:HttpContextContract){
@@ -204,6 +205,17 @@ export default class PagesController {
     return {
       success: true
     }
+  }
+
+  public async getPageContent(httpContext:HttpContextContract){
+    const {url} = httpContext.request.all()
+
+    if(! url){
+      return
+    }
+    const altrpRouting = new AltrpRouting
+
+    return await altrpRouting.getContentByUrl(url, httpContext);
   }
 
   public async getAreas() {

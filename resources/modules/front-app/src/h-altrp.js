@@ -12,3 +12,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     import('./js/helpers/dataAsyncContentLoad').then(cb=>cb.default())
   }
 })
+if(document.querySelector('a[href]')){
+  import('./js/functions/events-handlers/document-click')
+}

@@ -57,7 +57,7 @@ class BasicLink extends Component {
         dangerouslySetInnerHTML: { __html: this.props.children }
       });
     }
-
+    console.log(children);
     return settings.tag === "a" ? (
       <a
         href={settings.href}
@@ -65,11 +65,9 @@ class BasicLink extends Component {
         target={target}
         style={styleChildren}
         className={className}
+        dangerouslySetInnerHTML={{__html: children}}
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
       >
-        {
-          children
-        }
       </a>
     ) : (
       <window.Link
@@ -77,11 +75,9 @@ class BasicLink extends Component {
         className={className}
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
         href={settings.href}
+        dangerouslySetInnerHTML={{__html: children}}
         to={settings.to}
       >
-        {
-          children
-        }
       </window.Link>
     )
   }

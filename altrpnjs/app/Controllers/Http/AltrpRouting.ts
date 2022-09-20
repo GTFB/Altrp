@@ -49,34 +49,8 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async index(httpContext: HttpContextContract) {
-    /**
-     * Игнорим все запросы кроме get
-     */
-
-    const url = httpContext.request.url();
-    /**
-     * Игнорим логинизацию
-     */
-    for (const route of IGNORED_ROUTES) {
-      if (route === url) {
-        return
-      }
-    }
-
-    const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
-
-    if (httpContext.request.completeUrl().split(modulesUrl).length > 1) {
-      return
-    }
+  public async getContentByUrl(url, httpContext: HttpContextContract){
     const asCheck = isRobot(httpContext.request.headers())
-
-    /**
-     * Игнорим админку и ajax
-     */
-    if (url.split('/')[1] === 'admin' || url.split('/')[1] === 'ajax') {
-      return
-    }
 
     const start = performance.now();
     console.log(performance.now() - start);
@@ -206,7 +180,7 @@ export default class AltrpRouting {
 
     const altrpContext = {
       ...model_data,
-        ...pageMatch.params,
+      ...pageMatch.params,
       altrpuser,
       altrppage: {
         title,
@@ -305,6 +279,36 @@ export default class AltrpRouting {
          ${e.stack}
          `)
     }
+  }
+
+  public async index(httpContext: HttpContextContract) {
+    /**
+     * Игнорим все запросы кроме get
+     */
+
+    const url = httpContext.request.url();
+    /**
+     * Игнорим логинизацию
+     */
+    for (const route of IGNORED_ROUTES) {
+      if (route === url) {
+        return
+      }
+    }
+
+    const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
+
+    if (httpContext.request.completeUrl().split(modulesUrl).length > 1) {
+      return
+    }
+
+    /**
+     * Игнорим админку и ajax
+     */
+    if (url.split('/')[1] === 'admin' || url.split('/')[1] === 'ajax') {
+      return
+    }
+    return this.getContentByUrl(url, httpContext)
   }
   async tryRenderEdgeTemplate({page,
                                 httpContext,
