@@ -100,6 +100,7 @@ class AltrpPosts extends React.Component {
         ...state,
         posts: prevProps.data,
       }));
+      if (this.state.currentPage > 1) this.setPage(1)
     }
     if (this.props.data !== prevProps.data) {
       this.postsComponents = {};

@@ -400,11 +400,13 @@ class InputTextCommonWidget extends Component {
    * @param {{}} e
    */
   handleEnter = e => {
+    console.log('dwddwrrr444')
     if (e.keyCode === 13) {
       e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
+      const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
       const index = inputs.indexOf(e.target);
       if (index === undefined) return;
+      if (!e.target.hasAttribute('data-enter')) return;
       inputs[index + 1] && inputs[index + 1].focus();
       const {
         create_allowed,
@@ -924,6 +926,10 @@ class InputTextCommonWidget extends Component {
       autocomplete = "off";
     }
 
+    const maxlength = this.props.element.getResponsiveLockedSetting("maxlength_input_text")
+    const typeInput = this.state.settings.content_type === 'text' || this.state.settings.content_type === 'password'
+    const enterNextInput = this.props.element.getResponsiveLockedSetting("content_enter_input") ?? true
+
     let input = (
       <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
         <AltrpInput
@@ -932,6 +938,8 @@ class InputTextCommonWidget extends Component {
           id={this.getName()}
           className={classes}
           value={value || ""}
+          maxLength={(maxlength > 0 && typeInput) ? maxlength : null}
+          data-enter={enterNextInput ? 'enabled' : null}
           element={this.props.element}
           readOnly={content_readonly}
           autoComplete={autocomplete}

@@ -153,6 +153,7 @@ class MaskedInput extends React.Component {
 
       e.preventDefault()
     }
+    this.props.inputProps.onKeyDown(e)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
