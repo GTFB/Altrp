@@ -400,7 +400,6 @@ class InputTextCommonWidget extends Component {
    * @param {{}} e
    */
   handleEnter = e => {
-    console.log('dwddwrrr444')
     if (e.keyCode === 13) {
       e.preventDefault();
       const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
