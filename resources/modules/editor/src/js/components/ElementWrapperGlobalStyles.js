@@ -54,6 +54,7 @@ import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
 import getResponsiveSetting from "../../../../front-app/src/js/functions/getResponsiveSetting";
 import {connect} from "react-redux";
+import hoverTransitions from "./widgets/styled-components/hoverTransitions";
 
 let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
                                                                elementName,
@@ -343,6 +344,8 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       `.${prefix}${elementId}`
     );
   }
+  styles += hoverTransitions(settings, elementId)
+
   return styles;
 }}`;
 ElementWrapperGlobalStyles = connect((state)=>{

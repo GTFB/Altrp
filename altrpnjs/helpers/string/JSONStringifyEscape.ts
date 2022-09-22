@@ -1,4 +1,8 @@
-export default function JSONStringifyEscape(data:any):string{
+export default function JSONStringifyEscape(data:any, forAttribute: boolean = false):string{
 
-  return  (JSON.stringify(data) || 'undefined').replace(/\//g, '\\/')
+  data =  (JSON.stringify(data) || 'undefined').replace(/\//g, '\\/')
+  if(forAttribute){
+    data = data.replace(/"/g, '\\"')
+  }
+  return data
 }

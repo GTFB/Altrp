@@ -3,7 +3,6 @@ import {dimensionsControllerToStyles} from "../../../../../front-app/src/js/help
 
 const Styles = createGlobalStyle`
 ${({element, settings}) => {
-  console.log(settings);
   let elementStyles = ''
   let afterStyles = ''
   let keyFrames = ''

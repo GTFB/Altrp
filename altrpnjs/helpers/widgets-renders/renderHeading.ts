@@ -133,7 +133,7 @@ export default function renderHeading(settings, device) {
         }
         advancedHeading = `<div class="altrp-heading-advanced-wrapper">
 <${settings.heading_settings_html_tag || 'h2'} class="${classes}" style="${objectToStylesString(styles)}">
-${getResponsiveSetting(settings, "text_advanced_heading_content", device)}</${settings.heading_settings_html_tag || 'h2'}></div>`
+${settings.text_advanced_heading_content || ''}</${settings.heading_settings_html_tag || 'h2'}></div>`
 
         let currentBreakpoint: {
           type?: string,
