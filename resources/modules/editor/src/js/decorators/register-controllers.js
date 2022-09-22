@@ -10,7 +10,7 @@ import {
   TAB_ADVANCED,
   CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER,
   CONTROLLER_TEXT, CONTROLLER_NUMBER,
-  CONTROLLER_TYPOGRAPHIC, CONTROLLER_TEXTAREA
+  CONTROLLER_TYPOGRAPHIC, CONTROLLER_TEXTAREA, CONTROLLER_CHOOSE
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../front-app/src/js/helpers";
@@ -1324,7 +1324,6 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
-
   element.startControlSection('skeleton', {
     tab: TAB_ADVANCED,
     label: 'Skeleton Settings',
@@ -1413,17 +1412,17 @@ export function advancedTabControllers(element) {
   //   type: CONTROLLER_COLOR,
   // });
 
-  // element.addControl('skeleton:fade_speed', {
-  //   type: CONTROLLER_SLIDER,
-  //   label: 'Fade Speed',
-  //   units: ['ms'],
-  //   max: 5000,
-  //   min: 0,
-  //   default: {
-  //     unit: 'ms',
-  //     size: 0
-  //   }
-  // })
+  element.addControl('skeleton:fade_speed', {
+    type: CONTROLLER_SLIDER,
+    label: 'Fade Speed',
+    units: ['ms'],
+    max: 5000,
+    min: 0,
+    default: {
+      unit: 'ms',
+      size: 0
+    }
+  })
 
   element.addControl('skeleton_pending_path', {
     type: CONTROLLER_TEXTAREA,
@@ -1434,12 +1433,141 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
+
+  element.startControlSection('hover-transition', {
+    tab: TAB_ADVANCED,
+    label: 'Hover Transform',
+  });
+
+
+  element.addControl('hover-transition:rotate', {
+    type: CONTROLLER_SLIDER,
+    label: 'Rotate',
+    units: ['deg'],
+    dynamic: false,
+    min: -360,
+    max: 360,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:scale-x', {
+    type: CONTROLLER_TEXT,
+    label: 'Scale X',
+    dynamic: false,
+    responsive: false,
+  })
+
+
+  element.addControl('hover-transition:scale-y', {
+    type: CONTROLLER_TEXT,
+    label: 'Scale Y',
+    dynamic: false,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:offset-x', {
+    type: CONTROLLER_TEXT,
+    label: 'Offset X',
+    dynamic: false,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:offset-y', {
+    type: CONTROLLER_TEXT,
+    label: 'Offset Y',
+    dynamic: false,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:skew-x', {
+    type: CONTROLLER_TEXT,
+    label: 'Skew X',
+    dynamic: false,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:skew-y', {
+    type: CONTROLLER_TEXT,
+    label: 'Skew Y',
+    dynamic: false,
+    responsive: false,
+  })
+
+
+  element.addControl('hover-transition:flip-x', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Flip Horizontal',
+    dynamic: false,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:flip-y', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Flip Vertical',
+    dynamic: false,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:duration', {
+    type: CONTROLLER_SLIDER,
+    label: 'Duration',
+    units: ['ms'],
+    default: {
+      unit: 'ms',
+      size: '300'
+    },
+    min: 0,
+    max: 10000,
+    dynamic: false,
+    responsive: false,
+  })
+
+  element.addControl('hover-transition:x-anchor', {
+    type: CONTROLLER_CHOOSE,
+    dynamic: false,
+    label: 'X Anchor Point',
+    options: [
+      {
+        icon: 'block_left',
+        value: 'left',
+      },
+      {
+        icon: 'block_vertically',
+        value: 'center',
+      },
+      {
+        icon: 'block_right',
+        value: 'right',
+      },
+    ],
+  });
+
+  element.addControl('hover-transition:y-anchor', {
+    type: CONTROLLER_CHOOSE,
+    dynamic: false,
+    label: 'Y Anchor Point',
+    options: [
+      {
+        icon: 'block_top',
+        value: 'top',
+      },
+      {
+        icon: 'block_horiz',
+        value: 'center',
+      },
+      {
+        icon: 'block_bottom',
+        value: 'bottom',
+      },
+    ],
+  });
+
+  element.endControlSection();
+
   element.startControlSection('sticky_section', {
     label: 'Sticky',
     tab: TAB_ADVANCED,
   })
-
-
 
   element.addControl('sticky', {
     type: CONTROLLER_SELECT,

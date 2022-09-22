@@ -156,7 +156,7 @@ export default class AltrpRouting {
         const ModelClass = (await import(`../../AltrpModels/${page.model.name}`)).default
         let classInstance
         if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
-          classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
+          classInstance = await ModelClass.query().where(page.model_column, pageMatch.params[page.param_name]).first()
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
@@ -169,10 +169,9 @@ export default class AltrpRouting {
       if (_.isEmpty(model_data)) {
         httpContext.response.status(404)
 
-        if (!page) {
-          httpContext.response.status(404)
-          page = await Page.query().where('not_found', true).first()
-        }
+        httpContext.response.status(404)
+        page = await Page.query().where('not_found', true).first()
+
 
         if (!page) {
           return httpContext.response.send('Not Found')

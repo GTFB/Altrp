@@ -5,6 +5,7 @@
 
 ### 1.3.0
 * Added Extended Skeleton Features Support for All Elements
+* Added Hover Transform Settings 
 * Change Empty Image PlaceHolder
 * Change Default Font Family To `Arial`
 
