@@ -7,6 +7,7 @@ import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
+import CustomizerGenerator from 'App/Generators/CustomizerGenerator';
 // import timers from "App/Services/Timers";
 import timers from "../../../Services/Timers";
 import LIKE from "../../../../helpers/const/LIKE";
@@ -194,6 +195,12 @@ export default class CustomizersController {
     delete all.created_at
     delete all.updated_at
 
+    if (oldType === 'crud' && all.type !== 'crud') {
+      const generator = new CustomizerGenerator(customizer)
+
+      generator.delete()
+    }
+
     customizer.merge(all)
     customizer.merge({
       name: request.all().name,
@@ -210,6 +217,7 @@ export default class CustomizersController {
     if(oldType === 'api' && customizer.$dirty.type && oldSource){
       await oldSource.delete()
     }
+
     let model
     try {
       model = await Model.find(customizer.model_id)
@@ -250,6 +258,13 @@ export default class CustomizersController {
 
         await generator.run(customizer)
       }
+
+      if (customizer.type === 'crud' && model) {
+        const generator = new CustomizerGenerator(customizer)
+
+        await generator.run()
+      }
+
       if(model) {
         Event.emit('model:updated', model)
       }

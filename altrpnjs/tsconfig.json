@@ -8,6 +8,7 @@
     "node_modules",
     "app/AltrpModels",
     "app/AltrpControllers",
+    "app/AltrpCRUDs",
     "app/AltrpListeners",
     "app/AltrpPlugins",
     "public",

@@ -1,3 +1,4 @@
+import execa from 'execa'
 import isProd from "../../helpers/isProd";
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
@@ -40,5 +41,14 @@ export default class AltrpEvent {
     //     r.default(type, data)
     //   })
     // }
+
+    const [_namespace, modelName, eventType] = type.split('.')
+
+    const before = eventType.indexOf('before') === 0
+    const actionType = eventType.replace('after', '').replace('before', '').toLowerCase()
+
+    await execa.node('ace', ['hook:crud', modelName, actionType, data.id], {
+      before,
+    })
   }
 }

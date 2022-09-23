@@ -1,5 +1,47 @@
 {
   "commands": {
+    "customizer:crud": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/CustomizerCrud",
+      "commandName": "customizer:crud",
+      "description": "Run a CRUD customizer",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "modelName",
+          "name": "model",
+          "required": true,
+          "description": "Name of the model"
+        },
+        {
+          "type": "string",
+          "propertyName": "action",
+          "name": "action",
+          "required": false,
+          "description": "Action type that should be hooked [create(default), read, update, delete]"
+        },
+        {
+          "type": "string",
+          "propertyName": "instanceId",
+          "name": "id",
+          "required": false,
+          "description": "Id of the instance"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "before",
+          "propertyName": "isBefore",
+          "type": "boolean",
+          "alias": "b",
+          "description": "Trigger the hook before the model action"
+        }
+      ]
+    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",
