@@ -778,6 +778,18 @@ class InputMultiSelect extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
     });
 
+    this.addControl('multiselect_style_border_gradient_custom', {
+      type: CONTROLLER_SWITCHER,
+      label: "Border Gradient",
+    });
+
+    this.addControl("multiselect_style_gradient_text", {
+      type: CONTROLLER_TEXTAREA,
+      label: "linear-gradient",
+      default: '',
+      description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
+    });
+
     this.endControlSection();
 
     this.startControlSection("transform_section", {

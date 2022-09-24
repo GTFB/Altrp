@@ -805,5 +805,42 @@ export function getHeadingTypeHeadingStyles(settings, id) {
 
   styles += `} `;
 
+  styles += `${parentClass} .altrp-heading {`
+  const gradientColor = getResponsiveSetting(
+    settings,
+    "style_text_gradient_switcher"
+  );
+
+  const gradientTextarea = getResponsiveSetting(
+    settings,
+    "style_text_gradient_textarea"
+  ) || ''
+
+  if (gradientColor) {
+    styles += `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-text-fill-color: transparent;`
+  }
+
+  styles += `} `;
+
+
+  styles += `${parentClass} .altrp-heading:hover {`
+  const gradientColorH = getResponsiveSetting(
+    settings,
+    "style_text_gradient_switcher",
+    ":hover"
+  );
+
+  const gradientTextareaH = getResponsiveSetting(
+    settings,
+    "style_text_gradient_textarea",
+    ":hover"
+  ) || ''
+
+  if (gradientColorH) {
+    styles += `background-image: ${gradientTextareaH.replace(/;/g, '')}; -webkit-text-fill-color: transparent;`
+  }
+
+  styles += `} `;
+
   return styles;
 }

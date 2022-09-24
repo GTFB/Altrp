@@ -113,7 +113,7 @@ const fieldStyle = (settings) => {
   settings &&
     (borderRadius = getResponsiveSetting(
       settings,
-      "global_filter_input_border_radius"
+      "border_radius"
     ));
   borderRadius &&
     (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
@@ -217,7 +217,7 @@ const fieldStyleHover = (settings) => {
   settings &&
     (borderRadius = getResponsiveSetting(
       settings,
-      "global_filter_input_border_radius",
+      "border_radius",
       ":hover"
     ));
   borderRadius &&
