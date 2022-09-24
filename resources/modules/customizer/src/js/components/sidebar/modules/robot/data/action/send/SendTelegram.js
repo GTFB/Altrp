@@ -120,7 +120,7 @@ export default class SendTelegram extends Component{
       else this.onNotice();
       const typeOptions = [
         {label:'Text', value: 'content'},
-        {label: 'Customizer', value: 'customizer'},
+        {label: 'Robotizer', value: 'customizer'},
         {label:'Link', value: 'link'},
         {label:'Photo', value: 'photo'},
         {label:'File', value: 'file'},

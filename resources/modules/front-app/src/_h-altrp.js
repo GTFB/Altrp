@@ -55,6 +55,7 @@ documentCheckEvents( () => {
       const hAltrpLoadedEvent = new Event('h-altrp-loaded');
       // console.log('h-altrp-loaded');
       window.dispatchEvent(hAltrpLoadedEvent);
+      document.dispatchEvent(hAltrpLoadedEvent);
 
       let actionComponents = _.get(__altrp_settings__, 'action_components', [])
       if(actionComponents.find((action => action === 'toggle_popup'))){

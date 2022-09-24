@@ -72,13 +72,13 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
 }
 .altrp-field-label {
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
 .altrp-field-select2__single-value, .altrp-field {
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -98,7 +98,7 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
 }
 .altrp-field::placeholder, .altrp-field-select2__placeholder {
   font-size: 13px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
