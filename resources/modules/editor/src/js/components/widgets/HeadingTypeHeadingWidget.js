@@ -33,6 +33,11 @@ import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURL
 .altrp-heading-sub-container-link {
   margin: 0;
 }
+
+.text-gradient-color {
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+}
 `)
 
 class HeadingTypeHeadingWidget extends Component {
@@ -67,12 +72,13 @@ class HeadingTypeHeadingWidget extends Component {
   render() {
     let heading;
     let textStrokeSwitch = this.props.element.getResponsiveLockedSetting('style_text_stroke_switcher')
+    let gradientColor = this.props.element.getResponsiveSetting('style_text_gradient_switcher')
 
     let modelData = this.props.element.getCurrentModel().getData();
     const background_image = this.props.element.getLockedSettings('background_image', {});
     let text = this.getLockedContent('text');
     let link;
-    const className = this.getClasses() + (this.state.settings.position_css_classes || "") + " altrp-heading altrp-heading--link " + (background_image.url ? ' altrp-background-image' : '') + (textStrokeSwitch ? "text-stroke-included" : "");
+    const className = this.getClasses() + (this.state.settings.position_css_classes || "") + " altrp-heading altrp-heading--link " + (background_image.url ? ' altrp-background-image' : '') + (textStrokeSwitch ? "text-stroke-included" : "") + (gradientColor ? "text-gradient-color" : "");
 
     if (this.state.settings.link_link && this.state.settings.link_link.url) {
       let linkProps = {

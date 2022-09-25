@@ -5,7 +5,7 @@ import getComponentByElementId from "../../../../../front-app/src/js/functions/g
 import getHTMLElementById from "../../../../../front-app/src/js/functions/getHTMLElementById";
 import printElements from "../../../../../front-app/src/js/functions/printElements";
 import scrollToElement from "../../../../../front-app/src/js/functions/scrollToElement";
-import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
@@ -295,7 +295,7 @@ class DropbarWidget extends Component {
         {
           showIcon ? (
             ! isSSR() && <span className={`${classesState} altrp-btn-icon`}>
-          {renderAssetIcon(buttonMedia)}{" "}
+          {renderAsset(buttonMedia)}
           </span>
           ) : ""
         }
