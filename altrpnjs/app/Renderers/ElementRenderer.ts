@@ -87,6 +87,7 @@ export default class ElementRenderer {
           break
       }
       let styles: {} | string = {}
+      let deleteOverflowHidden = getResponsiveSetting(settings,"switch_overflow_hidden_section", screenName) ? "overflow: initial" : "";
       const {layout_content_width_type: widthType, isFixed} = this.element.settings
       let section_classes = ''
 
@@ -138,7 +139,7 @@ export default class ElementRenderer {
           settings: JSON.stringify(this.element.settings),
           id: this.element.id,
           children_content,
-          element_styles: styles,
+          element_styles: `${styles}${deleteOverflowHidden}`,
           section_classes,
           column_classes: getColumnClasses(settings, screenName),
           section_background,

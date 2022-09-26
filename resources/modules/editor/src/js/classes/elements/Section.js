@@ -335,6 +335,12 @@ class Section extends BaseElement{
       locked: true,
     });
 
+    this.addControl('switch_overflow_hidden_section', {
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Delete Overflow Hidden"
+    });
+
     this.addControl('layout_columns_height', {
       // type: CONTROLLER_NUMBER,
       label: 'Columns height (%)',
