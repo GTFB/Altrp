@@ -55,6 +55,11 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
       height: 25px;
       width: 25px;
     }
+
+    & img {
+      height: 25px;
+      width: 25px;
+    }
   }
 
   .btn-container-row {

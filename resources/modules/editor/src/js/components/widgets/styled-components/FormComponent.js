@@ -408,7 +408,7 @@ const fieldStyle = (settings) => {
     widthTextArea,
     boxShadow,
     toggle,
-    height;
+    height, borderGradient, borderGradientH;
 
   const {
     placeholder_and_value_alignment_position_section,
@@ -422,6 +422,10 @@ const fieldStyle = (settings) => {
     image_select_image_position,
     cross_size,
   } = settings;
+
+  if (settings !== undefined) {
+    borderGradient = getResponsiveSetting(settings, 'textarea_style_border_gradient_custom');
+  }
 
   settings &&
     (widthTextArea = getResponsiveSetting(settings, "field_width_textarea"));
@@ -451,7 +455,7 @@ const fieldStyle = (settings) => {
     (styles += simplePropertyStyled(borderType, "border-style", "!important"));
 
   settings && (borderColor = getResponsiveSetting(settings, "border_color"));
-  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+  (borderColor && !borderGradient) && (styles += colorPropertyStyled(borderColor, "border-color"));
 
   settings && (borderWidth = getResponsiveSetting(settings, "border_width"));
   borderWidth && (styles += borderWidthStyled(borderWidth));
@@ -469,8 +473,14 @@ const fieldStyle = (settings) => {
       settings,
       "background_style_background_color"
     ));
-  backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  (backgroundColor && !borderGradient) &&
+    (styles += colorPropertyStyled(backgroundColor, "background"));
+
+  if (borderGradient) {
+    let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+    let textareaText = getResponsiveSetting(settings, 'textarea_style_gradient_text' )?.replace(/;/g, '') || ''
+    styles += `background: linear-gradient(${bg},${bg}) padding-box, ${textareaText} border-box; border-color: transparent;`;
+  }
 
   placeholder_and_value_alignment_position_section &&
     (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
@@ -522,6 +532,10 @@ const fieldStyle = (settings) => {
 
   styles += `&& .altrp-field:hover {`;
 
+  if (settings !== undefined) {
+    borderGradientH = getResponsiveSetting(settings, 'textarea_style_border_gradient_custom', ':hover');
+  }
+
   settings &&
     (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
@@ -539,7 +553,7 @@ const fieldStyle = (settings) => {
 
   settings &&
     (borderColor = getResponsiveSetting(settings, "border_color", ":hover"));
-  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+  (borderColor && !borderGradientH) && (styles += colorPropertyStyled(borderColor, "border-color"));
 
   settings &&
     (borderWidth = getResponsiveSetting(settings, "border_width", ":hover"));
@@ -562,8 +576,14 @@ const fieldStyle = (settings) => {
       "background_style_background_color",
       ":hover"
     ));
-  backgroundColor &&
+  (backgroundColor && !borderGradientH) &&
     (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  if (borderGradientH) {
+    let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+    let textareaText = getResponsiveSetting(settings, 'textarea_style_gradient_text', ":hover")?.replace(/;/g, '') || ''
+    styles += `background: linear-gradient(${bg},${bg}) padding-box, ${textareaText} border-box; border-color: transparent;`;
+  }
 
   styles += "}";
 

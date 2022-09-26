@@ -43,11 +43,6 @@ import Animating from "../altrp-heading/Animating";
   transition-property: prop;
 }
 
-.altrp-heading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .altrp-heading-wrapper {
   display: flex;

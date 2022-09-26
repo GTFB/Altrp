@@ -9,14 +9,16 @@ import {setScrollValue} from "./js/store/scroll-position/actions";
 window.Link = 'a';
 window.count = 0
 window.countReduced = 0
-function _hAltrp() {
-  function loadDatastorageUpdater() {
-    import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
-      const dataStorageUpdater = window.dataStorageUpdater;
 
-      dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
-    });
-  }
+function loadDatastorageUpdater() {
+  import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
+    const dataStorageUpdater = window.dataStorageUpdater;
+
+    dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
+  });
+}
+
+function _hAltrp() {
 
   import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     window.currentRouterMatch = new window.AltrpModel({
@@ -53,11 +55,12 @@ function _hAltrp() {
           (window.libsToLoad.length
             === window.libsLoaded.length))
       ) {
-        console.log('h-altrp LOADED: ', performance.now());
+        console.trace('h-altrp LOADED: ', performance.now());
 
         const hAltrpLoadedEvent = new Event('h-altrp-loaded');
         // console.log('h-altrp-loaded');
         window.dispatchEvent(hAltrpLoadedEvent);
+        document.dispatchEvent(hAltrpLoadedEvent);
 
         let actionComponents = _.get(__altrp_settings__, 'action_components', [])
         if (actionComponents.find((action => action === 'toggle_popup'))) {

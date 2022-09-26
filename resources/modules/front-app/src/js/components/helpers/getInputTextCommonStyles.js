@@ -1,4 +1,4 @@
-import {colorPropertyStyled, styledString, typographicControllerToStyles} from "../../helpers/styles";
+import {colorPropertyStyled, gradientStyled, styledString, typographicControllerToStyles} from "../../helpers/styles";
 import getResponsiveSetting from "../../functions/getResponsiveSetting";
 
 /**
@@ -74,14 +74,37 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['padding', 'position_padding', 'dimensions'],
       ['', 'field_font_typographic', 'typographic'],
       ['color', 'field_font_color', 'color'],
-      ['background-color', 'background_style_background_color', 'color'],
+      // ['background-color', 'background_style_background_color', 'color'],
       () => {
         const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity');
         return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
       },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "input_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "background_style_background_color");
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+        let textareaText = getResponsiveSetting(settings, 'input_style_gradient_text')?.replace(/;/g, '') || ''
+        return `background: linear-gradient(${bg},${bg}) padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "input_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "background_style_background_color");
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "input_style_border_gradient_custom");
+      const borderColor = getResponsiveSetting(settings, "border_color");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
       ['border-style', 'border_type',],
       ['border-width', 'border_width', 'dimensions'],
-      ['border-color', 'border_color', 'color'],
+      // ['border-color', 'border_color', 'color'],
       ['border-radius', 'border_radius', 'dimensions'],
       ['', 'box_shadow', 'shadow'],
     () => {
@@ -148,14 +171,37 @@ export default function getInputTextCommonStyles(settings, elementId) {
     'bp3-input:hover',
       ['', 'field_font_typographic', 'typographic', ':hover'],
       ['color', 'field_font_color', 'color', ':hover'],
-      ['background-color', 'background_style_background_color', 'color',':hover'],
-      ['border-color', 'border_color', 'color',':hover'],
+      // ['background-color', 'background_style_background_color', 'color',':hover'],
+      // ['border-color', 'border_color', 'color',':hover'],
       ['border-radius', 'border_radius', 'dimensions',':hover'],
       ['', 'box_shadow', 'shadow',':hover'],
       () => {
         const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity', ':hover');
         return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
       },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "input_style_border_gradient_custom", ":hover");
+      const backgroundColor = getResponsiveSetting(settings, "background_style_background_color", ":hover");
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+        let textareaText = getResponsiveSetting(settings, 'input_style_gradient_text', ":hover")?.replace(/;/g, '') || ''
+        return `background: linear-gradient(${bg},${bg}) padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "input_style_border_gradient_custom", ":hover");
+      const backgroundColor = getResponsiveSetting(settings, "background_style_background_color", ":hover");
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "input_style_border_gradient_custom", ":hover");
+      const borderColor = getResponsiveSetting(settings, "border_color", ":hover");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
     '}',
     '.bp3-input.bp3-input.bp3-input.bp3-input:focus',
       ['', 'field_font_typographic', 'typographic', ':focus'],

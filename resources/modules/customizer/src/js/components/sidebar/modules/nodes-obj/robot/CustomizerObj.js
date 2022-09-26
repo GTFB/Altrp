@@ -3,7 +3,7 @@ import CustomizerNode from "../../data/CustomizerNode";
 import Customizer from "../../widgets/Customizer";
 
 export const CustomizerObj = {
-  title: 'Customizer',
+  title: 'Robotizer',
   name: 'customizer',
   selectedNode: CustomizerNode,
   node: Customizer,

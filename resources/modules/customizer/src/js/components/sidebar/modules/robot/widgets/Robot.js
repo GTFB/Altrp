@@ -9,7 +9,7 @@ export default class Robot extends React.Component {
 
   redirectTo(item) {
     if (!item) {
-      alert('Customizer not found');
+      alert('Robotizer not found');
     }
     else {
       if (confirm('Save?')) return window.location.href = `robots-editor?robot_id=${item}`;

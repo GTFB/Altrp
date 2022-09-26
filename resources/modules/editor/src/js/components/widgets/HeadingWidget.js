@@ -5,6 +5,7 @@ import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURL
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-heading {
+  display: block;
   margin-top: 5px;
   margin-right: 0;
   margin-bottom: 5px;
@@ -16,6 +17,7 @@ import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURL
   background-position: top left;
   background-attachment: scroll;
   background-repeat: repeat;
+
 }
 
 .altrp-heading-advanced-wrapper {

@@ -744,7 +744,7 @@ class InputDate extends BaseElement {
 
     this.addControl("border_radius", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Radius",
+      label: "Border Radius",
       default: {
         unit: "px",
       },

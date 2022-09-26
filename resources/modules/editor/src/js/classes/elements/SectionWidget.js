@@ -14,7 +14,7 @@ import {
   CONTROLLER_COLWIDTH,
   TAB_STYLE,
   CONTROLLER_GRADIENT,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA, CONTROLLER_TEXTAREA
 } from "../modules/ControllersManager";
 import RowIcon from "../../../svgs/section.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
@@ -602,6 +602,18 @@ class SectionWidget extends BaseElement {
     this.addControl("section_style_box_shadow", {
       type: CONTROLLER_SHADOW,
       label: "Shadow",
+    });
+
+    this.addControl('section_style_border_gradient_custom', {
+      type: CONTROLLER_SWITCHER,
+      label: "Border Gradient",
+    });
+
+    this.addControl("section_style_gradient_text", {
+      type: CONTROLLER_TEXTAREA,
+      label: "linear-gradient",
+      default: '',
+      description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
     });
 
     this.endControlSection();

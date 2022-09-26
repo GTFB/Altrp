@@ -13,8 +13,8 @@ import {
 const ColumnComponent = (settings) => {
   let styles = "";
 
-  let flexWrap, flexDirection, align, justifyContent, overflow, backgroundColor, gradient, zIndex, borderType, borderWidth, borderColor, borderRadius, boxShadow;
-  let backgroundColorH, gradientH, borderTypeH, borderWidthH, borderColorH, borderRadiusH, boxShadowH;
+  let flexWrap, flexDirection, align, justifyContent, overflow, backgroundColor, gradient, zIndex, borderType, borderWidth, borderColor, borderRadius, boxShadow, borderGradient;
+  let backgroundColorH, gradientH, borderTypeH, borderWidthH, borderColorH, borderRadiusH, boxShadowH, borderGradientH;
   let marginBottom, marginBottomH, backgroundImage, backgroundPosition, backgroundAttachment, backgroundRepeat, backgroundSizeInUnits, backgroundSize;
   let backgroundImageH, backgroundPositionH, backgroundAttachmentH, backgroundRepeatH, backgroundSizeInUnitsH, backgroundSizeH, margin, marginH, padding, paddingH, width;
 
@@ -92,13 +92,19 @@ const ColumnComponent = (settings) => {
     styles += simplePropertyStyled(overflow, 'overflow',);
   }
 
+  //Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderGradient = getResponsiveSetting(settings, 'column_style_border_gradient_custom');
+  }
+
   //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
   if (settings !== undefined) {
     backgroundColor = getResponsiveSetting(settings, 'column_style_background_color');
   }
 
-  if (backgroundColor) {
+  if (backgroundColor && !borderGradient) {
     styles += colorPropertyStyled(backgroundColor, 'background-color');
   }
   // console.log(settings);
@@ -108,7 +114,7 @@ const ColumnComponent = (settings) => {
     gradient = getResponsiveSetting(settings, 'gradient');
   }
 
-  if (gradient) {
+  if (gradient && !borderGradient) {
     styles += gradientStyled(gradient);
   }
 
@@ -148,7 +154,7 @@ const ColumnComponent = (settings) => {
     borderColor = getResponsiveSetting(settings, 'column_style_border_color');
   }
 
-  if (borderColor) {
+  if (borderColor && !borderGradient) {
     styles += colorPropertyStyled(borderColor, 'border-color');
   }
 
@@ -172,11 +178,23 @@ const ColumnComponent = (settings) => {
     styles += shadowStyled(boxShadow);
   }
 
+  if (borderGradient) {
+    let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+    let textareaText = getResponsiveSetting(settings, 'column_style_gradient_text')?.replace(/;/g, '') || ''
+    styles += `background: ${gradient?.isWithGradient ? gradient.value.replace(/;/g, '') : `linear-gradient(${bg},${bg})`} padding-box, ${textareaText} border-box; border-color: transparent;`;
+  }
+
   styles += "} ";
 
   //hover
 
   styles += "& > div.altrp-column.altrp-column-priority:hover {";
+
+//Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderGradientH = getResponsiveSetting(settings, 'column_style_border_gradient_custom', ':hover');
+  }
 
 
   //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
@@ -185,7 +203,7 @@ const ColumnComponent = (settings) => {
     backgroundColorH = getResponsiveSetting(settings, 'column_style_background_color', ':hover');
   }
 
-  if (backgroundColorH) {
+  if (backgroundColorH && !borderGradientH) {
     styles += colorPropertyStyled(backgroundColorH, 'background-color');
   }
 
@@ -195,8 +213,14 @@ const ColumnComponent = (settings) => {
     gradientH = getResponsiveSetting(settings, 'gradient', ':hover');
   }
 
-  if (gradientH) {
+  if (gradientH && !borderGradientH) {
     styles += gradientStyled(gradientH);
+  }
+
+  if (borderGradientH) {
+    let bg = backgroundColorH?.color ? backgroundColorH.color : 'rgba(255,255,255,1)'
+    let textareaText = getResponsiveSetting(settings, 'column_style_gradient_text', ':hover')?.replace(/;/g, '') || ''
+    styles += `background: ${gradientH?.isWithGradient ? gradientH.value.replace(/;/g, '') : `linear-gradient(${bg},${bg})`} padding-box, ${textareaText} border-box; border-color: transparent;`;
   }
 
   //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
@@ -225,7 +249,7 @@ const ColumnComponent = (settings) => {
     borderColorH = getResponsiveSetting(settings, 'column_style_border_color', ':hover');
   }
 
-  if (borderColorH) {
+  if (borderColorH && !borderGradientH) {
     styles += colorPropertyStyled(borderColorH, 'border-color');
   }
 

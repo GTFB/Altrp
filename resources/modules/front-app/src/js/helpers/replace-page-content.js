@@ -49,6 +49,7 @@ export default function replacePageContent(url, popstate = false){
         }
       } catch (e) {
         console.error(e);
+        location.href = url
       } finally {
         progressBar.remove()
       }
@@ -65,15 +66,6 @@ function _replace(htmlString){
   htmlString = htmlString.replace(/<!([\s\S]+?)>/, '')
   const newHtml = document.createElement('html')
   newHtml.innerHTML = htmlString
-  const mainScript = newHtml.querySelector('#main-script-altrp')
-
-  let oldMainScript = document.querySelector('#content_style')
-  if(! oldStyles){
-    oldMainScript = document.createElement('script')
-    oldMainScript.setAttribute('id', 'main-script-altrp')
-    document.body.appendChild(oldMainScript)
-  }
-  oldMainScript.innerHTML = mainScript.innerHTML
   const newContentStyle = newHtml.querySelector('#content_style')
 
   let oldStyles = document.querySelector('#content_style')
@@ -83,6 +75,17 @@ function _replace(htmlString){
     document.head.appendChild(oldStyles)
   }
   oldStyles.innerHTML = newContentStyle.innerHTML
+  
+  const mainScript = newHtml.querySelector('#main-script-altrp')
+
+  let oldMainScript = document.querySelector('#content_style')
+  if(! oldStyles){
+    oldMainScript = document.createElement('script')
+    oldMainScript.setAttribute('id', 'main-script-altrp')
+    document.body.appendChild(oldMainScript)
+  }
+  oldMainScript.innerHTML = mainScript.innerHTML
+
   document.querySelector('#content_style')
   const oldAreas = document.querySelectorAll('.app-area');
   for(const area of oldAreas) {
@@ -99,13 +102,17 @@ function _replace(htmlString){
   const title = document.querySelector('title')
   const newTitle = newHtml.querySelector('title')
   title.innerHTML = newTitle.innerHTML
+
+
   document.querySelector('.admin-bar-portal')?.remove()
   window.popupsContainer.remove()
   window.popupsContainer = null
   const event = new Event('DOMContentLoaded')
   document.dispatchEvent(event)
+
   window.hAltrp.loadComponents()
   appStore.dispatch(clearCurrentDataStorage())
+
   window._hAltrp()
   return{
     newTitle,

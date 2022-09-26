@@ -57,7 +57,7 @@ class BasicLink extends Component {
         dangerouslySetInnerHTML: { __html: this.props.children }
       });
     }
-    console.log(children);
+
     return settings.tag === "a" ? (
       <a
         href={settings.href}

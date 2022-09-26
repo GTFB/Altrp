@@ -291,9 +291,11 @@ class AssetsBrowser extends Component {
             </div>)}
           </div>}
           <div className="assets-browser-bottom">
-            <button className={buttonClasses} onClick={this.chooseAsset}>
-              Choose
-            </button>
+            {!(activeTab === 'icons') && (
+              <button className={buttonClasses} onClick={this.chooseAsset}>
+                Choose
+              </button>
+            )}
             {rawEnable && activeTab === 'icons' && <button className={buttonClasses + ' ml-3'} onClick={this.insertRaw}>Insert Raw</button>}
           </div>
         </div>
