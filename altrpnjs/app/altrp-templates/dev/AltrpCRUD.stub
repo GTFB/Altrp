@@ -1,0 +1,13 @@
+import _ from 'lodash'
+import Database from '@ioc:Adonis/Lucid/Database';
+import selectForSQLEditor from '../../helpers/selectForSQLEditor'
+import empty from '../../helpers/empty'
+{{{imports}}}
+
+const DB = Database?.default ? Database.default : Database
+
+export default class {{{name}}} extends AltrpBaseController {
+  async run(instanceId: string) {
+    {{{content}}}
+  }
+}

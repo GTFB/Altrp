@@ -59,8 +59,16 @@ export default class CustomizerGenerator extends BaseGenerator {
     if (!customizer.settings.event_type || !customizer.settings.event_hook_type) {
       return
     }
+    
+    await customizer.load((loader) => {
+      loader.load('altrp_model', loader=>{
+        loader.preload('table', loader=>{
+          loader.preload('columns')
+        })
+      })
+    })
 
-    let imports = ''
+    let imports = this.getImportsContent()
     let content = customizer.getMethodContent()
 
     content = await this.applyFilters('templates', content)
@@ -79,7 +87,8 @@ export default class CustomizerGenerator extends BaseGenerator {
       .apply({
         name: customizer.name,
         imports,
-        content
+        content,
+        params: 'instanceId'
       })
 
     clearRequireCache()
@@ -91,5 +100,23 @@ export default class CustomizerGenerator extends BaseGenerator {
     }
 
     this.deleteFiles()
+  }
+
+  private getImportsContent() {
+    return isProd() ? this.getProdImportsContent() : this.getDevImportsContent()
+  }
+
+  private getProdImportsContent() {
+    return `
+const ${this.customizer.altrp_model.name} = require('../AltrpModels/${this.customizer.altrp_model.name}').default
+const AltrpBaseController = require('../Controllers/AltrpBaseController').default
+`
+  }
+
+  private getDevImportsContent() {
+    return `
+import ${this.customizer.altrp_model.name} from '../AltrpModels/${this.customizer.altrp_model.name}'
+import AltrpBaseController from '../Controllers/AltrpBaseController'
+`
   }
 }

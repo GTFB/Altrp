@@ -65,8 +65,12 @@ export default class CustomizerCrud extends BaseCommand {
     const generator = new CustomizerGenerator(customizer)
     const filePath = generator.getFilePath()
 
-    const customizerFunc = await import(filePath)
+    const classCustomizerCRUD = await import(filePath)
 
-    customizerFunc && customizerFunc(instanceId)
+    if (classCustomizerCRUD) {
+      const customizerCRUD = new classCustomizerCRUD
+
+      customizerCRUD.run(instanceId)
+    }
   }
 }
