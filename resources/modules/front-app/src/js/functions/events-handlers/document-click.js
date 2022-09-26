@@ -13,13 +13,19 @@ export default function documentClick(e){
     return
   }
   let url = target.getAttribute('href')
-  if(url.indexOf('/') === 0
-    || url.indexOf(location.origin) === 0
-    && location.pathname !== url){
+  if(url.indexOf('/') !== 0
+    && url.indexOf(location.origin) !== 0){
+    return;
+  }
+  url = url.replace(location.origin, '')
+  url = location.origin + url
+  url = new URL(url)
+
+  if(location.pathname + location.search !== url.pathname + url.search){
     e.preventDefault();
-    url = url.replace(location.origin, '')
+
     try{
-      replacePageContent(url)
+      replacePageContent(url.pathname + url.search + url.hash)
     }catch (e) {
       console.error(e);
       location.href = url

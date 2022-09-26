@@ -1,9 +1,14 @@
 import {clearCurrentDataStorage} from "../store/current-data-storage/actions";
+import {clearElements} from "../store/elements-storage/actions";
+import mountElements from "../functions/mount-elements";
+import {changeCurrentPage} from "../store/current-page/actions";
+import convertQueryParamsToObject from "../functions/convert-query-params-to-object";
 
 export default function replacePageContent(url, popstate = false){
   if(! url){
     return
   }
+
   const progressBar = document.createElement('div')
   progressBar.style.background= 'rgb(48, 79, 253)'
   progressBar.style.boxShadow= 'rgb(0 0 0 / 15%) 0 4px 5px 0px'
@@ -25,6 +30,7 @@ export default function replacePageContent(url, popstate = false){
     if (e.lengthComputable)
     {
       let percent = (e.loaded / e.total) * 100;
+      console.log(percent);
       progressBar.style.transform = 'translate(' + (100 - percent) + '%)'
 
     }
@@ -75,15 +81,18 @@ function _replace(htmlString){
     document.head.appendChild(oldStyles)
   }
   oldStyles.innerHTML = newContentStyle.innerHTML
-  
+
   const mainScript = newHtml.querySelector('#main-script-altrp')
 
-  let oldMainScript = document.querySelector('#content_style')
-  if(! oldStyles){
-    oldMainScript = document.createElement('script')
-    oldMainScript.setAttribute('id', 'main-script-altrp')
-    document.body.appendChild(oldMainScript)
+  let oldMainScript = document.querySelector('#main-script-altrp')
+  if(oldStyles){
+    oldStyles.remove()
   }
+  oldMainScript = document.createElement('script')
+  oldMainScript.setAttribute('id', 'main-script-altrp')
+  document.body.appendChild(oldMainScript)
+
+
   oldMainScript.innerHTML = mainScript.innerHTML
 
   document.querySelector('#content_style')
@@ -112,7 +121,27 @@ function _replace(htmlString){
 
   window.hAltrp.loadComponents()
   appStore.dispatch(clearCurrentDataStorage())
+  appStore.dispatch(clearElements())
 
+  window.altrpContentLoaded = false
+
+  let params = window?.__altrp_settings__?.page_params
+  if( ! params){
+    params= convertQueryParamsToObject(document?.location?.search);
+  }
+  let hashParams = {};
+  if(document?.location?.hash && document?.location?.hash.indexOf('=') !== -1){
+    hashParams = convertQueryParamsToObject(document?.location?.hash)
+  }
+
+  appStore.dispatch(changeCurrentPage({
+    url: location?.href || "",
+    title: window?.currentPage?.title || "",
+    hash:document?.location?.hash,
+    hashParams,
+    params,
+  }))
+  window.addEventListener('h-altrp-loaded', mountElements);
   window._hAltrp()
   return{
     newTitle,

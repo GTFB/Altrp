@@ -55,6 +55,10 @@ function _hAltrp() {
           (window.libsToLoad.length
             === window.libsLoaded.length))
       ) {
+        if(window.altrpContentLoaded){
+          return
+        }
+        window.altrpContentLoaded = true
         console.trace('h-altrp LOADED: ', performance.now());
 
         const hAltrpLoadedEvent = new Event('h-altrp-loaded');

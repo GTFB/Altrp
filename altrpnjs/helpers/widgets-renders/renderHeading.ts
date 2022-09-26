@@ -50,7 +50,7 @@ export default function renderHeading(settings, device) {
           rel: settings.link_link.noFollow ? "nofollow" : null,
           // href: settings.link_link.url,
           href: `mailto:mail@gmail.com`,
-          className: 'altrp-inherit altrp-inherit_wo-border',
+          className: 'altrp-heading altrp-heading--link  altrp-inherit altrp-inherit_wo-border',
         }
 
         linkProps.tag = settings.link_link.tag
