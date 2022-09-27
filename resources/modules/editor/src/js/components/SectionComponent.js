@@ -111,6 +111,9 @@ class SectionComponent extends Component {
     let styles = {
       maxWidth: "100%"
     };
+
+    let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_section")
+    if (deleteOverflowHidden) styles.overflow = 'initial'
     const background_image = this.props.element.getLockedSettings(
       "background_image",
       {}

@@ -119,6 +119,12 @@ class Table extends BaseElement {
       locked: true,
     });
 
+    this.addControl('switch_overflow_hidden_template', {
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Delete Overflow Hidden"
+    });
+
     this.addControl("posts_card_template", {
       type: CONTROLLER_SELECT2,
       prefetch_options: true,
