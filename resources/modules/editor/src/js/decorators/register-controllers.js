@@ -1324,6 +1324,85 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
+  element.startControlSection('mouse-effects', {
+    tab: TAB_ADVANCED,
+    label: 'Mouse Effects',
+  });
+
+  element.addControl('mouse-effects:enable', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Enable',
+    responsive: false,
+  })
+
+  element.addControl('mouse-effects:track', {
+    label: 'Mouse Track',
+    type: CONTROLLER_GROUP,
+    fields: [
+      {
+        controlId: 'direction',
+        label : 'Direction',
+        type: CONTROLLER_SELECT,
+        options: [
+          {
+            value: 'opposite',
+            label: 'Opposite',
+          },
+          {
+            value: 'direct',
+            label: 'Direct',
+          },
+        ]
+      },
+      {
+        controlId: 'speed',
+        label : 'Speed',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 1
+        },
+        max: 10,
+        min: 0,
+        step: 0.1
+      },
+    ],
+  })
+
+  element.addControl('mouse-effects:tilt', {
+    label: 'Tilt',
+    type: CONTROLLER_GROUP,
+    fields: [
+      {
+        controlId: 'direction',
+        label : 'Direction',
+        type: CONTROLLER_SELECT,
+        options: [
+          {
+            value: 'opposite',
+            label: 'Opposite',
+          },
+          {
+            value: 'direct',
+            label: 'Direct',
+          },
+        ]
+      },
+      {
+        controlId: 'speed',
+        label : 'Speed',
+        type: CONTROLLER_SLIDER,
+        default: {
+          size: 1
+        },
+        max: 10,
+        min: 0,
+        step: 0.1
+      },
+    ],
+  })
+
+  element.endControlSection();
+
   element.startControlSection('skeleton', {
     tab: TAB_ADVANCED,
     label: 'Skeleton Settings',
@@ -1432,7 +1511,6 @@ export function advancedTabControllers(element) {
   })
 
   element.endControlSection();
-
 
   element.startControlSection('hover-transition', {
     tab: TAB_ADVANCED,

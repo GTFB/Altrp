@@ -2545,6 +2545,7 @@ a.bp3-button{
         -ms-user-select:none;
             user-select:none;
     vertical-align:middle;
+    overflow: hidden;
     width:1em; }
     .bp3-control .bp3-control-indicator::before{
       content:"";

@@ -16,6 +16,7 @@ import getSectionWidthClass from "../../helpers/widgets-renders/getSectionWidthC
 import Role from "App/Models/Role";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import AltrpSkeletonBox from "../../helpers/widgets-renders/components/AltrpSkeletonBox";
+import stringifyWrapperAttributes from "../../helpers/widgets-renders/functions/stringifyWrapperAttributes";
 
 
 export default class ElementRenderer {
@@ -219,6 +220,7 @@ export default class ElementRenderer {
     if (advanced_element_id) {
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
+    wrapper_attributes += stringifyWrapperAttributes(settings, screenName)
     content = mustache.render(content, {
       id: this.getId(),
       element_content,

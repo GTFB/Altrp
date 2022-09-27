@@ -377,8 +377,6 @@ class InputRadioWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.onChange = this.onChange.bind(this);
-    this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
       this.getLockedContent("content_default_value") ||
@@ -430,17 +428,6 @@ class InputRadioWidget extends Component {
     }
 
     let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getLockedContent для получение этого динамического значения
-     * старые динамические данные
-     * */
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getLockedContent("content_default_value");
-    }
 
     /**
      * Если модель обновилась при смене URL
@@ -473,14 +460,6 @@ class InputRadioWidget extends Component {
       );
       return;
     }
-    if (this.state.value !== value) {
-      this.setState(
-        state => ({ ...state, value }),
-        () => {
-          this.dispatchFieldValueToStore(value);
-        }
-      );
-    }
   }
 
   /**
@@ -508,9 +487,7 @@ class InputRadioWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getLockedContent(
-        "content_default_value",
-        this.props.element.getLockedSettings("select2_multiple")
-      );
+        "content_default_value");
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -563,22 +540,7 @@ class InputRadioWidget extends Component {
     const altrpforms = this.props.formsStore;
     const fieldName = this.props.element.getFieldId();
     const formId = this.props.element.getFormId();
-    if (!content_calculation) {
-      /**
-       * Обновить значение, если formsStore изменилось из другого компонента
-       */
-      const path = `${formId}.${fieldName}`;
-      if (
-        this.props.formsStore !== prevProps.formsStore &&
-        _.get(altrpforms, path) !== this.state.value
-      ) {
-        this.setState(state => ({
-          ...state,
-          value: _.get(altrpforms, path)
-        }));
-      }
-      return;
-    }
+
 
     const prevContext = {};
 
@@ -655,25 +617,27 @@ class InputRadioWidget extends Component {
       return;
     }
     let value = "";
-    try {
-      content_calculation = content_calculation
-        .replace(/}}/g, "')")
-        .replace(/{{/g, "_.get(context, '");
-      value = eval(content_calculation);
-      if (value === this.state.value) {
-        return;
-      }
-      this.setState(
-        state => ({ ...state, value }),
-        () => {
-          this.dispatchFieldValueToStore(value);
+    if(content_calculation) {
+      try {
+        content_calculation = content_calculation
+          .replace(/}}/g, "')")
+          .replace(/{{/g, "_.get(context, '");
+        value = eval(content_calculation);
+        if (value === this.state.value) {
+          return;
         }
-      );
-    } catch (e) {
-      console.error(
-        "Evaluate error in Input: '" + e.message + "'",
-        this.props.element.getId()
-      );
+        this.setState(
+          state => ({...state, value}),
+          () => {
+            this.dispatchFieldValueToStore(value);
+          }
+        );
+      } catch (e) {
+        console.error(
+          "Evaluate error in Input: '" + e.message + "'",
+          this.props.element.getId()
+        );
+      }
     }
   }
 
@@ -712,8 +676,7 @@ class InputRadioWidget extends Component {
           options = !_.isArray(options) ? options.data : options;
           options = _.isArray(options) ? options : [];
         }
-        // console.log(options);
-        // console.log(this.state.value);
+
         this.setState(state => ({
           ...state,
           paramsForUpdate,
@@ -728,28 +691,14 @@ class InputRadioWidget extends Component {
    * @param e
    * @param  editor для получения изменений из CKEditor
    */
-  onChange(e, editor = null) {
+  onChange = (e, editor = null) =>{
     let value = "";
-    let valueToDispatch;
     if (e && e.target) {
       value = e.target.value;
     }
 
     if (e && e.value) {
       value = e.value;
-    }
-    if (_.get(editor, "getData")) {
-      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
-    }
-    if (_.isArray(e)) {
-      value = _.cloneDeep(e);
-    }
-    if (
-      this.props.element.getLockedSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
     }
 
     this.setState(
@@ -762,40 +711,15 @@ class InputRadioWidget extends Component {
          * Обновляем хранилище только если не текстовое поле
          */
 
-        const change_actions = this.props.element.getLockedSettings("change_actions");
-        const change_change_end = this.props.element.getLockedSettings(
-          "change_change_end"
-        );
-        const change_change_end_delay = this.props.element.getLockedSettings(
-          "change_change_end_delay"
-        );
-
         this.dispatchFieldValueToStore(
-          valueToDispatch !== undefined ? valueToDispatch : value,
+           value,
           true
         );
 
-        if (change_actions && !change_change_end && !isEditor()) {
-          this.debounceDispatch(
-            valueToDispatch !== undefined ? valueToDispatch : value
-          );
-        }
-        if (change_actions && change_change_end && !isEditor()) {
-          this.timeInput && clearTimeout(this.timeInput);
-          this.timeInput = setTimeout(() => {
-            this.debounceDispatch(
-              valueToDispatch !== undefined ? valueToDispatch : value
-            );
-          }, change_change_end_delay);
-        }
       }
     );
   }
 
-  debounceDispatch = _.debounce(
-    value => this.dispatchFieldValueToStore(value, true),
-    150
-  );
 
   /**
    * получить опции
@@ -910,77 +834,6 @@ class InputRadioWidget extends Component {
   };
 
   /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const { value: inputValue } = e.target;
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getLockedSettings();
-    if (!create_label && !create_url) {
-      return;
-    }
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({ ...state, isDisabled: true }));
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-        this.setState(
-          state => ({ ...state, isDisabled: false }),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-            this.setState(
-              state => ({ ...state, options, value }),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({ ...state, isDisabled: false }));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({ ...state, isDisabled: false }));
-    }
-  };
-
-  /**
    * Взовращает имя для атрибута name
    * @return {string}
    */
@@ -1005,26 +858,7 @@ class InputRadioWidget extends Component {
   render() {
     let label = null;
     const settings = this.props.element.getLockedSettings();
-    const {
-      image_select_options,
-      select2_multiple: isMultiple,
-    } = settings;
 
-    let value = this.state.value;
-
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getLockedContent("content_default_value");
-    }
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
@@ -1100,13 +934,6 @@ class InputRadioWidget extends Component {
       label = null;
     }
 
-    let autocomplete = "off";
-    if (this.state.settings.content_autocomplete) {
-      autocomplete = "on";
-    } else {
-      autocomplete = "off";
-    }
-
     const input = this.renderRepeatedInput();
 
     const cssId = this.props.element.getResponsiveLockedSetting('position_css_id')
@@ -1138,6 +965,7 @@ class InputRadioWidget extends Component {
       this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
     const { options = [] } = this.state;
     let { value = "" } = this.state;
+
     const fieldName =
       this.props.element.getFieldId() ||
       Math.random()
@@ -1149,32 +977,30 @@ class InputRadioWidget extends Component {
         .toString(36)
         .substr(2, 9);
 
-
+    value = _.isNaN(Number(value)) ? value : Number(value);
     return (
       <div className={`${classes} altrp-field-subgroup`}>
         <RadioGroup
           className={`${classes} altrp-field-radio-group`}
           name={`${formID}-${fieldName}`}
           inline={!inline}
+          value={value}
           onChange={this.onChange}
-          selectedValue={this.state.value}
+          selectedValue={value}
         >
           {options.map((option, idx) => {
-            let checked = false;
+            let checked;
             /**
              * Если значение или опция число, то приведем к числу перед сравнением
              */
-            if (this.props.element.getName() === "input-radio") {
-              checked = altrpCompare(value, option.value, "==");
-            } else {
-              value = _.isArray(value) ? value : value ? [value] : [];
-              checked = altrpCompare(option.value, value, "in");
-            }
+            checked = altrpCompare(value, option.value, "==");
+
             return (
               <Radio
                 className={`${classes} altrp-field-radio ${checked ? "active" : ""} ${radioPosition == 'right' ? 'bp3-align-right' : ''}`}
                 label={option.label}
                 value={option.value}
+                checked={checked}
                 key={`${fieldName}-${idx}`}
               />
               // <span className="altrp-field-option-span">

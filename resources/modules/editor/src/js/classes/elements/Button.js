@@ -166,7 +166,7 @@ class Button extends BaseElement {
         url: "",
         attributes: "",
         noFollow: false,
-        tag: 'Link'
+        tag: 'a'
       },
       label: 'Link',
       locked: true,

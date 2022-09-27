@@ -285,7 +285,9 @@ class ElementWrapper extends Component {
     //
     // }
     if(newProps.currentDataStorage !== this.props.currentDataStorage
-      && dependencies.indexOf('altrpdata') === -1){
+      && dependencies.indexOf('altrpdata') === -1 &&
+      newProps.currentDataStorage.getProperty("currentDataStorageLoaded") ===
+      this.props.currentDataStorage.getProperty("currentDataStorageLoaded")){
       ++window.countReduced
       return false
     }
