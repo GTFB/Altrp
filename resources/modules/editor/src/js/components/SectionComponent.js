@@ -26,7 +26,7 @@ import redirect from "../../../../front-app/src/js/functions/redirect";
 
   .altrp-section {
     position: relative;
-    overflow: hidden;
+    //overflow: hidden;
     // top: auto;
     // right: auto;
     // left: auto;

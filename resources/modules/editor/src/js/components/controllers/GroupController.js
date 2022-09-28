@@ -26,9 +26,10 @@ class GroupController extends Component {
 
     let target = e.target
     console.log(target);
+    console.log(this.popoverRef.current);
     do {
       target = target.parentNode
-    } while(target?.parentNode && target.parentNode !== this.popoverRef.current)
+    } while(target?.parentNode && target !== this.popoverRef.current)
     console.log(target);
     if(target === document){
       this.setState(state=>({

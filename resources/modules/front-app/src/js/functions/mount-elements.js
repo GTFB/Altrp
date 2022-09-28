@@ -1,10 +1,6 @@
 import loadGlobalStyles from "./load-global-styles";
 import findElement from "./findElement";
 
-const ALTRP_ELEMENTS = {
-  'input-textarea': async () => await import("../altrp-elements/AltrpTextarea")
-}
-
 export default function mountElements(){
   loadGlobalStyles();
   let elementContainers = document.querySelectorAll('*:not([data-react-element]) [data-react-element]');

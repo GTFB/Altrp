@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.3.1
+* Added Scroll & Mouse Transform Effects for All Elements
+
 ### 1.3.0
 * Added Extended Skeleton Features Support for All Elements
 * Added Hover Transform Settings 

@@ -14,6 +14,7 @@ import altrpRandomId from "../functions/altrpRandomId";
 import altrpCompare from "../functions/altrpCompare";
 import conditionsChecker from "../functions/conditionsChecker";
 import replaceContentWithData from "../functions/replaceContentWithData";
+import stringifyWrapperAttributes from "../helpers/functions/stringifyWrapperAttributes";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -61,6 +62,8 @@ class ElementWrapper extends Component {
     // document.dispatchEvent(mountElementEvent)
     // document.dispatchEvent(mountElementTypeEvent)
     this.checkElementDisplay();
+    const HtmlRenderEvent = new Event('html-render')
+    document.dispatchEvent(HtmlRenderEvent)
   }
 
   componentWillUnmount() {
@@ -473,6 +476,9 @@ class ElementWrapper extends Component {
       wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');
       wrapperProps["data-altrp-sticky-spacing"] = element.getResponsiveSetting('st_spacing');
       wrapperProps["data-margin-top"] = element.getResponsiveSetting('st_spacing') || 0;
+    }
+    if(element.getResponsiveSetting('mouse-effects:enable')){
+      wrapperProps["data-altrp-settings"] = stringifyWrapperAttributes(element.settings)
     }
     wrapperProps["data-altrp-id"] = element.getId();
 

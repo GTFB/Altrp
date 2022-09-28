@@ -164,3 +164,10 @@ if(document.querySelector('[data-enter-animation-type]')){
 
 const altrpe = new Event(`altrpe`);
 document.dispatchEvent(altrpe)
+
+window.addEventListener('mousemove', e=>{
+  altrp.mousePosition = {
+    x: e.clientX,
+    y: e.clientY
+  }
+})
