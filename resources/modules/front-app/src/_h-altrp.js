@@ -20,6 +20,8 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     params:queryString.parseUrl(window.location.href).query
   });
   import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+
+    document.dispatchEvent(new Event('app-store-loaded'))
     loadDatastorageUpdater();
   })
 })
