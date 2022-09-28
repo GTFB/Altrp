@@ -128,16 +128,19 @@ class Resource {
       return res.json();
     });
   }
+
   /**
    * простой запрос
    * @return {Promise}
    * */
-  getAsText() {
+  getAsText(customHeaders  = null) {
     let options = {
       method: "get",
-      headers: {
+      headers:_.assign({
         "Content-Type": "text/plain"
-      }
+      },
+        customHeaders
+      )
     };
 
     let url = this.getRoute();

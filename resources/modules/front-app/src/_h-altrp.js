@@ -15,11 +15,11 @@ function loadDatastorageUpdater(){
     dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
   });
 }
-import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(() => {
   window.currentRouterMatch = new window.AltrpModel({
     params:queryString.parseUrl(window.location.href).query
   });
-  import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+  import (/* webpackChunkName: 'appStore' */'./js/store/store').then(() => {
 
     document.dispatchEvent(new Event('app-store-loaded'))
     loadDatastorageUpdater();
@@ -75,7 +75,7 @@ documentCheckEvents( () => {
 
   import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
 
-    import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+    import (/* webpackChunkName: 'appStore' */'./js/store/store').then(() => {
       console.log('LOAD appStore: ', performance.now());
       loadingCallback();
       loadDepends()
@@ -96,7 +96,7 @@ documentCheckEvents( () => {
   })
 
 
-  import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
+  import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(() => {
     console.log('LOAD FormsManager: ', performance.now());
   });
 })

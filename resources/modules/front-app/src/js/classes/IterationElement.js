@@ -1,6 +1,5 @@
 import mbParseJSON from "../functions/mb-parse-JSON";
 import $ from 'jquery'
-import getResponsiveSetting from "../functions/getResponsiveSetting";
 
 /**
  * @class IterationElement
@@ -12,6 +11,7 @@ class IterationElement {
     this.settings = mbParseJSON(element.dataset.altrpSettings, {})
     this.setElementInViewportObserver();
     this.oldMousePosition = {};
+    this.element.style.setProperty('perspective', '1200px')
 
   }
 
@@ -21,7 +21,6 @@ class IterationElement {
   }
 
   run = () => {
-
     const mousePosition = altrp.mousePosition,
       oldMousePosition = this.oldMousePosition;
     const scrollPosition = window?.appStore?.getState()?.scrollPosition,
@@ -30,7 +29,6 @@ class IterationElement {
     if (oldMousePosition.x === mousePosition?.x && oldMousePosition.y === mousePosition?.y && scrollPosition?.top === oldScrollPosition?.top) {
       return;
     }
-
     if(scrollPosition?.top !== oldScrollPosition?.top){
       this.runScrollCallback()
       this.oldScrollPosition = {...scrollPosition};
@@ -59,7 +57,6 @@ class IterationElement {
     }`
 
     const target = this.element.querySelector('.altrp-element > *:not(.overlay, .altrp-skeleton-box)')
-    this.$element = $(target)
     target.style.setProperty('transform', value)
     this.opacity && target.style.setProperty('opacity', this.opacity)
     this.blur && target.style.setProperty('filter', `blur(${this.blur})`)
@@ -242,27 +239,11 @@ class IterationElement {
       speed = speed / 10
       const direction = this.settings['mouse-effects:tilt'].direction || 'opposite';
       let _passedPercentsX = direction === 'opposite' ? (50 - passedPercentsX) * speed + 'deg' : (passedPercentsX - 50) * speed + 'deg'
-      let _passedPercentsY = direction === 'opposite' ? (50 - passedPercentsY) * speed + 'deg' : (passedPercentsY - 50) * speed + 'deg'
-
-      this.rotateX =  _passedPercentsX
-      this.rotateY =  _passedPercentsY
+      let _passedPercentsY = direction === 'opposite' ? (passedPercentsY - 50) * speed + 'deg' : (50 - passedPercentsY) * speed + 'deg'
+      this.rotateX =  _passedPercentsY
+      this.rotateY =  _passedPercentsX
     }
 
-  }
-
-  updateRulePart(ruleName, key, value) {
-    if (!this.rulesVariables[ruleName]) {
-      this.rulesVariables[ruleName] = {};
-    }
-
-    if (!this.rulesVariables[ruleName][key]) {
-      this.rulesVariables[ruleName][key] = true;
-      this.updateRule(ruleName);
-    }
-
-    const cssVarKey = `--${key}`;
-    console.trace(value);
-    this.$element[0].style.setProperty(cssVarKey, value);
   }
 
   setElementInViewportObserver() {

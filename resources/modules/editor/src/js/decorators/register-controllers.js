@@ -331,222 +331,6 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 */
-  element.startControlSection(
-    'entrance_animation', {
-      tab: TAB_ADVANCED,
-      label: 'Entrance Animation',
-    }
-  );
-
-  element.addControl('en_an', {
-    label: 'Entrance Animation',
-    type: CONTROLLER_SELECT2,
-    isClearable: true,
-    //<editor-fold description="Entrance Animation Options" defaultstate="collapsed">
-    options:[
-      {
-        label: 'Fading',
-        options: [
-          {
-            label: 'Fade In',
-            value: 'fadeIn'
-          },
-          {
-            label: 'Fade In Down',
-            value: 'fadeInDown'
-          },
-          {
-            label: 'Fade In Left',
-            value: 'fadeInLeft'
-          },
-          {
-            label: 'Fade In Right',
-            value: 'fadeInRight'
-          },
-          {
-            label: 'Fade In Up',
-            value: 'fadeUp'
-          },
-        ]
-      },
-      {
-        label: 'Zooming',
-        options: [
-          {
-            label: 'Zoom In',
-            value: 'zoomIn'
-          },
-          {
-            label: 'Zoom In Down',
-            value: 'zoomInDown'
-          },
-          {
-            label: 'Zoom In Left',
-            value: 'zoomInLeft'
-          },
-          {
-            label: 'Zoom In Right',
-            value: 'zoomInRight'
-          },
-          {
-            label: 'Zoom In Up',
-            value: 'zoomInUp'
-          },
-        ],
-      },
-      {
-        label: 'Bouncing',
-        options: [
-          {
-            label: 'Bounce In',
-            value: 'bounceIn'
-          },
-          {
-            label: 'Bounce In Down',
-            value: 'bounceDown'
-          },
-          {
-            label: 'Bounce In Left',
-            value: 'bounceInLeft'
-          },
-          {
-            label: 'Bounce In Right',
-            value: 'bounceInRight'
-          },
-          {
-            label: 'Bounce In Up',
-            value: 'bounceInUp'
-          },
-        ],
-      },
-      {
-        label: 'Sliding',
-        options: [
-          {
-            label: 'Slide In Down',
-            value: 'slideInDown'
-          },
-          {
-            label: 'Slide In Left',
-            value: 'slideInLeft'
-          },
-          {
-            label: 'Slide In Right',
-            value: 'slideInRight'
-          },
-          {
-            label: 'Slide In Up',
-            value: 'slideInUp'
-          },
-        ],
-      },
-      {
-        label: 'Rotating',
-        options: [
-          {
-            label: 'Rotate In',
-            value: 'rotateIn'
-          },
-          {
-            label: 'Rotate In Down Left',
-            value: 'rotateInDownLeft'
-          },
-          {
-            label: 'Rotate In Down Right',
-            value: 'RotateInDownRight'
-          },
-          {
-            label: 'Rotate In Up Left',
-            value: 'RotateInUpLeft'
-          },
-          {
-            label: 'Rotate In Up Right',
-            value: 'RotateInUpRight'
-          },
-        ],
-      },
-      {
-        label: 'Attention Seekers',
-        options: [
-          {
-            label: 'Bounce',
-            value: 'bounce',
-          },
-          {
-            label: 'Flash',
-            value: 'flash',
-          },
-          {
-            label: 'Pulse',
-            value: 'pulse',
-          },
-          {
-            label: 'Rubber Band',
-            value: 'rubberBand',
-          },
-          {
-            label: 'Shake',
-            value: 'shake',
-          },
-          {
-            label: 'Head Shake',
-            value: 'headShake',
-          },
-          {
-            label: 'Wobble',
-            value: 'wobble',
-          },
-          {
-            label: 'Jello',
-            value: 'jello',
-          },
-        ],
-      },
-      {
-        label: 'Light Speed',
-        options:[
-          {
-            label: 'Light Speed In',
-            value: 'lsi',
-          }
-        ],
-      },
-      {
-        label: 'Special',
-        options:[
-          {
-            label: 'Roll In',
-            value: 'roll_in',
-          }
-        ],
-      },
-    ],
-    //</editor-fold>
-  })
-
-  element.addControl('en_a_duration', {
-    label: 'Animation Duration (ms)',
-    type: CONTROLLER_SLIDER,
-    units: ['ms'],
-    max: 1000,
-    min: 0,
-  })
-  element.addControl('en_a_delay', {
-    label: 'Animation Delay (ms)',
-    type: CONTROLLER_SLIDER,
-    units: ['ms'],
-    max: 1000,
-    min: 0,
-  })
-
-  element.addControl('en_a_switcher', {
-    type: CONTROLLER_SWITCHER,
-    label: 'Overflow hidden container',
-    default: true,
-    responsive: false,
-  });
-
-  element.endControlSection();
 
   if (element.getType() !== 'section') {
 
@@ -1400,6 +1184,223 @@ export function advancedTabControllers(element) {
       },
     ],
   })
+
+  element.endControlSection();
+
+  element.startControlSection(
+    'entrance_animation', {
+      tab: TAB_ADVANCED,
+      label: 'Entrance Animation',
+    }
+  );
+
+  element.addControl('en_an', {
+    label: 'Entrance Animation',
+    type: CONTROLLER_SELECT2,
+    isClearable: true,
+    //<editor-fold description="Entrance Animation Options" defaultstate="collapsed">
+    options:[
+      {
+        label: 'Fading',
+        options: [
+          {
+            label: 'Fade In',
+            value: 'fadeIn'
+          },
+          {
+            label: 'Fade In Down',
+            value: 'fadeInDown'
+          },
+          {
+            label: 'Fade In Left',
+            value: 'fadeInLeft'
+          },
+          {
+            label: 'Fade In Right',
+            value: 'fadeInRight'
+          },
+          {
+            label: 'Fade In Up',
+            value: 'fadeUp'
+          },
+        ]
+      },
+      {
+        label: 'Zooming',
+        options: [
+          {
+            label: 'Zoom In',
+            value: 'zoomIn'
+          },
+          {
+            label: 'Zoom In Down',
+            value: 'zoomInDown'
+          },
+          {
+            label: 'Zoom In Left',
+            value: 'zoomInLeft'
+          },
+          {
+            label: 'Zoom In Right',
+            value: 'zoomInRight'
+          },
+          {
+            label: 'Zoom In Up',
+            value: 'zoomInUp'
+          },
+        ],
+      },
+      {
+        label: 'Bouncing',
+        options: [
+          {
+            label: 'Bounce In',
+            value: 'bounceIn'
+          },
+          {
+            label: 'Bounce In Down',
+            value: 'bounceDown'
+          },
+          {
+            label: 'Bounce In Left',
+            value: 'bounceInLeft'
+          },
+          {
+            label: 'Bounce In Right',
+            value: 'bounceInRight'
+          },
+          {
+            label: 'Bounce In Up',
+            value: 'bounceInUp'
+          },
+        ],
+      },
+      {
+        label: 'Sliding',
+        options: [
+          {
+            label: 'Slide In Down',
+            value: 'slideInDown'
+          },
+          {
+            label: 'Slide In Left',
+            value: 'slideInLeft'
+          },
+          {
+            label: 'Slide In Right',
+            value: 'slideInRight'
+          },
+          {
+            label: 'Slide In Up',
+            value: 'slideInUp'
+          },
+        ],
+      },
+      {
+        label: 'Rotating',
+        options: [
+          {
+            label: 'Rotate In',
+            value: 'rotateIn'
+          },
+          {
+            label: 'Rotate In Down Left',
+            value: 'rotateInDownLeft'
+          },
+          {
+            label: 'Rotate In Down Right',
+            value: 'RotateInDownRight'
+          },
+          {
+            label: 'Rotate In Up Left',
+            value: 'RotateInUpLeft'
+          },
+          {
+            label: 'Rotate In Up Right',
+            value: 'RotateInUpRight'
+          },
+        ],
+      },
+      {
+        label: 'Attention Seekers',
+        options: [
+          {
+            label: 'Bounce',
+            value: 'bounce',
+          },
+          {
+            label: 'Flash',
+            value: 'flash',
+          },
+          {
+            label: 'Pulse',
+            value: 'pulse',
+          },
+          {
+            label: 'Rubber Band',
+            value: 'rubberBand',
+          },
+          {
+            label: 'Shake',
+            value: 'shake',
+          },
+          {
+            label: 'Head Shake',
+            value: 'headShake',
+          },
+          {
+            label: 'Wobble',
+            value: 'wobble',
+          },
+          {
+            label: 'Jello',
+            value: 'jello',
+          },
+        ],
+      },
+      {
+        label: 'Light Speed',
+        options:[
+          {
+            label: 'Light Speed In',
+            value: 'lsi',
+          }
+        ],
+      },
+      {
+        label: 'Special',
+        options:[
+          {
+            label: 'Roll In',
+            value: 'roll_in',
+          }
+        ],
+      },
+    ],
+    //</editor-fold>
+  })
+
+  element.addControl('en_a_duration', {
+    label: 'Animation Duration (ms)',
+    type: CONTROLLER_SLIDER,
+    units: ['ms'],
+    max: 1000,
+    min: 0,
+  })
+  element.addControl('en_a_delay', {
+    label: 'Animation Delay (ms)',
+    type: CONTROLLER_SLIDER,
+    units: ['ms'],
+    max: 1000,
+    min: 0,
+  })
+
+  element.addControl('en_a_switcher', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Overflow hidden container',
+    default: true,
+    responsive: false,
+  });
 
   element.endControlSection();
 

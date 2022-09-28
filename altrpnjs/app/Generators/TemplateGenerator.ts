@@ -15,7 +15,7 @@ import DEFAULT_BREAKPOINT from "../../helpers/const/DEFAULT_BREAKPOINT";
 export default class TemplateGenerator extends BaseGenerator {
 
   public static directory = '/views/altrp/templates'
-  public static screensDirectory = '/views/altrp/screens'
+  public static screensDirectory = '/altrp/html/screens'
   public static template = app_path(`altrp-templates/views/Template.stub`)
   public template: Template;
 
@@ -38,7 +38,7 @@ export default class TemplateGenerator extends BaseGenerator {
     if (!screenName) {
       return Application.resourcesPath(`${TemplateGenerator.directory}/${template.currentArea?.name}`)
     }
-    return Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screenName}/templates/${template.currentArea?.name}`)
+    return Application.publicPath(`${TemplateGenerator.screensDirectory}/${screenName}/templates/${template.currentArea?.name}`)
   }
 
   getFilename(template: Template): string {
@@ -85,15 +85,20 @@ export default class TemplateGenerator extends BaseGenerator {
         return
       }
 
-      // await this.addFile(fileName)
-      //   .destinationDir(this.getDirectory(template, screen.name))
-      //   .stub(TemplateGenerator.template)
-      //   .apply({
-      //     children_content,
-      //     all_styles: '',
-      //     screen_name: screen.name,
-      //     area_name: template.currentArea?.name,
-      //   }, true)
+      if(template.currentArea.name === 'card'){
+        const children_content = await template.getChildrenContent(screen.name)
+        const fileName = `${template.guid}.html`
+
+        await this.addFile(fileName)
+          .destinationDir(this.getDirectory(template, screen.name))
+          .stub(TemplateGenerator.template)
+          .apply({
+            children_content,
+            all_styles: '',
+            screen_name: screen.name,
+            area_name: template.currentArea?.name,
+          })
+      }
     }
     if (template.guid) {
       for (const screen of SCREENS) {

@@ -124,18 +124,41 @@ export class TemplateLoader {
     /**
      * for loading the styles before loading the html
      */
-    return new Promise(resolve => {
+    return this.stylesResolve({
+      template,
+
+    })
+  }
+
+  /**
+   *
+   * @param template
+   * @param templateGUID
+   * @returns {Promise<{} | null>}
+   */
+   stylesResolve = async ({
+     template = null,
+     templateGUID = null
+   })=>{
+    return new Promise(  resolve => {
+      if(template?.guid){
+        templateGUID = template?.guid
+      }
       const _doc = isEditor() ?
         document.getElementById("editorContent").contentDocument :
         document
       let link = _doc.createElement('link')
       link.addEventListener('load',()=>{
+        if(! template){
+          resolve(null)
+          return
+        }
         let templateData = _.get(template, 'data');
         templateData = JSON.parse(templateData);
         resolve(frontElementsFabric.parseData(templateData))
       })
       link.setAttribute('rel', 'stylesheet')
-      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${template.guid}.css`)
+      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${templateGUID}.css`)
 
       _doc.head.appendChild(link)
 
@@ -148,12 +171,16 @@ export class TemplateLoader {
          */
         link = _doc.createElement('link')
         link.addEventListener('load',()=>{
+          if(! template){
+            resolve(null)
+            return
+          }
           let templateData = _.get(template, 'data');
           templateData = JSON.parse(templateData);
           resolve(frontElementsFabric.parseData(templateData))
         })
         link.setAttribute('rel', 'stylesheet')
-        link.setAttribute('href',  `/altrp/css/${template.guid}.css`)
+        link.setAttribute('href',  `/altrp/css/${templateGUID}.css`)
         _doc.head.appendChild(link)
 
       })
@@ -172,6 +199,12 @@ export class TemplateLoader {
     let templateData = _.get(this.templatesCache.getProperty(templateId), 'data');
     templateData = JSON.parse(templateData);
     return frontElementsFabric.parseData(templateData)
+  }
+  async loadHtmlTemplate(templateGUID){
+    let url = `/altrp/html/screens/${appStore.getState().currentScreen.name}/templates/card/${templateGUID}.html`
+    const html = await (new Resource({route:url})).getAsText()
+    await this.stylesResolve({templateGUID})
+    return html
   }
 }
 
