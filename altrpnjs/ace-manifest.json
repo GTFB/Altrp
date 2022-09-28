@@ -42,6 +42,26 @@
         }
       ]
     },
+    "customizer:schedule": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/CustomizerSchedule",
+      "commandName": "customizer:schedule",
+      "description": "Run a Schedule customizer",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the customizer"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",

@@ -8,6 +8,7 @@ import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import CustomizerGenerator from 'App/Generators/CustomizerGenerator';
+import ScheduleGenerator from 'App/Generators/ScheduleGenerator';
 // import timers from "App/Services/Timers";
 import timers from "../../../Services/Timers";
 import LIKE from "../../../../helpers/const/LIKE";
@@ -38,6 +39,9 @@ export default class CustomizersController {
       }
       if (!customizer.settings) {
         customizer.settings = []
+      }
+      if (customizer.type === 'schedule') {
+        customizer.settings.period_unit = customizer.settings.period_unit || 'day'
       }
       await customizer.save()
 
@@ -195,10 +199,22 @@ export default class CustomizersController {
     delete all.created_at
     delete all.updated_at
 
+    if (all.type === 'schedule') {
+      all.settings = all.settings || {}
+      all.settings.period_unit = all.settings.period_unit || 'day'
+    }
+
     if (oldType === 'crud' && all.type !== 'crud') {
       const generator = new CustomizerGenerator(customizer)
 
       generator.delete()
+    }
+
+    if (oldType === 'schedule' && all.type !== 'schedule') {
+      const generator = new ScheduleGenerator(customizer)
+
+      generator.delete()
+      customizer.removeSchedule()
     }
 
     customizer.merge(all)
@@ -263,6 +279,13 @@ export default class CustomizersController {
         const generator = new CustomizerGenerator(customizer)
 
         await generator.run()
+      }
+
+      if (customizer.type === 'schedule') {
+        const generator = new ScheduleGenerator(customizer)
+
+        await generator.run()
+        customizer.schedule()
       }
 
       if(model) {

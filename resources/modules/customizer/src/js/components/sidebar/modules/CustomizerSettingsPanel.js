@@ -6,7 +6,9 @@ import AltrpSelect from "../../../../../../admin/src/components/altrp-select/Alt
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
-import {InputGroup} from "@blueprintjs/core";
+import {InputGroup, Switch} from "@blueprintjs/core";
+import { DateInput, TimePrecision } from '@blueprintjs/datetime';
+import { format, parse } from 'date-fns';
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -26,6 +28,7 @@ class CustomizerSettingsPanel extends React.Component {
     };
     this.modelsResource = new Resource({ route: "/admin/ajax/models_options?with_names=0&not_plural=1&with_sql_queries=0" });
     this.resource = new Resource({ route: "/admin/ajax/customizers" });
+    this.dateFnsFormat = 'yyyy-MM-dd HH:mm:ss';
   }
 
   async componentDidMount() {
@@ -119,6 +122,11 @@ class CustomizerSettingsPanel extends React.Component {
     })
     return modelsOptions
   }
+
+  formatDate = (date) => format(date, this.dateFnsFormat)
+
+  parseDate = (str) => parse(str, this.dateFnsFormat, new Date())
+
   render() {
     let modelsOptions = this.getModelOptions();
     console.log(modelsOptions);
@@ -130,6 +138,11 @@ class CustomizerSettingsPanel extends React.Component {
     const MethodType = settings?.hook_type;
     const eventType = settings?.event_type;
     const eventHookType = settings?.event_hook_type;
+    const startAt = settings?.start_at ? new Date(settings.start_at) : new Date();
+    const repeatCount = settings?.repeat_count;
+    const infinity = settings?.infinity || false;
+    const period = settings?.period;
+    const periodUnit = settings?.period_unit || 'day';
 
     const time = customizer.time || "";
     const time_type = customizer.time_type || "none";
@@ -295,6 +308,86 @@ class CustomizerSettingsPanel extends React.Component {
                       )
                     }
                     {
+                      type === 'schedule' && (
+                        <>
+                          <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                            <div className="controller-container__label control-select__label controller-label">Start At:</div>
+
+                            <div className="form-control-blueprint date-input-wrapper">
+                              <DateInput
+                                placeholder={this.dateFnsFormat}
+                                parseDate={this.parseDate}
+                                formatDate={this.formatDate}
+                                timePickerProps={{ precision: TimePrecision.SECOND }}
+                                value={startAt}
+                                onChange={this.changeStartAt}
+                                id="start-at"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                            <div className="controller-container__label control-select__label controller-label">Repeat Count:</div>
+
+                            <div className="w-75">
+                              <input
+                                id="repeat_count"
+                                className="css-entfk-control d-inline-block w-25 pl-2 mr-4"
+                                type="number"
+                                value={repeatCount}
+                                onChange={this.changeRepeatCount}
+                                disabled={infinity}
+                              />
+
+                              <Switch className="d-inline" checked={infinity} label="Infinity" onChange={this.changeInfinity} />
+                            </div>
+                          </div>
+
+                          <div className="controller-container">
+                            <div className="controller-container__label control-select__label controller-label">Period:</div>
+
+                            <input
+                              id="period"
+                              className="css-entfk-control w-25 pl-2"
+                              type="number"
+                              value={period}
+                              onChange={this.changePeriod}
+                            />
+
+                            <AltrpSelect
+                              id="period-unit"
+                              className="w-50"
+                              isMulti={false}
+                              value={periodUnit}
+                              onChange={this.changePeriodUnit}
+                              options={[
+                                {
+                                  value: 'hour',
+                                  label: 'Hour',
+                                },
+                                {
+                                  value: 'day',
+                                  label: 'Day',
+                                },
+                                {
+                                  value: 'week',
+                                  label: 'Week',
+                                },
+                                {
+                                  value: 'month',
+                                  label: 'Month',
+                                },
+                                {
+                                  value: 'year',
+                                  label: 'Year',
+                                },
+                              ]}
+                            />
+                          </div>
+                        </>
+                      )
+                    }
+                    {
                       type === "listener" && (
                         <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                           <div className="controller-container__label control-select__label controller-label">Hook Type:</div>
@@ -447,7 +540,56 @@ class CustomizerSettingsPanel extends React.Component {
     }
 
     customizer = mutate.set(customizer, 'settings.event_hook_type', e.value || '');
-    console.error({ customizer })
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeStartAt = (value) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.start_at', value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeRepeatCount = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.repeat_count', e.target.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeInfinity = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.infinity', e.target.checked || false);
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changePeriod = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.period', e.target.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changePeriodUnit = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.period_unit', e.value || '');
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
   }
   changeHookType = (e)=>{

@@ -1,3 +1,5 @@
+import execa from 'execa'
+import Logger from '@ioc:Adonis/Core/Logger'
 import data_get from "../../helpers/data_get";
 import empty from "../../helpers/empty";
 import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne, ManyToMany, manyToMany} from "@ioc:Adonis/Lucid/Orm";
@@ -25,6 +27,7 @@ import {clearTimeout, setTimeout} from "node:timers";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
+import { addSchedule, removeSchedule } from '../../helpers/schedule';
 
 export default class Customizer extends BaseModel {
   timeout
@@ -312,6 +315,56 @@ export default class Customizer extends BaseModel {
     }
 
     this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
+  }
+
+  public static async scheduleAll() {
+    const customizers = await Customizer.query().where('type', 'schedule')
+
+    Logger.info(`found schedules (${customizers.length})`)
+
+    customizers.forEach(customizer => customizer.schedule())
+  }
+
+  public schedule() {
+    if (this.type !== 'schedule' || !this.settings) {
+      return
+    }
+
+    Logger.info(`new schedule: run ${this.name}`
+      + ` per ${this.settings.period} ${this.settings.period_unit}`
+      + ` from ${this.settings.start_at}`
+      + ` and repeat ${this.settings.infinity ? 'infinitely' : `${this.settings.repeat_count} times`}`)
+
+    addSchedule(this.id, new Date(this.settings.start_at), this.settings.period_unit, this.settings.period, () => {
+      if (!this.settings.infinity) {
+        if (this.settings.repeat_count > 0) {
+          this.settings.repeat_count--
+
+          this.save().then(() => {
+            if (this.settings.repeat_count <= 0) {
+              this.removeSchedule()
+            }
+
+            return this.invoke()
+          })
+        }
+
+        this.removeSchedule()
+      }
+
+      this.invoke()
+    })
+  }
+
+  public async invoke() {
+    Logger.info('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
+    await execa.node('ace', ['hook:schedule', this.id])
+  }
+
+  public removeSchedule() {
+    removeSchedule(this.id)
+
+    Logger.info(`remove schedule: ${this.name} / ${this.id}`)
   }
 
   changePropertyToJS(propertyData, value, type = 'set'): string {

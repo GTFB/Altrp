@@ -19,6 +19,7 @@ app/AltrpPlugins/
 app/AltrpListeners/
 app/AltrpOther/
 app/AltrpCRUDs/
+app/AltrpSchedules/
 start/altrp-routes/
 /resources/views/altrp
 
