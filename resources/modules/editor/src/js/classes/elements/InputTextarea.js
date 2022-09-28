@@ -522,7 +522,7 @@ class InputTextarea extends BaseElement {
 
     this.addControl("textarea_style_gradient_text", {
       type: CONTROLLER_TEXTAREA,
-      label: "linear-gradient",
+      label: "Gradient",
       default: '',
       description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
     });

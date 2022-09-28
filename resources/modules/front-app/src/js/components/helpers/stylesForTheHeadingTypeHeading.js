@@ -817,7 +817,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   ) || ''
 
   if (gradientColor) {
-    styles += `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-text-fill-color: transparent;`
+    styles += `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
   }
 
   styles += `} `;
@@ -837,7 +837,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   ) || ''
 
   if (gradientColorH) {
-    styles += `background-image: ${gradientTextareaH.replace(/;/g, '')}; -webkit-text-fill-color: transparent;`
+    styles += `background-image: ${gradientTextareaH.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
   }
 
   styles += `} `;
