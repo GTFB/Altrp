@@ -10,6 +10,9 @@ export default function hoverTransitions(settings, elementId){
   let transform = ''
   let transformOrigin = ''
 
+  if(!getResponsiveSetting(settings, 'hover-transition:enable')){
+    return ''
+  }
   const rotate = getResponsiveSetting(settings, 'hover-transition:rotate')
   if(rotate?.size){
     transform += ` rotateZ(${rotate.size}deg)`

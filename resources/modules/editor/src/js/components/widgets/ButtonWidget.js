@@ -20,6 +20,7 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
   }
   .altrp-btn:hover {
     text-decoration: none;
+    color: #fff;
   }
 
   .altrp-btn {
@@ -673,10 +674,10 @@ class ButtonWidget extends Component {
       this.state.settings.link_link?.url &&
       !this.state.settings.link_link.toPrevPage
     ) {
-      if (this.state.settings.link_link.tag === "a" || isEditor()) {
         let target = _.get(this.state.settings, "link_link.openInNew")
-          ? "blank"
+        ? "_blank"
           : "";
+      if (this.state.settings.link_link.tag === "a" || isEditor()) {
         link = (
           <a
             href={url}
@@ -691,7 +692,7 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={url} href={url} onClick={this.onClick} className={classes} title={tooltip || null}>
+          <Link to={url} href={url} onClick={this.onClick} target={target} className={classes} title={tooltip || null}>
             {" "}
             {buttonInner}
           </Link>

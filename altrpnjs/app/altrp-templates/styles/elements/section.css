@@ -24,7 +24,7 @@
 
 .altrp-section {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .background_section {

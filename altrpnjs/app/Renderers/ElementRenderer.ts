@@ -16,6 +16,7 @@ import getSectionWidthClass from "../../helpers/widgets-renders/getSectionWidthC
 import Role from "App/Models/Role";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import AltrpSkeletonBox from "../../helpers/widgets-renders/components/AltrpSkeletonBox";
+import stringifyWrapperAttributes from "../../helpers/widgets-renders/functions/stringifyWrapperAttributes";
 
 
 export default class ElementRenderer {
@@ -96,6 +97,7 @@ export default class ElementRenderer {
           break
       }
       let styles: {} | string = {}
+      let deleteOverflowHidden = getResponsiveSetting(settings,"switch_overflow_hidden_section", screenName) ? "overflow: initial" : "";
       const {layout_content_width_type: widthType, isFixed} = this.element.settings
       let section_classes = ''
 
@@ -155,7 +157,7 @@ export default class ElementRenderer {
           settings: JSON.stringify(this.element.settings),
           id: this.element.id,
           children_content,
-          element_styles: styles,
+          element_styles: `${styles}${deleteOverflowHidden}`,
           section_classes,
           column_classes: getColumnClasses(settings, screenName),
           section_background,
@@ -219,6 +221,7 @@ export default class ElementRenderer {
     if (advanced_element_id) {
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
+    wrapper_attributes += stringifyWrapperAttributes(settings, screenName)
     content = mustache.render(content, {
       id: this.getId(),
       element_content,

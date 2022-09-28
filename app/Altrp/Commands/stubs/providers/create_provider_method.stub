@@ -1,5 +1,0 @@
-try{
-          \App\AltrpModels\{{modelName}}::observe(\App\Observers\AltrpObservers\{{modelName}}Observer::class);
-        } catch(\Throwable $e){
-
-        }

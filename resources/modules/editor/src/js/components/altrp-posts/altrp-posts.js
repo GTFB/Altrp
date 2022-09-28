@@ -239,8 +239,9 @@ class AltrpPosts extends React.Component {
     }
 
     let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
     return (
-      <div className={`${this.props?.className} altrp-post`} key={key}>
+      <div className={`${this.props?.className} altrp-post`} style={deleteOverflowHidden ? {overflow: "initial"} : null} key={key}>
         {PostContentComponent}
         {this.state.hoverSimpleTemplateId && (
           <div

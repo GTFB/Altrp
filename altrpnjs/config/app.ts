@@ -234,5 +234,5 @@ export const profiler: ProfilerConfig = {
 export const validator: ValidatorConfig = {
 }
 
-export const altrp_version:string = '1.3.0'
+export const altrp_version:string = '1.3.1'
 export const url:string  = Env.get('APP_URL')

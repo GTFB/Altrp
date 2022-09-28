@@ -10,13 +10,35 @@ class GroupController extends Component {
     super(props);
     controllerDecorate(this);
     const value = this.getSettings(this.props.controlId) || null;
-
+    this.popoverRef = React.createRef()
     this.state = {
       undoEnabled: ! ! value,
       value,
     };
-
+    document.addEventListener('click', this.onBodyClick)
   }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.onBodyClick)
+  }
+
+  onBodyClick = e=>{
+
+    let target = e.target
+    console.log(target);
+    console.log(this.popoverRef.current);
+    do {
+      target = target.parentNode
+    } while(target?.parentNode && target !== this.popoverRef.current)
+    console.log(target);
+    if(target === document){
+      this.setState(state=>({
+        ...state,
+        openPopover: false
+      }))
+    }
+  }
+
 
   onClick = (e) => {
     e.preventDefault();
@@ -78,7 +100,7 @@ class GroupController extends Component {
       return '';
     }
 
-    return <div className="controller-container controller-container__group">
+    return <div className="controller-container controller-container__group" ref={this.popoverRef}>
       <div className="controller-container__label">
         {this.props.label || ''}
       </div>

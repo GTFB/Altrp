@@ -176,3 +176,10 @@ function _hAltrp() {
 }
 window._hAltrp = _hAltrp
 window._hAltrp()
+
+window.addEventListener('mousemove', e=>{
+  altrp.mousePosition = {
+    x: e.clientX,
+    y: e.clientY
+  }
+})

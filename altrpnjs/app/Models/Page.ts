@@ -1057,6 +1057,7 @@ export default class Page extends BaseModel {
       'skeleton',
       'hover-transition',
     ]
+
     if(_.isObject(data.settings)){
       prefixes.forEach((prefix)=>{
         prefix += ':'

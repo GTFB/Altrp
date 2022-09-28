@@ -1,9 +1,0 @@
-// Routes for the {{tableName}} resource
-Route::get('{{routePrefix}}/{{tableName}}', [{{getMiddleware}}'uses' =>'{{controllerName}}@index']);
-Route::get('{{routePrefix}}/{{resourceId}}_options', [{{optionsMiddleware}}'uses' =>'{{controllerName}}@options']);
-Route::post('{{routePrefix}}/{{tableName}}', [{{addMiddleware}}'uses' =>'{{controllerName}}@store']);
-Route::get('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{showMiddleware}}'uses' =>'{{controllerName}}@show']);
-Route::put('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{updateMiddleware}}'uses' =>'{{controllerName}}@update']);
-Route::delete('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{deleteMiddleware}}'uses' =>'{{controllerName}}@destroy']);
-Route::put('{{routePrefix}}/{{tableName}}/{{{id}}}/{{{column}}}', [{{update_columnMiddleware}}'uses' =>'{{controllerName}}@updateColumn']);
-Route::get('{{routePrefix}}/filters/{{tableName}}/{{{column}}}', [{{filtersMiddleware}}'uses' =>'{{controllerName}}@getIndexedColumnsValueWithCount']);

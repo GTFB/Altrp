@@ -1,5 +1,10 @@
 import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
-import {defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
+import {
+  colorPropertyStyled,
+  defaultStyled,
+  sliderStyled,
+  styledString
+} from "../../../../../../front-app/src/js/helpers/styles";
 
 /**
  * @return {string}
@@ -63,12 +68,40 @@ export default function DividerComponent(settings) {
     "}",
 
     "altrp-divider .altrp-divider-separator",
-      ["border-color", "divider_style_color", "color"],
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "divider_style_gradient_color");
+      if (borderGradient) {
+        let textareaText = getResponsiveSetting(settings, 'divider_style_gradient_text')?.replace(/;/g, '') || ''
+        return `background: ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "divider_style_gradient_color");
+      const borderColor = getResponsiveSetting(settings, "divider_style_color");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
+      // ["border-color", "divider_style_color", "color"],
     "}",
 
     "altrp-divider:hover",
       'altrp-divider-separator',
-        ["border-color", "divider_style_color", "color", ':hover'],
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "divider_style_gradient_color", ":hover");
+      if (borderGradient) {
+        let textareaText = getResponsiveSetting(settings, 'divider_style_gradient_text', ":hover")?.replace(/;/g, '') || ''
+        return `background: ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "divider_style_gradient_color", ":hover");
+      const borderColor = getResponsiveSetting(settings, "divider_style_color", ":hover");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
+        // ["border-color", "divider_style_color", "color", ':hover'],
       '}',
     "}",
 
@@ -89,7 +122,21 @@ export default function DividerComponent(settings) {
     "}",
 
     "altrp-divider.active .altrp-divider-separator",
-      ["border-color", "divider_style_color", "color", ".active"],
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "divider_style_gradient_color", ".active");
+      if (borderGradient) {
+        let textareaText = getResponsiveSetting(settings, 'divider_style_gradient_text', ".active")?.replace(/;/g, '') || ''
+        return `background: ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "divider_style_gradient_color", ".active");
+      const borderColor = getResponsiveSetting(settings, "divider_style_color", ".active");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
+      // ["border-color", "divider_style_color", "color", ".active"],
     "}",
 
     'altrp-divider-image',
