@@ -54,18 +54,21 @@ export default class CustomizerCrud extends BaseCommand {
       })
       .where('type', 'crud')
 
-    const customizer = customizers.find(customizer => customizer.settings.event_type === action)
+    const customizer = customizers.find(
+      customizer => customizer.settings.event_type === action
+        && customizer.settings.event_hook_type === hookType
+    )
 
     if (!customizer) {
-      return this.logger.error(new Error('Customizer does not exist'))
+      return this.logger.error(new Error(`Customizer does not exist for ${this.modelName} ${hookType} ${action}`))
     }
 
-    this.logger.success(`Found customizer: ${this.colors.cyan(customizer.name)}`)
+    this.logger.success(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
 
     const generator = new CustomizerGenerator(customizer)
     const filePath = generator.getFilePath()
 
-    const classCustomizerCRUD = await import(filePath)
+    const { default: classCustomizerCRUD } = await import(filePath)
 
     if (classCustomizerCRUD) {
       const customizerCRUD = new classCustomizerCRUD

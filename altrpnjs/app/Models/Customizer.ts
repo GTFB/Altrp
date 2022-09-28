@@ -332,10 +332,12 @@ export default class Customizer extends BaseModel {
 
     Logger.info(`new schedule: run ${this.name}`
       + ` per ${this.settings.period} ${this.settings.period_unit}`
-      + ` from ${this.settings.start_at}`
+      + ` from ${this.settings.start_at || 'now'}`
       + ` and repeat ${this.settings.infinity ? 'infinitely' : `${this.settings.repeat_count} times`}`)
 
-    addSchedule(this.id, new Date(this.settings.start_at), this.settings.period_unit, this.settings.period, () => {
+    const date = this.settings.start_at ? new Date(this.settings.start_at) : new Date()
+
+    addSchedule(this.id, date, this.settings.period_unit, this.settings.period, () => {
       if (!this.settings.infinity) {
         if (this.settings.repeat_count > 0) {
           this.settings.repeat_count--
@@ -358,7 +360,7 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     Logger.info('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    await execa.node('ace', ['hook:schedule', this.id])
+    await execa('node', ['ace', 'customizer:schedule', this.id.toString()], { stdio: 'inherit' })
   }
 
   public removeSchedule() {

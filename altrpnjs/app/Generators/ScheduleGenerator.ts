@@ -56,10 +56,6 @@ export default class ScheduleGenerator extends BaseGenerator {
       return
     }
 
-    if (!customizer.settings.event_type || !customizer.settings.event_hook_type) {
-      return
-    }
-
     let imports = this.getImportsContent()
     let content = customizer.getMethodContent()
 

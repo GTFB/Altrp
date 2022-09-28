@@ -41,11 +41,13 @@ export default class CustomizerGenerator extends BaseGenerator {
       fs.rmSync(filePath)
     }
 
-    const isDirectory = fs.lstatSync(directoryPath).isDirectory()
-    const isEmpty = isDirectory && !fs.readdirSync(directoryPath).length
+    if (fs.existsSync(directoryPath)) {
+      const isDirectory = fs.lstatSync(directoryPath).isDirectory()
+      const isEmpty = isDirectory && !fs.readdirSync(directoryPath).length
 
-    if (isEmpty) {
-      fs.rmdirSync(directoryPath)
+      if (isEmpty) {
+        fs.rmdirSync(directoryPath)
+      }
     }
   }
 
