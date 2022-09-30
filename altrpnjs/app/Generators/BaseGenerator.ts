@@ -66,7 +66,6 @@ class BaseGenerator {
       })
     }
     content = await applyPluginsFiltersAsync('generate_file', content, this)
-    console.log(this.page?.data);
     fs.writeFileSync(this.getFullFileName(), content)
     if(isProd()){
       /**

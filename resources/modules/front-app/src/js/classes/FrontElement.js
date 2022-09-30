@@ -705,6 +705,7 @@ class FrontElement {
    * @param {null | int} index
    */
   setCardModel(model, index = null) {
+
     let rootElement = this.getRoot();
     if(! model){
       rootElement.cardModel = null;

@@ -35,7 +35,9 @@ export default function AltrpImage(props: any, device: string) {
       src = `src="/img/nullImage.png"`
     }
 
-    return `<img class="altrp-image" width="${props.width}" height="${props.height}" ${src}/>`
+    return `<img class="altrp-image"
+    ${settings.raw_url ? `data-replace-attributes-if-exists="src|${settings.raw_url}"` : ''}
+    width="${props.width}" height="${props.height}" ${src}/>`
   }
 
 

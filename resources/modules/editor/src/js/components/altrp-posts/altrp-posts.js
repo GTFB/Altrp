@@ -13,7 +13,8 @@ import getResponsiveSetting from "../../../../../front-app/src/js/functions/getR
 import PostsWrapper from "./components/PostsWrapper";
 import Pagination from "../altrp-table/components/Pagination";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
-import mustache from  'mustache'
+import replaceContentWithData from '../../../../../front-app/src/js/functions/replaceContentWithData'
+import prepareHtml from "../../../../../front-app/src/js/helpers/prepareHtml";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -23,7 +24,9 @@ class AltrpPosts extends React.Component {
       simpleTemplateId: null,
       currentPage: 1,
       posts: [],
+      finalHtml: {}
     };
+    this.htmlStore = {}
     this.postsComponents = {};
   }
 
@@ -88,11 +91,9 @@ class AltrpPosts extends React.Component {
       (state) => ({ ...state, simpleTemplateId }),
       async () => {
         if(loadHtmlCards){
-          console.log(loadHtmlCards);
           let htmlTemplate = await templateLoader.loadHtmlTemplate(
             simpleTemplateId
           );
-          console.log(htmlTemplate);
           this.setState((state) => ({ ...state, htmlTemplate }));
         } else {
           let template = await templateLoader.loadParsedTemplate(
@@ -179,18 +180,10 @@ class AltrpPosts extends React.Component {
     }
   }
 
+  onStoreUpdate = (idx)=>{
 
-  renderPostViaHtml =(idx)=>{
-    let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
-    let post = this.props.data[idx] || this.props.data;
     let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
-    hoverHtmlTemplate = mustache.render(hoverHtmlTemplate, post)
-    htmlTemplate = mustache.render(htmlTemplate, post)
-    const transitionType = _.get(
-      this.props.settings,
-      "posts_transition_type",
-      null
-    );
+    let post = this.props.data[idx] || this.props.data;
     if(hoverHtmlTemplate){
       htmlTemplate += `<div
             class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
@@ -198,7 +191,62 @@ class AltrpPosts extends React.Component {
           ${hoverHtmlTemplate}
           </div>`
     }
+    htmlTemplate = prepareHtml(htmlTemplate, post)
     let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    htmlTemplate = replaceContentWithData(htmlTemplate, post)
+    if(this.htmlStore[key] !== htmlTemplate){
+      this.setState(state=>({
+        ...state,
+        finalHtml: {
+          ...state.finalHtml,
+          [key]: htmlTemplate
+        }
+      }))
+    }
+  }
+
+  renderPostViaHtml =(idx)=>{
+    let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
+    let post = this.props.data[idx] || this.props.data;
+    let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    if(this.state.finalHtml[key]){
+      return (
+        <div className={`${this.props?.className} altrp-post`}
+             style={deleteOverflowHidden ? {overflow: "initial"} : null}
+             dangerouslySetInnerHTML={
+               {__html: this.state.finalHtml[key]}
+             }
+             key={key}>
+        </div>
+      );
+    }
+    let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
+
+    const transitionType = _.get(
+      this.props.settings,
+      "posts_transition_type",
+      null
+    );
+    /**
+     * subscribe on store updates
+     */
+    if(htmlTemplate.indexOf('conditional_other_display') > -1){
+      appStore.subscribe(()=>this.onStoreUpdate(idx))
+    }
+    if(hoverHtmlTemplate){
+      htmlTemplate += `<div
+            class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
+          >
+          ${hoverHtmlTemplate}
+          </div>`
+    }
+    htmlTemplate = prepareHtml(htmlTemplate, post)
+    this.htmlStore[key] = htmlTemplate
+    htmlTemplate = replaceContentWithData(htmlTemplate, post)
+    setTimeout(() => {
+      const HtmlRenderEvent = new Event('html-render')
+      document.dispatchEvent(HtmlRenderEvent)
+    }, 250)
     return (
       <div className={`${this.props?.className} altrp-post`}
            style={deleteOverflowHidden ? {overflow: "initial"} : null}
