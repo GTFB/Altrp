@@ -28,6 +28,9 @@ class AltrpPosts extends React.Component {
     };
     this.htmlStore = {}
     this.postsComponents = {};
+    if(_.get(this.props.settings, "load-html-cards")){
+      appStore.subscribe(()=>this.onStoreUpdate())
+    }
   }
 
   /**
@@ -180,29 +183,85 @@ class AltrpPosts extends React.Component {
     }
   }
 
-  onStoreUpdate = (idx)=>{
+  checkStore(){
+    const state = appStore.getState()
+    if(this.altrpPageState !== state.altrpPageState){
+      this.altrpPageState = state.altrpPageState
+      return true
+    }
+    if(this.currentDataStorage !== state.currentDataStorage){
+      this.currentDataStorage = state.currentDataStorage
+      return true
+    }
+    if(this.altrpresponses !== state.altrpresponses){
+      this.altrpresponses = state.altrpresponses
+      return true
+    }
 
-    let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
-    let post = this.props.data[idx] || this.props.data;
-    if(hoverHtmlTemplate){
-      htmlTemplate += `<div
+    if(this.altrpresponses !== state.altrpresponses){
+      this.altrpresponses = state.altrpresponses
+      return true
+    }
+
+    if(this.currentModel !== state.currentModel){
+      this.currentModel = state.currentModel
+      return true
+    }
+    if(this.formsStore !== state.formsStore){
+      this.formsStore = state.formsStore
+      return true
+    }
+
+    return false;
+  }
+
+  onStoreUpdate = ()=>{
+    if(! this.state.htmlTemplate){
+      return
+    }
+    if(! this.checkStore()){
+      return
+    }
+    let { data: posts } = this.props;
+    if (!_.isArray(posts) && _.isObject(posts)) {
+      posts = [posts];
+    }
+    if (!_.isArray(posts)) {
+      posts = [];
+    }
+    let postsStart = 0;
+    const posts_per_page =
+      Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
+    if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {
+      if (currentPage > 1) {
+        postsStart = (currentPage - 1) * posts_per_page;
+      }
+      posts = posts.slice(postsStart, postsStart + posts_per_page);
+    }
+    posts.forEach((p, idx)=>{
+
+      let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
+      let post = this.props.data[idx] || this.props.data;
+      if(hoverHtmlTemplate){
+        htmlTemplate += `<div
             class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
           >
           ${hoverHtmlTemplate}
           </div>`
-    }
-    htmlTemplate = prepareHtml(htmlTemplate, post)
-    let key = post.altrpRandomKey || post.id || post.altrpIndex;
-    htmlTemplate = replaceContentWithData(htmlTemplate, post)
-    if(this.htmlStore[key] !== htmlTemplate){
-      this.setState(state=>({
-        ...state,
-        finalHtml: {
-          ...state.finalHtml,
-          [key]: htmlTemplate
-        }
-      }))
-    }
+      }
+      htmlTemplate = prepareHtml(htmlTemplate, post)
+      let key = post.altrpRandomKey || post.id || post.altrpIndex;
+      htmlTemplate = replaceContentWithData(htmlTemplate, post)
+      if(this.htmlStore[key] !== htmlTemplate){
+        this.setState(state=>({
+          ...state,
+          finalHtml: {
+            ...state.finalHtml,
+            [key]: htmlTemplate
+          }
+        }))
+      }
+    })
   }
 
   renderPostViaHtml =(idx)=>{
@@ -230,9 +289,7 @@ class AltrpPosts extends React.Component {
     /**
      * subscribe on store updates
      */
-    if(htmlTemplate.indexOf('conditional_other_display') > -1){
-      appStore.subscribe(()=>this.onStoreUpdate(idx))
-    }
+
     if(hoverHtmlTemplate){
       htmlTemplate += `<div
             class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
@@ -247,6 +304,7 @@ class AltrpPosts extends React.Component {
       const HtmlRenderEvent = new Event('html-render')
       document.dispatchEvent(HtmlRenderEvent)
     }, 250)
+    // this.oldData = this.props.data
     return (
       <div className={`${this.props?.className} altrp-post`}
            style={deleteOverflowHidden ? {overflow: "initial"} : null}

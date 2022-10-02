@@ -85,7 +85,6 @@
     {{{extra_footer_styles}}}
   {{{all_site_js}}}
   <style type="text/css">
-  body{display:flex;}
     .altrp-section.altrp-section {
       overflow: visible;
     }

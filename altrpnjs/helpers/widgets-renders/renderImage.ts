@@ -46,7 +46,6 @@ export default function renderImage(settings, device, widgetId) {
       name: 'default',
     }
   }
-  console.log(media);
   let width = getResponsiveSetting(settings, 'width_size', device)
   let height = getResponsiveSetting(settings,'height_size', device)
   width = _.get(width, 'size', '100') + _.get(width, 'unit', '%')
@@ -71,7 +70,6 @@ export default function renderImage(settings, device, widgetId) {
     if(link.openInNew){
       linkProps.target = '_blank'
     }
-    console.log(altrpImage);
     return `
     <div class="altrp-image-container">
     <div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}'
