@@ -126,7 +126,7 @@ class LinkController extends Component {
       <div className="control-link-input-wrapper">
         <input
           onChange={this.changeInput}
-          value={value.toPrevPage ? 'На предыдущую страницу' : value.url || ''}
+          value={value.toPrevPage ? 'On Prev Page' : value.url || ''}
           type="text"
           className="control-link"
           placeholder="введите ссылку"
@@ -166,11 +166,11 @@ class LinkController extends Component {
             onChange={this.toggleSettingsToPrevPage}
           />
           <span className="settings-checkbox-container" />
-          <label htmlFor="toPrevPage" className="settings-checkbox__label">На предыдущую страницу</label>
+          <label htmlFor="toPrevPage" className="settings-checkbox__label">On Prev Page</label>
         </div>
         <div className="customAttributes">
           <div className="control-link-header">
-            <label className="controller-container__label">Произвольные атрибуты</label>
+            <label className="controller-container__label">Custom Attributes</label>
           </div>
           <input onChange={this.changeAttribute}
             value={value.attributes || ''}

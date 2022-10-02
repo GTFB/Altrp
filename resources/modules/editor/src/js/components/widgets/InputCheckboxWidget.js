@@ -96,13 +96,13 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
   padding-left: 10px;
 }
 .altrp-field-label {
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
 .altrp-field-select2__single-value, .altrp-field {
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -123,7 +123,7 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
 }
 .altrp-field::placeholder, .altrp-field-select2__placeholder {
   font-size: 13px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -446,27 +446,6 @@ class InputCheckboxWidget extends Component {
     options = options.map(({ value }) => value);
     this.onChange(options);
   }
-  /**
-   * Обработка нажатия клавиши
-   * @param {{}} e
-   */
-  handleEnter = e => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
-      inputs[index + 1] && inputs[index + 1].focus();
-      const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getLockedSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
-      }
-    }
-  };
 
   /**
    * Загрузка виджета

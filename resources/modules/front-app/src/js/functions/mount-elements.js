@@ -1,10 +1,6 @@
 import loadGlobalStyles from "./load-global-styles";
 import findElement from "./findElement";
 
-const ALTRP_ELEMENTS = {
-  'input-textarea': async () => await import("../altrp-elements/AltrpTextarea")
-}
-
 export default function mountElements(){
   loadGlobalStyles();
   let elementContainers = document.querySelectorAll('*:not([data-react-element]) [data-react-element]');
@@ -25,13 +21,15 @@ export default function mountElements(){
     if(! element){
       return;
     }
+
     const props = {
       element,
       elementWrapperRef:{
         current: container
-      }
+      },
+      withSkeleton: ! ! container.querySelector('.altrp-element > .altrp-skeleton-box'),
+      skeletonItems: container.querySelectorAll('.altrp-element > .altrp-skeleton-box > .altrp-skeleton-box__item').length
     }
-    console.log('Loading Element: ', performance.now());
     window.ReactDOM.render(<window.Provider store={window.appStore}>
       <window.ElementWrapper {...props} />
     </window.Provider>,  container, ()=>{

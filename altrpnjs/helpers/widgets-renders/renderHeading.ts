@@ -13,11 +13,12 @@ export default function renderHeading(settings, device) {
 
       const background_image = getResponsiveSetting(settings, 'background_image', device, {})
 
-      const textStrokeSwitch = getResponsiveSetting(settings, 'style_text_stroke_switcher', device, {})
+      const textStrokeSwitch = getResponsiveSetting(settings, 'style_text_stroke_switcher', device, false)
+      const colorGradient = getResponsiveSetting(settings, 'style_text_gradient_switcher', device, false)
       let text = getResponsiveSetting(settings,'text', device)
       let link
       const className = "altrp-heading altrp-heading--link " +
-         (background_image?.url ? ' altrp-background-image' : '') + (textStrokeSwitch ? "text-stroke-included" : "")
+         (background_image?.url ? ' altrp-background-image' : '') + (textStrokeSwitch ? "text-stroke-included" : "") + (colorGradient ? "text-gradient-color" : "")
       // @ts-ignore
       let wrapperClasses = "altrp-heading-wrapper"
 
@@ -133,7 +134,7 @@ export default function renderHeading(settings, device) {
         }
         advancedHeading = `<div class="altrp-heading-advanced-wrapper">
 <${settings.heading_settings_html_tag || 'h2'} class="${classes}" style="${objectToStylesString(styles)}">
-${getResponsiveSetting(settings, "text_advanced_heading_content", device)}</${settings.heading_settings_html_tag || 'h2'}></div>`
+${settings.text_advanced_heading_content || ''}</${settings.heading_settings_html_tag || 'h2'}></div>`
 
         let currentBreakpoint: {
           type?: string,

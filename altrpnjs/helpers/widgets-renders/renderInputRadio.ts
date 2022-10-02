@@ -219,16 +219,16 @@ export default function renderInputRadio(settings, device, context) {
     const fieldName = Math.random().toString(36).substr(2, 9);
     const formID = Math.random().toString(36).substr(2, 9);
 
-    return `<div class="altrp-field-subgroup"><div class="altrp-field-radio-group">${options.map((option, idx) => {
-      let checked = false;
-
-      value = _.isArray(value) ? value : value ? [value] : [];
-      checked = altrpCompare(option.value, value, "in");
+    return `<div class="altrp-field-subgroup"><div class="altrp-field-radio-group">${options.map((option) => {
+      // let checked = false;
+      //
+      // value = _.isArray(value) ? value : value ? [value] : [];
+      // checked = altrpCompare(option.value, value, "in");
 
       return (
-        `<label key="${fieldName + "-" + idx}" class="${"bp3-control bp3-radio" + (!inline ? " bp3-inline" : "") + " altrp-field-radio" + (checked ? " active" : "")}"><input checked="${checked}" name="${formID + "-" + fieldName}" type="radio"><span class="bp3-control-indicator"></span>${option.label}</label>`
+        `<label class="${"bp3-control bp3-radio" + (!inline ? " bp3-inline" : "") + " altrp-field-radio"}"><input name="${formID + "-" + fieldName}" type="radio"><span class="bp3-control-indicator"></span>${option.label}</label>`
       );
-    }).join(" ")}</div></div>`
+    }).join("")}</div></div>`
   }
 
   let input = renderRepeatedInput();

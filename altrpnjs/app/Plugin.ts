@@ -286,10 +286,10 @@ export default class Plugin {
     if (!fs.existsSync(this.getPath())) {
       let plugins = get_plugin_setting(Plugin.ALTRP_PLUGINS) || ''
       plugins = plugins.split(plugins,',')
-      plugins = plugins.filter(p => p === this.name)
+      plugins = plugins.filter(p => p !== this.name)
       plugins = plugins.join(',')
       set_plugin_setting([{key:Plugin.ALTRP_PLUGINS, value: plugins}])
-      throw new NotFoundException('Plugin not Found', 404, NotFoundException.code)
+      throw new NotFoundException(`Plugin not '${this.name}' Found`, 404, NotFoundException.code)
     }
     if (is_null(this.plugin_meta_data)) {
       this.plugin_meta_data = []

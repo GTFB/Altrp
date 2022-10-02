@@ -10,11 +10,42 @@ import {
   gradientStyled,
   backgroundImageControllerToStyles, sliderStyled, styledString, filtersControllerToStyles,
 } from "../../../../../../front-app/src/js/helpers/styles";
+
+function borderGradientFunc(settings, state = '') {
+  let styles = '';
+  let borderGradient, backgroundColor, gradient;
+
+  if (settings !== undefined) {
+    borderGradient = getResponsiveSetting(settings, 'section_style_border_gradient_custom', state);
+  }
+
+  if (settings !== undefined) {
+    backgroundColor = getResponsiveSetting(settings, 'section_style_background_color', state);
+  }
+
+  if (settings !== undefined) {
+    gradient = getResponsiveSetting(settings, 'gradient', state);
+  }
+
+  if (borderGradient) {
+    let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+    let textareaText = getResponsiveSetting(settings, 'section_style_gradient_text', state)?.replace(/;/g, '') || ''
+    styles += `background: ${gradient?.isWithGradient ? gradient.value.replace(/;/g, '') : `linear-gradient(${bg},${bg})`} padding-box, ${textareaText} border-box; border-color: transparent;`;
+  }
+
+  return styles
+}
+
 function altrpSection(settings) {
   let styles = '';
 
-  let flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow;
+  let flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow, borderGradient;
 
+  //Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderGradient = getResponsiveSetting(settings, 'section_style_border_gradient_custom');
+  }
 
   //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles
 
@@ -102,7 +133,7 @@ function altrpSection(settings) {
     borderColor = getResponsiveSetting(settings, 'section_style_border_color');
   }
 
-  if (borderColor) {
+  if (borderColor && !borderGradient) {
     styles += colorPropertyStyled(borderColor, 'border-color');
   }
 
@@ -112,8 +143,11 @@ function altrpSection(settings) {
     borderRadius = getResponsiveSetting(settings, 'section_style_border_radius');
   }
 
+
   if (borderRadius) {
-    styles += dimensionsStyled(borderRadius, 'border-radius');
+    styles += '& > .background_section {'
+    styles += dimensionsStyled(borderRadius, "border-radius");
+    styles += '}'
   }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -132,7 +166,13 @@ function altrpSection(settings) {
 function altrpSectionHover(settings,state=':hover') {
   let styles = '';
 
-  let borderStyle, borderWidth, borderColor, boxShadow, borderRadius;
+  let borderStyle, borderWidth, borderColor, boxShadow, borderRadius, borderGradient;
+
+  //Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderGradient = getResponsiveSetting(settings, 'section_style_border_gradient_custom', state);
+  }
 
   //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
 
@@ -160,7 +200,7 @@ function altrpSectionHover(settings,state=':hover') {
     borderColor = getResponsiveSetting(settings, 'section_style_border_color', state);
   }
 
-  if (borderColor) {
+  if (borderColor && !borderGradient) {
     styles += colorPropertyStyled(borderColor, 'border-color');
   }
 
@@ -170,9 +210,13 @@ function altrpSectionHover(settings,state=':hover') {
     borderRadius = getResponsiveSetting(settings, 'section_style_border_radius', state);
   }
 
+
   if (borderRadius) {
-    styles += dimensionsStyled(borderRadius, 'border-radius');
+    styles += '& > .background_section {'
+    styles += dimensionsStyled(borderRadius, "border-radius");
+    styles += '}'
   }
+
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
 
@@ -193,7 +237,13 @@ function sectionBackground(settings) {
       backgroundImage,
       backgroundSize,
       backgroundRepeat,
-      backgroundSizeInUnit, backgroundAttachment, backgroundPosition, gradient;
+      backgroundSizeInUnit, backgroundAttachment, backgroundPosition, gradient, borderGradient;
+
+  //Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderGradient = getResponsiveSetting(settings, 'section_style_border_gradient_custom');
+  }
 
   //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
@@ -201,7 +251,7 @@ function sectionBackground(settings) {
     backgroundColor = getResponsiveSetting(settings, 'section_style_background_color');
   }
 
-  if (backgroundColor) {
+  if (backgroundColor && !borderGradient) {
     styles += colorPropertyStyled(backgroundColor, 'background');
   }
 
@@ -261,7 +311,7 @@ function sectionBackground(settings) {
     gradient = getResponsiveSetting(settings, 'gradient');
   }
 
-  if (gradient) {
+  if (gradient && !borderGradient) {
     styles += gradientStyled(gradient);
   }
 
@@ -270,12 +320,19 @@ function sectionBackground(settings) {
 
 function sectionBackgroundHover(settings, state=':hover') {
   let styles = '';
-  let backgroundColor, backgroundImage, backgroundSize, backgroundRepeat, backgroundSizeInUnit, backgroundAttachment, backgroundPosition, gradient;
+  let backgroundColor, backgroundImage, backgroundSize, backgroundRepeat, backgroundSizeInUnit, backgroundAttachment, backgroundPosition, gradient, borderGradient;
+
+  //Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderGradient = getResponsiveSetting(settings, 'section_style_border_gradient_custom', state);
+  }
+
   if (settings !== undefined) {
     backgroundColor = getResponsiveSetting(settings, 'section_style_background_color', state);
   }
 
-  if (backgroundColor) {
+  if (backgroundColor && !borderGradient) {
     styles += colorPropertyStyled(backgroundColor, 'background');
   }
 
@@ -333,7 +390,7 @@ function sectionBackgroundHover(settings, state=':hover') {
     gradient = getResponsiveSetting(settings, 'gradient', state);
   }
 
-  if (gradient) {
+  if (gradient && !borderGradient) {
     styles += gradientStyled(gradient);
   }
 
@@ -668,11 +725,13 @@ export default function SectionWidgetComponent(settings, childrenLength, element
   & > .altrp-section,
   & > .altrp-section-full-fill {
     ${altrpSection(settings)}
+    ${borderGradientFunc(settings)}
   }
 
   & > .altrp-section:hover,
   & > .altrp-section-full-fill:hover {
     ${altrpSectionHover(settings)}
+    ${borderGradientFunc(settings, ":hover")}
   }
 
   & .altrp-section .altrp-background-image${elementId} {
@@ -698,6 +757,7 @@ export default function SectionWidgetComponent(settings, childrenLength, element
   & > .altrp-section.active,
   & > .altrp-section-full-fill.active {
     ${altrpSectionHover(settings,'.active')}
+     ${borderGradientFunc(settings, ".active")}
     ${(()=>{
       const  styles = [
         ['margin', 'position_style_position_margin', 'dimensions', '.active'],

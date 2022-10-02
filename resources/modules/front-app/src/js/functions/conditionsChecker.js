@@ -1,4 +1,5 @@
 import conditionChecker from "./conditionChecker";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 /**
  * Функция для проверки условий
@@ -14,6 +15,9 @@ export default function conditionsChecker(
   model,
   dataByPath = true
 ) {
+  if(! (model instanceof AltrpModel)){
+    model = new AltrpModel(model)
+  }
   if (!conditions.length) {
     return true;
   }

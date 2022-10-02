@@ -107,6 +107,16 @@ class InputTextCommon extends BaseElement {
       label: "Field ID (Column Name)",
     });
 
+    this.addControl("maxlength_input_text", {
+      type: CONTROLLER_NUMBER,
+      label: "maxlength",
+      default: 0,
+      conditions: {
+        content_type: ["text", "password"],
+      },
+      locked: true,
+    });
+
     this.addControl("invalid_email_message", {
       responsive: false,
       type: CONTROLLER_TEXT,
@@ -255,6 +265,14 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Timestamp",
       default: false,
+    });
+
+    this.addControl("content_enter_input", {
+      type: CONTROLLER_SWITCHER,
+      label: "Enter Next Input",
+      default: true,
+      responsive: false,
+      locked: true,
     });
 
     this.addControl("params_for_update", {
@@ -609,6 +627,17 @@ class InputTextCommon extends BaseElement {
         colorPickedHex: "#000000",
         type: " ",
       },
+    });
+
+    this.addControl('input_style_border_gradient_custom', {
+      type: CONTROLLER_SWITCHER,
+      label: "Border Gradient",
+    });
+
+    this.addControl("input_style_gradient_text", {
+      type: CONTROLLER_TEXTAREA,
+      label: "linear-gradient",
+      description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
     });
 
     this.endControlSection();

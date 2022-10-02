@@ -57,12 +57,43 @@ export function btnStyles(settings) {
         return ''
       }
     },
-    ["background-color", "background_color", "color"],
-    ["", "gradient", "gradient"],
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "background_color");
+      const gradient = getResponsiveSetting(settings, "gradient");
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(52, 59, 76, 1)'
+        let textareaText = getResponsiveSetting(settings, 'button_style_gradient_text')?.replace(/;/g, '') || ''
+        return `background: ${gradient?.isWithGradient ? gradient.value.replace(/;/g, '') : `linear-gradient(${bg},${bg})`} padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "background_color");
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const gradient = getResponsiveSetting(settings, "gradient");
+      if (gradient && !borderGradient) {
+        return gradientStyled(gradient);
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const borderColor = getResponsiveSetting(settings, "border_color");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
+    // ["background-color", "background_color", "color"],
+    // ["", "gradient", "gradient"],
     ["", "background_image", "media"],
     ["border-style", "border_type"],
     ["border-width", "border_width", "dimensions"],
-    ["border-color", "border_color", "color"],
+    // ["border-color", "border_color", "color"],
     ["border-radius", "border_radius", "dimensions"],
     ["", "style_background_shadow", "shadow"],
     ["", "font_typographic", "typographic"],
@@ -78,13 +109,44 @@ export function btnStyles(settings) {
         return ''
       }
     },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const backgroundColor = getResponsiveSetting(settings, "background_color", ':hover');
+      const gradient = getResponsiveSetting(settings, "gradient", ':hover');
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(52, 59, 76, 1)'
+        let textareaText = getResponsiveSetting(settings, 'button_style_gradient_text', ':hover')?.replace(/;/g, '') || ''
+        return `background: ${gradient?.isWithGradient ? gradient.value.replace(/;/g, '') : `linear-gradient(${bg},${bg})`} padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const backgroundColor = getResponsiveSetting(settings, "background_color", ':hover');
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const gradient = getResponsiveSetting(settings, "gradient", ':hover');
+      if (gradient && !borderGradient) {
+        return gradientStyled(gradient);
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const borderColor = getResponsiveSetting(settings, "border_color", ':hover');
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
     ["margin", "position_margin", "dimensions", ":hover"],
     ["padding", "position_padding", "dimensions", ":hover"],
-    ["background-color", "background_color", "color", ":hover"],
-    ["", "gradient", "gradient", ":hover"],
+    // ["background-color", "background_color", "color", ":hover"],
+    // ["", "gradient", "gradient", ":hover"],
     ["border-style", "border_type", "", ":hover"],
     ["border-width", "border_width", "dimensions", ":hover"],
-    ["border-color", "border_color", "color", ":hover"],
+    // ["border-color", "border_color", "color", ":hover"],
     ["border-radius", "border_radius", "dimensions", ":hover"],
     ["", "style_background_shadow", "shadow", ":hover"],
     ["color", "font_color", "color", ":hover"],
@@ -166,6 +228,7 @@ export function btnStyles(settings) {
 
     "& img",
     ["width", "icon_size", "slider"],
+    ["height", "icon_size", "slider"],
     ["icon_size", "slider"],
     "}",
 

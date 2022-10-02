@@ -1,1 +1,0 @@
-         $schedule->command('{{command}}'){{period}}{{restrictions}}

@@ -13,8 +13,10 @@ export function elementsStorageReducer(elementStorage, action) {
       if(! _.isArray(elementStorage)){
         elementStorage = defaultElementStorage;
       }
-      elementStorage.push(action.elementComponent);
-      elementStorage = [...elementStorage];
+      if(elementStorage.indexOf(action.elementComponent)){
+        elementStorage.push(action.elementComponent);
+        elementStorage = [...elementStorage];
+      }
     }
     break;
   }

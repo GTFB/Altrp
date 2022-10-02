@@ -2,6 +2,7 @@ import Resource from "../Resource";
 import AltrpModel from "../AltrpModel";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+import mbParseJSON from "../../../../../front-app/src/js/functions/mb-parse-JSON";
 /**
  * @class TemplateLoader
  */
@@ -121,21 +122,55 @@ export class TemplateLoader {
     templateId = Number(templateId) ? Number(templateId) : templateId;
 
     const template = await this.loadTemplate(templateId, force)
-    /**
+    console.log(template);
+    if(! page_areas.find(a=>a.id === templateId)){
+      page_areas.push({
+        area_name: 'card',
+        id: templateId,
+        template: {
+          ...template,
+          data: frontElementsFabric.parseData(mbParseJSON(template.data))
+        }
+      });
+
+    }    /**
      * for loading the styles before loading the html
      */
-    return new Promise(resolve => {
+    return this.stylesResolve({
+      template,
+
+    })
+  }
+
+  /**
+   *
+   * @param template
+   * @param templateGUID
+   * @returns {Promise<{} | null>}
+   */
+   stylesResolve = async ({
+     template = null,
+     templateGUID = null
+   })=>{
+    return new Promise(  resolve => {
+      if(template?.guid){
+        templateGUID = template?.guid
+      }
       const _doc = isEditor() ?
         document.getElementById("editorContent").contentDocument :
         document
       let link = _doc.createElement('link')
       link.addEventListener('load',()=>{
+        if(! template){
+          resolve(null)
+          return
+        }
         let templateData = _.get(template, 'data');
         templateData = JSON.parse(templateData);
         resolve(frontElementsFabric.parseData(templateData))
       })
       link.setAttribute('rel', 'stylesheet')
-      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${template.guid}.css`)
+      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${templateGUID}.css`)
 
       _doc.head.appendChild(link)
 
@@ -148,12 +183,16 @@ export class TemplateLoader {
          */
         link = _doc.createElement('link')
         link.addEventListener('load',()=>{
+          if(! template){
+            resolve(null)
+            return
+          }
           let templateData = _.get(template, 'data');
           templateData = JSON.parse(templateData);
           resolve(frontElementsFabric.parseData(templateData))
         })
         link.setAttribute('rel', 'stylesheet')
-        link.setAttribute('href',  `/altrp/css/${template.guid}.css`)
+        link.setAttribute('href',  `/altrp/css/${templateGUID}.css`)
         _doc.head.appendChild(link)
 
       })
@@ -172,6 +211,13 @@ export class TemplateLoader {
     let templateData = _.get(this.templatesCache.getProperty(templateId), 'data');
     templateData = JSON.parse(templateData);
     return frontElementsFabric.parseData(templateData)
+  }
+  async loadHtmlTemplate(templateGUID){
+    let url = `/altrp/html/screens/${appStore.getState().currentScreen.name}/templates/card/${templateGUID}.html`
+    const html = await (new Resource({route:url})).getAsText()
+    await this.stylesResolve({templateGUID})
+    this.loadParsedTemplate(templateGUID)
+    return html
   }
 }
 

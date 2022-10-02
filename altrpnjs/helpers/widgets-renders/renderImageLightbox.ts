@@ -69,7 +69,7 @@ export default function renderImageLightbox(settings, device, context) {
   return `
   <div class="altrp-image-container">
     <div class="${classNames}">
-      <div class="altrp-image-placeholder" height="${height}" width="${width}">
+      <div class="altrp-image-placeholder">
         ${image}
       </div>
     </div>

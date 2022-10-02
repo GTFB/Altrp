@@ -1,6 +1,5 @@
 import { withRouter } from "react-router-dom";
 import { addElement } from "../store/elements-storage/actions";
-import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
@@ -15,6 +14,7 @@ import altrpRandomId from "../functions/altrpRandomId";
 import altrpCompare from "../functions/altrpCompare";
 import conditionsChecker from "../functions/conditionsChecker";
 import replaceContentWithData from "../functions/replaceContentWithData";
+import stringifyWrapperAttributes from "../helpers/functions/stringifyWrapperAttributes";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -62,6 +62,8 @@ class ElementWrapper extends Component {
     // document.dispatchEvent(mountElementEvent)
     // document.dispatchEvent(mountElementTypeEvent)
     this.checkElementDisplay();
+    const HtmlRenderEvent = new Event('html-render')
+    document.dispatchEvent(HtmlRenderEvent)
   }
 
   componentWillUnmount() {
@@ -286,7 +288,9 @@ class ElementWrapper extends Component {
     //
     // }
     if(newProps.currentDataStorage !== this.props.currentDataStorage
-      && dependencies.indexOf('altrpdata') === -1){
+      && dependencies.indexOf('altrpdata') === -1 &&
+      newProps.currentDataStorage.getProperty("currentDataStorageLoaded") ===
+      this.props.currentDataStorage.getProperty("currentDataStorageLoaded")){
       ++window.countReduced
       return false
     }
@@ -472,6 +476,9 @@ class ElementWrapper extends Component {
       wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');
       wrapperProps["data-altrp-sticky-spacing"] = element.getResponsiveSetting('st_spacing');
       wrapperProps["data-margin-top"] = element.getResponsiveSetting('st_spacing') || 0;
+    }
+    if(element.getResponsiveSetting('mouse-effects:enable')){
+      wrapperProps["data-altrp-settings"] = stringifyWrapperAttributes(element.settings)
     }
     wrapperProps["data-altrp-id"] = element.getId();
 

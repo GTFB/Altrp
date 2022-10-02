@@ -6,7 +6,6 @@ import Application from "@ioc:Adonis/Core/Application";
 import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
 import SCREENS from "../../helpers/const/SCREENS";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import * as _ from "lodash";
 import getLatestVersion from "../../helpers/getLatestVersion";
@@ -30,6 +29,7 @@ export default class PageGenerator extends BaseGenerator {
       altrpMenus: any[]
     };
   } = {}
+  public static screensDirectory = '/views/altrp/screens'
 
   setGlobal(path, value) {
     _.set(this.__altrp_global__, path, value)
@@ -131,7 +131,7 @@ export default class PageGenerator extends BaseGenerator {
 
 
       await this.addFile(fileName)
-        .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
+        .destinationDir(Application.resourcesPath(`${PageGenerator.screensDirectory}/${screen.name}/pages`))
         .stub(PageGenerator.template)
         .apply({
           hAltrp: Env.get('PATH_ENV') === 'production'

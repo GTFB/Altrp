@@ -98,7 +98,7 @@ export default function renderInputSelect(settings, device) {
                   <button type="button" ${content_readonly ? "disabled" : ""} class="${"bp3-button" + (content_readonly ? " bp3-disabled" : "")}">
                      ${leftIcon}
                      ${selectText}
-                     ${rightIcon ? rightIcon : `<span class="bp3-icon bp3-icon-caret-down" icon="caret-down" aria-hidden="true">
+                     ${rightIcon ? rightIcon : `<span class="bp3-icon bp3-icon-caret-down" aria-hidden="true">
                         <svg data-icon="caret-down" width="16" height="16" viewBox="0 0 16 16"><path d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z" fill-rule="evenodd"></path></svg>
                      </span>`}
                   </button>
