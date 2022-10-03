@@ -32,8 +32,11 @@
   flex-direction: column;
   justify-content: flex-start;
   padding: 10px;
-  border: 1px solid;
-  border-radius: 5px
+  border-radius: 5px;
+  opacity: 0;
+}
+.popup-transition-state-enter-done .popup-window{
+  opacity: 1;
 }
 
 .popup-content {

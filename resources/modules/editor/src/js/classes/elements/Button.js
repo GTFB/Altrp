@@ -498,7 +498,7 @@ class Button extends BaseElement {
 
     this.addControl("button_style_gradient_text", {
       type: CONTROLLER_TEXTAREA,
-      label: "linear-gradient",
+      label: "Gradient",
       default: '',
       description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
     });
@@ -534,6 +534,18 @@ class Button extends BaseElement {
         // },
       }
     );
+
+    this.addControl("style_button_gradient_switcher", {
+      type: CONTROLLER_SWITCHER,
+      label: "gradient color",
+    });
+
+    this.addControl("style_button_gradient_textarea", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Gradient",
+      default: '',
+      description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
+    });
 
     this.endControlSection();
 
