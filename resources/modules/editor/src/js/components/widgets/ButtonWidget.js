@@ -336,12 +336,12 @@ class ButtonWidget extends Component {
     }
 
     existingIconsString = existingIconsString.split('').sort().join('');
-    let buttonInner = buttonText || "";
+    let buttonInner = <span className="altrp-btn-text">{buttonText || ""}</span>
 
     if (existingIconsString === 'r') {
       buttonInner = (
         <div className="btn-container-row">
-          <div>{buttonText}</div>
+          <div className="altrp-btn-text">{buttonText}</div>
           <div className={"altrp-btn-icon-right "}>
             {renderAsset(buttonMediaRight)}{" "}
           </div>
@@ -356,7 +356,7 @@ class ButtonWidget extends Component {
           <div className={"altrp-btn-icon-left "}>
             {renderAsset(buttonMediaLeft)}{" "}
           </div>
-          <div>{buttonText}</div>
+          <div className="altrp-btn-text">{buttonText}</div>
         </div>
       )
     }
@@ -367,7 +367,7 @@ class ButtonWidget extends Component {
           <div className={"altrp-btn-icon-top "}>
             {renderAsset(buttonMediaTop)}{" "}
           </div>
-          <div>{buttonText}</div>
+          <div className="altrp-btn-text">{buttonText}</div>
         </div>
       )
     }
@@ -375,7 +375,7 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'b') {
       buttonInner = (
         <div className="btn-container-column">
-          <div>{buttonText}</div>
+          <div className="altrp-btn-text">{buttonText}</div>
           <div className={"altrp-btn-icon-bottom "}>
             {renderAsset(buttonMediaBottom)}{" "}
           </div>
@@ -393,7 +393,7 @@ class ButtonWidget extends Component {
             <span className={"altrp-btn-icon-left "}>
               {renderAsset(buttonMediaLeft)}{" "}
             </span>
-            {buttonText}
+            <div className="altrp-btn-text">{buttonText}</div>
             <span className={"altrp-btn-icon-right "}>
               {renderAsset(buttonMediaRight)}{" "}
             </span>
@@ -412,8 +412,7 @@ class ButtonWidget extends Component {
             {renderAsset(buttonMediaTop)}{" "}
           </span>
           <div className="btn-container-row">
-            <span></span>
-            {buttonText}
+            <div className="altrp-btn-text">{buttonText}</div>
             <span className={"altrp-btn-icon-right "}>
               {renderAsset(buttonMediaRight)}{" "}
             </span>
@@ -435,8 +434,7 @@ class ButtonWidget extends Component {
             <span className={"altrp-btn-icon-left "}>
               {renderAsset(buttonMediaLeft)}{" "}
             </span>
-            {buttonText}
-            <span></span>
+            <div className="altrp-btn-text">{buttonText}</div>
           </div>
           <span className={"altrp-btn-icon-bottom "}>
             {renderAsset(buttonMediaBottom)}{" "}
@@ -455,12 +453,11 @@ class ButtonWidget extends Component {
             <span className={"altrp-btn-icon-left "}>
               {renderAsset(buttonMediaLeft)}{" "}
             </span>
-            {buttonText}
+            <div className="altrp-btn-text">{buttonText}</div>
             <span className={"altrp-btn-icon-right "}>
               {renderAsset(buttonMediaRight)}{" "}
             </span>
           </div>
-          <span></span>
         </div>
       )
     }
@@ -468,12 +465,11 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'blr') {
       buttonInner = (
         <div className="btn-container-column">
-          <span></span>
           <div className="btn-container-row">
             <span className={"altrp-btn-icon-left "}>
               {renderAsset(buttonMediaLeft)}{" "}
             </span>
-            {buttonText}
+            <div className="altrp-btn-text">{buttonText}</div>
             <span className={"altrp-btn-icon-right "}>
               {renderAsset(buttonMediaRight)}{" "}
             </span>
@@ -492,13 +488,11 @@ class ButtonWidget extends Component {
             {renderAsset(buttonMediaTop)}{" "}
           </span>
           <div className="btn-container-row">
-            <span></span>
-            {buttonText}
+            <div className="altrp-btn-text">{buttonText}</div>
             <span className={"altrp-btn-icon-right "}>
               {renderAsset(buttonMediaRight)}{" "}
             </span>
           </div>
-          <span></span>
         </div>
       )
     }
@@ -513,10 +507,8 @@ class ButtonWidget extends Component {
             <span className={"altrp-btn-icon-left "}>
               {renderAsset(buttonMediaLeft)}{" "}
             </span>
-            {buttonText}
-            <span></span>
+            <div className="altrp-btn-text">{buttonText}</div>
           </div>
-          <span></span>
         </div>
       )
     }
@@ -528,9 +520,7 @@ class ButtonWidget extends Component {
             {renderAsset(buttonMediaTop)}{" "}
           </span>
           <div className="btn-container-row">
-            <span></span>
-            {buttonText}
-            <span></span>
+            <div className="altrp-btn-text">{buttonText}</div>
           </div>
           <span className={"altrp-btn-icon-bottom "}>
             {renderAsset(buttonMediaBottom)}{" "}
@@ -542,10 +532,8 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'br') {
       buttonInner = (
         <div className="btn-container-column">
-          <span></span>
           <div className="btn-container-row">
-            <span></span>
-            {buttonText}
+            <div className="altrp-btn-text">{buttonText}</div>
             <span className={"altrp-btn-icon-right "}>
               {renderAsset(buttonMediaRight)}{" "}
             </span>
@@ -560,17 +548,15 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'lr') {
       buttonInner = (
         <div className="btn-container-column">
-          <span></span>
           <div className="btn-container-row">
             <span className={"altrp-btn-icon-left "}>
               {renderAsset(buttonMediaLeft)}{" "}
             </span>
-            {buttonText}
+            <div className="altrp-btn-text">{buttonText}</div>
             <span className={"altrp-btn-icon-right "}>
               {renderAsset(buttonMediaRight)}{" "}
             </span>
           </div>
-          <span></span>
         </div>
       )
     }
@@ -578,13 +564,11 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'bl') {
       buttonInner = (
         <div className="btn-container-column">
-          <span></span>
           <div className="btn-container-row">
             <span className={"altrp-btn-icon-left "}>
               {renderAsset(buttonMediaLeft)}{" "}
             </span>
-            {buttonText}
-            <span></span>
+            <div className="altrp-btn-text">{buttonText}</div>
           </div>
           <span className={"altrp-btn-icon-bottom "}>
             {renderAsset(buttonMediaBottom)}{" "}
@@ -624,7 +608,7 @@ class ButtonWidget extends Component {
       id={this.state.settings.position_css_id}
       title={tooltip || null}
     >
-      <span>{buttonInner}</span>
+      {buttonInner}
     </button>;
     // let buttonTemplate = (
     //   <button
