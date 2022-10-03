@@ -60,7 +60,7 @@ export default class CustomizerCrud extends BaseCommand {
     )
 
     if (!customizer) {
-      return this.logger.error(new Error(`Customizer does not exist for ${this.modelName} ${hookType} ${action}`))
+      return
     }
 
     this.logger.success(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
