@@ -1,7 +1,7 @@
-import execa from 'execa'
 import Logger from '@ioc:Adonis/Core/Logger'
 import isProd from "../../helpers/isProd";
 import base_path from "../../helpers/path/base_path";
+import exec from '../../helpers/exec'
 import fs from "fs";
 import path from "path";
 
@@ -19,9 +19,7 @@ export default class AltrpEvent {
     if (['create', 'read', 'update', 'delete'].includes(actionType)) {
       Logger.info(`new crud: ${modelName} ${before ? 'before' : 'after'} ${actionType} ${data.id}`)
   
-      await execa('node', ['ace', 'customizer:crud', modelName, actionType, data.id, before ? '--before' : ''], {
-        stdio: 'inherit'
-      })
+      await exec(`node ace customizer:crud ${modelName} ${actionType} ${data.id} ${before ? '--before' : ''}`)
     }
 
     const dir = base_path(`app/altrp-listeners/${type}`);

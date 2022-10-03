@@ -1,4 +1,3 @@
-import execa from 'execa'
 import Logger from '@ioc:Adonis/Core/Logger'
 import data_get from "../../helpers/data_get";
 import empty from "../../helpers/empty";
@@ -28,6 +27,7 @@ import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
 import { addSchedule, removeSchedule } from '../../helpers/schedule';
+import exec from '../../helpers/exec'
 
 export default class Customizer extends BaseModel {
   timeout
@@ -360,7 +360,7 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     Logger.info('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    await execa('node', ['ace', 'customizer:schedule', this.id.toString()], { stdio: 'inherit' })
+    await exec(`node ace customizer:schedule ${this.id.toString()}`)
   }
 
   public removeSchedule() {

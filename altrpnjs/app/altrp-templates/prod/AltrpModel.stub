@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const luxon = require("luxon");
 const Orm = global[Symbol.for('ioc.use')]("Adonis/Lucid/Orm");
 const Database = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
-const Event = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Event"));
 const _ = __importStar(require("lodash"));
 {{{imports}}}
 
