@@ -87,10 +87,23 @@ class FrontElementsManager {
    * проверяем все ли виджеты из window.altrpElementsLists загрузились
    */
   componentsIsLoaded() {
-    if (! window.altrpElementsLists) {
-      return Object.keys(this.components).length === this.ELEMENTS.length;
+    if(window.altrpElementsLists?.length && ! Object.keys(this.components).length ){
+      return false
     }
-    return Object.keys(this.components).length >= window.altrpElementsLists.length;
+    let result = true
+
+    Object.keys(this.components).forEach(componentName =>{
+      if(! result){
+        return
+      }
+      if (! window.altrpElementsLists) {
+        result = ! ! this.ELEMENTS.find(e=>e.name === componentName)
+        return
+      }
+      result = ! ! window.altrpElementsLists.find(e=>e === componentName)
+
+    })
+    return result
   }
 
   /**

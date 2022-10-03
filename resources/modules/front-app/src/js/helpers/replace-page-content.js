@@ -40,8 +40,9 @@ export default function replacePageContent(url, popstate = false){
   xhr.onreadystatechange = function() {
 
     if (xhr.readyState === XMLHttpRequest.DONE) {
-      if(! xhr.responseText || xhr.status !== 200){
-        throw 'Response Error: ' + xhr.responseText
+      console.log(xhr.status);
+      if(! xhr.responseText || xhr.status !== 200 && xhr.status !== 404){
+        console.error( 'Response Error: ' + xhr.responseText)
       }
       try {
         const newPageData = _replace(xhr.responseText)
@@ -112,7 +113,23 @@ function _replace(htmlString){
   const newTitle = newHtml.querySelector('title')
   title.innerHTML = newTitle.innerHTML
 
+  /**
+   * CSS links
+   */
 
+  let links = newHtml.querySelectorAll('link[id*=altrp]')
+
+  console.log(links);
+  links.forEach(l=>{
+    if(document.querySelector(`#${l.getAttribute('id')}`)){
+      return
+    }
+    const newLink =  document.createElement('link')
+    newLink.setAttribute('id', l.getAttribute('id'))
+    newLink.setAttribute('href', l.getAttribute('href'))
+    newLink.setAttribute('rel', 'stylesheet')
+    document.body.appendChild(newLink)
+  })
   document.querySelector('.admin-bar-portal')?.remove()
   window.popupsContainer.remove()
   window.popupsContainer = null
@@ -137,7 +154,7 @@ function _replace(htmlString){
   appStore.dispatch(changeCurrentPage({
     url: location?.href || "",
     title: window?.currentPage?.title || "",
-    hash:document?.location?.hash,
+    hash: document?.location?.hash,
     hashParams,
     params,
   }))

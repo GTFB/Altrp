@@ -230,6 +230,7 @@ class AltrpPosts extends React.Component {
       posts = [];
     }
     let postsStart = 0;
+    const { currentPage } = this.state;
     const posts_per_page =
       Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
     if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {

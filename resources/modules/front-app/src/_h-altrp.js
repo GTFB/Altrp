@@ -59,7 +59,7 @@ function _hAltrp() {
           return
         }
         window.altrpContentLoaded = true
-        console.trace('h-altrp LOADED: ', performance.now());
+        console.log('h-altrp LOADED: ', performance.now());
 
         const hAltrpLoadedEvent = new Event('h-altrp-loaded');
         // console.log('h-altrp-loaded');

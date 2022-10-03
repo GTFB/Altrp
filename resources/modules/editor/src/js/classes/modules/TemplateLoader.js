@@ -122,7 +122,7 @@ export class TemplateLoader {
     templateId = Number(templateId) ? Number(templateId) : templateId;
 
     const template = await this.loadTemplate(templateId, force)
-    console.log(template);
+
     if(! page_areas.find(a=>a.id === templateId)){
       page_areas.push({
         area_name: 'card',
