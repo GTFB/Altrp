@@ -4,6 +4,9 @@
 ## Changelog
 ##Test Version
 
+### 1.3.2
+* Added Raw Html for Cards Widget with Click Actions
+
 ### 1.3.1
 * Added Scroll & Mouse Transform Effects for All Elements
 

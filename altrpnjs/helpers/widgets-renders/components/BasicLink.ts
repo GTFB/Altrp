@@ -53,5 +53,5 @@ export default function BasicLink(attrs):string {
     children = `<span class="altrp-inherit">${attrs.children}</span>`
   }
 
-  return `<a href="${settings.href}" rel="${rel}" target="${target}" style="${styleChildren}" class="${className}">${children}</a>`
+  return `<a href="${settings.href}" rel="${rel}" ${target ? `target="${target}"` : ''} style="${styleChildren}" class="${className}">${children}</a>`
 }

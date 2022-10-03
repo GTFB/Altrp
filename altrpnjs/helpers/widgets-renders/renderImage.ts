@@ -70,10 +70,10 @@ export default function renderImage(settings, device, widgetId) {
     if(link.openInNew){
       linkProps.target = '_blank'
     }
-
     return `
     <div class="altrp-image-container">
-    <div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}' ${objectToAttributesString(linkProps)}>${altrpImage}</a>` : altrpImage }</div>
+    <div class='${classNames}'>${linkUrl ? `<a href='${linkUrl}'
+     ${objectToAttributesString(linkProps)}>${altrpImage}</a>` : altrpImage }</div>
     </div>`
   }
 }

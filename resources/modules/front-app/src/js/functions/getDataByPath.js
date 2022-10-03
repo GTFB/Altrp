@@ -5,6 +5,7 @@ import getTimeValue from "./getTimeValue";
 import replaceContentWithData from './replaceContentWithData'
 import getComponentByElementId from './getComponentByElementId'
 import getDataFromLocalStorage from './getDataFromLocalStorage'
+import setAltrpIndex from "./setAltrpIndex";
 
 /**
  * Получить данные из окружения
@@ -152,6 +153,9 @@ export default function getDataByPath(
   }
   if (trueValue || falseValue) {
     value = value ? trueValue : falseValue;
+  }
+  if(_.isArray(value)){
+    setAltrpIndex(value)
   }
   return value;
 }

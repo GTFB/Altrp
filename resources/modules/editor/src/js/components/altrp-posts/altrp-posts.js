@@ -13,6 +13,8 @@ import getResponsiveSetting from "../../../../../front-app/src/js/functions/getR
 import PostsWrapper from "./components/PostsWrapper";
 import Pagination from "../altrp-table/components/Pagination";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
+import replaceContentWithData from '../../../../../front-app/src/js/functions/replaceContentWithData'
+import prepareHtml from "../../../../../front-app/src/js/helpers/prepareHtml";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -22,8 +24,13 @@ class AltrpPosts extends React.Component {
       simpleTemplateId: null,
       currentPage: 1,
       posts: [],
+      finalHtml: {}
     };
+    this.htmlStore = {}
     this.postsComponents = {};
+    if(_.get(this.props.settings, "load-html-cards")){
+      appStore.subscribe(()=>this.onStoreUpdate())
+    }
   }
 
   /**
@@ -33,15 +40,7 @@ class AltrpPosts extends React.Component {
     const { settings } = this.props;
     let simpleTemplateId = _.get(settings, "posts_card_template");
     if (simpleTemplateId) {
-      this.setState(
-        (state) => ({ ...state, simpleTemplateId }),
-        async () => {
-          let template = await templateLoader.loadParsedTemplate(
-            simpleTemplateId
-          );
-          this.setState((state) => ({ ...state, simpleTemplate: template }));
-        }
-      );
+      this.updateSimpleTemplate(simpleTemplateId)
     }
   }
 
@@ -55,6 +54,12 @@ class AltrpPosts extends React.Component {
       return true;
     }
     if (this.props.settings !== nextProps.settings) {
+      return true;
+    }
+    if (this.state.htmlTemplate !== nextState.htmlTemplate) {
+      return true;
+    }
+    if (this.state.hoverHtmlTemplate !== nextState.hoverHtmlTemplate) {
       return true;
     }
     if (!_.isEqual(this.state.simpleTemplate, nextState.simpleTemplate)) {
@@ -80,6 +85,27 @@ class AltrpPosts extends React.Component {
       return true;
     }
     return false;
+  }
+
+  updateSimpleTemplate = (simpleTemplateId)=>{
+    const { settings } = this.props;
+    const loadHtmlCards = _.get(settings, "load-html-cards")
+    this.setState(
+      (state) => ({ ...state, simpleTemplateId }),
+      async () => {
+        if(loadHtmlCards){
+          let htmlTemplate = await templateLoader.loadHtmlTemplate(
+            simpleTemplateId
+          );
+          this.setState((state) => ({ ...state, htmlTemplate }));
+        } else {
+          let template = await templateLoader.loadParsedTemplate(
+            simpleTemplateId
+          );
+          this.setState((state) => ({ ...state, simpleTemplate: template }));
+        }
+      }
+    );
   }
   /**
    * Компонент обновился
@@ -114,23 +140,9 @@ class AltrpPosts extends React.Component {
         }));
         return;
       }
-      this.setState(
-        (state) => ({
-          ...state,
-          simpleTemplateId: newSimpleTemplateId,
-        }),
-        async () => {
 
-
-          let template = await templateLoader.loadParsedTemplate(
-            newSimpleTemplateId
-          );
-          this.setState((state) => ({
-            ...state,
-            simpleTemplate: template,
-          }));
-        }
-      );
+      this.updateSimpleTemplate(newSimpleTemplateId)
+      return;
     }
     if (newHoverSimpleTemplateId !== hoverSimpleTemplateId) {
       if (!newHoverSimpleTemplateId) {
@@ -147,23 +159,176 @@ class AltrpPosts extends React.Component {
           hoverSimpleTemplateId: newHoverSimpleTemplateId,
         }),
         async () => {
-          let hoverTemplate = await templateLoader.loadParsedTemplate(
-            newHoverSimpleTemplateId
-          );
-          this.setState((state) => ({
-            ...state,
-            hoverSimpleTemplate: hoverTemplate,
-          }));
+
+          const loadHtmlCards = _.get(settings, "load-html-cards")
+          if(loadHtmlCards){
+            let hoverHtmlTemplate = await templateLoader.loadHtmlTemplate(newHoverSimpleTemplateId)
+
+            this.setState((state) => ({
+              ...state,
+              hoverHtmlTemplate,
+            }));
+          } else {
+
+            let hoverTemplate = await templateLoader.loadParsedTemplate(
+              newHoverSimpleTemplateId
+            );
+            this.setState((state) => ({
+              ...state,
+              hoverSimpleTemplate: hoverTemplate,
+            }));
+          }
         }
       );
     }
   }
 
+  checkStore(){
+    const state = appStore.getState()
+    if(this.altrpPageState !== state.altrpPageState){
+      this.altrpPageState = state.altrpPageState
+      return true
+    }
+    if(this.currentDataStorage !== state.currentDataStorage){
+      this.currentDataStorage = state.currentDataStorage
+      return true
+    }
+    if(this.altrpresponses !== state.altrpresponses){
+      this.altrpresponses = state.altrpresponses
+      return true
+    }
+
+    if(this.altrpresponses !== state.altrpresponses){
+      this.altrpresponses = state.altrpresponses
+      return true
+    }
+
+    if(this.currentModel !== state.currentModel){
+      this.currentModel = state.currentModel
+      return true
+    }
+    if(this.formsStore !== state.formsStore){
+      this.formsStore = state.formsStore
+      return true
+    }
+
+    return false;
+  }
+
+  onStoreUpdate = ()=>{
+    if(! this.state.htmlTemplate){
+      return
+    }
+    if(! this.checkStore()){
+      return
+    }
+    let { data: posts } = this.props;
+    if (!_.isArray(posts) && _.isObject(posts)) {
+      posts = [posts];
+    }
+    if (!_.isArray(posts)) {
+      posts = [];
+    }
+    let postsStart = 0;
+    const posts_per_page =
+      Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
+    if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {
+      if (currentPage > 1) {
+        postsStart = (currentPage - 1) * posts_per_page;
+      }
+      posts = posts.slice(postsStart, postsStart + posts_per_page);
+    }
+    posts.forEach((p, idx)=>{
+
+      let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
+      let post = this.props.data[idx] || this.props.data;
+      if(hoverHtmlTemplate){
+        htmlTemplate += `<div
+            class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
+          >
+          ${hoverHtmlTemplate}
+          </div>`
+      }
+      htmlTemplate = prepareHtml(htmlTemplate, post)
+      let key = post.altrpRandomKey || post.id || post.altrpIndex;
+      htmlTemplate = replaceContentWithData(htmlTemplate, post)
+      if(this.htmlStore[key] !== htmlTemplate){
+        this.setState(state=>({
+          ...state,
+          finalHtml: {
+            ...state.finalHtml,
+            [key]: htmlTemplate
+          }
+        }))
+      }
+    })
+  }
+
+  renderPostViaHtml =(idx)=>{
+    let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
+    let post = this.props.data[idx] || this.props.data;
+    let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    if(this.state.finalHtml[key]){
+      return (
+        <div className={`${this.props?.className} altrp-post`}
+             style={deleteOverflowHidden ? {overflow: "initial"} : null}
+             dangerouslySetInnerHTML={
+               {__html: this.state.finalHtml[key]}
+             }
+             key={key}>
+        </div>
+      );
+    }
+    let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
+
+    const transitionType = _.get(
+      this.props.settings,
+      "posts_transition_type",
+      null
+    );
+    /**
+     * subscribe on store updates
+     */
+
+    if(hoverHtmlTemplate){
+      htmlTemplate += `<div
+            class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
+          >
+          ${hoverHtmlTemplate}
+          </div>`
+    }
+    htmlTemplate = prepareHtml(htmlTemplate, post)
+    this.htmlStore[key] = htmlTemplate
+    htmlTemplate = replaceContentWithData(htmlTemplate, post)
+    setTimeout(() => {
+      const HtmlRenderEvent = new Event('html-render')
+      document.dispatchEvent(HtmlRenderEvent)
+    }, 250)
+    // this.oldData = this.props.data
+    return (
+      <div className={`${this.props?.className} altrp-post`}
+           style={deleteOverflowHidden ? {overflow: "initial"} : null}
+           dangerouslySetInnerHTML={
+             {__html: htmlTemplate}
+           }
+           key={key}>
+      </div>
+    );
+  }
   /**
    * Отрисовывает отдельную карточку
    * @param {int} idx - индекс в массиве записей
    */
   renderPost = (idx) => {
+    const { settings } = this.props;
+    const loadHtmlCards = _.get(settings, "load-html-cards")
+    const {hoverSimpleTemplateId, hoverHtmlTemplate, simpleTemplateId, htmlTemplate} = this.state
+    if(loadHtmlCards &&
+      simpleTemplateId && htmlTemplate &&
+      (!hoverSimpleTemplateId || hoverSimpleTemplateId && hoverHtmlTemplate)
+    ){
+      return this.renderPostViaHtml(idx)
+    }
     const transitionType = _.get(
       this.props.settings,
       "posts_transition_type",
@@ -240,8 +405,11 @@ class AltrpPosts extends React.Component {
 
     let key = post.altrpRandomKey || post.id || post.altrpIndex;
     let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
+
     return (
-      <div className={`${this.props?.className} altrp-post`} style={deleteOverflowHidden ? {overflow: "initial"} : null} key={key}>
+      <div className={`${this.props?.className} altrp-post`}
+           style={deleteOverflowHidden ? {overflow: "initial"} : null}
+           key={key}>
         {PostContentComponent}
         {this.state.hoverSimpleTemplateId && (
           <div

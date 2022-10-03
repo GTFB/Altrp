@@ -2,9 +2,8 @@
 .altrp-post{
   width: 100%;
   position: relative;
-  overflow: hidden;
-  &.overflow-visible{
-    overflow: visible
+  .altrp-post--hover{
+    overflow: hidden;
   }
 }
 .altrp-post > .sections-wrapper{

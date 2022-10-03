@@ -143,8 +143,11 @@ function altrpSection(settings) {
     borderRadius = getResponsiveSetting(settings, 'section_style_border_radius');
   }
 
+
   if (borderRadius) {
-    styles += dimensionsStyled(borderRadius, 'border-radius');
+    styles += '& > .background_section {'
+    styles += dimensionsStyled(borderRadius, "border-radius");
+    styles += '}'
   }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -207,9 +210,13 @@ function altrpSectionHover(settings,state=':hover') {
     borderRadius = getResponsiveSetting(settings, 'section_style_border_radius', state);
   }
 
+
   if (borderRadius) {
-    styles += dimensionsStyled(borderRadius, 'border-radius');
+    styles += '& > .background_section {'
+    styles += dimensionsStyled(borderRadius, "border-radius");
+    styles += '}'
   }
+
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
 
