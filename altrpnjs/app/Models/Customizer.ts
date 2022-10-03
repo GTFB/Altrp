@@ -15,7 +15,7 @@ import Source from "App/Models/Source";
 import escapeRegExp from "../../helpers/escapeRegExp";
 import DocumentNode from "App/Customizer/Nodes/DocumentNode";
 import CrudNode from "App/Customizer/Nodes/crudNode";
-import ApiNode from "App/Customizer/Nodes/apiNode";
+import ApiNode from "App/Customizer/Nodes/ApiNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
