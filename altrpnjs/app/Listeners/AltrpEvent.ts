@@ -14,8 +14,8 @@ export default class AltrpEvent {
 
     if (['create', 'read', 'update', 'delete'].includes(actionType)) {
       Logger.info(`new crud: ${modelName} ${before ? 'before' : 'after'} ${actionType} ${data.id}`)
-  
-      await execa('node', ['ace', 'customizer:crud', modelName, actionType, data.id, before ? '--before' : ''], {
+
+      execa('node', ['ace', 'customizer:crud', modelName, actionType, data.id, before ? '--before' : ''], {
         stdio: 'inherit'
       })
     }

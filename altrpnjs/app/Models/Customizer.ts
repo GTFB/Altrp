@@ -1,5 +1,4 @@
 import execa from 'execa'
-import Logger from '@ioc:Adonis/Core/Logger'
 import data_get from "../../helpers/data_get";
 import empty from "../../helpers/empty";
 import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne, ManyToMany, manyToMany} from "@ioc:Adonis/Lucid/Orm";
@@ -320,7 +319,7 @@ export default class Customizer extends BaseModel {
   public static async scheduleAll() {
     const customizers = await Customizer.query().where('type', 'schedule')
 
-    Logger.info(`found schedules (${customizers.length})`)
+    console.log(`found schedules (${customizers.length})`)
 
     customizers.forEach(customizer => customizer.schedule())
   }
@@ -330,7 +329,7 @@ export default class Customizer extends BaseModel {
       return
     }
 
-    Logger.info(`new schedule: run ${this.name}`
+    console.log(`new schedule: run ${this.name}`
       + ` per ${this.settings.period} ${this.settings.period_unit}`
       + ` from ${this.settings.start_at || 'now'}`
       + ` and repeat ${this.settings.infinity ? 'infinitely' : `${this.settings.repeat_count} times`}`)
@@ -359,14 +358,14 @@ export default class Customizer extends BaseModel {
   }
 
   public async invoke() {
-    Logger.info('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
+    console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
     await execa('node', ['ace', 'customizer:schedule', this.id.toString()], { stdio: 'inherit' })
   }
 
   public removeSchedule() {
     removeSchedule(this.id)
 
-    Logger.info(`remove schedule: ${this.name} / ${this.id}`)
+    console.log(`remove schedule: ${this.name} / ${this.id}`)
   }
 
   changePropertyToJS(propertyData, value, type = 'set'): string {

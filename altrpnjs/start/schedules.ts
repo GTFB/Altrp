@@ -8,8 +8,7 @@
 |
 */
 
-import Logger from '@ioc:Adonis/Core/Logger'
 import Customizer from 'App/Models/Customizer'
 
-Logger.info('booking schedules...')
+console.log('booking schedules...')
 Customizer.scheduleAll()
