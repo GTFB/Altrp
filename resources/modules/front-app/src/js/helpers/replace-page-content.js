@@ -18,7 +18,7 @@ export default function replacePageContent(url, popstate = false){
   progressBar.style.left=0
   progressBar.style.height= '4px'
   progressBar.style.transitionDuration= '5000ms'
-  progressBar.style.zIndex= 1000
+  progressBar.style.zIndex= 100000
   progressBar.style.transform = 'translate( - 100% )'
 
   document.body.appendChild(progressBar)
@@ -26,13 +26,13 @@ export default function replacePageContent(url, popstate = false){
   let _url = `/ajax/get-page-content?url=${url}`
   let xhr = new XMLHttpRequest();
 
+
   xhr.onprogress = function(e){
     if (e.lengthComputable)
     {
       let percent = (e.loaded / e.total) * 100;
-      console.log(percent);
       progressBar.style.transform = 'translate(' + (100 - percent) + '%)'
-
+      console.log('percent' + percent);
     }
   };
 
@@ -40,7 +40,7 @@ export default function replacePageContent(url, popstate = false){
   xhr.onreadystatechange = function() {
 
     if (xhr.readyState === XMLHttpRequest.DONE) {
-      console.log(xhr.status);
+
       if(! xhr.responseText || xhr.status !== 200 && xhr.status !== 404){
         console.error( 'Response Error: ' + xhr.responseText)
       }
@@ -113,13 +113,14 @@ function _replace(htmlString){
   const newTitle = newHtml.querySelector('title')
   title.innerHTML = newTitle.innerHTML
 
+
   /**
    * CSS links
    */
 
   let links = newHtml.querySelectorAll('link[id*=altrp]')
 
-  console.log(links);
+
   links.forEach(l=>{
     if(document.querySelector(`#${l.getAttribute('id')}`)){
       return
@@ -131,7 +132,7 @@ function _replace(htmlString){
     document.body.appendChild(newLink)
   })
   document.querySelector('.admin-bar-portal')?.remove()
-  window.popupsContainer.remove()
+  window.popupsContainer?.remove()
   window.popupsContainer = null
   const event = new Event('DOMContentLoaded')
   document.dispatchEvent(event)

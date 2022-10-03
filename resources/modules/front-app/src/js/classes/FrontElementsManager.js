@@ -91,18 +91,26 @@ class FrontElementsManager {
       return false
     }
     let result = true
-
-    Object.keys(this.components).forEach(componentName =>{
-      if(! result){
+    if (! window.altrpElementsLists) {
+      this.ELEMENTS.forEach(element=>{
+        if(! result) {
+          return
+        }
+        if(Object.keys(this.components).indexOf(element.name) === -1){
+          result = false
+        }
+      })
+      return result
+    }
+    window.altrpElementsLists.forEach(element=>{
+      if(! result) {
         return
       }
-      if (! window.altrpElementsLists) {
-        result = ! ! this.ELEMENTS.find(e=>e.name === componentName)
-        return
+      if(Object.keys(this.components).indexOf(element) === -1){
+        result = false
       }
-      result = ! ! window.altrpElementsLists.find(e=>e === componentName)
-
     })
+
     return result
   }
 

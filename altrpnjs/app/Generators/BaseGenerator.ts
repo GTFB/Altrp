@@ -73,6 +73,7 @@ class BaseGenerator {
        */
       View.asyncCompiler.cacheManager = new CacheManager(env('CACHE_VIEWS'))
     }
+
     return
   }
 

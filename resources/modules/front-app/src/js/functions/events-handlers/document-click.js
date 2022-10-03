@@ -20,7 +20,7 @@ export default function documentClick(e){
   url = url.replace(location.origin, '')
   url = location.origin + url
   url = new URL(url)
-
+  console.log(location.pathname + location.search !== url.pathname + url.search);
   if(location.pathname + location.search !== url.pathname + url.search){
     e.preventDefault();
 
@@ -34,6 +34,7 @@ export default function documentClick(e){
 }
 
 window.addEventListener('popstate', e =>{
+
   if(e?.state?.altrpCustomNavigation){
     try {
       replacePageContent(window.location.pathname + window.location.search + window.location.hash, true)

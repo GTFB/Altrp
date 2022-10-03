@@ -149,31 +149,6 @@ function _hAltrp() {
      */
     const frontAppContainer = document.getElementById('front-app');
 
-    document.addEventListener('scroll', e => {
-      window.appStore && window.appStore.dispatch(setScrollValue({top: document.documentElement.scrollTop}))
-      import(/* webpackChunkName: 'scroll-actions' */'./js/functions/actions/scroll-actions').then((module) => {
-        module?.default(e);
-      })
-    })
-    document.body.addEventListener('click', e => {
-      import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module) => {
-        module?.default(e);
-      })
-    })
-
-    window.addEventListener('h-altrp-loaded', e => {
-      import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module) => {
-        module?.default(e);
-      })
-
-    })
-
-    if (document.querySelector('[data-enter-animation-type]')) {
-      import('./js/functions/add-animation-classes').then(module => {
-        document.addEventListener('scroll', module.default)
-        module.default();
-      })
-    }
 
 
     const altrpe = new Event(`altrpe`);
@@ -189,3 +164,30 @@ window.addEventListener('mousemove', e=>{
     y: e.clientY
   }
 })
+
+document.addEventListener('scroll', e => {
+  window.appStore && window.appStore.dispatch(setScrollValue({top: document.documentElement.scrollTop}))
+  import(/* webpackChunkName: 'scroll-actions' */'./js/functions/actions/scroll-actions').then((module) => {
+    module?.default(e);
+  })
+})
+
+document.body.addEventListener('click', e => {
+  import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module) => {
+    module?.default(e);
+  })
+})
+
+window.addEventListener('h-altrp-loaded', e => {
+  import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module) => {
+    module?.default(e);
+  })
+
+})
+
+if (document.querySelector('[data-enter-animation-type]')) {
+  import('./js/functions/add-animation-classes').then(module => {
+    document.addEventListener('scroll', module.default)
+    module.default();
+  })
+}
