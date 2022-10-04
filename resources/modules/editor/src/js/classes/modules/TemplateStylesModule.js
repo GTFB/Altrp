@@ -36,8 +36,7 @@ class TemplateStylesModule {
         return false
       }
       const rect = htmlElement.getBoundingClientRect();
-      console.log(rect.y , maxTop);
-      console.log(rect.y < maxTop);
+
       return rect.y < maxTop
     }
 

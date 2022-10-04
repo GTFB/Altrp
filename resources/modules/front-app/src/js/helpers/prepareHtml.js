@@ -3,7 +3,7 @@ import conditionsChecker from "../functions/conditionsChecker";
 import replaceContentWithData from "../functions/replaceContentWithData";
 
 export default function prepareHtml(htmlString, modelData = {}) {
-  console.log(htmlString);
+
   let newHtml = document.createElement('html')
   newHtml.innerHTML = htmlString
   const sectionWrapper = newHtml.querySelector('body > .sections-wrapper')

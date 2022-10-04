@@ -37,7 +37,7 @@ const MarkerCluster = ({ markers, FG }) => {
         marker.bindTooltip(tooltip)
       }
     });
-    console.log(FG.current);
+
     FG.current.addLayer(mcg);
   }, [markers, map]);
 

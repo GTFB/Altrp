@@ -84,11 +84,10 @@ export default class Api extends Component{
                 </div>
 
                 {!source && <div className="controller-container controller-container_select">
-                        <div className="controller-container__label control-select__label controller-label">Name</div>
+                        <div className="controller-container__label control-select__label controller-label">API Response Path</div>
                         <div className="control-container_select-wrapper controller-field">
                             <textarea
                               className="control-field"
-                              type="text"
                               id="api-name"
                               name="api-name"
                               value={name || ''}

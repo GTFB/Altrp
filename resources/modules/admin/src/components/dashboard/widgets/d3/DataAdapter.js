@@ -20,7 +20,7 @@ class DataAdapter {
     try {
       return path.split("altrpdata.")[1];
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
   /**

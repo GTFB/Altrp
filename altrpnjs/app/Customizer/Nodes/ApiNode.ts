@@ -1,8 +1,7 @@
 import BaseNode from 'App/Customizer/Nodes/BaseNode'
 import NodeInterface from "App/Customizer/Nodes/NodeInterface"
 import data_get from "../../../helpers/data_get"
-import axios from "axios";
-import altrpRandomId from "../../../helpers/altrpRandomId";
+
 
 export default class ApiNode extends BaseNode implements NodeInterface
 {
@@ -64,7 +63,6 @@ export default class ApiNode extends BaseNode implements NodeInterface
 
       headers = JSON.stringify(headers)
     }
-    // axios()
 
     JSContent += this.customizer.changeToJS("api.source", source);
     JSContent += this.customizer.changeToJS("api.method", method);
@@ -72,27 +70,12 @@ export default class ApiNode extends BaseNode implements NodeInterface
     JSContent += this.customizer.changeToJS("api.data", data);
     JSContent += this.customizer.changeToJS("api.url", url);
 
-    JSContent += `
-
-     const ${this.getsourceVarName()} = await Source.query().where("id", ${source}).first();
-     let url
-     if(${this.getsourceVarName()}){
-        url =
-     }
+    JSContent += `return await this.sendApiRequest()
     `
 
     for(const child of this.children){
       JSContent += child.getJSContent()
     }
     return JSContent
-  }
-
-  private getsourceVarName(){
-    let id = this.getId()
-    if(! id){
-      id = altrpRandomId()
-    }
-    return `source${id}`
-
   }
 }

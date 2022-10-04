@@ -34,7 +34,7 @@ class AltrpInputFile extends Component {
     if (!files.length) {
       this.setState(state => ({ ...state, filesForDisplay, files }));
     }
-    console.log(files);
+
     _.each(files, f => {
       let fr = new FileReader();
       fr.readAsDataURL(f);
@@ -87,7 +87,6 @@ class AltrpInputFile extends Component {
           alt: f.name || ""
         });
         if (filesForDisplay.length === files.length) {
-          console.log(filesForDisplay);
           this.setState(state => ({ ...state, filesForDisplay, files }));
         }
       };

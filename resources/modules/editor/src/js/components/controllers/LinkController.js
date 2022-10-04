@@ -55,7 +55,6 @@ class LinkController extends Component {
   toggleSettingsNewPage(e) {
     let toggleSettingsNewPageCheckbox = e.currentTarget;
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    console.log(value.openInNew);
     this._changeValue({
       ...value,
       openInNew: !value.openInNew

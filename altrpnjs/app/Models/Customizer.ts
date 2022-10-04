@@ -15,7 +15,6 @@ import Source from "App/Models/Source";
 import escapeRegExp from "../../helpers/escapeRegExp";
 import DocumentNode from "App/Customizer/Nodes/DocumentNode";
 import CrudNode from "App/Customizer/Nodes/crudNode";
-import ApiNode from "App/Customizer/Nodes/ApiNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
@@ -27,6 +26,7 @@ import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
 import { addSchedule, removeSchedule } from '../../helpers/schedule';
 import exec from '../../helpers/exec'
+import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -461,7 +461,7 @@ export default class Customizer extends BaseModel {
         case 'change': return new ChangeNode( item, customizer )
         case 'documentAction': return new DocumentNode(item, customizer)
         case 'crudAction': return new CrudNode(item, customizer)
-        case 'apiAction': return new ApiNode(item, customizer)
+        case 'apiAction': return new ApiNodeV2(item, customizer)
         case 'messageAction': return new MessageNode(item, customizer)
         case 'customizer': return new CustomizerNode(item, customizer)
         case 'discordAction': return new DiscordNode(item, customizer)

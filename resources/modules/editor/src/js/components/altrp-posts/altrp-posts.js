@@ -222,6 +222,7 @@ class AltrpPosts extends React.Component {
     if(! this.checkStore()){
       return
     }
+    const { currentPage } = this.state;
     let { data: posts } = this.props;
     if (!_.isArray(posts) && _.isObject(posts)) {
       posts = [posts];

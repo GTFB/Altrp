@@ -8,7 +8,7 @@ export const queryString = (obj = {}) => {
     val = encodeURIComponent(obj[key]);
     return [str, delimiter, key, "=", val].join("");
   }, "");
-  console.log("RESULT ==>", data);
+
   return data;
 };
 
@@ -24,7 +24,7 @@ export const getWidgetData = async (url, filter) => {
       // headers: [{ key: "Cache-Control", value: "no-store" }]
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return { status: 500 };
   }
 };
