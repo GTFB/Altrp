@@ -15,7 +15,6 @@ import Source from "App/Models/Source";
 import escapeRegExp from "../../helpers/escapeRegExp";
 import DocumentNode from "App/Customizer/Nodes/DocumentNode";
 import CrudNode from "App/Customizer/Nodes/crudNode";
-import ApiNode from "App/Customizer/Nodes/ApiNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
@@ -25,6 +24,9 @@ import {clearTimeout, setTimeout} from "node:timers";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
+import { addSchedule, removeSchedule } from '../../helpers/schedule';
+import exec from '../../helpers/exec'
+import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -314,6 +316,62 @@ export default class Customizer extends BaseModel {
     this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
   }
 
+  public static async scheduleAll() {
+    const customizers = await Customizer.query().where('type', 'schedule')
+
+    console.log(`found schedules (${customizers.length})`)
+
+    customizers.forEach(customizer => customizer.schedule())
+  }
+
+  public schedule() {
+    if (this.type !== 'schedule' || !this.settings) {
+      return
+    }
+
+    console.log(`new schedule: run ${this.name}`
+      + ` per ${this.settings.period} ${this.settings.period_unit}`
+      + ` from ${this.settings.start_at || 'now'}`
+      + ` and repeat ${this.settings.infinity ? 'infinitely' : `${this.settings.repeat_count} times`}`)
+
+    const date = this.settings.start_at ? new Date(this.settings.start_at) : new Date()
+
+    addSchedule(this.id, date, this.settings.period_unit, this.settings.period, () => {
+      if (!this.settings.infinity) {
+        if (this.settings.repeat_count > 0) {
+          this.settings.repeat_count--
+
+          this.save().then(() => {
+            if (this.settings.repeat_count <= 0) {
+              this.removeSchedule()
+            }
+
+            return this.invoke()
+          })
+        }
+
+        this.removeSchedule()
+      }
+
+      this.invoke()
+    })
+  }
+
+  public async invoke() {
+    console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
+    exec(`node ace customizer:schedule ${this.id.toString()}`).then(data => {
+      console.log(data);
+    }).catch(err => {
+      console.error(err);
+    })
+  }
+
+  public removeSchedule() {
+    removeSchedule(this.id)
+
+    console.log(`remove schedule: ${this.name} / ${this.id}`)
+  }
+
   changePropertyToJS(propertyData, value, type = 'set'): string {
     if (empty(propertyData)) {
       return 'null'
@@ -403,7 +461,7 @@ export default class Customizer extends BaseModel {
         case 'change': return new ChangeNode( item, customizer )
         case 'documentAction': return new DocumentNode(item, customizer)
         case 'crudAction': return new CrudNode(item, customizer)
-        case 'apiAction': return new ApiNode(item, customizer)
+        case 'apiAction': return new ApiNodeV2(item, customizer)
         case 'messageAction': return new MessageNode(item, customizer)
         case 'customizer': return new CustomizerNode(item, customizer)
         case 'discordAction': return new DiscordNode(item, customizer)

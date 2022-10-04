@@ -1,5 +1,6 @@
 import data_get from '../../../helpers/data_get'
 import Customizer from "App/Models/Customizer";
+import altrpRandomId from "../../../helpers/altrpRandomId";
 
 export  default class BaseNode
 {
@@ -40,7 +41,11 @@ export  default class BaseNode
    * @return string
    */
   public getId(){
-    return data_get( this.data, 'id' )
+    let id =  data_get( this.data, 'id' )
+    if(! id){
+      id = altrpRandomId()
+    }
+    return id
   }
   constructor( public data, protected customizer: Customizer ){
   }
