@@ -56,7 +56,7 @@ class IterationElement {
     }${
       this.scale ? `scale(${this.scale})` : ''
     }`
-
+    console.log(this.element);
     const target = this.element.querySelector('.altrp-element > *:not(.overlay, .altrp-skeleton-box)')
     target.style.setProperty('transform', value)
     this.opacity && target.style.setProperty('opacity', this.opacity)

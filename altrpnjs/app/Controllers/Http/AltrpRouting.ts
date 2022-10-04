@@ -301,6 +301,7 @@ export default class AltrpRouting {
     if (url.split('/')[1] === 'admin' || url.split('/')[1] === 'ajax') {
       return
     }
+    httpContext.response.header('Cache-Control', 'no-cache')
     return this.getContentByUrl(url, httpContext)
   }
   async tryRenderEdgeTemplate({page,

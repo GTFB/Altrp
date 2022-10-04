@@ -395,14 +395,14 @@ class Export extends Component {
   }
 
   changeItem(id, line) {
-    console.log(id, line);
+
     let newValue = {...this.state.value};
     if(newValue[line].indexOf(id) === -1){
       newValue[line].push(id);
     } else {
       newValue[line] = newValue[line].filter(item => item !== id);
     }
-    console.log(newValue);
+
     this.setState(state =>({...state, value: newValue}));
   }
 

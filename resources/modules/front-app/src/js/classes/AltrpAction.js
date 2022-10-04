@@ -595,7 +595,12 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty('back')) {
         history.back()
       } else {
-        replacePageContent(URL)
+        try{
+          replacePageContent(URL)
+        } catch (e) {
+          console.error(e);
+          window.location.assign(URL);
+        }
       }
     }
     return {

@@ -479,7 +479,7 @@ export function actionsControllers(
         );
       } catch (error) {
         alert("Page request error")
-        console.log(error)
+        console.error(error)
       }
     }
   });
@@ -524,7 +524,7 @@ export function actionsControllers(
         }
       } catch (error) {
         alert("Customizer request error")
-        console.log(error)
+        console.error(error)
       }
     },
     conditions: {

@@ -10,7 +10,7 @@ import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions"
 import {generateId, redirect} from "../js/helpers";*/
 
 export default class Tables extends Component{
-	
+
 	constructor(props) {
             super(props);
             this.state = {
@@ -47,31 +47,30 @@ export default class Tables extends Component{
                     },
 		]
             };
-            
+
             this.resource = new Resource({
                 route: '/admin/ajax/tables'
             });
-		
+
 	}
-	
+
 	async componentDidMount(){
             this.resource.getAll().then(modules=>{
                 this.setModules(modules);
             });
         }
-	
+
 	setModules(modules){
             let urlModules = modules.map((row) => {
                 row.editUrl = "/admin/tables/edit/" + row.id;
                 return row;
             });
-            
-            console.log(urlModules);
+
             this.setState((state) => {
 		return {modules: urlModules};
             });
         }
-	
+
 	render(){
             return <div className="admin-tables admin-page">
                 <div className="admin-heading">
@@ -90,6 +89,6 @@ export default class Tables extends Component{
                 </div>
             </div>;
 	}
-		
-    
+
+
 }

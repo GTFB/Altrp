@@ -304,7 +304,6 @@ class Rotating extends Component {
   }
 
   setStep(value) {
-    console.log(value)
     this.setState({ step: value })
   };
 

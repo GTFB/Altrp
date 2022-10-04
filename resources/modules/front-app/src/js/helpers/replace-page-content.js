@@ -35,8 +35,8 @@ export default function replacePageContent(url, popstate = false){
       console.log('percent' + percent);
     }
   };
-
   xhr.open('GET', _url, true);
+  xhr.setRequestHeader('Cache-Control', 'no-cache');
   xhr.onreadystatechange = function() {
 
     if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -122,13 +122,16 @@ function _replace(htmlString){
 
 
   links.forEach(l=>{
-    if(document.querySelector(`#${l.getAttribute('id')}`)){
+    if(document.querySelector(`#${l.getAttribute('id')?.split(' ').join('#')}`)){
       return
     }
     const newLink =  document.createElement('link')
     newLink.setAttribute('id', l.getAttribute('id'))
     newLink.setAttribute('href', l.getAttribute('href'))
     newLink.setAttribute('rel', 'stylesheet')
+    newLink.addEventListener('load', ()=>{
+      console.log('new link loaded');
+    })
     document.body.appendChild(newLink)
   })
   document.querySelector('.admin-bar-portal')?.remove()
