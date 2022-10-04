@@ -88,7 +88,6 @@ export default class Api extends Component{
                         <div className="control-container_select-wrapper controller-field">
                             <textarea
                               className="control-field"
-                              type="text"
                               id="api-name"
                               name="api-name"
                               value={name || ''}
