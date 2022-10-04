@@ -58,7 +58,7 @@ export default class {{{classname}}} extends Orm.BaseModel {
   }
 
   @Orm.afterPaginate()
-  public static afterFind(model) {
+  public static afterPaginate(model) {
     Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterPaginate", data: model})
   }
 
