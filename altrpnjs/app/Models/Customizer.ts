@@ -1,4 +1,3 @@
-import execa from 'execa'
 import data_get from "../../helpers/data_get";
 import empty from "../../helpers/empty";
 import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne, ManyToMany, manyToMany} from "@ioc:Adonis/Lucid/Orm";
@@ -27,6 +26,7 @@ import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
 import { addSchedule, removeSchedule } from '../../helpers/schedule';
+import exec from '../../helpers/exec'
 
 export default class Customizer extends BaseModel {
   timeout
@@ -359,7 +359,11 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    await execa('node', ['ace', 'customizer:schedule', this.id.toString()], { stdio: 'inherit' })
+    exec(`node ace customizer:schedule ${this.id.toString()}`).then(data => {
+      console.log(data);
+    }).catch(err => {
+      console.error(err);
+    })
   }
 
   public removeSchedule() {

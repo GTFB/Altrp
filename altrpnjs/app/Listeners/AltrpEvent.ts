@@ -1,7 +1,7 @@
-import execa from 'execa'
 import Logger from '@ioc:Adonis/Core/Logger'
 import isProd from "../../helpers/isProd";
 import base_path from "../../helpers/path/base_path";
+import exec from '../../helpers/exec'
 import fs from "fs";
 import path from "path";
 
@@ -10,13 +10,18 @@ export default class AltrpEvent {
     const [_namespace, modelName, eventType] = type.split('.')
 
     const before = eventType.indexOf('before') === 0
-    const actionType = eventType.replace('after', '').replace('before', '').toLowerCase()
+    let actionType = eventType.replace('after', '').replace('before', '').toLowerCase()
+
+    if (actionType === 'find') {
+      actionType = 'read'
+    }
 
     if (['create', 'read', 'update', 'delete'].includes(actionType)) {
       Logger.info(`new crud: ${modelName} ${before ? 'before' : 'after'} ${actionType} ${data.id}`)
 
-      execa('node', ['ace', 'customizer:crud', modelName, actionType, data.id, before ? '--before' : ''], {
-        stdio: 'inherit'
+
+      exec(`node ace customizer:crud ${modelName} ${actionType} ${data.id} ${before ? '--before' : ''}`).then((data) => {
+        console.log(data);
       })
     }
 
