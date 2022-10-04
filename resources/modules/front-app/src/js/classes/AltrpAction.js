@@ -599,7 +599,7 @@ class AltrpAction extends AltrpModel {
           replacePageContent(URL)
         } catch (e) {
           console.error(e);
-          window.location.assign(URL);
+          // window.location.assign(URL);
         }
       }
     }

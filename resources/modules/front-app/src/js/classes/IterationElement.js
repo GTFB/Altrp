@@ -9,11 +9,38 @@ class IterationElement {
   constructor(element) {
     this.element = element
     this.settings = mbParseJSON(element.dataset.altrpSettings, {})
-    this.setElementInViewportObserver();
+    if(this.checkElementSettings()){
+      this.setElementInViewportObserver();
+    }
     this.oldMousePosition = {};
     if(this.settings?.perspective){
       this.element.style.setProperty('perspective', '1200px')
     }
+  }
+
+  checkElementSettings() {
+    if(this.settings['mouse-effects:track']){
+      return true
+    }
+    if(this.settings['mouse-effects:tilt']){
+      return true
+    }
+    if(this.settings['scroll-effects:vertical']){
+      return true
+    }
+    if(this.settings['scroll-effects:horizontal']){
+      return true
+    }
+    if(this.settings['scroll-effects:rotate']){
+      return true
+    }
+    if(this.settings['scroll-effects:transparency']){
+      return true
+    }
+    if(this.settings['scroll-effects:blur']){
+      return true
+    }
+    return this.settings['scroll-effects:scale']
   }
 
   onInsideViewport = () => {
@@ -56,8 +83,8 @@ class IterationElement {
     }${
       this.scale ? `scale(${this.scale})` : ''
     }`
-    console.log(this.element);
-    const target = this.element.querySelector('.altrp-element > *:not(.overlay, .altrp-skeleton-box)')
+
+    const target = this.element.querySelector('.altrp-element > *:not(.overlay)')
     target.style.setProperty('transform', value)
     this.opacity && target.style.setProperty('opacity', this.opacity)
     this.blur && target.style.setProperty('filter', `blur(${this.blur})`)

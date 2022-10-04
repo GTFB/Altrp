@@ -20,9 +20,9 @@ export default function documentClick(e){
   url = url.replace(location.origin, '')
   url = location.origin + url
   url = new URL(url)
-  console.log(location.pathname + location.search !== url.pathname + url.search);
+  e.preventDefault();
+
   if(location.pathname + location.search !== url.pathname + url.search){
-    e.preventDefault();
 
     try{
       replacePageContent(url.pathname + url.search + url.hash)

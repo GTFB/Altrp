@@ -9,7 +9,6 @@ import React from "react";
 import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
 import isEditor from "../functions/isEditor";
 import replaceContentWithData from "../functions/replaceContentWithData";
-import setTitle from "../functions/setTitle";
 import altrpRandomId from "../functions/altrpRandomId";
 import conditionsChecker from "../functions/conditionsChecker";
 import altrpCompare from "../functions/altrpCompare";
@@ -208,10 +207,6 @@ class SingleElementWrapper extends Component {
     ) {
       let title = appStore.getState().currentTitle;
       title = replaceContentWithData(title);
-      if (appStore.getState().altrpPage.getProperty("title") !== title) {
-        appStore.dispatch(changeCurrentPageProperty("title", title));
-      }
-      setTitle(title);
     }
     if(prevProps.currentDataStorage !== this.props.currentDataStorage){
       let skeleton_pending_path = this.props.element.settings?.skeleton_pending_path;

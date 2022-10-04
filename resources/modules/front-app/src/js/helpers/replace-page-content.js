@@ -17,7 +17,7 @@ export default function replacePageContent(url, popstate = false){
   progressBar.style.right= 0
   progressBar.style.left=0
   progressBar.style.height= '4px'
-  progressBar.style.transitionDuration= '5000ms'
+  progressBar.style.transitionDuration= '500ms'
   progressBar.style.zIndex= 100000
   progressBar.style.transform = 'translate( - 100% )'
 
@@ -27,25 +27,29 @@ export default function replacePageContent(url, popstate = false){
   let xhr = new XMLHttpRequest();
 
 
+  console.log('async Page Start: ', performance.now());
   xhr.onprogress = function(e){
     if (e.lengthComputable)
     {
       let percent = (e.loaded / e.total) * 100;
-      progressBar.style.transform = 'translate(' + (100 - percent) + '%)'
+      progressBar.style.transform = 'translate(' + (90 - percent) + '%)'
       console.log('percent' + percent);
+      console.log(e.loaded, e.total);
     }
   };
   xhr.open('GET', _url, true);
   xhr.setRequestHeader('Cache-Control', 'no-cache');
-  xhr.onreadystatechange = function() {
+  xhr.onreadystatechange = async function() {
 
     if (xhr.readyState === XMLHttpRequest.DONE) {
+      console.log('async Page End: ', performance.now());
 
       if(! xhr.responseText || xhr.status !== 200 && xhr.status !== 404){
         console.error( 'Response Error: ' + xhr.responseText)
       }
       try {
-        const newPageData = _replace(xhr.responseText)
+        const newPageData = await _replace(xhr.responseText)
+        progressBar.style.transform = 'translate(100%)'
         if (! popstate){
           window.history.replaceState({
             altrpCustomNavigation: true
@@ -69,7 +73,7 @@ export default function replacePageContent(url, popstate = false){
   xhr.send(null);
 }
 
-function _replace(htmlString){
+async function _replace(htmlString){
   htmlString = htmlString.replace(/<!([\s\S]+?)>/, '')
   const newHtml = document.createElement('html')
   newHtml.innerHTML = htmlString
@@ -86,8 +90,8 @@ function _replace(htmlString){
   const mainScript = newHtml.querySelector('#main-script-altrp')
 
   let oldMainScript = document.querySelector('#main-script-altrp')
-  if(oldStyles){
-    oldStyles.remove()
+  if(oldMainScript){
+    oldMainScript.remove()
   }
   oldMainScript = document.createElement('script')
   oldMainScript.setAttribute('id', 'main-script-altrp')
@@ -97,9 +101,37 @@ function _replace(htmlString){
   oldMainScript.innerHTML = mainScript.innerHTML
 
   document.querySelector('#content_style')
+
+  /**
+   * CSS links
+   */
+
+  let links = newHtml.querySelectorAll('link[id*=altrp]')
+
+
+  await Promise.all(_.map(links, l=>{
+    return new Promise(resolve => {
+
+      if(document.querySelector(`#${l.getAttribute('id')?.split(' ').join('#')}`)){
+        resolve()
+        return
+      }
+      const newLink =  document.createElement('link')
+      newLink.setAttribute('id', l.getAttribute('id'))
+      newLink.setAttribute('href', `l.getAttribute('href')`)
+      newLink.setAttribute('rel', 'stylesheet')
+      newLink.addEventListener('load', ()=>{
+        resolve()
+      })
+      newLink.addEventListener('error', ()=>{
+        resolve()
+      })
+      document.body.appendChild(newLink)
+    })
+  }))
+
   const oldAreas = document.querySelectorAll('.app-area');
   for(const area of oldAreas) {
-    // console.log(area.className);
     let selector = area.className
     selector = selector.trim()
     selector = selector.split(' ')
@@ -114,26 +146,7 @@ function _replace(htmlString){
   title.innerHTML = newTitle.innerHTML
 
 
-  /**
-   * CSS links
-   */
 
-  let links = newHtml.querySelectorAll('link[id*=altrp]')
-
-
-  links.forEach(l=>{
-    if(document.querySelector(`#${l.getAttribute('id')?.split(' ').join('#')}`)){
-      return
-    }
-    const newLink =  document.createElement('link')
-    newLink.setAttribute('id', l.getAttribute('id'))
-    newLink.setAttribute('href', l.getAttribute('href'))
-    newLink.setAttribute('rel', 'stylesheet')
-    newLink.addEventListener('load', ()=>{
-      console.log('new link loaded');
-    })
-    document.body.appendChild(newLink)
-  })
   document.querySelector('.admin-bar-portal')?.remove()
   window.popupsContainer?.remove()
   window.popupsContainer = null
