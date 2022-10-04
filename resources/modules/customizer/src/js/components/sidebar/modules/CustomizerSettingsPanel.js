@@ -344,7 +344,7 @@ class CustomizerSettingsPanel extends React.Component {
                           </div>
 
                           <div className="controller-container">
-                            <div className="controller-container__label control-select__label controller-label">Period:</div>
+                            <div className="controller-container__label control-select__label controller-label">Period: Every</div>
 
                             <input
                               id="period"
