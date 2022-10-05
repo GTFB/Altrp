@@ -835,7 +835,6 @@ class InputTextCommonWidget extends Component {
   }
 
   render() {
-    console.log('ooo', Number(this.props.element.getResponsiveLockedSetting('debounce_input')?.size))
     let label = null;
     const settings = this.props.element.getSettings();
     let classes = this.getClasses()
