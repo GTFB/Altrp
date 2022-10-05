@@ -36,6 +36,12 @@ import {FileInput} from "@blueprintjs/core";
     display: grid;
     grid-auto-flow: row dense;
     }
+
+.input-gallery__item-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 `)
 
 class InputGalleryWidget extends Component {
@@ -576,15 +582,18 @@ class InputGalleryWidget extends Component {
       <div className={`${classes} input-gallery-wrapper`}>
         {value.map((item, idx) => {
           return <div
-            className={`${classes} input-gallery__item`}
+            className={`${classes} input-gallery__item${this.state.filesStorage?.[idx]?.data?.media?.media_type !== "image" ? ' input-gallery__item-text' : ''}`}
             title={deleteText}
-            style={{
+            style={this.state.filesStorage?.[idx]?.data?.media?.media_type !== "image" ? null : {
               backgroundImage: `url(${this.state[`imageUrls_${idx}`]})`
             }}
             key={item}>
             {<CloseIcon className={`${classes} input-gallery__delete`} onClick={(e) => {
               this.deleteItem(e, item)
             }}/>}
+            {this.state.filesStorage?.[idx]?.data?.media?.media_type !== "image" && (
+              <div className="file_name">{this.state.filesStorage?.[idx]?.data?.file?.name}</div>
+            )}
           </div>
         })}
         <FileInput {...fileInputProps} />

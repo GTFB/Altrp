@@ -308,6 +308,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-right svg",
+    () => {
+      const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right');
+      if (iconRightSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-right",
     ['padding', 'icon_padding_right', 'dimensions', ':hover'],
     ['margin', 'icon_margin_right', 'dimensions', ':hover'],
@@ -319,6 +328,15 @@ export function btnStyles(settings) {
       }
     },
 
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-right svg",
+    () => {
+      const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right', ':hover');
+      if (iconRightSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
     "}",
 
     "altrp-btn .altrp-btn-icon-left",
@@ -334,6 +352,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-left svg",
+    () => {
+      const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left');
+      if (iconLeftSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-left",
     ['padding', 'icon_padding_left', 'dimensions', ':hover'],
     ['margin', 'icon_margin_left', 'dimensions', ':hover'],
@@ -345,6 +372,15 @@ export function btnStyles(settings) {
       }
     },
 
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-left svg",
+    () => {
+      const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left', ':hover');
+      if (iconLeftSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
     "}",
 
     "altrp-btn .altrp-btn-icon-top",
@@ -360,6 +396,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-top svg",
+    () => {
+      const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top');
+      if (iconTopSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-top",
     ['padding', 'icon_padding_top', 'dimensions', ':hover'],
     ['margin', 'icon_margin_top', 'dimensions', ':hover'],
@@ -371,6 +416,15 @@ export function btnStyles(settings) {
       }
     },
 
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-top svg",
+    () => {
+      const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top', ':hover');
+      if (iconTopSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
     "}",
 
     "altrp-btn .altrp-btn-icon-bottom",
@@ -386,6 +440,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-bottom svg",
+    () => {
+      const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom');
+      if (iconBottomSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-bottom",
     ['padding', 'icon_padding_bottom', 'dimensions', ':hover'],
     ['margin', 'icon_margin_bottom', 'dimensions', ':hover'],
@@ -397,6 +460,15 @@ export function btnStyles(settings) {
       }
     },
 
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-bottom svg",
+    () => {
+      const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom', ':hover');
+      if (iconBottomSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
     "}",
   ]
 }
