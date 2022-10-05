@@ -21,7 +21,6 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(() => {
   });
   import (/* webpackChunkName: 'appStore' */'./js/store/store').then(() => {
 
-    document.dispatchEvent(new Event('app-store-loaded'))
     loadDatastorageUpdater();
   })
 })
@@ -76,6 +75,7 @@ documentCheckEvents( () => {
   import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
 
     import (/* webpackChunkName: 'appStore' */'./js/store/store').then(() => {
+      document.dispatchEvent(new Event('app-store-loaded'))
       console.log('LOAD appStore: ', performance.now());
       loadingCallback();
       loadDepends()

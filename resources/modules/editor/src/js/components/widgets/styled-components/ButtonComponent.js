@@ -462,6 +462,7 @@ export function btnStyles(settings) {
 
     "}",
 
+<<<<<<< HEAD
     "altrp-btn:hover .altrp-btn-icon-bottom svg",
     () => {
       const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom', ':hover');
@@ -469,6 +470,50 @@ export function btnStyles(settings) {
         return 'width: 100%; height: 100%;'
       }
     },
+=======
+    "altrp-btn .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+      }
+    },
+
+    "}",
+
+    "altrp-btn:hover .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher", ":hover");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea", ":hover") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+      }
+    },
+
+    "}",
+
+    "altrp-btn.active .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher", ".active");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea", ".active") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+      }
+    },
+
+    "}",
+
+    "altrp-btn.state-disabled .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher", ".state-disabled");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea", ".state-disabled") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+      }
+    },
+
+>>>>>>> master
     "}",
   ]
 }

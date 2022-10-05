@@ -1,7 +1,7 @@
 import BaseNode from 'App/Customizer/Nodes/BaseNode'
 import NodeInterface from "App/Customizer/Nodes/NodeInterface"
 import data_get from "../../../helpers/data_get"
-import _ from "lodash";
+
 
 export default class ApiNode extends BaseNode implements NodeInterface
 {

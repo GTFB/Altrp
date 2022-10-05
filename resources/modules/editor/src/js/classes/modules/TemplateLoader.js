@@ -2,6 +2,7 @@ import Resource from "../Resource";
 import AltrpModel from "../AltrpModel";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+import mbParseJSON from "../../../../../front-app/src/js/functions/mb-parse-JSON";
 /**
  * @class TemplateLoader
  */
@@ -121,7 +122,18 @@ export class TemplateLoader {
     templateId = Number(templateId) ? Number(templateId) : templateId;
 
     const template = await this.loadTemplate(templateId, force)
-    /**
+
+    if(window?.page_areas && ! window?.page_areas?.find(a=>a.id === templateId)){
+      page_areas.push({
+        area_name: 'card',
+        id: templateId,
+        template: {
+          ...template,
+          data: frontElementsFabric.parseData(mbParseJSON(template.data))
+        }
+      });
+
+    }    /**
      * for loading the styles before loading the html
      */
     return this.stylesResolve({
@@ -204,6 +216,7 @@ export class TemplateLoader {
     let url = `/altrp/html/screens/${appStore.getState().currentScreen.name}/templates/card/${templateGUID}.html`
     const html = await (new Resource({route:url})).getAsText()
     await this.stylesResolve({templateGUID})
+    this.loadParsedTemplate(templateGUID)
     return html
   }
 }

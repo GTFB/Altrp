@@ -15,7 +15,6 @@ import stringToObject from "../../../helpers/string/stringToObject";
 import resource_path from "../../../helpers/path/resource_path";
 import fs from "fs";
 import JSONStringifyEscape from "../../../helpers/string/JSONStringifyEscape";
-import PagesCache from "App/Services/PagesCache";
 import Edge from "../../../helpers/edge";
 import data_get from "../../../helpers/data_get";
 import recurseMapElements from "../../../helpers/recurseMapElements";
@@ -221,13 +220,14 @@ export default class AltrpRouting {
     try {
 
       console.log(performance.now() - start);
-      let content = PagesCache.getCache(page.guid, device)
 
-      if(!content){
-        content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
-        PagesCache.setCache(page.guid, device, content)
-      }
-
+      let [page_areas, all_styles, content] = await Promise.all(
+        [
+          promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
+          promisify(fs.readFile)(storage_path(`pages-content/styles/${device}/${page.guid}.html`), 'utf8'),
+          promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
+        ]
+      )
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
@@ -246,12 +246,6 @@ export default class AltrpRouting {
         device,
       })
       mustache?.templateCache?.clear()
-      const [page_areas, all_styles, ] = await Promise.all(
-        [
-          promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
-          promisify(fs.readFile)(storage_path(`pages-content/styles/${device}/${page.guid}.html`), 'utf8'),
-        ]
-      )
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)
       content = content.replace('<<<all_styles>>>', all_styles)

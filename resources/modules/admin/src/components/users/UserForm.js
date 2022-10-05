@@ -33,9 +33,6 @@ class UserForm extends Component {
       isPasswordChange: false
     };
 
-    if (!this.state.id) {
-      console.log(this.props.id)
-    }
 
     this.resource = new Resource({ route: '/admin/ajax/users' });
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });

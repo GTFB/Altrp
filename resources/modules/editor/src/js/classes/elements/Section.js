@@ -690,7 +690,7 @@ class Section extends BaseElement{
 
     this.addControl("section_style_gradient_text", {
       type: CONTROLLER_TEXTAREA,
-      label: "linear-gradient",
+      label: "Gradient",
       default: '',
       description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
     });
@@ -714,6 +714,17 @@ class Section extends BaseElement{
       //   hue: 0,
       // },
     });
+
+
+    this.addControl('backdrop_blur', {
+      type: CONTROLLER_SLIDER,
+      label: "Backdrop Blur",
+      min: 0,
+      max: 10,
+      step: 0.1,
+      units: ['px', '%'],
+    });
+
 
     // this.addControl('isFixed', {
     //   type: CONTROLLER_SWITCHER,

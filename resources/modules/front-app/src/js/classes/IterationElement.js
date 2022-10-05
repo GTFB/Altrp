@@ -11,8 +11,9 @@ class IterationElement {
     this.settings = mbParseJSON(element.dataset.altrpSettings, {})
     this.setElementInViewportObserver();
     this.oldMousePosition = {};
-    this.element.style.setProperty('perspective', '1200px')
-
+    if(this.settings?.perspective){
+      this.element.style.setProperty('perspective', '1200px')
+    }
   }
 
   onInsideViewport = () => {

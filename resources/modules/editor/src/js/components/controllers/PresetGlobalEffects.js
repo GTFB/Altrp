@@ -19,7 +19,6 @@ class PresetGlobalEffects extends Component {
     if (effects.length > 0) {
       effects.forEach(effect => {
         if (this.props.checkGlobal(effect.guid)) {
-          console.log(this.props.checkGlobal(effect.guid));
           this.setState(s => ({ ...s, defaultValue: effect.guid }));
         }
       });

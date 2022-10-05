@@ -84,5 +84,6 @@ export function stringifyStylesheet (stylesheet) {
 }
 
 export  function stringifyRule(rule) {
+  if (rule.cssText?.includes('background-clip: text;')) return rule.cssText.replace('background-clip: text;', '-webkit-background-clip: text;')
   return rule.cssText || ''
 }

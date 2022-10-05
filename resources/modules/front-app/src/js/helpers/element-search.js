@@ -8,11 +8,6 @@ import checkElement from "./check-element";
  */
 export default function elementSearch(elementId, params = {}){
   let element = null;
-  let elements = appStore.getState().elements
-  element = elements.find(el=> (el.props.element.getId() === elementId && checkElement(el.props.element, params))) || element;
-  if (element?.props?.element){
-    return element.props.element;
-  }
   for(let area of page_areas){
     element = recursiveSearch(area?.template?.data, elementId, params)
     if (element){
@@ -21,6 +16,11 @@ export default function elementSearch(elementId, params = {}){
       }
       return element;
     }
+  }
+  let elements = appStore.getState().elements
+  element = elements.find(el=> (el.props.element.getId() === elementId && checkElement(el.props.element, params))) || element;
+  if (element?.props?.element){
+    return element.props.element;
   }
   if(! (element instanceof FrontElement)){
     element = new FrontElement(element)

@@ -1944,6 +1944,11 @@ export function advancedTabControllers(element) {
   });
 
 
+  element.addControl('hover-transition:enable', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Enable',
+  })
+
   element.addControl('hover-transition:rotate', {
     type: CONTROLLER_SLIDER,
     label: 'Rotate',

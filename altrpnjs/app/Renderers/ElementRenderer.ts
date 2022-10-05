@@ -55,7 +55,7 @@ export default class ElementRenderer {
   }
 
   async render(screenName: string): Promise<string> {
-    const settings = this.element.settings
+    const settings: any = this.element.settings
     let reactElement = this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     if(! reactElement && this.element.settings['skeleton:enable']){
       reactElement = true
@@ -132,7 +132,7 @@ export default class ElementRenderer {
           let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
             : await import(base_path(`helpers/widgets-renders/${filename}`))
           render = render.default
-          element_content = render(this.element.settings, screenName,)
+          element_content = render(this.element.settings, screenName, this.getId())
         }
         if (this.getName() === 'section_widget') {
           element_content =

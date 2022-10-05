@@ -13,7 +13,8 @@ import getResponsiveSetting from "../../../../../front-app/src/js/functions/getR
 import PostsWrapper from "./components/PostsWrapper";
 import Pagination from "../altrp-table/components/Pagination";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
-import mustache from  'mustache'
+import replaceContentWithData from '../../../../../front-app/src/js/functions/replaceContentWithData'
+import prepareHtml from "../../../../../front-app/src/js/helpers/prepareHtml";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -23,8 +24,13 @@ class AltrpPosts extends React.Component {
       simpleTemplateId: null,
       currentPage: 1,
       posts: [],
+      finalHtml: {}
     };
+    this.htmlStore = {}
     this.postsComponents = {};
+    if(_.get(this.props.settings, "load-html-cards")){
+      appStore.subscribe(()=>this.onStoreUpdate())
+    }
   }
 
   /**
@@ -88,11 +94,9 @@ class AltrpPosts extends React.Component {
       (state) => ({ ...state, simpleTemplateId }),
       async () => {
         if(loadHtmlCards){
-          console.log(loadHtmlCards);
           let htmlTemplate = await templateLoader.loadHtmlTemplate(
             simpleTemplateId
           );
-          console.log(htmlTemplate);
           this.setState((state) => ({ ...state, htmlTemplate }));
         } else {
           let template = await templateLoader.loadParsedTemplate(
@@ -179,18 +183,114 @@ class AltrpPosts extends React.Component {
     }
   }
 
+  checkStore(){
+    const state = appStore.getState()
+    if(this.altrpPageState !== state.altrpPageState){
+      this.altrpPageState = state.altrpPageState
+      return true
+    }
+    if(this.currentDataStorage !== state.currentDataStorage){
+      this.currentDataStorage = state.currentDataStorage
+      return true
+    }
+    if(this.altrpresponses !== state.altrpresponses){
+      this.altrpresponses = state.altrpresponses
+      return true
+    }
+
+    if(this.altrpresponses !== state.altrpresponses){
+      this.altrpresponses = state.altrpresponses
+      return true
+    }
+
+    if(this.currentModel !== state.currentModel){
+      this.currentModel = state.currentModel
+      return true
+    }
+    if(this.formsStore !== state.formsStore){
+      this.formsStore = state.formsStore
+      return true
+    }
+
+    return false;
+  }
+
+  onStoreUpdate = ()=>{
+    if(! this.state.htmlTemplate){
+      return
+    }
+    if(! this.checkStore()){
+      return
+    }
+    const { currentPage } = this.state;
+    let { data: posts } = this.props;
+    if (!_.isArray(posts) && _.isObject(posts)) {
+      posts = [posts];
+    }
+    if (!_.isArray(posts)) {
+      posts = [];
+    }
+    let postsStart = 0;
+    const posts_per_page =
+      Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
+    if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {
+      if (currentPage > 1) {
+        postsStart = (currentPage - 1) * posts_per_page;
+      }
+      posts = posts.slice(postsStart, postsStart + posts_per_page);
+    }
+    posts.forEach((p, idx)=>{
+
+      let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
+      let post = this.props.data[idx] || this.props.data;
+      if(hoverHtmlTemplate){
+        htmlTemplate += `<div
+            class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
+          >
+          ${hoverHtmlTemplate}
+          </div>`
+      }
+      htmlTemplate = prepareHtml(htmlTemplate, post)
+      let key = post.altrpRandomKey || post.id || post.altrpIndex;
+      htmlTemplate = replaceContentWithData(htmlTemplate, post)
+      if(this.htmlStore[key] !== htmlTemplate){
+        this.setState(state=>({
+          ...state,
+          finalHtml: {
+            ...state.finalHtml,
+            [key]: htmlTemplate
+          }
+        }))
+      }
+    })
+  }
 
   renderPostViaHtml =(idx)=>{
     let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
     let post = this.props.data[idx] || this.props.data;
+    let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    if(this.state.finalHtml[key]){
+      return (
+        <div className={`${this.props?.className} altrp-post`}
+             style={deleteOverflowHidden ? {overflow: "initial"} : null}
+             dangerouslySetInnerHTML={
+               {__html: this.state.finalHtml[key]}
+             }
+             key={key}>
+        </div>
+      );
+    }
     let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
-    hoverHtmlTemplate = mustache.render(hoverHtmlTemplate, post)
-    htmlTemplate = mustache.render(htmlTemplate, post)
+
     const transitionType = _.get(
       this.props.settings,
       "posts_transition_type",
       null
     );
+    /**
+     * subscribe on store updates
+     */
+
     if(hoverHtmlTemplate){
       htmlTemplate += `<div
             class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
@@ -198,7 +298,14 @@ class AltrpPosts extends React.Component {
           ${hoverHtmlTemplate}
           </div>`
     }
-    let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    htmlTemplate = prepareHtml(htmlTemplate, post)
+    this.htmlStore[key] = htmlTemplate
+    htmlTemplate = replaceContentWithData(htmlTemplate, post)
+    setTimeout(() => {
+      const HtmlRenderEvent = new Event('html-render')
+      document.dispatchEvent(HtmlRenderEvent)
+    }, 250)
+    // this.oldData = this.props.data
     return (
       <div className={`${this.props?.className} altrp-post`}
            style={deleteOverflowHidden ? {overflow: "initial"} : null}

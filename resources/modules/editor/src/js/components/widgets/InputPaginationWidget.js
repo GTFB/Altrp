@@ -28,7 +28,6 @@ export default class InputPaginationWidget extends React.Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
 
-      console.log(props.element.getLockedSettings("values", []))
       this.state = {
         settings: {...props.element.getSettings()},
         values: props.element.getLockedSettings("values", []),

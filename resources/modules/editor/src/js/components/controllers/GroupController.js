@@ -25,12 +25,9 @@ class GroupController extends Component {
   onBodyClick = e=>{
 
     let target = e.target
-    console.log(target);
-    console.log(this.popoverRef.current);
     do {
       target = target.parentNode
     } while(target?.parentNode && target !== this.popoverRef.current)
-    console.log(target);
     if(target === document){
       this.setState(state=>({
         ...state,
@@ -94,7 +91,6 @@ class GroupController extends Component {
   }
   render() {
     const {undoEnabled, show, openPopover, value} = this.state
-    console.log(value);
     const {fields = []} = this.props
     if (show === false) {
       return '';

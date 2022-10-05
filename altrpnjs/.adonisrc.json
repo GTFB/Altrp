@@ -29,6 +29,12 @@
       "environment": [
         "web"
       ]
+    },
+    {
+      "file": "./start/schedules",
+      "environment": [
+        "web"
+      ]
     }
   ],
   "providers": [

@@ -12,7 +12,7 @@ export function currentUserReducer(state, action) {
     case SET_USERS_ONLINE:
     {
       state = { ...state, members: action.members };
-      console.log(state);
+
     }
       break;
 

@@ -39,7 +39,7 @@ function borderGradientFunc(settings, state = '') {
 function altrpSection(settings) {
   let styles = '';
 
-  let flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow, borderGradient;
+  let flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow, borderGradient, backdropBlur;
 
   //Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
 
@@ -143,8 +143,11 @@ function altrpSection(settings) {
     borderRadius = getResponsiveSetting(settings, 'section_style_border_radius');
   }
 
+
   if (borderRadius) {
-    styles += dimensionsStyled(borderRadius, 'border-radius');
+    styles += '& > .background_section {'
+    styles += dimensionsStyled(borderRadius, "border-radius");
+    styles += '}'
   }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -155,6 +158,14 @@ function altrpSection(settings) {
 
   if (boxShadow) {
     styles += shadowControllerToStyles(boxShadow);
+  }
+
+  if (settings !== undefined) {
+    backdropBlur = getResponsiveSetting(settings, 'backdrop_blur');
+  }
+
+  if (backdropBlur) {
+    styles += `backdrop-filter: blur(${sliderStyled(backdropBlur)});`;
   }
 
   return styles;
@@ -207,9 +218,13 @@ function altrpSectionHover(settings,state=':hover') {
     borderRadius = getResponsiveSetting(settings, 'section_style_border_radius', state);
   }
 
+
   if (borderRadius) {
-    styles += dimensionsStyled(borderRadius, 'border-radius');
+    styles += '& > .background_section {'
+    styles += dimensionsStyled(borderRadius, "border-radius");
+    styles += '}'
   }
+
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
 
