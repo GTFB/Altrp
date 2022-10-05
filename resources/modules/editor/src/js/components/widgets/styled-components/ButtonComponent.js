@@ -462,7 +462,7 @@ export function btnStyles(settings) {
 
     "}",
 
-<<<<<<< HEAD
+
     "altrp-btn:hover .altrp-btn-icon-bottom svg",
     () => {
       const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom', ':hover');
@@ -470,7 +470,9 @@ export function btnStyles(settings) {
         return 'width: 100%; height: 100%;'
       }
     },
-=======
+
+    "}",
+
     "altrp-btn .altrp-btn-text",
     () => {
       const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher");
@@ -513,7 +515,6 @@ export function btnStyles(settings) {
       }
     },
 
->>>>>>> master
     "}",
   ]
 }
