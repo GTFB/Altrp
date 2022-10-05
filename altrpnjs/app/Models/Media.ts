@@ -46,6 +46,9 @@ export default class Media extends BaseModel {
   public caption: string
 
   @column()
+  public media_variation: string
+
+  @column()
   public description: string
 
   @column()
