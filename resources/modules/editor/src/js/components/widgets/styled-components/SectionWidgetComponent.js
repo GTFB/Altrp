@@ -39,7 +39,7 @@ function borderGradientFunc(settings, state = '') {
 function altrpSection(settings) {
   let styles = '';
 
-  let flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow, borderGradient;
+  let flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow, borderGradient, backdropBlur;
 
   //Получаем значения borderGradient из контроллера, обрабатываем и добавляем в styles
 
@@ -158,6 +158,14 @@ function altrpSection(settings) {
 
   if (boxShadow) {
     styles += shadowControllerToStyles(boxShadow);
+  }
+
+  if (settings !== undefined) {
+    backdropBlur = getResponsiveSetting(settings, 'backdrop_blur');
+  }
+
+  if (backdropBlur) {
+    styles += `backdrop-filter: blur(${sliderStyled(backdropBlur)});`;
   }
 
   return styles;
