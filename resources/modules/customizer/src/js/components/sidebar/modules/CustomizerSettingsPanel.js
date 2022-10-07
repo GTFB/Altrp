@@ -148,10 +148,12 @@ class CustomizerSettingsPanel extends React.Component {
     const time_type = customizer.time_type || "none";
 
     let Url = ''
+    let relativeUrl = ''
     if (this.props.customizer.source) {
       let { web_url } = this.props.customizer.source
       try{
         let strippedDownUrl = new URL(web_url)
+        relativeUrl = strippedDownUrl.pathname
         Url = document.location.origin
           +strippedDownUrl.pathname
       }catch (e){
@@ -434,7 +436,10 @@ class CustomizerSettingsPanel extends React.Component {
                               <CopyToClipboard onCopy={this.UrlCopy} text={Url}>
                                 <button className="btn btn_success">Copy url</button>
                               </CopyToClipboard>
-                              <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
+                              <CopyToClipboard onCopy={this.UrlCopy} text={relativeUrl}>
+                                <button className="btn btn_success">Copy relative url</button>
+                              </CopyToClipboard>
+                              <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied!</div>
                             </div>
                             <input value={Url} readOnly={true} className="url-text"/>
                           </div>

@@ -910,7 +910,6 @@ textarea.control-field{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100px;
     height: 38px;
 
     &:hover {
@@ -919,6 +918,9 @@ textarea.control-field{
     }
   }
 
+  & .btn_success:not(:last-child) {
+    margin-right: 12px;
+  }
 }
 
 .url-text {
