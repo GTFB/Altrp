@@ -176,6 +176,8 @@ class Button extends BaseElement {
 
     actionsControllers(this);
 
+    actionsControllers(this, 'Hover Actions', 'hover_');
+
     //</editor-fold>
 
     this.startControlSection('position_section', {
