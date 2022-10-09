@@ -9,6 +9,7 @@ import {ApiObj} from "../../components/sidebar/modules/nodes-obj/robot/ApiObj";
 import {MessageObj} from "../../components/sidebar/modules/nodes-obj/robot/MessageObj";
 import {CustomizerObj} from "../../components/sidebar/modules/nodes-obj/robot/CustomizerObj";
 import {DiscordObj} from "../../components/sidebar/modules/nodes-obj/robot/DiscordObj";
+import {Handle} from "react-flow-renderer";
 // import {BotObj} from "../../components/sidebar/modules/nodes-obj/robot/BotObj";
 
 export const initialState = {
@@ -24,6 +25,6 @@ export const initialState = {
     MessageObj,
     CustomizerObj,
     // BotObj
-    DiscordObj
+    DiscordObj,
   ]
 }

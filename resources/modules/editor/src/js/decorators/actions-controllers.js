@@ -287,6 +287,7 @@ export function actionsControllers(
       type: ['update_current_datasources', "socket_receiver"]
     },
     locked: true,
+    description: 'Comma Separated'
   });
 
   actionsRepeater.addControl('milliseconds', {

@@ -22,6 +22,7 @@ export default async function applyPluginsFiltersAsync(type: string, content, ..
             : (await import(filePath)).default
           hooks.push({
             fn:hook,
+            plugin,
             hookName
           })
         } catch (e) {
@@ -40,7 +41,7 @@ export default async function applyPluginsFiltersAsync(type: string, content, ..
   },])
   for(const hook of hooks){
     try{
-      content = await hook.fn(content, ...params)
+      content = await hook.fn.bind(hook.plugin)(content, ...params,)
     } catch (e) {
       console.error(e);
     }

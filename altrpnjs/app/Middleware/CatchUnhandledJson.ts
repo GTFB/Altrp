@@ -17,6 +17,7 @@ export default class CatchUnhandledJson {
     { response }: HttpContextContract,
     next: () => Promise<void>,
   ) {
+    response.header('Content-Type', 'application/json')
     try {
       await next()
     }catch (e) {

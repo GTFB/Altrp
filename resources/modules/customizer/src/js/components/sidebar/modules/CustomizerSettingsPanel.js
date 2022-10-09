@@ -6,7 +6,7 @@ import AltrpSelect from "../../../../../../admin/src/components/altrp-select/Alt
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
-import {InputGroup, Switch} from "@blueprintjs/core";
+import {Checkbox, InputGroup, Switch} from "@blueprintjs/core";
 import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 import { format, parse } from 'date-fns';
 import {compose} from "redux";
@@ -15,6 +15,14 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 class CustomizerSettingsPanel extends React.Component {
+  externalChange = (e)=>{
+    let newSettings = {...this.state.customizer?.settings}
+
+    newSettings.external = e.target.value != 'true'
+    const customizer = mutate.set(this.state.customizer, 'settings', newSettings)
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+    this.setState(state=>(mutate.set(state, 'customizer', customizer)))
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -128,6 +136,7 @@ class CustomizerSettingsPanel extends React.Component {
   parseDate = (str) => parse(str, this.dateFnsFormat, new Date())
 
   render() {
+
     let modelsOptions = this.getModelOptions();
 
     const {customizer} = this.props;
@@ -148,17 +157,24 @@ class CustomizerSettingsPanel extends React.Component {
     const time_type = customizer.time_type || "none";
 
     let Url = ''
+
     if (this.props.customizer.source) {
       let { web_url } = this.props.customizer.source
       try{
-        let strippedDownUrl = new URL(web_url)
-        Url = document.location.origin
-          +strippedDownUrl.pathname
+        if(this.state.customizer?.settings?.external){
+
+          Url = `${document.location.origin}/api/v1/${this.state.customizer.name}`
+        } else   {
+          let strippedDownUrl = new URL(web_url)
+          Url = document.location.origin
+            +strippedDownUrl.pathname
+        }
       }catch (e){
         alert('Error while parsing source URL')
         console.error(e);
       }
     }
+
 
     return (
       <div className="panel settings-panel d-flex">
@@ -425,6 +441,21 @@ class CustomizerSettingsPanel extends React.Component {
                         <button className="btn btn_success" type="submit">Save</button>
                       </div>
                     </form>
+                    {
+                      type === 'api' &&
+                      <div className="Customizer-external-api d-flex justify-space-between" onSubmit={this.EditTitleForm}>
+                        <div className="controller-container__label control-select__label controller-label">External API:</div>
+                        <div className="customizer-block__title">
+                          <Checkbox className="form-control-blueprint"
+                                      type="checkbox"
+                                      id="customizer-external-api"
+                                      value={this.state.customizer?.settings?.external || false}
+                                      checked={this.state.customizer?.settings?.external || false}
+                                      onChange={this.externalChange}
+                          />
+                        </div>
+                      </div>
+                    }
                     {
                       !['crud', 'schedule'].includes(type) && (
                         <>

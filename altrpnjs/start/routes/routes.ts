@@ -33,6 +33,10 @@ import _ from "lodash";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 
 
+const methods = [
+  'get', 'post', 'put', 'delete'
+]
+
 Route.get('/altrp-redirect', async ({response, request}:HttpContextContract)=>{
   const url = request.cookie('__altrp_redirect_from', '/')
   response.clearCookie('__altrp_redirect_from')
@@ -179,6 +183,7 @@ Route.group(() => {
    */
   Route.any('models/*', async (httpContext: HttpContextContract) => {
     const segments = httpContext.request.url().split('/').filter(segment => segment)
+
     if (httpContext.request.method() === 'OPTIONS' && segments[3] === 'customizers') {
       httpContext.response.header( 'Access-Control-Allow-Origin', '*' )
       httpContext.response.header( 'Access-Control-Allow-Methods', 'GET, OPTIONS' )
@@ -310,9 +315,6 @@ ${e.message}` : `Controller ${controllerName} require error:`,
   /**
    * plugins ajax requests START
    */
-  const methods = [
-    'get', 'post', 'put', 'delete'
-  ]
   for(const method of methods) {
     /**
      * handle all 4 HTTP methods
@@ -378,3 +380,41 @@ ${e.message}` : `Controller ${controllerName} require error:`,
   })
 }).middleware('catch_unhandled_json')
   .prefix("/ajax")
+
+Route.group( ()=>{
+    Route.any('*',async httpContext=>{
+      const segments = httpContext.request.url().split('/').filter(segment => segment)
+      // console.log(segments);
+
+      const customizer:Customizer | null = await Customizer.query().where('name', segments[2]).preload('altrp_model').first()
+
+      if(! customizer){
+
+        return httpContext.response.status(405).json({
+          success: false,
+          message: 'API URL is not an API'
+        })
+      }
+      if(! customizer.allowApi()){
+        return httpContext.response.status(405).json({
+          success: false,
+          message: 'API for This URL is not Allowed'
+        })
+      }
+
+      if(! customizer.allowMethod(httpContext.request.method())){
+        return httpContext.response.status(405).json({
+          success: false,
+          message: 'API Method not Allowed'
+        })
+      }
+      const controllerName = app_path(`AltrpControllers/${customizer.altrp_model?.name}Controller`)
+      const methodName = customizer.name
+
+      const ControllerClass = isProd() ? (await require(controllerName)).default
+        // @ts-ignore
+        : (await import(controllerName)).default
+      const controller = new ControllerClass()
+      return await controller[methodName](httpContext)
+    })
+}).prefix('api/v1').middleware('catch_unhandled_json')

@@ -12,6 +12,7 @@ import "./sass/styles.scss";
 import {Provider} from 'react-redux';
 import AltrpCustomizer from "./js/classes/AltrpCustomizer";
 import {io} from "socket.io-client";
+import  "./installing";
 
 window.altrpIo = io( {
   path: '/wsaltrp',

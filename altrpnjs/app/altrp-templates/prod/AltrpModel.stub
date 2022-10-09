@@ -21,30 +21,6 @@ const _ = __importStar(require("lodash"));
 class {{{classname}}} extends Orm.BaseModel {
   {{{constructor}}}
 
-  static beforeSave(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeSave", data: model})
-  }
-
-  static beforeCreate(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeCreate", data: model})
-  }
-
-  static beforeUpdate(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeUpdate", data: model})
-  }
-
-  static beforeDelete(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeDelete", data: model})
-  }
-
-  static beforeFind(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeFind", data: model})
-  }
-
-  static beforePaginate(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforePaginate", data: model})
-  }
-
   static afterSave(model) {
     Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterSave", data: model})
   }
@@ -78,42 +54,6 @@ class {{{classname}}} extends Orm.BaseModel {
 }
 
 {{{staticProperties}}}
-
-decorate([
-  (0, Orm.beforeSave)(),
-  metadata("design:type", Function),
-  metadata("design:paramtypes", [{{{classname}}}]),
-], {{{classname}}}, "beforeSave", null);
-
-decorate([
-  (0, Orm.beforeCreate)(),
-  metadata("design:type", Function),
-  metadata("design:paramtypes", [{{{classname}}}]),
-], {{{classname}}}, "beforeCreate", null);
-
-decorate([
-  (0, Orm.beforeUpdate)(),
-  metadata("design:type", Function),
-  metadata("design:paramtypes", [{{{classname}}}]),
-], {{{classname}}}, "beforeUpdate", null);
-
-decorate([
-  (0, Orm.beforeDelete)(),
-  metadata("design:type", Function),
-  metadata("design:paramtypes", [{{{classname}}}]),
-], {{{classname}}}, "beforeDelete", null);
-
-decorate([
-  (0, Orm.beforeFind)(),
-  metadata("design:type", Function),
-  metadata("design:paramtypes", [{{{classname}}}]),
-], {{{classname}}}, "beforeFind", null);
-
-decorate([
-  (0, Orm.beforePaginate)(),
-  metadata("design:type", Function),
-  metadata("design:paramtypes", [{{{classname}}}]),
-], {{{classname}}}, "beforePaginate", null);
 
 decorate([
   (0, Orm.afterSave)(),

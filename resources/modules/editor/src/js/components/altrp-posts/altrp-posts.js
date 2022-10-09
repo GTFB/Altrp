@@ -269,6 +269,10 @@ class AltrpPosts extends React.Component {
     let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
     let post = this.props.data[idx] || this.props.data;
     let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    setTimeout(() => {
+      const HtmlRenderEvent = new Event('html-render')
+      document.dispatchEvent(HtmlRenderEvent)
+    }, 1)
     if(this.state.finalHtml[key]){
       return (
         <div className={`${this.props?.className} altrp-post`}
@@ -301,10 +305,6 @@ class AltrpPosts extends React.Component {
     htmlTemplate = prepareHtml(htmlTemplate, post)
     this.htmlStore[key] = htmlTemplate
     htmlTemplate = replaceContentWithData(htmlTemplate, post)
-    setTimeout(() => {
-      const HtmlRenderEvent = new Event('html-render')
-      document.dispatchEvent(HtmlRenderEvent)
-    }, 250)
     // this.oldData = this.props.data
     return (
       <div className={`${this.props?.className} altrp-post`}

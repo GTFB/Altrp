@@ -13,6 +13,7 @@ const SIMPLE_OPERATORS = [
   'null',
   'not_null',
   'else',
+  'default',
 ]
 const OPTIONS = [
   {
@@ -24,6 +25,14 @@ const OPTIONS = [
     label: "False"
   },
   ...CONDITIONS_OPTIONS,
+  {
+    value: "else",
+    label: "Else"
+  },
+  {
+    value: "default",
+    label: "Default"
+  },
 ]
 class SwitcherRepeater extends Component {
 

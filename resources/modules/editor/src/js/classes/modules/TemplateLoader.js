@@ -214,7 +214,9 @@ export class TemplateLoader {
   }
   async loadHtmlTemplate(templateGUID){
     let url = `/altrp/html/screens/${appStore.getState().currentScreen.name}/templates/card/${templateGUID}.html`
-    const html = await (new Resource({route:url})).getAsText()
+    const html = await (new Resource({route:url})).getAsText({
+      'Cache-Control': 'no-cache',
+    })
     await this.stylesResolve({templateGUID})
     this.loadParsedTemplate(templateGUID)
     return html
