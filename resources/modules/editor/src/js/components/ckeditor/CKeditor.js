@@ -37,6 +37,7 @@ class CKeditor extends Component {
     const text = this.props.text === undefined ? "Type text here" : this.props.text
 
     const config = {
+      placeholder: this.props.placeholder || "",
       extraPlugins: [UploadAdapterPlugin],
       body: this.body,
       toolbar: defaultToolbar,

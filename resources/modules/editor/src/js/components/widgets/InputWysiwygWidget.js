@@ -658,6 +658,21 @@ class InputWysiwygWidget extends Component {
     return classes;
   }
 
+  renderWysiwyg() {
+    return (
+      <CKeditor
+        onChange={this.onChange}
+        onBlur={this.onBlur}
+        placeholder={this.props.element.getResponsiveLockedSetting('content_placeholder')}
+        changeText={this.dispatchFieldValueToStore}
+        text={this.getLockedContent("content_default_value")}
+        name={this.getName()}
+        readOnly={this.getLockedContent("read_only")}
+
+      />
+    );
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings()
@@ -779,20 +794,6 @@ class InputWysiwygWidget extends Component {
         {input}
         {content_label_position_type === "bottom" ? label : ""}
       </AltrpFieldContainer>
-    );
-  }
-
-  renderWysiwyg() {
-    return (
-      <CKeditor
-        onChange={this.onChange}
-        onBlur={this.onBlur}
-        changeText={this.dispatchFieldValueToStore}
-        text={this.getLockedContent("content_default_value")}
-        name={this.getName()}
-        readOnly={this.getLockedContent("read_only")}
-
-      />
     );
   }
 }
