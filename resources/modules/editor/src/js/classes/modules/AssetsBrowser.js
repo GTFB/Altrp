@@ -66,25 +66,59 @@ class AssetsBrowser extends Component {
 
   async componentDidMount() {
     try {
-      this.videoResource.getAll()
-        .then(videoAssets => this.setState({ videoAssets }));
+      // this.videoResource.getAll()
+      //   .then(videoAssets => this.setState({ videoAssets }));
 
-      let resSvg = await this.svgResource.getAll();
-      if(_.isArray(resSvg.media)){
-        resSvg = resSvg.media
-      }
-      this.setState(state => {
-        return { ...state, svgAssets: resSvg };
-      });
+      // this.setState(state => {
+      //   return { ...state, svgAssets: resSvg };
+      // });
 
-      let resMedia = await this.mediaResource.getAll();
-      if(_.isArray(resMedia.media)){
-        resMedia = resMedia.media
-      }
+      // if(_.isArray(resVideo.media)){
+      //   resVideo = resVideo.media
+      // }
+
+      // if(_.isArray(resSvg.media)){
+      //   resSvg = resSvg.media
+      // }
+
+      // if(_.isArray(resMedia.media)){
+      //   resMedia = resMedia.media
+      // }
+
+      let {media: resMedia = []} = await this.mediaResource.getAll();
+      let {media: resVideo = []} = await this.videoResource.getAll();
+      let {media: resSvg = []} = await this.svgResource.getAll();
+
       this.setState(state => {
-        state = { ...state, mediaAssets: resMedia };
+        state = {
+          ...state,
+          mediaAssets: _.isArray(resMedia) ? resMedia : [],
+          videoAssets: _.isArray(resVideo) ? resVideo : [],
+          svgAssets: _.isArray(resSvg) ? resSvg : []
+        };
         if (state.activeTab === "media") {
           state.assets = resMedia;
+        }
+        if (window.altrpEditor?.altimageEnabled) {
+          state.tabs = [
+            ...state.tabs,
+            {
+              name: "media-standard",
+              title: "Media Library Standard"
+            },
+            {
+              name: "media-good",
+              title: "Media Library Good"
+            },
+            {
+              name: "media-card",
+              title: "Media Library Card"
+            },
+            {
+              name: "media-thumbnail",
+              title: "Media Library Thumbnail"
+            }
+          ]
         }
         return state;
       });
