@@ -246,26 +246,30 @@ class AddPage extends Component {
     this.setState({editingDataSource, isModalOpened: true});
   };
 
-  ItemPredicate(query, value) {
+  // ItemPredicate(query, value) {
+  //
+  //   if (!query) {
+  //     return true
+  //   }
+  //   const index = _.findIndex(_.split(value.label, ""), char => {
+  //     let similar = false;
+  //     _.split(query, "").forEach(queryChar => {
+  //       if (queryChar === char) {
+  //         similar = true
+  //       }
+  //     });
+  //     return similar
+  //   });
+  //
+  //   if (index !== -1) {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // }
 
-    if (!query) {
-      return true
-    }
-    const index = _.findIndex(_.split(value.label, ""), char => {
-      let similar = false;
-      _.split(query, "").forEach(queryChar => {
-        if (queryChar === char) {
-          similar = true
-        }
-      });
-      return similar
-    });
-
-    if (index !== -1) {
-      return true
-    } else {
-      return false
-    }
+  onQueryChange = (query, value) => {
+    return `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
   }
 
   /**
@@ -560,7 +564,7 @@ class AddPage extends Component {
                           <Select items={this.state.pagesOptions}
                                   matchTargetWidth
                                   id="parent_page_id"
-                                  itemPredicate={this.ItemPredicate}
+                                  itemPredicate={this.onQueryChange}
                                   noResults={<MenuItem disabled={true} text="No results."/>}
                                   itemRenderer={(item, {handleClick, modifiers, query}) => {
                                     return <MenuItem
@@ -605,7 +609,7 @@ class AddPage extends Component {
                           <Select items={this.state.models}
                                   matchTargetWidth
                                   id="page-model"
-                                  itemPredicate={this.ItemPredicate}
+                                  itemPredicate={this.onQueryChange}
                                   noResults={<MenuItem disabled={true} text="No results."/>}
                                   itemRenderer={(item, {handleClick, modifiers, query}) => {
                                     return <MenuItem
@@ -681,7 +685,7 @@ class AddPage extends Component {
 
                           <MultiSelect tagRenderer={this.tagRenderer} id="roles"
                                        items={this.state.value.rolesOptions}
-                                       itemPredicate={this.ItemPredicate}
+                                       itemPredicate={this.onQueryChange}
                                        noResults={<MenuItem disabled={true} text="No results."/>}
                                        fill={true}
                                        placeholder="All..."

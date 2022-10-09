@@ -107,6 +107,20 @@ class InputTextCommon extends BaseElement {
       label: "Field ID (Column Name)",
     });
 
+    this.addControl("debounce_input", {
+      type: CONTROLLER_SLIDER,
+      responsive: false,
+      label: "Debounce",
+      max: 10000,
+      min: 0,
+      default: {
+        size: 0,
+        unit: 'ms'
+      },
+      units: ["ms"],
+      locked: true,
+    });
+
     this.addControl("maxlength_input_text", {
       type: CONTROLLER_NUMBER,
       label: "maxlength",

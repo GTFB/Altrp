@@ -212,7 +212,7 @@ export default function renderButton(settings, device, elementId) {
   if (existingIconsString === 'lt') {
     buttonInner = (
       `<div class="btn-container-column">
-      <span class={"altrp-btn-icon-top "}>
+      <span class="altrp-btn-icon-top ">
         ${renderAsset(buttonMediaTop)}
     </span>
     <div class="btn-container-row">

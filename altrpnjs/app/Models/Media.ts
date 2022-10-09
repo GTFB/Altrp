@@ -31,6 +31,9 @@ export default class Media extends BaseModel {
   public media_type: string
 
   @column()
+  public media_variation: string
+
+  @column()
   public type: string
 
   @column()

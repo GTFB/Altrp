@@ -3,17 +3,19 @@ import { exec as originExec } from 'child_process'
 
 const execAsync = promisify(originExec)
 
-async function exec(command: string) {
+async function exec(command: string):Promise<string|null> {
   try {
     const { stdout, stderr } = await execAsync(command)
     if (stderr) {
       console.error(stderr)
-    } else if (stdout) {
-      console.info(stdout)
+    } else if (stdout?.trim()?.length) {
+      console.log(stdout.trim())
+      return stdout
     }
   } catch(err) {
-    console.error(err.message)
+    console.error(err)
   }
+  return null
 }
 
 export default exec

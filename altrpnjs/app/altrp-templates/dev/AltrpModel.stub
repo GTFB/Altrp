@@ -2,35 +2,6 @@
 import _ from 'lodash'
 
 export default class {{{classname}}} extends Orm.BaseModel {
-  @Orm.beforeSave()
-    public static beforeSave(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeSave", data: model})
-    }
-
-  @Orm.beforeCreate()
-    public static beforeCreate(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeCreate", data: model})
-    }
-
-  @Orm.beforeUpdate()
-    public static beforeUpdate(model) {
-       Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeUpdate", data: model})
-      }
-
-  @Orm.beforeDelete()
-    public static beforeDelete(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeDelete", data: model})
-    }
-
-  @Orm.beforeFind()
-    public static beforeFind(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeFind", data: model})
-    }
-
-  @Orm.beforePaginate()
-    public static beforePaginate(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforePaginate", data: model})
-    }
 
   @Orm.afterSave()
     public static afterSave(model) {

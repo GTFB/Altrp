@@ -140,7 +140,8 @@ class InputWysiwyg extends BaseElement {
     this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
-      default: "Placeholder",
+      description: "appears only after saving and refreshing the page",
+      locked: true,
     });
 
     this.addControl("read_only", {
@@ -477,6 +478,26 @@ class InputWysiwyg extends BaseElement {
     this.addControl("field_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
+    });
+
+    this.addControl("wysiwyg_paragraph_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic paragraph",
+    });
+
+    this.addControl("wysiwyg_heading1_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic heading 1",
+    });
+
+    this.addControl("wysiwyg_heading2_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic heading 2",
+    });
+
+    this.addControl("wysiwyg_heading3_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic heading 3",
     });
 
     this.addControl("field_font_color", {

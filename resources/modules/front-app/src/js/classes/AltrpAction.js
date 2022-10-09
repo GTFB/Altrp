@@ -1257,6 +1257,8 @@ class AltrpAction extends AltrpModel {
     /**
      * @type {DataStorageUpdater}
      */
+
+
     await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false);
     return {success: true};
   }

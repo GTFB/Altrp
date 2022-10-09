@@ -660,13 +660,15 @@ class InputTextCommonWidget extends Component {
     if(isEditor()){
       this.setState(state=>({...state, value}))
     } else {
-      this.dispatchFieldValueToStore(value, true)
+      // this.dispatchFieldValueToStore(value, true)
+      this.setState(state=>({...state, value}))
+      this.debounceDispatch(value)
     }
   }
 
   debounceDispatch = _.debounce(
     value => this.dispatchFieldValueToStore(value, true),
-    150
+    Number(this.props.element.getResponsiveLockedSetting('debounce_input')?.size) || 0
   );
 
 
@@ -839,7 +841,7 @@ class InputTextCommonWidget extends Component {
     const {
       content_readonly,
     } = settings;
-    let value = this.getValue()
+    // let value = this.getValue()
 
     let classLabel = "";
     let styleLabel = {};
@@ -936,7 +938,7 @@ class InputTextCommonWidget extends Component {
           name={this.getName()}
           id={this.getName()}
           className={classes}
-          value={value || ""}
+          value={this.state.value || ""}
           maxLength={(maxlength > 0 && typeInput) ? maxlength : null}
           data-enter={enterNextInput ? 'enabled' : null}
           element={this.props.element}

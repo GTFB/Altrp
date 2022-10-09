@@ -27,6 +27,7 @@ import HttpContext from "@ioc:Adonis/Core/HttpContext";
 import { addSchedule, removeSchedule } from '../../helpers/schedule';
 import exec from '../../helpers/exec'
 import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
+import base_path from "../../helpers/base_path";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -238,6 +239,10 @@ export default class Customizer extends BaseModel {
       case 'not_contain': {
         return ` ${rightJSProperty}?.indexOf(${leftJSProperty}) === -1`
       }
+      case 'default':
+      case 'else': {
+        return ``
+      }
       default:
         return 'null'
     }
@@ -359,7 +364,7 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    exec(`node ace customizer:schedule ${this.id.toString()}`).then(data => {
+    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`).then(data => {
       console.log(data);
     }).catch(err => {
       console.error(err);
@@ -498,13 +503,13 @@ export default class Customizer extends BaseModel {
     return startNode ? startNode.getJSContent() : ''
   }
 
-  static replaceMustache(expression:string):string{
+  static replaceMustache(expression:string, before: string = '', after: string = ''):string{
 
     let paths = _.isString(expression) ? expression.match(/{{([\s\S]+?)(?=}})/g) : null;
     if (_.isArray(paths)) {
       paths.forEach(path => {
         path = path.replace("{{", "");
-        let replace = `this.getCustomizerData(\`${path}\`)`
+        let replace = `${before}this.getCustomizerData(\`${path}\`)${after}`
 
         path = escapeRegExp(path);
         expression = expression.replace(new RegExp(`{{${path}}}`, "g"), replace || "");
@@ -523,4 +528,9 @@ export default class Customizer extends BaseModel {
 
     return request_type.toLowerCase() === method.toLowerCase()
   }
+
+  allowApi():boolean{
+    return ! ! _.get(this, 'settings.external')
+  }
+
 }

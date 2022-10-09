@@ -26,6 +26,7 @@ class DataStorageUpdater extends AltrpModel {
    *  обновление currentDataStorage
    *  @param {Datasource[]} dataSources
    *  @param {boolean} initialUpdate
+   *  @param {{}} newParams
    */
   async updateCurrent(
     dataSources = null,
@@ -95,6 +96,7 @@ class DataStorageUpdater extends AltrpModel {
         })
       );
     });
+
     // dataSources = _.sortBy(dataSources, ['data.priority']);
     /**
      * @member {Datasource} dataSource
@@ -162,6 +164,9 @@ class DataStorageUpdater extends AltrpModel {
                   _.get(this.props, "match.params.id")
                 );
                 if (id) {
+                  console.log(dataSource.getWebUrl());
+                  console.log(id);
+                  console.log(this);
                   res = await new Resource({
                     route: dataSource.getWebUrl(),
                   }).get(id);

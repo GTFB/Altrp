@@ -52,10 +52,7 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
       justify-content: center;
     }
 
-    & svg {
-      height: 25px;
-      width: 25px;
-    }
+
 
     & img {
       height: 25px;
@@ -83,10 +80,7 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
     object-fit: contain;
   }
 
-  .altrp-btn-icon-right svg {
-    width: 100%;
-    height: 100%;
-  }
+
 
   .altrp-btn-icon-left img {
     width: 100%;
@@ -94,10 +88,7 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
     object-fit: contain;
   }
 
-  .altrp-btn-icon-left svg {
-    width: 100%;
-    height: 100%;
-  }
+
 
   .altrp-btn-icon-top img {
     width: 100%;
@@ -105,10 +96,7 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
     object-fit: contain;
   }
 
-  .altrp-btn-icon-top svg {
-    width: 100%;
-    height: 100%;
-  }
+
 
   .altrp-btn-icon-bottom img {
     width: 100%;

@@ -10,7 +10,7 @@ export default class CustomizerCrud extends BaseCommand {
   public modelName: string
 
   @args.string({
-    description: 'Action type that should be hooked [create(default), read, update, delete]', 
+    description: 'Action type that should be hooked [create(default), read, update, delete]',
     required: false
   })
   public action: string
@@ -32,48 +32,52 @@ export default class CustomizerCrud extends BaseCommand {
 
   public async run() {
     const { default: Customizer } = await import('App/Models/Customizer')
-    const table = this.ui.table()
+    // const table = this.ui.table()
     const action = ['create', 'read', 'update', 'delete'].includes(this.action)
       ? this.action
       : 'create'
-    const modelName = this.modelName
+    // const modelName = this.modelName
     const hookType = this.isBefore ? 'before': 'after'
     const instanceId = this.instanceId
 
-    table.head(['Name', 'Argument', 'Composed'])
-    table.columnWidths([15, 30, 30])
-    table.row(['Model', this.modelName, modelName])
-    table.row(['Action', this.action, action])
-    table.row(['Hook', this.isBefore ? '--before' : '', hookType])
-    table.row(['Instance', this.instanceId, instanceId])
-    table.render()
+    // table.head(['Name', 'Argument', 'Composed'])
+    // table.columnWidths([15, 30, 30])
+    // table.row(['Model', this.modelName, modelName])
+    // table.row(['Action', this.action, action])
+    // table.row(['Hook', this.isBefore ? '--before' : '', hookType])
+    // table.row(['Instance', this.instanceId, instanceId])
+    // table.render()
 
-    const customizers = await Customizer.query()
+    let customizers = await Customizer.query()
       .preload('altrp_model', modelQuery => {
         modelQuery.where('name', this.modelName)
       })
       .where('type', 'crud')
-
-    const customizer = customizers.find(
+    console.log();
+    customizers = customizers.filter(
       customizer => customizer.settings.event_type === action
         && customizer.settings.event_hook_type === hookType
     )
+    customizers.forEach(customizer =>{
+      if (!customizer) {
+        return
+      }
 
-    if (!customizer) {
-      return
-    }
+      this.logger.success(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
 
-    this.logger.success(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
+      const generator = new CustomizerGenerator(customizer)
+      const filePath = generator.getFilePath()
 
-    const generator = new CustomizerGenerator(customizer)
-    const filePath = generator.getFilePath()
+       import(filePath).then(module=>{
+         const { default: classCustomizerCRUD } = module
+        if (classCustomizerCRUD) {
+          const customizerCRUD = new classCustomizerCRUD
 
-    const { default: classCustomizerCRUD } = await import(filePath)
+          customizerCRUD.run(instanceId)
+        }
+      })
 
-    if (classCustomizerCRUD) {
-      const customizerCRUD = new classCustomizerCRUD
 
-      customizerCRUD.run(instanceId)
-    }
+    })
   }
 }

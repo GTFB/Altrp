@@ -714,6 +714,17 @@ class Section extends BaseElement{
       // },
     });
 
+
+    this.addControl('backdrop_blur', {
+      type: CONTROLLER_SLIDER,
+      label: "Backdrop Blur",
+      min: 0,
+      max: 10,
+      step: 0.1,
+      units: ['px', '%'],
+    });
+
+
     // this.addControl('isFixed', {
     //   type: CONTROLLER_SWITCHER,
     //   label: 'Enable Fixed',

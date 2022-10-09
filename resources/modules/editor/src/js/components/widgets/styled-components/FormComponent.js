@@ -46,11 +46,94 @@ const containerStyle = (settings) => {
   return styles;
 };
 
+const placeholderWysiwyg = (settings) => {
+  let placeholderColor;
+  let styles = '.ck .ck-placeholder:before {'
+
+  settings &&
+  (placeholderColor = getResponsiveSetting(
+    settings,
+    "placeholder_style_font_color"
+  ));
+  placeholderColor &&
+  (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  settings &&
+  (placeholderColor = getResponsiveSetting(
+    settings,
+    "placeholder_style_font_color",
+    ".state-disabled"
+  ));
+  placeholderColor &&
+  (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  settings &&
+  (placeholderColor = getResponsiveSetting(
+    settings,
+    "placeholder_style_font_color",
+    ".active"
+  ));
+  placeholderColor &&
+  (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  styles += "}";
+
+  styles += '.ck .ck-placeholder:hover:before {'
+
+  settings &&
+  (placeholderColor = getResponsiveSetting(
+    settings,
+    "placeholder_style_font_color",
+    ":hover"
+  ));
+  placeholderColor &&
+  (styles += colorPropertyStyled(placeholderColor, "color"));
+
+  styles += "}";
+  return styles;
+}
+
+const fontsWysiwyg = (settings) => {
+  let paragraphFont, heading1Font, heading2Font, heading3Font;
+  let styles = '.ck.ck-content p {'
+
+  settings &&
+  (paragraphFont = getResponsiveSetting(settings, "wysiwyg_paragraph_font_typographic"));
+  paragraphFont && (styles += typographicControllerToStyles(paragraphFont));
+
+  styles += "}";
+
+  styles += '.ck.ck-content h1 {'
+
+  settings &&
+  (heading1Font = getResponsiveSetting(settings, "wysiwyg_heading1_font_typographic"));
+  heading1Font && (styles += typographicControllerToStyles(heading1Font));
+
+  styles += "}";
+
+  styles += '.ck.ck-content h2 {'
+
+  settings &&
+  (heading2Font = getResponsiveSetting(settings, "wysiwyg_heading2_font_typographic"));
+  heading2Font && (styles += typographicControllerToStyles(heading2Font));
+
+  styles += "}";
+
+
+  styles += '.ck.ck-content h3 {'
+
+  settings &&
+  (heading3Font = getResponsiveSetting(settings, "wysiwyg_heading3_font_typographic"));
+  heading3Font && (styles += typographicControllerToStyles(heading3Font));
+
+  styles += "}";
+  return styles
+}
+
 const wysiwygStyle = (settings) => {
   let padding,
     fontColor,
     widthWysiwyg,
-    placeholderColor,
     reqColor,
     backgroundColor,
     borderType,
@@ -81,14 +164,6 @@ const wysiwygStyle = (settings) => {
     (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
-
-  settings &&
-    (placeholderColor = getResponsiveSetting(
-      settings,
-      "placeholder_style_font_color"
-    ));
-  placeholderColor &&
-    (styles += colorPropertyStyled(placeholderColor, "color"));
 
   settings &&
     (reqColor = getResponsiveSetting(settings, "required_style_font_color"));
@@ -156,15 +231,6 @@ const wysiwygStyle = (settings) => {
       ".state-disabled"
     ));
   height && (styles += sizeStyled(height, "height"));
-
-  settings &&
-    (placeholderColor = getResponsiveSetting(
-      settings,
-      "placeholder_style_font_color",
-      ".state-disabled"
-    ));
-  placeholderColor &&
-    (styles += colorPropertyStyled(placeholderColor, "color"));
 
   settings &&
     (reqColor = getResponsiveSetting(
@@ -248,15 +314,6 @@ const wysiwygStyle = (settings) => {
   height && (styles += sizeStyled(height, "height"));
 
   settings &&
-    (placeholderColor = getResponsiveSetting(
-      settings,
-      "placeholder_style_font_color",
-      ".active"
-    ));
-  placeholderColor &&
-    (styles += colorPropertyStyled(placeholderColor, "color"));
-
-  settings &&
     (reqColor = getResponsiveSetting(
       settings,
       "required_style_font_color",
@@ -329,14 +386,6 @@ const wysiwygStyle = (settings) => {
   //
   // position_z_index && (styles += `z-index:${position_z_index};`)
 
-  settings &&
-    (placeholderColor = getResponsiveSetting(
-      settings,
-      "placeholder_style_font_color",
-      ":hover"
-    ));
-  placeholderColor &&
-    (styles += colorPropertyStyled(placeholderColor, "color"));
 
   settings &&
     (reqColor = getResponsiveSetting(
@@ -1397,6 +1446,11 @@ function FormComponent(settings) {
   //wysiwygStyle ck-content
   const wysiwygStyles = wysiwygStyle(settings);
   wysiwygStyles && (styles += wysiwygStyles);
+  const wysiwygPlaceholder = placeholderWysiwyg(settings)
+  wysiwygPlaceholder && (styles += wysiwygPlaceholder);
+
+  const wysiwygFonts = fontsWysiwyg(settings)
+  wysiwygFonts && (styles += wysiwygFonts);
   //altrp-field
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);

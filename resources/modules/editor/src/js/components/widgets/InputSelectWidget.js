@@ -914,7 +914,7 @@ class InputSelectWidget extends Component {
       value = null
     }
 
-    document.removeEventListener("click", this.checkOutsideClick)
+    document.removeEventListener("mousedown", this.checkOutsideClick)
 
     const options = this.getOptions();
     const element = this.props.element;
@@ -1144,7 +1144,7 @@ class InputSelectWidget extends Component {
       }
     }
 
-    document.removeEventListener("click", this.checkOutsideClick)
+    document.removeEventListener("mousedown", this.checkOutsideClick)
     this.setState((s) => ({
       ...s,
       isOpen: false
@@ -1162,9 +1162,9 @@ class InputSelectWidget extends Component {
         isOpen: !s.isOpen
     }), () => {
       if(this.state.isOpen) {
-        document.addEventListener("click", this.checkOutsideClick)
+        document.addEventListener("mousedown", this.checkOutsideClick)
       } else {
-        document.removeEventListener("click", this.checkOutsideClick)
+        document.removeEventListener("mousedown", this.checkOutsideClick)
       }
     })
 
@@ -1186,7 +1186,7 @@ class InputSelectWidget extends Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("click", this.checkOutsideClick)
+    document.removeEventListener("mousedown", this.checkOutsideClick)
   }
 
   /**

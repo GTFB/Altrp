@@ -3977,6 +3977,32 @@ class RootElement extends BaseElement {
     });
 
     this.endControlSection();
+
+    this.startControlSection('font_size_global', {
+      tab: TAB_ADVANCED,
+      label: 'Setting the font size for a page',
+    });
+
+    this.addControl('font_size_settings_global', {
+      type: CONTROLLER_SLIDER,
+      label: 'Font Size',
+      units: [
+        'px',
+        'vw',
+        'vh',
+      ],
+      max: 400,
+      min: 0,
+      // default: {
+      //   size: '14',
+      //   unit: 'px'
+      // },
+      rules: {
+        "html{{STATE}}": "font-size: {{SIZE}}{{UNIT}};"
+      }
+    });
+
+    this.endControlSection();
   }
 
 
