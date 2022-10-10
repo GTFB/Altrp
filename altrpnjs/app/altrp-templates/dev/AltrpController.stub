@@ -5,6 +5,9 @@ import _ from 'lodash'
 import Database from "@ioc:Adonis/Lucid/Database";
 const DB = Database?.default ? Database.default : Database;
 import Source from "../Models/Source"
+import {BaseModel} from "@adonisjs/lucid/build/src/Orm/BaseModel";
+import {column} from "@ioc:Adonis/Lucid/Orm";
+import {DateTime} from "luxon";
 
 {{{imports}}}
 

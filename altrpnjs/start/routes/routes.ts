@@ -260,7 +260,7 @@ Route.group(() => {
           })
         }
 
-        if(! customizer.allowMethod(httpContext.request.method())){
+        if(! await customizer.allowMethod(httpContext.request.method())){
           return httpContext.response.status(405).json({
             success: false,
             message: 'Method not Allowed'
@@ -402,7 +402,7 @@ Route.group( ()=>{
         })
       }
 
-      if(! customizer.allowMethod(httpContext.request.method())){
+      if(! await customizer.allowMethod(httpContext.request.method())){
         return httpContext.response.status(405).json({
           success: false,
           message: 'API Method not Allowed'
