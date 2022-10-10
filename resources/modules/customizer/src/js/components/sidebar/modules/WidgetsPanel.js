@@ -60,6 +60,7 @@ class WidgetsPanel extends React.Component {
   render() {
     let start = this.issetNode('start');
     let finish = this.issetNode('return');
+    // const pluginsNodes =
     let nodesFilter = this.props.nodeState.filter(item => item.name.includes(this.state.searchNodes.toLowerCase()))
 
   return <div className="widget-panel-wrapper">

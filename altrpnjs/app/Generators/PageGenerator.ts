@@ -6,7 +6,6 @@ import Application from "@ioc:Adonis/Core/Application";
 import app_path from "../../helpers/path/app_path";
 import Page from "App/Models/Page";
 import SCREENS from "../../helpers/const/SCREENS";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
 import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import * as _ from "lodash";
 import getLatestVersion from "../../helpers/getLatestVersion";
@@ -20,6 +19,7 @@ import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import {encode} from "html-entities";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import storage_path from "../../helpers/storage_path";
+import config from "../../helpers/config";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -30,6 +30,7 @@ export default class PageGenerator extends BaseGenerator {
       altrpMenus: any[]
     };
   } = {}
+  public static screensDirectory = '/views/altrp/screens'
 
   setGlobal(path, value) {
     _.set(this.__altrp_global__, path, value)
@@ -95,7 +96,14 @@ export default class PageGenerator extends BaseGenerator {
 
     const all_site_js = this.getFrontAppJs()
     const pages = await this.page.getPagesForFrontend();
-
+    pages.forEach(page => {
+      page?.data_sources?.map(data_source => {
+        if(data_source?.source?.web_url){
+          // @ts-ignore
+          data_source.source.web_url = data_source?.source?.web_url.replace(config('app.url'), '')
+        }
+      })
+    })
     const pageAreas = await page.renderPageAreas()
     const areasStore = storage_path(`pages-content/areas/${page.guid}.html`)
 
@@ -131,7 +139,7 @@ export default class PageGenerator extends BaseGenerator {
 
 
       await this.addFile(fileName)
-        .destinationDir(Application.resourcesPath(`${TemplateGenerator.screensDirectory}/${screen.name}/pages`))
+        .destinationDir(Application.resourcesPath(`${PageGenerator.screensDirectory}/${screen.name}/pages`))
         .stub(PageGenerator.template)
         .apply({
           hAltrp: Env.get('PATH_ENV') === 'production'

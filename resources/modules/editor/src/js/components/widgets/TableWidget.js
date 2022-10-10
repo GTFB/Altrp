@@ -16,7 +16,7 @@ import {setGlobalElementTable} from "../../../../../front-app/src/js/store/eleme
   text-align: center;
   font-size: 14px;
   font-weight: normal;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
   padding: 0 0 0 0;
@@ -27,7 +27,7 @@ import {setGlobalElementTable} from "../../../../../front-app/src/js/store/eleme
   padding: 0 0 0 0;
   font-size: 14px;
   font-weight: normal;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
   display: table-cell;

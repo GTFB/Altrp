@@ -563,6 +563,14 @@ button {
     font-size: 11px;
     line-height: 1.3;
     color: $grey;
+    a{
+      color: $green;
+    }
+    code{
+      background-color: $light-gray;
+      border-radius: 3px;
+      padding: 1px 3px;
+    }
   }
 }
 .control-shadow-label {
@@ -896,8 +904,11 @@ button {
   background-color: $grey;
   margin-left: 10px;
   svg{
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
+    position: relative;
+    top: 1px;
+    left: 0;
     path{
       fill: #fff;
     }

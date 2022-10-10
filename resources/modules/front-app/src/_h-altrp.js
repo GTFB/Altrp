@@ -15,11 +15,12 @@ function loadDatastorageUpdater(){
     dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
   });
 }
-import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(() => {
   window.currentRouterMatch = new window.AltrpModel({
     params:queryString.parseUrl(window.location.href).query
   });
-  import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+  import (/* webpackChunkName: 'appStore' */'./js/store/store').then(() => {
+
     loadDatastorageUpdater();
   })
 })
@@ -53,8 +54,9 @@ documentCheckEvents( () => {
       console.log('h-altrp LOADED: ', performance.now());
 
       const hAltrpLoadedEvent = new Event('h-altrp-loaded');
-      console.log('h-altrp-loaded');
+      // console.log('h-altrp-loaded');
       window.dispatchEvent(hAltrpLoadedEvent);
+      document.dispatchEvent(hAltrpLoadedEvent);
 
       let actionComponents = _.get(__altrp_settings__, 'action_components', [])
       if(actionComponents.find((action => action === 'toggle_popup'))){
@@ -72,15 +74,16 @@ documentCheckEvents( () => {
 
   import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
 
-    import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+    import (/* webpackChunkName: 'appStore' */'./js/store/store').then(() => {
+      document.dispatchEvent(new Event('app-store-loaded'))
       console.log('LOAD appStore: ', performance.now());
       loadingCallback();
       loadDepends()
     });
 
-    import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
+    import (/* webpackChunkName: 'SingleElementWrapper' */'./js/components/SingleElementWrapper').then(module => {
       window.ElementWrapper = module.default;
-      console.log('LOAD SimpleElementWrapper: ', performance.now());
+      console.log('LOAD SingleElementWrapper: ', performance.now());
       loadingCallback();
     });
 
@@ -93,7 +96,7 @@ documentCheckEvents( () => {
   })
 
 
-  import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
+  import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(() => {
     console.log('LOAD FormsManager: ', performance.now());
   });
 })
@@ -163,3 +166,10 @@ if(document.querySelector('[data-enter-animation-type]')){
 
 const altrpe = new Event(`altrpe`);
 document.dispatchEvent(altrpe)
+
+window.addEventListener('mousemove', e=>{
+  altrp.mousePosition = {
+    x: e.clientX,
+    y: e.clientY
+  }
+})

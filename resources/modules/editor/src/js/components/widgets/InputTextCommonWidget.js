@@ -74,13 +74,13 @@ import '../../../../../editor/src/sass/blueprint.scss'
   padding-left: 10px;
 }
 .altrp-field-label {
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
 .altrp-field-select2__single-value, .altrp-field {
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -100,7 +100,7 @@ import '../../../../../editor/src/sass/blueprint.scss'
 }
 .altrp-field::placeholder, .altrp-field-select2__placeholder {
   font-size: 13px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -402,9 +402,10 @@ class InputTextCommonWidget extends Component {
   handleEnter = e => {
     if (e.keyCode === 13) {
       e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
+      const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
       const index = inputs.indexOf(e.target);
       if (index === undefined) return;
+      if (!e.target.hasAttribute('data-enter')) return;
       inputs[index + 1] && inputs[index + 1].focus();
       const {
         create_allowed,
@@ -659,13 +660,15 @@ class InputTextCommonWidget extends Component {
     if(isEditor()){
       this.setState(state=>({...state, value}))
     } else {
-      this.dispatchFieldValueToStore(value, true)
+      // this.dispatchFieldValueToStore(value, true)
+      this.setState(state=>({...state, value}))
+      this.debounceDispatch(value)
     }
   }
 
   debounceDispatch = _.debounce(
     value => this.dispatchFieldValueToStore(value, true),
-    150
+    Number(this.props.element.getResponsiveLockedSetting('debounce_input')?.size) || 0
   );
 
 
@@ -838,7 +841,7 @@ class InputTextCommonWidget extends Component {
     const {
       content_readonly,
     } = settings;
-    let value = this.getValue()
+    // let value = this.getValue()
 
     let classLabel = "";
     let styleLabel = {};
@@ -924,6 +927,10 @@ class InputTextCommonWidget extends Component {
       autocomplete = "off";
     }
 
+    const maxlength = this.props.element.getResponsiveLockedSetting("maxlength_input_text")
+    const typeInput = this.state.settings.content_type === 'text' || this.state.settings.content_type === 'password'
+    const enterNextInput = this.props.element.getResponsiveLockedSetting("content_enter_input") ?? true
+
     let input = (
       <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
         <AltrpInput
@@ -931,7 +938,9 @@ class InputTextCommonWidget extends Component {
           name={this.getName()}
           id={this.getName()}
           className={classes}
-          value={value || ""}
+          value={this.state.value || ""}
+          maxLength={(maxlength > 0 && typeInput) ? maxlength : null}
+          data-enter={enterNextInput ? 'enabled' : null}
           element={this.props.element}
           readOnly={content_readonly}
           autoComplete={autocomplete}

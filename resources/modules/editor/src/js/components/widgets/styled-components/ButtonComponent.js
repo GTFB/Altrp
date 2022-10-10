@@ -57,12 +57,43 @@ export function btnStyles(settings) {
         return ''
       }
     },
-    ["background-color", "background_color", "color"],
-    ["", "gradient", "gradient"],
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "background_color");
+      const gradient = getResponsiveSetting(settings, "gradient");
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(52, 59, 76, 1)'
+        let textareaText = getResponsiveSetting(settings, 'button_style_gradient_text')?.replace(/;/g, '') || ''
+        return `background: ${gradient?.isWithGradient ? gradient.value.replace(/;/g, '') : `linear-gradient(${bg},${bg})`} padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "background_color");
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const gradient = getResponsiveSetting(settings, "gradient");
+      if (gradient && !borderGradient) {
+        return gradientStyled(gradient);
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom");
+      const borderColor = getResponsiveSetting(settings, "border_color");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
+    // ["background-color", "background_color", "color"],
+    // ["", "gradient", "gradient"],
     ["", "background_image", "media"],
     ["border-style", "border_type"],
     ["border-width", "border_width", "dimensions"],
-    ["border-color", "border_color", "color"],
+    // ["border-color", "border_color", "color"],
     ["border-radius", "border_radius", "dimensions"],
     ["", "style_background_shadow", "shadow"],
     ["", "font_typographic", "typographic"],
@@ -78,13 +109,44 @@ export function btnStyles(settings) {
         return ''
       }
     },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const backgroundColor = getResponsiveSetting(settings, "background_color", ':hover');
+      const gradient = getResponsiveSetting(settings, "gradient", ':hover');
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(52, 59, 76, 1)'
+        let textareaText = getResponsiveSetting(settings, 'button_style_gradient_text', ':hover')?.replace(/;/g, '') || ''
+        return `background: ${gradient?.isWithGradient ? gradient.value.replace(/;/g, '') : `linear-gradient(${bg},${bg})`} padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const backgroundColor = getResponsiveSetting(settings, "background_color", ':hover');
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const gradient = getResponsiveSetting(settings, "gradient", ':hover');
+      if (gradient && !borderGradient) {
+        return gradientStyled(gradient);
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "button_style_border_gradient_custom", ':hover');
+      const borderColor = getResponsiveSetting(settings, "border_color", ':hover');
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
     ["margin", "position_margin", "dimensions", ":hover"],
     ["padding", "position_padding", "dimensions", ":hover"],
-    ["background-color", "background_color", "color", ":hover"],
-    ["", "gradient", "gradient", ":hover"],
+    // ["background-color", "background_color", "color", ":hover"],
+    // ["", "gradient", "gradient", ":hover"],
     ["border-style", "border_type", "", ":hover"],
     ["border-width", "border_width", "dimensions", ":hover"],
-    ["border-color", "border_color", "color", ":hover"],
+    // ["border-color", "border_color", "color", ":hover"],
     ["border-radius", "border_radius", "dimensions", ":hover"],
     ["", "style_background_shadow", "shadow", ":hover"],
     ["color", "font_color", "color", ":hover"],
@@ -166,6 +228,7 @@ export function btnStyles(settings) {
 
     "& img",
     ["width", "icon_size", "slider"],
+    ["height", "icon_size", "slider"],
     ["icon_size", "slider"],
     "}",
 
@@ -245,6 +308,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-right svg",
+    () => {
+      const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right');
+      if (iconRightSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-right",
     ['padding', 'icon_padding_right', 'dimensions', ':hover'],
     ['margin', 'icon_margin_right', 'dimensions', ':hover'],
@@ -256,6 +328,15 @@ export function btnStyles(settings) {
       }
     },
 
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-right svg",
+    () => {
+      const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right', ':hover');
+      if (iconRightSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
     "}",
 
     "altrp-btn .altrp-btn-icon-left",
@@ -271,6 +352,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-left svg",
+    () => {
+      const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left');
+      if (iconLeftSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-left",
     ['padding', 'icon_padding_left', 'dimensions', ':hover'],
     ['margin', 'icon_margin_left', 'dimensions', ':hover'],
@@ -282,6 +372,15 @@ export function btnStyles(settings) {
       }
     },
 
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-left svg",
+    () => {
+      const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left', ':hover');
+      if (iconLeftSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
     "}",
 
     "altrp-btn .altrp-btn-icon-top",
@@ -297,6 +396,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-top svg",
+    () => {
+      const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top');
+      if (iconTopSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-top",
     ['padding', 'icon_padding_top', 'dimensions', ':hover'],
     ['margin', 'icon_margin_top', 'dimensions', ':hover'],
@@ -308,6 +416,15 @@ export function btnStyles(settings) {
       }
     },
 
+    "}",
+
+    "altrp-btn:hover .altrp-btn-icon-top svg",
+    () => {
+      const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top', ':hover');
+      if (iconTopSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
     "}",
 
     "altrp-btn .altrp-btn-icon-bottom",
@@ -323,6 +440,15 @@ export function btnStyles(settings) {
 
     "}",
 
+    "altrp-btn .altrp-btn-icon-bottom svg",
+    () => {
+      const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom');
+      if (iconBottomSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+    "}",
+
     "altrp-btn:hover .altrp-btn-icon-bottom",
     ['padding', 'icon_padding_bottom', 'dimensions', ':hover'],
     ['margin', 'icon_margin_bottom', 'dimensions', ':hover'],
@@ -331,6 +457,61 @@ export function btnStyles(settings) {
 
       if (iconBottomSizeBtn) {
         return iconSizeStyled(iconBottomSizeBtn);
+      }
+    },
+
+    "}",
+
+
+    "altrp-btn:hover .altrp-btn-icon-bottom svg",
+    () => {
+      const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom', ':hover');
+      if (iconBottomSizeBtn) {
+        return 'width: 100%; height: 100%;'
+      }
+    },
+
+    "}",
+
+    "altrp-btn .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+      }
+    },
+
+    "}",
+
+    "altrp-btn:hover .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher", ":hover");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea", ":hover") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+      }
+    },
+
+    "}",
+
+    "altrp-btn.active .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher", ".active");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea", ".active") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+      }
+    },
+
+    "}",
+
+    "altrp-btn.state-disabled .altrp-btn-text",
+    () => {
+      const gradientColorSwitcher = getResponsiveSetting(settings, "style_button_gradient_switcher", ".state-disabled");
+      const gradientTextarea = getResponsiveSetting(settings, "style_button_gradient_textarea", ".state-disabled") || ''
+      if (gradientColorSwitcher) {
+        return `background-image: ${gradientTextarea.replace(/;/g, '')}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
       }
     },
 

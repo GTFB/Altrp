@@ -110,13 +110,13 @@ import '../../../../../editor/src/sass/blueprint.scss'
 }
 .altrp-field-label {
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
 .altrp-field-select2__single-value, .altrp-field {
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -136,7 +136,7 @@ import '../../../../../editor/src/sass/blueprint.scss'
 }
 .altrp-field::placeholder, .altrp-field-select2__placeholder {
   font-size: 13px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -1251,6 +1251,7 @@ class InputMultiSelectWidget extends Component {
     const content_readonly = element.getResponsiveLockedSetting('content_readonly');
     const no_results_text = element.getResponsiveLockedSetting('no_results_text');
     const reset_input = element.getResponsiveLockedSetting('reset__input');
+    const openPopoverKeyDown = element.getResponsiveLockedSetting('open_popover_on_key_down');
 
     const inputProps = {
     };
@@ -1271,6 +1272,7 @@ class InputMultiSelectWidget extends Component {
         itemsEqual={this.itemsEqual}
         disabled={content_readonly}
         resetOnSelect={reset_input}
+        openOnKeyDown={openPopoverKeyDown}
         popoverProps={this.popoverProps}
         createNewItemFromQuery={element.getResponsiveLockedSetting('create') ? this.createNewItemFromQuery : null}
         createNewItemRenderer={this.createNewItemRenderer}

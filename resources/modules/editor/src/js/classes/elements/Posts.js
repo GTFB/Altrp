@@ -4,24 +4,19 @@ import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
   CONTROLLER_COLOR,
-  TAB_ADVANCED,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SELECT,
-  CONTROLLER_TEXT,
   CONTROLLER_SLIDER,
   TAB_CONTENT,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_LINK,
   TAB_STYLE,
-  CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
   CONTROLLER_SHADOW,
   CONTROLLER_GRADIENT,
   CONTROLLER_MEDIA,
-  CONTROLLER_WYSIWYG, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_SELECT2
+  CONTROLLER_HEADING, CONTROLLER_SELECT2
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
-import Repeater from "../Repeater";
 
 class Table extends BaseElement {
   static getName() {
@@ -119,6 +114,12 @@ class Table extends BaseElement {
       locked: true,
     });
 
+    this.addControl('switch_overflow_hidden_template', {
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Delete Overflow Hidden"
+    });
+
     this.addControl("posts_card_template", {
       type: CONTROLLER_SELECT2,
       prefetch_options: true,
@@ -146,7 +147,12 @@ class Table extends BaseElement {
       nullable: true,
       locked: true,
     });
-
+    this.addControl("load-html-cards", {
+      label: 'Loading Raw Html for Cards',
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      locked: true,
+    })
     this.addControl("posts_transition_type", {
       type: CONTROLLER_SELECT,
       label: "Select Transition Type",

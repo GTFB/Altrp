@@ -79,27 +79,6 @@ class InputWysiwygWidget extends Component {
     this.dispatchFieldValueToStore(value, true);
   }
 
-  /**
-   * Обработка нажатия клавиши
-   * @param {{}} e
-   */
-  handleEnter = e => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
-      inputs[index + 1] && inputs[index + 1].focus();
-      const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getLockedSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
-      }
-    }
-  };
 
   /**
    * Загрузка виджета
@@ -679,6 +658,21 @@ class InputWysiwygWidget extends Component {
     return classes;
   }
 
+  renderWysiwyg() {
+    return (
+      <CKeditor
+        onChange={this.onChange}
+        onBlur={this.onBlur}
+        placeholder={this.props.element.getResponsiveLockedSetting('content_placeholder')}
+        changeText={this.dispatchFieldValueToStore}
+        text={this.getLockedContent("content_default_value")}
+        name={this.getName()}
+        readOnly={this.getLockedContent("read_only")}
+
+      />
+    );
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings()
@@ -800,20 +794,6 @@ class InputWysiwygWidget extends Component {
         {input}
         {content_label_position_type === "bottom" ? label : ""}
       </AltrpFieldContainer>
-    );
-  }
-
-  renderWysiwyg() {
-    return (
-      <CKeditor
-        onChange={this.onChange}
-        onBlur={this.onBlur}
-        changeText={this.dispatchFieldValueToStore}
-        text={this.getLockedContent("content_default_value")}
-        name={this.getName()}
-        readOnly={this.getLockedContent("read_only")}
-
-      />
     );
   }
 }

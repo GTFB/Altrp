@@ -41,14 +41,13 @@ class DashboardsWidget extends Component {
             .getAttribute("content")
         }
       });
-      console.log(req.data.settings);
       let data = JSON.parse(req.data.settings) || JSON.parse("{}");
       this.setState(state => ({
         ...state,
         settingsData: data
       }));
     } catch (e) {
-      console.log("ERROR ==>", e);
+      console.error("ERROR ==>", e);
     }
   }
 

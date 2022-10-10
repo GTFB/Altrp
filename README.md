@@ -3,6 +3,18 @@
 
 ## Changelog
 
+### 1.3.2
+* Added Raw Html for Cards Widget with Click Actions
+
+### 1.3.1
+* Added Scroll & Mouse Transform Effects for All Elements
+
+### 1.3.0
+* Added Extended Skeleton Features Support for All Elements
+* Added Hover Transform Settings 
+* Change Empty Image PlaceHolder
+* Change Default Font Family To `Arial`
+
 ### 1.2.11
 * Added Support for `Soft Deletes` Models
 * Fixed `Table to CSV` Coding Issue

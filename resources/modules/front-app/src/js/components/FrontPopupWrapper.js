@@ -108,8 +108,8 @@ ${({settings}) => {
 &.popup-transition-state{
 ${({settings}) => {
   let styles = '';
-  const vertical_position_popup_layout = getResponsiveSetting(settings, 'vertical_position_popup_layout')
-  const horizontal_position_popup_layout = getResponsiveSetting(settings, 'horizontal_position_popup_layout')
+  const vertical_position_popup_layout = getResponsiveSetting(settings, 'vertical_position_popup_layout') || "center"
+  const horizontal_position_popup_layout = getResponsiveSetting(settings, 'horizontal_position_popup_layout') || "center"
   /**
    * @var s_direction
    * @type {string}

@@ -6,13 +6,23 @@ import AltrpSelect from "../../../../../../admin/src/components/altrp-select/Alt
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
-import {InputGroup} from "@blueprintjs/core";
+import {Checkbox, InputGroup, Switch} from "@blueprintjs/core";
+import { DateInput, TimePrecision } from '@blueprintjs/datetime';
+import { format, parse } from 'date-fns';
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 class CustomizerSettingsPanel extends React.Component {
+  externalChange = (e)=>{
+    let newSettings = {...this.state.customizer?.settings}
+
+    newSettings.external = e.target.value != 'true'
+    const customizer = mutate.set(this.state.customizer, 'settings', newSettings)
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+    this.setState(state=>(mutate.set(state, 'customizer', customizer)))
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -26,6 +36,7 @@ class CustomizerSettingsPanel extends React.Component {
     };
     this.modelsResource = new Resource({ route: "/admin/ajax/models_options?with_names=0&not_plural=1&with_sql_queries=0" });
     this.resource = new Resource({ route: "/admin/ajax/customizers" });
+    this.dateFnsFormat = 'yyyy-MM-dd HH:mm:ss';
   }
 
   async componentDidMount() {
@@ -80,7 +91,7 @@ class CustomizerSettingsPanel extends React.Component {
       let {customizer} = this.props;
       customizer = mutate.set(customizer, 'title', this.state.customizer.title)
       window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
-      await this.resource.put(this.state.customizer.id, this.state.customizer)
+      await this.resource.put(this.state.customizer.id, customizer)
     }
   }
 
@@ -119,31 +130,51 @@ class CustomizerSettingsPanel extends React.Component {
     })
     return modelsOptions
   }
+
+  formatDate = (date) => format(date, this.dateFnsFormat)
+
+  parseDate = (str) => parse(str, this.dateFnsFormat, new Date())
+
   render() {
+
     let modelsOptions = this.getModelOptions();
-    console.log(modelsOptions);
+
     const {customizer} = this.props;
-    const {type, model_id, settings = {}} = customizer
+    const { type, model_id, settings = {} } = customizer;
 
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
     const MethodType = settings?.hook_type;
+    const eventType = settings?.event_type;
+    const eventHookType = settings?.event_hook_type;
+    const startAt = settings?.start_at ? new Date(settings.start_at) : new Date();
+    const repeatCount = settings?.repeat_count;
+    const infinity = settings?.infinity || false;
+    const period = settings?.period;
+    const periodUnit = settings?.period_unit || 'day';
 
     const time = customizer.time || "";
     const time_type = customizer.time_type || "none";
 
     let Url = ''
-    if (this.props.customizer.source !== null) {
+
+    if (this.props.customizer.source) {
       let { web_url } = this.props.customizer.source
       try{
-        let strippedDownUrl = new URL(web_url)
-        Url = document.location.origin
-          +strippedDownUrl.pathname
+        if(this.state.customizer?.settings?.external){
+
+          Url = `${document.location.origin}/api/v1/${this.state.customizer.name}`
+        } else   {
+          let strippedDownUrl = new URL(web_url)
+          Url = document.location.origin
+            +strippedDownUrl.pathname
+        }
       }catch (e){
         alert('Error while parsing source URL')
         console.error(e);
       }
     }
+
 
     return (
       <div className="panel settings-panel d-flex">
@@ -189,6 +220,14 @@ class CustomizerSettingsPanel extends React.Component {
                                      {
                                        label: 'Model Class Method',
                                        value: 'method'
+                                     },
+                                     {
+                                       value: 'crud',
+                                       label: 'CRUD'
+                                     },
+                                     {
+                                       value: 'schedule',
+                                       label: 'Schedule'
                                      }
                                      // {
                                      //   value: 'before',
@@ -197,7 +236,7 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {(type === 'api' || type === 'method') && <>
+                    {['api', 'method', 'crud'].includes(type) && <>
                     {/*  <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>*/}
                     {/*  <div className="controller-container__label control-select__label controller-label">Middlewares:</div>*/}
                     {/*  <AltrpSelect id="crud-fields"*/}
@@ -225,6 +264,144 @@ class CustomizerSettingsPanel extends React.Component {
                       />
                     </div>
                     </>
+                    }
+                    {
+                      type === 'crud' && !!model_id && (
+                        <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                          <div className="controller-container__label control-select__label controller-label">Event Type:</div>
+
+                          <AltrpSelect
+                            id="event-type"
+                            className="controller-field"
+                            isMulti={false}
+                            value={eventType}
+                            onChange={this.changeEventType}
+                            options={[
+                              {
+                                label: 'Create',
+                                value: 'create'
+                              },
+                              {
+                                label: 'Update',
+                                value: 'update'
+                              },
+                              {
+                                label: 'Read',
+                                value: 'read'
+                              },
+                              {
+                                label: 'Delete',
+                                value: 'delete'
+                              }
+                            ]}
+                          />
+                        </div>
+                      )
+                    }
+                    {
+                      type === 'crud' && !!model_id && !!eventType && (
+                        <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                          <div className="controller-container__label control-select__label controller-label">Event Hook Type:</div>
+
+                          <AltrpSelect
+                            id="event-hook-type"
+                            className="controller-field"
+                            isMulti={false}
+                            value={eventHookType}
+                            onChange={this.changeEventHookType}
+                            options={[
+                              {
+                                label: 'Before',
+                                value: 'before'
+                              },
+                              {
+                                label: 'After',
+                                value: 'after'
+                              }
+                            ]}
+                          />
+                        </div>
+                      )
+                    }
+                    {
+                      type === 'schedule' && (
+                        <>
+                          <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                            <div className="controller-container__label control-select__label controller-label">Start At:</div>
+
+                            <div className="form-control-blueprint date-input-wrapper">
+                              <DateInput
+                                placeholder={this.dateFnsFormat}
+                                parseDate={this.parseDate}
+                                formatDate={this.formatDate}
+                                timePickerProps={{ precision: TimePrecision.SECOND }}
+                                value={startAt}
+                                onChange={this.changeStartAt}
+                                id="start-at"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                            <div className="controller-container__label control-select__label controller-label">Repeat Count:</div>
+
+                            <div className="w-75">
+                              <input
+                                id="repeat_count"
+                                className="css-entfk-control d-inline-block w-25 pl-2 mr-4"
+                                type="number"
+                                value={repeatCount}
+                                onChange={this.changeRepeatCount}
+                                disabled={infinity}
+                              />
+
+                              <Switch className="d-inline" checked={infinity} label="Infinity" onChange={this.changeInfinity} />
+                            </div>
+                          </div>
+
+                          <div className="controller-container">
+                            <div className="controller-container__label control-select__label controller-label">Period: Every</div>
+
+                            <input
+                              id="period"
+                              className="css-entfk-control w-25 pl-2"
+                              type="number"
+                              value={period}
+                              onChange={this.changePeriod}
+                            />
+
+                            <AltrpSelect
+                              id="period-unit"
+                              className="w-50"
+                              isMulti={false}
+                              value={periodUnit}
+                              onChange={this.changePeriodUnit}
+                              options={[
+                                {
+                                  value: 'hour',
+                                  label: 'Hour',
+                                },
+                                {
+                                  value: 'day',
+                                  label: 'Day',
+                                },
+                                {
+                                  value: 'week',
+                                  label: 'Week',
+                                },
+                                {
+                                  value: 'month',
+                                  label: 'Month',
+                                },
+                                {
+                                  value: 'year',
+                                  label: 'Year',
+                                },
+                              ]}
+                            />
+                          </div>
+                        </>
+                      )
                     }
                     {
                       type === "listener" && (
@@ -264,56 +441,77 @@ class CustomizerSettingsPanel extends React.Component {
                         <button className="btn btn_success" type="submit">Save</button>
                       </div>
                     </form>
-                    <div className="Customizer-url">
-                      <div className="controller-container__label control-select__label controller-label">Url:</div>
-                      <div className="Customizer-url__block">
-                        <CopyToClipboard onCopy={this.UrlCopy} text={Url}>
-                          <button className="btn btn_success">Copy url</button>
-                        </CopyToClipboard>
-                        <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
-                      </div>
-                      <input value={Url} readOnly={true} className="url-text"/>
-                    </div>
-                    <div className="Customizer-time">
-                      <AltrpSelect id="time-type-fields"
-                                   className="controller-field"
-                                   isMulti={false}
-                                   value={time_type}
-                                   onChange={this.changeTimeType}
-                                   options={[
-                                     {
-                                       value: '',
-                                       label: 'None',
-                                     },
-                                     {
-                                       value: 'minute',
-                                       label: 'Minute',
-                                     },
-                                     {
-                                       value: 'hour',
-                                       label: 'Hour',
-                                     },
-                                     {
-                                       value: 'day',
-                                       label: 'Day',
-                                     },
-                                     {
-                                       value: 'week',
-                                       label: 'Week',
-                                     },
-                                   ]}
-                      />
-                      {
-                        time_type !== "none" ? (
-                          <InputGroup className="form-control-blueprint customizer-time-input"
-                                      type="number"
-                                      id="customizer-time"
-                                      value={time}
-                                      onChange={this.changeTime}
+                    {
+                      type === 'api' &&
+                      <div className="Customizer-external-api d-flex justify-space-between" onSubmit={this.EditTitleForm}>
+                        <div className="controller-container__label control-select__label controller-label">External API:</div>
+                        <div className="customizer-block__title">
+                          <Checkbox className="form-control-blueprint"
+                                      type="checkbox"
+                                      id="customizer-external-api"
+                                      value={this.state.customizer?.settings?.external || false}
+                                      checked={this.state.customizer?.settings?.external || false}
+                                      onChange={this.externalChange}
                           />
-                        ) : ""
-                      }
-                    </div>
+                        </div>
+                      </div>
+                    }
+                    {
+                      !['crud', 'schedule'].includes(type) && (
+                        <>
+                          <div className="Customizer-url">
+                            <div className="controller-container__label control-select__label controller-label">Url:</div>
+                            <div className="Customizer-url__block">
+                              <CopyToClipboard onCopy={this.UrlCopy} text={Url}>
+                                <button className="btn btn_success">Copy url</button>
+                              </CopyToClipboard>
+                              <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
+                            </div>
+                            <input value={Url} readOnly={true} className="url-text"/>
+                          </div>
+                          <div className="Customizer-time">
+                            <AltrpSelect id="time-type-fields"
+                                        className="controller-field"
+                                        isMulti={false}
+                                        value={time_type}
+                                        onChange={this.changeTimeType}
+                                        options={[
+                                          {
+                                            value: '',
+                                            label: 'None',
+                                          },
+                                          {
+                                            value: 'minute',
+                                            label: 'Minute',
+                                          },
+                                          {
+                                            value: 'hour',
+                                            label: 'Hour',
+                                          },
+                                          {
+                                            value: 'day',
+                                            label: 'Day',
+                                          },
+                                          {
+                                            value: 'week',
+                                            label: 'Week',
+                                          },
+                                        ]}
+                            />
+                            {
+                              time_type !== "none" ? (
+                                <InputGroup className="form-control-blueprint customizer-time-input"
+                                            type="number"
+                                            id="customizer-time"
+                                            value={time}
+                                            onChange={this.changeTime}
+                                />
+                              ) : ""
+                            }
+                          </div>
+                        </>
+                      )
+                    }
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
 
@@ -355,6 +553,76 @@ class CustomizerSettingsPanel extends React.Component {
     customizer = mutate.set(customizer, 'model_id', e.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   };
+  changeEventType = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.event_type', e.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeEventHookType = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.event_hook_type', e.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeStartAt = (value) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.start_at', value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeRepeatCount = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.repeat_count', e.target.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changeInfinity = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.infinity', e.target.checked || false);
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changePeriod = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.period', e.target.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
+  changePeriodUnit = (e) => {
+    let { customizer } = this.props;
+
+    if (_.isArray(_.get(customizer, 'settings'))) {
+      customizer = mutate.set(customizer, 'settings', {});
+    }
+
+    customizer = mutate.set(customizer, 'settings.period_unit', e.value || '');
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer));
+  }
   changeHookType = (e)=>{
     let {customizer} = this.props;
     if(_.isArray(_.get(customizer, 'settings'))){

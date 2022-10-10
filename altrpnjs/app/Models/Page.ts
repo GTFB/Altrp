@@ -281,7 +281,7 @@ export default class Page extends BaseModel {
   public pageDatasources: HasMany<typeof PageDatasource>
 
   @hasMany(() => PageDatasource, {
-    foreignKey: 'page_id'
+    foreignKey: 'page_id',
   })
   public data_sources: HasMany<typeof PageDatasource>
 
@@ -465,7 +465,11 @@ export default class Page extends BaseModel {
     applyPluginsFiltersAsync('page_after_create', page)
   }
 
-  async getPagesForFrontend(): Promise<Page[]> {
+  async getPagesForFrontend(): Promise<{data_sources:{
+    source: {
+      web_url?:string
+    }
+    }[]}[]> {
 
     let pages: Page[] = [this]
     let page: Page | null = this
@@ -480,7 +484,8 @@ export default class Page extends BaseModel {
     } catch (e) {
       console.error(e);
     }
-    return pages
+    // @ts-ignore
+    return pages.map(p=>p.toJSON())
   }
 
   static getRouteStyles(areas) {
@@ -591,7 +596,11 @@ export default class Page extends BaseModel {
     })
     const purifycssOptions = {
       minify: true,
-      whitelist: ['*:not*']
+      whitelist: [
+        '*:not*',
+        '.active',
+        '.state-disabled',
+      ]
     }
     for (let area of areas) {
       let customStyles = data_get(await Template.getTemplate(this.id, area.name), 'styles')
@@ -1055,7 +1064,9 @@ export default class Page extends BaseModel {
   }){
     const prefixes = [
       'skeleton',
+      'hover-transition',
     ]
+
     if(_.isObject(data.settings)){
       prefixes.forEach((prefix)=>{
         prefix += ':'

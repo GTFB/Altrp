@@ -459,6 +459,18 @@ class HeadingTypeHeading extends BaseElement {
       },
     });
 
+    this.addControl("style_text_gradient_switcher", {
+      type: CONTROLLER_SWITCHER,
+      label: "gradient color",
+    });
+
+    this.addControl("style_text_gradient_textarea", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Gradient",
+      default: '',
+      description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
+    });
+
     this.addControl('heading_style_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',

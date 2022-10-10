@@ -166,9 +166,6 @@ const settingsToStyles = ({ settings, columns = [] }) => {
     );
   }
 
-  if (borderRadius) {
-    styles += sizeStyled(borderRadius, "border-radius");
-  }
 
   //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
 

@@ -12,7 +12,6 @@
 import Server from '@ioc:Adonis/Core/Server'
 import Route from "@ioc:Adonis/Core/Route"
 import './view'
-import './events'
 import "../app/Services/TelegramBot"
 import "../app/Services/DiscordBot"
 //import "../app/Services/Timers";
@@ -21,6 +20,7 @@ import fs from "fs";
 import base_path from "../helpers/path/base_path";
 import guid from "../helpers/guid";
 import Plugin from "../app/Plugin";
+import Application from "@ioc:Adonis/Core/Application";
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +37,23 @@ Server.middleware.register([
   () => import('App/Middleware/SilentAuth'),
   () => import('@ioc:Adonis/Addons/Shield'),
 ])
-const plugins = Plugin.getEnabledPlugins()
+if(Application.environment === 'web') {
+  const plugins = Plugin.getEnabledPlugins()
+  plugins.forEach(plugin => plugin.callActivationHooks())
 
-plugins.forEach(plugin => plugin.callActivationHooks())
+  /**
+   * set package key
+   */
+  let packageKey
+  if(fs.existsSync(base_path('.package_key'))){
+    packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
+    console.log("Setting package key by File")
+  } else {
+    packageKey = guid()
+    console.log("Setting package key by random guid")
+  }
+  Env.set('PACKAGE_KEY', packageKey)
+}
 
 
 Route.get('*', 'AltrpRouting.index')
@@ -69,15 +83,3 @@ Server.middleware.registerNamed({
 })
 
 
-/**
- * set package key
- */
-let packageKey
-if(fs.existsSync(base_path('.package_key'))){
-  packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
-  console.log("Setting package key by File")
-} else {
-  packageKey = guid()
-  console.log("Setting package key by random guid")
-}
-Env.set('PACKAGE_KEY', packageKey)

@@ -213,7 +213,6 @@ class AltrpForm {
         // this.
       }
     } else {
-      console.log(emptyFieldMessage);
       if(emptyFieldMessage === undefined){
         await alert("Please fill in all required fields");
       } else {

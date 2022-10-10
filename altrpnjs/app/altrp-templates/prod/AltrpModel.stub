@@ -8,6 +8,9 @@ var decorate = (this && this.decorate) || function (decorators, target, key, des
 var metadata = (this && this.metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const luxon = require("luxon");
 const Orm = global[Symbol.for('ioc.use')]("Adonis/Lucid/Orm");
@@ -17,6 +20,31 @@ const _ = __importStar(require("lodash"));
 
 class {{{classname}}} extends Orm.BaseModel {
   {{{constructor}}}
+
+  static afterSave(model) {
+    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterSave", data: model})
+  }
+
+  static afterCreate(model) {
+    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterCreate", data: model})
+  }
+
+  static afterUpdate(model) {
+    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterUpdate", data: model})
+  }
+
+  static afterDelete(model) {
+    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterDelete", data: model})
+  }
+
+  static afterFind(model) {
+    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterFind", data: model})
+  }
+
+  static afterPaginate(model) {
+    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterPaginate", data: model})
+  }
+
   {{{properties}}}
   {{{computed}}}
   {{{methods}}}
@@ -24,7 +52,45 @@ class {{{classname}}} extends Orm.BaseModel {
   {{{custom}}}
   // CUSTOM_START
 }
+
 {{{staticProperties}}}
+
+decorate([
+  (0, Orm.afterSave)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "afterSave", null);
+
+decorate([
+  (0, Orm.afterCreate)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "afterCreate", null);
+
+decorate([
+  (0, Orm.afterUpdate)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "afterUpdate", null);
+
+decorate([
+  (0, Orm.afterDelete)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "afterDelete", null);
+
+decorate([
+  (0, Orm.afterFind)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "afterFind", null);
+
+decorate([
+  (0, Orm.afterPaginate)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "afterPaginate", null);
+
 {{{columns}}}
 {{{relations}}}
 

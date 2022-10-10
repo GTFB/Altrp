@@ -1,4 +1,4 @@
-import {ADD_NODE, FILTER_NODE} from "./action";
+import {ADD_NODE, ADD_NODES, FILTER_NODE} from "./action";
 import {initialState} from "./initialState";
 
 
@@ -8,6 +8,11 @@ export const nodeStateReducer = (state = initialState, action) => {
       return {
         ...state,
         nodes: [...state.nodes, action.payload]
+      }
+    case ADD_NODES:
+      return {
+        ...state,
+        nodes: [...state.nodes, ...action.payload]
       }
     case FILTER_NODE:
       let node = [...state.nodes]

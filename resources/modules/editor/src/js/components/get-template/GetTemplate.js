@@ -14,7 +14,6 @@ export default class GetTemplate extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window);
     window.addEventListener("message", this.message)
   }
 

@@ -1,7 +1,0 @@
-[program:{{alias}}]
-directory={{projectDir}}
-command=node server-dist/index.js
-numprocs=1
-autostart=true
-autorestart=true
-user={{projectOwner}}

@@ -16,6 +16,7 @@ import getSectionWidthClass from "../../helpers/widgets-renders/getSectionWidthC
 import Role from "App/Models/Role";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import AltrpSkeletonBox from "../../helpers/widgets-renders/components/AltrpSkeletonBox";
+import stringifyWrapperAttributes from "../../helpers/widgets-renders/functions/stringifyWrapperAttributes";
 
 
 export default class ElementRenderer {
@@ -54,7 +55,7 @@ export default class ElementRenderer {
   }
 
   async render(screenName: string): Promise<string> {
-    const settings = this.element.settings
+    const settings: any = this.element.settings
     let reactElement = this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     if(! reactElement && this.element.settings['skeleton:enable']){
       reactElement = true
@@ -80,7 +81,7 @@ export default class ElementRenderer {
     const columns_count = this.element.children.length;
 
     if(settings['skeleton:enable']){
-      element_content = AltrpSkeletonBox()
+      element_content = AltrpSkeletonBox(settings, screenName)
     } else {
       let section_background
       switch (this.getName()) {
@@ -96,6 +97,7 @@ export default class ElementRenderer {
           break
       }
       let styles: {} | string = {}
+      let deleteOverflowHidden = getResponsiveSetting(settings,"switch_overflow_hidden_section", screenName) ? "overflow: initial" : "";
       const {layout_content_width_type: widthType, isFixed} = this.element.settings
       let section_classes = ''
 
@@ -130,7 +132,7 @@ export default class ElementRenderer {
           let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
             : await import(base_path(`helpers/widgets-renders/${filename}`))
           render = render.default
-          element_content = render(this.element.settings, screenName,)
+          element_content = render(this.element.settings, screenName, this.getId())
         }
         if (this.getName() === 'section_widget') {
           element_content =
@@ -155,7 +157,7 @@ export default class ElementRenderer {
           settings: JSON.stringify(this.element.settings),
           id: this.element.id,
           children_content,
-          element_styles: styles,
+          element_styles: `${styles}${deleteOverflowHidden}`,
           section_classes,
           column_classes: getColumnClasses(settings, screenName),
           section_background,
@@ -219,6 +221,7 @@ export default class ElementRenderer {
     if (advanced_element_id) {
       wrapper_attributes += ` id="${advanced_element_id}" `
     }
+    wrapper_attributes += stringifyWrapperAttributes(settings, screenName)
     content = mustache.render(content, {
       id: this.getId(),
       element_content,

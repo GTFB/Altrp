@@ -401,6 +401,9 @@ export default class TemplatesController {
 
       template.data = JSON.stringify(request.input("data"));
       template.styles = JSON.stringify(request.input("styles"));
+
+      template.title = request.input("title")
+
       template.html_content = '';
       await template.save()
 

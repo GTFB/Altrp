@@ -1,4 +1,4 @@
-import {gradientStyled, styledString} from "../../helpers/styles";
+import {colorPropertyStyled, gradientStyled, styledString} from "../../helpers/styles";
 import getResponsiveSetting from "../../functions/getResponsiveSetting";
 
 /**
@@ -165,16 +165,62 @@ export default function getInputMultiSelectStyles(settings, elementId) {
     ['opacity', 'background_section_opacity', 'slider'],
     '}',
     '.bp3-tag-input',
-    ['background-color', 'input_bg', 'color'],
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "multiselect_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "input_bg");
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+        let textareaText = getResponsiveSetting(settings, 'multiselect_style_gradient_text')?.replace(/;/g, '') || ''
+        return `background: linear-gradient(${bg},${bg}) padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "multiselect_style_border_gradient_custom");
+      const backgroundColor = getResponsiveSetting(settings, "input_bg");
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "multiselect_style_border_gradient_custom");
+      const borderColor = getResponsiveSetting(settings, "border_color");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
+    // ['background-color', 'input_bg', 'color'],
     ['align-items', 'clear_align', ''],
     ['border-style', 'border_type',],
     ['border-width', 'border_width', 'dimensions'],
-    ['border-color', 'border_color', 'color'],
+    // ['border-color', 'border_color', 'color'],
     ['border-radius', 'border_radius', 'dimensions'],
     ['', 'box_shadow', 'shadow'],
     '}',
     '.bp3-tag-input:hover',
-    ['background-color', 'input_bg', 'color', ':hover'],
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "multiselect_style_border_gradient_custom", ":hover");
+      const backgroundColor = getResponsiveSetting(settings, "input_bg", ":hover");
+      if (borderGradient) {
+        let bg = backgroundColor?.color ? backgroundColor.color : 'rgba(255,255,255,1)'
+        let textareaText = getResponsiveSetting(settings, 'multiselect_style_gradient_text', ":hover")?.replace(/;/g, '') || ''
+        return `background: linear-gradient(${bg},${bg}) padding-box, ${textareaText} border-box; border-color: transparent;`;
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "multiselect_style_border_gradient_custom", ":hover");
+      const backgroundColor = getResponsiveSetting(settings, "input_bg", ":hover");
+      if (backgroundColor && !borderGradient) {
+        return colorPropertyStyled(backgroundColor, 'background');
+      }
+    },
+    () => {
+      const borderGradient = getResponsiveSetting(settings, "multiselect_style_border_gradient_custom", ":hover");
+      const borderColor = getResponsiveSetting(settings, "border_color", ":hover");
+      if (borderColor && !borderGradient) {
+        return colorPropertyStyled(borderColor, 'border-color');
+      }
+    },
+    // ['background-color', 'input_bg', 'color', ':hover'],
     ['', 'box_shadow', 'shadow',':hover'],
     '}',
     '.bp3-tag-input.bp3-active',

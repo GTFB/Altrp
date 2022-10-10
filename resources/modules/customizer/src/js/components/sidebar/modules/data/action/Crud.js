@@ -91,7 +91,7 @@ export default class Crud extends Component {
 
     async setStateCrud() {
         const item = this.props.selectNode?.data?.props?.nodeData?.data?.model_id ?? '';
-        console.log(item);
+
 
         if (item) {
             let fields = new Resource({ route: `/admin/ajax/models/${item}/field_options` });
@@ -129,8 +129,6 @@ export default class Crud extends Component {
 
         let value = this.getData("custom");
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
-
-        console.log(fields);
 
         return <div>
             <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>

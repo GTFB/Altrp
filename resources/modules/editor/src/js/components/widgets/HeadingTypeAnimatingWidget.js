@@ -2,6 +2,7 @@ import Animating from "../altrp-heading/Animating";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-heading {
+  display: block;
   margin-top: 5px;
   margin-right: 0;
   margin-bottom: 5px;
@@ -42,11 +43,6 @@ import Animating from "../altrp-heading/Animating";
   transition-property: prop;
 }
 
-.altrp-heading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .altrp-heading-wrapper {
   display: flex;

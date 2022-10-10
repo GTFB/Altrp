@@ -15,7 +15,6 @@ import Source from "App/Models/Source";
 import escapeRegExp from "../../helpers/escapeRegExp";
 import DocumentNode from "App/Customizer/Nodes/DocumentNode";
 import CrudNode from "App/Customizer/Nodes/crudNode";
-import ApiNode from "App/Customizer/Nodes/apiNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
@@ -25,6 +24,12 @@ import {clearTimeout, setTimeout} from "node:timers";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
+import { addSchedule, removeSchedule } from '../../helpers/schedule';
+import exec from '../../helpers/exec'
+import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
+import base_path from "../../helpers/base_path";
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
+import applyPluginsFiltersSync from "../../helpers/plugins/applyPluginsFiltersSync";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -236,6 +241,10 @@ export default class Customizer extends BaseModel {
       case 'not_contain': {
         return ` ${rightJSProperty}?.indexOf(${leftJSProperty}) === -1`
       }
+      case 'default':
+      case 'else': {
+        return ``
+      }
       default:
         return 'null'
     }
@@ -314,6 +323,62 @@ export default class Customizer extends BaseModel {
     this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
   }
 
+  public static async scheduleAll() {
+    const customizers = await Customizer.query().where('type', 'schedule')
+
+    console.log(`found schedules (${customizers.length})`)
+
+    customizers.forEach(customizer => customizer.schedule())
+  }
+
+  public schedule() {
+    if (this.type !== 'schedule' || !this.settings) {
+      return
+    }
+
+    console.log(`new schedule: run ${this.name}`
+      + ` per ${this.settings.period} ${this.settings.period_unit}`
+      + ` from ${this.settings.start_at || 'now'}`
+      + ` and repeat ${this.settings.infinity ? 'infinitely' : `${this.settings.repeat_count} times`}`)
+
+    const date = this.settings.start_at ? new Date(this.settings.start_at) : new Date()
+
+    addSchedule(this.id, date, this.settings.period_unit, this.settings.period, () => {
+      if (!this.settings.infinity) {
+        if (this.settings.repeat_count > 0) {
+          this.settings.repeat_count--
+
+          this.save().then(() => {
+            if (this.settings.repeat_count <= 0) {
+              this.removeSchedule()
+            }
+
+            return this.invoke()
+          })
+        }
+
+        this.removeSchedule()
+      }
+
+      this.invoke()
+    })
+  }
+
+  public async invoke() {
+    console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
+    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`).then(data => {
+      console.log(data);
+    }).catch(err => {
+      console.error(err);
+    })
+  }
+
+  public removeSchedule() {
+    removeSchedule(this.id)
+
+    console.log(`remove schedule: ${this.name} / ${this.id}`)
+  }
+
   changePropertyToJS(propertyData, value, type = 'set'): string {
     if (empty(propertyData)) {
       return 'null'
@@ -383,15 +448,18 @@ export default class Customizer extends BaseModel {
   /**
    * @return string
    */
-  public getRequestType(): string {
+  public async getRequestType(): Promise<string> {
     const startNode = this.getStartNode()
-    if(startNode === null || startNode === undefined){
-      return  'get'
+    let type = 'get'
+    if(startNode){
+      type = startNode.getRequestType()
     }
-    return startNode.getRequestType()
+    type = await applyPluginsFiltersAsync('get_customizer_request_type', type, this)
+
+    return type
   }
 
-  public static  parseData( data, customizer ){
+  public static parseData( data, customizer ){
 
     data = data.map( item  => {
       const type = data_get( item, 'type' )
@@ -403,11 +471,17 @@ export default class Customizer extends BaseModel {
         case 'change': return new ChangeNode( item, customizer )
         case 'documentAction': return new DocumentNode(item, customizer)
         case 'crudAction': return new CrudNode(item, customizer)
-        case 'apiAction': return new ApiNode(item, customizer)
+        case 'apiAction': return new ApiNodeV2(item, customizer)
         case 'messageAction': return new MessageNode(item, customizer)
         case 'customizer': return new CustomizerNode(item, customizer)
         case 'discordAction': return new DiscordNode(item, customizer)
-        default: return new BaseNode( item, customizer )
+        default: {
+          let classInstance = applyPluginsFiltersSync('get_node_class_instance', type, item, customizer)
+          if(! classInstance){
+            return new BaseNode( item, customizer )
+          }
+          return classInstance
+        }
       }
     })
     data.forEach( ( node_item ) => {
@@ -437,16 +511,18 @@ export default class Customizer extends BaseModel {
   }
   getMethodContent(){
     let startNode = this.getStartNode()
-    return startNode ? startNode.getJSContent() : ''
+    let content = startNode ? startNode.getJSContent() : ''
+    content = applyPluginsFiltersSync('customizer_render_content', content, this)
+    return content
   }
 
-  static replaceMustache(expression:string):string{
+  static replaceMustache(expression:string, before: string = '', after: string = ''):string{
 
     let paths = _.isString(expression) ? expression.match(/{{([\s\S]+?)(?=}})/g) : null;
     if (_.isArray(paths)) {
       paths.forEach(path => {
         path = path.replace("{{", "");
-        let replace = `this.getCustomizerData(\`${path}\`)`
+        let replace = `${before}this.getCustomizerData(\`${path}\`)${after}`
 
         path = escapeRegExp(path);
         expression = expression.replace(new RegExp(`{{${path}}}`, "g"), replace || "");
@@ -455,14 +531,14 @@ export default class Customizer extends BaseModel {
     return expression
   }
 
-  allowMethod(method: string){
-    const startNode = this.getStartNode()
-
-    if (! startNode){
-      return false
-    }
-    const request_type = startNode.getDataByPath('request_type') || 'get'
+  async allowMethod(method: string){
+    const request_type = await this.getRequestType()
 
     return request_type.toLowerCase() === method.toLowerCase()
   }
+
+  allowApi():boolean{
+    return ! ! _.get(this, 'settings.external')
+  }
+
 }

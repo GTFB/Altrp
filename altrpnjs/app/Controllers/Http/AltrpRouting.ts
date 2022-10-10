@@ -15,7 +15,6 @@ import stringToObject from "../../../helpers/string/stringToObject";
 import resource_path from "../../../helpers/path/resource_path";
 import fs from "fs";
 import JSONStringifyEscape from "../../../helpers/string/JSONStringifyEscape";
-import PagesCache from "App/Services/PagesCache";
 import Edge from "../../../helpers/edge";
 import data_get from "../../../helpers/data_get";
 import recurseMapElements from "../../../helpers/recurseMapElements";
@@ -156,7 +155,7 @@ export default class AltrpRouting {
         const ModelClass = (await import(`../../AltrpModels/${page.model.name}`)).default
         let classInstance
         if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
-          classInstance = await ModelClass.where(page.model_column, pageMatch.params[page.param_name])
+          classInstance = await ModelClass.query().where(page.model_column, pageMatch.params[page.param_name]).first()
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
@@ -169,10 +168,9 @@ export default class AltrpRouting {
       if (_.isEmpty(model_data)) {
         httpContext.response.status(404)
 
-        if (!page) {
-          httpContext.response.status(404)
-          page = await Page.query().where('not_found', true).first()
-        }
+        httpContext.response.status(404)
+        page = await Page.query().where('not_found', true).first()
+
 
         if (!page) {
           return httpContext.response.send('Not Found')
@@ -222,13 +220,14 @@ export default class AltrpRouting {
     try {
 
       console.log(performance.now() - start);
-      let content = PagesCache.getCache(page.guid, device)
 
-      if(!content){
-        content = fs.readFileSync(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8')
-        PagesCache.setCache(page.guid, device, content)
-      }
-
+      let [page_areas, all_styles, content] = await Promise.all(
+        [
+          promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
+          promisify(fs.readFile)(storage_path(`pages-content/styles/${device}/${page.guid}.html`), 'utf8'),
+          promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
+        ]
+      )
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
@@ -247,12 +246,6 @@ export default class AltrpRouting {
         device,
       })
       mustache?.templateCache?.clear()
-      const [page_areas, all_styles, ] = await Promise.all(
-        [
-          promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
-          promisify(fs.readFile)(storage_path(`pages-content/styles/${device}/${page.guid}.html`), 'utf8'),
-        ]
-      )
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)
       content = content.replace('<<<all_styles>>>', all_styles)

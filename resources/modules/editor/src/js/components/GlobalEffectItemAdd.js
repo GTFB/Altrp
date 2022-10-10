@@ -174,7 +174,6 @@ class GlobalEffectItemAdd extends Component {
               />
               <GlobalPresetColors
                 changeValue={color => {
-                  console.log(color);
                   this.globalColor(color);
                   // this._changeValue(color);
                   // this.setState(state=>({...state, colorRGB: color.colorRGB}))

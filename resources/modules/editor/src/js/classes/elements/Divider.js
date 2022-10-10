@@ -10,12 +10,9 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_NUMBER,
-  CONTROLLER_DIMENSIONS,
   CONTROLLER_SLIDER,
-  CONTROLLER_LINK,
-  CONTROLLER_TRANSFORM,
   CONTROLLER_CHOOSE,
-  CONTROLLER_MEDIA,
+  CONTROLLER_MEDIA, CONTROLLER_SWITCHER,
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -190,6 +187,17 @@ class Divider extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
+    });
+
+    this.addControl('divider_style_gradient_color', {
+      type: CONTROLLER_SWITCHER,
+      label: "Gradient Color",
+    });
+
+    this.addControl("divider_style_gradient_text", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Gradient",
+      description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
     });
 
     this.addControl("divider_style_weight", {

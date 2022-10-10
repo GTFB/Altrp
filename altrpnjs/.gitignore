@@ -11,6 +11,7 @@ tmp
 #bundles
 public/*
 !public/css
+!public/img
 !public/modules/editor/editor.css
 storage/
 app/AltrpModels/
@@ -18,6 +19,8 @@ app/AltrpControllers/
 app/AltrpPlugins/
 app/AltrpListeners/
 app/AltrpOther/
+app/AltrpCRUDs/
+app/AltrpSchedules/
 start/altrp-routes/
 /resources/views/altrp
 

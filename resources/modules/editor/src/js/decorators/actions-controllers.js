@@ -287,6 +287,7 @@ export function actionsControllers(
       type: ['update_current_datasources', "socket_receiver"]
     },
     locked: true,
+    description: 'Comma Separated'
   });
 
   actionsRepeater.addControl('milliseconds', {
@@ -479,7 +480,7 @@ export function actionsControllers(
         );
       } catch (error) {
         alert("Page request error")
-        console.log(error)
+        console.error(error)
       }
     }
   });
@@ -524,7 +525,7 @@ export function actionsControllers(
         }
       } catch (error) {
         alert("Customizer request error")
-        console.log(error)
+        console.error(error)
       }
     },
     conditions: {

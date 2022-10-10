@@ -353,18 +353,6 @@ class CustomizerEditor extends Component {
           }
         };
         break;
-      case "bot":
-        data = {
-          "type": "bot",
-          "nodeData": {
-            "type": "bot",
-            "data": {
-              "shortcode": "",
-              "content": [],
-            }
-          }
-        };
-        break;
     }
     return data;
   }
@@ -500,11 +488,16 @@ class CustomizerEditor extends Component {
 
   render() {
     let nodesTypesObj = {}
+    let nodesTypesId = ''
     this.props.nodeState.forEach(el => {
       nodesTypesObj[el.name] = el.node
+      nodesTypesId += el.name
     })
+
+    nodesTypesObj.nodesTypesId = nodesTypesId
+    // console.log(nodesTypesObj);
     return (
-      <div className="page__content">
+      <div className="page__content" key={nodesTypesId}>
         <ReactFlowProvider>
           <Sidebar changeTab={this.changeTab}
                    activePanel={this.state.activePanel}

@@ -140,6 +140,13 @@ class InputMultiSelect extends BaseElement {
       locked: true,
     });
 
+    this.addControl("open_popover_on_key_down", {
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      label: "Open popover on key down",
+      locked: true,
+    });
+
     this.addControl("minimal", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
@@ -769,6 +776,18 @@ class InputMultiSelect extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Radius",
       units: ['px', '%', 'vh', 'vw'],
+    });
+
+    this.addControl('multiselect_style_border_gradient_custom', {
+      type: CONTROLLER_SWITCHER,
+      label: "Border Gradient",
+    });
+
+    this.addControl("multiselect_style_gradient_text", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Gradient",
+      default: '',
+      description: "Example:<br>linear-gradient(90deg,#0068e1,#a161ee) <a style='margin-top: 10px; color: #007bff; display: block' href='https://www.colorzilla.com/gradient-editor/' target='_blank'>--> CSS Gradient Generator</a>"
     });
 
     this.endControlSection();

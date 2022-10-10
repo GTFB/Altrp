@@ -4,7 +4,7 @@ import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURL
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-heading {
-  display: flex;
+  display: block;
   justify-content: center;
   align-items: center;
   margin-top: 5px;

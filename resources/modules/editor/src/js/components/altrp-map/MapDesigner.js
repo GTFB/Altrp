@@ -298,7 +298,6 @@ function MapDesigner({
   const whenReady = useCallback(() => {
     if (!FG.current) return;
     // Очищаем старые слои
-    console.log(FG.current);
     FG.current.clearLayers();
     let markers = [];
     // Добавляем новые слои

@@ -8,6 +8,9 @@ import * as _ from 'lodash'
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
+import ListenerGenerator from "App/Generators/ListenerGenerator";
+import CustomizerGenerator from 'App/Generators/CustomizerGenerator';
+import ScheduleGenerator from 'App/Generators/ScheduleGenerator';
 // import timers from "App/Services/Timers";
 import timers from "../../../Services/Timers";
 import LIKE from "../../../../helpers/const/LIKE";
@@ -39,6 +42,9 @@ export default class CustomizersController {
       if (!customizer.settings) {
         customizer.settings = []
       }
+      if (customizer.type === 'schedule') {
+        customizer.settings.period_unit = customizer.settings.period_unit || 'day'
+      }
       await customizer.save()
 
       if (customizer.type === 'api' && model) {
@@ -54,7 +60,7 @@ export default class CustomizersController {
           'title': customizer.title,
           'name': customizer.name,
           'type': 'customizer',
-          'request_type': customizer.getRequestType(),
+          'request_type':await customizer.getRequestType(),
         })
 
         customizer = await Customizer.query().preload("altrp_model").firstOrFail()
@@ -194,6 +200,24 @@ export default class CustomizersController {
     delete all.created_at
     delete all.updated_at
 
+    if (all.type === 'schedule') {
+      all.settings = all.settings || {}
+      all.settings.period_unit = all.settings.period_unit || 'day'
+    }
+
+    if (oldType === 'crud' && all.type !== 'crud') {
+      const generator = new CustomizerGenerator(customizer)
+
+      generator.delete()
+    }
+
+    if (oldType === 'schedule' && all.type !== 'schedule') {
+      const generator = new ScheduleGenerator(customizer)
+
+      generator.delete()
+      customizer.removeSchedule()
+    }
+
     customizer.merge(all)
     customizer.merge({
       name: request.all().name,
@@ -210,6 +234,7 @@ export default class CustomizersController {
     if(oldType === 'api' && customizer.$dirty.type && oldSource){
       await oldSource.delete()
     }
+
     let model
     try {
       model = await Model.find(customizer.model_id)
@@ -241,13 +266,27 @@ export default class CustomizersController {
           'title': customizer.title,
           'name': customizer.name,
           'type': 'customizer',
-          'request_type': customizer.getRequestType(),
+          'request_type':await customizer.getRequestType(),
         })
         await source.save()
       }
       if(customizer.type === "listener" && model) {
         promisify(exec)(`node ace generator:listener ${customizer.id}`)
       }
+
+      if (customizer.type === 'crud' && model) {
+        const generator = new CustomizerGenerator(customizer)
+
+        await generator.run()
+      }
+
+      if (customizer.type === 'schedule') {
+        const generator = new ScheduleGenerator(customizer)
+
+        await generator.run()
+        customizer.schedule()
+      }
+
       if(model) {
         Event.emit('model:updated', model)
       }

@@ -63,11 +63,19 @@ export default class SwitchNode extends BaseNode implements NodeInterface
       }
       let rightJSProperty = this.customizer.propertyToJS( item )
       let compare = this.customizer.customizerBuildCompare(data_get( item,'operator'), leftJSProperty,  rightJSProperty)
-      JSContent += `if( ${compare} ){`
+      if(data_get( item,'operator') !== 'default') {
+        if (data_get(item, 'operator') !== 'else') {
+          JSContent += `if( ${compare} ){`
+        } else {
+          JSContent += `else {`
+        }
+      }
       if(data_get( this.children, key)){
         JSContent+= data_get( this.children, key).getJSContent()
       }
-      JSContent += '}'
+      if(data_get( item,'operator') !== 'default') {
+        JSContent += '}'
+      }
     }
     return JSContent
   }
