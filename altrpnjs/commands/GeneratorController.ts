@@ -22,7 +22,7 @@ export default class GeneratorController extends BaseCommand {
     if (controller) {
       const controllerGenerator = new ControllerGenerator()
       await controllerGenerator.run(controller)
-      this.logger.success(`Controller generated for id:${this.id}: ${this.colors.cyan(controllerGenerator.getFilename())}`)
+      console.log(`Controller generated for id:${this.id}: ${this.colors.cyan(controllerGenerator.getFilename())}`)
     }
   }
 }

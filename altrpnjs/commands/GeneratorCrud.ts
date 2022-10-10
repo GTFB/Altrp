@@ -31,10 +31,10 @@ export default class GeneratorSchedule extends BaseCommand {
 
       if (this.isDelete) {
         customizerGenerator.delete()
-        this.logger.success(`Schedule of id (${this.id}) deleted: ${this.colors.cyan(customizerGenerator.getFileName())}`)
+        console.log(`Schedule of id (${this.id}) deleted: ${this.colors.cyan(customizerGenerator.getFileName())}`)
       } else {
         await customizerGenerator.run()
-        this.logger.success(`Schedule generated for id (${this.id}) : ${this.colors.cyan(customizerGenerator.getFileName())}`)
+        console.log(`Schedule generated for id (${this.id}) : ${this.colors.cyan(customizerGenerator.getFileName())}`)
       }
     }
   }

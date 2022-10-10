@@ -22,6 +22,7 @@ import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import delay from "../../../../helpers/delay";
+import base_path from '../../../../helpers/base_path'
 
 export default class AdminController {
 
@@ -131,7 +132,7 @@ export default class AdminController {
     }
     for (let template of templates) {
       try{
-        await promisify(exec)(`node ace generator:template ${template.id}`)
+        await promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
 
       }catch (e) {
         console.error(`Error while Template ${template.guid} generate: ${e.message}`);
@@ -243,7 +244,7 @@ export default class AdminController {
 
     for (let page of pages) {
       try{
-        await promisify(exec)(`node ace generator:page ${page.id}`)
+        await promisify(exec)(`node ${base_path('ace')} generator:page ${page.id}`)
         await delay(100);
       }catch (e) {
 
@@ -264,7 +265,7 @@ export default class AdminController {
         continue
       }
       try{
-        await promisify(exec)(`node ace generator:model ${model.id}`)
+        await promisify(exec)(`node ${base_path('ace')} generator:model ${model.id}`)
       }catch (e) {
         console.error(`Error while Model generate: ${e.message}`);
       }
@@ -278,7 +279,7 @@ export default class AdminController {
         await controller.save()
       }
       try{
-        await promisify(exec)(`node ace generator:controller ${controller.id}`)
+        await promisify(exec)(`node ${base_path('ace')} generator:controller ${controller.id}`)
       }catch (e) {
         console.error(e);
       }
@@ -298,7 +299,7 @@ export default class AdminController {
     const listeners = await Customizer.query().where('type', 'listener').select('*')
 
     for (const _l of listeners) {
-      await promisify(exec)(`node ace generator:listener ${_l.id}`)
+      await promisify(exec)(`node ${base_path('ace')} generator:listener ${_l.id}`)
     }
   }
 
@@ -309,7 +310,7 @@ export default class AdminController {
 
     for (const crud of cruds) {
       try {
-        await promisify(exec)(`node ace generator:crud ${crud.id}`)
+        await promisify(exec)(`node ${base_path('ace')} generator:crud ${crud.id}`)
       } catch(e) {
         console.error(`Error while CRUD generate: ${e.message}`)
       }
@@ -317,13 +318,13 @@ export default class AdminController {
   }
 
   private static async upgradeSchedules() {
-    console.info('Upgrading Schedules')
+    console.log('Upgrading Schedules')
 
     const schedules = await Customizer.query().where('type', 'schedule')
 
     for (const schedule of schedules) {
       try {
-        await promisify(exec)(`node ace generator:schedule ${schedule.id}`)
+        await promisify(exec)(`node ${base_path('ace')} generator:schedule ${schedule.id}`)
       } catch(e) {
         console.error(`Error while schedule generate: ${e.message}`)
       }
