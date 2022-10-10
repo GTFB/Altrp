@@ -16,7 +16,6 @@ import {exec} from "child_process";
 import fs from "fs";
 import {promisify} from "util";
 import resource_path from "../../../../helpers/path/resource_path";
-import Logger from "@ioc:Adonis/Core/Logger";
 import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
@@ -44,7 +43,7 @@ export default class AdminController {
     }catch (e) {
       res.message = 'Error server restarting: \n' + e.message
       e.message = 'Error server restarting: \n' + e.message
-      Logger.error(e);
+      console.error(e);
     }
     return response.json(res)
 
@@ -102,7 +101,7 @@ export default class AdminController {
     }catch (e) {
       res.message = 'Error server restarting: \n' + e.message
       e.message = 'Error server restarting: \n' + e.message
-      Logger.error(e);
+      console.error(e);
     }
 
 
@@ -111,7 +110,7 @@ export default class AdminController {
 
 
   private static async upgradeTemplates(request: RequestContract){
-    Logger.info('Upgrading templates')
+    console.info('Upgrading templates')
 
 
     let templates
@@ -135,7 +134,7 @@ export default class AdminController {
         await promisify(exec)(`node ace generator:template ${template.id}`)
 
       }catch (e) {
-        Logger.error(`Error while Template ${template.guid} generate: ${e.message}`);
+        console.error(`Error while Template ${template.guid} generate: ${e.message}`);
       }
     }
   }
@@ -176,7 +175,7 @@ export default class AdminController {
     try {
       await updateService.update()
     } catch (e) {
-      Logger.error(e);
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -202,7 +201,7 @@ export default class AdminController {
     try {
       await updateService.update('test')
     } catch (e) {
-      Logger.error(e);
+      console.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -222,7 +221,7 @@ export default class AdminController {
   }
 
   private static async upgradePages(request: RequestContract) {
-    Logger.log('Upgrading pages')
+    console.log('Upgrading pages')
 
     let pages
 
@@ -248,7 +247,7 @@ export default class AdminController {
         await delay(100);
       }catch (e) {
 
-        Logger.error(`Error while Page ${page.id} generate: ${e.message}`,
+        console.error(`Error while Page ${page.id} generate: ${e.message}`,
           e.stack.split('\n'),
           );
       }
@@ -256,7 +255,7 @@ export default class AdminController {
   }
 
   private static async upgradeModels() {
-    Logger.log('Upgrading models')
+    console.log('Upgrading models')
 
     const models = await Model.query().select('*')
 
@@ -267,7 +266,7 @@ export default class AdminController {
       try{
         await promisify(exec)(`node ace generator:model ${model.id}`)
       }catch (e) {
-        Logger.error(`Error while Model generate: ${e.message}`);
+        console.error(`Error while Model generate: ${e.message}`);
       }
       let controller: any = await Controller.query().where('model_id', model.id).first()
       if (!controller) {
@@ -281,13 +280,13 @@ export default class AdminController {
       try{
         await promisify(exec)(`node ace generator:controller ${controller.id}`)
       }catch (e) {
-        Logger.error(e);
+        console.error(e);
       }
     }
   }
 
   private static async upgradeListeners() {
-    Logger.info('Upgrading Listeners')
+    console.info('Upgrading Listeners')
 
     const listenerGenerator = new ListenerGenerator()
 
@@ -304,7 +303,7 @@ export default class AdminController {
   }
 
   private static async upgradeCRUDs() {
-    Logger.info('Upgrading CRUDs')
+    console.info('Upgrading CRUDs')
 
     const cruds = await Customizer.query().where('type', 'crud')
 
@@ -312,13 +311,13 @@ export default class AdminController {
       try {
         await promisify(exec)(`node ace generator:crud ${crud.id}`)
       } catch(e) {
-        Logger.error(`Error while CRUD generate: ${e.message}`)
+        console.error(`Error while CRUD generate: ${e.message}`)
       }
     }
   }
 
   private static async upgradeSchedules() {
-    Logger.info('Upgrading Schedules')
+    console.info('Upgrading Schedules')
 
     const schedules = await Customizer.query().where('type', 'schedule')
 
@@ -326,7 +325,7 @@ export default class AdminController {
       try {
         await promisify(exec)(`node ace generator:schedule ${schedule.id}`)
       } catch(e) {
-        Logger.error(`Error while schedule generate: ${e.message}`)
+        console.error(`Error while schedule generate: ${e.message}`)
       }
     }
   }
