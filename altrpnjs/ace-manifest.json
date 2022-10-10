@@ -82,6 +82,34 @@
       "aliases": [],
       "flags": []
     },
+    "generator:crud": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorCrud",
+      "commandName": "generator:crud",
+      "description": "Run a crud generator",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the crud customizer"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated crud"
+        }
+      ]
+    },
     "generator:listener": {
       "settings": {
         "loadApp": true,
@@ -157,6 +185,34 @@
       ],
       "aliases": [],
       "flags": []
+    },
+    "generator:schedule": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorSchedule",
+      "commandName": "generator:schedule",
+      "description": "Run a schedule generator",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the schedule customizer"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated schedule"
+        }
+      ]
     },
     "generator:template": {
       "settings": {

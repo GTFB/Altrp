@@ -26,7 +26,7 @@ export default class GeneratorListener extends BaseCommand {
 
     const customizer = await Customizer.find(parseInt(this.id))
 
-    if(customizer) {
+    if (customizer) {
       const listenerGenerator = new ListenerGenerator()
 
       if (this.isDelete) {

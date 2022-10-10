@@ -8,9 +8,6 @@ import * as _ from 'lodash'
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
-import ListenerGenerator from "App/Generators/ListenerGenerator";
-import CustomizerGenerator from 'App/Generators/CustomizerGenerator';
-import ScheduleGenerator from 'App/Generators/ScheduleGenerator';
 // import timers from "App/Services/Timers";
 import timers from "../../../Services/Timers";
 import LIKE from "../../../../helpers/const/LIKE";
@@ -206,15 +203,11 @@ export default class CustomizersController {
     }
 
     if (oldType === 'crud' && all.type !== 'crud') {
-      const generator = new CustomizerGenerator(customizer)
-
-      generator.delete()
+      promisify(exec)(`node ace generator:crud --delete ${customizer.id}`)
     }
 
     if (oldType === 'schedule' && all.type !== 'schedule') {
-      const generator = new ScheduleGenerator(customizer)
-
-      generator.delete()
+      promisify(exec)(`node ace generator:schedule --delete ${customizer.id}`)
       customizer.removeSchedule()
     }
 
@@ -275,15 +268,11 @@ export default class CustomizersController {
       }
 
       if (customizer.type === 'crud' && model) {
-        const generator = new CustomizerGenerator(customizer)
-
-        await generator.run()
+        promisify(exec)(`node ace generator:crud ${customizer.id}`)
       }
 
       if (customizer.type === 'schedule') {
-        const generator = new ScheduleGenerator(customizer)
-
-        await generator.run()
+        promisify(exec)(`node ace generator:schedule ${customizer.id}`)
         customizer.schedule()
       }
 

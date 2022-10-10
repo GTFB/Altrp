@@ -19,7 +19,7 @@ export default class GeneratorPage extends BaseCommand {
 
     const page = await Page.find(parseInt(this.id))
 
-    if(page) {
+    if (page) {
       const pageGenerator = new PageGenerator()
       await pageGenerator.run(page)
       this.logger.success(`Page generated for id:${this.id}: ${this.colors.cyan(pageGenerator.getFilename(page))}`)

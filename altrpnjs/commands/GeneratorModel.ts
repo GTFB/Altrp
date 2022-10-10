@@ -26,7 +26,7 @@ export default class GeneratorModel extends BaseCommand {
 
     const model = await Model.find(parseInt(this.id))
 
-    if(model) {
+    if (model) {
       const modelGenerator = new ModelGenerator()
 
       if (this.isDelete) {
