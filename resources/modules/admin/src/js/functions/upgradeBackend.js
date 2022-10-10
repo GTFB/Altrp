@@ -6,6 +6,8 @@ const defaultTypes = [
   'listeners',
   'models',
   'pages',
+  'cruds',
+  'schedules'
 ]
 
 async function upgradeBackend(types = defaultTypes, ids ) {

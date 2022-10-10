@@ -25,6 +25,7 @@ import Logger from "@ioc:Adonis/Core/Logger";
 import keys from "lodash/keys"
 import Customizer from "App/Models/Customizer";
 import LIKE from "../../../../helpers/const/LIKE";
+import base_path from '../../../../helpers/base_path'
 
 
 export default class ModelsController {
@@ -710,7 +711,7 @@ export default class ModelsController {
         }
       })
     } catch (e) {
-      await promisify(exec)(`node ace generator:model --delete ${model.id}`)
+      await promisify(exec)(`node ${base_path('ace')} generator:model --delete ${model.id}`)
       await model.delete()
       await Promise.all(sources.map(s => s.delete()))
       await controller.delete()
@@ -834,7 +835,7 @@ export default class ModelsController {
 
       await controller.delete()
     }
-    await promisify(exec)(`node ace generator:model --delete ${model.id}`)
+    await promisify(exec)(`node ${base_path('ace')} generator:model --delete ${model.id}`)
 
     const client = Database.connection(Env.get('DB_CONNECTION'))
     await Customizer.query().where('model_id', model.id).update({

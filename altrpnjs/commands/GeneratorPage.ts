@@ -22,7 +22,7 @@ export default class GeneratorPage extends BaseCommand {
     if (page) {
       const pageGenerator = new PageGenerator()
       await pageGenerator.run(page)
-      this.logger.success(`Page generated for id:${this.id}: ${this.colors.cyan(pageGenerator.getFilename(page))}`)
+      console.log(`Page generated for id:${this.id}: ${this.colors.cyan(pageGenerator.getFilename(page))}`)
     }
   }
 }

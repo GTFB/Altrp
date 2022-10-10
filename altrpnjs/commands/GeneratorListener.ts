@@ -31,10 +31,10 @@ export default class GeneratorListener extends BaseCommand {
 
       if (this.isDelete) {
         listenerGenerator.delete(customizer)
-        this.logger.success(`Listener of id (${this.id}) deleted: ${this.colors.cyan(listenerGenerator.getFilename())}`)
+        console.log(`Listener of id (${this.id}) deleted: ${this.colors.cyan(listenerGenerator.getFilename())}`)
       } else {
         await listenerGenerator.run(customizer)
-        this.logger.success(`Listener generated for id (${this.id}) : ${this.colors.cyan(listenerGenerator.getFilename())}`)
+        console.log(`Listener generated for id (${this.id}) : ${this.colors.cyan(listenerGenerator.getFilename())}`)
       }
     }
   }

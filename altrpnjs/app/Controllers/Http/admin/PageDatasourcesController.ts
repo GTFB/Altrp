@@ -4,6 +4,7 @@ import { promisify } from 'util'
 
 import PageDatasource from "App/Models/PageDatasource";
 import Page from "App/Models/Page";
+import base_path from '../../../../helpers/base_path'
 
 export default class PageDatasourcesController {
   public async store({ request, response }) {
@@ -31,7 +32,7 @@ export default class PageDatasourcesController {
     }
 
     const pageDatasource = await PageDatasource.create(data)
-    await promisify(exec)(`node ace generator:page ${page.id}`)
+    await promisify(exec)(`node ${base_path('ace')} generator:page ${page.id}`)
     return pageDatasource
   }
 
@@ -58,7 +59,7 @@ export default class PageDatasourcesController {
     if(await pageDatasource.save()) {
       const page = await Page.query().where("guid", body.page_guid).firstOrFail()
 
-      await promisify(exec)(`node ace generator:page ${page.id}`)
+      await promisify(exec)(`node ${base_path('ace')} generator:page ${page.id}`)
       return {
         success: true
       }

@@ -16,6 +16,7 @@ import filtration from "../../../helpers/filtration";
 import Area from "App/Models/Area";
 import mbParseJSON from "../../../helpers/mbParseJSON";
 import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
+import base_path from '../../../helpers/base_path'
 
 export default class TemplatesController {
   public async getAllIds({ response }) {
@@ -197,7 +198,7 @@ export default class TemplatesController {
         }
       }
     }
-    await promisify(exec)(`node ace generator:template ${template.id}`)
+    await promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
     applyPluginsFiltersAsync('template_updated', template)
     return {
       message: "Success",
@@ -240,7 +241,7 @@ export default class TemplatesController {
         all_site: parentTemplate?.all_site ? 1 : 0
       })
 
-    await promisify(exec)(`node ace generator:template ${template.id}`)
+    await promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
     applyPluginsFiltersAsync('template_updated', template)
 
     return {
@@ -337,7 +338,7 @@ export default class TemplatesController {
 
     const template = await templateQuery.firstOrFail()
 
-    promisify(exec)(`node ace generator:template ${template.id}`)
+    promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
     applyPluginsFiltersAsync('template_before_delete', template)
 
     await TemplateSetting.query().where("template_id", template.id).delete()
@@ -407,7 +408,7 @@ export default class TemplatesController {
       template.html_content = '';
       await template.save()
 
-      await promisify(exec)(`node ace generator:template ${params.id}`)
+      await promisify(exec)(`node ${base_path('ace')} generator:template ${params.id}`)
       applyPluginsFiltersAsync('template_updated', template)
 
 
