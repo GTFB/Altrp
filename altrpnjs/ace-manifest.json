@@ -1,5 +1,129 @@
 {
   "commands": {
+    "generator:controller": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorController",
+      "commandName": "generator:controller",
+      "description": "Run a controller generator",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the controller"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "generator:listener": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorListener",
+      "commandName": "generator:listener",
+      "description": "Run a listener generator",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the listener"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated listener"
+        }
+      ]
+    },
+    "generator:model": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorModel",
+      "commandName": "generator:model",
+      "description": "Run a model generator",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the model"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated model"
+        }
+      ]
+    },
+    "generator:page": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorPage",
+      "commandName": "generator:page",
+      "description": "Run a page generator",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the page"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "generator:template": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorTemplate",
+      "commandName": "generator:template",
+      "description": "Run a template generator",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "id",
+          "name": "id",
+          "required": true,
+          "description": "Id of the template"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated template"
+        }
+      ]
+    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",

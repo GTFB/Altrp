@@ -1,11 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { exec } from 'child_process'
+import { promisify } from 'util'
 import { v4 as uuid } from "uuid";
 import Page from "App/Models/Page";
 import Template from "App/Models/Template";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
-import PageGenerator from "App/Generators/PageGenerator";
 import validGuid from "../../../../helpers/validGuid";
 import LIKE from "../../../../helpers/const/LIKE";
 
@@ -109,8 +110,7 @@ export default class PagesController {
       res.success = true
       res.page = page
       await page.parseRoles(request.input('roles'));
-      const pageGenerator = new PageGenerator()
-      await pageGenerator.run(page)
+      await promisify(exec)(`node ace generator:page ${page.id}`)
       await page.save()
 
       return res
@@ -277,8 +277,58 @@ export default class PagesController {
       await page.related('roles').detach()
       await page.parseRoles(request.input('roles'));
       await page.save()
-      const pageGenerator = new PageGenerator()
-      await pageGenerator.run(page)
+
+      if(request.input("categories").length > 0) {
+
+        await page.related("categories").detach()
+        for (const option of request.input("categories")) {
+
+          const category = await Category.query().where('guid', option.value).firstOrFail();
+
+          if (!category) {
+            response.status(404)
+            return {
+              message: "Category not Found"
+            }
+          } else {
+            await CategoryObject.create({
+              category_guid: category.guid,
+              object_type: "Pages",
+              object_guid: page.guid
+            })
+          }
+        }
+      }
+
+      return {
+        success: true
+      }
+    }
+
+    return {
+      success: false
+    }
+  }
+
+  public async publish({ params, request, response }) {
+    const page = await Page.find(parseInt(params.id))
+
+    if(page) {
+      const body = request.body();
+
+      Object.keys(body).forEach(input => {
+        if(body[input] && input !== "rolesOptions" && input !== "roles") {
+          page[input] = body[input]
+        }
+      })
+
+      page.model_id = body.model_id || null
+      page.parent_page_id = body.parent_page_id || null
+
+      await page.related('roles').detach()
+      await page.parseRoles(request.input('roles'));
+      await page.save()
+      await promisify(exec)(`node ace generator:page ${page.id}`)
 
       if(request.input("categories").length > 0) {
 

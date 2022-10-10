@@ -1,6 +1,4 @@
 import Model from "App/Models/Model";
-import ModelGenerator from "App/Generators/ModelGenerator";
-import ControllerGenerator from "App/Generators/ControllerGenerator";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Controller from "App/Models/Controller";
 import Application from '@ioc:Adonis/Core/Application';
@@ -8,8 +6,6 @@ import jimp from "jimp";
 import FAVICONS_SIZES from "../../../../helpers/const/FAVICONS_SIZES";
 import Drive from '@ioc:Adonis/Core/Drive'
 import Template from "App/Models/Template";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
-import PageGenerator from "App/Generators/PageGenerator";
 import Page from "App/Models/Page";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import Customizer from "App/Models/Customizer";
@@ -48,7 +44,7 @@ export default class AdminController {
     }catch (e) {
       res.message = 'Error server restarting: \n' + e.message
       e.message = 'Error server restarting: \n' + e.message
-      console.error(e);
+      Logger.error(e);
     }
     return response.json(res)
 
@@ -80,6 +76,12 @@ export default class AdminController {
         await AdminController.upgradePages(request)
       }
         break;
+      case 'cruds':
+        await AdminController.upgradeCRUDs()
+        break
+      case 'schedules':
+        await AdminController.upgradeSchedules()
+        break
       default:{
 
         if (fs.existsSync(resource_path('views/altrp'))) {
@@ -100,7 +102,7 @@ export default class AdminController {
     }catch (e) {
       res.message = 'Error server restarting: \n' + e.message
       e.message = 'Error server restarting: \n' + e.message
-      console.error(e);
+      Logger.error(e);
     }
 
 
@@ -110,7 +112,6 @@ export default class AdminController {
 
   private static async upgradeTemplates(request: RequestContract){
     Logger.info('Upgrading templates')
-    const templateGenerator = new TemplateGenerator()
 
 
     let templates
@@ -131,10 +132,10 @@ export default class AdminController {
     }
     for (let template of templates) {
       try{
-        await templateGenerator.run(template)
+        await promisify(exec)(`node ace generator:template ${template.id}`)
 
       }catch (e) {
-        console.error(`Error while Template ${template.guid} generate: ${e.message}`);
+        Logger.error(`Error while Template ${template.guid} generate: ${e.message}`);
       }
     }
   }
@@ -175,7 +176,7 @@ export default class AdminController {
     try {
       await updateService.update()
     } catch (e) {
-      console.error(e);
+      Logger.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -201,7 +202,7 @@ export default class AdminController {
     try {
       await updateService.update('test')
     } catch (e) {
-      console.error(e);
+      Logger.error(e);
       httpContext.response.status(500);
       return httpContext.response.json({
         success: false,
@@ -221,7 +222,7 @@ export default class AdminController {
   }
 
   private static async upgradePages(request: RequestContract) {
-    console.log('Upgrading pages')
+    Logger.log('Upgrading pages')
 
     let pages
 
@@ -242,13 +243,12 @@ export default class AdminController {
     }
 
     for (let page of pages) {
-      const pageGenerator = new PageGenerator()
       try{
-        await pageGenerator.run(page)
+        await promisify(exec)(`node ace generator:page ${page.id}`)
         await delay(100);
       }catch (e) {
 
-        console.error(`Error while Page ${page.id} generate: ${e.message}`,
+        Logger.error(`Error while Page ${page.id} generate: ${e.message}`,
           e.stack.split('\n'),
           );
       }
@@ -256,21 +256,18 @@ export default class AdminController {
   }
 
   private static async upgradeModels() {
-    console.log('Upgrading models')
+    Logger.log('Upgrading models')
 
     const models = await Model.query().select('*')
-
-    const controllerGenerator = new ControllerGenerator()
-    const modelGenerator = new ModelGenerator()
 
     for (let model of models) {
       if (model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media') {
         continue
       }
       try{
-        await modelGenerator.run(model)
+        await promisify(exec)(`node ace generator:model ${model.id}`)
       }catch (e) {
-        console.error(`Error while Model generate: ${e.message}`);
+        Logger.error(`Error while Model generate: ${e.message}`);
       }
       let controller: any = await Controller.query().where('model_id', model.id).first()
       if (!controller) {
@@ -282,9 +279,9 @@ export default class AdminController {
         await controller.save()
       }
       try{
-        await controllerGenerator.run(controller)
+        await promisify(exec)(`node ace generator:controller ${controller.id}`)
       }catch (e) {
-        console.error(e);
+        Logger.error(e);
       }
     }
   }
@@ -302,9 +299,38 @@ export default class AdminController {
     const listeners = await Customizer.query().where('type', 'listener').select('*')
 
     for (const _l of listeners) {
-      await listenerGenerator.run(_l)
+      await promisify(exec)(`node ace generator:listener ${_l.id}`)
     }
   }
+
+  private static async upgradeCRUDs() {
+    Logger.info('Upgrading CRUDs')
+
+    const cruds = await Customizer.query().where('type', 'crud')
+
+    for (const crud of cruds) {
+      try {
+        await promisify(exec)(`node ace generator:crud ${crud.id}`)
+      } catch(e) {
+        Logger.error(`Error while CRUD generate: ${e.message}`)
+      }
+    }
+  }
+
+  private static async upgradeSchedules() {
+    Logger.info('Upgrading Schedules')
+
+    const schedules = await Customizer.query().where('type', 'schedule')
+
+    for (const schedule of schedules) {
+      try {
+        await promisify(exec)(`node ace generator:schedule ${schedule.id}`)
+      } catch(e) {
+        Logger.error(`Error while schedule generate: ${e.message}`)
+      }
+    }
+  }
+
   async getHealthCheck({response}:HttpContextContract){
 
     let used = process.memoryUsage().heapUsed / 1024 / 1024;

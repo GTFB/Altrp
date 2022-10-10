@@ -1,3 +1,5 @@
+import { exec } from 'child_process'
+import { promisify } from 'util'
 import Customizer from 'App/Models/Customizer';
 import Model from 'App/Models/Model';
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
@@ -6,7 +8,6 @@ import * as _ from 'lodash'
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
-import ListenerGenerator from "App/Generators/ListenerGenerator";
 // import timers from "App/Services/Timers";
 import timers from "../../../Services/Timers";
 import LIKE from "../../../../helpers/const/LIKE";
@@ -64,8 +65,7 @@ export default class CustomizersController {
         await source.save()
       }
       if(customizer.type === "listener" && model) {
-        const generator = new ListenerGenerator()
-        await generator.run(customizer)
+        await promisify(exec)(`node ace generator:listener ${customizer.id}`)
       }
       //@ts-ignore
       if(model){
@@ -246,9 +246,7 @@ export default class CustomizersController {
         await source.save()
       }
       if(customizer.type === "listener" && model) {
-        const generator = new ListenerGenerator()
-
-        await generator.run(customizer)
+        promisify(exec)(`node ace generator:listener ${customizer.id}`)
       }
       if(model) {
         Event.emit('model:updated', model)
@@ -350,10 +348,7 @@ export default class CustomizersController {
     }
     try {
       if(customizer.type === "listener") {
-        const generator = new ListenerGenerator()
-
-        await generator.delete(customizer)
-
+        await promisify(exec)(`node ace generator:listener --delete ${customizer.id}`)
       }
 
       if(customizer?.settings?.time && customizer?.settings?.time_type) {

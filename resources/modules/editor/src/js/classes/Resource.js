@@ -449,6 +449,31 @@ class Resource {
     // console.log(res)
     return res;
   }
+
+  publish(id, headers = null) {
+    const defaultHeaders = {};
+
+    if(window._token){
+      defaultHeaders['X-CSRF-TOKEN'] = window._token;
+    } else {
+      defaultHeaders['X-XSRF-TOKEN'] = getCookie('XSRF-TOKEN');
+    }
+
+    const options = {
+      method: 'post',
+      headers: _.assign(defaultHeaders, headers)
+    };
+
+    const url = this.getRoute() + '/' + id + '/publish';
+
+    return fetch(url, options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject(res.text(), res.status);
+      }
+
+      return res.json();
+    });
+  }
 }
 
 export default Resource;
