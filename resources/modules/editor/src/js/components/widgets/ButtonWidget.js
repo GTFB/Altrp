@@ -104,7 +104,14 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
     object-fit: contain;
   }
 
+  .altrp-btn-icon-bottom svg {
+    width: 100%;
+    height: 100%;
+  }
 
+  .altrp-background-image_btn{
+    background-size: unset;
+  }
 `);
 
 const Link = window.Link;
@@ -639,9 +646,9 @@ class ButtonWidget extends Component {
       this.state.settings.link_link?.url &&
       !this.state.settings.link_link.toPrevPage
     ) {
-      let target = _.get(this.state.settings, "link_link.openInNew")
+        let target = _.get(this.state.settings, "link_link.openInNew")
         ? "_blank"
-        : "";
+          : "";
       if (this.state.settings.link_link.tag === "a" || isEditor()) {
         link = (
           <a

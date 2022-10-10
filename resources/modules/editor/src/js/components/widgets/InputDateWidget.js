@@ -19,6 +19,12 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
   .altrp-date-picker-popover .bp3-datepicker-year-select select {
     padding: 0 0 0 2px;
   }
+
+  .altrp-field-label--required::after {
+    line-height: 1.5;
+    font-weight: normal;
+    font-family: Open Sans;
+  }
 `)
 
 const AltrpFieldContainer = styled.div`

@@ -41,6 +41,7 @@ import redirect from "../../../../front-app/src/js/functions/redirect";
     right: 0;
     width: 100%;
     height: 100%;
+    background-size: unset;
   }
 
   .section-video {
@@ -62,6 +63,10 @@ import redirect from "../../../../front-app/src/js/functions/redirect";
     width:100%;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .altrp-section .section-video-controllers {
+    object-fit:cover;
   }
 `);
 

@@ -15,6 +15,12 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
 
 (window.globalDefaults = window.globalDefaults || []).push(`
  /*здесь css стилей по умолчанию с селекторами*/
+
+  .altrp-field-label--required::after {
+    line-height: 1.5;
+    font-weight: normal;
+    font-family: "Open Sans";
+  }
 `)
 const AltrpFieldContainer = styled.div`
   ${({settings}) => {

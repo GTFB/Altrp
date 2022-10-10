@@ -133,11 +133,14 @@ export default function getInputSelectStyles(settings) {
       if (button_gradient?.isWithGradient) {
         styles += gradientStyled(button_gradient);
       } else {
-        styles += colorPropertyStyled(
+        let backgroundStyle = colorPropertyStyled(
           getResponsiveSetting(settings, "button_background_color"),
           "background-color"
         );
-        styles += "background-blend-mode: color-burn;";
+        if (backgroundStyle) {
+          styles += backgroundStyle;
+          styles += "background-blend-mode: color-burn;";
+        }
       }
 
       styles += "}";
@@ -151,11 +154,14 @@ export default function getInputSelectStyles(settings) {
       if (button_gradient?.isWithGradient) {
         styles += gradientStyled(button_gradient);
       } else {
-        styles += colorPropertyStyled(
+        let backgroundStyle = colorPropertyStyled(
           getResponsiveSetting(settings, "button_background_color", ":hover"),
           "background-color"
         );
-        styles += "background-blend-mode: color-burn;";
+        if (backgroundStyle) {
+          styles += backgroundStyle;
+          styles += "background-blend-mode: color-burn;";
+        }
       }
 
       styles += "}";
@@ -169,12 +175,15 @@ export default function getInputSelectStyles(settings) {
       if (button_gradient?.isWithGradient) {
         styles += gradientStyled(button_gradient);
       } else {
-        styles += colorPropertyStyled(
+        let backgroundStyle = colorPropertyStyled(
           getResponsiveSetting(settings, "button_background_color", ".active"),
           "background-color",
           "!important"
         );
-        styles += "background-blend-mode: color-burn;";
+        if (backgroundStyle) {
+          styles += backgroundStyle;
+          styles += "background-blend-mode: color-burn;";
+        }
       }
       styles += "}";
       return styles;
@@ -349,15 +358,14 @@ export default function getInputSelectStyles(settings) {
       if (button_gradient?.isWithGradient) {
         styles += gradientStyled(button_gradient);
       } else {
-        styles += colorPropertyStyled(
-          getResponsiveSetting(
-            settings,
-            "button_background_color",
-            ".state-disabled"
-          ),
+        let backgroundStyle = colorPropertyStyled(
+          getResponsiveSetting(settings, "button_background_color", ".state-disabled"),
           "background-color"
         );
-        styles += "background-blend-mode: color-burn;";
+        if (backgroundStyle) {
+          styles += backgroundStyle;
+          styles += "background-blend-mode: color-burn;";
+        }
       }
 
       styles += "}";
@@ -493,11 +501,14 @@ export default function getInputSelectStyles(settings) {
       if (button_gradient?.isWithGradient) {
         styles += gradientStyled(button_gradient);
       } else {
-        styles += colorPropertyStyled(
+        let backgroundStyle = colorPropertyStyled(
           getResponsiveSetting(settings, "button_background_color", ".active"),
           "background-color"
         );
-        styles += "background-blend-mode: color-burn;";
+        if (backgroundStyle) {
+          styles += backgroundStyle;
+          styles += "background-blend-mode: color-burn;";
+        }
       }
 
       styles += "}";
@@ -537,10 +548,18 @@ export function getInputSelectPopoverStyles(settings, elementId) {
     ["padding", "item_padding", "dimensions"],
     "}",
     ".bp3-popover-content",
-    () =>
-      `background-color: ${
-        getResponsiveSetting(settings, "drop_menu_background_color")?.color
-      } !important;`,
+    () => {
+      const dropMenuBackgroundColorSetting =
+        getResponsiveSetting(settings, "drop_menu_background_color");
+
+      if (dropMenuBackgroundColorSetting?.color) {
+        return (
+          `background-color: ${
+            dropMenuBackgroundColorSetting.color
+          } !important;`
+        );
+      }
+    },
     "}",
     ".bp3-menu",
     ["padding", "menu_padding", "dimensions"],
@@ -632,11 +651,16 @@ export function getInputSelectPopoverStyles(settings, elementId) {
     ["padding", "item_padding", "dimensions", ".active"],
     "}",
     ".active .bp3-popover-content",
-    () =>
-      `background-color: ${
-        getResponsiveSetting(settings, "drop_menu_background_color", ".active")
-          ?.color
-      } !important;`,
+    () => {
+      const activeDropMenuBackgroundColorSetting =
+        getResponsiveSetting(settings, "drop_menu_background_color", ".active");
+
+      if (activeDropMenuBackgroundColorSetting?.color) {
+        returnn (
+          `background-color: ${activeDropMenuBackgroundColorSetting.color} !important;`
+        );
+      }
+    },
     "}",
     ".active .bp3-menu",
     ["padding", "menu_padding", "dimensions", ".active"],

@@ -1,6 +1,37 @@
 import DefaultIcon from '../../../svgs/icon.svg'
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .icon-widget-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .icon-widget__icon {
+    width: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .icon-widget__icon * {
+    width: auto;
+  }
+
+  .title {
+    text-align: center;
+    color: rgb(0,0,0);
+  }
+
+  .description {
+    text-align: center;
+    color: rgb(0,0,0);
+  }
+
+  .content {
+    width: 100%;
+  }
+`);
+
 class IconWidget extends Component {
   constructor(props) {
     super(props);

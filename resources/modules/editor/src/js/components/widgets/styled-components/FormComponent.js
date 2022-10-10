@@ -553,11 +553,13 @@ const fieldStyle = (settings) => {
 
   styles += "&& .altrp-image-select>.altrp-field{";
 
-  image_select_item_width &&
-    (styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`);
+  if (image_select_item_width?.size && image_select_item_width?.unit) {
+    styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`;
+  }
 
-  image_select_item_height &&
-    (styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`);
+  if (image_select_item_height?.size && image_select_item_height?.unit) {
+    styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`;
+  }
 
   styles += "}";
 
@@ -1076,8 +1078,12 @@ const fieldLabelContainerStyle = (settings) => {
   settings && (width = getResponsiveSetting(settings, "label_width"));
   width && (styles += `${sizeStyled(width, "width")};flex-shrink: 0;`);
 
-  label_position_top && (styles += `top:${label_position_top};`);
-  label_position_left && (styles += `left:${label_position_left};`);
+  if (label_position_top?.size && label_position_top?.unit) {
+    styles += `top:${label_position_top.size}${label_position_top.unit};`;
+  }
+  if (label_position_left?.size && label_position_left?.unit) {
+    styles += `left:${label_position_left.size}${label_position_left.unit};`;
+  }
   label_icon_position && (styles += `flex-direction:${label_icon_position};`);
 
   styles += "}";

@@ -392,7 +392,6 @@ class Button extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
     });
 
     this.addControl("background_image_width", {

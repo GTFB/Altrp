@@ -23,6 +23,10 @@ import '../../../../../editor/src/sass/blueprint.scss'
   align-items: flex-start;
 }
 
+.altrp-field-radio.bp3-control.bp3-radio input:checked ~ .bp3-control-indicator::before {
+  background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 28%, rgba(0, 0, 0, 0) calc(28% + 6%));
+}
+
 .altrp-field-container .bp3-radio {
   margin-bottom: 0;
 }
@@ -81,6 +85,9 @@ import '../../../../../editor/src/sass/blueprint.scss'
   color: red;
   font-size: inherit;
   padding-left: 10px;
+  line-height: 1.5;
+  font-weight: normal;
+  font-family: Open Sans;
 }
 .altrp-field-label {
   font-size: 16px;
@@ -335,6 +342,7 @@ textarea.altrp-field {
 .altrp-field-label-container {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
 }
 .altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
   padding: 0 8px;
@@ -618,27 +626,27 @@ class InputRadioWidget extends Component {
     }
     let value = "";
     if(content_calculation) {
-      try {
-        content_calculation = content_calculation
-          .replace(/}}/g, "')")
-          .replace(/{{/g, "_.get(context, '");
-        value = eval(content_calculation);
-        if (value === this.state.value) {
-          return;
-        }
-        this.setState(
-          state => ({...state, value}),
-          () => {
-            this.dispatchFieldValueToStore(value);
-          }
-        );
-      } catch (e) {
-        console.error(
-          "Evaluate error in Input: '" + e.message + "'",
-          this.props.element.getId()
-        );
+    try {
+      content_calculation = content_calculation
+        .replace(/}}/g, "')")
+        .replace(/{{/g, "_.get(context, '");
+      value = eval(content_calculation);
+      if (value === this.state.value) {
+        return;
       }
+      this.setState(
+        state => ({ ...state, value }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
+    } catch (e) {
+      console.error(
+        "Evaluate error in Input: '" + e.message + "'",
+        this.props.element.getId()
+      );
     }
+  }
   }
 
   /**
@@ -993,7 +1001,7 @@ class InputRadioWidget extends Component {
             /**
              * Если значение или опция число, то приведем к числу перед сравнением
              */
-            checked = altrpCompare(value, option.value, "==");
+              checked = altrpCompare(value, option.value, "==");
 
             return (
               <Radio

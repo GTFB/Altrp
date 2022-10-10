@@ -6,9 +6,18 @@ const getBreadcrumbsStyles =(settings,id)=>{
 
   let styles = '';
 
-  styles = `${parentClass} .bp3-icon svg{
-    width:${getResponsiveSetting(settings, 'icon_width') || '20px'};
-    height:${getResponsiveSetting(settings, 'icon_height') || '20px'};`
+  styles = `${parentClass} .bp3-icon svg{`;
+
+  const iconWidthSetting = getResponsiveSetting(settings, 'icon_width');
+  const iconHeightSetting = getResponsiveSetting(settings, 'icon_height');
+
+  if (iconWidthSetting) {
+    styles += `width:${iconWidthSetting};`;
+  }
+
+  if (iconHeightSetting) {
+    styles += `height:${iconHeightSetting};`;
+  }
 
   const colorIcon = getResponsiveSetting(settings, 'icon_color');
 
@@ -29,7 +38,6 @@ const getBreadcrumbsStyles =(settings,id)=>{
     }
     styles += `} `;
 
-    styles += `${parentClass} .altrp-menu-item__icon {display:flex;}`;
     let height = getResponsiveSetting(settings, 'height');
     if(height){
         styles += `${parentClass} .bp3-breadcrumbs{height:${height};}`;

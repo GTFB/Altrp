@@ -40,6 +40,9 @@ export default function parseURLTemplate(URLTemplate = "", object = null) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
+    if(Number(idTemplate.replace(/:|\//g, ""))){
+      return
+    }
     let replace = object[idTemplate.replace(/:|\//g, "")] || "";
     idTemplate = idTemplate.replace("/", "");
     url = url.replace(new RegExp(idTemplate, "g"), replace);

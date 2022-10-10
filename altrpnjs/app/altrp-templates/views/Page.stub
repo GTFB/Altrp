@@ -13,7 +13,7 @@
 {{{extra_header_styles}}}
 <<<all_styles>>>
 {{{plugin_frontend_head}}}
-    <script>
+    <script id="first-script-altrp">
         /* <![CDATA[ */
         console.log('START: ',performance.now());
         /**
@@ -47,7 +47,7 @@
             {{{children_content}}}
         </div>
     </div>
-      <script>
+      <script id="main-script-altrp">
         /* <![CDATA[ */
         {{=<% %>=}}
         window['h-altrp'] = true;

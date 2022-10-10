@@ -84,6 +84,10 @@ import Animating from "../altrp-heading/Animating";
   display: flex;
 }
 
+.altrp-animating-highlighted-svg svg path {
+  stroke-width: 8;
+}
+
 `)
 
 class HeadingTypeAnimatingWidget extends Component {

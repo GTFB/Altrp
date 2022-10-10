@@ -18,7 +18,18 @@ import {Popover2} from '@blueprintjs/popover2'
 .altrp-menu {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
 }
+
+.bp3-menu-item {
+  align-items: center;
+  border-radius: 0;
+}
+
+.bp3-menu {
+  flex-direction: column;
+}
+
 `)
 
 class MenuWidget extends Component {

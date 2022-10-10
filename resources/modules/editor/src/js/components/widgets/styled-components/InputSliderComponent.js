@@ -60,21 +60,21 @@ export default function InputSliderComponent(settings) {
 
     "altrp-field-slider-horizontal .bp3-slider-label",
       () => {
-        let height = getResponsiveSetting(settings, "height", "", { size: 6, unit: "px" })
+        let height = getResponsiveSetting(settings, "height", "")
 
         height = sliderStyled(height)
 
-        return `transform: translate(-50%, calc(14px + ${height}));`
+        return height ? `transform: translate(-50%, calc(14px + ${height}));`: ""
       },
     "}",
 
     "altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
       () => {
-        let thickness = getResponsiveSetting(settings, "thickness", "", { size: 6, unit: "px" })
+        let thickness = getResponsiveSetting(settings, "thickness", "")
 
         thickness = sliderStyled(thickness)
 
-        return `transform: translate(calc(14px + ${thickness}), 50%);`
+        return thickness ? `transform: translate(calc(14px + ${thickness}), 50%);` : ""
       },
     "}",
 
@@ -141,20 +141,20 @@ export default function InputSliderComponent(settings) {
     "}",
     ".state-disabled altrp-field-slider-horizontal .bp3-slider-label",
     () => {
-      let height = getResponsiveSetting(settings, "height", ".state-disabled", { size: 6, unit: "px" })
+      let height = getResponsiveSetting(settings, "height", ".state-disabled")
 
       height = sliderStyled(height)
 
-      return `transform: translate(-50%, calc(14px + ${height}));`
+      return height ? `transform: translate(-50%, calc(14px + ${height}));` : ""
     },
     "}",
     ".state-disabled altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
     () => {
-      let thickness = getResponsiveSetting(settings, "thickness", ".state-disabled", { size: 6, unit: "px" })
+      let thickness = getResponsiveSetting(settings, "thickness", ".state-disabled")
 
       thickness = sliderStyled(thickness)
 
-      return `transform: translate(calc(14px + ${thickness}), 50%);`
+      return thickness ? `transform: translate(calc(14px + ${thickness}), 50%);` : ""
     },
     "}",
     ".state-disabled bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
@@ -209,16 +209,16 @@ export default function InputSliderComponent(settings) {
     "}",
     ".active altrp-field-slider-horizontal .bp3-slider-label",
     () => {
-      let height = getResponsiveSetting(settings, "height", ".active", { size: 6, unit: "px" })
+      let height = getResponsiveSetting(settings, "height", ".active")
       height = sliderStyled(height)
-      return `transform: translate(-50%, calc(14px + ${height}));`
+      return height ? `transform: translate(-50%, calc(14px + ${height}));` : ""
     },
     "}",
     ".active altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
     () => {
-      let thickness = getResponsiveSetting(settings, "thickness", ".active", { size: 6, unit: "px" })
+      let thickness = getResponsiveSetting(settings, "thickness", ".active")
       thickness = sliderStyled(thickness)
-      return `transform: translate(calc(14px + ${thickness}), 50%);`
+      return thickness ? `transform: translate(calc(14px + ${thickness}), 50%);` : ""
     },
     "}",
 

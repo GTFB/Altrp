@@ -9,7 +9,9 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const boxBorderRadius = getResponsiveSetting(settings, 'box_border_radius')
 
-        return `border-radius: ${boxBorderRadius?.size}${boxBorderRadius?.unit} !important;`
+        if (boxBorderRadius?.size && boxBorderRadius?.unit) {
+          return `border-radius: ${boxBorderRadius.size}${boxBorderRadius.unit} !important;`
+        }
       },
       () => {
         const value = getResponsiveSetting(settings, "size");
@@ -38,12 +40,16 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const switchColor = getResponsiveSetting(settings, 'switch_color')
 
-        return `background-color: ${switchColor?.colorPickedHex} !important;`
+        if (switchColor?.colorPickedHex) {
+          return `background-color: ${switchColor.colorPickedHex} !important;`
+        }
       },
       () => {
         const switchBorderRadius = getResponsiveSetting(settings, 'switch_border_radius')
 
-        return `border-radius: ${switchBorderRadius?.size}${switchBorderRadius?.unit} !important;`
+        if (switchBorderRadius?.size && switchBorderRadius?.unit) {
+          return `border-radius: ${switchBorderRadius.size}${switchBorderRadius.unit} !important;`
+        }
       },
     "}",
 
@@ -94,12 +100,16 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const switchColor = getResponsiveSetting(settings, 'switch_color', ':hover')
 
-        return `background-color: ${switchColor?.colorPickedHex} !important;`
+        if (switchColor?.colorPickedHex) {
+          return `background-color: ${switchColor.colorPickedHex} !important;`
+        }
       },
       () => {
         const switchBorderRadius = getResponsiveSetting(settings, 'switch_border_radius', ':hover')
 
-        return `border-radius: ${switchBorderRadius?.size}${switchBorderRadius?.unit} !important;`
+        if (switchBorderRadius?.size && switchBorderRadius?.unit) {
+          return `border-radius: ${switchBorderRadius.size}${switchBorderRadius.unit} !important;`
+        }
       },
     "}",
 
@@ -136,7 +146,9 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const boxBorderRadius = getResponsiveSetting(settings, 'box_border_radius', ':hover')
 
-        return `border-radius: ${boxBorderRadius?.size}${boxBorderRadius?.unit} !important;`
+        if (boxBorderRadius?.size && boxBorderRadius?.unit) {
+          return `border-radius: ${boxBorderRadius.size}${boxBorderRadius.unit} !important;`
+        }
       },
     "}",
 
@@ -195,7 +207,9 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const boxBorderRadius = getResponsiveSetting(settings, 'box_border_radius', ':focus')
 
-        return `border-radius: ${boxBorderRadius?.size}${boxBorderRadius?.unit} !important;`
+        if (boxBorderRadius?.size && boxBorderRadius?.unit) {
+          return `border-radius: ${boxBorderRadius.size}${boxBorderRadius.unit} !important;`
+        }
       },
       () => {
         const value = getResponsiveSetting(settings, "size", ':focus');
@@ -249,12 +263,16 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const switchBorderRadius = getResponsiveSetting(settings, 'switch_border_radius', ':focus')
 
-        return `border-radius: ${switchBorderRadius?.size}${switchBorderRadius?.unit} !important;`
+        if (switchBorderRadius?.size && switchBorderRadius?.unit) {
+          return `border-radius: ${switchBorderRadius.size}${switchBorderRadius.unit} !important;`
+        }
       },
       () => {
         const switchColor = getResponsiveSetting(settings, 'switch_color', ':focus')
 
-        return `background-color: ${switchColor?.colorPickedHex} !important;`
+        if (switchColor?.colorPickedHex) {
+          return `background-color: ${switchColor.colorPickedHex} !important;`
+        }
       },
     '}',
 
@@ -264,12 +282,16 @@ export default function TabsSwitcherComponent(settings) {
     () => {
       const switchBorderRadius = getResponsiveSetting(settings, 'switch_border_radius', '.active')
 
-      return `border-radius: ${switchBorderRadius?.size}${switchBorderRadius?.unit} !important;`
+      if (switchBorderRadius?.size && switchBorderRadius?.unit) {
+        return `border-radius: ${switchBorderRadius.size}${switchBorderRadius.unit} !important;`
+      }
     },
       () => {
         const switchColor = getResponsiveSetting(settings, 'switch_color', '.active')
 
-        return `background-color: ${switchColor?.colorPickedHex} !important;`
+        if (switchColor?.colorPickedHex) {
+          return `background-color: ${switchColor.colorPickedHex} !important;`
+        }
       },
     '}',
 
@@ -277,12 +299,16 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const backgroundColor = getResponsiveSetting(settings, 'box_around_color_one', '.active')
 
-        return `background-color: ${backgroundColor?.colorPickedHex} !important;`
+        if (backgroundColor?.colorPickedHex) {
+          return `background-color: ${backgroundColor.colorPickedHex} !important;`
+        }
       },
       () => {
         const boxBorderRadius = getResponsiveSetting(settings, 'box_border_radius', '.active')
 
-        return `border-radius: ${boxBorderRadius?.size}${boxBorderRadius?.unit} !important;`
+        if (boxBorderRadius?.size && boxBorderRadius?.unit) {
+          return `border-radius: ${boxBorderRadius.size}${boxBorderRadius.unit} !important;`
+        }
       },
       () => {
         const value = getResponsiveSetting(settings, "size", '.active');
@@ -314,7 +340,9 @@ export default function TabsSwitcherComponent(settings) {
       () => {
         const backgroundColor = getResponsiveSetting(settings, 'box_around_color_two', '.active')
 
-        return `background-color: ${backgroundColor?.colorPickedHex} !important;`
+        if (backgroundColor?.colorPickedHex) {
+          return `background-color: ${backgroundColor.colorPickedHex} !important;`
+        }
       },
       () => {
         const value = getResponsiveSetting(settings, "size", '.active');

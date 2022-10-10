@@ -161,6 +161,7 @@ Route.group(() => {
   Route.get("/menus/:id", "admin/MenusController.show")
 
   Route.get("/pages/:id", "admin/PagesController.getAreas")
+  Route.get("/get-page-content",  "admin/PagesController.getPageContent")
 
   Route.get("/current-user", "users/UsersController.getCurrentUser")
 
