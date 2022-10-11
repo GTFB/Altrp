@@ -2,7 +2,7 @@ import '../../front-app/src/js/libs/react-lodash'
 import '../../front-app/src/js/libs/ckeditor'
 // import '../../front-app/src/js/libs/altrp'
 import '../../front-app/src/js/libs/moment'
-import React, { Component } from "react";
+import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import CustomizerEditor from "./CustomizerEditor";
 import store from "./js/store/store";
@@ -12,12 +12,12 @@ import "./sass/styles.scss";
 import {Provider} from 'react-redux';
 import AltrpCustomizer from "./js/classes/AltrpCustomizer";
 import {io} from "socket.io-client";
-import  "./installing";
+import "./installing";
+import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 
-window.altrpIo = io( {
+window.altrpIo = io({
   path: '/wsaltrp',
-  auth: {
-  },
+  auth: {},
 })
 
 window.React = React;
@@ -41,4 +41,8 @@ if (process.env.NODE_ENV !== "production") {
 
 let customizerTarget = document.getElementById("customizer-editor");
 
-if (customizerTarget) window.ReactDOM.render(<Provider store={store}><CustomizerEditor /></Provider>, customizerTarget);
+if (customizerTarget) window.ReactDOM.render(
+  <Provider store={store}>
+    <CustomizerEditor/>
+    <AssetsBrowser/>
+  </Provider>, customizerTarget);

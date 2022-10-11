@@ -150,6 +150,8 @@ class AssetsBrowser extends Component {
   }
 
   selectAsset(e) {
+    console.log(e.currentTarget.dataset.assetname);
+    console.log(this.state.videoAssets);
     let selectedAsset = e.currentTarget.dataset.assetname;
     this.setState(state => {
       return { ...state, selectedAsset };
@@ -178,6 +180,13 @@ class AssetsBrowser extends Component {
     this.state.assets.forEach(item => {
       if (item.name === this.state.selectedAsset) {
         asset = item;
+      }
+    });
+    this.state.videoAssets.forEach(item => {
+      if (item.filename === this.state.selectedAsset) {
+        asset = {...item};
+        asset.assetType = 'video'
+        asset.name = item.filename;
       }
     });
     if (!asset) {
@@ -318,11 +327,21 @@ class AssetsBrowser extends Component {
             ""
           )}
           {activeTab === 'video' && <div className="assets-browser-choose-frame">
-            {videoAssets.map(video => <div key={video.id} className="assets-list__item item col-1" onClick={this.selectAsset}>
-              <svg width="43" height="56" fill="none" xmlns="http://www.w3.org/2000/svg" className="item__icon-background">
-                <path d="M30.485 0H1.463C.655 0 0 .655 0 1.926V55c0 .345.655 1 1.463 1h40.074c.808 0 1.463-.655 1.463-1V12.978c0-.696-.093-.92-.257-1.085L31.107.257A.884.884 0 0030.485 0z" fill="#F7F8F9"></path><path d="M31 .151V12h11.849L31 .151z" fill="#E0E1E6"></path><path d="M41.537 56H1.463A1.463 1.463 0 010 54.537V39h43v15.537c0 .808-.655 1.463-1.463 1.463z" fill="#7CA727"></path><path d="M18.262 52h-1.86v-6.07L13.96 52h-.806l-2.444-6.07V52H8.863v-8.67h2.587l2.106 5.238 2.106-5.239h2.6V52zM21.83 52h-1.846v-8.67h4.056c.91 0 1.62.268 2.132.805.52.529.78 1.192.78 1.99 0 .788-.26 1.45-.78 1.988-.52.537-1.23.806-2.132.806h-2.21V52zm1.963-4.706c.373 0 .676-.104.91-.312.243-.217.364-.503.364-.858s-.121-.637-.364-.845c-.234-.217-.537-.325-.91-.325H21.83v2.34h1.963zM33.556 52H31.71v-1.794h-4.147V48.75l3.445-5.42h2.548v5.251h1.118v1.625h-1.118V52zm-1.846-3.419v-3.614l-2.34 3.614h2.34z" fill="#fff"></path><path d="M16.923 28a.964.964 0 01-.444-.108.87.87 0 01-.479-.767v-12.25a.87.87 0 01.48-.768.972.972 0 01.94.03l10.153 6.124c.265.161.427.44.427.739 0 .3-.162.577-.427.738l-10.154 6.125a.968.968 0 01-.496.137zm.923-11.532v9.063L25.357 21l-7.51-4.532z" fill="#D5D7DE"></path><path d="M21 35c-7.72 0-14-6.28-14-14S13.28 7 21 7s14 6.28 14 14-6.28 14-14 14zm0-26.133C14.31 8.867 8.867 14.31 8.867 21c0 6.69 5.443 12.133 12.133 12.133 6.69 0 12.133-5.443 12.133-12.133 0-6.69-5.443-12.133-12.133-12.133z" fill="#D5D7DE"></path>
-              </svg>
-            </div>)}
+            {videoAssets.map(video => {
+              let classes = 'assets-list__item assets-list__item_video item col-1'
+              if (this.state.selectedAsset === video.filename) {
+                classes += " asset-choose_selected";
+              }
+              return <div key={video.id}
+                         data-assetname={video.filename}
+                         className={classes}
+                         onClick={this.selectAsset}>
+                <svg width="43" height="56" fill="none" xmlns="http://www.w3.org/2000/svg" className="item__icon-background">
+                  <path d="M30.485 0H1.463C.655 0 0 .655 0 1.926V55c0 .345.655 1 1.463 1h40.074c.808 0 1.463-.655 1.463-1V12.978c0-.696-.093-.92-.257-1.085L31.107.257A.884.884 0 0030.485 0z" fill="#F7F8F9"></path><path d="M31 .151V12h11.849L31 .151z" fill="#E0E1E6"></path><path d="M41.537 56H1.463A1.463 1.463 0 010 54.537V39h43v15.537c0 .808-.655 1.463-1.463 1.463z" fill="#7CA727"></path><path d="M18.262 52h-1.86v-6.07L13.96 52h-.806l-2.444-6.07V52H8.863v-8.67h2.587l2.106 5.238 2.106-5.239h2.6V52zM21.83 52h-1.846v-8.67h4.056c.91 0 1.62.268 2.132.805.52.529.78 1.192.78 1.99 0 .788-.26 1.45-.78 1.988-.52.537-1.23.806-2.132.806h-2.21V52zm1.963-4.706c.373 0 .676-.104.91-.312.243-.217.364-.503.364-.858s-.121-.637-.364-.845c-.234-.217-.537-.325-.91-.325H21.83v2.34h1.963zM33.556 52H31.71v-1.794h-4.147V48.75l3.445-5.42h2.548v5.251h1.118v1.625h-1.118V52zm-1.846-3.419v-3.614l-2.34 3.614h2.34z" fill="#fff"></path><path d="M16.923 28a.964.964 0 01-.444-.108.87.87 0 01-.479-.767v-12.25a.87.87 0 01.48-.768.972.972 0 01.94.03l10.153 6.124c.265.161.427.44.427.739 0 .3-.162.577-.427.738l-10.154 6.125a.968.968 0 01-.496.137zm.923-11.532v9.063L25.357 21l-7.51-4.532z" fill="#D5D7DE"></path><path d="M21 35c-7.72 0-14-6.28-14-14S13.28 7 21 7s14 6.28 14 14-6.28 14-14 14zm0-26.133C14.31 8.867 8.867 14.31 8.867 21c0 6.69 5.443 12.133 12.133 12.133 6.69 0 12.133-5.443 12.133-12.133 0-6.69-5.443-12.133-12.133-12.133z" fill="#D5D7DE"></path>
+                </svg>
+                <span>{video.title}</span>
+              </div>
+            })}
           </div>}
           <div className="assets-browser-bottom">
             {!(activeTab === 'icons') && (
