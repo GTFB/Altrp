@@ -118,7 +118,7 @@ async function _replace(htmlString){
       }
       const newLink =  document.createElement('link')
       newLink.setAttribute('id', l.getAttribute('id'))
-      newLink.setAttribute('href', `l.getAttribute('href')`)
+      newLink.setAttribute('href', l.getAttribute('href'))
       newLink.setAttribute('rel', 'stylesheet')
       newLink.addEventListener('load', ()=>{
         resolve()
