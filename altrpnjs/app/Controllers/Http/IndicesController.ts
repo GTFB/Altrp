@@ -14,6 +14,7 @@ import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFilte
 export default class IndicesController {
   async admin({view}) {
     return view.render('admin', Edge({
+      isProd: isProd(),
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ?
@@ -22,6 +23,7 @@ export default class IndicesController {
   }
   async customizer({view}) {
     return view.render('customizer', Edge({
+      isProd: isProd(),
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ?
@@ -31,6 +33,7 @@ export default class IndicesController {
 
   public editor({view}) {
     return view.render('editor', Edge({
+      isProd: isProd(),
       applyPluginsFiltersSync,
       applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ?
