@@ -99,6 +99,20 @@
     overflow: auto;
   }
 }
+.assets-list__item{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  span {
+    text-align: center;
+    height: 60px;
+    overflow: hidden;
+    line-height: 20px;
+  }
+}
+
 .asset-choose{
   position: relative;
   cursor: pointer;

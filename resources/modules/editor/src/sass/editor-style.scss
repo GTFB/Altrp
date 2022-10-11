@@ -15,6 +15,7 @@
 @import "default-styles";
 @import "./altrp-image-select.scss";
 @import "./history-panel.scss";
+@import "./controller-media.scss";
 @import "../../../../sass/ckeditor.scss";
 
 // map leaflet
@@ -672,53 +673,6 @@ button {
 .textcontroller-responsive {
   width: 100%;
   margin-bottom: 5px;
-}
-.controller-media__asset_svg {
-  height: 100%;
-}
-.controller-media {
-  &-choose {
-    position: relative;
-    display: flex;
-    height: 90px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    background-color: $light-gray;
-    cursor: pointer;
-    overflow: hidden;
-    & .controller-media__asset_media {
-      object-position: center;
-      object-fit: contain;
-    }
-    &__button {
-      position: absolute;
-      background-color: $grey;
-      color: #fff;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      padding: 0;
-      text-align: center;
-      -webkit-transform: translate(0, 100%);
-      -moz-transform: translate(0, 100%);
-      -ms-transform: translate(0, 100%);
-      -o-transform: translate(0, 100%);
-      transform: translate(0, 100%);
-    }
-    &:hover {
-      & .controller-media-choose__button {
-        -webkit-transform: translate(0, 0);
-        -moz-transform: translate(0, 0);
-        -ms-transform: translate(0, 0);
-        -o-transform: translate(0, 0);
-        transform: translate(0, 0);
-      }
-    }
-  }
 }
 .control-group {
   display: flex;

@@ -418,4 +418,4 @@ Route.group( ()=>{
       const controller = new ControllerClass()
       return await controller[methodName](httpContext)
     })
-}).prefix('api/v1').middleware('catch_unhandled_json')
+}).prefix('api/v1').middleware('catch_unhandled_json').middleware('cors')

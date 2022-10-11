@@ -4,6 +4,7 @@ import {currentCustomizerReducer} from "./current-customizer/reducers";
 import {otherDataReducer} from "./other-data/reducers";
 import {copyNodeReducer} from "./copy-node/reducers";
 import {nodeStateReducer} from "./node-store/reducers";
+import {assetsSettingsReducer} from "../../../../editor/src/js/store/assets-browser/reducers";
 
 
 export default combineReducers({
@@ -11,5 +12,6 @@ export default combineReducers({
   currentCustomizer: currentCustomizerReducer,
   otherData: otherDataReducer,
   copyNodeData: copyNodeReducer,
-  nodeStoreData: nodeStateReducer
+  assetsManagerSettings: assetsSettingsReducer,
+  nodeStoreData: nodeStateReducer,
 });

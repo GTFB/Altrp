@@ -13,6 +13,7 @@ import dagre from 'dagre';
 import {connect} from "react-redux";
 import _ from "lodash";
 import "./sass/styles.scss";
+import "../../editor/src/sass/controller-media.scss";
 import Resource from "../../editor/src/js/classes/Resource";
 import {hot} from "react-hot-loader";
 import store from "./js/store/store";
