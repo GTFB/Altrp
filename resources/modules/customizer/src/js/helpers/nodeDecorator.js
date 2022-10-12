@@ -2,15 +2,13 @@ import mutate from "dot-prop-immutable";
 import store from "../store/store";
 import {setUpdatedNode} from "../store/customizer-settings/actions";
 
-function changeByPath  (){
-
+function changeByPath (path, value){
   let node = this.getNode();
-  node = mutate.set(node, `data.${path}`, e)
+  node = mutate.set(node, `data.${path}`, value)
   store.dispatch(setUpdatedNode(node));
 }
 
-function getNode (){
-
+function getNode(){
   return this.props.customizerSettingsData?.find(n => {
     return this.props.selectNode?.id == n.id
   });

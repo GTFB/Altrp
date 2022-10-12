@@ -58,7 +58,7 @@ export default class CustomizersController {
           'title': customizer.title,
           'name': customizer.name,
           'type': 'customizer',
-          'request_type': customizer.getRequestType(),
+          'request_type':await customizer.getRequestType(),
         })
 
         customizer = await Customizer.query().preload("altrp_model").firstOrFail()
@@ -265,7 +265,7 @@ export default class CustomizersController {
           'title': customizer.title,
           'name': customizer.name,
           'type': 'customizer',
-          'request_type': customizer.getRequestType(),
+          'request_type':await customizer.getRequestType(),
         })
         await source.save()
       }

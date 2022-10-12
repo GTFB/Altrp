@@ -27,6 +27,9 @@ export default class CatchUnhandledJson {
         success: false,
         message: 'Unhandled Exception: ' + e.message,
         trace: e.stack.split('\n'),
+        config: e.config,
+        response: e.response,
+        request: e.request,
       })
     }
   }

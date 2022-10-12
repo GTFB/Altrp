@@ -106,6 +106,10 @@ export default class AltrpBaseController {
     await notification.send(users)
   }
 
+  replaceContentWithData(content: string):string{
+    return replaceContentWithData(content, this.customizerData)
+  }
+
   protected async execCustomizer(name) {
     const customizer = await Customizer.query().where("guid", name).preload("altrp_model").firstOrFail();
 

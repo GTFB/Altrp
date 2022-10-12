@@ -261,7 +261,7 @@ Route.group(() => {
           })
         }
 
-        if(! customizer.allowMethod(httpContext.request.method())){
+        if(! await customizer.allowMethod(httpContext.request.method())){
           return httpContext.response.status(405).json({
             success: false,
             message: 'Method not Allowed'
@@ -403,7 +403,7 @@ Route.group( ()=>{
         })
       }
 
-      if(! customizer.allowMethod(httpContext.request.method())){
+      if(! await customizer.allowMethod(httpContext.request.method())){
         return httpContext.response.status(405).json({
           success: false,
           message: 'API Method not Allowed'
@@ -418,4 +418,4 @@ Route.group( ()=>{
       const controller = new ControllerClass()
       return await controller[methodName](httpContext)
     })
-}).prefix('api/v1').middleware('catch_unhandled_json')
+}).prefix('api/v1').middleware('catch_unhandled_json').middleware('cors')

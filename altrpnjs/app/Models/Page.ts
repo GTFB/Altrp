@@ -995,7 +995,7 @@ export default class Page extends BaseModel {
           if (template?.data) {
             template.data = mbParseJSON(template.data, template.data)
 
-            Page.getDataDependencies(template.data)
+            await Page.getDataDependencies(template.data)
 
           }
         }
@@ -1003,7 +1003,7 @@ export default class Page extends BaseModel {
       if (area?.template?.data) {
         area.template.data = mbParseJSON(area.template.data, area.template.data)
 
-        Page.getDataDependencies(area.template.data)
+        await Page.getDataDependencies(area.template.data)
 
       }
       _areas.push(area)
@@ -1012,7 +1012,7 @@ export default class Page extends BaseModel {
     return JSONStringifyEscape(_areas)
   }
 
-  static getDataDependencies(data) {
+  static async getDataDependencies(data) {
     if (!data) {
       return
     }
@@ -1037,9 +1037,10 @@ export default class Page extends BaseModel {
       }
     }
     _data = JSON.stringify(_data)
+
     if (_.isArray(data.children)) {
       for (const child of data.children) {
-        Page.getDataDependencies(child)
+        await Page.getDataDependencies(child)
       }
     }
     const dependenciesList = [

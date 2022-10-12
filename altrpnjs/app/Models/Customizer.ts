@@ -28,6 +28,8 @@ import { addSchedule, removeSchedule } from '../../helpers/schedule';
 import exec from '../../helpers/exec'
 import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
 import base_path from "../../helpers/base_path";
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
+import applyPluginsFiltersSync from "../../helpers/plugins/applyPluginsFiltersSync";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -446,15 +448,18 @@ export default class Customizer extends BaseModel {
   /**
    * @return string
    */
-  public getRequestType(): string {
+  public async getRequestType(): Promise<string> {
     const startNode = this.getStartNode()
-    if(startNode === null || startNode === undefined){
-      return  'get'
+    let type = 'get'
+    if(startNode){
+      type = startNode.getRequestType()
     }
-    return startNode.getRequestType()
+    type = await applyPluginsFiltersAsync('get_customizer_request_type', type, this)
+
+    return type
   }
 
-  public static  parseData( data, customizer ){
+  public static parseData( data, customizer ){
 
     data = data.map( item  => {
       const type = data_get( item, 'type' )
@@ -470,7 +475,13 @@ export default class Customizer extends BaseModel {
         case 'messageAction': return new MessageNode(item, customizer)
         case 'customizer': return new CustomizerNode(item, customizer)
         case 'discordAction': return new DiscordNode(item, customizer)
-        default: return new BaseNode( item, customizer )
+        default: {
+          let classInstance = applyPluginsFiltersSync('get_node_class_instance', type, item, customizer)
+          if(! classInstance){
+            return new BaseNode( item, customizer )
+          }
+          return classInstance
+        }
       }
     })
     data.forEach( ( node_item ) => {
@@ -500,7 +511,9 @@ export default class Customizer extends BaseModel {
   }
   getMethodContent(){
     let startNode = this.getStartNode()
-    return startNode ? startNode.getJSContent() : ''
+    let content = startNode ? startNode.getJSContent() : ''
+    content = applyPluginsFiltersSync('customizer_render_content', content, this)
+    return content
   }
 
   static replaceMustache(expression:string, before: string = '', after: string = ''):string{
@@ -518,13 +531,8 @@ export default class Customizer extends BaseModel {
     return expression
   }
 
-  allowMethod(method: string){
-    const startNode = this.getStartNode()
-
-    if (! startNode){
-      return false
-    }
-    const request_type = startNode.getDataByPath('request_type') || 'get'
+  async allowMethod(method: string){
+    const request_type = await this.getRequestType()
 
     return request_type.toLowerCase() === method.toLowerCase()
   }
