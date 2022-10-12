@@ -426,6 +426,10 @@ class InputTextCommonWidget extends Component {
   async _componentDidMount(prevProps, prevState) {
 
     let value = this.getValue();
+    this.setState(state => ({
+      ...state,
+      value
+    }))
 
     /**
      * Если модель обновилась при смене URL
