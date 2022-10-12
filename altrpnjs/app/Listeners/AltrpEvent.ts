@@ -1,28 +1,27 @@
 // import isProd from "../../helpers/isProd";
-import Application from "@ioc:Adonis/Core/Application";
 // import fs from "fs";
 // import path from "path";
 
 export default class AltrpEvent {
-  public async listener({ type, data }) {
-    const [_namespace, modelName, eventType] = type.split('.')
-
-    const before = eventType.indexOf('before') === 0
-    let actionType = eventType.replace('after', '').replace('before', '').toLowerCase()
-
-    if (actionType === 'find') {
-      actionType = 'read'
-    }
-
-    if (['create', 'read', 'update', 'delete'].includes(actionType)) {
-      console.trace(`new crud: ${modelName} ${before ? 'before' : 'after'} ${actionType} ${data.id}`)
-      console.log(Application.environment);
-
-
-      // exec(`node ${base_path('ace')} customizer:crud ${modelName} ${actionType} ${data.id} ${before ? '--before' : ''}`).then((data) => {
-      //   console.log(data);
-      // })
-    }
+  public async listener({  }) {
+    // const [_namespace, modelName, eventType] = type.split('.')
+    //
+    //
+    // let actionType = eventType.replace('after', '').replace('before', '').toLowerCase()
+    //
+    // if (actionType === 'find') {
+    //   actionType = 'read'
+    // }
+    //
+    // if (['create', 'read', 'update', 'delete'].includes(actionType)) {
+    //   // console.trace(`new crud: ${modelName} ${before ? 'before' : 'after'} ${actionType} ${data.id}`)
+    //   // console.log(Application.environment);
+    //
+    //
+    //   // exec(`node ${base_path('ace')} customizer:crud ${modelName} ${actionType} ${data.id} ${before ? '--before' : ''}`).then((data) => {
+    //   //   console.log(data);
+    //   // })
+    // }
 
     // const dir = base_path(`app/altrp-listeners/${type}`);
     //

@@ -59,6 +59,9 @@ class AltrpPosts extends React.Component {
     if (this.state.htmlTemplate !== nextState.htmlTemplate) {
       return true;
     }
+    if (this.state.finalHtml !== nextState.finalHtml) {
+      return true;
+    }
     if (this.state.hoverHtmlTemplate !== nextState.hoverHtmlTemplate) {
       return true;
     }

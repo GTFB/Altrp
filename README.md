@@ -4,6 +4,9 @@
 ## Changelog
 
 ### 1.3.2
+* Added Customizers API for Plugins
+
+### 1.3.2
 * Added Raw Html for Cards Widget with Click Actions
 
 ### 1.3.1
