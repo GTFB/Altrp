@@ -214,8 +214,7 @@ export default class PagesController {
       return
     }
     const altrpRouting = new AltrpRouting
-
-    return await altrpRouting.getContentByUrl(url, httpContext);
+    return await altrpRouting.getContentByUrl(url, httpContext)
   }
 
   public async getAreas() {

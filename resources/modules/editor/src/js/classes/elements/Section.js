@@ -357,11 +357,6 @@ class Section extends BaseElement{
 
     this.addControl('link_link', {
       type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false
-      },
       label: 'Link',
       locked: true,
     });

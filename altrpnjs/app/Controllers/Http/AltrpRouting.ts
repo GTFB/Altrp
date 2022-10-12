@@ -48,7 +48,7 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async getContentByUrl(url, httpContext: HttpContextContract){
+  public async getContentByUrl(url, httpContext: HttpContextContract):Promise<void>{
     const asCheck = isRobot(httpContext.request.headers())
 
     const start = performance.now();
@@ -241,6 +241,7 @@ export default class AltrpRouting {
         }
       }
 
+      httpContext.response.header('Content-Length', res.length)
       return httpContext.response.send(res)
     } catch (e) {
       console.error(`Error to View Custom Page \`${page.guid}\` : ${e.message}
@@ -376,6 +377,7 @@ export default class AltrpRouting {
           }
         }
       }
+      httpContext.response.header('Content-Length', res.length)
       return httpContext.response.send(res)
     } catch (e) {
       console.error(`Error to View Custom Page \`${page.guid}\`: ${e.message}

@@ -1078,6 +1078,7 @@ export default class Page extends BaseModel {
         }
       })
     }
+    data.settings = {}
     if(_.isObject(data.settingsLock)){
       prefixes.forEach((prefix)=>{
         prefix += ':'

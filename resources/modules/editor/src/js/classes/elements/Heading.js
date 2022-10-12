@@ -279,12 +279,6 @@ class Heading extends BaseElement {
     this.addControl('link_link', {
       type: CONTROLLER_LINK,
       responsive:false,
-      default: {
-        url: "",
-        attributes: "",
-        tag: 'Link',
-        noFollow: false
-      },
       label: 'link',
     });
 

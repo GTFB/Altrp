@@ -2,7 +2,6 @@ export const CHANGE_CURRENT_PAGE = "CHANGE_CURRENT_PAGE";
 export const CHANGE_CURRENT_PAGE_PROPERTY = "CHANGE_CURRENT_PAGE_PROPERTY";
 
 export function changeCurrentPage(pageData) {
-  console.error(pageData);
   return {
     type: CHANGE_CURRENT_PAGE,
     pageData: pageData || {}
