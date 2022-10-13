@@ -75,12 +75,12 @@ function migrateScript(target, source) {
   scripts.forEach( (s)=> {
     const newScript = document.createElement('script')
     if(s.innerHTML){
-      newScript.innerHTML = s.innerHTML
-
+      newScript.innerHTML = `(function(){${s.innerHTML}})()`
     } else if(s.getAttribute('src')){
       newScript.setAttribute('src', s.getAttribute('src'))
     }
-    source.appendChild(newScript)
+
+    target.appendChild(newScript)
   })
 }
 
@@ -164,8 +164,8 @@ async function _replace(htmlString) {
         }
       })
       newArea.innerHTML = a.innerHTML
-      migrateScript(newArea, a)
       routeContent.appendChild(newArea)
+      migrateScript(newArea, a)
       return
     }
     const newSectionWrapper = a.querySelector('.sections-wrapper')
@@ -177,6 +177,7 @@ async function _replace(htmlString) {
       return;
     }
     oldArea.innerHTML = a.innerHTML
+
     migrateScript(oldArea, a)
 
   })
