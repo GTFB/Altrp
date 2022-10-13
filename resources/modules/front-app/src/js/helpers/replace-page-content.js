@@ -70,23 +70,25 @@ export default function replacePageContent(url, popstate = false) {
   xhr.send(null);
 }
 
+function migrateScript(target, source) {
+  const scripts = source.querySelectorAll('script')
+  scripts.forEach( (s)=> {
+    const newScript = document.createElement('script')
+    if(s.innerHTML){
+      newScript.innerHTML = s.innerHTML
+
+    } else if(s.getAttribute('src')){
+      newScript.setAttribute('src', s.getAttribute('src'))
+    }
+    source.appendChild(newScript)
+  })
+}
+
 async function _replace(htmlString) {
   htmlString = htmlString.replace(/<!([\s\S]+?)>/, '')
   const newHtml = document.createElement('html')
   newHtml.innerHTML = htmlString
 
-
-  // const mainScript = newHtml.querySelector('#main-script-altrp')
-  //
-  // let oldMainScript = document.querySelector('#main-script-altrp')
-  // if (oldMainScript) {
-  //   oldMainScript.remove()
-  // }
-  // oldMainScript = document.createElement('script')
-  // oldMainScript.setAttribute('id', 'main-script-altrp')
-  // document.body.appendChild(oldMainScript)
-  //
-  // oldMainScript.innerHTML = mainScript.innerHTML
 
   /**
    * CSS links
@@ -161,6 +163,8 @@ async function _replace(htmlString) {
           newArea.classList.add(c)
         }
       })
+      newArea.innerHTML = a.innerHTML
+      migrateScript(newArea, a)
       routeContent.appendChild(newArea)
       return
     }
@@ -173,6 +177,7 @@ async function _replace(htmlString) {
       return;
     }
     oldArea.innerHTML = a.innerHTML
+    migrateScript(oldArea, a)
 
   })
 
@@ -180,6 +185,21 @@ async function _replace(htmlString) {
   const newTitle = newHtml.querySelector('title')
   title.innerHTML = newTitle.innerHTML
 
+  /**
+   * scripts move
+   */
+
+  const mainScript = newHtml.querySelector('#main-script-altrp')
+
+  let oldMainScript = document.querySelector('#main-script-altrp')
+  if (oldMainScript) {
+    oldMainScript.remove()
+  }
+  oldMainScript = document.createElement('script')
+  oldMainScript.setAttribute('id', 'main-script-altrp')
+  document.body.appendChild(oldMainScript)
+
+  oldMainScript.innerHTML = mainScript.innerHTML
   /**
    * grid stiles for route content
    */
@@ -191,27 +211,8 @@ async function _replace(htmlString) {
   window.popupsContainer?.remove()
   window.popupsContainer = null
 
-  /**
-   * scripts move
-   */
-  let newScripts = newHtml.querySelectorAll('script')
 
-  const ignoredScripts = newHtml.querySelectorAll('.route-content script')
-  newScripts = _.difference(newScripts, ignoredScripts)
 
-  const scriptsContainer = document.createElement('div')
-  scriptsContainer.classList.add('migrated-scripts')
-  document.body.appendChild(scriptsContainer)
-  for (const s of newScripts) {
-    const newScript = document.createElement('script')
-    if(s.getAttribute('src')){
-      newScript.setAttribute('src', s.getAttribute('src'))
-    }
-    scriptsContainer.appendChild(newScript)
-    if(s.innerHTML){
-      newScript.innerHTML = s.innerHTML
-    }
-  }
 
   /**
    * Events dispatch

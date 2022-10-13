@@ -9,6 +9,7 @@ import {TextArea} from "@blueprintjs/core";
 import {pageReload} from "../js/helpers";
 import delay from '../../../front-app/src/js/functions/delay'
 import upgradeBackend from "../js/functions/upgradeBackend";
+import axios from "axios";
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
 
@@ -132,7 +133,6 @@ class AdvancedSettings extends Component {
   };
 
   /**
-   * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
    * @param e
    */
   updateAllBackendResources = async (e) => {
@@ -143,6 +143,37 @@ class AdvancedSettings extends Component {
     store.dispatch(setAdminDisable());
 
     await upgradeBackend()
+    pageReload()
+
+  };
+  /**
+   * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
+   * @param e
+   */
+  restartAltrp = async (e) => {
+    let result = await confirm('Are You Sure');
+    if (!result) {
+      return;
+    }
+    store.dispatch(setAdminDisable());
+
+    try {
+      await axios.post('/admin/ajax/restart-altrp',)
+
+    } catch (e) {
+      let serverRestarted = false
+      let i = 0
+      do {
+        ++i
+        try {
+          await delay(100)
+          await axios.get('/ajax/_token')
+          serverRestarted = true
+        } catch (e) {
+          console.error(e);
+        }
+      } while (!serverRestarted && i < 100)
+    }
     pageReload()
 
   };
@@ -183,6 +214,14 @@ class AdvancedSettings extends Component {
               <button className="btn btn_success btn_advanced"
                       onClick={this.updateAllBackendResources}>
                 Update
+              </button>
+            </div>
+
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Restart Altrp:</div>
+              <button className="btn btn_success btn_advanced"
+                      onClick={this.restartAltrp}>
+                Restart
               </button>
             </div>
 

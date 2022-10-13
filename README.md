@@ -1,10 +1,10 @@
 # ALTRP
 
 
-## Changelog
+## Changelog build 3
 ##Test Version
 
-### 1.3.3 build 2
+### 1.3.3 
 * Added Customizers API for Plugins
 
 ### 1.3.2

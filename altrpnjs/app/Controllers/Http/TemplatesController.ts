@@ -1,4 +1,5 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
+import exec from '../../../helpers/exec'
 import validGuid from '../../../helpers/validGuid';
 
 import { v4 as uuid } from "uuid";
@@ -11,10 +12,10 @@ import CategoryObject from "App/Models/CategoryObject";
 import AltrpMeta from "App/Models/AltrpMeta";
 import GlobalStyle from "App/Models/GlobalStyle";
 import filtration from "../../../helpers/filtration";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
 import Area from "App/Models/Area";
 import mbParseJSON from "../../../helpers/mbParseJSON";
 import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
+import base_path from '../../../helpers/base_path'
 
 export default class TemplatesController {
   public async getAllIds({ response }) {
@@ -196,8 +197,9 @@ export default class TemplatesController {
         }
       }
     }
-    let templateGenerator = new TemplateGenerator()
-    await templateGenerator.run(template)
+    if(body.type !== "review"){
+      console.log(await exec(`node ${base_path('ace')} generator:template --id=${template.id}`))
+    }
     applyPluginsFiltersAsync('template_updated', template)
     return {
       message: "Success",
@@ -240,8 +242,7 @@ export default class TemplatesController {
         all_site: parentTemplate?.all_site ? 1 : 0
       })
 
-    let templateGenerator = new TemplateGenerator()
-    await templateGenerator.run(template)
+    await exec(`node ${base_path('ace')} generator:template --id=${template.id}`)
     applyPluginsFiltersAsync('template_updated', template)
 
     return {
@@ -338,9 +339,7 @@ export default class TemplatesController {
 
     const template = await templateQuery.firstOrFail()
 
-    let templateGenerator = new TemplateGenerator()
-    templateGenerator.deleteFile(template)
-    templateGenerator.deleteFiles(template)
+    await exec(`node ${base_path('ace')} generator:template --delete --id=${template.id}`)
     applyPluginsFiltersAsync('template_before_delete', template)
 
     await TemplateSetting.query().where("template_id", template.id).delete()
@@ -352,6 +351,37 @@ export default class TemplatesController {
   }
 
   public async update({ params, request }) {
+    const templateQuery = Template.query()
+
+    if (isNaN(params.id)) {
+      templateQuery.where('guid', params.id)
+    } else {
+      templateQuery.where('id', parseInt(params.id))
+    }
+
+    const template = await templateQuery.firstOrFail()
+
+    if (template) {
+      //@ts-ignore
+      const data = template.serialize()
+
+      delete data.created_at
+      delete data.updated_at
+      delete data.id
+
+      template.data = JSON.stringify(request.input('data'))
+      template.styles = JSON.stringify(request.input('styles'))
+      template.html_content = ''
+      await template.save()
+      await applyPluginsFiltersAsync('template_updated', template)
+
+      return {
+        success: true
+      }
+    }
+  }
+
+  public async publish({ params, request }) {
     const templateQuery = Template.query();
 
     if(isNaN(params.id)) {
@@ -379,8 +409,7 @@ export default class TemplatesController {
       template.html_content = '';
       await template.save()
 
-      let templateGenerator = new TemplateGenerator()
-      await templateGenerator.run(template)
+      await exec(`node ${base_path('ace')} generator:template --id=${params.id}`)
       applyPluginsFiltersAsync('template_updated', template)
 
 

@@ -38,7 +38,7 @@ import {InputGroup, TextArea} from '@blueprintjs/core'
     margin-bottom: 8px;
   }
 
-  .bp3-input {
+  .popup__body .bp3-input {
     height: 40px;
   }
 

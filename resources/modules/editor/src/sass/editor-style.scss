@@ -157,12 +157,21 @@ button {
     }
   }
   .control-group {
+    position: relative;
     margin-left: 10px;
     margin-right: 10px;
     line-height: 20px;
+    background-color: #586573;
     & > .btn {
-      &:first-child {
+      &.btn-update {
         margin-right: 2px;
+      }
+      &.btn-publish {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translateY(-100%);
+        border-bottom: 1px solid black;
       }
     }
   }
@@ -2532,4 +2541,14 @@ body {
 }
 .important_styles_manger{
   display: none;
+}
+
+.group-hover {
+  .group-hover-visible {
+    display: none;
+  }
+
+  &:hover .group-hover-visible {
+    display: block;
+  }
 }
