@@ -41,7 +41,7 @@ export default class GeneratorController extends BaseCommand {
     for (let controller of controllers) {
       try {
         await controllerGenerator.run(controller)
-        console.log(`Controller generated for id (${this.id}): ${this.colors.cyan(controllerGenerator.getFilename())}`)
+        console.log(`Controller generated for id (${controller.id}): ${this.colors.cyan(controllerGenerator.getFilename())}`)
       } catch (err) {
         console.error(`Error occurred while generating Controller ${controller.guid}: ${err.message}`)
         console.error(err)

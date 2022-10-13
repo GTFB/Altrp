@@ -108,11 +108,13 @@ export default class AdminController {
 
 
   private static async upgradeTemplates(request: RequestContract){
-    console.info('Upgrading templates')
+    console.info('Upgrading Templates')
 
     const id = request.input('id')
 
     await exec(`node ${base_path('ace')} generator:template ${id ? `--id=${id}` : ''}`)
+
+    console.info('Templates Upgraded')
   }
 
   public async updateFavicon({request}) {
@@ -197,15 +199,17 @@ export default class AdminController {
   }
 
   private static async upgradePages(request: RequestContract) {
-    console.info('Upgrading pages')
+    console.info('Upgrading Pages')
 
     const id = request.input('id')
 
     await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`)
+
+    console.info('Pages Upgraded')
   }
 
   private static async upgradeModels() {
-    console.info('Upgrading models')
+    console.info('Upgrading Models')
 
     const models = (await Model.query().select('*'))
       .filter(model => !['user', 'media'].includes(model.name.toLocaleLowerCase()))
@@ -213,6 +217,7 @@ export default class AdminController {
 
     for (let model of models) {
       await modelGenerator.run(model)
+      console.log(`Model generated for id (${model.id}): ${modelGenerator.getFilename(model)}`)
     }
 
     const payload = models.map(model => ({ model_id: model.id, description: model.description }))
@@ -221,7 +226,10 @@ export default class AdminController {
 
     for (let controller of controllers) {
       await controllerGenerator.run(controller)
+      console.log(`Controller generated for id (${controller.id}): ${controllerGenerator.getFilename()}`)
     }
+
+    console.info('Models Upgraded')
   }
 
   private static async upgradeListeners() {
@@ -236,18 +244,24 @@ export default class AdminController {
     await listenerGenerator.hookListeners()
 
     await exec(`node ${base_path('ace')} generator:listener`)
+
+    console.info('Listeners Upgraded')
   }
 
   private static async upgradeCRUDs() {
     console.info('Upgrading CRUDs')
 
     await exec(`node ${base_path('ace')} generator:crud`)
+
+    console.info('CRUDs Upgraded')
   }
 
   private static async upgradeSchedules() {
-    console.log('Upgrading Schedules')
+    console.info('Upgrading Schedules')
 
     await exec(`node ${base_path('ace')} generator:schedule`)
+
+    console.info('Schedules Upgraded')
   }
 
   async getHealthCheck({response}:HttpContextContract){

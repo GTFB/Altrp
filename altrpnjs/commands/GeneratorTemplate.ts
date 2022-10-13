@@ -50,10 +50,10 @@ export default class GeneratorTemplate extends BaseCommand {
         if (this.isDelete) {
           templateGenerator.deleteFile(template)
           templateGenerator.deleteFiles(template)
-          console.log(`Template of id (${this.id}) deleted: ${this.colors.cyan(templateGenerator.getFilename(template))}`)
+          console.log(`Template of id (${template.id}) deleted: ${this.colors.cyan(templateGenerator.getFilename(template))}`)
         } else {
           await templateGenerator.run(template)
-          console.log(`Template generated for id (${this.id}): ${this.colors.cyan(templateGenerator.getFilename(template))}`)
+          console.log(`Template generated for id (${template.id}): ${this.colors.cyan(templateGenerator.getFilename(template))}`)
         }
       } catch (err) {
         console.error(`Error occurred while ${this.isDelete ? 'deleting' : 'generating'} Template ${template.guid}: ${err.message}`)

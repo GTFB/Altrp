@@ -40,8 +40,13 @@ export default class GeneratorPage extends BaseCommand {
 
     for (let page of pages) {
       try {
-        await pageGenerator.run(page)
-        console.log(`Page generated for id (${this.id}): ${this.colors.cyan(pageGenerator.getFilename(page))}`)
+        const result = await pageGenerator.run(page)
+
+        if (result) {
+          console.log(`Page generated for id (${page.id}): ${this.colors.cyan(pageGenerator.getFilename(page))}`)
+        } else {
+          throw new Error(`Page (id: ${page.id}) is invalid`)
+        }
       } catch (err) {
         console.error(`Error occurred while generating Page ${page.guid}: ${err.message}`)
         console.error(err)

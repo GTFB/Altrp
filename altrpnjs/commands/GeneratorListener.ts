@@ -49,10 +49,10 @@ export default class GeneratorListener extends BaseCommand {
       try {
         if (this.isDelete) {
           listenerGenerator.delete(listener)
-          console.log(`Listener of id (${this.id}) deleted: ${this.colors.cyan(listener.name)}`)
+          console.log(`Listener of id (${listener.id}) deleted: ${this.colors.cyan(listener.name)}`)
         } else {
           await listenerGenerator.run(listener)
-          console.log(`Listener generated for id (${this.id}): ${this.colors.cyan(listener.name)}`)
+          console.log(`Listener generated for id (${listener.id}): ${this.colors.cyan(listener.name)}`)
         }
       } catch (err) {
         console.error(`Error occurred while generating Listener ${listener.guid}: ${err.message}`)

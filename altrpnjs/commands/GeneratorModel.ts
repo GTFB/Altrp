@@ -49,10 +49,10 @@ export default class GeneratorModel extends BaseCommand {
       try {
         if (this.isDelete) {
           modelGenerator.deleteFiles(model)
-          console.log(`Model of id (${this.id}) deleted: ${this.colors.cyan(modelGenerator.getFilename(model))}`)
+          console.log(`Model of id (${model.id}) deleted: ${this.colors.cyan(modelGenerator.getFilename(model))}`)
         } else {
           await modelGenerator.run(model)
-          console.log(`Model generated for id (${this.id}): ${this.colors.cyan(modelGenerator.getFilename(model))}`)
+          console.log(`Model generated for id (${model.id}): ${this.colors.cyan(modelGenerator.getFilename(model))}`)
         }
       } catch (err) {
         console.error(`Error occurred while ${this.isDelete ? 'deleting' : 'generating'} Model ${model.guid}: ${err.message}`)

@@ -50,10 +50,10 @@ export default class GeneratorSchedule extends BaseCommand {
       try {
         if (this.isDelete) {
           crudGenerator.delete()
-          console.log(`CRUD of id (${this.id}) deleted: ${this.colors.cyan(crudGenerator.getFileName())}`)
+          console.log(`CRUD of id (${crud.id}) deleted: ${this.colors.cyan(crudGenerator.getFileName())}`)
         } else {
           await crudGenerator.run()
-          console.log(`CRUD generated for id (${this.id}): ${this.colors.cyan(crudGenerator.getFileName())}`)
+          console.log(`CRUD generated for id (${crud.id}): ${this.colors.cyan(crudGenerator.getFileName())}`)
         }
       } catch (err) {
         console.error(`Error occurred while generating CRUD ${crud.guid}: ${err.message}`)
