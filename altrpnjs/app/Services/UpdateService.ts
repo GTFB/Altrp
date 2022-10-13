@@ -11,6 +11,7 @@ import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import guid from "../../helpers/guid";
 import Env from "@ioc:Adonis/Core/Env";
+import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class UpdateService {
 
@@ -47,6 +48,7 @@ export default class UpdateService {
 
 
     UpdateService.update_files()
+    await   applyPluginsFiltersAsync('altrp_files_updated', '')
 
     if (!await UpdateService.write_public_permissions('public')) {
       console.error('Failed to update file reading mode after unzipping');

@@ -4,7 +4,7 @@ import app_path from '../path/app_path';
 import isProd from '../isProd';
 import _ from 'lodash'
 
-export default async function applyPluginsFiltersAsync(type: string, content, ...params) {
+export default async function applyPluginsFiltersAsync(type: string, content:any = null, ...params) {
 
   const base = `AltrpPlugins`
 

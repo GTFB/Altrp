@@ -27,7 +27,6 @@ import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 
-
 export default class AdminController {
 
   // async setSettings({params, response, request, }:HttpContextContract){

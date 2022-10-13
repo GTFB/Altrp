@@ -108,6 +108,7 @@ class BaseGenerator {
       content = res.styles
     }
     fs.writeFileSync(fileName, content)
+    applyPluginsFiltersAsync('altrp_files_updated', '')
     return
   }
 }
