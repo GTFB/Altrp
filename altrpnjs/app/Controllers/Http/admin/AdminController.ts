@@ -21,8 +21,12 @@ import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
+<<<<<<< HEAD
 import delay from "../../../../helpers/delay";
 import base_path from '../../../../helpers/base_path'
+=======
+
+>>>>>>> optimizing-generated-styles
 
 export default class AdminController {
 
@@ -244,8 +248,13 @@ export default class AdminController {
 
     for (let page of pages) {
       try{
+<<<<<<< HEAD
         await promisify(exec)(`node ${base_path('ace')} generator:page ${page.id}`)
         await delay(100);
+=======
+        await pageGenerator.run(page)
+
+>>>>>>> optimizing-generated-styles
       }catch (e) {
 
         console.error(`Error while Page ${page.id} generate: ${e.message}`,

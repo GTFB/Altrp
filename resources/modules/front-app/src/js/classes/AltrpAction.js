@@ -571,8 +571,17 @@ class AltrpAction extends AltrpModel {
    */
   async doActionRedirect() {
     let history = window.history
-    let URL = this.getFormURL();
-    if(! URL){
+    let _URL = this.getFormURL();
+    if(! this.getProperty('back')){
+      let url = _URL.replace(location.origin, '')
+      url = location.origin + url
+      url = new URL(url)
+      if(location.pathname + location.search === url.pathname + url.search){
+        return {success: true}
+      }
+
+    }
+    if(! _URL){
       if (this.getProperty('back')) {
         history.back()
       }
@@ -586,9 +595,9 @@ class AltrpAction extends AltrpModel {
       } else {
         let innerRedirect = !this.getProperty('outer');
         if (innerRedirect) {
-          frontAppRouter.history.push(URL);
+          frontAppRouter.history.push(_URL);
         } else {
-          window.location.assign(URL);
+          window.location.assign(_URL);
         }
       }
     } else {
@@ -596,10 +605,11 @@ class AltrpAction extends AltrpModel {
         history.back()
       } else {
         try{
-          replacePageContent(URL)
+
+          replacePageContent(_URL)
         } catch (e) {
           console.error(e);
-          // window.location.assign(URL);
+          // window.location.assign(_URL);
         }
       }
     }

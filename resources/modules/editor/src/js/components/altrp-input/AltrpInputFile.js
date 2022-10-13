@@ -96,7 +96,7 @@ class AltrpInputFile extends Component {
     }
   };
   render() {
-    // console.log(this.props);
+
     let multiple = this.props.settings.select2_multiple;
     let placeholder = this.props.settings.content_placeholder || "";
     const { filesForDisplay } = this.state;

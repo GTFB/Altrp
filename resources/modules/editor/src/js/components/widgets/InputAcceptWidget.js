@@ -349,7 +349,7 @@ textarea.altrp-field {
 `)
 const AltrpFieldContainer = styled.div`
   ${({settings}) => {
-    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')  
+    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
     switch (content_label_position_type) {
       case "left": {
         return "display: flex";
@@ -385,7 +385,8 @@ class InputAcceptWidget extends Component {
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getLockedContent("content_default_value")) {
+    const value = this.getValue();
+    if (!value && this.getLockedContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }

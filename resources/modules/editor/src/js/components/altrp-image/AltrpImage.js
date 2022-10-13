@@ -90,14 +90,27 @@ class AltrpImage extends Component {
       visible,
       update: 0,
     };
+    this.onScroll()
     this.timeoutId = setTimeout(() => this.setState(state => ({...state, update: state.update++})), 500);
   }
+
+  componentDidMount() {
+    ! isEditor() && window.addEventListener('scroll',this.onScroll)
+  }
+  onScroll =  _.debounce(()=>{
+      if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, document.documentElement)) {
+        clearTimeout(this.timeoutId);
+        this.setState(state => ({...state, visible: true}));
+      }
+    }, 200)
+
 
   /**
    * очищаем обновление
    */
   componentWillUnmount() {
     clearTimeout(this.timeoutId);
+    window.removeEventListener('scroll', this.onScroll)
   }
 
   /**
@@ -119,10 +132,13 @@ class AltrpImage extends Component {
     if (prevProps.scrollPosition === this.props.scrollPosition && prevState.update === this.state.update) {
       return;
     }
-    return
-    if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, document.documentElement)) {
-      clearTimeout(this.timeoutId);
-      this.setState(state => ({...state, visible: true}));
+
+    let scroller = window.mainScrollbars;
+    if(! scroller){
+      scroller = document.querySelector('.front-app-content');
+    }
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
     }
   }
 

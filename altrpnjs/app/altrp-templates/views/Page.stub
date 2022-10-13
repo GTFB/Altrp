@@ -25,10 +25,13 @@
          */
         function myErrHandler(msg, url, lno)
         {
-          document.getElementById('front-app').textContent = `${msg} ${url} ${lno}`;
+          var element = document.createElement('div');
+
+          document.body.appendChild(element);
+          element.innerHTML =`${msg} ${url} ${lno}`;
           return true;
         }
-        // window.onerror = myErrHandler;
+        window.onerror = myErrHandler;
 
         document.currentScript = "/modules/front-app/";
         /* ]]> */

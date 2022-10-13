@@ -124,6 +124,7 @@ class ButtonWidget extends Component {
       pending: false
     };
     props.element.component = this;
+    this.element = props.element;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
@@ -295,15 +296,15 @@ class ButtonWidget extends Component {
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
     let classes =
-      this.getClasses() + (this.state.settings.position_css_classes || "");
+      this.getClasses() + (this.element.getLockedSettings('position_css_classes',  ""));
     if (background_image.url) {
       classes += " altrp-background-image_btn";
     }
     let buttonText = this.getLockedContent("button_text");
-    let buttonMediaRight = { ...this.state.settings.button_icon_right };
-    let buttonMediaLeft = { ...this.state.settings.button_icon_left };
-    let buttonMediaTop = { ...this.state.settings.button_icon_top };
-    let buttonMediaBottom = { ...this.state.settings.button_icon_bottom };
+    let buttonMediaRight = { ...this.element.getLockedSettings('button_icon_right') };
+    let buttonMediaLeft = { ...this.element.getLockedSettings('.button_icon_left') };
+    let buttonMediaTop = { ...this.element.getLockedSettings('button_icon_top') };
+    let buttonMediaBottom = { ...this.element.getLockedSettings('button_icon_bottom') };
 
     const showIcon = buttonMediaRight.url || buttonMediaLeft.url || buttonMediaTop.url || buttonMediaBottom.url;
 
@@ -573,20 +574,6 @@ class ButtonWidget extends Component {
       classes += " altrp-disabled";
     }
 
-    // classes +=
-    //   this.state.settings.link_button_type === "dropbar"
-    //     ? "altrp-btn-dropbar"
-    //     : "";
-
-    // let icon =
-    //   buttonMedia && showIcon && buttonMedia.assetType ? (
-    //     <span className={"altrp-btn-icon "}>
-    //       {renderAsset(buttonMedia)}{" "}
-    //     </span>
-    //   ) : (
-    //     ""
-    //   );
-
     let url = link_link.url
       ? link_link.url.replace(":id", this.getModelId() || "")
       : "";
@@ -597,49 +584,11 @@ class ButtonWidget extends Component {
     let button = <button
       onClick={this.onClick}
       className={classes}
-      id={this.state.settings.position_css_id}
+      id={this.element.getLockedSettings('position_css_id')}
       title={tooltip || null}
     >
       {buttonInner}
     </button>;
-    // let buttonTemplate = (
-    //   <button
-    //     onClick={this.onClick}
-    //     className={classes}
-    //     id={this.state.settings.position_css_id}
-    //     title={tooltip || null}
-    //   >
-    //     {buttonText}
-    //     {
-    //       showIcon ? (
-    //         ! isSSR() && <span className={"altrp-btn-icon "}>
-    //       {renderAsset(buttonMedia)}{" "}
-    //       </span>
-    //       ) : ""
-    //     }
-    //   </button>
-    // );
-
-    // switch (this.props.element.getResponsiveLockedSetting("link_button_type", null,"none")) {
-    //   case "dropbar":
-    //     button = (
-    //       <Suspense fallback={<div>Загрузка...</div>}>
-    //         <Dropbar
-    //           elemenentId={this.props.element.getId()}
-    //           settings={this.props.element.getSettings()}
-    //           className="btn"
-    //           element={this.props.element}
-    //           getContent={this.getContent}
-    //           showDelay={this.state.settings.show_delay_dropbar_options}
-    //         >
-    //           {buttonTemplate}
-    //         </Dropbar>
-    //       </Suspense>
-    //     );
-    //     break;
-    //   default:
-    //     button = buttonTemplate;
-    // }
 
     let link = null;
     if (

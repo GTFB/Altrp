@@ -153,6 +153,21 @@ export default class Page extends BaseModel {
   })
   public categories: ManyToMany<typeof Category>
 
+  // private static elementsWithoutSettings = [
+  //   'button',
+  //   'section',
+  //   'section_widget',
+  //   'column',
+  //   'image',
+  // ]
+  private static settingsToMigrate = [
+    'default_hidden',
+    'section',
+    'section_widget',
+    'column',
+    'image',
+  ]
+
   static FRONT_DEFAULT_AREAS = [
     'content', 'footer', 'header', 'popups',
   ];
@@ -995,7 +1010,7 @@ export default class Page extends BaseModel {
           if (template?.data) {
             template.data = mbParseJSON(template.data, template.data)
 
-            Page.getDataDependencies(template.data)
+            await Page.getDataDependencies(template.data)
 
           }
         }
@@ -1003,7 +1018,7 @@ export default class Page extends BaseModel {
       if (area?.template?.data) {
         area.template.data = mbParseJSON(area.template.data, area.template.data)
 
-        Page.getDataDependencies(area.template.data)
+        await Page.getDataDependencies(area.template.data)
 
       }
       _areas.push(area)
@@ -1012,7 +1027,7 @@ export default class Page extends BaseModel {
     return JSONStringifyEscape(_areas)
   }
 
-  static getDataDependencies(data) {
+  static async getDataDependencies(data) {
     if (!data) {
       return
     }
@@ -1037,9 +1052,10 @@ export default class Page extends BaseModel {
       }
     }
     _data = JSON.stringify(_data)
+
     if (_.isArray(data.children)) {
       for (const child of data.children) {
-        Page.getDataDependencies(child)
+        await Page.getDataDependencies(child)
       }
     }
     const dependenciesList = [
@@ -1088,6 +1104,18 @@ export default class Page extends BaseModel {
         }
       })
     }
+
+    // if(Page.elementsWithoutSettings.includes(data.name)){
+    for(const s of Page.settingsToMigrate){
+      // @ts-ignore
+      if(data.settings[s]){
+        // @ts-ignore
+        data.settingsLock[s] = data.settings[s]
+      }
+    }
+    data.settings = {...data.settingsLock}
+    delete data.settingsLock
+    // }
   }
 
   async getPopupsGuids() {

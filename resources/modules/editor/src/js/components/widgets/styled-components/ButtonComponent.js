@@ -193,7 +193,7 @@ export function btnStyles(settings) {
     ["color", "font_color", "color", ".state-disabled"],
     ["", "background_image", "media", ".state-disabled"],
 
-    "& .altrp-btn-icon",
+    // "& .altrp-btn-icon",
     // ["width", "icon_size", "slider", ":hover"],
     // ["height", "icon_size", "slider", ":hover"],
 
@@ -238,7 +238,7 @@ export function btnStyles(settings) {
     "}",
     "}",
 
-    "}",
+    // "}",
 
     "altrp-background-image_btn",
     ["background-position", "background_position", "simplePropertyStyled"],
