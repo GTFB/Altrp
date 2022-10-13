@@ -155,7 +155,13 @@ async function _replace(htmlString) {
       .querySelector(`.${a.classList.value.replace(/ /g, '.')}`)
 
     if (!oldArea) {
-      routeContent.appendChild(a)
+      const newArea = document.createElement('div' )
+      a.classList.value.split(' ').forEach(c=>{
+        if(c){
+          newArea.classList.add(c)
+        }
+      })
+      routeContent.appendChild(newArea)
       return
     }
     const newSectionWrapper = a.querySelector('.sections-wrapper')
@@ -189,10 +195,10 @@ async function _replace(htmlString) {
    * scripts move
    */
   let newScripts = newHtml.querySelectorAll('script')
-  console.log(newScripts.length);
+
   const ignoredScripts = newHtml.querySelectorAll('.route-content script')
   newScripts = _.difference(newScripts, ignoredScripts)
-  console.log(newScripts.length);
+
   const scriptsContainer = document.createElement('div')
   scriptsContainer.classList.add('migrated-scripts')
   document.body.appendChild(scriptsContainer)

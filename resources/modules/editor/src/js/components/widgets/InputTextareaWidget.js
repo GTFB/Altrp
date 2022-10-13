@@ -378,7 +378,8 @@ class InputTextareaWidget extends Component {
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getLockedContent("content_default_value")) {
+    const value = this.getValue();
+    if (!value && this.getLockedContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }

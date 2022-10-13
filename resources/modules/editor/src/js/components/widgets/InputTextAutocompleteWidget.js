@@ -413,7 +413,8 @@ class InputTextCommonWidget extends Component {
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getLockedContent("content_default_value")) {
+    const value = this.getValue();
+    if (!value && this.getLockedContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
