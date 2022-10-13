@@ -1,12 +1,16 @@
-import { BaseCommand, args, flags } from '@adonisjs/core/build/standalone'
+import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 
 export default class GeneratorListener extends BaseCommand {
   public static commandName = 'generator:listener'
 
   public static description = 'Run a listener generator'
-  
-  @args.string({ name: 'id', description: 'Id of the listener' })
-  public id: string
+
+  @flags.array({
+    name: 'id',
+    alias: 'i',
+    description: 'Array of listener ids (comma separated values without space)',
+  })
+  public id: string[]
 
   @flags.boolean({
     name: 'delete',
@@ -24,18 +28,41 @@ export default class GeneratorListener extends BaseCommand {
     const { default: Customizer } = await import('App/Models/Customizer')
     const { default: ListenerGenerator } = await import('App/Generators/ListenerGenerator')
 
-    const customizer = await Customizer.find(parseInt(this.id))
+    let listeners
 
-    if (customizer) {
-      const listenerGenerator = new ListenerGenerator()
+    if (this.id) {
+      listeners = await Customizer.query()
+        .where('type', 'listener')
+        .andWhereIn('id', this.id)
+        .limit(this.id.length)
+        .select('*')
+    } else {
+      listeners = await Customizer.query()
+        .where('type', 'listener')
+        .select('*')
+    }
 
-      if (this.isDelete) {
-        listenerGenerator.delete(customizer)
-        console.log(`Listener of id (${this.id}) deleted: ${this.colors.cyan(listenerGenerator.getFilename())}`)
-      } else {
-        await listenerGenerator.run(customizer)
-        console.log(`Listener generated for id (${this.id}) : ${this.colors.cyan(listenerGenerator.getFilename())}`)
+    const listenerGenerator = new ListenerGenerator()
+    const failure: Error[] = []
+
+    for (let listener of listeners) {
+      try {
+        if (this.isDelete) {
+          listenerGenerator.delete(listener)
+          console.log(`Listener of id (${this.id}) deleted: ${this.colors.cyan(listener.name)}`)
+        } else {
+          await listenerGenerator.run(listener)
+          console.log(`Listener generated for id (${this.id}): ${this.colors.cyan(listener.name)}`)
+        }
+      } catch (err) {
+        console.error(`Error occurred while generating Listener ${listener.guid}: ${err.message}`)
+        console.error(err)
+        failure.push(err)
       }
+    }
+
+    if (failure.length) {
+      console.error(`${failure.length} error${failure.length === 1 ? '' : 's'} occurred while generating listeners`)
     }
   }
 }

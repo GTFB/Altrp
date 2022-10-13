@@ -1,9 +1,8 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
-import { exec } from 'child_process'
-import { promisify } from 'util'
 import Model from 'App/Models/Model'
 import Source from 'App/Models/Source'
 import Accessors from 'App/Models/Accessor'
+import exec from '../../../../helpers/exec'
 import empty from '../../../../helpers/empty'
 import CategoryObject from 'App/Models/CategoryObject'
 import Event from '@ioc:Adonis/Core/Event'
@@ -711,7 +710,7 @@ export default class ModelsController {
         }
       })
     } catch (e) {
-      await promisify(exec)(`node ${base_path('ace')} generator:model --delete ${model.id}`)
+      await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
       await model.delete()
       await Promise.all(sources.map(s => s.delete()))
       await controller.delete()
@@ -835,7 +834,7 @@ export default class ModelsController {
 
       await controller.delete()
     }
-    await promisify(exec)(`node ${base_path('ace')} generator:model --delete ${model.id}`)
+    await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
 
     const client = Database.connection(Env.get('DB_CONNECTION'))
     await Customizer.query().where('model_id', model.id).update({

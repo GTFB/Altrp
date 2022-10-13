@@ -5,24 +5,21 @@ import Application from '@ioc:Adonis/Core/Application';
 import jimp from "jimp";
 import FAVICONS_SIZES from "../../../../helpers/const/FAVICONS_SIZES";
 import Drive from '@ioc:Adonis/Core/Drive'
-import Template from "App/Models/Template";
-import Page from "App/Models/Page";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
-import Customizer from "App/Models/Customizer";
+import ModelGenerator from 'App/Generators/ModelGenerator'
+import ControllerGenerator from 'App/Generators/ControllerGenerator'
 import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
 import Env from "@ioc:Adonis/Core/Env";
-import {exec} from "child_process";
 import fs from "fs";
-import {promisify} from "util";
 import resource_path from "../../../../helpers/path/resource_path";
 import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
-import delay from "../../../../helpers/delay";
 import base_path from '../../../../helpers/base_path'
+import exec from '../../../../helpers/exec'
 
 export default class AdminController {
 
@@ -38,7 +35,7 @@ export default class AdminController {
     }
     try {
       if(isProd()){
-        await promisify(exec)('pm2 restart all --update-env')
+        await exec('pm2 restart all --update-env')
       }
 
     }catch (e) {
@@ -96,7 +93,7 @@ export default class AdminController {
     }
     try {
       if(isProd()){
-        await promisify(exec)('pm2 restart all --update-env')
+        await exec('pm2 restart all --update-env')
       }
 
     }catch (e) {
@@ -113,31 +110,9 @@ export default class AdminController {
   private static async upgradeTemplates(request: RequestContract){
     console.info('Upgrading templates')
 
+    const id = request.input('id')
 
-    let templates
-    let id = request.input('id')
-    if(id){
-      if(id.indexOf(',')){
-        id = id.split(',')
-        templates = await Template.query()
-          .whereIn('id', id)
-          .select('*')
-      } else {
-        templates = await Template.query()
-          .where('id', id)
-          .select('*')
-      }
-    } else {
-      templates = await Template.query().whereNull('deleted_at').select('*')
-    }
-    for (let template of templates) {
-      try{
-        await promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
-
-      }catch (e) {
-        console.error(`Error while Template ${template.guid} generate: ${e.message}`);
-      }
-    }
+    await exec(`node ${base_path('ace')} generator:template ${id ? `--id=${id}` : ''}`)
   }
 
   public async updateFavicon({request}) {
@@ -222,67 +197,30 @@ export default class AdminController {
   }
 
   private static async upgradePages(request: RequestContract) {
-    console.log('Upgrading pages')
+    console.info('Upgrading pages')
 
-    let pages
+    const id = request.input('id')
 
-    let id = request.input('id')
-    if(id){
-      if(id.indexOf(',')){
-        id = id.split(',')
-        pages = await Page.query().whereNull('deleted_at')
-          .whereIn('id', id)
-          .select('*')
-      } else {
-        pages = await Page.query()
-          .where('id', id)
-          .select('*')
-      }
-    } else {
-      pages = await Page.query().whereNull('deleted_at').select('*')
-    }
-
-    for (let page of pages) {
-      try{
-        await promisify(exec)(`node ${base_path('ace')} generator:page ${page.id}`)
-        await delay(100);
-      }catch (e) {
-
-        console.error(`Error while Page ${page.id} generate: ${e.message}`,
-          e.stack.split('\n'),
-          );
-      }
-    }
+    await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`)
   }
 
   private static async upgradeModels() {
-    console.log('Upgrading models')
+    console.info('Upgrading models')
 
-    const models = await Model.query().select('*')
+    const models = (await Model.query().select('*'))
+      .filter(model => !['user', 'media'].includes(model.name.toLocaleLowerCase()))
+    const modelGenerator = new ModelGenerator()
 
     for (let model of models) {
-      if (model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media') {
-        continue
-      }
-      try{
-        await promisify(exec)(`node ${base_path('ace')} generator:model ${model.id}`)
-      }catch (e) {
-        console.error(`Error while Model generate: ${e.message}`);
-      }
-      let controller: any = await Controller.query().where('model_id', model.id).first()
-      if (!controller) {
-        controller = new Controller();
-        controller.fill({
-          model_id: model.id,
-          description: model.description,
-        })
-        await controller.save()
-      }
-      try{
-        await promisify(exec)(`node ${base_path('ace')} generator:controller ${controller.id}`)
-      }catch (e) {
-        console.error(e);
-      }
+      await modelGenerator.run(model)
+    }
+
+    const payload = models.map(model => ({ model_id: model.id, description: model.description }))
+    const controllers = await Controller.fetchOrNewUpMany('model_id', payload)
+    const controllerGenerator = new ControllerGenerator()
+
+    for (let controller of controllers) {
+      await controllerGenerator.run(controller)
     }
   }
 
@@ -296,39 +234,20 @@ export default class AdminController {
     await listenerGenerator.hookModels()
     await listenerGenerator.hookPages()
     await listenerGenerator.hookListeners()
-    const listeners = await Customizer.query().where('type', 'listener').select('*')
 
-    for (const _l of listeners) {
-      await promisify(exec)(`node ${base_path('ace')} generator:listener ${_l.id}`)
-    }
+    await exec(`node ${base_path('ace')} generator:listener`)
   }
 
   private static async upgradeCRUDs() {
     console.info('Upgrading CRUDs')
 
-    const cruds = await Customizer.query().where('type', 'crud')
-
-    for (const crud of cruds) {
-      try {
-        await promisify(exec)(`node ${base_path('ace')} generator:crud ${crud.id}`)
-      } catch(e) {
-        console.error(`Error while CRUD generate: ${e.message}`)
-      }
-    }
+    await exec(`node ${base_path('ace')} generator:crud`)
   }
 
   private static async upgradeSchedules() {
     console.log('Upgrading Schedules')
 
-    const schedules = await Customizer.query().where('type', 'schedule')
-
-    for (const schedule of schedules) {
-      try {
-        await promisify(exec)(`node ${base_path('ace')} generator:schedule ${schedule.id}`)
-      } catch(e) {
-        console.error(`Error while schedule generate: ${e.message}`)
-      }
-    }
+    await exec(`node ${base_path('ace')} generator:schedule`)
   }
 
   async getHealthCheck({response}:HttpContextContract){

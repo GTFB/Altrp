@@ -1,5 +1,6 @@
 // import isProd from "../../helpers/isProd";
 import Application from "@ioc:Adonis/Core/Application";
+import Customizer from 'App/Models/Customizer'
 // import fs from "fs";
 // import path from "path";
 
@@ -7,7 +8,7 @@ export default class AltrpEvent {
   public async listener({ type, data }) {
     const [_namespace, modelName, eventType] = type.split('.')
 
-    const before = eventType.indexOf('before') === 0
+    const hookType = eventType.indexOf('before') === 0 ? 'before' : 'after'
     let actionType = eventType.replace('after', '').replace('before', '').toLowerCase()
 
     if (actionType === 'find') {
@@ -15,13 +16,22 @@ export default class AltrpEvent {
     }
 
     if (['create', 'read', 'update', 'delete'].includes(actionType)) {
-      console.trace(`new crud: ${modelName} ${before ? 'before' : 'after'} ${actionType} ${data.id}`)
       console.log(Application.environment);
 
+      let customizers = await Customizer.query()
+        .preload('altrp_model', modelQuery => {
+          modelQuery.where('name', modelName)
+        })
+        .where('type', 'crud')
 
-      // exec(`node ${base_path('ace')} customizer:crud ${modelName} ${actionType} ${data.id} ${before ? '--before' : ''}`).then((data) => {
-      //   console.log(data);
-      // })
+      customizers = customizers.filter(
+        customizer => customizer.settings.event_type === actionType
+          && customizer.settings.event_hook_type === hookType
+      )
+
+      for (let customizer of customizers) {
+        customizer.callCrud(data.id)
+      }
     }
 
     // const dir = base_path(`app/altrp-listeners/${type}`);

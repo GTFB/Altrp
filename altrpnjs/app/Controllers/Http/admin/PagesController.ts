@@ -1,6 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { exec } from 'child_process'
-import { promisify } from 'util'
 import { v4 as uuid } from "uuid";
 import Page from "App/Models/Page";
 import Template from "App/Models/Template";
@@ -11,6 +9,7 @@ import validGuid from "../../../../helpers/validGuid";
 import LIKE from "../../../../helpers/const/LIKE";
 import AltrpRouting from "App/Controllers/Http/AltrpRouting";
 import base_path from '../../../../helpers/base_path'
+import exec from '../../../../helpers/exec'
 
 export default class PagesController {
   public async getTemplatePagesIds({ request, response}:HttpContextContract){
@@ -112,7 +111,7 @@ export default class PagesController {
       res.success = true
       res.page = page
       await page.parseRoles(request.input('roles'));
-      await promisify(exec)(`node ${base_path('ace')} generator:page ${page.id}`)
+      await exec(`node ${base_path('ace')} generator:page --id=${page.id}`)
       await page.save()
 
       return res
@@ -341,7 +340,7 @@ export default class PagesController {
       await page.related('roles').detach()
       await page.parseRoles(request.input('roles'));
       await page.save()
-      await promisify(exec)(`node ${base_path('ace')} generator:page ${page.id}`)
+      await exec(`node ${base_path('ace')} generator:page --id=${page.id}`)
 
       if(request.input("categories").length > 0) {
 
