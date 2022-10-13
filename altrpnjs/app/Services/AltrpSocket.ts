@@ -3,7 +3,10 @@ import AdonisServer from '@ioc:Adonis/Core/Server'
 import User from "App/Models/User";
 import Role from "App/Models/Role";
 import _ from "lodash";
+import isProd from "../../helpers/isProd";
 
+const { createAdapter } = require("@socket.io/cluster-adapter");
+const { setupWorker } = require("@socket.io/sticky");
 
 class AltrpSocket {
   public io: Server
@@ -24,6 +27,13 @@ class AltrpSocket {
         origin: '*'
       }
     })
+
+    if(isProd()){
+      this.io.adapter(createAdapter());
+
+      setupWorker(this.io);
+
+    }
   }
 
   async pushClient(client: Socket) {

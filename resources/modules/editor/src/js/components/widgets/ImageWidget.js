@@ -61,6 +61,7 @@ class ImageWidget extends Component {
       window.elementDecorator(this);
     }
     this.elementId = props.element.getId()
+    this.element = props.element
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
@@ -89,7 +90,7 @@ class ImageWidget extends Component {
     //   {}
     // );
     let classNames = this.getClasses() + (this.state.settings.position_css_classes || "") + "altrp-image-container"
-    let media = this.state.settings.content_media;
+    let media = this.element.getLockedSettings('content_media', {});
 
     if(cursorPointer) {
       classNames += " cursor-pointer"

@@ -27,7 +27,7 @@
         {
           var element = document.createElement('div');
 
-          document.appendChild(element);
+          document.body.appendChild(element);
           element.innerHTML =`${msg} ${url} ${lno}`;
           return true;
         }

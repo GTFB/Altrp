@@ -364,7 +364,7 @@ const AltrpFieldContainer = styled.div`
 `;
 
 class InputTextCommonWidget extends Component {
-  timeInput = null;
+
 
   constructor(props) {
     super(props);
@@ -374,14 +374,14 @@ class InputTextCommonWidget extends Component {
     }
     this.onChange = this.onChange.bind(this);
     this.debounceDispatch = this.debounceDispatch.bind(this);
-
     this.defaultValue = this.getLockedContent("content_default_value")
 
     this.state = {
       settings: {...props.element.getSettings()},
       showPassword: false,
     };
-    if (this.getLockedContent("content_default_value")) {
+    const value = this.getValue();
+    if (!value && this.getLockedContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }

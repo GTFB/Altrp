@@ -26,7 +26,7 @@ import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
-import delay from "../../../../helpers/delay";
+
 
 export default class AdminController {
 
@@ -245,7 +245,7 @@ export default class AdminController {
       const pageGenerator = new PageGenerator()
       try{
         await pageGenerator.run(page)
-        await delay(100);
+
       }catch (e) {
 
         console.error(`Error while Page ${page.id} generate: ${e.message}`,

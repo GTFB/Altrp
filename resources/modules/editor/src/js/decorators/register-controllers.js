@@ -55,6 +55,7 @@ export function advancedTabControllers(element) {
   element.addControl('default_hidden', {
     type: CONTROLLER_SWITCHER,
     label: 'Default Hidden',
+    locked:true,
     default: false,
   });
 

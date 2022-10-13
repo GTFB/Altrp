@@ -52,20 +52,19 @@ class SingleElementWrapper extends Component {
   }
 
   /**
-   * Иногда надо обновить элемент (FrontElement)
+   *
    */
   componentDidMount() {
     let skeleton_pending_path = this.props.element.settings?.skeleton_pending_path;
-    if(this.props.withSkeleton){
+    if(this.props.withSkeleton ){
       setTimeout(()=>{
-        if(skeleton_pending_path){
-          if(getDataByPath(skeleton_pending_path)){
-            this.setState(state =>({...state, withSkeleton: false}))
-          }
-        }else {
+        if( skeleton_pending_path && getDataByPath(skeleton_pending_path)){
           this.setState(state =>({...state, withSkeleton: false}))
         }
-      }, 500)
+        if(! skeleton_pending_path){
+          this.setState(state =>({...state, withSkeleton: false}))
+        }
+      }, 1000)
     }
     !isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
@@ -197,23 +196,13 @@ class SingleElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
-    if (
-      appStore.getState().currentModel.getProperty("altrpModelUpdated") &&
-      appStore
-        .getState()
-        .currentDataStorage.getProperty("currentDataStorageLoaded") &&
-      !isEditor() &&
-      this.props.element.getName() === "section"
-    ) {
-      let title = appStore.getState().currentTitle;
-      title = replaceContentWithData(title);
-    }
+
     if(prevProps.currentDataStorage !== this.props.currentDataStorage){
       let skeleton_pending_path = this.props.element.settings?.skeleton_pending_path;
       if(this.state.withSkeleton && getDataByPath(skeleton_pending_path)){
         setTimeout(()=>{
           this.setState(state =>({...state, withSkeleton: false}))
-        }, 500)
+        }, 1000)
       }
     }
   }
@@ -276,9 +265,6 @@ class SingleElementWrapper extends Component {
       return false
     }
     dependencies = dependencies || []
-    // console.log(dependencies);
-    // console.log(newProps);
-    // console.log(this.props);
 
     if(newState.elementDisplay !== this.state.elementDisplay){
       return true
@@ -368,9 +354,6 @@ class SingleElementWrapper extends Component {
     /**
      * @member {FrontElement} element
      */
-    if(this.state.withSkeleton){
-      return <AltrpSkeletonBoxFrontApp itemsCount={this.props.skeletonItems}/>
-    }
     const {
       element
     } = this.props;
@@ -525,6 +508,8 @@ class SingleElementWrapper extends Component {
               vertical={tooltip_vertical_offset}
             /> : ''
         }
+        {this.state.withSkeleton &&
+        <AltrpSkeletonBoxFrontApp itemsCount={this.props.skeletonItems} />}
         <WrapperComponent {...wrapperProps} >
           {content}
         </WrapperComponent>

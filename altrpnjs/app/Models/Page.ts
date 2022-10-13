@@ -153,6 +153,21 @@ export default class Page extends BaseModel {
   })
   public categories: ManyToMany<typeof Category>
 
+  // private static elementsWithoutSettings = [
+  //   'button',
+  //   'section',
+  //   'section_widget',
+  //   'column',
+  //   'image',
+  // ]
+  private static settingsToMigrate = [
+    'default_hidden',
+    'section',
+    'section_widget',
+    'column',
+    'image',
+  ]
+
   static FRONT_DEFAULT_AREAS = [
     'content', 'footer', 'header', 'popups',
   ];
@@ -1079,7 +1094,6 @@ export default class Page extends BaseModel {
         }
       })
     }
-    data.settings = {}
     if(_.isObject(data.settingsLock)){
       prefixes.forEach((prefix)=>{
         prefix += ':'
@@ -1090,6 +1104,18 @@ export default class Page extends BaseModel {
         }
       })
     }
+
+    // if(Page.elementsWithoutSettings.includes(data.name)){
+    for(const s of Page.settingsToMigrate){
+      // @ts-ignore
+      if(data.settings[s]){
+        // @ts-ignore
+        data.settingsLock[s] = data.settings[s]
+      }
+    }
+    data.settings = {...data.settingsLock}
+    delete data.settingsLock
+    // }
   }
 
   async getPopupsGuids() {

@@ -4,7 +4,7 @@
 ## Changelog
 ##Test Version
 
-### 1.3.2
+### 1.3.2.1
 * Added Customizers API for Plugins
 
 ### 1.3.2
