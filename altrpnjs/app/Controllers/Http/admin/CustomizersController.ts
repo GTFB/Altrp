@@ -1,10 +1,9 @@
-import { exec } from 'child_process'
-import { promisify } from 'util'
 import Customizer from 'App/Models/Customizer';
 import Model from 'App/Models/Model';
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
 import validGuid from '../../../../helpers/validGuid';
 import * as _ from 'lodash'
+import exec from "../../../../helpers/exec";
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
@@ -69,7 +68,7 @@ export default class CustomizersController {
         await source.save()
       }
       if(customizer.type === "listener" && model) {
-        await promisify(exec)(`node ${base_path('ace')} generator:listener ${customizer.id}`)
+        await exec(`node ${base_path('ace')} generator:listener --id=${customizer.id}`)
       }
       //@ts-ignore
       if(model){
@@ -204,11 +203,11 @@ export default class CustomizersController {
     }
 
     if (oldType === 'crud' && all.type !== 'crud') {
-      promisify(exec)(`node ${base_path('ace')} generator:crud --delete ${customizer.id}`)
+      await exec(`node ${base_path('ace')} generator:crud --delete --id=${customizer.id}`)
     }
 
     if (oldType === 'schedule' && all.type !== 'schedule') {
-      promisify(exec)(`node ${base_path('ace')} generator:schedule --delete ${customizer.id}`)
+      await exec(`node ${base_path('ace')} generator:schedule --delete --id=${customizer.id}`)
       customizer.removeSchedule()
     }
 
@@ -265,15 +264,15 @@ export default class CustomizersController {
         await source.save()
       }
       if(customizer.type === "listener" && model) {
-        promisify(exec)(`node ${base_path('ace')} generator:listener ${customizer.id}`)
+        await exec(`node ${base_path('ace')} generator:listener --id=${customizer.id}`)
       }
 
       if (customizer.type === 'crud' && model) {
-        promisify(exec)(`node ${base_path('ace')} generator:crud ${customizer.id}`)
+        await exec(`node ${base_path('ace')} generator:crud --id=${customizer.id}`)
       }
 
       if (customizer.type === 'schedule') {
-        promisify(exec)(`node ${base_path('ace')} generator:schedule ${customizer.id}`)
+        await exec(`node ${base_path('ace')} generator:schedule --id=${customizer.id}`)
         customizer.schedule()
       }
 
@@ -377,7 +376,7 @@ export default class CustomizersController {
     }
     try {
       if(customizer.type === "listener") {
-        await promisify(exec)(`node ${base_path('ace')} generator:listener --delete ${customizer.id}`)
+        await exec(`node ${base_path('ace')} generator:listener --delete --id=${customizer.id}`)
       }
 
       if(customizer?.settings?.time && customizer?.settings?.time_type) {

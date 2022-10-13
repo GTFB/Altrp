@@ -1,6 +1,5 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
-import { exec } from 'child_process'
-import { promisify } from 'util'
+import exec from '../../../helpers/exec'
 import validGuid from '../../../helpers/validGuid';
 
 import { v4 as uuid } from "uuid";
@@ -198,7 +197,7 @@ export default class TemplatesController {
         }
       }
     }
-    await promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
+    await exec(`node ${base_path('ace')} generator:template --id=${template.id}`)
     applyPluginsFiltersAsync('template_updated', template)
     return {
       message: "Success",
@@ -241,7 +240,7 @@ export default class TemplatesController {
         all_site: parentTemplate?.all_site ? 1 : 0
       })
 
-    await promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
+    await exec(`node ${base_path('ace')} generator:template --id=${template.id}`)
     applyPluginsFiltersAsync('template_updated', template)
 
     return {
@@ -338,7 +337,7 @@ export default class TemplatesController {
 
     const template = await templateQuery.firstOrFail()
 
-    promisify(exec)(`node ${base_path('ace')} generator:template ${template.id}`)
+    await exec(`node ${base_path('ace')} generator:template --delete --id=${template.id}`)
     applyPluginsFiltersAsync('template_before_delete', template)
 
     await TemplateSetting.query().where("template_id", template.id).delete()
@@ -408,7 +407,7 @@ export default class TemplatesController {
       template.html_content = '';
       await template.save()
 
-      await promisify(exec)(`node ${base_path('ace')} generator:template ${params.id}`)
+      await exec(`node ${base_path('ace')} generator:template --id=${params.id}`)
       applyPluginsFiltersAsync('template_updated', template)
 
 

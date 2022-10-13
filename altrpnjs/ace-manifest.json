@@ -70,17 +70,17 @@
       "commandPath": "./commands/GeneratorController",
       "commandName": "generator:controller",
       "description": "Run a controller generator",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "id",
-          "name": "id",
-          "required": true,
-          "description": "Id of the controller"
-        }
-      ],
+      "args": [],
       "aliases": [],
-      "flags": []
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of controller ids (comma separated values without space)"
+        }
+      ]
     },
     "generator:crud": {
       "settings": {
@@ -89,24 +89,23 @@
       },
       "commandPath": "./commands/GeneratorCrud",
       "commandName": "generator:crud",
-      "description": "Run a crud generator",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "id",
-          "name": "id",
-          "required": true,
-          "description": "Id of the crud customizer"
-        }
-      ],
+      "description": "Run a CRUD generator",
+      "args": [],
       "aliases": [],
       "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of CRUD ids (comma separated values without space)"
+        },
         {
           "name": "delete",
           "propertyName": "isDelete",
           "type": "boolean",
           "alias": "d",
-          "description": "Delete generated crud"
+          "description": "Delete generated CRUD"
         }
       ]
     },
@@ -118,17 +117,16 @@
       "commandPath": "./commands/GeneratorListener",
       "commandName": "generator:listener",
       "description": "Run a listener generator",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "id",
-          "name": "id",
-          "required": true,
-          "description": "Id of the listener"
-        }
-      ],
+      "args": [],
       "aliases": [],
       "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of listener ids (comma separated values without space)"
+        },
         {
           "name": "delete",
           "propertyName": "isDelete",
@@ -146,17 +144,16 @@
       "commandPath": "./commands/GeneratorModel",
       "commandName": "generator:model",
       "description": "Run a model generator",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "id",
-          "name": "id",
-          "required": true,
-          "description": "Id of the model"
-        }
-      ],
+      "args": [],
       "aliases": [],
       "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of model ids (comma separated values without space)"
+        },
         {
           "name": "delete",
           "propertyName": "isDelete",
@@ -174,17 +171,17 @@
       "commandPath": "./commands/GeneratorPage",
       "commandName": "generator:page",
       "description": "Run a page generator",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "id",
-          "name": "id",
-          "required": true,
-          "description": "Id of the page"
-        }
-      ],
+      "args": [],
       "aliases": [],
-      "flags": []
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of page ids (comma separated values without space)"
+        }
+      ]
     },
     "generator:schedule": {
       "settings": {
@@ -194,17 +191,16 @@
       "commandPath": "./commands/GeneratorSchedule",
       "commandName": "generator:schedule",
       "description": "Run a schedule generator",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "id",
-          "name": "id",
-          "required": true,
-          "description": "Id of the schedule customizer"
-        }
-      ],
+      "args": [],
       "aliases": [],
       "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of schedule ids (comma separated values without space)"
+        },
         {
           "name": "delete",
           "propertyName": "isDelete",
@@ -222,17 +218,16 @@
       "commandPath": "./commands/GeneratorTemplate",
       "commandName": "generator:template",
       "description": "Run a template generator",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "id",
-          "name": "id",
-          "required": true,
-          "description": "Id of the template"
-        }
-      ],
+      "args": [],
       "aliases": [],
       "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of template ids (comma separated values without space)"
+        },
         {
           "name": "delete",
           "propertyName": "isDelete",
@@ -255,63 +250,17 @@
       "settings": {
         "loadApp": true
       },
-      "commandPath": "@adonisjs/core/build/commands/ListRoutes/index",
+      "commandPath": "@adonisjs/core/build/commands/ListRoutes",
       "commandName": "list:routes",
       "description": "List application routes",
       "args": [],
       "aliases": [],
       "flags": [
         {
-          "name": "verbose",
-          "propertyName": "verbose",
-          "type": "boolean",
-          "description": "Display more information"
-        },
-        {
-          "name": "reverse",
-          "propertyName": "reverse",
-          "type": "boolean",
-          "alias": "r",
-          "description": "Reverse routes display"
-        },
-        {
-          "name": "methods",
-          "propertyName": "methodsFilter",
-          "type": "array",
-          "alias": "m",
-          "description": "Filter routes by method"
-        },
-        {
-          "name": "patterns",
-          "propertyName": "patternsFilter",
-          "type": "array",
-          "alias": "p",
-          "description": "Filter routes by the route pattern"
-        },
-        {
-          "name": "names",
-          "propertyName": "namesFilter",
-          "type": "array",
-          "alias": "n",
-          "description": "Filter routes by route name"
-        },
-        {
           "name": "json",
           "propertyName": "json",
           "type": "boolean",
           "description": "Output as JSON"
-        },
-        {
-          "name": "table",
-          "propertyName": "table",
-          "type": "boolean",
-          "description": "Output as Table"
-        },
-        {
-          "name": "max-width",
-          "propertyName": "maxWidth",
-          "type": "number",
-          "description": "Specify maximum rendering width. Ignored for JSON Output"
         }
       ]
     },

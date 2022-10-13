@@ -1,12 +1,16 @@
-import { BaseCommand, args, flags } from '@adonisjs/core/build/standalone'
+import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 
 export default class GeneratorTemplate extends BaseCommand {
   public static commandName = 'generator:template'
 
   public static description = 'Run a template generator'
-  
-  @args.string({ name: 'id', description: 'Id of the template' })
-  public id: string
+
+  @flags.array({
+    name: 'id',
+    alias: 'i',
+    description: 'Array of template ids (comma separated values without space)',
+  })
+  public id: string[]
 
   @flags.boolean({
     name: 'delete',
@@ -24,19 +28,42 @@ export default class GeneratorTemplate extends BaseCommand {
     const { default: Template } = await import('App/Models/Template')
     const { default: TemplateGenerator } = await import('App/Generators/TemplateGenerator')
 
-    const template = await Template.find(parseInt(this.id))
+    let templates
 
-    if (template) {
-      const templateGenerator = new TemplateGenerator()
+    if (this.id) {
+      templates = await Template.query()
+        .whereNull('deleted_at')
+        .andWhereIn('id', this.id)
+        .limit(this.id.length)
+        .select('*')
+    } else {
+      templates = await Template.query()
+        .whereNull('deleted_at')
+        .select('*')
+    }
 
-      if (this.isDelete) {
-        templateGenerator.deleteFile(template)
-        templateGenerator.deleteFiles(template)
-        console.log(`Template of id (${this.id}) deleted: ${this.colors.cyan(templateGenerator.getFilename(template))}`)
-      } else {
-        await templateGenerator.run(template)
-        console.log(`Template generated for id (${this.id}) : ${this.colors.cyan(templateGenerator.getFilename(template))}`)
+    const templateGenerator = new TemplateGenerator()
+    const failure: Error[] = []
+
+    for (let template of templates) {
+      try {
+        if (this.isDelete) {
+          templateGenerator.deleteFile(template)
+          templateGenerator.deleteFiles(template)
+          console.log(`Template of id (${template.id}) deleted: ${this.colors.cyan(templateGenerator.getFilename(template))}`)
+        } else {
+          await templateGenerator.run(template)
+          console.log(`Template generated for id (${template.id}): ${this.colors.cyan(templateGenerator.getFilename(template))}`)
+        }
+      } catch (err) {
+        console.error(`Error occurred while ${this.isDelete ? 'deleting' : 'generating'} Template ${template.guid}: ${err.message}`)
+        console.error(err)
+        failure.push(err)
       }
+    }
+
+    if (failure.length) {
+      console.error(`${failure.length} error${failure.length === 1 ? '' : 's'} occurred while ${this.isDelete ? 'deleting' : 'generating'} templates`)
     }
   }
 }

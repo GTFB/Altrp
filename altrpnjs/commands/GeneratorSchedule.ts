@@ -1,12 +1,16 @@
-import { BaseCommand, args, flags } from '@adonisjs/core/build/standalone'
+import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 
 export default class GeneratorSchedule extends BaseCommand {
   public static commandName = 'generator:schedule'
 
   public static description = 'Run a schedule generator'
-  
-  @args.string({ name: 'id', description: 'Id of the schedule customizer' })
-  public id: string
+
+  @flags.array({
+    name: 'id',
+    alias: 'i',
+    description: 'Array of schedule ids (comma separated values without space)',
+  })
+  public id: string[]
 
   @flags.boolean({
     name: 'delete',
@@ -24,18 +28,47 @@ export default class GeneratorSchedule extends BaseCommand {
     const { default: Customizer } = await import('App/Models/Customizer')
     const { default: CustomizerGenerator } = await import('App/Generators/CustomizerGenerator')
 
-    const customizer = await Customizer.find(parseInt(this.id))
+    let schedules
 
-    if (customizer && customizer.type === 'schedule') {
-      const customizerGenerator = new CustomizerGenerator(customizer)
+    if (this.id) {
+      schedules = await Customizer.query()
+        .where('type', 'schedule')
+        .andWhereIn('id', this.id)
+        .limit(this.id.length)
+        .select('*')
+    } else {
+      schedules = await Customizer.query()
+        .where('type', 'schedule')
+        .select('*')
+    }
 
-      if (this.isDelete) {
-        customizerGenerator.delete()
-        console.log(`Schedule of id (${this.id}) deleted: ${this.colors.cyan(customizerGenerator.getFileName())}`)
-      } else {
-        await customizerGenerator.run()
-        console.log(`Schedule generated for id (${this.id}) : ${this.colors.cyan(customizerGenerator.getFileName())}`)
+    const failure: Error[] = []
+
+    for (let schedule of schedules) {
+      const scheduleGenerator = new CustomizerGenerator(schedule)
+
+      try {
+        if (this.isDelete) {
+          scheduleGenerator.delete()
+          console.log(`Schedule of id (${schedule.id}) deleted: ${this.colors.cyan(scheduleGenerator.getFileName())}`)
+        } else {
+          const result = await scheduleGenerator.run()
+
+          if (result) {
+            console.log(`Schedule generated for id (${schedule.id}): ${this.colors.cyan(scheduleGenerator.getFileName())}`)
+          } else {
+            throw new Error(`Schedule Customizer (id: ${schedule.id}) is invalid`)
+          }
+        }
+      } catch (err) {
+        console.error(`Error occurred while generating Schedule ${schedule.guid}: ${err.message}`)
+        console.error(err)
+        failure.push(err)
       }
+    }
+
+    if (failure.length) {
+      console.error(`${failure.length} error${failure.length === 1 ? '' : 's'} occurred while generating schedules`)
     }
   }
 }
