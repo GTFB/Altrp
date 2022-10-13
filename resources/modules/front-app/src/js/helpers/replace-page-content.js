@@ -161,6 +161,7 @@ async function _replace(htmlString) {
           newArea.classList.add(c)
         }
       })
+      newArea.innerHTML = a.innerHTML
       routeContent.appendChild(newArea)
       return
     }

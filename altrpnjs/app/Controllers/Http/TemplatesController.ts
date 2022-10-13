@@ -197,7 +197,9 @@ export default class TemplatesController {
         }
       }
     }
-    await exec(`node ${base_path('ace')} generator:template --id=${template.id}`)
+    if(body.type !== "review"){
+      console.log(await exec(`node ${base_path('ace')} generator:template --id=${template.id}`))
+    }
     applyPluginsFiltersAsync('template_updated', template)
     return {
       message: "Success",

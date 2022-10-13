@@ -321,11 +321,11 @@ class AddPage extends Component {
       progressBar()
     }
     if (res.success) {
-      this.setState(state => {
-        return {...state, redirectAfterSave: true};
-      }, () => {
-        this.props.history.push('/admin/pages')
-      });
+      // this.setState(state => {
+      //   return {...state, redirectAfterSave: true};
+      // }, () => {
+      //   this.props.history.push('/admin/pages')
+      // });
     } else {
       this.setState(state => {
         return {...state, value: {}};
@@ -333,7 +333,8 @@ class AddPage extends Component {
     }
   }
 
-   async handlePublish(e) {
+    handlePublish = async(e) =>{
+    console.log(e);
     if (this.state.value.path === undefined ||
       this.state.value.path === '' ||
       this.state.value.title === undefined ||
@@ -345,6 +346,7 @@ class AddPage extends Component {
     }
 
     e.preventDefault();
+    e.stopPropagation();
     let res;
     const {parent_page_id} = this.state.value;
     let path = this.state.value.path;
@@ -372,28 +374,18 @@ class AddPage extends Component {
       progressBar(1)
       await delay(100)
       progressBar()
-    }
-    if (res.success) {
+
       this.setState(state => {
         return {...state, redirectAfterSave: true};
       }, () => {
         this.props.history.push('/admin/pages')
       });
+    }
+    if (res.success) {
     } else {
       this.setState(state => {
         return {...state, value: {}};
       });
-    }
-    e.preventDefault();
-
-    try {
-      progressBar(0.01);
-      await this.resource.publish(this.state.id);
-      progressBar(1);
-      await delay(100);
-      progressBar();
-    } catch(err) {
-      
     }
   }
 
@@ -602,7 +594,6 @@ class AddPage extends Component {
           <div className="custom-tab__tab-panel">
             <form
               className={this.state.currentTab === 'Datasource' ? "admin-form-pages__datasource mb-2" : "admin-form-pages mb-2"}
-              onSubmit={this.savePage}
             >
               {(() => {
                 if (this.state.currentTab === 'content') {
@@ -854,7 +845,9 @@ class AddPage extends Component {
                 }
               })()}
               {(this.state.currentTab === "content") && (
-                <button className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}>
+                <button
+                  onClick={this.savePage}
+                  className={(this.state.value.path ? "btn btn_success" : "btn btn_disable") + ' mr-2'}>
                   {this.state.id ? "Save" : "Add"}
                 </button>
               )}
