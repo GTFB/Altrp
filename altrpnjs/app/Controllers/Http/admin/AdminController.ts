@@ -27,7 +27,6 @@ import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import delay from "../../../../helpers/delay";
-import applyPluginsFiltersAsync from "../../../../helpers/plugins/applyPluginsFiltersAsync";
 
 export default class AdminController {
 

@@ -3,7 +3,7 @@
 
 ## Changelog
 
-### 1.3.2
+### 1.3.3 build 4
 * Added Customizers API for Plugins
 
 ### 1.3.2

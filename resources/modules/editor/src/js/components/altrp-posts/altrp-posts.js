@@ -244,6 +244,11 @@ class AltrpPosts extends React.Component {
     }
     posts.forEach((p, idx)=>{
 
+      const transitionType = _.get(
+        this.props.settings,
+        "posts_transition_type",
+        null
+      );
       let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
       let post = this.props.data[idx] || this.props.data;
       if(hoverHtmlTemplate){
