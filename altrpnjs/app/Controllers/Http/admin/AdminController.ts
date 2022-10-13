@@ -1,13 +1,9 @@
-import Model from "App/Models/Model";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import Controller from "App/Models/Controller";
 import Application from '@ioc:Adonis/Core/Application';
 import jimp from "jimp";
 import FAVICONS_SIZES from "../../../../helpers/const/FAVICONS_SIZES";
 import Drive from '@ioc:Adonis/Core/Drive'
 import ListenerGenerator from "App/Generators/ListenerGenerator";
-import ModelGenerator from 'App/Generators/ModelGenerator'
-import ControllerGenerator from 'App/Generators/ControllerGenerator'
 import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
 import Env from "@ioc:Adonis/Core/Env";
@@ -211,23 +207,7 @@ export default class AdminController {
   private static async upgradeModels() {
     console.info('Upgrading Models')
 
-    const models = (await Model.query().select('*'))
-      .filter(model => !['user', 'media'].includes(model.name.toLocaleLowerCase()))
-    const modelGenerator = new ModelGenerator()
-
-    for (let model of models) {
-      await modelGenerator.run(model)
-      console.log(`Model generated for id (${model.id}): ${modelGenerator.getFilename(model)}`)
-    }
-
-    const payload = models.map(model => ({ model_id: model.id, description: model.description }))
-    const controllers = await Controller.fetchOrNewUpMany('model_id', payload)
-    const controllerGenerator = new ControllerGenerator()
-
-    for (let controller of controllers) {
-      await controllerGenerator.run(controller)
-      console.log(`Controller generated for id (${controller.id}): ${controllerGenerator.getFilename()}`)
-    }
+    await exec(`node ${base_path('ace')} generator:model`)
 
     console.info('Models Upgraded')
   }
