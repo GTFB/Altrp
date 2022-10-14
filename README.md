@@ -3,7 +3,10 @@
 
 ## Changelog
 
-### 1.3.3 build 4
+### 1.3.4 build 7
+* Added Support for Square Brackets for the Second Level of Data Replacement Nesting in the Content
+
+### 1.3.3 
 * Added Customizers API for Plugins
 
 ### 1.3.2

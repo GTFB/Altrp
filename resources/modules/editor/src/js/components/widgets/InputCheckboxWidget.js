@@ -418,6 +418,22 @@ class InputCheckboxWidget extends Component {
   }
 
   /**
+   *
+   * @returns {string}
+   */
+  getValue = () => {
+    let value;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
+    }
+    return value;
+  }
+  /**
    * В некоторых случаях значение поля должно быть массивом
    * @return {boolean}
    */
