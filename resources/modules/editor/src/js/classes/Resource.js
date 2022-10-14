@@ -497,7 +497,7 @@ class Resource {
     };
 
     const url = this.getRoute() + '/' + id + '/publish';
-    console.log(options);
+
     return fetch(url, options).then(res => {
       if (res.ok === false) {
         return Promise.reject(res.text(), res.status);

@@ -1,8 +1,11 @@
 # ALTRP
 
 
-## Changelog build 6
+## Changelog build 13
 ##Test Version
+
+### 1.3.4 
+* Added Support for Square Brackets for the Second Level of Data Replacement Nesting in the Content
 
 ### 1.3.3 
 * Added Customizers API for Plugins

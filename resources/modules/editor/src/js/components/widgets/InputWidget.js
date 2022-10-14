@@ -818,8 +818,7 @@ class InputWidget extends Component {
           options = !_.isArray(options) ? options.data : options;
           options = _.isArray(options) ? options : [];
         }
-        // console.log(options);
-        // console.log(this.state.value);
+
         this.setState(state => ({
           ...state,
           paramsForUpdate,

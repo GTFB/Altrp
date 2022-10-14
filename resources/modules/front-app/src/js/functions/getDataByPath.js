@@ -26,7 +26,11 @@ export default function getDataByPath(
   }
   if (path.indexOf("{{") !== -1) {
     path = replaceContentWithData(path, context);
+  } else if( path.indexOf("[[") !== -1){
+    path = replaceContentWithData(path, context, true);
+
   }
+
   /**
    * проверим путь
    */

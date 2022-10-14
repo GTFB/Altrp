@@ -3,26 +3,52 @@ import {clearElements} from "../store/elements-storage/actions";
 import mountElements from "../functions/mount-elements";
 import {changeCurrentPage} from "../store/current-page/actions";
 import convertQueryParamsToObject from "../functions/convert-query-params-to-object";
+import delay from "../functions/delay";
+import {changeCurrentModel} from "../store/current-model/actions";
 
 export default function replacePageContent(url, popstate = false) {
   if (!url) {
     return
   }
+  /**
+   * helpers styles
+   */
+  let helperStyles = document.querySelector('#__helper__styles__')
+  if (!helperStyles) {
+    helperStyles = document.createElement('style')
+    document.head.appendChild(helperStyles)
+    helperStyles.innerHTML = `
+.app-area__fade-in{
+  transition-duration: .75s;
+  opacity: 1;
+}
+.app-area__fade-out{
+  transition-duration: .75s;
+  opacity: 0;
+}
+    `
+  }
 
-  const progressBar = document.createElement('div')
-  progressBar.style.background = 'rgb(48, 79, 253)'
-  progressBar.style.boxShadow = 'rgb(0 0 0 / 15%) 0 4px 5px 0px'
-  progressBar.style.position = 'fixed'
-  progressBar.style.top = 0
-  progressBar.style.right = 0
-  progressBar.style.left = 0
-  progressBar.style.height = '4px'
-  progressBar.style.transitionDuration = '500ms'
-  progressBar.style.zIndex = 100000
-  progressBar.style.transform = 'translate( - 100% )'
 
-  document.body.appendChild(progressBar)
+  // const progressBar = document.createElement('div')
+  // progressBar.style.background = 'rgb(48, 79, 253)'
+  // progressBar.style.boxShadow = 'rgb(0 0 0 / 15%) 0 4px 5px 0px'
+  // progressBar.style.position = 'fixed'
+  // progressBar.style.top = 0
+  // progressBar.style.right = 0
+  // progressBar.style.left = 0
+  // progressBar.style.height = '4px'
+  // progressBar.style.transitionDuration = '500ms'
+  // progressBar.style.zIndex = 100000
+  // progressBar.style.transform = 'translate( - 100% )'
 
+  // document.body.appendChild(progressBar)
+  if (url.indexOf(location.origin) === 0) {
+    url = url.replace(location.origin, '')
+  }
+  if (url.indexOf(location.host) === 0) {
+    url = url.replace(location.host, '')
+  }
   let _url = `/ajax/get-page-content?url=${url}`
   let xhr = new XMLHttpRequest();
 
@@ -31,7 +57,7 @@ export default function replacePageContent(url, popstate = false) {
   xhr.onprogress = function (e) {
     if (e.lengthComputable) {
       let percent = (e.loaded / e.total) * 100;
-      progressBar.style.transform = 'translate(' + (90 - percent) + '%)'
+      // progressBar.style.transform = 'translate(' + (90 - percent) + '%)'
     }
   };
   xhr.open('GET', _url, true);
@@ -39,14 +65,13 @@ export default function replacePageContent(url, popstate = false) {
   xhr.onreadystatechange = async function () {
 
     if (xhr.readyState === XMLHttpRequest.DONE) {
-      console.log('async Page End: ', performance.now());
 
       if (!xhr.responseText || xhr.status !== 200 && xhr.status !== 404) {
         console.error('Response Error: ' + xhr.responseText)
       }
       try {
         const newPageData = await _replace(xhr.responseText)
-        progressBar.style.transform = 'translate(100%)'
+        // progressBar.style.transform = 'translate(100%)'
         if (!popstate) {
           window.history.replaceState({
             altrpCustomNavigation: true
@@ -55,11 +80,12 @@ export default function replacePageContent(url, popstate = false) {
             altrpCustomNavigation: true
           }, newPageData.newTitle, url)
         }
+        console.log('async Page End: ', performance.now());
       } catch (e) {
         console.error(e);
         location.href = url
       } finally {
-        progressBar.remove()
+        // progressBar.remove()
       }
     }
   };
@@ -72,11 +98,11 @@ export default function replacePageContent(url, popstate = false) {
 
 function migrateScript(target, source) {
   const scripts = source.querySelectorAll('script')
-  scripts.forEach( (s)=> {
+  scripts.forEach((s) => {
     const newScript = document.createElement('script')
-    if(s.innerHTML){
+    if (s.innerHTML) {
       newScript.innerHTML = `(function(){${s.innerHTML}})()`
-    } else if(s.getAttribute('src')){
+    } else if (s.getAttribute('src')) {
       newScript.setAttribute('src', s.getAttribute('src'))
     }
 
@@ -88,40 +114,6 @@ async function _replace(htmlString) {
   htmlString = htmlString.replace(/<!([\s\S]+?)>/, '')
   const newHtml = document.createElement('html')
   newHtml.innerHTML = htmlString
-
-
-  /**
-   * CSS links
-   */
-
-  let links = newHtml.querySelectorAll('link')
-
-  let stylesContainer = document.createElement('div')
-
-  stylesContainer.classList.add('migrated-styles')
-  document.body.appendChild(stylesContainer)
-
-
-  const newStyles = newHtml.querySelectorAll('style')
-  for (const s of newStyles) {
-    stylesContainer.appendChild(s)
-  }
-  await Promise.all(_.map(links, l => {
-    return new Promise(resolve => {
-
-      const newLink = document.createElement('link')
-      newLink.setAttribute('id', l.getAttribute('id'))
-      newLink.setAttribute('href', l.getAttribute('href'))
-      newLink.setAttribute('rel', 'stylesheet')
-      newLink.addEventListener('load', () => {
-        resolve()
-      })
-      newLink.addEventListener('error', () => {
-        resolve()
-      })
-      stylesContainer.appendChild(newLink)
-    })
-  }))
 
 
   /**
@@ -148,7 +140,7 @@ async function _replace(htmlString) {
     // routeContent.appendChild(area)
 
   }
-  newAreas.forEach((a, idx) => {
+  newAreas.forEach((a) => {
 
     // oldAreas.forEach((oa, _idx)=>{
     //
@@ -157,31 +149,98 @@ async function _replace(htmlString) {
       .querySelector(`.${a.classList.value.replace(/ /g, '.')}`)
 
     if (!oldArea) {
-      const newArea = document.createElement('div' )
-      a.classList.value.split(' ').forEach(c=>{
-        if(c){
+      const newArea = document.createElement('div')
+      a.classList.value.split(' ').forEach(c => {
+        if (c) {
           newArea.classList.add(c)
         }
       })
-      newArea.innerHTML = a.innerHTML
+
+      newArea.classList.add('app-area__fade-out')
+      delay(750).then(() => {
+        newArea.innerHTML = a.innerHTML
+        newArea.classList.add('app-area__fade-in')
+        newArea.classList.remove('app-area__fade-out')
+
+        migrateScript(newArea, a)
+        return delay(750)
+      }).then(() => {
+        newArea.classList.remove('app-area__fade-in')
+      })
       routeContent.appendChild(newArea)
-      migrateScript(newArea, a)
       return
     }
     const newSectionWrapper = a.querySelector('.sections-wrapper')
+
     if (!newSectionWrapper) {
-      oldArea.innerHTML = ''
+      oldArea.classList.add('app-area__fade-out')
+      delay(750).then(() => {
+        oldArea.innerHTML = ''
+        return delay(750)
+      })
       return
     }
     if (oldArea.querySelector(`.${newSectionWrapper.classList.value.replace(/ /g, '.')}`)) {
       return;
     }
-    oldArea.innerHTML = a.innerHTML
 
-    migrateScript(oldArea, a)
+    oldArea.classList.add('app-area__fade-out')
+    delay(750).then(() => {
+      oldArea.innerHTML = a.innerHTML
+      oldArea.classList.remove('app-area__fade-out')
+      oldArea.classList.add('app-area__fade-in')
+      migrateScript(oldArea, a)
+      return delay(750)
+    }).then(() => {
+      oldArea.classList.remove('app-area__fade-in')
+    })
+
 
   })
 
+  await delay(750)
+  appStore.dispatch(clearCurrentDataStorage())
+
+  /**
+   * bar-portal
+   */
+  document.querySelector('.admin-bar-portal')?.remove()
+
+  /**
+   * CSS links
+   */
+
+  let links = newHtml.querySelectorAll('link')
+
+  let stylesContainer = document.createElement('div')
+
+  stylesContainer.classList.add('migrated-styles')
+  document.body.appendChild(stylesContainer)
+
+
+  const newStyles = newHtml.querySelectorAll('style')
+  for (const s of newStyles) {
+    stylesContainer.appendChild(s)
+  }
+
+  await Promise.all(_.map(links, l => {
+    return new Promise(resolve => {
+
+      const newLink = document.createElement('link')
+      newLink.setAttribute('id', l.getAttribute('id'))
+      newLink.setAttribute('href', l.getAttribute('href'))
+      newLink.setAttribute('rel', 'stylesheet')
+      newLink.addEventListener('load', () => {
+        resolve()
+      })
+      newLink.addEventListener('error', () => {
+        resolve()
+      })
+      stylesContainer.appendChild(newLink)
+    })
+  }))
+
+  await delay(750)
   const title = document.querySelector('title')
   const newTitle = newHtml.querySelector('title')
   title.innerHTML = newTitle.innerHTML
@@ -198,20 +257,27 @@ async function _replace(htmlString) {
   }
   oldMainScript = document.createElement('script')
   oldMainScript.setAttribute('id', 'main-script-altrp')
+
   document.body.appendChild(oldMainScript)
-
   oldMainScript.innerHTML = mainScript.innerHTML
-  /**
-   * grid stiles for route content
-   */
 
-  /**
-   * bar-portal
-   */
-  document.querySelector('.admin-bar-portal')?.remove()
+  let _allSiteScripts = document.querySelector('#all_site_js')?.innerHTML || ''
+  let allSiteScripts = document.querySelector('#all_site_js')
+  if (allSiteScripts) {
+    allSiteScripts.remove()
+  }
+
   window.popupsContainer?.remove()
   window.popupsContainer = null
+  allSiteScripts = document.createElement('script')
+  allSiteScripts.setAttribute('id', 'all_site_js')
 
+  document.body.appendChild(allSiteScripts)
+  allSiteScripts.innerHTML = `(function(){${_allSiteScripts}})()`
+  // const scriptContainer = document.createElement('div')
+  // scriptContainer.classList.add('migrated-scripts')
+  // document.body.appendChild(scriptContainer)
+  // migrateScript(scriptContainer, newHtml)
 
 
 
@@ -221,7 +287,6 @@ async function _replace(htmlString) {
   const event = new Event('DOMContentLoaded')
   document.dispatchEvent(event)
   window.hAltrp.loadComponents()
-  appStore.dispatch(clearCurrentDataStorage())
   appStore.dispatch(clearElements())
   window.altrpContentLoaded = false
 
@@ -234,6 +299,16 @@ async function _replace(htmlString) {
     hashParams = convertQueryParamsToObject(document?.location?.hash)
   }
 
+  let defaultModel = {...window.model_data};
+  defaultModel.altrpModelUpdated = true
+  if (_.isObject(window.route_args)) {
+    defaultModel = {
+      ...defaultModel,
+      ...window.route_args
+    }
+  }
+  appStore.dispatch(changeCurrentModel(defaultModel))
+
   appStore.dispatch(changeCurrentPage({
     url: location?.href || "",
     title: window?.currentPage?.title || "",
@@ -245,8 +320,12 @@ async function _replace(htmlString) {
   window._hAltrp()
 
   const stylesContainers = document.querySelectorAll('.migrated-styles')
-  if(stylesContainers.length > 2){
+  if (stylesContainers.length > 2) {
     stylesContainers[0].remove()
+  }
+  const scriptContainers = document.querySelectorAll('.migrated-scripts')
+  if (scriptContainers.length > 2) {
+    scriptContainers[0].remove()
   }
   return {
     newTitle,

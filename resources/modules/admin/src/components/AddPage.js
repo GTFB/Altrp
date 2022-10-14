@@ -334,7 +334,7 @@ class AddPage extends Component {
   }
 
     handlePublish = async(e) =>{
-    console.log(e);
+
     if (this.state.value.path === undefined ||
       this.state.value.path === '' ||
       this.state.value.title === undefined ||

@@ -362,10 +362,17 @@ class AdvancedSettings extends Component {
    * Сохранить код JS для всего сайта
    */
   updateAllSiteJavascript = async () => {
-    await new Resource({route: '/admin/ajax/settings'}).put('all_site_js', {
-      value: this.state.allSiteJavascript,
-      encrypt: true
-    });
+    try {
+      await new Resource({route: '/admin/ajax/settings'}).put('all_site_js', {
+        value: this.state.allSiteJavascript,
+        encrypt: true
+      });
+    }catch (e) {
+      alert('Error: ' + e.message)
+      console.error();
+    }
+    alert('Success!')
+
   };
 
   updateAdditionalHtml = (e, type = 'headStart') => {

@@ -73,8 +73,7 @@ export default class SendTelegram extends Component{
     }
 
     onChange(e){
-      console.log(e);
-      console.log(e?.target?.value);
+
     }
 
     getLabel(type){

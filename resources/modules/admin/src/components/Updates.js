@@ -73,6 +73,7 @@ class Updates extends Component {
           serverRestarted = true
         } catch (e) {
           console.error(e);
+          alert('Error: ' + e.message)
         }
       } while (!serverRestarted && i < 100)
     }
