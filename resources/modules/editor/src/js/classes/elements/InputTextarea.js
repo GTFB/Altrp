@@ -49,10 +49,14 @@ class InputTextarea extends BaseElement {
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
       label: "Form ID",
+      responsive: false,
+      locked: true,
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
+      responsive: false,
+      locked: true,
       label: "Field ID (Column Name)",
     });
 

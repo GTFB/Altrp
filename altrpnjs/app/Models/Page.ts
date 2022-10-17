@@ -1074,9 +1074,13 @@ export default class Page extends BaseModel {
   }
 
   static purgeSettings(data:{
-    settings?:object,
-    settingsLock?:object,
+    settings:object,
+    settingsLock:object ,
+    name:string,
   } = {
+    name: 'default',
+    settings: {},
+    settingsLock: {},
   }){
     const prefixes = [
       'skeleton',
@@ -1113,7 +1117,22 @@ export default class Page extends BaseModel {
         data.settingsLock[s] = data.settings[s]
       }
     }
+    const oldSettings = data.settings
     data.settings = {...data.settingsLock}
+    _.each(Page.requiredFields, (item, elementName)=>{
+      if(data.name !== elementName){
+        return
+      }
+      item.forEach(settingName=> {
+        if (data.settings[settingName]){
+          return
+        }
+        if(oldSettings[settingName]){
+          data.settings[settingName] = oldSettings[settingName]
+        }
+      })
+    })
+    // @ts-ignore
     delete data.settingsLock
     // }
   }
@@ -1121,5 +1140,97 @@ export default class Page extends BaseModel {
   async getPopupsGuids() {
     const popups = await Template.getTemplates(this.id, 'popup')
     return popups.map(popup => popup.guid)
+  }
+
+  protected static requiredFields = {
+    'input-text-common': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-multi-select': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-select': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-radio': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-checkbox': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-wysiwyg': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-textarea': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-image-select': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-accept': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-text-autocomplete': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-date': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-hidden': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-crop-image': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-date-range': [
+      'form_id',
+      'field_id',
+      'content_default_value_start',
+      'content_default_value_end',
+    ],
+    'input-gallery': [
+      'form_id',
+      'field_id',
+      'default_value',
+    ],
   }
 }

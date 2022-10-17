@@ -45,16 +45,19 @@ class InputImageSelect extends BaseElement {
 
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
+      locked: true,
       label: "Content"
     });
 
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
+      locked: true,
       label: "Form ID"
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
+      locked: true,
       label: "Field ID (Column Name)"
     });
 
