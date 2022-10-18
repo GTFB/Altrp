@@ -43,6 +43,7 @@ import app_path from "../../helpers/path/app_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import SCREENS from "../../helpers/const/SCREENS";
 import public_path from "../../helpers/path/public_path";
+import getResponsiveSetting, {setResponsiveSetting} from "../../helpers/getResponsiveSetting";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -166,6 +167,39 @@ export default class Page extends BaseModel {
     'section_widget',
     'column',
     'image',
+    'conditional_ignore_in_forms',
+    'conditional_display_choose',
+    'conditional_roles',
+    'conditional_other',
+    'conditional_other_display',
+    'conditions',
+    'disabled_enable',
+    'conditional_disabled_choose',
+    'conditional_disabled_roles',
+    'conditional_disabled_permissions',
+    'disabled_conditional_other',
+    'disabled_conditional_other_display',
+    'disabled_conditions',
+    'active_enable',
+    'conditional_active_choose',
+    'conditional_active_roles',
+    'conditional_active_permissions',
+    'active_conditional_other',
+    'active_conditional_other_display',
+    'active_conditions',
+    'tooltip_show_type',
+    'tooltip_enable',
+    'tooltip_text',
+    'tooltip_position',
+    'tooltip_minimal',
+    'tooltip_position_padding',
+    'tooltip_horizontal_offset',
+    'tooltip_vertical_offset',
+    'tooltip_font_typographic',
+    'tooltip_font_color',
+    'tooltip_background_color',
+    'tooltip_border_radius',
+    'tooltip_background_shadow',
   ]
 
   static FRONT_DEFAULT_AREAS = [
@@ -612,9 +646,11 @@ export default class Page extends BaseModel {
     const purifycssOptions = {
       minify: true,
       whitelist: [
+        '*bp3-popover2-arrow*',
+        '*bp3-popover2-content*',
         '*:not*',
-        '.active',
-        '.state-disabled',
+        'active',
+        'state-disabled',
       ]
     }
     for (let area of areas) {
@@ -629,7 +665,9 @@ export default class Page extends BaseModel {
           if (_.isArray(important_styles)) {
             important_styles = important_styles.join('')
           }
+
           _styles = [purifycss(html, important_styles, purifycssOptions)]
+
         } else {
           _.forEach(customStyles, (style: string[], key) => {
             const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
@@ -1124,11 +1162,15 @@ export default class Page extends BaseModel {
         return
       }
       item.forEach(settingName=> {
-        if (data.settings[settingName]){
-          return
-        }
-        if(oldSettings[settingName]){
-          data.settings[settingName] = oldSettings[settingName]
+        for(let s of SCREENS){
+          if (getResponsiveSetting(data.settings, settingName, s.name)){
+            return
+          }
+          if(getResponsiveSetting(oldSettings, settingName, s.name)){
+
+
+            setResponsiveSetting(data.settings,settingName,s.name, getResponsiveSetting(oldSettings, settingName, s.name))
+          }
         }
       })
     })
@@ -1231,6 +1273,40 @@ export default class Page extends BaseModel {
       'form_id',
       'field_id',
       'default_value',
+    ],
+    'icon': [
+      'icon',
+    ],
+    'root-element': [
+      'close_context',
+      'close_right',
+      'close_top',
+      'popup_close_icon_height_size',
+      'popup_close_icon_width_size',
+      'close_pa',
+      'animations_offcanvas',
+      's_direction',
+      'time',
+      'popup_close_icon',
+      'switcher_close_button_popup_layout',
+      'overlay_close_popup_layout',
+      'heading_close_popup_layout',
+      'popup_bg',
+      'layout_bg',
+      'popup_radius',
+      'popup_border_color',
+      'popup_border_width',
+      'popup_border',
+      'popup_pa',
+      'content_position_popup_layout',
+      'height_custom_popup_layout',
+      'height_popup_layout',
+      'width_popup_layout',
+      'vertical_position_popup_layout',
+      'horizontal_position_popup_layout',
+      'heading_position_popup_layout',
+      'popup_layout_section',
+      'type_popup',
     ],
   }
 }

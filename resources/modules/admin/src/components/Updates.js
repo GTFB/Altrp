@@ -72,8 +72,6 @@ class Updates extends Component {
           await axios.get('/ajax/_token')
           serverRestarted = true
         } catch (e) {
-          console.error(e);
-          alert('Error: ' + e.message)
         }
       } while (!serverRestarted && i < 100)
     }
@@ -94,7 +92,6 @@ class Updates extends Component {
             await axios.get('/ajax/_token')
             serverRestarted = true
           } catch (e) {
-            console.error(e);
           }
         } while (!serverRestarted && i < 100)
       }
@@ -124,7 +121,6 @@ class Updates extends Component {
           await axios.get('/ajax/_token')
           serverRestarted = true
         } catch (e) {
-          console.error(e);
         }
       } while (!serverRestarted && i < 100)
     }
@@ -145,7 +141,6 @@ class Updates extends Component {
             await axios.get('/ajax/_token')
             serverRestarted = true
           } catch (e) {
-            console.error(e);
           }
         } while (!serverRestarted && i < 100)
       }

@@ -5,7 +5,7 @@ import StylesSettings from "./StylesSettings";
 import Websockets from "./settings/integrations/Websockets";
 import Telegram from "./settings/integrations/Telegram";
 import Resource from "../../../editor/src/js/classes/Resource";
-import AutoUpdateCheckbox from "./AutoUpdateCheckbox";
+
 import UserTopPanel from "./UserTopPanel";
 import React from "react";
 import CategoryTable from "./CategoryTable";

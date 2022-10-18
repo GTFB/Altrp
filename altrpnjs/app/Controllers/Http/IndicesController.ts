@@ -138,7 +138,7 @@ export default class IndicesController {
   }
 
   public async changelog({ response }) {
-    const pathToPublic = base_path( "README.md");
+    const pathToPublic = base_path( "CHANGELOG.md");
     let file:any = ''
     try {
        file = await Drive.get(pathToPublic)

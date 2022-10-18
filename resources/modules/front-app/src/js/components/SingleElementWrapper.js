@@ -1,5 +1,4 @@
 import { addElement } from "../store/elements-storage/actions";
-import { changeCurrentPageProperty } from "../store/current-page/actions";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
@@ -28,7 +27,9 @@ class SingleElementWrapper extends Component {
     props.element.wrapper = this;
     this.elementWrapperRef = this.props.elementWrapperRef;
     this.elementRef = React.createRef();
-    this.wrapper = React.createRef();
+    this.wrapper = this.props.elementWrapperRef?.current ? React.createRef() : this.props.elementWrapperRef;
+    this.tooltipWrapper = {current: this.props.container};
+
     this.settings = props.element.getSettings();
     this.onClickTooltip = this.onClickTooltip.bind(this);
     this.closeTooltip = this.closeTooltip.bind(this);
@@ -60,9 +61,13 @@ class SingleElementWrapper extends Component {
       setTimeout(()=>{
         if( skeleton_pending_path && getDataByPath(skeleton_pending_path)){
           this.setState(state =>({...state, withSkeleton: false}))
+          const resizeEvent = new Event('resize')
+          window.dispatchEvent(resizeEvent)
         }
         if(! skeleton_pending_path){
           this.setState(state =>({...state, withSkeleton: false}))
+          const resizeEvent = new Event('resize')
+          window.dispatchEvent(resizeEvent)
         }
       }, 1000)
     }
@@ -493,12 +498,13 @@ class SingleElementWrapper extends Component {
     if(! this.props.element.getResponsiveSetting('tooltip_enable')){
       tooltip_show_type = 'never'
     }
+
     return (
       <>
         {
           tooltip_show_type && (tooltip_show_type !== "never" && tooltip_show_type !== "Never") ?
             <AltrpTooltip2
-              element={this.wrapper}
+              element={this.tooltipWrapper}
               text={tooltip_text}
               id={this.props.element.getId()}
               open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}

@@ -87,16 +87,16 @@ export default class AdminController {
 
       }
     }
-    try {
-      if(isProd()){
-        await exec('pm2 restart all --update-env')
-      }
-
-    }catch (e) {
-      res.message = 'Error server restarting: \n' + e.message
-      e.message = 'Error server restarting: \n' + e.message
-      console.error(e);
-    }
+    // try {
+    //   if(isProd()){
+    //     await exec('pm2 restart all --update-env')
+    //   }
+    //
+    // }catch (e) {
+    //   res.message = 'Error server restarting: \n' + e.message
+    //   e.message = 'Error server restarting: \n' + e.message
+    //   console.error(e);
+    // }
 
 
     return response.json(res)
@@ -108,7 +108,7 @@ export default class AdminController {
 
     const id = request.input('id')
 
-    await exec(`node ${base_path('ace')} generator:template ${id ? `--id=${id}` : ''}`)
+    console.log(await exec(`node ${base_path('ace')} generator:template ${id ? `--id=${id}` : ''}`))
 
     console.info('Templates Upgraded')
   }
@@ -198,7 +198,7 @@ export default class AdminController {
     console.info('Upgrading Pages')
     const id = request.input('id')
 
-    await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`)
+    console.log(await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`))
 
     console.info('Pages Upgraded')
   }
@@ -206,7 +206,7 @@ export default class AdminController {
   private static async upgradeModels() {
     console.info('Upgrading Models')
 
-    await exec(`node ${base_path('ace')} generator:model`)
+    console.log(await exec(`node ${base_path('ace')} generator:model`))
 
     console.info('Models Upgraded')
   }
@@ -222,7 +222,7 @@ export default class AdminController {
     await listenerGenerator.hookPages()
     await listenerGenerator.hookListeners()
 
-    await exec(`node ${base_path('ace')} generator:listener`)
+    console.log(await exec(`node ${base_path('ace')} generator:listener`))
 
     console.info('Listeners Upgraded')
   }
@@ -230,7 +230,7 @@ export default class AdminController {
   private static async upgradeCRUDs() {
     console.info('Upgrading CRUDs')
 
-    await exec(`node ${base_path('ace')} generator:crud`)
+    console.log(await exec(`node ${base_path('ace')} generator:crud`))
 
     console.info('CRUDs Upgraded')
   }
@@ -238,7 +238,7 @@ export default class AdminController {
   private static async upgradeSchedules() {
     console.info('Upgrading Schedules')
 
-    await exec(`node ${base_path('ace')} generator:schedule`)
+    console.log(await exec(`node ${base_path('ace')} generator:schedule`))
 
     console.info('Schedules Upgraded')
   }

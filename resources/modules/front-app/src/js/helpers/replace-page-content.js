@@ -19,11 +19,11 @@ export default function replacePageContent(url, popstate = false) {
     document.head.appendChild(helperStyles)
     helperStyles.innerHTML = `
 .app-area__fade-in{
-  transition-duration: .75s;
+  transition-duration: .3s;
   opacity: 1;
 }
 .app-area__fade-out{
-  transition-duration: .75s;
+  transition-duration: .3s;
   opacity: 0;
 }
     `
@@ -157,13 +157,13 @@ async function _replace(htmlString) {
       })
 
       newArea.classList.add('app-area__fade-out')
-      delay(750).then(() => {
+      delay(300).then(() => {
         newArea.innerHTML = a.innerHTML
         newArea.classList.add('app-area__fade-in')
         newArea.classList.remove('app-area__fade-out')
 
         migrateScript(newArea, a)
-        return delay(750)
+        return delay(300)
       }).then(() => {
         newArea.classList.remove('app-area__fade-in')
       })
@@ -174,9 +174,9 @@ async function _replace(htmlString) {
 
     if (!newSectionWrapper) {
       oldArea.classList.add('app-area__fade-out')
-      delay(750).then(() => {
+      delay(300).then(() => {
         oldArea.innerHTML = ''
-        return delay(750)
+        return delay(300)
       })
       return
     }
@@ -185,12 +185,12 @@ async function _replace(htmlString) {
     }
 
     oldArea.classList.add('app-area__fade-out')
-    delay(750).then(() => {
+    delay(300).then(() => {
       oldArea.innerHTML = a.innerHTML
       oldArea.classList.remove('app-area__fade-out')
       oldArea.classList.add('app-area__fade-in')
       migrateScript(oldArea, a)
-      return delay(750)
+      return delay(300)
     }).then(() => {
       oldArea.classList.remove('app-area__fade-in')
     })
@@ -198,7 +198,7 @@ async function _replace(htmlString) {
 
   })
 
-  await delay(750)
+  await delay(300)
   appStore.dispatch(clearCurrentDataStorage())
 
   /**
@@ -240,7 +240,7 @@ async function _replace(htmlString) {
     })
   }))
 
-  await delay(750)
+  await delay(300)
   const title = document.querySelector('title')
   const newTitle = newHtml.querySelector('title')
   title.innerHTML = newTitle.innerHTML

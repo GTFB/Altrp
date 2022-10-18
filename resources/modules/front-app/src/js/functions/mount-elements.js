@@ -27,9 +27,11 @@ export default function mountElements(){
       elementWrapperRef:{
         current: container
       },
+      container,
       withSkeleton: ! ! container.querySelector('.altrp-element > .altrp-skeleton-box'),
       skeletonItems: container.querySelectorAll('.altrp-element > .altrp-skeleton-box > .altrp-skeleton-box__item').length
     }
+
     window.ReactDOM.render(<window.Provider store={window.appStore}>
       <window.ElementWrapper {...props} />
     </window.Provider>,  container, ()=>{

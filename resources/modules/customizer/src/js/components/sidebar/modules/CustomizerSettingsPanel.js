@@ -378,6 +378,10 @@ class CustomizerSettingsPanel extends React.Component {
                               onChange={this.changePeriodUnit}
                               options={[
                                 {
+                                  value: 'minute',
+                                  label: 'Minute',
+                                },
+                                {
                                   value: 'hour',
                                   label: 'Hour',
                                 },

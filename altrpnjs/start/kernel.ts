@@ -47,10 +47,10 @@ if(Application.environment === 'web') {
   let packageKey
   if(fs.existsSync(base_path('.package_key'))){
     packageKey = fs.readFileSync(base_path('.package_key'), {encoding:'utf8'})
-    console.log("Setting package key by File")
+    // console.log("Setting package key by File")
   } else {
     packageKey = guid()
-    console.log("Setting package key by random guid")
+    // console.log("Setting package key by random guid")
   }
   Env.set('PACKAGE_KEY', packageKey)
 }

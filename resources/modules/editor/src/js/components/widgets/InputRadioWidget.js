@@ -714,9 +714,8 @@ class InputRadioWidget extends Component {
   /**
    * Изменение значения в виджете
    * @param e
-   * @param  editor для получения изменений из CKEditor
    */
-  onChange = (e, editor = null) =>{
+  onChange = (e) =>{
     let value = "";
     if (e && e.target) {
       value = e.target.value;
@@ -725,6 +724,7 @@ class InputRadioWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
+    console.log(value);
 
     this.setState(
       state => ({
@@ -740,6 +740,8 @@ class InputRadioWidget extends Component {
            value,
           true
         );
+        console.log(this.getValue());
+
 
       }
     );
@@ -989,7 +991,7 @@ class InputRadioWidget extends Component {
     let classes =
       this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
     const { options = [] } = this.state;
-    let { value = "" } = this.state;
+    let value  = this.getValue();
 
     const fieldName =
       this.props.element.getFieldId() ||
@@ -1028,19 +1030,6 @@ class InputRadioWidget extends Component {
                 checked={checked}
                 key={`${fieldName}-${idx}`}
               />
-              // <span className="altrp-field-option-span">
-              //   {/*<Radio*/}
-              //   {/*  // type="radio"*/}
-              //   {/*  value={option.value}*/}
-              //   {/*  // name={`${formID}-${fieldName}`}*/}
-              //   {/*  // className={`altrp-field-option__input ${checked ? "active" : ""*/}
-              //   {/*    // }`}*/}
-              //   {/*  // onChange={this.onChange}*/}
-              //   {/*  // checked={checked}*/}
-              //   {/*  // id={`${formID}-${fieldName}-${idx}`}*/}
-              //   {/*/>*/}
-              // </span>
-              // </Radio>
             );
           })}
         </RadioGroup>
