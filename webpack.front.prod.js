@@ -65,13 +65,13 @@ module.exports ={
     // publicPath: "https://up.altrp.com/modules/front-app/",
     publicPath: "/modules/front-app/",
     chunkFilename: "[name].[contenthash].js",
-
     filename: "[name].js"
   },
 
   optimization:{
     chunkIds: 'named',
     concatenateModules: true,
+    minimize: false,
     splitChunks: {
       chunks: 'async',
       minSize: 20000,

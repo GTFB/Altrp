@@ -260,7 +260,15 @@ async function _replace(htmlString) {
   oldMainScript.setAttribute('id', 'main-script-altrp')
 
   document.body.appendChild(oldMainScript)
-  oldMainScript.innerHTML = mainScript.innerHTML
+
+
+
+
+
+
+
+
+  oldMainScript.innerHTML = `(function(){${mainScript.innerHTML.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'')}})()`
 
   let _allSiteScripts = document.querySelector('#all_site_js')?.innerHTML || ''
   let allSiteScripts = document.querySelector('#all_site_js')
