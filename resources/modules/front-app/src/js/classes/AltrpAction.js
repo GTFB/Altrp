@@ -606,10 +606,14 @@ class AltrpAction extends AltrpModel {
       } else {
         try{
 
+
           replacePageContent(_URL)
         } catch (e) {
           console.error(e);
-          // window.location.assign(_URL);
+
+          // window.location.href = _URL
+          alert(e);
+          window.location.assign(_URL);
         }
       }
     }

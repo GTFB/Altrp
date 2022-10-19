@@ -68,6 +68,7 @@ export default function replacePageContent(url, popstate = false) {
 
       if (!xhr.responseText || xhr.status !== 200 && xhr.status !== 404) {
         console.error('Response Error: ' + xhr.responseText)
+        location.href = url
       }
       try {
         const newPageData = await _replace(xhr.responseText)
@@ -91,7 +92,7 @@ export default function replacePageContent(url, popstate = false) {
   };
   xhr.onerror = function (e) {
     console.error(e);
-    // location.href = url
+    location.href = url
   }
   xhr.send(null);
 }

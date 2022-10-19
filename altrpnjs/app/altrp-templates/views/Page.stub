@@ -29,6 +29,9 @@
 
           document.body.appendChild(element);
           element.innerHTML =`${msg} ${url} ${lno}`;
+          alert(`${msg} ${url} ${lno}
+          ${e?.stack.split('\n')}
+          `);
           return true;
         }
         //window.onerror = myErrHandler;

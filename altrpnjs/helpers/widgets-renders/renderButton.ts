@@ -94,7 +94,6 @@ export default function renderButton(settings, device, elementId) {
     </div>`
   )
   }
-
   if (existingIconsString === 'blrt') {
     buttonInner = (
       `<div class="btn-container-column">
@@ -338,6 +337,7 @@ export default function renderButton(settings, device, elementId) {
     </button>`
   )
   }
+
   // @ts-ignore
   return `<div class="altrp-btn-wrapper">
     ${link || button || buttonMediaRight || buttonMediaLeft || buttonMediaTop || buttonMediaBottom}
