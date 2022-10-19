@@ -2,7 +2,7 @@
 
 
 ## Changelog
-## Test Version build 21
+## Test Version build 31
 
 ### 1.3.4
 * Added Support for Square Brackets for the Second Level of Data Replacement Nesting in the Content

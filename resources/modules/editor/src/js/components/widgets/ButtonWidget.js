@@ -302,10 +302,11 @@ class ButtonWidget extends Component {
     }
     let buttonText = this.getLockedContent("button_text");
     let buttonMediaRight = { ...this.element.getLockedSettings('button_icon_right') };
-    let buttonMediaLeft = { ...this.element.getLockedSettings('.button_icon_left') };
+    let buttonMediaLeft = { ...this.element.getLockedSettings('button_icon_left') };
     let buttonMediaTop = { ...this.element.getLockedSettings('button_icon_top') };
     let buttonMediaBottom = { ...this.element.getLockedSettings('button_icon_bottom') };
-
+    console.log(buttonMediaLeft);
+    console.log(buttonMediaLeft);
     const showIcon = buttonMediaRight.url || buttonMediaLeft.url || buttonMediaTop.url || buttonMediaBottom.url;
 
     let existingIconsString = '';

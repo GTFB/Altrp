@@ -479,7 +479,6 @@ class ElementWrapper extends Component {
     if(! this.props.element.getResponsiveSetting('tooltip_enable')){
       tooltip_show_type = 'never'
     }
-    console.log(this.wrapper);
 
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (

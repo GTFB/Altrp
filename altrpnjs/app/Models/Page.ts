@@ -1125,6 +1125,10 @@ export default class Page extends BaseModel {
       'hover-transition',
     ]
 
+    if(!Page.coreElements.includes(data.name)){
+      return
+    }
+
     if(_.isObject(data.settings)){
       prefixes.forEach((prefix)=>{
         prefix += ':'
@@ -1309,4 +1313,5 @@ export default class Page extends BaseModel {
       'type_popup',
     ],
   }
+  private static coreElements = ['root-element', 'section_widget', 'heading', 'image', 'icon', 'button', 'divider', 'menu', 'template', 'tabs', 'tabs-switcher', 'accordion', 'text', 'breadcrumbs', 'input-text-common', 'input-textarea', 'input-checkbox', 'input-radio', 'input-select', 'input-multi-select', 'input-slider', 'input-range-slider', 'input-text-autocomplete', 'input-wysiwyg', 'input-select-tree', 'input-image-select', 'input-date', 'input-date-range', 'input-gallery', 'input-crop-image', 'input-accept', 'input-hidden', 'input-file', 'input-pagination', 'table', 'posts', 'gallery', 'carousel', 'map', 'image-lightbox', 'dropbar', 'scheduler', 'tree', 'video', 'html', 'action-trigger', 'heading-type-animating', 'stars', 'progress-bar', 'pie-diagram', 'bar-diagram', 'line-diagram', 'funnel-diagram', 'radar-diagram', 'tournament', 'feedback', 'column', 'section']
 }

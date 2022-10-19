@@ -35,6 +35,12 @@ function AltrpTooltip2(props) {
     const resizeEvent = new Event('resize')
     window.dispatchEvent(resizeEvent)
   }, [props.open]);
+  useEffect(() => {
+
+    import('../../../sass/blueprint.scss')
+    import('../../../sass/blueprint-tooltip.scss')
+    import('../../../sass/blueprint-hi-contrast.scss')
+  }, []);
   // console.trace(props);
 
   function checkSize() {
