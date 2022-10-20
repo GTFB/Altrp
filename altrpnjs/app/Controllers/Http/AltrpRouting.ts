@@ -276,8 +276,7 @@ export default class AltrpRouting {
   }
 
   public async index(httpContext: HttpContextContract) {
-    const cluster = require("cluster");
-    console.log(cluster.isMaster);
+
     /**
      * Игнорим все запросы кроме get
      */

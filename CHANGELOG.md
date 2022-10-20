@@ -1,10 +1,15 @@
 # ALTRP
 
 
-## Changelog
-## Test Version build 31
+## Changelog 
 
-### 1.3.4
+### 1.4.0 build 1
+* Added SPA Functionality
+* Optimized Page Generation
+* Added `Reload Page` Action for Elements
+* Added Ability to Create External Request Handlers
+
+### 1.3.4 
 * Added Support for Square Brackets for the Second Level of Data Replacement Nesting in the Content
 
 ### 1.3.3 

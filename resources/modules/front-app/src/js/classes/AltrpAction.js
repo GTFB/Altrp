@@ -213,6 +213,10 @@ class AltrpAction extends AltrpModel {
         result = await this.doActionRedirect();
       }
         break;
+      case 'reload': {
+        result = this.doActionReload();
+      }
+        break;
       case 'toggle_element': {
         result = await this.doActionToggleElements();
       }
@@ -565,6 +569,10 @@ class AltrpAction extends AltrpModel {
     return result;
   }
 
+  doActionReload(){
+    window.location.reload();
+    return{success: true}
+  }
   /**
    * Делает редирект на страницу form_url
    * @return {Promise<{}>}
