@@ -5,7 +5,9 @@ import UserTopPanel from "./UserTopPanel";
 import {InputGroup, Tree} from "@blueprintjs/core";
 import Search from "../svgs/search.svg";
 import {filterCategories} from "../js/helpers";
-import Pagination from "./Pagination";
+import SettingPage from "./SettingPage";
+import {CSSTransition} from "react-transition-group";
+import ArrowSidebar from "../svgs/akar-icons_arrow-down.svg";
 
 class AllPages extends Component {
   constructor(props) {
@@ -20,6 +22,9 @@ class AllPages extends Component {
       filter: false,
       activeCategory: 'All',
       categoryOptions: [],
+      isActive: true,
+      page: null,
+      emptyExit: false
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
@@ -204,16 +209,64 @@ class AllPages extends Component {
       key: page.id,
       isExpanded: true,
       label: (
-        <Link to={page.editUrl}>{page.title}</Link>
+        // <Link to={page.editUrl}>{page.title}</Link>
+        <div
+          className={this.state.page === page.id ? "bl-text-w" : "bl-text-b"}
+          onClick={() => this.openSidebar(page.id)}
+          style={{cursor: 'pointer', display: "inline-block"}}>
+          {page.title}
+        </div>
       ),
       secondaryLabel: (
-        <a href={page.path} target="_blank">{page.path}</a>
+        <a
+          className={this.state.page === page.id ? "bl-text-w" : "bl-text-b"}
+          href={page.path}
+          target="_blank">
+          {page.path}
+        </a>
       ),
       hasCaret: hasCaret,
-      childNodes: childPage
+      childNodes: childPage,
+      isSelected: this.state.page === page.id
     }
     return treePage
   }
+
+  openSidebar = (id) => {
+    this.setState(state => ({
+      ...state,
+      isActive: true,
+      page: id
+    }))
+
+    if (!this.state.emptyExit) {
+      this.setState(state => ({
+        ...state,
+        emptyExit: true
+      }))
+    }
+  }
+
+  exitSidebar = () => {
+    this.setState(state => ({
+      ...state,
+      isActive: false,
+      page: null
+    }))
+
+    this.getPagesDidMount();
+    this.getPages();
+  }
+
+  onExited = () => {
+    if (!this.state.emptyExit) {
+      this.setState(state => ({
+        ...state,
+        emptyExit: true
+      }))
+    }
+  }
+
 
   render() {
     const {treePages, treePagesSlice, } = this.state;
@@ -235,36 +288,18 @@ class AllPages extends Component {
               <span className="admin-filters__current">
                 All ({treePages.length || "0"})
               </span>
-              {/*<DraggableScroll>*/}
-              {/*  <SwiperSlide className="category__block-slider">*/}
-              {/*    <a*/}
-              {/*      className={this.state.activeCategory === 'All' ? "admin-filters__link active-category" : "admin-filters__link"}*/}
-              {/*      onClick={() => this.getCategory(null, 'All')}*/}
-              {/*    >*/}
-              {/*      All ({this.state.pagesDidMount.length || "0"})*/}
-              {/*    </a>*/}
-              {/*  </SwiperSlide>*/}
-              {/*  {this.state.categoryOptions.map(item => {*/}
-              {/*    const itemsCount = filterCategories(this.state.pagesDidMount, item.value).length*/}
-
-              {/*    return (*/}
-              {/*      <SwiperSlide className="category__block-slider" key={item.value}>*/}
-              {/*       <a*/}
-              {/*         className={item.value === this.state.activeCategory ? "admin-filters__link active-category" : "admin-filters__link"}*/}
-              {/*         onClick={() => this.getCategory(item.value)}*/}
-              {/*       >*/}
-              {/*         {item.label} ({itemsCount})*/}
-              {/*       </a>*/}
-              {/*      </SwiperSlide>*/}
-              {/*    )*/}
-              {/*  })}*/}
-              {/*</DraggableScroll>*/}
             </div>
           </div>
           <UserTopPanel/>
         </div>
         <div className="admin-content">
-          <div className="altrp-tree">
+          <div className={this.state.isActive ? "altrp-tree active" : "altrp-tree"}>
+            <CSSTransition  in={this.state.isActive} timeout={500} onExited={this.onExited} classNames={"altrp-setting-status"}>
+              <div className="altrp-tree__page-setting">
+                <ArrowSidebar onClick={this.exitSidebar} className="altrp-tree__page-setting-exit"/>
+                <SettingPage emptyExit={this.state.emptyExit} id={this.state.page} exitSidebar={this.exitSidebar} getPages={this.getPages} getPagesDidMount={this.getPagesDidMount}/>
+              </div>
+            </CSSTransition>
             <div className="altrp-tree__block">
               <div className="admin-table-top__flex">
                 <form className="admin-tree-top" onSubmit={this.submitSearchHandler}>
@@ -307,6 +342,7 @@ class AllPages extends Component {
                 className="altrp-tree__pages"
                 onNodeCollapse={this.handleNodeCollapse}
                 onNodeExpand={this.handleNodeExpand}
+                onNodeClick={this.getPages}
               />
             </div>
           </div>

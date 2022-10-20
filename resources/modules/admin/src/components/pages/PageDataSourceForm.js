@@ -33,13 +33,14 @@ class PageDataSourceForm extends Component {
   submitHandler = e => {
     e.preventDefault();
     const { id } = this.props.match.params;
+    const pageId = id || this.props.id;
     const resource = new Resource({ route: `/admin/ajax/page_data_sources` });
     const data = { ...this.state };
     delete data.dataSourceOptions;
     if (this.props.dataSource) {
         resource.put(data.id, data);
     } else {
-      resource.post({ page_id: id, ...data });
+      resource.post({ page_id: pageId, ...data });
     }
     this.props.updateHandler();
   };
