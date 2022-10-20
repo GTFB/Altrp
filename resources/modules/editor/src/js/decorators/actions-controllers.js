@@ -114,6 +114,10 @@ export function actionsControllers(
         label: 'Redirect'
       },
       {
+        value: 'reload',
+        label: 'Reload Page'
+      },
+      {
         value: 'trigger',
         label: 'Trigger Action'
       },
@@ -543,6 +547,17 @@ export function actionsControllers(
       type: ['form', 'redirect']
     },
     locked: true,
+  });
+
+  actionsRepeater.addControl('form_url', {
+    label: 'URL',
+    responsive: false,
+    dynamic: false,
+    type: CONTROLLER_SWITCHER,
+    description: '/ajax/models/tests/{{id}}',
+    conditions: {
+      type: [ 'redirect']
+    },
   });
 
   actionsRepeater.addControl('media_url', {
