@@ -63,11 +63,13 @@ class SingleElementWrapper extends Component {
           this.setState(state =>({...state, withSkeleton: false}))
           const resizeEvent = new Event('resize')
           window.dispatchEvent(resizeEvent)
+          console.trace('not delay', this);
         }
         if(! skeleton_pending_path){
           this.setState(state =>({...state, withSkeleton: false}))
           const resizeEvent = new Event('resize')
           window.dispatchEvent(resizeEvent)
+          console.trace('delay', this);
         }
       }, 1000)
     }
@@ -207,6 +209,7 @@ class SingleElementWrapper extends Component {
       if(this.state.withSkeleton && getDataByPath(skeleton_pending_path)){
         setTimeout(()=>{
           this.setState(state =>({...state, withSkeleton: false}))
+          console.trace('delay 2', this);
         }, 1000)
       }
     }

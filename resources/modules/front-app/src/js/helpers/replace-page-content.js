@@ -5,7 +5,6 @@ import {changeCurrentPage} from "../store/current-page/actions";
 import convertQueryParamsToObject from "../functions/convert-query-params-to-object";
 import delay from "../functions/delay";
 import {changeCurrentModel} from "../store/current-model/actions";
-import {encode} from 'html-entities';
 
 export default function replacePageContent(url, popstate = false) {
   if (!url) {
@@ -79,7 +78,7 @@ export default function replacePageContent(url, popstate = false) {
         if (!popstate) {
           window.history.replaceState({
             altrpCustomNavigation: true
-          }, newPageData.title, location.href)
+          }, newPageData.oldTitle, location.href)
           window.history.pushState({
             altrpCustomNavigation: true
           }, newPageData.newTitle, url)
@@ -217,6 +216,7 @@ async function _replace(htmlString) {
   }
 
   const title = document.querySelector('title')
+  const oldTitle = title.innerHTML
   const newTitle = newHtml.querySelector('title')
   title.innerHTML = newTitle.innerHTML
 
@@ -331,7 +331,7 @@ async function _replace(htmlString) {
     scriptContainers[0].remove()
   }
   return {
-    newTitle,
-    title
+    newTitle: newTitle.innerHTML,
+    oldTitle
   }
 }

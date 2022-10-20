@@ -1,9 +1,8 @@
 # ALTRP
 
 ## Changelog
-## Test Version build 7
 
-### 1.4.0 
+### 1.4.0 build 8
 * Added SPA Functionality
 * Optimized Page Generation
 * Added `Reload Page` Action for Elements

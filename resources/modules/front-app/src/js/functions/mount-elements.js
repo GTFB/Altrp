@@ -38,7 +38,9 @@ export default function mountElements(){
     })
   })
   import('../classes/modules/HAltrp');
+  import('../libs/section-element-wrapper');
   window.removeEventListener('h-altrp-loaded', mountElements);
+
 }
 
 window.addEventListener('h-altrp-loaded', mountElements);
