@@ -154,7 +154,7 @@ export default class AdminController {
       return httpContext.response.json({
         success: false,
         message: e.message,
-        trace: e.stack.split('\n'),
+        trace: e?.stack?.split('\n'),
       })
     }
 
@@ -180,7 +180,7 @@ export default class AdminController {
       return httpContext.response.json({
         success: false,
         message: e.message,
-        trace: e.stack.split('\n'),
+        trace: e?.stack?.split('\n'),
       })
     }
 

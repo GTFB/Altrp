@@ -34,7 +34,7 @@
           `);
           return true;
         }
-        window.onerror = myErrHandler;
+        //window.onerror = myErrHandler;
 
         document.currentScript = "/modules/front-app/";
         /* ]]> */

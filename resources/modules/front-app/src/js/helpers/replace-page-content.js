@@ -5,6 +5,7 @@ import {changeCurrentPage} from "../store/current-page/actions";
 import convertQueryParamsToObject from "../functions/convert-query-params-to-object";
 import delay from "../functions/delay";
 import {changeCurrentModel} from "../store/current-model/actions";
+import {encode} from 'html-entities';
 
 export default function replacePageContent(url, popstate = false) {
   if (!url) {
@@ -65,7 +66,9 @@ export default function replacePageContent(url, popstate = false) {
   xhr.onreadystatechange = async function () {
 
     if (xhr.readyState === XMLHttpRequest.DONE) {
-
+      if(xhr.getResponseHeader('location')){
+        location.href = xhr.getResponseHeader('location')
+      }
       if (!xhr.responseText || xhr.status !== 200 && xhr.status !== 404) {
         console.error('Response Error: ' + xhr.responseText)
         location.href = url
@@ -160,13 +163,7 @@ async function _replace(htmlString) {
       newArea.classList.add('app-area__fade-out')
       delay(300).then(() => {
         newArea.innerHTML = a.innerHTML
-        newArea.classList.add('app-area__fade-in')
-        newArea.classList.remove('app-area__fade-out')
-
         migrateScript(newArea, a)
-        return delay(300)
-      }).then(() => {
-        newArea.classList.remove('app-area__fade-in')
       })
       routeContent.appendChild(newArea)
       return
@@ -188,12 +185,7 @@ async function _replace(htmlString) {
     oldArea.classList.add('app-area__fade-out')
     delay(300).then(() => {
       oldArea.innerHTML = a.innerHTML
-      oldArea.classList.remove('app-area__fade-out')
-      oldArea.classList.add('app-area__fade-in')
       migrateScript(oldArea, a)
-      return delay(300)
-    }).then(() => {
-      oldArea.classList.remove('app-area__fade-in')
     })
 
 
@@ -224,6 +216,10 @@ async function _replace(htmlString) {
     stylesContainer.appendChild(s)
   }
 
+  const title = document.querySelector('title')
+  const newTitle = newHtml.querySelector('title')
+  title.innerHTML = newTitle.innerHTML
+
   await Promise.all(_.map(links, l => {
     return new Promise(resolve => {
 
@@ -241,11 +237,15 @@ async function _replace(htmlString) {
     })
   }))
 
-  await delay(300)
-  const title = document.querySelector('title')
-  const newTitle = newHtml.querySelector('title')
-  title.innerHTML = newTitle.innerHTML
+  document.querySelectorAll('.app-area__fade-out').forEach(e => {
 
+    e.classList.remove('app-area__fade-out')
+    e.classList.add('app-area__fade-in')
+    delay(300).then(() => {
+      e.classList.remove('app-area__fade-in')
+    })
+  });
+  await delay(300)
   /**
    * scripts move
    */
@@ -260,15 +260,10 @@ async function _replace(htmlString) {
   oldMainScript.setAttribute('id', 'main-script-altrp')
 
   document.body.appendChild(oldMainScript)
-
-
-
-
-
-
-
-
-  oldMainScript.innerHTML = `(function(){${mainScript.innerHTML.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'')}})()`
+  // oldMainScript.innerHTML = `(function(){${mainScript.innerHTML}})()`
+  eval(`(function () {
+    ${mainScript.innerHTML}
+  })()`)
 
   let _allSiteScripts = document.querySelector('#all_site_js')?.innerHTML || ''
   let allSiteScripts = document.querySelector('#all_site_js')
@@ -287,7 +282,6 @@ async function _replace(htmlString) {
   // scriptContainer.classList.add('migrated-scripts')
   // document.body.appendChild(scriptContainer)
   // migrateScript(scriptContainer, newHtml)
-
 
 
   /**

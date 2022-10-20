@@ -92,7 +92,7 @@ export default class UpdateService {
   private static update_files() {
     let archive = new AdmZip(UpdateService.ARCHIVE_PATH)
     if(!archive.test()){
-      throw 'Archive no pass a test'
+      throw new Error('Archive no pass a test')
     }
     if (fs.existsSync(public_path('modules'))) {
       fs.rmSync(public_path('modules'), {recursive: true});
