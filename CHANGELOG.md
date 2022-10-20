@@ -3,7 +3,7 @@
 ## Changelog
 ## Test Version build 36
 
-### 1.4.0 build 1
+### 1.4.0 
 * Added SPA Functionality
 * Optimized Page Generation
 * Added `Reload Page` Action for Elements
