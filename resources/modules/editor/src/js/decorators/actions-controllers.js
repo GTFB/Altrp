@@ -114,6 +114,10 @@ export function actionsControllers(
         label: 'Redirect'
       },
       {
+        value: 'reload',
+        label: 'Reload Page'
+      },
+      {
         value: 'trigger',
         label: 'Trigger Action'
       },
@@ -544,6 +548,7 @@ export function actionsControllers(
     },
     locked: true,
   });
+
 
   actionsRepeater.addControl('media_url', {
     label: 'Media URL',

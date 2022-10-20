@@ -2858,10 +2858,6 @@ class Table extends BaseElement {
     this.addControl('table_style_group_border_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_group_font', {
@@ -2963,19 +2959,11 @@ class Table extends BaseElement {
     this.addControl('table_style_footer_border_background', {
       type: CONTROLLER_COLOR,
       label: 'Background',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_footer_border_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_footer_font', {

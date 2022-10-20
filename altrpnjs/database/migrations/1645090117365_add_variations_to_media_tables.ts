@@ -10,7 +10,7 @@ export default class AddVariationsToMediaTables extends BaseSchema {
     }
     this.schema.alterTable(this.tableName,  (table) => {
 
-      table.json('media_variation').nullable();
+      table.text('media_variation', 'longtext').nullable();
     })
 
   }

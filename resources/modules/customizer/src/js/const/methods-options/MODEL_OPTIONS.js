@@ -221,9 +221,9 @@ const MODEL_OPTIONS = [
     ],
   },
   {
-    value: 'Model.toJson',
+    value: 'Model.toJSON',
     objectInstance: 'Model',
-    label: 'toJson',
+    label: 'toJSON',
     description: 'Convert the model instance to JSON.',
     classDescription,
     returns: [STRING],
