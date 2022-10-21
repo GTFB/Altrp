@@ -30,7 +30,6 @@ import store, {
 import Logo from "./svgs/logotext.svg";
 import Navigation from "./svgs/navigation.svg";
 import History from "./svgs/history.svg";
-import Preview from "./svgs/preview.svg";
 import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
@@ -62,6 +61,8 @@ import {setGlobalStylesCss} from "./js/store/global-css-editor/actions";
 import ReactDOM from "react-dom";
 import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
 import ImportantStylesManager from "./js/components/ImportantStylesManager";
+import PreviewButton from './js/components/PreviewButton';
+import PreviewSettingModal from './js/components/PreviewSettingModal';
 
 /**
  * Главный класс редактора.<br/>
@@ -495,9 +496,7 @@ class Editor extends Component {
               <div className="btn ">
                 <ResponsiveDdFooter />
               </div>
-              <button className="btn ">
-                <Preview className="icon" />
-              </button>
+              <PreviewButton />
               <UpdateButton
                 onClick={() => this.toggleModalWindow()}
                 toggleModalWindow={() => this.toggleModalWindow()}
@@ -520,6 +519,7 @@ class Editor extends Component {
                 <ConditionsPopup/>
               </EditorWindowPopup>
             )}
+            <PreviewSettingModal />
             <EditorWindow />
             <Rnd
               className={this.state.navigator ? "draggable-navigator" : "draggable-navigator-hide"}
