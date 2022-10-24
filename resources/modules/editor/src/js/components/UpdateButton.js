@@ -14,8 +14,16 @@ class UpdateButton extends Component {
     };
     this.saveTemplate = this.saveTemplate.bind(this);
   }
-  saveTemplate(e) {
-    getEditor().modules.saveImportModule.saveTemplate();
+  async saveTemplate(e) {
+    const { templateData, previewTab } = this.props;
+
+    await getEditor().modules.saveImportModule.saveTemplate();
+
+    if (previewTab && !previewTab.closed) {
+      const newTabUrl = `/admin/altrp-template-preview/${templateData.guid}`;
+
+      previewTab.location.href = newTabUrl;
+    }
   }
   showModal() {
     this.props.toggleModalWindow();
@@ -57,6 +65,7 @@ function mapStateToProps(state) {
   return {
     templateStatus: state.templateStatus.status,
     templateData: state.templateData,
+    previewTab: state.portalStatus.previewTab,
   };
 }
 export default connect(mapStateToProps)(UpdateButton);

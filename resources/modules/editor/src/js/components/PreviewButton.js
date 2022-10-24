@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Settings from '../../svgs/settings.svg';
 import Preview from '../../svgs/preview.svg';
-import { setPreviewSettingModalOpened } from '../store/portal-status/actions';
+import { setPreviewSettingModalOpened, setPreviewTab } from '../store/portal-status/actions';
 
 const ButtonWithHoverMenu = styled.div`
   display: flex;
@@ -25,9 +25,16 @@ const ButtonWithHoverMenu = styled.div`
   }
 `;
 
-function PreviewButton({ templateData, setPreviewSettingModalOpened }) {
+function PreviewButton({ templateData, setPreviewSettingModalOpened, setPreviewTab }) {
   const handleShowSetting = () => {
     setPreviewSettingModalOpened(true);
+  };
+
+  const handlePreview = () => {
+    const newTabUrl = `/admin/altrp-template-preview/${templateData.guid}`;
+    const newTab = window.open(newTabUrl, 'template_preview');
+
+    setPreviewTab(newTab);
   };
 
   return (
@@ -41,13 +48,12 @@ function PreviewButton({ templateData, setPreviewSettingModalOpened }) {
         </button>
       </div>
 
-      <a
+      <button
         className="btn"
-        href={`/admin/altrp-template-preview/${templateData.guid}`}
-        target="_blank"
+        onClick={handlePreview}
       >
         <Preview className="icon" />
-      </a>
+      </button>
     </ButtonWithHoverMenu>
   );
 }
@@ -56,8 +62,9 @@ const mapStateToProps = state => ({
   templateData: state.templateData,
 });
 
-const mapDispatchToProps = dispatch => ({
-  setPreviewSettingModalOpened: isOpened => dispatch(setPreviewSettingModalOpened(isOpened)),
-});
+const mapDispatchToProps = {
+  setPreviewSettingModalOpened,
+  setPreviewTab,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreviewButton);
