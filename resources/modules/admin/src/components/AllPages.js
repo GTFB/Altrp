@@ -211,7 +211,7 @@ class AllPages extends Component {
       label: (
         // <Link to={page.editUrl}>{page.title}</Link>
         <div
-          className={this.state.page === page.id ? "bl-text-w" : "bl-text-b"}
+          className="bl-text"
           onClick={() => this.openSidebar(page.id)}
           style={{cursor: 'pointer', display: "inline-block"}}>
           {page.title}
@@ -219,7 +219,7 @@ class AllPages extends Component {
       ),
       secondaryLabel: (
         <a
-          className={this.state.page === page.id ? "bl-text-w" : "bl-text-b"}
+          className="bl-text"
           href={page.path}
           target="_blank">
           {page.path}
@@ -294,7 +294,7 @@ class AllPages extends Component {
         </div>
         <div className="admin-content">
           <div className={this.state.isActive ? "altrp-tree active" : "altrp-tree"}>
-            <CSSTransition  in={this.state.isActive} timeout={500} onExited={this.onExited} classNames={"altrp-setting-status"}>
+            <CSSTransition unmountOnExit in={this.state.isActive} timeout={500} onExited={this.onExited} classNames={"altrp-setting-status"}>
               <div className="altrp-tree__page-setting">
                 <ArrowSidebar onClick={this.exitSidebar} className="altrp-tree__page-setting-exit"/>
                 <SettingPage emptyExit={this.state.emptyExit} id={this.state.page} exitSidebar={this.exitSidebar} getPages={this.getPages} getPagesDidMount={this.getPagesDidMount}/>
