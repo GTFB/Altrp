@@ -92,7 +92,7 @@ class TemplateStylesModule {
 
 
         editorStore.dispatch(setCurrentScreen(screen))
-        await delay(650)
+        await delay(600)
 
         if(screen.name === CONSTANTS.DEFAULT_BREAKPOINT){
           extractElements(rootElement, elements, callback)

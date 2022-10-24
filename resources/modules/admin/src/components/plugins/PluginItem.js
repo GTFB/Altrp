@@ -45,7 +45,7 @@ class PluginItem extends Component {
         const res = await (new Resource({route:`/admin/ajax/plugins/${plugin.name}`})).delete()
         this.props.getInitialData()
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
 

@@ -13,6 +13,7 @@ export default function loadAdminBar() {
     import (/* webpackChunkName: 'AdminBar' */'../components/AdminBar').then(module => {
       const AdminBar = module.default;
       const adminContainer = document.createElement('div');
+      adminContainer.classList.add('admin-bar-portal')
       document.body.appendChild(adminContainer);
       ReactDOM.render(<AdminBar data={window.current_user || {}} areas={window.page_areas || []} idPage={window.page_id}/>, adminContainer);
     });

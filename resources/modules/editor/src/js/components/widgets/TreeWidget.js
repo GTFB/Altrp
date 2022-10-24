@@ -37,6 +37,10 @@ import {Tree as TreeBlueprint} from '@blueprintjs/core'
     padding-left: 20px
   }
 
+  .bp3-tree-node-caret-none {
+    z-index: 99;
+  }
+
   .bp3-collapse .bp3-tree-node-content {
       padding: 0;
   }

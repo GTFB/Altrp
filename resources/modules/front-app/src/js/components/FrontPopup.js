@@ -186,7 +186,7 @@ class FrontPopup extends Component {
     }))
   }
   componentDidCatch = (e)=>{
-    console.log(e);
+    console.error(e);
   }
   render() {
     const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template

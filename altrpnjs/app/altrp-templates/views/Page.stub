@@ -13,7 +13,7 @@
 {{{extra_header_styles}}}
 <<<all_styles>>>
 {{{plugin_frontend_head}}}
-    <script>
+    <script id="first-script-altrp">
         /* <![CDATA[ */
         console.log('START: ',performance.now());
         /**
@@ -25,10 +25,16 @@
          */
         function myErrHandler(msg, url, lno)
         {
-          document.getElementById('front-app').textContent = `${msg} ${url} ${lno}`;
+          var element = document.createElement('div');
+
+          document.body.appendChild(element);
+          element.innerHTML =`${msg} ${url} ${lno}`;
+          alert(`${msg} ${url} ${lno}
+          ${e?.stack.split('\n')}
+          `);
           return true;
         }
-        // window.onerror = myErrHandler;
+        //window.onerror = myErrHandler;
 
         document.currentScript = "/modules/front-app/";
         /* ]]> */
@@ -47,7 +53,7 @@
             {{{children_content}}}
         </div>
     </div>
-      <script>
+      <script id="main-script-altrp">
         /* <![CDATA[ */
         {{=<% %>=}}
         window['h-altrp'] = true;

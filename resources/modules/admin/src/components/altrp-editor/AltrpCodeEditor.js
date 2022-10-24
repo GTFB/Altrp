@@ -34,8 +34,7 @@ class AltrpCodeEditor extends Component {
   };
   componentDidUpdate(prevProps){
     if(this.props.value !== prevProps.value){
-      // console.log(this.props);
-      // console.log(prevProps);
+
       let value = this.prepareIncomingValue(this.props.value);
       this.setState(state =>({...state, value}));
       this.editor = this.props.AceEditor ? <this.props.AceEditor

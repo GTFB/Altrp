@@ -58,13 +58,13 @@ export default class PageGenerator extends BaseGenerator {
 
   async run(page: Page) {
     if (!page) {
-      return
+      return false
     }
 
 
     if (!page.guid) {
       console.error(`Page ${page.id} render error. Need more data`);
-      return
+      return false
     }
 
     this.page = page
@@ -172,7 +172,7 @@ export default class PageGenerator extends BaseGenerator {
         }, false, true)
     }
     clearRequireCache()
-    return
+    return true
   }
 
   async getExtraStyles(elementsList): Promise<{

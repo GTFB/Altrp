@@ -357,11 +357,6 @@ class Section extends BaseElement{
 
     this.addControl('link_link', {
       type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false
-      },
       label: 'Link',
       locked: true,
     });
@@ -585,7 +580,6 @@ class Section extends BaseElement{
           label: "set width"
         },
       ],
-      default: "unset",
       label: 'Background Size',
     });
 
@@ -797,7 +791,6 @@ class Section extends BaseElement{
     this.addControl('object_fit_select', {
       type: CONTROLLER_SELECT,
       label: 'object-fit',
-      default: 'cover',
       options: [
         {
           value: 'initial',

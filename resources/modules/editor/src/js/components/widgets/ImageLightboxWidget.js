@@ -156,8 +156,8 @@ class ImageLightboxWidget extends Component {
 
     let width = this.props.element.getResponsiveLockedSetting('width_size');
     let height = this.props.element.getResponsiveLockedSetting('height_size');
-    width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
-    height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
+    width = _.get(width, 'size') ? _.get(width, 'size') + _.get(width, 'unit', '%') : "";
+    height = _.get(height, 'size') ? _.get(height, 'size') + _.get(height, 'unit', '%') : "";
 
     if (_.get(this.props.element.getResponsiveLockedSetting('height_size'), 'size', '100') === "0") {
       height = ""

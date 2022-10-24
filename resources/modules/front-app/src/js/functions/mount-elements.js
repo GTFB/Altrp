@@ -27,17 +27,20 @@ export default function mountElements(){
       elementWrapperRef:{
         current: container
       },
+      container,
       withSkeleton: ! ! container.querySelector('.altrp-element > .altrp-skeleton-box'),
       skeletonItems: container.querySelectorAll('.altrp-element > .altrp-skeleton-box > .altrp-skeleton-box__item').length
     }
+
     window.ReactDOM.render(<window.Provider store={window.appStore}>
       <window.ElementWrapper {...props} />
     </window.Provider>,  container, ()=>{
-      console.log('Load Element:', performance.now());
     })
   })
   import('../classes/modules/HAltrp');
+  import('../libs/section-element-wrapper');
   window.removeEventListener('h-altrp-loaded', mountElements);
+
 }
 
 window.addEventListener('h-altrp-loaded', mountElements);

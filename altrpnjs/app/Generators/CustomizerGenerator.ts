@@ -55,11 +55,11 @@ export default class CustomizerGenerator extends BaseGenerator {
     const customizer = this.customizer
 
     if (!customizer || !customizer.type || !customizer.settings) {
-      return
+      return false
     }
 
     if (!customizer.settings.event_type || !customizer.settings.event_hook_type) {
-      return
+      return false
     }
     
     await customizer.load((loader) => {
@@ -94,6 +94,8 @@ export default class CustomizerGenerator extends BaseGenerator {
       })
 
     clearRequireCache()
+
+    return true;
   }
 
   public delete() {

@@ -73,6 +73,7 @@ class InputDateRange extends BaseElement {
     this.addControl("content_default_value_start", {
       type: CONTROLLER_TEXTAREA,
       responsive: false,
+      locked: true,
       label: "Start default Value"
     });
 
@@ -98,6 +99,7 @@ class InputDateRange extends BaseElement {
     this.addControl("content_default_value_end", {
       type: CONTROLLER_TEXTAREA,
       responsive: false,
+      locked: true,
       label: "End default Value"
     });
 

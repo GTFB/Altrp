@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import isSSR from "../../../../../front-app/src/js/functions/isSSR";
 import styled from "styled-components";
@@ -31,6 +31,17 @@ function AltrpTooltip2(props) {
   let vertical = offset(props.vertical);
   let offsetArray = [parseInt(horizontal.size|| 0), parseInt(vertical.size|| 10)];
   const [size, setSize] = React.useState([0, 0]); // [width, height]
+  useEffect(() => {
+    const resizeEvent = new Event('resize')
+    window.dispatchEvent(resizeEvent)
+  }, [props.open]);
+  useEffect(() => {
+
+    import('../../../sass/blueprint.scss')
+    import('../../../sass/blueprint-tooltip.scss')
+    import('../../../sass/blueprint-hi-contrast.scss')
+  }, []);
+  // console.trace(props);
 
   function checkSize() {
     if(
@@ -69,16 +80,19 @@ function AltrpTooltip2(props) {
       :
       document.body
   });
+
   if(! isSSR()){
     React.useLayoutEffect(() => {
       if(isEditor()) {
         document.getElementById("editorContent").contentWindow.addEventListener("resize", checkSize);
+        window.addEventListener("resize", checkSize);
       } else {
         window.addEventListener("resize", checkSize);
       }
       return () => {
         if(isEditor()) {
           document.getElementById("editorContent").contentWindow.removeEventListener("resize", checkSize);
+          window.removeEventListener("resize", checkSize);
         } else {
           window.removeEventListener("resize", checkSize);
         }
@@ -86,9 +100,7 @@ function AltrpTooltip2(props) {
     }, [])
   }
 
-  if(isSSR()){
-    return <></>;
-  }
+
   if(Tooltip2 && props.text && !_.isString(props.children)) {
     return <Tooltip2
       content={props.text}
