@@ -26,8 +26,16 @@ class UpdateButton extends Component {
       previewTab.location.href = newTabUrl;
     }
   }
-  updateTemplate(e) {
-    getEditor().modules.saveImportModule.updateTemplate();
+  async updateTemplate(e) {
+    const { templateData, previewTab } = this.props;
+
+    await getEditor().modules.saveImportModule.updateTemplate();
+
+    if (previewTab && !previewTab.closed) {
+      const newTabUrl = `/admin/altrp-template-preview/${templateData.guid}`;
+
+      previewTab.location.href = newTabUrl;
+    }
   }
   showModal() {
     this.props.toggleModalWindow();
