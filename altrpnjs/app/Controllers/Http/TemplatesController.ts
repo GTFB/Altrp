@@ -479,9 +479,6 @@ export default class TemplatesController {
     let content = mustache.render(childrenContent, templateSetting)
 
     content = mustache.render(stub, {
-      hAltrp: Env.get('PATH_ENV') === 'production'
-        ? `/modules/front-app/h-altrp.js?${env('PACKAGE_KEY')}`
-        : 'http://localhost:3002/src/h-altrp.js',
       content,
       title: `Template Preview - ${template.guid}`,
       fonts,
