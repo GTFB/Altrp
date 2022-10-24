@@ -120,6 +120,7 @@ class NavigationPanel extends Component {
       childNodes: template.children.map((item, index) =>
         this.parseTemplate(item)
       ),
+      isSelected: getEditor().modules.templateDataStorage.getCurrentElement().id === template.id,
       hasCaret: expandable,
       key: template.id,
       isExpanded: expandable,

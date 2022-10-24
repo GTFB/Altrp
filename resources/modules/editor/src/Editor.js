@@ -63,6 +63,7 @@ import ReactDOM from "react-dom";
 import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
 import ImportantStylesManager from "./js/components/ImportantStylesManager";
 import cn from "classnames";
+import NavigationPanelPages from "./js/components/NavigationPanelPages";
 
 /**
  * Главный класс редактора.<br/>
@@ -91,6 +92,7 @@ class Editor extends Component {
       hidePanel: false,
       navigator: false,
       resizeNavigator: false,
+      tabNavigatorActive: 'elements',
       cssEditor: false,
       iframeDisabled: false,
     };
@@ -427,6 +429,28 @@ class Editor extends Component {
     }))
   }
 
+  unlockIframe = () => {
+    this.setState(state => ({
+      ...state,
+      iframeDisabled: false
+    }))
+  }
+
+
+  blockIframe = () => {
+    this.setState(state => ({
+      ...state,
+      iframeDisabled: true
+    }))
+  }
+
+  changeTab = (e) => {
+    this.setState(state => ({
+      ...state,
+      tabNavigatorActive: e.target.dataset.tab
+    }))
+  }
+
   /**
    * Отрисовка Компонента
    */
@@ -476,14 +500,8 @@ class Editor extends Component {
             }}
             minWidth={270}
             maxWidth={400}
-            onResizeStart={() => this.setState(state => ({
-              ...state,
-              iframeDisabled: true
-            }))}
-            onResizeStop={() => this.setState(state => ({
-              ...state,
-              iframeDisabled: false
-            }))}
+            onResizeStart={this.blockIframe}
+            onResizeStop={this.unlockIframe}
             onResize={this.resizeLeftSidebar}
             enable={{top:false, right:true, bottom:false, left:false, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false}}
             handleStyles={{right: {right: '0'}}}
@@ -585,13 +603,17 @@ class Editor extends Component {
                 x: 400,
                 y: 100,
                 width: 350,
-                height: 600,
+                height: 300,
               }}
               minWidth={350}
-              minHeight={600}
+              minHeight={300}
               maxWidth={1000}
               maxHeight={800}
               bounds="body"
+              onResizeStart={this.blockIframe}
+              onResizeStop={this.unlockIframe}
+              onDragStart={this.blockIframe}
+              onDragStop={this.unlockIframe}
               resizeHandleStyles={{bottom: {height: '30px', bottom: '0'}}}
             >
               <div className="draggable-popup">
@@ -599,9 +621,32 @@ class Editor extends Component {
                   <h2 className="title-navigator">Navigator</h2>
                   <CloseNavigator onClick={this.navigatorPanel} data-navigator="close-draggable" width={16} height={16} className="exit-navigator"/>
                 </div>
+                <div className="right-panel-sidebar-tabs">
+                  <button
+                    onClick={this.changeTab}
+                    data-tab="elements"
+                    className={cn("right-panel-sidebar-tab", {
+                      'active-tab': this.state.tabNavigatorActive === "elements"
+                    })}
+                  >
+                    Elements
+                  </button>
+                  <button
+                    onClick={this.changeTab}
+                    data-tab="pages"
+                    className={cn("right-panel-sidebar-tab", {
+                      'active-tab': this.state.tabNavigatorActive === "pages"
+                    })}
+                  >
+                    Pages
+                  </button>
+                </div>
                 <div className="draggable-popup-center">
-                  {this.state.navigator && (
+                  {(this.state.navigator && this.state.tabNavigatorActive === "elements") && (
                     <NavigationPanel />
+                  )}
+                  {(this.state.navigator && this.state.tabNavigatorActive === "pages") && (
+                    <NavigationPanelPages/>
                   )}
                 </div>
                 <div className="draggable-popup-bottom">
@@ -625,9 +670,32 @@ class Editor extends Component {
                 <h2 className="right-panel-sidebar-title">Navigator</h2>
                 <CloseNavigator data-navigator="close-sidebar" onClick={this.navigatorPanel} width={20} height={20} className="exit-sidebar-navigator"/>
               </div>
+              <div className="right-panel-sidebar-tabs">
+                <button
+                  onClick={this.changeTab}
+                  data-tab="elements"
+                  className={cn("right-panel-sidebar-tab", {
+                    'active-tab': this.state.tabNavigatorActive === "elements"
+                  })}
+                >
+                  Elements
+                </button>
+                <button
+                  onClick={this.changeTab}
+                  data-tab="pages"
+                  className={cn("right-panel-sidebar-tab", {
+                    'active-tab': this.state.tabNavigatorActive === "pages"
+                  })}
+                >
+                  Pages
+                </button>
+              </div>
               <div className='right-panel-sidebar-center'>
-                {this.state.resizeNavigator && (
-                  <NavigationPanel  />
+                {(this.state.resizeNavigator && this.state.tabNavigatorActive === "elements") && (
+                  <NavigationPanel />
+                )}
+                {(this.state.resizeNavigator && this.state.tabNavigatorActive === "pages") && (
+                  <NavigationPanelPages/>
                 )}
               </div>
               <div className='right-panel-sidebar-bottom'>

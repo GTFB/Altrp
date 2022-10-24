@@ -26,6 +26,7 @@ class NavigationItem extends Component {
     return connectDragSource(
       <div
         key={key}
+        className="n-text"
         style={{ opacity: isDragging ? 0.5 : 1, cursor: "pointer" }}
       >
         {text}

@@ -2554,3 +2554,41 @@ body {
     transition: none;
   }
 }
+
+.right-panel-sidebar, .draggable-navigator {
+  & .bp3-tree-node-secondary-label {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  & .bp3-tree-node-content:hover .bp3-tree-node-secondary-label{
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.right-panel-sidebar-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  background-color: #788796;
+}
+
+.right-panel-sidebar-tab {
+  width: 90px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: #586573;
+  color: white;
+}
+
+.right-panel-sidebar-tab:first-child {
+  margin-right: 20px;
+}
+
+.right-panel-sidebar-tab.active-tab {
+  background-color: white;
+  color: black;
+}
+
