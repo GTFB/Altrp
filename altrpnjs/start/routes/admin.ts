@@ -34,6 +34,7 @@ Route.group(() => {
     Route.get('/templates/options', 'TemplatesController.options')
     Route.get('/templates/:id', 'TemplatesController.get')
     Route.put('/templates/:id', 'TemplatesController.update')
+    Route.post('/templates/:id/publish', 'TemplatesController.publish')
     Route.delete('/templates/:id/reviews', 'TemplatesController.deleteReviews')
     Route.get('/templates/:id/reviews/', 'TemplatesController.getReviews')
     Route.get('/templates/:id/reviews/:review_id', 'TemplatesController.getReview')
@@ -59,6 +60,7 @@ Route.group(() => {
     Route.delete('/pages/:id', 'admin/PagesController.delete')
     Route.get('/pages/:id', 'admin/PagesController.show')
     Route.put('/pages/:id', 'admin/PagesController.update')
+    Route.post('/pages/:id/publish', 'admin/PagesController.publish')
 
     Route.get("/users", "users/UsersController.index")
     Route.post("/users", "users/UsersController.create")

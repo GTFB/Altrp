@@ -18,6 +18,7 @@ import CrudNode from "App/Customizer/Nodes/crudNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
+import CustomizerGenerator from 'App/Generators/CustomizerGenerator'
 import {DateTime} from 'luxon'
 import getNextWeek from "../../helpers/getNextWeek";
 import {clearTimeout, setTimeout} from "node:timers";
@@ -323,6 +324,27 @@ export default class Customizer extends BaseModel {
     this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
   }
 
+  async callCrud(instanceId) {
+    const customizer = this
+
+    if (customizer.type !== 'crud') {
+      return
+    }
+
+    const generator = new CustomizerGenerator(customizer)
+    const filePath = generator.getFilePath()
+
+    const classCustomizerCRUD = isProd()
+      ? (await require(filePath)).default
+      : (await import(filePath)).default
+
+    if (classCustomizerCRUD) {
+      const customizerCRUD = new classCustomizerCRUD
+
+      customizerCRUD.run(instanceId)
+    }
+  }
+
   public static async scheduleAll() {
     const customizers = await Customizer.query().where('type', 'schedule')
 
@@ -366,7 +388,7 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`).then(data => {
+    exec(`node ${base_path('ace')} customizer:schedule --id=${this.id.toString()}`).then(data => {
       console.log(data);
     }).catch(err => {
       console.error(err);

@@ -1178,15 +1178,7 @@ class Table extends BaseElement {
 
     this.addControl('replace_text_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 14,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ''
-      },
+      label: 'Typographic'
     }
     );
 
@@ -2866,10 +2858,6 @@ class Table extends BaseElement {
     this.addControl('table_style_group_border_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_group_font', {
@@ -2971,19 +2959,11 @@ class Table extends BaseElement {
     this.addControl('table_style_footer_border_background', {
       type: CONTROLLER_COLOR,
       label: 'Background',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_footer_border_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_footer_font', {

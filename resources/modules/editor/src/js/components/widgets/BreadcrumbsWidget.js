@@ -5,6 +5,17 @@ import getResponsiveSetting from "../../../../../front-app/src/js/functions/getR
 import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
 import {Breadcrumbs} from "@blueprintjs/core";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .bp3-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .altrp-menu-item__icon {
+    display: flex;
+  }
+`);
+
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings})=>{
     let styles = `.altrp-portal.altrp-portal${elementId}{`;

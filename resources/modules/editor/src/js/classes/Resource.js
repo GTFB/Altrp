@@ -452,6 +452,60 @@ class Resource {
     // console.log(res)
     return res;
   }
+
+  publish(id,data,  headers = null) {
+    const defaultHeaders = {};
+
+    if(window._token){
+      defaultHeaders['X-CSRF-TOKEN'] = window._token;
+    } else {
+      defaultHeaders['X-XSRF-TOKEN'] = getCookie('XSRF-TOKEN');
+    }
+    let formData = new FormData();
+    let hasFile = false;
+
+    _.each(data, (value, key) => {
+      if (_.isArray(value)) {
+        for (let i = 0; i < value.length; i++) {
+          if (value[i] instanceof File) {
+            hasFile = true;
+          }
+          if (value[i].size > MAX_FILE_SIZE) {
+            console.log(value[i]);
+            continue;
+          }
+          formData.append(`${key}[${i}]`, value[i]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
+
+    headers = _.assign(
+      defaultHeaders,
+      headers
+    );
+    if (!hasFile) {
+      headers["Content-Type"] = "application/json";
+      headers["Accept"] = "application/json";
+    }
+
+    const options = {
+      method: 'post',
+      body: hasFile ? formData : JSON.stringify(data),
+      headers: _.assign(defaultHeaders, headers)
+    };
+
+    const url = this.getRoute() + '/' + id + '/publish';
+
+    return fetch(url, options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject(res.text(), res.status);
+      }
+
+      return res.json();
+    });
+  }
 }
 
 export default Resource;

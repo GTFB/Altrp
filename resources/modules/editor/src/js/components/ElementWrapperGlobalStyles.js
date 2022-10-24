@@ -329,6 +329,7 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
   const tooltip_show_type = settings.tooltip_show_type || "never";
 
   if (tooltip_show_type !== "never") {
+    console.trace(element);
     styles += `.altrp-tooltip${elementId}.altrp-tooltip${elementId} {${TooltipComponent(
       settings
     )}}`;

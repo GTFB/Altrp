@@ -9,7 +9,6 @@ import { DndProvider } from "react-dnd";
 import React from "react";
 import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
 import isEditor from "../functions/isEditor";
-import setTitle from "../functions/setTitle";
 import altrpRandomId from "../functions/altrpRandomId";
 import altrpCompare from "../functions/altrpCompare";
 import conditionsChecker from "../functions/conditionsChecker";
@@ -140,10 +139,6 @@ class ElementWrapper extends Component {
     ) {
       let title = appStore.getState().currentTitle;
       title = replaceContentWithData(title);
-      if (appStore.getState().altrpPage.getProperty("title") !== title) {
-        appStore.dispatch(changeCurrentPageProperty("title", title));
-      }
-      setTitle(title);
     }
   }
 

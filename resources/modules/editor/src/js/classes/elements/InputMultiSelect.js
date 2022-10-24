@@ -48,11 +48,13 @@ class InputMultiSelect extends BaseElement {
 
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
+      locked: true,
       label: "Form ID"
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
+      locked: true,
       label: "Field ID (Column Name)"
     });
 

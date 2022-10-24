@@ -1,5 +1,4 @@
 import { addElement } from "../store/elements-storage/actions";
-import { changeCurrentPageProperty } from "../store/current-page/actions";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
@@ -9,7 +8,6 @@ import React from "react";
 import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
 import isEditor from "../functions/isEditor";
 import replaceContentWithData from "../functions/replaceContentWithData";
-import setTitle from "../functions/setTitle";
 import altrpRandomId from "../functions/altrpRandomId";
 import conditionsChecker from "../functions/conditionsChecker";
 import altrpCompare from "../functions/altrpCompare";
@@ -29,7 +27,9 @@ class SingleElementWrapper extends Component {
     props.element.wrapper = this;
     this.elementWrapperRef = this.props.elementWrapperRef;
     this.elementRef = React.createRef();
-    this.wrapper = React.createRef();
+    this.wrapper = this.props.elementWrapperRef?.current ? React.createRef() : this.props.elementWrapperRef;
+    this.tooltipWrapper = {current: this.props.container};
+
     this.settings = props.element.getSettings();
     this.onClickTooltip = this.onClickTooltip.bind(this);
     this.closeTooltip = this.closeTooltip.bind(this);
@@ -53,20 +53,25 @@ class SingleElementWrapper extends Component {
   }
 
   /**
-   * Иногда надо обновить элемент (FrontElement)
+   *
    */
   componentDidMount() {
     let skeleton_pending_path = this.props.element.settings?.skeleton_pending_path;
-    if(this.props.withSkeleton){
+    if(this.props.withSkeleton ){
       setTimeout(()=>{
-        if(skeleton_pending_path){
-          if(getDataByPath(skeleton_pending_path)){
-            this.setState(state =>({...state, withSkeleton: false}))
-          }
-        }else {
+        if( skeleton_pending_path && getDataByPath(skeleton_pending_path)){
           this.setState(state =>({...state, withSkeleton: false}))
+          const resizeEvent = new Event('resize')
+          window.dispatchEvent(resizeEvent)
+          console.trace('not delay', this);
         }
-      }, 500)
+        if(! skeleton_pending_path){
+          this.setState(state =>({...state, withSkeleton: false}))
+          const resizeEvent = new Event('resize')
+          window.dispatchEvent(resizeEvent)
+          console.trace('delay', this);
+        }
+      }, 1000)
     }
     !isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
@@ -198,27 +203,14 @@ class SingleElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
-    if (
-      appStore.getState().currentModel.getProperty("altrpModelUpdated") &&
-      appStore
-        .getState()
-        .currentDataStorage.getProperty("currentDataStorageLoaded") &&
-      !isEditor() &&
-      this.props.element.getName() === "section"
-    ) {
-      let title = appStore.getState().currentTitle;
-      title = replaceContentWithData(title);
-      if (appStore.getState().altrpPage.getProperty("title") !== title) {
-        appStore.dispatch(changeCurrentPageProperty("title", title));
-      }
-      setTitle(title);
-    }
+
     if(prevProps.currentDataStorage !== this.props.currentDataStorage){
       let skeleton_pending_path = this.props.element.settings?.skeleton_pending_path;
       if(this.state.withSkeleton && getDataByPath(skeleton_pending_path)){
         setTimeout(()=>{
           this.setState(state =>({...state, withSkeleton: false}))
-        }, 500)
+          console.trace('delay 2', this);
+        }, 1000)
       }
     }
   }
@@ -281,9 +273,6 @@ class SingleElementWrapper extends Component {
       return false
     }
     dependencies = dependencies || []
-    // console.log(dependencies);
-    // console.log(newProps);
-    // console.log(this.props);
 
     if(newState.elementDisplay !== this.state.elementDisplay){
       return true
@@ -373,9 +362,6 @@ class SingleElementWrapper extends Component {
     /**
      * @member {FrontElement} element
      */
-    if(this.state.withSkeleton){
-      return <AltrpSkeletonBoxFrontApp itemsCount={this.props.skeletonItems}/>
-    }
     const {
       element
     } = this.props;
@@ -515,12 +501,13 @@ class SingleElementWrapper extends Component {
     if(! this.props.element.getResponsiveSetting('tooltip_enable')){
       tooltip_show_type = 'never'
     }
+
     return (
       <>
         {
           tooltip_show_type && (tooltip_show_type !== "never" && tooltip_show_type !== "Never") ?
             <AltrpTooltip2
-              element={this.wrapper}
+              element={this.tooltipWrapper}
               text={tooltip_text}
               id={this.props.element.getId()}
               open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
@@ -530,6 +517,8 @@ class SingleElementWrapper extends Component {
               vertical={tooltip_vertical_offset}
             /> : ''
         }
+        {this.state.withSkeleton &&
+        <AltrpSkeletonBoxFrontApp itemsCount={this.props.skeletonItems} />}
         <WrapperComponent {...wrapperProps} >
           {content}
         </WrapperComponent>

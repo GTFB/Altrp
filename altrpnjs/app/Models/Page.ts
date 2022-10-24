@@ -43,6 +43,7 @@ import app_path from "../../helpers/path/app_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import SCREENS from "../../helpers/const/SCREENS";
 import public_path from "../../helpers/path/public_path";
+import getResponsiveSetting, {setResponsiveSetting} from "../../helpers/getResponsiveSetting";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -152,6 +153,62 @@ export default class Page extends BaseModel {
     localKey: 'guid',
   })
   public categories: ManyToMany<typeof Category>
+
+  // private static elementsWithoutSettings = [
+  //   'button',
+  //   'section',
+  //   'section_widget',
+  //   'column',
+  //   'image',
+  // ]
+  private static settingsToMigrate = [
+    'default_hidden',
+    'section',
+    'section_widget',
+    'column',
+    'image',
+    'conditional_ignore_in_forms',
+    'conditional_display_choose',
+    'conditional_roles',
+    'conditional_other',
+    'conditional_other_display',
+    'conditions',
+    'disabled_enable',
+    'conditional_disabled_choose',
+    'conditional_disabled_roles',
+    'conditional_disabled_permissions',
+    'disabled_conditional_other',
+    'disabled_conditional_other_display',
+    'disabled_conditions',
+    'active_enable',
+    'conditional_active_choose',
+    'conditional_active_roles',
+    'conditional_active_permissions',
+    'active_conditional_other',
+    'active_conditional_other_display',
+    'active_conditions',
+    'tooltip_show_type',
+    'tooltip_enable',
+    'tooltip_text',
+    'tooltip_position',
+    'tooltip_minimal',
+    'tooltip_position_padding',
+    'tooltip_horizontal_offset',
+    'tooltip_vertical_offset',
+    'tooltip_font_typographic',
+    'tooltip_font_color',
+    'tooltip_background_color',
+    'tooltip_border_radius',
+    'tooltip_background_shadow',
+    'hide_on_wide_screen',
+    'hide_on_desktop',
+    'hide_on_laptop',
+    'hide_on_tablet',
+    'hide_on_big_phone',
+    'hide_on_small_phone',
+    'css_class',
+    'advanced_element_id',
+  ]
 
   static FRONT_DEFAULT_AREAS = [
     'content', 'footer', 'header', 'popups',
@@ -597,9 +654,11 @@ export default class Page extends BaseModel {
     const purifycssOptions = {
       minify: true,
       whitelist: [
+        '*bp3-popover2-arrow*',
+        '*bp3-popover2-content*',
         '*:not*',
-        '.active',
-        '.state-disabled',
+        'active',
+        'state-disabled',
       ]
     }
     for (let area of areas) {
@@ -614,7 +673,9 @@ export default class Page extends BaseModel {
           if (_.isArray(important_styles)) {
             important_styles = important_styles.join('')
           }
+
           _styles = [purifycss(html, important_styles, purifycssOptions)]
+
         } else {
           _.forEach(customStyles, (style: string[], key) => {
             const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
@@ -1059,14 +1120,22 @@ export default class Page extends BaseModel {
   }
 
   static purgeSettings(data:{
-    settings?:object,
-    settingsLock?:object,
+    settings:object,
+    settingsLock:object ,
+    name:string,
   } = {
+    name: 'default',
+    settings: {},
+    settingsLock: {},
   }){
     const prefixes = [
       'skeleton',
       'hover-transition',
     ]
+
+    if(!Page.coreElements.includes(data.name)){
+      return
+    }
 
     if(_.isObject(data.settings)){
       prefixes.forEach((prefix)=>{
@@ -1089,10 +1158,229 @@ export default class Page extends BaseModel {
         }
       })
     }
+
+    // if(Page.elementsWithoutSettings.includes(data.name)){
+    for(const s of Page.settingsToMigrate){
+      // @ts-ignore
+      if(data.settings[s]){
+        // @ts-ignore
+        data.settingsLock[s] = data.settings[s]
+      }
+    }
+    const oldSettings = data.settings
+    data.settings = {...data.settingsLock}
+    _.each(Page.requiredFields, (item, elementName)=>{
+      if(data.name !== elementName){
+        return
+      }
+      item.forEach(settingName=> {
+        for(let s of SCREENS){
+          if (getResponsiveSetting(data.settings, settingName, s.name)){
+            return
+          }
+          if(getResponsiveSetting(oldSettings, settingName, s.name)){
+
+
+            setResponsiveSetting(data.settings,settingName,s.name, getResponsiveSetting(oldSettings, settingName, s.name))
+          }
+        }
+      })
+    })
+    // @ts-ignore
+    delete data.settingsLock
+    // }
   }
 
   async getPopupsGuids() {
     const popups = await Template.getTemplates(this.id, 'popup')
     return popups.map(popup => popup.guid)
   }
+
+  protected static requiredFields = {
+    'input-text-common': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-multi-select': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-select': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-radio': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-checkbox': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-wysiwyg': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-textarea': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-image-select': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-accept': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-text-autocomplete': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-date': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-hidden': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-crop-image': [
+      'form_id',
+      'field_id',
+      'content_default_value',
+      'content_calculation',
+    ],
+    'input-date-range': [
+      'form_id',
+      'field_id',
+      'content_default_value_start',
+      'content_default_value_end',
+    ],
+    'input-gallery': [
+      'form_id',
+      'field_id',
+      'default_value',
+    ],
+    'icon': [
+      'icon',
+    ],
+    'root-element': [
+      'close_context',
+      'close_right',
+      'close_top',
+      'popup_close_icon_height_size',
+      'popup_close_icon_width_size',
+      'close_pa',
+      'animations_offcanvas',
+      's_direction',
+      'time',
+      'popup_close_icon',
+      'switcher_close_button_popup_layout',
+      'overlay_close_popup_layout',
+      'heading_close_popup_layout',
+      'popup_bg',
+      'layout_bg',
+      'popup_radius',
+      'popup_border_color',
+      'popup_border_width',
+      'popup_border',
+      'popup_pa',
+      'content_position_popup_layout',
+      'height_custom_popup_layout',
+      'height_popup_layout',
+      'width_popup_layout',
+      'vertical_position_popup_layout',
+      'horizontal_position_popup_layout',
+      'heading_position_popup_layout',
+      'popup_layout_section',
+      'type_popup',
+    ],
+    tabs: [
+      'items_tabs',
+      'vertical',
+      'animate',
+    ],
+    table: [
+      'tables_settings_for_subheading',
+      'group_subheading_settings',
+      'tables_groups',
+      'table_style_footer_font',
+      'cell_vertical_alignment',
+      'table_data_settings_pagination',
+      'tables_columns',
+      'actions',
+      'additional_cells',
+      'additional_rows',
+      'footer_columns',
+      'group_collapsing',
+      'group_default_text',
+      'group_by_column_name',
+      'current_page_text',
+      'prev_icon_position',
+      'prev_icon',
+      'prev_text',
+      'next_icon_position',
+      'next_icon',
+      'next_text',
+      'not_found_text',
+      'field_name_for_row_styling',
+      'table_datasource',
+      'choose_datasource',
+      'table_data_settings_info',
+      'table_data_settings_ordering',
+      'table_data_settings_search',
+      'table_2_0',
+      'table_hover_row',
+    ],
+    posts: [
+      'current_page_text',
+      'prev_icon_position',
+      'prev_icon',
+      'prev_text',
+      'next_icon_position',
+      'next_icon',
+      'next_text',
+      'not_found_text',
+      'field_name_for_row_styling',
+      'table_datasource',
+      'choose_datasource',
+      'table_data_settings_info',
+      'table_data_settings_ordering',
+      'table_data_settings_search',
+      'posts_pagination_section',
+      'hide_next_page_button',
+      'hide_pre_page_button',
+      'is_with_ellipsis',
+      'middle_buttons_count',
+      'first_last_buttons_count',
+      'posts_per_page',
+      'posts_pagination_type',
+    ],
+  }
+  private static coreElements = ['root-element', 'section_widget', 'heading', 'image', 'icon', 'button', 'divider', 'menu', 'template', 'tabs', 'tabs-switcher', 'accordion', 'text', 'breadcrumbs', 'input-text-common', 'input-textarea', 'input-checkbox', 'input-radio', 'input-select', 'input-multi-select', 'input-slider', 'input-range-slider', 'input-text-autocomplete', 'input-wysiwyg', 'input-select-tree', 'input-image-select', 'input-date', 'input-date-range', 'input-gallery', 'input-crop-image', 'input-accept', 'input-hidden', 'input-file', 'input-pagination', 'table', 'posts', 'gallery', 'carousel', 'map', 'image-lightbox', 'dropbar', 'scheduler', 'tree', 'video', 'html', 'action-trigger', 'heading-type-animating', 'stars', 'progress-bar', 'pie-diagram', 'bar-diagram', 'line-diagram', 'funnel-diagram', 'radar-diagram', 'tournament', 'feedback', 'column', 'section']
 }

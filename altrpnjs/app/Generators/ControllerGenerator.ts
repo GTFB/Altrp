@@ -83,7 +83,7 @@ export default class ControllerGenerator extends BaseGenerator {
       return s
     }))
 
-    let fileName =`${this.model.name}Controller${ModelGenerator.ext}`
+    let fileName = this.getFilename()
     if (!this.getClassnameContent()) {
       return
     }
@@ -112,6 +112,10 @@ export default class ControllerGenerator extends BaseGenerator {
       })
 
     clearRequireCache()
+  }
+
+  public getFilename(): string{
+    return `${this.model.name}Controller${ModelGenerator.ext}`
   }
 
   private getImportsContent(): string {

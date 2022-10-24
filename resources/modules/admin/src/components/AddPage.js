@@ -323,11 +323,67 @@ class AddPage extends Component {
       progressBar()
     }
     if (res.success) {
+      // this.setState(state => {
+      //   return {...state, redirectAfterSave: true};
+      // }, () => {
+      //   this.props.history.push('/admin/pages')
+      // });
+    } else {
+      this.setState(state => {
+        return {...state, value: {}};
+      });
+    }
+  }
+
+    handlePublish = async(e) =>{
+
+    if (this.state.value.path === undefined ||
+      this.state.value.path === '' ||
+      this.state.value.title === undefined ||
+      this.state.value.title === '') {
+      this.setState(state => {
+        return {...state, currentTab: 'content'}
+      });
+      return;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+    let res;
+    const {parent_page_id} = this.state.value;
+    let path = this.state.value.path;
+    path = path.split("\\").join("/");
+    path = path[0] !== "/" ? `/${path}` : path;
+
+    let redirect = this.state.value.redirect;
+    redirect = (redirect || "").split("\\").join("/");
+    this.state.value.redirect = redirect;
+    this.state.value.path = path;
+    progressBar(.01)
+    if (this.state.id) {
+      res = await this.resource.publish(this.state.id, {
+        ...this.state.value,
+        parent_page_id: parent_page_id === "root" ? null : parent_page_id
+      });
+      progressBar(1)
+      await delay(100)
+      progressBar()
+    } else {
+      res = await this.resource.post({
+        ...this.state.value,
+        parent_page_id: parent_page_id === "root" ? null : parent_page_id
+      });
+      progressBar(1)
+      await delay(100)
+      progressBar()
+
       this.setState(state => {
         return {...state, redirectAfterSave: true};
       }, () => {
         this.props.history.push('/admin/pages')
       });
+    }
+    if (res.success) {
     } else {
       this.setState(state => {
         return {...state, value: {}};
@@ -540,7 +596,6 @@ class AddPage extends Component {
           <div className="custom-tab__tab-panel">
             <form
               className={this.state.currentTab === 'Datasource' ? "admin-form-pages__datasource mb-2" : "admin-form-pages mb-2"}
-              onSubmit={this.savePage}
             >
               {(() => {
                 if (this.state.currentTab === 'content') {
@@ -792,8 +847,18 @@ class AddPage extends Component {
                 }
               })()}
               {(this.state.currentTab === "content") && (
-                <button className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}>
+                <button
+                  onClick={this.savePage}
+                  className={(this.state.value.path ? "btn btn_success" : "btn btn_disable") + ' mr-2'}>
                   {this.state.id ? "Save" : "Add"}
+                </button>
+              )}
+              {(this.state.currentTab === "content" && !!this.state.id) && (
+                <button
+                  className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}
+                  onClick={this.handlePublish}
+                >
+                  Publish
                 </button>
               )}
             </form>

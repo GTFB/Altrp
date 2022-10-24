@@ -24,6 +24,13 @@ class AltrpSocket {
         origin: '*'
       }
     })
+
+    // if(isProd()){
+    //   this.io.adapter(createAdapter());
+    //
+    //   setupWorker(this.io);
+    //
+    // }
   }
 
   async pushClient(client: Socket) {

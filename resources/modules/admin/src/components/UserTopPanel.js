@@ -1,13 +1,8 @@
 import React, {Component} from "react";
 import { connect } from "react-redux";
-
 import BellIcon from './../svgs/bell.svg';
-import UserIcon from './../svgs/user.svg';
 import LogoutIcon from './../svgs/logout.svg';
 import {logout} from "../js/helpers";
-import {io} from "socket.io-client";
-import getCookie from "../../../editor/src/js/helpers/getCookie";
-import  Cookies from 'js-cookie';
 import TopMemoryUsage from "./TopMemoryUsage";
 
 class UserTopPanel extends Component {

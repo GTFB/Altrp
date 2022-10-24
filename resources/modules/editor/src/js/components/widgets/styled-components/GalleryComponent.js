@@ -11,6 +11,11 @@ export default function GalleryComponent(settings) {
 
     () => {
       const value = getResponsiveSetting(settings, "aspect_ratio_grid_settings");
+
+      if (!value) {
+        return;
+      }
+
       let aspectRatio = "100%";
 
       switch (value) {
@@ -41,6 +46,11 @@ export default function GalleryComponent(settings) {
 
     () => {
       const value = getResponsiveSetting(settings, "aspect_ratio_grid_settings", ".state-disabled");
+
+      if (!value) {
+        return;
+      }
+
       let aspectRatio = "100%";
 
       switch (value) {
@@ -70,6 +80,11 @@ export default function GalleryComponent(settings) {
 
     () => {
       const value = getResponsiveSetting(settings, "aspect_ratio_grid_settings", ".active");
+
+      if (!value) {
+        return;
+      }
+
       let aspectRatio = "100%";
 
       switch (value) {
