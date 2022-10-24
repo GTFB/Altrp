@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 1.4.0 build 8
+### 1.4.0 build 14
 * Added SPA Functionality
 * Optimized Page Generation
 * Added `Reload Page` Action for Elements

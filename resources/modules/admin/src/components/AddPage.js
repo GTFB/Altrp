@@ -59,6 +59,7 @@ class AddPage extends Component {
         title: "",
         _categories: [],
         categories: [],
+        not_found: null
       },
       redirectAfterSave: false,
       templates: [],
@@ -162,6 +163,7 @@ class AddPage extends Component {
             categories: pageData.categories,
             model_column: pageData.model_column,
             param_name: pageData.param_name,
+            not_found: pageData.not_found,
             id
           },
           id
@@ -269,7 +271,7 @@ class AddPage extends Component {
   // }
 
   onQueryChange = (query, value) => {
-    return `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    return `${value.label?.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
   }
 
   /**

@@ -200,6 +200,14 @@ export default class Page extends BaseModel {
     'tooltip_background_color',
     'tooltip_border_radius',
     'tooltip_background_shadow',
+    'hide_on_wide_screen',
+    'hide_on_desktop',
+    'hide_on_laptop',
+    'hide_on_tablet',
+    'hide_on_big_phone',
+    'hide_on_small_phone',
+    'css_class',
+    'advanced_element_id',
   ]
 
   static FRONT_DEFAULT_AREAS = [

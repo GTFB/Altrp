@@ -33,6 +33,9 @@ export default class UpdateService {
     try {
       file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
         responseType: 'arraybuffer',
+        headers: {
+          'x-altrp-domain': env('APP_URL'),
+        },
       }))?.data || '';
     } catch (e) {
       return false;

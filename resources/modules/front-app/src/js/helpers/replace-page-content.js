@@ -73,16 +73,9 @@ export default function replacePageContent(url, popstate = false) {
         location.href = url
       }
       try {
-        const newPageData = await _replace(xhr.responseText)
+         await _replace(xhr.responseText, popstate ,url)
         // progressBar.style.transform = 'translate(100%)'
-        if (!popstate) {
-          window.history.replaceState({
-            altrpCustomNavigation: true
-          }, newPageData.oldTitle, location.href)
-          window.history.pushState({
-            altrpCustomNavigation: true
-          }, newPageData.newTitle, url)
-        }
+
         console.log('async Page End: ', performance.now());
       } catch (e) {
         console.error(e);
@@ -113,11 +106,10 @@ function migrateScript(target, source) {
   })
 }
 
-async function _replace(htmlString) {
+async function _replace(htmlString, popstate, url) {
   htmlString = htmlString.replace(/<!([\s\S]+?)>/, '')
   const newHtml = document.createElement('html')
   newHtml.innerHTML = htmlString
-
 
   /**
    * parsing areas
@@ -199,6 +191,23 @@ async function _replace(htmlString) {
   document.querySelector('.admin-bar-portal')?.remove()
 
   /**
+   * Area GRid Styles Update
+   */
+
+  const newAreasStyles = newHtml.querySelector('#altrp-generated-custom-areas-styles')
+  let oldAreasStyles = document.querySelector('#altrp-generated-custom-areas-styles')
+  if(newAreasStyles){
+    if(! oldAreasStyles){
+      oldAreasStyles = document.createElement('style')
+      oldAreasStyles.setAttribute('id', 'altrp-generated-custom-areas-styles')
+      document.head.appendChild(oldAreasStyles)
+    }
+    oldAreasStyles.innerHTML = newAreasStyles?.innerHTML
+  } else if(oldAreasStyles){
+    oldAreasStyles.innerHTML = ''
+  }
+
+  /**
    * CSS links
    */
 
@@ -245,6 +254,7 @@ async function _replace(htmlString) {
       e.classList.remove('app-area__fade-in')
     })
   });
+  window.scrollTo(0, 0);
   await delay(300)
   /**
    * scripts move
@@ -282,7 +292,7 @@ async function _replace(htmlString) {
   // scriptContainer.classList.add('migrated-scripts')
   // document.body.appendChild(scriptContainer)
   // migrateScript(scriptContainer, newHtml)
-
+  formsManager?.clearAll()
 
   /**
    * Events dispatch
@@ -312,13 +322,6 @@ async function _replace(htmlString) {
   }
   appStore.dispatch(changeCurrentModel(defaultModel))
 
-  appStore.dispatch(changeCurrentPage({
-    url: location?.href || "",
-    title: window?.currentPage?.title || "",
-    hash: document?.location?.hash,
-    hashParams,
-    params,
-  }))
   window.addEventListener('h-altrp-loaded', mountElements);
   window._hAltrp()
 
@@ -330,6 +333,22 @@ async function _replace(htmlString) {
   if (scriptContainers.length > 2) {
     scriptContainers[0].remove()
   }
+  if (!popstate) {
+    window.history.replaceState({
+      altrpCustomNavigation: true
+    }, oldTitle, location.href)
+    window.history.pushState({
+      altrpCustomNavigation: true
+    }, newTitle.innerHTML, url)
+  }
+
+  appStore.dispatch(changeCurrentPage({
+    url: location?.href || "",
+    title: window?.currentPage?.title || "",
+    hash: document?.location?.hash,
+    hashParams,
+    params,
+  }))
   return {
     newTitle: newTitle.innerHTML,
     oldTitle

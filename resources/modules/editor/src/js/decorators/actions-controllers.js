@@ -604,6 +604,16 @@ export function actionsControllers(
     locked: true,
   });
 
+  actionsRepeater.addControl('prevent', {
+    label: 'Prevent Altrp Redirect',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['redirect']
+    },
+  });
+
   actionsRepeater.addControl('elements_ids', {
     label: 'Elements',
     responsive: false,

@@ -25,13 +25,11 @@ export default class GeneratorController extends BaseCommand {
 
     if (this.id) {
       controllers = await Controller.query()
-        .whereNull('deleted_at')
         .andWhereIn('id', this.id)
         .limit(this.id.length)
         .select('*')
     } else {
       controllers = await Controller.query()
-        .whereNull('deleted_at')
         .select('*')
     }
 

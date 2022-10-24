@@ -468,6 +468,7 @@ class AltrpAction extends AltrpModel {
         getAppContext(this.getCurrentModel()),
         true
       );
+      console.log(data);
     }
     if (this.getProperty('forms_bulk')) {
       if (
@@ -613,15 +614,17 @@ class AltrpAction extends AltrpModel {
         history.back()
       } else {
         try{
-
-
-          replacePageContent(_URL)
+          if(this.getProperty('prevent')){
+            replacePageContent(_URL)
+          } else {
+            window.location.href = _URL
+          }
         } catch (e) {
           console.error(e);
 
-          // window.location.href = _URL
-          alert(e);
-          window.location.assign(_URL);
+          window.location.href = _URL
+          // alert(e);
+          // window.location.assign(_URL);
         }
       }
     }

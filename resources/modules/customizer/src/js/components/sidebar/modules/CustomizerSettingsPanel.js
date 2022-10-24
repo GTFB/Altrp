@@ -193,8 +193,8 @@ class CustomizerSettingsPanel extends React.Component {
 
                   <div className="controllers-wrapper">
                     <div className="controller-container controller-container_select2">
-                      <button className={"btn font_montserrat font_500 btn_grey"} style={{margin: '10px'}} onClick={() => this.props.onLayout('TB')}>vertical</button>
-                      <button className={"btn font_montserrat font_500 btn_grey"} style={{margin: '10px'}} onClick={() => this.props.onLayout('LR')}>horizontal</button>
+                      <button className={"btn font_montserrat font_500 btn_grey"} style={{marginRight: '20px'}} onClick={() => this.props.onLayout('TB')}>vertical</button>
+                      <button className={"btn font_montserrat font_500 btn_grey"} onClick={() => this.props.onLayout('LR')}>horizontal</button>
                     </div>
 
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
