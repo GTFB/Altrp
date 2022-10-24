@@ -13,9 +13,9 @@ class UpdateButton extends Component {
     this.state = {
       isShowed: false
     };
-    this.saveTemplate = this.saveTemplate.bind(this);
   }
-  async saveTemplate(e) {
+
+  saveTemplate = async () => {
     const { templateData, previewTab } = this.props;
 
     await getEditor().modules.saveImportModule.saveTemplate();
@@ -26,7 +26,8 @@ class UpdateButton extends Component {
       previewTab.location.href = newTabUrl;
     }
   }
-  async updateTemplate(e) {
+
+  updateTemplate = async () => {
     const { templateData, previewTab } = this.props;
 
     await getEditor().modules.saveImportModule.updateTemplate();
@@ -37,6 +38,7 @@ class UpdateButton extends Component {
       previewTab.location.href = newTabUrl;
     }
   }
+
   showModal() {
     this.props.toggleModalWindow();
   }
