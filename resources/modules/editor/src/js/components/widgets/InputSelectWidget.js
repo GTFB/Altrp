@@ -507,7 +507,6 @@ class InputSelectWidget extends Component {
     if (!value && this.getLockedContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
-
     this.popoverRef = React.createRef();
     this.inputRef = React.createRef();
 

@@ -114,6 +114,10 @@ export function actionsControllers(
         label: 'Redirect'
       },
       {
+        value: 'reload',
+        label: 'Reload Page'
+      },
+      {
         value: 'trigger',
         label: 'Trigger Action'
       },
@@ -545,6 +549,7 @@ export function actionsControllers(
     locked: true,
   });
 
+
   actionsRepeater.addControl('media_url', {
     label: 'Media URL',
     responsive: false,
@@ -597,6 +602,16 @@ export function actionsControllers(
       type: ['redirect']
     },
     locked: true,
+  });
+
+  actionsRepeater.addControl('prevent', {
+    label: 'Prevent Altrp Redirect',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['redirect']
+    },
   });
 
   actionsRepeater.addControl('elements_ids', {

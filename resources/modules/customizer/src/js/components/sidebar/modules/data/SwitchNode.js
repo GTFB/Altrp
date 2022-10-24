@@ -62,7 +62,7 @@ class SwitchNode extends React.Component {
           </div>
 
           <div className="controllers-wrapper">
-            <div className="controller-container controller-container_select">
+            <div className="controller-container controller-container_select controller-container_resizable">
               <div className="controller-container__label control-select__label controller-label">Property:</div>
               <PropertyComponent
                 changeByPath={this.changeByPath}

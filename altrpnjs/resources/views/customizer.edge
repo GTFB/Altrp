@@ -27,6 +27,7 @@
   <script>
     window.container_width = {{ get_altrp_setting('container_width', '1440') }};
     window.altrpJS = true
+    window.isProd = {{{ isProd }}}
 
     window.altrp = {
       version: '{{getLatestVersion()}}',

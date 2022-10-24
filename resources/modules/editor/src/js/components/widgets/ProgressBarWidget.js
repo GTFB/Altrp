@@ -37,7 +37,7 @@ class ProgressBarWidget extends Component {
     let value = this.props.element.getLockedContent("value") || "100";
 
     if(!isNaN(value)) {
-      value = parseInt(value) * 0.01;
+      value = parseFloat(value) * 0.01;
     }
 
     const settings = {

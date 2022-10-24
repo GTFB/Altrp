@@ -2,6 +2,7 @@ import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Model from 'App/Models/Model'
 import Source from 'App/Models/Source'
 import Accessors from 'App/Models/Accessor'
+import exec from '../../../../helpers/exec'
 import empty from '../../../../helpers/empty'
 import CategoryObject from 'App/Models/CategoryObject'
 import Event from '@ioc:Adonis/Core/Event'
@@ -12,7 +13,6 @@ import Env from '@ioc:Adonis/Core/Env'
 import {string} from '@ioc:Adonis/Core/Helpers'
 import Table from 'App/Models/Table'
 import Controller from 'App/Models/Controller'
-import ModelGenerator from 'App/Generators/ModelGenerator'
 import Role from 'App/Models/Role'
 import SourceRole from 'App/Models/SourceRole'
 import guid from '../../../../helpers/guid'
@@ -24,6 +24,7 @@ import Logger from "@ioc:Adonis/Core/Logger";
 import keys from "lodash/keys"
 import Customizer from "App/Models/Customizer";
 import LIKE from "../../../../helpers/const/LIKE";
+import base_path from '../../../../helpers/base_path'
 
 
 export default class ModelsController {
@@ -709,7 +710,7 @@ export default class ModelsController {
         }
       })
     } catch (e) {
-      await (new ModelGenerator).deleteFiles(model)
+      await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
       await model.delete()
       await Promise.all(sources.map(s => s.delete()))
       await controller.delete()
@@ -833,7 +834,7 @@ export default class ModelsController {
 
       await controller.delete()
     }
-    await (new ModelGenerator).deleteFiles(model)
+    await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
 
     const client = Database.connection(Env.get('DB_CONNECTION'))
     await Customizer.query().where('model_id', model.id).update({

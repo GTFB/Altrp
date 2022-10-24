@@ -475,7 +475,7 @@ const ModalControl = (
               }
               return { ...item };
             }) || [];
-          console.log(options);
+
           continue;
         }
       }

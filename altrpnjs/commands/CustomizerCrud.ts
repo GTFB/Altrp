@@ -63,7 +63,7 @@ export default class CustomizerCrud extends BaseCommand {
         return
       }
 
-      this.logger.success(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
+      console.log(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
 
       const generator = new CustomizerGenerator(customizer)
       const filePath = generator.getFilePath()

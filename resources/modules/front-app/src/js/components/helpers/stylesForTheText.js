@@ -810,17 +810,6 @@ export function getTextStyles(settings, id) {
   const startNumber = getResponsiveSetting(settings, 'start_number')
   styles += `${parentClass} .altrp-text ol {`;
 
-  styles += `counter-reset:list-number ${startNumber};`
-
-  styles += `li {
-    list-style:none;
-  }`;
-  styles += `li::before{
-      margin: 0px 5px 0px 0px;
-      content:counter(list-number) ".";
-      counter-increment:list-number;
-   }`;
-
   const numberedListMargin = getResponsiveSetting(settings, 'text_numbered_list_margin');
 
   if (numberedListMargin) {
@@ -971,18 +960,6 @@ export function getTextStyles(settings, id) {
   if (unorderedListStyleActive) {
     styles += simplePropertyStyled(unorderedListStyleActive, 'list-style-type');
   }
-
-  styles += `} `;
-
-  styles += `${parentClass} .altrp-text img {`;
-
-  styles += `max-width: 100%; `
-
-  styles += `} `;
-
-  styles += `${parentClass} .ck.ck-editor__editable_inline {`;
-
-  styles += `padding: 0; `
 
   styles += `} `;
 

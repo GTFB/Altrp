@@ -162,12 +162,6 @@ class Button extends BaseElement {
     this.addControl('link_link', {
       type: CONTROLLER_LINK,
       responsive:false,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false,
-        tag: 'a'
-      },
       label: 'Link',
       locked: true,
     });
@@ -392,7 +386,6 @@ class Button extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
     });
 
     this.addControl("background_image_width", {
@@ -694,6 +687,10 @@ class Button extends BaseElement {
     this.addControl('icon_size_right', {
       type: CONTROLLER_SLIDER,
       label: 'Icon right size',
+      default: {
+        size: 25,
+        unit: 'px'
+      },
       units: [
         'px',
         '%',
@@ -707,6 +704,10 @@ class Button extends BaseElement {
     this.addControl('icon_size_left', {
       type: CONTROLLER_SLIDER,
       label: 'Icon left size',
+      default: {
+        size: 25,
+        unit: 'px'
+      },
       units: [
         'px',
         '%',
@@ -720,6 +721,10 @@ class Button extends BaseElement {
     this.addControl('icon_size_top', {
       type: CONTROLLER_SLIDER,
       label: 'Icon top size',
+      default: {
+        size: 25,
+        unit: 'px'
+      },
       units: [
         'px',
         '%',
@@ -733,6 +738,10 @@ class Button extends BaseElement {
     this.addControl('icon_size_bottom', {
       type: CONTROLLER_SLIDER,
       label: 'Icon bottom size',
+      default: {
+        size: 25,
+        unit: 'px'
+      },
       units: [
         'px',
         '%',

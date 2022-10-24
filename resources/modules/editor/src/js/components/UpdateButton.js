@@ -1,6 +1,7 @@
 import Chevron from "../../svgs/chevron.svg";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import clsx from 'clsx';
 import { getEditor } from "../helpers";
 import CONSTANTS from "../consts";
 const TEMPLATE_TYPES_WITHOUT_CONDITIONS = [
@@ -25,32 +26,42 @@ class UpdateButton extends Component {
       previewTab.location.href = newTabUrl;
     }
   }
+  updateTemplate(e) {
+    getEditor().modules.saveImportModule.updateTemplate();
+  }
   showModal() {
     this.props.toggleModalWindow();
   }
 
   render() {
-    let buttonClasses = "btn font_montserrat font_500 btn_grey";
-    switch (this.props.templateStatus) {
-      case CONSTANTS.TEMPLATE_UPDATED:
-        {
-          buttonClasses += " btn_disabled ";
-        }
-        break;
-      case CONSTANTS.TEMPLATE_NEED_UPDATE:
-        {
-          buttonClasses += " btn_active ";
-        }
-        break;
-    }
     let showTemplateConditions = true;
-    if(this.props.templateData.template_type
-        && (TEMPLATE_TYPES_WITHOUT_CONDITIONS.indexOf(this.props.templateData.template_type) >= 0)){
+    const { templateData, templateStatus } = this.props;
+    if(templateData.template_type
+        && (TEMPLATE_TYPES_WITHOUT_CONDITIONS.indexOf(templateData.template_type) >= 0)){
       showTemplateConditions = false;
     }
     return (
-      <div className={"control-group d-flex " + (showTemplateConditions ? '' : 'control-group_single')}>
-        <button className={buttonClasses} onClick={this.saveTemplate}>
+      <div
+        className={clsx('control-group d-flex group-hover', {
+          'control-group_single': !showTemplateConditions
+        })}
+      >
+        <button
+          className={clsx('btn font_montserrat font_500 btn_grey btn-publish group-hover-visible', {
+            btn_disabled: templateStatus === CONSTANTS.TEMPLATE_PUBLISHED,
+            btn_active: templateStatus === CONSTANTS.TEMPLATE_NEED_UPDATE,
+          })}
+          onClick={this.saveTemplate}
+        >
+          PUBLISH
+        </button>
+        <button
+          className={clsx('btn font_montserrat font_500 btn_grey btn-update', {
+            btn_disabled: [CONSTANTS.TEMPLATE_UPDATED, CONSTANTS.TEMPLATE_PUBLISHED].includes(templateStatus),
+            btn_active: templateStatus === CONSTANTS.TEMPLATE_NEED_UPDATE,
+          })}
+          onClick={this.updateTemplate}
+        >
           UPDATE
         </button>
         {showTemplateConditions && <button onClick={() => this.showModal()} className="btn btn_grey">

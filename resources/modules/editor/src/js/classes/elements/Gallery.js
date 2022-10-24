@@ -190,7 +190,6 @@ class Gallery extends BaseElement {
       },
       type: CONTROLLER_SELECT,
       label: 'Aspect ratio',
-      default: '1to1',
       options: [
         {
           value: '1to1',
@@ -508,8 +507,7 @@ class Gallery extends BaseElement {
           label: "Luminosity"
         }
       ],
-      label: 'Blend mode',
-      default: 'none',
+      label: 'Blend mode'
     });
 
     this.addControl('hover_animation_overlay', {

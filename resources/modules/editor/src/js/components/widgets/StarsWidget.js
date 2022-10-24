@@ -5,6 +5,12 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+.altrp-stars-list {
+  justify-content: flex-start;
+}
+`);
+
 const StarsList = styled.ul`
   list-style-type: none;
   margin: 0;

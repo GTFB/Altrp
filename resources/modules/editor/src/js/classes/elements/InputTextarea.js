@@ -49,10 +49,14 @@ class InputTextarea extends BaseElement {
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
       label: "Form ID",
+      responsive: false,
+      locked: true,
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
+      responsive: false,
+      locked: true,
       label: "Field ID (Column Name)",
     });
 
@@ -140,7 +144,6 @@ class InputTextarea extends BaseElement {
     this.addControl("label_icon_position", {
       type: CONTROLLER_SELECT,
       label: "Icon Position",
-      default: "default",
       options: [
         {
           value: "row",
@@ -537,10 +540,6 @@ class InputTextarea extends BaseElement {
     this.addControl("label_width", {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
-      default: {
-        unit: "px",
-        size: null,
-      },
       units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 0,
@@ -594,10 +593,6 @@ class InputTextarea extends BaseElement {
     this.addControl("label_position_top", {
       type: CONTROLLER_SLIDER,
       label: "Label Y Position",
-      default: {
-        unit: "px",
-        size: null,
-      },
       conditions: {
         content_label_position_type: ["absolute"],
       },
@@ -613,10 +608,6 @@ class InputTextarea extends BaseElement {
     this.addControl("label_position_left", {
       type: CONTROLLER_SLIDER,
       label: "Label X Position",
-      default: {
-        unit: "px",
-        size: null,
-      },
       conditions: {
         content_label_position_type: ["absolute"],
       },
@@ -741,14 +732,6 @@ class InputTextarea extends BaseElement {
     this.addControl("required_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        // size: 13,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: "",
-      },
     });
 
     this.endControlSection();

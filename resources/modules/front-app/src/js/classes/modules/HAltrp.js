@@ -8,7 +8,6 @@ import loadEmailRenderer from "../../functions/load-email-renderer";
 class HAltrp {
   constructor() {
     loadAdminBar();
-    this.actionComponents = _.get(__altrp_settings__, 'action_components', [])
   }
 
   onUserAction = async (e)=>{
@@ -24,9 +23,6 @@ class HAltrp {
 
   loadComponents(){
     loadAdminBar();
-    if(this.actionComponents.find('email')){
-      loadEmailRenderer();
-    }
   }
 }
 

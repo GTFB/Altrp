@@ -26,7 +26,7 @@ export function currentPageReducer(page, action) {
   switch (action.type) {
     case CHANGE_CURRENT_PAGE:
       {
-        page = action.page;
+        page = action.pageData;
       }
       break;
     case CHANGE_CURRENT_PAGE_PROPERTY:

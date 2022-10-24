@@ -142,7 +142,6 @@ class Scheduler extends BaseElement {
     this.addControl("switcher_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border type",
-      default: 'solid',
       options: [
         {
           value: "none",
@@ -389,7 +388,6 @@ class Scheduler extends BaseElement {
     this.addControl("event_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border type",
-      default: 'solid',
       options: [
         {
           value: "none",
