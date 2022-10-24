@@ -15,7 +15,6 @@ class NavigationPanelPages extends Component {
   }
 
   async componentDidMount() {
-    console.log('dawdawdawdwa')
     let pages = await this.resource.getAll()
     await this.setState(state => {
       return {
