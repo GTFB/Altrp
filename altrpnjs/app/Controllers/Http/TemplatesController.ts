@@ -409,7 +409,7 @@ export default class TemplatesController {
       template.html_content = '';
       await template.save()
 
-      await exec(`node ${base_path('ace')} generator:template --id=${params.id}`)
+      await exec(`node ${base_path('ace')} generator:template --id=${template.id}`)
       applyPluginsFiltersAsync('template_updated', template)
 
 
