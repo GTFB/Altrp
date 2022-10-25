@@ -2,7 +2,11 @@
 
 ## Changelog
 
-### 1.4.1 build 1
+### 1.4.2 build 1
+* Added the Ability to Copy the URL Path
+* Added the Preview Page for Templates 
+
+### 1.4.1 
 * Editing Pages in Pages-List
 
 ### 1.4.0
