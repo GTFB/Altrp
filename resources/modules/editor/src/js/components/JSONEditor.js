@@ -6,6 +6,10 @@ import 'jsoneditor/src/scss/jsoneditor.scss';
 const JSONEditorContainer = styled.div`
   width: 100%;
   height: 100%;
+
+  .jsoneditor-poweredBy {
+    display: none;
+  }
 `;
 
 export default class JSONEditor extends Component {
