@@ -43,6 +43,8 @@ Route.group(() => {
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
     Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
     Route.delete('/reviews', 'TemplatesController.deleteAllReviews')
+    Route.get('/templates/:id/settings', 'TemplatesController.settingsGet')
+    Route.put('/templates/:id/settings', 'TemplatesController.settingsSet')
 
 
     Route.get("/role_options", "OptionsController.roles")
@@ -291,6 +293,8 @@ Route.group(() => {
 
   Route.get('/editor-content', 'IndicesController.editorContent')
   Route.get('/editor', 'IndicesController.editor')
+
+  Route.get('/altrp-template-preview/:id', 'TemplatesController.preview')
 
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')

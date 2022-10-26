@@ -220,7 +220,7 @@ export default class PageGenerator extends BaseGenerator {
     return fs.readFileSync(base_path('resources/views/favicons.html'), 'utf8')
   }
 
-  private getFrontAppCss() {
+  getFrontAppCss() {
     let content = fs.readFileSync(base_path('resources/views/front-app-css.html'), 'utf8')
     const container_width = get_altrp_setting('container_width','1440')
     content = mustache.render(content, {

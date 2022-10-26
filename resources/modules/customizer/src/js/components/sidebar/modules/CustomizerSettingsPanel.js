@@ -159,16 +159,30 @@ class CustomizerSettingsPanel extends React.Component {
     let Url = ''
 
     if (this.props.customizer.source) {
-      let { web_url } = this.props.customizer.source
-      try{
-        if(this.state.customizer?.settings?.external){
+      let {web_url} = this.props.customizer.source
+      try {
+        if (this.state.customizer?.settings?.external) {
 
           Url = `${document.location.origin}/api/v1/${this.state.customizer.name}`
-        } else   {
+        } else {
           let strippedDownUrl = new URL(web_url)
           Url = document.location.origin
-            +strippedDownUrl.pathname
+            + strippedDownUrl.pathname
         }
+
+      } catch (e) {
+        alert('Error while parsing source URL')
+        console.error(e);
+      }
+    }
+    let relativeUrl = ''
+    if (this.props.customizer.source) {
+      let { web_url } = this.props.customizer.source
+      try{
+        let strippedDownUrl = new URL(web_url)
+        relativeUrl = strippedDownUrl.pathname
+        Url = document.location.origin
+          +strippedDownUrl.pathname
       }catch (e){
         alert('Error while parsing source URL')
         console.error(e);
@@ -467,9 +481,12 @@ class CustomizerSettingsPanel extends React.Component {
                             <div className="controller-container__label control-select__label controller-label">Url:</div>
                             <div className="Customizer-url__block">
                               <CopyToClipboard onCopy={this.UrlCopy} text={Url}>
-                                <button className="btn btn_success">Copy url</button>
+                                <button className="btn btn_success">Copy Full URL</button>
                               </CopyToClipboard>
-                              <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
+                              <CopyToClipboard onCopy={this.UrlCopy} text={relativeUrl}>
+                                <button className="btn btn_success">Copy URL Path</button>
+                              </CopyToClipboard>
+                              <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied!</div>
                             </div>
                             <input value={Url} readOnly={true} className="url-text"/>
                           </div>

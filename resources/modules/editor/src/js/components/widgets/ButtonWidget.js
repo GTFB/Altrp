@@ -145,6 +145,27 @@ class ButtonWidget extends Component {
     actionsManager.unregisterWidgetActions(this.props.element.getId());
   }
 
+  onMouseEnter = async (e) => {
+    e.persist();
+    if (isEditor()) {
+      e.preventDefault();
+    } else if (this.props.element.getResponsiveLockedSetting("hover_actions", null, []).length) {
+      e.preventDefault();
+      e.stopPropagation();
+      const actionsManager = (
+        await import(/* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+        )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        'click',
+        this.props.element.getLockedSettings("hover_actions", []),
+        this.props.element
+      );
+    }
+  }
+
   /**
    * Клик по кнопке
    * @param e
@@ -582,6 +603,7 @@ class ButtonWidget extends Component {
 
     let button = <button
       onClick={this.onClick}
+      onMouseEnter={this.onMouseEnter}
       className={classes}
       id={this.element.getLockedSettings('position_css_id')}
       title={tooltip || null}
@@ -602,6 +624,7 @@ class ButtonWidget extends Component {
           <a
             href={url}
             onClick={this.onClick}
+            onMouseEnter={this.onMouseEnter}
             className={classes}
             target={target}
             title={tooltip || null}
@@ -612,7 +635,7 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={url} href={url} onClick={this.onClick} target={target} className={classes} title={tooltip || null}>
+          <Link to={url} href={url} onClick={this.onClick} onMouseEnter={this.onMouseEnter} target={target} className={classes} title={tooltip || null}>
             {" "}
             {buttonInner}
           </Link>
