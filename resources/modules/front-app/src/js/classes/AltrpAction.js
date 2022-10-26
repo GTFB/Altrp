@@ -614,10 +614,10 @@ class AltrpAction extends AltrpModel {
         history.back()
       } else {
         try{
-          if(this.getProperty('prevent')){
-            replacePageContent(_URL)
-          } else {
+          if(this.getProperty('prevent') || window?.altrp?.spa_off){
             window.location.href = _URL
+          } else {
+            replacePageContent(_URL)
           }
         } catch (e) {
           console.error(e);
@@ -1189,6 +1189,7 @@ class AltrpAction extends AltrpModel {
     const change = this.getProperty('forms_change');
     IDs.forEach(id => {
       let component = getComponentByElementId(id);
+
       switch (change) {
         case 'select_all': {
           if (_.get(component, 'elementRef.current.selectAll')) {
@@ -1197,6 +1198,7 @@ class AltrpAction extends AltrpModel {
         }
           break;
         case 'clear': {
+          // console.log(component);
           if (_.get(component, 'elementRef.current.clearValue')) {
             component.elementRef.current.clearValue();
           }

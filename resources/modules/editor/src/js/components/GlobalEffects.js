@@ -50,7 +50,7 @@ class GlobalEffects extends Component {
         JSON.stringify(this.props.colors)
       )
     ) {
-      console.log("IM WATCHING UPDATES");
+
     }
   }
 

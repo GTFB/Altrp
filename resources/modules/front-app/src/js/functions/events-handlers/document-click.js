@@ -1,9 +1,11 @@
 import replacePageContent from "../../helpers/replace-page-content";
 
-document.addEventListener('click', documentClick)
-export default function documentClick(e){
+document.addEventListener('click', spaNavigation)
+export default function spaNavigation(e){
 
-
+  if(window?.altrp?.spa_off){
+    return;
+  }
   let target = e.target
   while(target && target.tagName && target.tagName.toLowerCase() !== 'a'){
     target = target.parentNode
@@ -15,7 +17,14 @@ export default function documentClick(e){
     return
   }
 
+  if(! target.hasAttribute('href')){
+    return;
+  }
+
   let url = target.getAttribute('href')
+  if(! url){
+    return;
+  }
   if(url.indexOf('/') !== 0
     && url.indexOf(location.origin) !== 0){
     return;

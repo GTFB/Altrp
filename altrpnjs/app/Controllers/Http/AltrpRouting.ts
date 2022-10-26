@@ -129,7 +129,7 @@ export default class AltrpRouting {
         const ModelClass = (await import(`../../AltrpModels/${page.model.name}`)).default
         let classInstance
         if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
-          classInstance = await ModelClass.query().where(page.model_column, pageMatch.params[page.param_name]).first()
+          classInstance = await ModelClass.query().orderBy('id','desc').where(page.model_column, pageMatch.params[page.param_name]).first()
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
@@ -217,6 +217,7 @@ export default class AltrpRouting {
         altrp_skeleton_highlight_color: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
         altrp_image_lazy: get_altrp_setting('altrp_image_lazy', 'none'),
         container_width: get_altrp_setting('container_width', '1440'),
+        spa_off: get_altrp_setting('spa_off') === 'true',
         device,
       })
       mustache?.templateCache?.clear()

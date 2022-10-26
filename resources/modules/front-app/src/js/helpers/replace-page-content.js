@@ -304,13 +304,6 @@ async function _replace(htmlString, popstate, url) {
   window.altrpContentLoaded = false
 
   let params = window?.__altrp_settings__?.page_params
-  if (!params) {
-    params = convertQueryParamsToObject(document?.location?.search);
-  }
-  let hashParams = {};
-  if (document?.location?.hash && document?.location?.hash.indexOf('=') !== -1) {
-    hashParams = convertQueryParamsToObject(document?.location?.hash)
-  }
 
   let defaultModel = {...window.model_data};
   defaultModel.altrpModelUpdated = true
@@ -341,7 +334,15 @@ async function _replace(htmlString, popstate, url) {
       altrpCustomNavigation: true
     }, newTitle.innerHTML, url)
   }
+  if (!params) {
+    params = convertQueryParamsToObject(document?.location?.search);
+  }
 
+  let hashParams = {};
+  if (document?.location?.hash && document?.location?.hash.indexOf('=') !== -1) {
+    hashParams = convertQueryParamsToObject(document?.location?.hash)
+  }
+  console.log(location?.href);
   appStore.dispatch(changeCurrentPage({
     url: location?.href || "",
     title: window?.currentPage?.title || "",

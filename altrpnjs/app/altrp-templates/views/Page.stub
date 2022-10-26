@@ -79,7 +79,8 @@
         window.altrpSkeletonColor = '{{altrp_skeleton_color}}';
         window.altrpSkeletonHighlightColor = '{{altrp_skeleton_highlight_color}}';
         window.model_data = {{{model_data}}};
-        window.altrpPreloadedDatasources = {{{datasources }}};
+        window.altrpPreloadedDatasources = {{{datasources}}};
+        window.altrp.spa_off = {{{spa_off}}};
         window.altrpMenus = [];
         window.route_args = {{{route_args}}};
         window.container_width = {{{container_width}}};

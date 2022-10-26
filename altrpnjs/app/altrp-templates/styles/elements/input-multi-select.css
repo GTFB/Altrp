@@ -13,7 +13,7 @@
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin-right: 7px;
-  margin-top: 0;
+  margin-top: 5px;
   min-width: 0;
 }
 
@@ -69,6 +69,7 @@
 .bp3-tag-input .bp3-tag-input-values > * {
   margin-bottom: 5px;
 }
+.bp3-tag-input.bp3-input ,
 .bp3-tag-input {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -86,6 +87,10 @@
   min-height: 30px;
   padding-left: 5px;
   padding-right: 0;
+}
+.altrp-widget_input-multi-select .bp3-icon{
+  width: auto;
+  height: auto;
 }
 .bp3-input {
   -webkit-appearance: none;

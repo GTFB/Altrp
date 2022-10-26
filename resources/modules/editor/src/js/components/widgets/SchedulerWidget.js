@@ -319,7 +319,7 @@ class SchedulerWidget extends Component {
         end: event.end
       });
     } catch (error) {
-      console.log({error});
+      console.error({error});
     }
   }
 

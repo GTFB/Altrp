@@ -451,6 +451,7 @@ class InputDateWidget extends Component {
     }
 
     if (_.isObject(this.props.appStore) && fieldName && formId) {
+      console.log(value);
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
@@ -505,6 +506,7 @@ class InputDateWidget extends Component {
 
       value = _.get(appStore.getState().formsStore, `${formId}`, '')
       value = _.get(value, fieldName, '')
+
       if(!value){
         if(!nullable) {
           value = new Date();
@@ -535,7 +537,7 @@ class InputDateWidget extends Component {
   }
 
   render() {
-    let label = null;
+    let label ;
     const settings = this.props.element.getLockedSettings();
     let classLabel = "";
     let styleLabel = {};
@@ -616,7 +618,7 @@ class InputDateWidget extends Component {
         try {
           value = moment.unix(value / 1000).format("YYYY-MM-DD");
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       }
     }
@@ -658,6 +660,7 @@ class InputDateWidget extends Component {
     }
 
     let classes = this.getClasses()
+    console.log(this.getValue());
     const input = (
       <div className="altrp-input-wrapper">
         <DateInput

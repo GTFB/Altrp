@@ -392,8 +392,12 @@ class SectionWidget extends BaseElement {
     this.addControl("background_image", {
       type: CONTROLLER_MEDIA,
       label: "Background Image",
-      default: { url: "" },
       locked: true,
+    });
+
+    this.addControl("background_image_lazy", {
+      type: CONTROLLER_SWITCHER,
+      label: "Background Image Lazy Loading",
     });
 
     this.addControl("background_position", {

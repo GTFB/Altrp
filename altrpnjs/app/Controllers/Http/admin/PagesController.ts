@@ -208,8 +208,11 @@ export default class PagesController {
   }
 
   public async getPageContent(httpContext:HttpContextContract){
-    const {url} = httpContext.request.all()
-
+    let {url} = httpContext.request.all()
+    console.log(url);
+    if(url.includes('?')){
+      [url] = url.split('?')
+    }
     if(! url){
       return
     }
