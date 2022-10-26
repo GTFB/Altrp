@@ -44,7 +44,7 @@ const SqlSelectController = ({ controller, controlId, label, multi, onlySQL }) =
   }, [settings]);
 
   const handleTypes = (opts, source) => {
-    console.log("opts :>> ", settings);
+
     setSettings(
       settings.map((item) => {
         if (item.value === source.value) {

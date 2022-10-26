@@ -388,7 +388,7 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    exec(`node ${base_path('ace')} customizer:schedule --id=${this.id.toString()}`).then(data => {
+    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`).then(data => {
       console.log(data);
     }).catch(err => {
       console.error(err);

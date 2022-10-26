@@ -12,7 +12,6 @@ import AltrpModel from "../../classes/AltrpModel";
 import {MultiSelect} from "@blueprintjs/select";
 import {MenuItem, Button} from "@blueprintjs/core";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
-import '../../../../../editor/src/sass/blueprint.scss'
 
 
 (window.globalDefaults = window.globalDefaults || []).push(`

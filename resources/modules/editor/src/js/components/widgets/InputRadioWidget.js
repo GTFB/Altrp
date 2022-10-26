@@ -13,7 +13,6 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import AltrpModel from "../../classes/AltrpModel";
 import {Radio, RadioGroup} from '@blueprintjs/core'
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
-import '../../../../../editor/src/sass/blueprint.scss'
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 
@@ -724,7 +723,7 @@ class InputRadioWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
-    console.log(value);
+
 
     this.setState(
       state => ({
@@ -740,8 +739,6 @@ class InputRadioWidget extends Component {
            value,
           true
         );
-        console.log(this.getValue());
-
 
       }
     );

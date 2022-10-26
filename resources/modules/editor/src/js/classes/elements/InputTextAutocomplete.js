@@ -16,11 +16,9 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_REPEATER,
   CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
-import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
 import { actionsControllers } from "../../decorators/actions-controllers";
 
 class InputTextCommon extends BaseElement {

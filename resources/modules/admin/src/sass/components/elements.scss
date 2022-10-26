@@ -1325,6 +1325,18 @@ input[type="text"].form__input {
   align-items: center
 }
 
+.altrp-tree {
+  & .bp3-tree-node-content:hover {
+    border-radius: 4px;
+  }
+
+  & .bp3-tree-node.bp3-tree-node-selected > .bp3-tree-node-content {
+    border-radius: 4px;
+  }
+}
+
+
+
 @media screen and (max-width: 1101px) {
   .upload__marginBottom {
     margin-bottom: 20px;

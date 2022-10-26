@@ -120,12 +120,6 @@ class Image extends BaseElement {
 
     this.addControl('image_link', {
       type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false,
-        tag: 'Link'
-      },
       label: 'Link',
       locked: true,
     });

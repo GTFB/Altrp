@@ -594,7 +594,7 @@ class Assets extends Component {
                                            data-assetid={asset.id}
                                            title="Delete"
                                            onClick={this.deleteClick}>
-                                     <CloseIcon className="item__delete-icon" />
+                                     <CloseIcon className="item__delete-icon" viewBox="0 0 24 24"/>
                                    </button>
                                  </div>
 

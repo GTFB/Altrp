@@ -816,6 +816,7 @@ export default class ModelsController {
 
 
     const controller = await Controller.query().where('model_id', model.id).first()
+
     if (controller) {
       const sources = await Source.query().where('controller_id', controller?.id).select('*')
       if (sources[0]) {
@@ -832,7 +833,6 @@ export default class ModelsController {
         return s.delete()
       }))
 
-      await controller.delete()
     }
     await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
 
@@ -842,8 +842,13 @@ export default class ModelsController {
     })
     if (table) {
       await Column.query().where('table_id', table.id).delete()
+      if(controller){
+        await controller.delete()
+      }
+
       await model.delete()
       await table.delete()
+
       await client.schema.dropTable(model.table.name)
     } else {
       await model.delete()

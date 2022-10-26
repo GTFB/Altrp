@@ -317,8 +317,8 @@ class ElementWrapper extends Component {
   componentDidUpdate(prevProps) {
     document.getElementById("editorContent")?.contentWindow?.dispatchEvent(new Event("resize"));
 
-    const prevTooltipState = prevProps.element.getSettings("tooltip_show_type");
-    const tooltipState = this.props.element.getSettings("tooltip_show_type");
+    const prevTooltipState = prevProps.element.getSettings("tooltip_show_type") || 'never';
+    const tooltipState = this.props.element.getSettings("tooltip_show_type") || 'never';
 
     if(prevTooltipState !== tooltipState) {
       this.tooltipOnClickListener(true)
@@ -383,7 +383,7 @@ class ElementWrapper extends Component {
       isFixed,
       tooltip_text,
       tooltip_minimal,
-      tooltip_show_type,
+      tooltip_show_type = 'never',
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
     } = this.props.element.getSettings();

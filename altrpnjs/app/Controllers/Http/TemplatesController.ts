@@ -1,6 +1,11 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
+import fs from 'fs'
 import exec from '../../../helpers/exec'
 import validGuid from '../../../helpers/validGuid';
+import * as mustache from 'mustache'
+import get from 'lodash/get'
+import uniq from 'lodash/uniq'
+import { parse } from 'node-html-parser'
 
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
@@ -15,6 +20,11 @@ import filtration from "../../../helpers/filtration";
 import Area from "App/Models/Area";
 import mbParseJSON from "../../../helpers/mbParseJSON";
 import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
+import SCREENS from '../../../helpers/const/SCREENS'
+import DEFAULT_BREAKPOINT from '../../../helpers/const/DEFAULT_BREAKPOINT'
+import getCurrentDevice from '../../../helpers/getCurrentDevice'
+import stub_path from '../../../helpers/path/stub_path'
+import PageGenerator from 'App/Generators/PageGenerator'
 import base_path from '../../../helpers/base_path'
 
 export default class TemplatesController {
@@ -74,10 +84,18 @@ export default class TemplatesController {
   }
 
   public async settingsGet({ request, params }) {
-    const setting = await TemplateSetting.query()
-      .where("template_id", parseInt(params.id))
-      .andWhere("setting_name", request.input("setting_name"))
-      .firstOrFail()
+    const settingQuery = TemplateSetting.query()
+
+    if (isNaN(params.id)) {
+      settingQuery.where('template_guid', params.id)
+    } else {
+      settingQuery.where('template_id', parseInt(params.id))
+    }
+
+    const setting = await settingQuery
+      .andWhere('setting_name', request.qs().setting_name)
+      .first()
+
     return setting
   }
 
@@ -409,7 +427,7 @@ export default class TemplatesController {
       template.html_content = '';
       await template.save()
 
-      await exec(`node ${base_path('ace')} generator:template --id=${params.id}`)
+      await exec(`node ${base_path('ace')} generator:template --id=${template.id}`)
       applyPluginsFiltersAsync('template_updated', template)
 
 
@@ -417,6 +435,92 @@ export default class TemplatesController {
         success: true
       }
     }
+  }
+
+  public async preview({ params, request, response }) {
+    const template = await Template.query().where('guid', params.id).first()
+
+    if (!template || template.type !== 'template') {
+      return response.status(404)
+    }
+
+    await template.load('currentArea')
+
+    if (!template.currentArea?.name) {
+      return response
+        .status(500)
+        .send(`Template ${template.id} couldn't be rendered because it doesn't have Area name`)
+    }
+
+    const templateSetting: TemplateSetting | null = await TemplateSetting
+      .query()
+      .where('template_id', template.id)
+      .andWhere('setting_name', 'preview_data')
+      .first()
+
+    const screenName = getCurrentDevice(request)
+
+    const templatePreviewStubFilePath = stub_path.TEMPLATE_PREVIEW
+
+    if (!fs.existsSync(templatePreviewStubFilePath)) {
+      return response
+        .status(500)
+        .send(`Template ${template.id} couldn't be rendered because it doesn't have template stub file`)
+    }
+
+    const stub = fs.readFileSync(templatePreviewStubFilePath, { encoding: 'utf8' })
+
+    const styles = JSON.parse(template.styles || '{}')
+    const allStyles = parse(get(styles, 'all_styles', []).join(''))
+
+    let queriedStyles = ''
+
+    let screen = SCREENS.find(screen => screen.name === screenName)
+
+    if (!screen) {
+      screen = SCREENS.find(screen => screen.name === DEFAULT_BREAKPOINT)
+    }
+
+    const currentScreenStyles = get(styles, screen!.name, []).join('')
+
+    if (currentScreenStyles.length) {
+      if (screenName === DEFAULT_BREAKPOINT) {
+        queriedStyles += currentScreenStyles
+      } else {
+        queriedStyles += `${screen!.fullMediaQuery}{${currentScreenStyles}}`
+      }
+    }
+
+    let childrenContent = await template.getChildrenContent(screenName)
+
+    const pageGenerator = new PageGenerator()
+    const previewPage = new Page()
+    const fonts = pageGenerator.getFonts()
+    const frontAppCss = pageGenerator.getFrontAppCss()
+
+    let elementsList = []
+    await previewPage._extractElementsNames(JSON.parse(template.data), elementsList, false)
+    elementsList = uniq(elementsList)
+    const { extra_header_styles, extra_footer_styles } = await pageGenerator.getExtraStyles(elementsList)
+    let content = mustache.render(childrenContent, mbParseJSON(templateSetting?.data, {}))
+
+    content = mustache.render(stub, {
+      content,
+      title: `Template Preview - ${template.guid}`,
+      fonts,
+      styles: allStyles.textContent + ' ' + queriedStyles,
+      app_styles: frontAppCss,
+      extra_header_styles,
+      extra_footer_styles,
+    })
+
+    mustache?.templateCache?.clear()
+
+    content = content
+      .replace(/<<<ignore_start>>>/g, '{{=<% %>=}}')
+      .replace(/<<<ignore_end>>>/g, '<%={{ }}=%>')
+
+    response.header('Content-type', 'text/html').send(content)
   }
 
   public async deleteReviews({ params, }) {

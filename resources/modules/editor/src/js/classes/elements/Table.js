@@ -105,10 +105,10 @@ class Table extends BaseElement {
       locked: true,
     });
 
-    this.addControl('table_position_style_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: "Z-index",
-    });
+    // this.addControl('table_position_style_z_index', {
+    //   type: CONTROLLER_NUMBER,
+    //   label: "Z-index",
+    // });
 
     this.endControlSection();
 

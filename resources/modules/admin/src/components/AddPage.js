@@ -328,7 +328,10 @@ class AddPage extends Component {
       // }, () => {
       //   this.props.history.push('/admin/pages')
       // });
+      this.props.history.push('/admin/pages')
     } else {
+      console.error(res);
+      res.message && alert(res.message);
       this.setState(state => {
         return {...state, value: {}};
       });

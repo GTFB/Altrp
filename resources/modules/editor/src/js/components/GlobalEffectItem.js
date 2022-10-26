@@ -106,7 +106,7 @@ class GlobalEffectItem extends Component {
   onSaveEffect(event) {
     event.preventDefault();
     const { effect } = this.state;
-    console.log(effect);
+
     const send = {
       type: "effect",
       settings: effect
@@ -196,7 +196,7 @@ class GlobalEffectItem extends Component {
                 />
                 <GlobalPresetColors
                   changeValue={color => {
-                    console.log(color);
+
                     this.globalColor(color);
                     // this._changeValue(color);
                     // this.setState(state=>({...state, colorRGB: color.colorRGB}))
