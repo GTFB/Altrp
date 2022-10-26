@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import ReactDOM from "react-dom";
 import AdminTable from "../AdminTable";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import ModalWindow from "../ModalWindow";
@@ -8,6 +8,7 @@ import {getModelId, getModelRelationId} from "../../js/store/models-state/action
 import ModalRelationWindow from "../ModalRelationWindow";
 import {editModels} from "../../js/store/routes-state/action";
 import SidebarEditModelForm from "./SidebarEditModelForm";
+import cn from "classnames";
 
 const columns = [
   {
@@ -32,17 +33,6 @@ class SidebarEditModel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      model: {
-        name: '',
-        title: '',
-        description: '',
-        bounded_model: '',
-        categories: [],
-        _categories: [],
-        categoryOptions: [],
-        soft_deletes: false,
-        time_stamps: false
-      },
       fields: [],
       relations: [],
       activeTable: "field",
@@ -91,25 +81,9 @@ class SidebarEditModel extends Component {
 
 
   getData = async () => {
-    const { data } = await this.categoryOptions.getAll();
-    this.setState(state => ({
-      ...state,
-      model: {
-        ...state.model,
-        categoryOptions: data
-      }
-    }))
     if (this.props.id) {
       this.modelsResource.get(this.props.id)
         .then(model => {
-          this.setState(state => ({
-            ...state,
-            model: {
-              ...state.model,
-              _categories: model.categories,
-              ...model,
-            }
-          }));
           this.modelName = model.name;
         });
 
@@ -161,23 +135,51 @@ class SidebarEditModel extends Component {
       await this.modelsResource.post(model);
     }
     this.updateModels();
+    this.props.updateModelsState()
   };
+
+  changeTab = (e) => {
+    this.setState(state => ({
+      ...state,
+      activeTable: e.target.dataset.key
+    }))
+  }
+
   render() {
-    const { model, fields,  relations, activeTable, modalWindow, modalRelationWindow } = this.state;
+    const { fields, relations, activeTable, modalWindow, modalRelationWindow } = this.state;
 
     return <div className="admin-settings_model-content">
       <div className="admin-settings_model-container">
         <SidebarEditModelForm
           paramsId={this.props.id}
-          model={model}
           submitText="Save"
-          edit={model.id}
-          onSubmit={this.onSubmit} />
-
+          onSubmit={this.onSubmit}
+          closeSidebar={this.props.closeSidebar}
+        />
+        <div className="admin-settings_model-table-tabs">
+          <button
+            onClick={this.changeTab}
+            data-key="field"
+            className={cn("admin-settings_model-table-tab", {
+              active: activeTable === "field"
+            })}
+          >
+            Fields
+          </button>
+          <button
+            onClick={this.changeTab}
+            data-key="relation"
+            className={cn("admin-settings_model-table-tab", {
+              active: activeTable === "relation"
+            })}
+          >
+            Relations
+          </button>
+        </div>
         <div className="form-table-wrapper">
           {activeTable === "field" && (
             <div className="form-table-field">
-              <div className="form-group__inline-wrapper table__name-top">
+              <div className="form-group__inline-wrapper tb">
                 <h2 className="sub-header ">Fields</h2>
                 <button className="btn btn_add" onClick={this.toggleWindowModal}>Add Field</button>
               </div>
@@ -202,7 +204,7 @@ class SidebarEditModel extends Component {
           )}
           {activeTable === "relation" && (
             <div className="form-table-relation">
-              <div className="form-group__inline-wrapper table__name-top">
+              <div className="form-group__inline-wrapper tb">
                 <h2 className="sub-header">Relations</h2>
                 <button className="btn btn_add" onClick={this.toggleWindowRelationModal}>Add Relation</button>
               </div>
@@ -228,11 +230,17 @@ class SidebarEditModel extends Component {
         </div>
 
         {modalWindow && (
-          <ModalWindow modelId={this.props.id} activeMode={this.state.modalWindow} toggleModal={this.toggleWindowModal} />
+          ReactDOM.createPortal(
+            <ModalWindow modelId={this.props.id} activeMode={this.state.modalWindow} toggleModal={this.toggleWindowModal} />,
+            document.body
+          )
         )}
 
         {modalRelationWindow && (
-          <ModalRelationWindow modelId={this.props.id} activeMode={this.state.modalRelationWindow} toggleModal={this.toggleWindowRelationModal}/>
+          ReactDOM.createPortal(
+            <ModalRelationWindow modelId={this.props.id} activeMode={this.state.modalRelationWindow} toggleModal={this.toggleWindowRelationModal}/>,
+            document.body
+          )
         )}
       </div>
     </div>;

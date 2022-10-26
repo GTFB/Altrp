@@ -104,7 +104,8 @@
   background-color: white;
   width: 600px;
   z-index: 50;
-  padding: 56px 20px 20px;
+  padding-top: 56px;
+  //padding: 56px 20px 20px;
   height: calc(100% - 62px);
   box-shadow: -6px 0 6px -6px rgb(34 60 80 / 20%);
 
@@ -150,6 +151,42 @@
   & .form-group__multiSelect-model .bp3-menu {
     width: 560px;
   }
+
+  & .admin-settings_model-table-tabs {
+    margin-top: 40px;
+    margin-bottom: 10px;
+  }
+
+  & .admin-settings_model-table-tab {
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    background-color: #E6E9EC;
+    border-radius: 4px;
+    padding: 6px 20px;
+    color: #343B4C;
+
+    &.active {
+      background-color: #315EFB;
+      color: white;
+    }
+
+    &:first-child {
+      margin-right: 20px;
+    }
+  }
+
+  & .form-group__inline-wrapper.tb {
+    align-items: center;
+
+    & .btn_add {
+      margin-top: 0;
+    }
+  }
+}
+
+.form-table-wrapper table {
+  border: 1px solid #D5D7DE;
 }
 
 .sidebar-settings-model-enter {

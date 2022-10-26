@@ -10,6 +10,7 @@ import {compose} from "redux";
 import {CSSTransition} from "react-transition-group";
 import ArrowSidebar from "../svgs/akar-icons_arrow-down.svg";
 import SidebarEditModel from "./models/SidebarEditModel";
+import Scrollbars from "react-custom-scrollbars";
 
 const columnsModel = [
   {
@@ -313,7 +314,8 @@ class Models extends Component {
   closeSidebar = () => {
     this.setState(state => ({
       ...state,
-      isActive: false
+      isActive: false,
+      idModel: null
     }))
   }
 
@@ -375,7 +377,16 @@ class Models extends Component {
        <CSSTransition unmountOnExit in={this.state.isActive} timeout={500} classNames="sidebar-settings-model">
          <div className="admin-settings_model">
            <ArrowSidebar onClick={this.closeSidebar} className="admin-settings_model-arrow"/>
-           <SidebarEditModel id={this.state.idModel}/>
+           <Scrollbars
+             renderTrackVertical={({style}) => <div style={{...style, right: "4px", bottom: "2px", top: "2px", borderRadius: "3px"}}  className="track-vertical"/>}
+             autoHide
+             autoHideTimeout={500}
+             autoHideDuration={200}
+           >
+             <div style={{padding: '0 20px 20px'}}>
+               <SidebarEditModel closeSidebar={this.closeSidebar} updateModelsState={this.updateModels} id={this.state.idModel}/>
+             </div>
+           </Scrollbars>
          </div>
        </CSSTransition>
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
@@ -391,11 +402,11 @@ class Models extends Component {
             <AdminTable
               columns={columnsModel}
               quickActions={[
-                {
-                  tag: 'Link',
-                  props: {href: '/admin/tables/models/edit/:id'},
-                  title: 'Edit'
-                },
+                // {
+                //   tag: 'Link',
+                //   props: {href: '/admin/tables/models/edit/:id'},
+                //   title: 'Edit'
+                // },
                 {
                   tag: 'button',
                   route: '/admin/ajax/models/:id',

@@ -12,6 +12,28 @@ import { format, parse } from 'date-fns';
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import store from "../../../store/store";
+import {setAnimateLine, setColorLine, setTypeLine} from "../../../store/connection-line-type/actions";
+import PickrComponent from "../../PickrComponent";
+
+const TypeLineOptions = [
+  {
+    value: 'default',
+    label: 'Default',
+  },
+  {
+    value: 'straight',
+    label: 'Straight',
+  },
+  {
+    value: 'step',
+    label: 'Step',
+  },
+  {
+    value: 'smoothstep',
+    label: 'Smoothstep',
+  }
+];
 
 
 class CustomizerSettingsPanel extends React.Component {
@@ -519,6 +541,52 @@ class CustomizerSettingsPanel extends React.Component {
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
 
+                <div className="settings-section open">
+                  <div className="settings-section__title d-flex">
+                    <div className="settings-section__icon d-flex">
+                      <Chevron/>
+                    </div>
+                    <div className="settings-section__label">Settings Line</div>
+                  </div>
+
+                  <div className="controllers-wrapper">
+                    <div className="controller-container controller-container_select">
+                      <div className="controller-container__label control-select__label controller-label">Line Type:</div>
+                      <div className="control-container_select-wrapper controller-field">
+                        <select className="control-select control-field"
+                                value={this.props.lineState.typeLine || ''}
+                                onChange={e => {
+                                  store.dispatch(setTypeLine(e.target.value))
+                                }}
+                        >
+                          {TypeLineOptions.map(option => {
+                            return <option value={option.value} key={option.value}>{option.label}</option>
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="controller-container controller-container_select align-items-center">
+                      <div className="controller-container__label control-select__label controller-label">Animate Line</div>
+                      <div className="d-flex align-items-center controller-field">
+                        <Checkbox className="form-control-blueprint"
+                                  type="checkbox"
+                                  id="animate-line"
+                                  checked={this.props.lineState.animateLine}
+                                  onChange={() => store.dispatch(setAnimateLine(!this.props.lineState.animateLine))}
+                        />
+                      </div>
+                    </div>
+                    <div className="controller-container controller-container_select align-items-center">
+                      <div className="controller-container__label control-select__label controller-label">Color Line</div>
+                      <div className="d-flex align-items-center controller-field">
+                        <PickrComponent colorControlled={this.props.lineState.colorLine} saveCallback={(color) => {
+                          store.dispatch(setColorLine(color))
+                        }}/>
+                      </div>
+                    </div>
+                  </div> {/* ./controllers-wrapper */}
+                </div> {/* ./settings-section */}
+
               </div>
             </div>
           </Scrollbars>
@@ -646,7 +714,8 @@ class CustomizerSettingsPanel extends React.Component {
 }
 function  mapStateToProps(state) {
   return {
-    customizer: state.currentCustomizer
+    customizer: state.currentCustomizer,
+    lineState: state.connectionLineTypeData
   }
 }
 

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import {Redirect} from "react-router-dom";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
@@ -10,13 +9,25 @@ class SidebarEditModelForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: {...this.props.model}
+      value: {
+        name: '',
+        title: '',
+        description: '',
+        bounded_model: '',
+        categories: [],
+        _categories: [],
+        categoryOptions: [],
+        soft_deletes: false,
+        time_stamps: false
+      }
     };
     this.submitHandler = this.submitHandler.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
     this.titleChangeHandler = this.titleChangeHandler.bind(this);
     this.nameChangeHandler = this.nameChangeHandler.bind(this);
     this.categoriesChangeHandler = this.categoriesChangeHandler.bind(this);
+    this.modelsResource = new Resource({ route: '/admin/ajax/models' });
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
   }
 
   /**
@@ -63,16 +74,27 @@ class SidebarEditModelForm extends Component {
     }))
   }
 
-  /**
-   * Обновляем state при получении новых props (model)
-   */
-  componentDidUpdate(prevProps){
-    if(this.props !== prevProps){
-      this.setState(state => {
-        state = { ...state };
-        state.value = {...this.props.model};
-        return state
-      });
+  getModel = async () => {
+    let res = await this.modelsResource.get(this.props.paramsId)
+    let {data} = await  this.categoryOptions.getAll();
+    this.setState(state =>({
+      ...state,
+      value: {
+        ...state.value,
+        ...res,
+        _categories: res.categories,
+        categoryOptions: data
+      }
+    }))
+  }
+
+  componentDidMount() {
+    this.getModel()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.paramsId !== this.props.paramsId && this.props.paramsId !== null) {
+      this.getModel()
     }
   }
   /**
@@ -92,9 +114,8 @@ class SidebarEditModelForm extends Component {
   }
 
   async deleteHandler() {
-    // delete: /admin/ajax/models/{model_id}
-    let res = await (new Resource({route: '/admin/ajax/models'}).delete(this.props.model.id));
-    this.setState(state=>({...state, redirect: '/admin/tables/models/'}))
+    await (new Resource({route: '/admin/ajax/models'}).delete(this.props.paramsId));
+    this.props.closeSidebar()
   }
 
   tagRenderer = (item) => {
@@ -141,9 +162,6 @@ class SidebarEditModelForm extends Component {
 
   render() {
     const model = this.state.value;
-    if(this.state.redirect){
-      return <Redirect to={this.state.redirect} push={true}/>
-    }
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width48">
@@ -266,9 +284,7 @@ class SidebarEditModelForm extends Component {
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>
-        {this.props.edit
-          ? <button className="btn btn_failure" type="button" onClick={this.deleteHandler}>Delete</button>
-          : ''}
+        <button className="btn btn_failure" type="button" onClick={this.deleteHandler}>Delete</button>
       </div>
     </form>;
   }
