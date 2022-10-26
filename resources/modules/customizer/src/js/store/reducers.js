@@ -5,6 +5,7 @@ import {otherDataReducer} from "./other-data/reducers";
 import {copyNodeReducer} from "./copy-node/reducers";
 import {nodeStateReducer} from "./node-store/reducers";
 import {assetsSettingsReducer} from "../../../../editor/src/js/store/assets-browser/reducers";
+import {connectionLineTypeReducer} from "./connection-line-type/reducers";
 
 
 export default combineReducers({
@@ -14,4 +15,5 @@ export default combineReducers({
   copyNodeData: copyNodeReducer,
   assetsManagerSettings: assetsSettingsReducer,
   nodeStoreData: nodeStateReducer,
+  connectionLineTypeData: connectionLineTypeReducer
 });

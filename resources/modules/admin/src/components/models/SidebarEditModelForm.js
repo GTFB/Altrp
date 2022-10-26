@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import {Link, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import {MultiSelect} from "@blueprintjs/select";
 import {altrpRandomId} from "../../../../front-app/src/js/helpers";
 
-class EditModelForm extends Component {
+class SidebarEditModelForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -146,7 +146,7 @@ class EditModelForm extends Component {
     }
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width23">
+        <div className="form-group form-group_width48">
           <label htmlFor="page-title" className="font__edit">Model Title</label>
           <InputGroup className="form-control-blueprint"
                       onChange={this.titleChangeHandler}
@@ -157,7 +157,7 @@ class EditModelForm extends Component {
                       required
           />
         </div>
-        <div className="form-group form-group_width23">
+        <div className="form-group form-group_width48">
           <label htmlFor="page-name" className="font__edit">Model Name</label>
           <InputGroup className="form-control-blueprint"
                       onChange={this.nameChangeHandler}
@@ -167,24 +167,25 @@ class EditModelForm extends Component {
                       required
           />
         </div>
-        <div className="form-group form-group_width23 form-group_column">
-          <label htmlFor="page-description" className="font__edit">Model Description</label>
-          <TextArea className="form-control-blueprint"
-                      large={false}
-                      onChange={e => { this.changeValue(e.target.value, 'description') }}
-                      value={model.description || ''}
-                      id="page-description"
-          />
-        </div>
+      </div>
+      <div className="form-group_column form-control-blueprint">
+        <label htmlFor="page-description" className="font__edit">Model Description</label>
+        <TextArea
+                  large={false}
+                  onChange={e => { this.changeValue(e.target.value, 'description') }}
+                  value={model.description || ''}
+                  id="page-description"
+        />
       </div>
       <div className="flex-model">
-        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-category form-group_width34">
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-category flex-grow-1 form-group__multiSelect-model">
           <label htmlFor="page-categories" className="font__edit">Categories</label>
           <MultiSelect tagRenderer={this.tagRenderer} id="categories"
                        items={this.state.value.categoryOptions}
                        itemPredicate={this.onQueryChange}
                        noResults={<MenuItem disabled={true} text="No results."/>}
-                       fill={true}
+                       fill
+                       matchTargetWidth
                        placeholder="Categories..."
                        selectedItems={this.state.value.categories}
                        onItemSelect={this.handleItemSelectCategory}
@@ -203,47 +204,74 @@ class EditModelForm extends Component {
                          large: false,
                        }}
                        popoverProps={{
-                         usePortal: false
+                         usePortal: false,
+                         matchTargetWidth: true
                        }}
           />
         </div>
       </div>
-      <div className="checkbox-container-editModel">
+      <div className="checkbox-container-editModel justify-content-between mb-2">
         <div className="form-group__flexModel">
-          <input type="checkbox" id="page-soft_deletes"
-            checked={model.soft_deletes}
-            onChange={e => { this.changeValue(e.target.checked, 'soft_deletes') }}
+          <div  className="font__edit">Soft Deletes</div>
+          <label style={{marginLeft: "10px", marginBottom: '0'}}>
+            <input
+              className="addPage__bottom-checkbox"
+              checked={model.soft_deletes}
+              onChange={e => { this.changeValue(e.target.checked, 'soft_deletes') }}
+              type="checkbox"
+              id="page-soft_deletes"
             />
-          <label htmlFor="page-soft_deletes" className="label_model font__edit">Soft Deletes</label>
+            <div className="control-switcher control-switcher_checked">
+              <div className="control-switcher__on-text">ON</div>
+              <div className="control-switcher__caret"/>
+              <div className="control-switcher__off-text">OFF</div>
+            </div>
+          </label>
         </div>
         <div className="form-group__flexModel">
-          <input type="checkbox" id="page-time_stamps"
-            checked={model.time_stamps}
-            onChange={e => { this.changeValue(e.target.checked, 'time_stamps') }}
+          <div className="font__edit">Time Stamps</div>
+          <label style={{marginLeft: "10px", marginBottom: '0'}}>
+            <input
+              className="addPage__bottom-checkbox"
+              checked={model.time_stamps}
+              onChange={e => { this.changeValue(e.target.checked, 'time_stamps') }}
+              type="checkbox"
+              id="page-time_stamps"
             />
-          <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
+            <div className="control-switcher control-switcher_checked">
+              <div className="control-switcher__on-text">ON</div>
+              <div className="control-switcher__caret"/>
+              <div className="control-switcher__off-text">OFF</div>
+            </div>
+          </label>
         </div>
 
         <div className="form-group__flexModel">
-          <input type="checkbox" id="page-only_user"
-
-
-            checked={this.state.value.user_id}
-
-            onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
+          <div className="font__edit">Only for Current User</div>
+          <label style={{marginLeft: "10px", marginBottom: '0'}}>
+            <input
+              className="addPage__bottom-checkbox"
+              checked={this.state.value.user_id}
+              onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
+              type="checkbox"
+              id="page-only_user"
             />
-          <label htmlFor="page-only_user" className="label_model font__edit">Only for Current User</label>
+            <div className="control-switcher control-switcher_checked">
+              <div className="control-switcher__on-text">ON</div>
+              <div className="control-switcher__caret"/>
+              <div className="control-switcher__off-text">OFF</div>
+            </div>
+          </label>
         </div>
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>
-        <Link to="/admin/tables/models"><button className="btn">Cancel</button></Link>
         {this.props.edit
-            ? <button className="btn btn_failure" type="button" onClick={this.deleteHandler}>Delete</button>
-            : ''}
+          ? <button className="btn btn_failure" type="button" onClick={this.deleteHandler}>Delete</button>
+          : ''}
       </div>
     </form>;
   }
 }
 
-export default EditModelForm;
+export default SidebarEditModelForm;
