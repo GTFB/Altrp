@@ -366,7 +366,7 @@ class SingleElementWrapper extends Component {
     const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
     let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
     const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
-    let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
+    let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type') || 'never'
     const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
     const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
 

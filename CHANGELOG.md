@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 1.4.2 build 4
+### 1.4.2 build 9
 * Added the Ability to Copy the URL Path
 * Added the Preview Page for Templates 
 

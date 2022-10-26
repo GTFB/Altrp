@@ -485,7 +485,7 @@ class ElementWrapper extends Component {
       element.getCurrentModel().getData()
     );
     const tooltip_minimal = element.getResponsiveSetting('tooltip_minimal')
-    let tooltip_show_type = element.getResponsiveSetting('tooltip_show_type')
+    let tooltip_show_type = element.getResponsiveSetting('tooltip_show_type') || 'never'
     const tooltip_horizontal_offset = element.getResponsiveSetting('tooltip_horizontal_offset')
     const tooltip_vertical_offset = element.getResponsiveSetting('tooltip_vertical_offset')
     if(['column', 'section'].indexOf(element.getType()) !== -1){
