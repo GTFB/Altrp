@@ -29,12 +29,12 @@ export default class CustomizerSchedule extends BaseCommand {
     const generator = new ScheduleGenerator(customizer)
     const filePath = generator.getFilePath()
 
-    const { default: classCustomizerCRUD } = await import(filePath)
+    const { default: classCustomizerSchedule } = require(filePath)
 
-    if (classCustomizerCRUD) {
-      const customizerCRUD = new classCustomizerCRUD
+    if (classCustomizerSchedule) {
+      const customizerSchedule = new classCustomizerSchedule
 
-      customizerCRUD.run()
+      await customizerSchedule.run()
     }
   }
 }

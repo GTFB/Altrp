@@ -50,7 +50,7 @@ export default class AltrpRouting {
 
   public async getContentByUrl(url, httpContext: HttpContextContract):Promise<void>{
     const asCheck = isRobot(httpContext.request.headers())
-
+    const accept_webp = httpContext.request.header('Accept')?.includes('image/webp')
     const start = performance.now();
     console.log(performance.now() - start);
     /**
@@ -207,6 +207,7 @@ export default class AltrpRouting {
         altrpContext,
         access_classes,
         asCheck,
+        accept_webp,
         user,
         csrfToken: httpContext.request.csrfToken,
         isProd: isProd(),

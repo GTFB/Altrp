@@ -26,7 +26,7 @@ export default class GeneratorSchedule extends BaseCommand {
 
   public async run() {
     const { default: Customizer } = await import('App/Models/Customizer')
-    const { default: CustomizerGenerator } = await import('App/Generators/CustomizerGenerator')
+    const { default: ScheduleGenerator } = await import('App/Generators/ScheduleGenerator')
 
     let schedules
 
@@ -45,20 +45,20 @@ export default class GeneratorSchedule extends BaseCommand {
     const failure: Error[] = []
 
     for (let schedule of schedules) {
-      const scheduleGenerator = new CustomizerGenerator(schedule)
+      const scheduleGenerator = new ScheduleGenerator(schedule)
 
       try {
         if (this.isDelete) {
           scheduleGenerator.delete()
           console.log(`Schedule of id (${schedule.id}) deleted: ${this.colors.cyan(scheduleGenerator.getFileName())}`)
         } else {
-          const result = await scheduleGenerator.run()
+          await scheduleGenerator.run()
 
-          if (result) {
-            console.log(`Schedule generated for id (${schedule.id}): ${this.colors.cyan(scheduleGenerator.getFileName())}`)
-          } else {
-            throw new Error(`Schedule Customizer (id: ${schedule.id}) is invalid`)
-          }
+          // if (result) {
+          //   console.log(`Schedule generated for id (${schedule.id}): ${this.colors.cyan(scheduleGenerator.getFileName())}`)
+          // } else {
+          //   throw new Error(`Schedule Customizer (id: ${schedule.id}) is invalid`)
+          // }
         }
       } catch (err) {
         console.error(`Error occurred while generating Schedule ${schedule.guid}: ${err.message}`)
