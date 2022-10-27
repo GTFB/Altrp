@@ -69,7 +69,7 @@ ${(props) => {
     style += `padding-top:${(props.mediaHeight / props.mediaWidth) * 100}%;`
   }
   return style;
-}};
+}}
 `
 class AltrpImage extends Component {
   constructor(props) {
@@ -162,7 +162,12 @@ class AltrpImage extends Component {
       } else if (noDefault) {
         return ""
       } else {
-        media.url = media.url || '/img/nullImage.png';
+        let mediaUrl = '/img/nullImage.png'
+        if (media.url)  {
+          let format = media.url.slice(-4)
+          mediaUrl = media.url.slice(0, -4) + (this.props.element.getResponsiveSetting('content_image_size') || '') + format
+        }
+        media.url = mediaUrl
         media.name = media.name || 'null';
         media.assetType = media.assetType || undefined;
       }

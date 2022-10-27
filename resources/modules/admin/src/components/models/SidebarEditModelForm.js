@@ -114,8 +114,11 @@ class SidebarEditModelForm extends Component {
   }
 
   async deleteHandler() {
-    await (new Resource({route: '/admin/ajax/models'}).delete(this.props.paramsId));
-    this.props.closeSidebar()
+    if (window.confirm("Are You Sure?")) {
+      await (new Resource({route: '/admin/ajax/models'}).delete(this.props.paramsId));
+      this.props.closeSidebar()
+      this.props.updateModelsState()
+    }
   }
 
   tagRenderer = (item) => {

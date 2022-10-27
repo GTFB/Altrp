@@ -155,6 +155,7 @@ class SidebarEditModel extends Component {
           submitText="Save"
           onSubmit={this.onSubmit}
           closeSidebar={this.props.closeSidebar}
+          updateModelsState={this.props.updateModelsState}
         />
         <div className="admin-settings_model-table-tabs">
           <button

@@ -412,8 +412,15 @@ class Models extends Component {
                   route: '/admin/ajax/models/:id',
                   method: 'delete',
                   confirm: 'Are You Sure?',
-                  after: () => {
-                    this.updateModels()
+                  // after: () => {
+                  //   this.updateModels()
+                  // },
+                  callBack: async ({id}) => {
+                    if (window.confirm("Are You Sure?")) {
+                      await (new Resource({route: '/admin/ajax/models'}).delete(id))
+                      this.updateModels()
+                    }
+                    if (id === this.state.idModel) this.closeSidebar()
                   },
                   className: 'quick-action-menu__item_danger',
                   title: 'Delete'
