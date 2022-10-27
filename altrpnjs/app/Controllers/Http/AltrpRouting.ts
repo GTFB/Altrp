@@ -27,7 +27,9 @@ import getLatestVersion from "../../../helpers/getLatestVersion";
 import FONTS, {SYSTEM_FONT} from "../../../helpers/const/FONTS";
 import {promisify} from "util";
 import storage_path from "../../../helpers/storage_path";
+import base_path from '../../../helpers/path/base_path';
 import isRobot from "../../../helpers/isRobot";
+import sharp from 'sharp';
 
 export default class AltrpRouting {
 
@@ -228,6 +230,96 @@ export default class AltrpRouting {
           promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
         ]
       )
+
+      let target = `:"\\/media\\/`;
+      const arr : string[] = [];
+
+      let pos = 0;
+      while (true) {
+        let startPos = page_areas.indexOf(target, pos);
+        if (startPos == -1) break;
+
+        let endPos = page_areas.indexOf('"', startPos+2)
+
+        let findUrl = page_areas.slice(startPos+2, endPos);
+        let url = findUrl.replace(/\\\//g, '/');
+        var ext = url.split('.').pop();
+
+        if (!arr.includes(url) && ext !== '.svg') {
+          arr.push(url)
+        }
+
+        pos = startPos + 1;
+      }
+
+      const sizes = [
+        {
+          with: 100,
+          height: 100,
+        },
+        {
+          with: 300,
+          height: 300,
+        },
+        {
+          with: 600,
+          height: 600,
+        },
+        {
+          with: 1600,
+          height: 900,
+        },
+      ];
+
+      for (const mediaUrl of arr) {
+
+        var filename = base_path('/public/storage'+mediaUrl);
+        var ext = mediaUrl.split('.').pop();
+
+        if (fs.existsSync(filename)){
+          //create webp copy
+          if(ext != 'webp'){
+            var webpCopyFileName = base_path('/public/storage'+mediaUrl.split('.'+ext)[0]+'.webp')
+            if (!fs.existsSync(webpCopyFileName)){
+              await sharp(filename)
+                  .toFormat('webp')
+                  .toFile(webpCopyFileName);
+            }
+          }
+          continue;
+        }
+
+        for (const size of sizes) {
+          
+          var sizeType = '_'+size.with+'x'+size.height+'.'+ext
+
+          if (mediaUrl.includes(sizeType)) {
+
+            var originalFileName = base_path('/public/storage'+mediaUrl.split(sizeType)[0]+'.'+ext)
+
+            if (!fs.existsSync(originalFileName)){
+              continue;
+            }
+
+            await sharp(originalFileName)
+                .resize(size.with, size.height)
+                .toFile(filename);
+
+            if(ext != 'webp'){
+              var webpCopyFileName = base_path('/public/storage'+mediaUrl.split(sizeType)[0]+'_'+size.with+'x'+size.height+'.webp')
+
+              if (!fs.existsSync(webpCopyFileName)){
+                await sharp(originalFileName)
+                    .toFormat('webp')
+                    .resize(size.with, size.height)
+                    .toFile(webpCopyFileName);
+              }
+            }
+          }
+        }
+        
+      }
+
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
