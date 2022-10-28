@@ -113,14 +113,7 @@ class InputDateWidget extends Component {
 
 
     let value = this.state.value;
-    // setTimeout(() => {
-    //   this.onChange(this.getValue());
-    // }, 0)
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getLockedContent для получение этого динамического значения
-     * старые динамические данные
-     * */
+
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
@@ -451,7 +444,7 @@ class InputDateWidget extends Component {
     }
 
     if (_.isObject(this.props.appStore) && fieldName && formId) {
-      console.log(value);
+
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
@@ -660,7 +653,7 @@ class InputDateWidget extends Component {
     }
 
     let classes = this.getClasses()
-    console.log(this.getValue());
+
     const input = (
       <div className="altrp-input-wrapper">
         <DateInput
