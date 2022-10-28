@@ -26,7 +26,7 @@ export default class GeneratorSchedule extends BaseCommand {
 
   public async run() {
     const { default: Customizer } = await import('App/Models/Customizer')
-    const { default: CustomizerGenerator } = await import('App/Generators/CustomizerGenerator')
+    const { default: ScheduleGenerator } = await import('App/Generators/ScheduleGenerator')
 
     let schedules
 
@@ -45,7 +45,7 @@ export default class GeneratorSchedule extends BaseCommand {
     const failure: Error[] = []
 
     for (let schedule of schedules) {
-      const scheduleGenerator = new CustomizerGenerator(schedule)
+      const scheduleGenerator = new ScheduleGenerator(schedule)
 
       try {
         if (this.isDelete) {

@@ -365,21 +365,21 @@ export default class Customizer extends BaseModel {
 
     const date = this.settings.start_at ? new Date(this.settings.start_at) : new Date()
 
-    addSchedule(this.id, date, this.settings.period_unit, this.settings.period, () => {
+    addSchedule(this.id, date, this.settings.period_unit, this.settings.period, async () => {
       if (!this.settings.infinity) {
         if (this.settings.repeat_count > 0) {
           this.settings.repeat_count--
 
-          this.save().then(() => {
-            if (this.settings.repeat_count <= 0) {
-              this.removeSchedule()
-            }
+          await this.save()
 
-            return this.invoke()
-          })
+          if (this.settings.repeat_count <= 0) {
+            this.removeSchedule()
+          }
+
+          return this.invoke()
         }
 
-        this.removeSchedule()
+        return this.removeSchedule()
       }
 
       this.invoke()
@@ -388,11 +388,7 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`).then(data => {
-      console.log(data);
-    }).catch(err => {
-      console.error(err);
-    })
+    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`)
   }
 
   public removeSchedule() {
