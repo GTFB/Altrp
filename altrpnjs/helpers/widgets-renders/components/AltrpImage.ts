@@ -28,9 +28,11 @@ export default function AltrpImage(props: any, device: string) {
       svg = svg.slice(0, endSvgTag).slice(startSvgTag);
       return `<svg xmlns="http://www.w3.org/2000/" class="altrp-image" ${objectToAttributesString(_props)}>${svg}</svg>`
     }
-    let src = _.get(settings, 'content_media.dataUrl') || _.get(settings, 'content_media.url')
+    let src: string = _.get(settings, 'content_media.dataUrl') || _.get(settings, 'content_media.url')
     if (src) {
-      src = `src="${src}"`
+      let format: string = src.slice(-4)
+      let mediaUrl: string = src.slice(0, -4) + getResponsiveSetting(settings, 'content_image_size', device) + format
+      src = `src="${mediaUrl}"`
     } else {
       src = `src="/img/nullImage.png"`
     }
