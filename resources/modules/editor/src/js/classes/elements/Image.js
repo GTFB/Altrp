@@ -86,12 +86,12 @@ class Image extends BaseElement {
     });
 
 
-    this.addControl('lazyload_disable', {
-      hideOnEmail: true,
-      type: CONTROLLER_SWITCHER,
-      label: 'Lazyload Disable',
-      default: false
-    });
+    // this.addControl('lazyload_disable', {
+    //   hideOnEmail: true,
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Lazyload Disable',
+    //   default: false
+    // });
 
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
@@ -120,12 +120,6 @@ class Image extends BaseElement {
 
     this.addControl('image_link', {
       type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false,
-        tag: 'Link'
-      },
       label: 'Link',
       locked: true,
     });

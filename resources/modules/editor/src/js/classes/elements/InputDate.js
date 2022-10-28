@@ -101,6 +101,7 @@ class InputDate extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Nullable",
       default: false,
+      responsive: false,
       locked: true,
     });
 

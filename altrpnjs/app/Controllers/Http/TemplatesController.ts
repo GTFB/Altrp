@@ -1,7 +1,5 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
-import Env from '@ioc:Adonis/Core/Env'
 import fs from 'fs'
-import env from '../../../helpers/env'
 import exec from '../../../helpers/exec'
 import validGuid from '../../../helpers/validGuid';
 import * as mustache from 'mustache'

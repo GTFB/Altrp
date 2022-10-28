@@ -522,11 +522,13 @@ export default class Page extends BaseModel {
     applyPluginsFiltersAsync('page_after_create', page)
   }
 
-  async getPagesForFrontend(): Promise<{data_sources:{
-    source: {
-      web_url?:string
-    }
-    }[]}[]> {
+  async getPagesForFrontend(): Promise<{
+    data_sources: {
+      source: {
+        web_url?: string
+      }
+    }[]
+  }[]> {
 
     let pages: Page[] = [this]
     let page: Page | null = this
@@ -542,7 +544,7 @@ export default class Page extends BaseModel {
       console.error(e);
     }
     // @ts-ignore
-    return pages.map(p=>p.toJSON())
+    return pages.map(p => p.toJSON())
   }
 
   static getRouteStyles(areas) {
@@ -666,30 +668,30 @@ export default class Page extends BaseModel {
       if (customStyles) {
         try {
           customStyles = JSON.parse(customStyles)
-        let _styles: string[] = []
+          let _styles: string[] = []
 
-        if (customStyles.important_styles) {
-          let important_styles = customStyles.important_styles
-          if (_.isArray(important_styles)) {
-            important_styles = important_styles.join('')
+          if (customStyles.important_styles) {
+            let important_styles = customStyles.important_styles
+            if (_.isArray(important_styles)) {
+              important_styles = important_styles.join('')
+            }
+
+            _styles = [purifycss(html, important_styles, purifycssOptions)]
+
+          } else {
+            _.forEach(customStyles, (style: string[], key) => {
+              const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
+              let _style = ''
+              _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
+              if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
+                _style = `${mediaQuery}{${_style}}`
+              }
+              _styles.push(_style)
+            })
+            _styles = _styles.filter(s => s)
           }
 
-          _styles = [purifycss(html, important_styles, purifycssOptions)]
-
-        } else {
-          _.forEach(customStyles, (style: string[], key) => {
-            const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
-            let _style = ''
-            _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
-            if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
-              _style = `${mediaQuery}{${_style}}`
-            }
-            _styles.push(_style)
-          })
-          _styles = _styles.filter(s => s)
-        }
-
-        styles += `
+          styles += `
 <style id="custom_area_styles_${area.name}">${_styles.join('')}</style>`
         } catch (e) {
           console.error(`Page ${this.id} Custom ${area.name} Styles Render Error:`, e);
@@ -1051,7 +1053,7 @@ export default class Page extends BaseModel {
     for (const area of areas) {
       if (_.isArray(area.templates)) {
         // continue
-        for(const template of area.templates){
+        for (const template of area.templates) {
 
           if (template?.data) {
             template.data = mbParseJSON(template.data, template.data)
@@ -1086,7 +1088,7 @@ export default class Page extends BaseModel {
         }
       }
     }
-    if(data.settings?.styles){
+    if (data.settings?.styles) {
       delete data.settings.styles
     }
 
@@ -1119,40 +1121,40 @@ export default class Page extends BaseModel {
     Page.purgeSettings(data)
   }
 
-  static purgeSettings(data:{
-    settings:object,
-    settingsLock:object ,
-    name:string,
+  static purgeSettings(data: {
+    settings: object,
+    settingsLock: object,
+    name: string,
   } = {
     name: 'default',
     settings: {},
     settingsLock: {},
-  }){
+  }) {
     const prefixes = [
       'skeleton',
       'hover-transition',
     ]
 
-    if(!Page.coreElements.includes(data.name)){
+    if (!Page.coreElements.includes(data.name)) {
       return
     }
 
-    if(_.isObject(data.settings)){
-      prefixes.forEach((prefix)=>{
+    if (_.isObject(data.settings)) {
+      prefixes.forEach((prefix) => {
         prefix += ':'
-        for(let key in data.settings){
-          if(data.settings.hasOwnProperty(key) && key.startsWith(prefix)){
+        for (let key in data.settings) {
+          if (data.settings.hasOwnProperty(key) && key.startsWith(prefix)) {
 
             delete data.settings[key]
           }
         }
       })
     }
-    if(_.isObject(data.settingsLock)){
-      prefixes.forEach((prefix)=>{
+    if (_.isObject(data.settingsLock)) {
+      prefixes.forEach((prefix) => {
         prefix += ':'
-        for(let key in data.settingsLock){
-          if(data.settingsLock.hasOwnProperty(key) && key.startsWith(prefix)){
+        for (let key in data.settingsLock) {
+          if (data.settingsLock.hasOwnProperty(key) && key.startsWith(prefix)) {
             delete data.settingsLock[key]
           }
         }
@@ -1160,28 +1162,28 @@ export default class Page extends BaseModel {
     }
 
     // if(Page.elementsWithoutSettings.includes(data.name)){
-    for(const s of Page.settingsToMigrate){
+    for (const s of Page.settingsToMigrate) {
       // @ts-ignore
-      if(data.settings[s]){
+      if (data.settings[s]) {
         // @ts-ignore
         data.settingsLock[s] = data.settings[s]
       }
     }
     const oldSettings = data.settings
     data.settings = {...data.settingsLock}
-    _.each(Page.requiredFields, (item, elementName)=>{
-      if(data.name !== elementName){
+    _.each(Page.requiredFields, (item, elementName) => {
+      if (data.name !== elementName) {
         return
       }
-      item.forEach(settingName=> {
-        for(let s of SCREENS){
-          if (getResponsiveSetting(data.settings, settingName, s.name)){
+      item.forEach(settingName => {
+        for (let s of SCREENS) {
+          if (getResponsiveSetting(data.settings, settingName, s.name)) {
             return
           }
-          if(getResponsiveSetting(oldSettings, settingName, s.name)){
+          if (getResponsiveSetting(oldSettings, settingName, s.name)) {
 
 
-            setResponsiveSetting(data.settings,settingName,s.name, getResponsiveSetting(oldSettings, settingName, s.name))
+            setResponsiveSetting(data.settings, settingName, s.name, getResponsiveSetting(oldSettings, settingName, s.name))
           }
         }
       })
@@ -1189,6 +1191,15 @@ export default class Page extends BaseModel {
     // @ts-ignore
     delete data.settingsLock
     // }
+    _.each(data.settings, (value, key) => {
+      if (_.isObject(value) && _.isEmpty(value)) {
+        delete data.settings[key]
+        return
+      }
+      if(! value){
+        delete data.settings[key]
+      }
+    })
   }
 
   async getPopupsGuids() {
@@ -1286,6 +1297,11 @@ export default class Page extends BaseModel {
       'field_id',
       'default_value',
     ],
+    'input-file': [
+      'form_id',
+      'field_id',
+      'default_value',
+    ],
     'icon': [
       'icon',
     ],
@@ -1327,6 +1343,7 @@ export default class Page extends BaseModel {
     ],
     table: [
       'tables_settings_for_subheading',
+      'table_style_table_striple_style',
       'group_subheading_settings',
       'tables_groups',
       'table_style_footer_font',
@@ -1338,6 +1355,8 @@ export default class Page extends BaseModel {
       'additional_rows',
       'footer_columns',
       'group_collapsing',
+      'collapsed_icon',
+      'expanded_icon',
       'group_default_text',
       'group_by_column_name',
       'current_page_text',
@@ -1356,6 +1375,34 @@ export default class Page extends BaseModel {
       'table_data_settings_search',
       'table_2_0',
       'table_hover_row',
+      'posts_per_page',
+      'inner_page_type',
+      'inner_page_size',
+      'row_expand',
+      'card_template',
+      'item_size',
+      'virtualized_height',
+      'virtualized_rows',
+      'replace_width',
+      'replace_image',
+      'replace_text',
+      'replace_rows',
+      'resize_columns',
+      'hide_columns',
+      'ids_storage',
+      'selected_storage',
+      'row_select',
+      'row_select_all',
+      'row_select_width',
+      'checkbox_indeterminate_icon',
+      'checkbox_unchecked_icon',
+      'checkbox_checked_icon',
+      'global_filter_placeholder',
+      'global_filter_label',
+      'global_filter',
+      'inner_page_count_options',
+      'loading_text',
+      'store_state',
     ],
     posts: [
       'current_page_text',
@@ -1382,5 +1429,62 @@ export default class Page extends BaseModel {
       'posts_pagination_type',
     ],
   }
-  private static coreElements = ['root-element', 'section_widget', 'heading', 'image', 'icon', 'button', 'divider', 'menu', 'template', 'tabs', 'tabs-switcher', 'accordion', 'text', 'breadcrumbs', 'input-text-common', 'input-textarea', 'input-checkbox', 'input-radio', 'input-select', 'input-multi-select', 'input-slider', 'input-range-slider', 'input-text-autocomplete', 'input-wysiwyg', 'input-select-tree', 'input-image-select', 'input-date', 'input-date-range', 'input-gallery', 'input-crop-image', 'input-accept', 'input-hidden', 'input-file', 'input-pagination', 'table', 'posts', 'gallery', 'carousel', 'map', 'image-lightbox', 'dropbar', 'scheduler', 'tree', 'video', 'html', 'action-trigger', 'heading-type-animating', 'stars', 'progress-bar', 'pie-diagram', 'bar-diagram', 'line-diagram', 'funnel-diagram', 'radar-diagram', 'tournament', 'feedback', 'column', 'section']
+  private static coreElements = ['root-element',
+    'section_widget',
+    'heading',
+    'image',
+    'icon',
+    'button',
+    'divider',
+    'menu',
+    'template',
+    'tabs',
+    'tabs-switcher',
+    'accordion',
+    'text',
+    'breadcrumbs',
+    'input-text-common',
+    'input-textarea',
+    'input-checkbox',
+    'input-radio',
+    'input-select',
+    'input-multi-select',
+    'input-slider',
+    'input-range-slider',
+    'input-text-autocomplete',
+    'input-wysiwyg',
+    'input-select-tree',
+    'input-image-select',
+    'input-date',
+    'input-date-range',
+    'input-gallery',
+    'input-crop-image',
+    'input-accept',
+    'input-hidden',
+    'input-file',
+    'input-pagination',
+    'table',
+    'posts',
+    'gallery',
+    'carousel',
+    'map',
+    'image-lightbox',
+    'dropbar',
+    'scheduler',
+    'tree',
+    'video',
+    'html',
+    'action-trigger',
+    'heading-type-animating',
+    'stars',
+    'progress-bar',
+    'pie-diagram',
+    'bar-diagram',
+    'line-diagram',
+    'funnel-diagram',
+    'radar-diagram',
+    'tournament',
+    'feedback',
+    'column',
+    'section']
 }

@@ -300,7 +300,7 @@ function isActive(){
       value
     };
   });
-  const active_conditional_other_display = element.getSettings("active_conditional_other_display");
+  const active_conditional_other_display = element.getSettings("active_conditional_other_display") || 'AND';
   let active = conditionsChecker(
     conditions,
     active_conditional_other_display === "AND",
@@ -368,17 +368,17 @@ function isDisabled(){
       value
     };
   });
-  const active_conditional_other_display = element.getSettings("disabled_conditional_other_display");
-  let active = conditionsChecker(
+  const disabled_conditional_other_display = element.getSettings("disabled_conditional_other_display") || 'AND';
+  let disabled = conditionsChecker(
     conditions,
-    active_conditional_other_display === "AND",
+    disabled_conditional_other_display === "AND",
     this.props.element.getCurrentModel(),
     true
   );
-  if(active_conditional_other_display === "AND"){
-    return active && authCondition;
+  if(disabled_conditional_other_display === "AND"){
+    return disabled && authCondition;
   }
-  return active || authCondition;
+  return disabled || authCondition;
 }
 /**
  * Декорирует компонент элемента методами необходимыми на фронте и в редакторе

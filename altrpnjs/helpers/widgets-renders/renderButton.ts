@@ -317,7 +317,7 @@ export default function renderButton(settings, device, elementId) {
         ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
       class="${classes}"
       target="${target}"
-      title="${tooltip || null}"
+      title="${tooltip || ''}"
     >
       ${buttonInner}
       </a>`
@@ -331,7 +331,7 @@ export default function renderButton(settings, device, elementId) {
       ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
       class="${classes}"
     id="${settings.position_css_id || ""}"
-    title="${tooltip || null}"
+    title="${tooltip || ''}"
   >
     ${buttonInner}
     </button>`

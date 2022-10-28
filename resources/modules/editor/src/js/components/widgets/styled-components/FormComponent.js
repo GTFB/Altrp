@@ -22,7 +22,6 @@ const inputWrapperStyle = (settings) => {
   width && (styles += sizeStyled(width, "width"));
   //width end
 
-  console.log(height);
 
   styles += "}";
   return styles;

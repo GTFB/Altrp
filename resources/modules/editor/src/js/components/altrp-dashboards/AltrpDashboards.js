@@ -38,7 +38,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
       });
       // Если успешно
       if (req.status === 200) {
-        console.log("req.data :>> ", req.data);
+
         // Получаем настройки
         return JSON.parse(req.data.settings);
       } else {

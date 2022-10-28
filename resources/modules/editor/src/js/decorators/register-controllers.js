@@ -761,7 +761,6 @@ export function advancedTabControllers(element) {
         value: 'OR',
       },
     ],
-    default: 'AND',
     conditions: {
       'disabled_enable': true,
       'disabled_conditional_other': true,
@@ -895,7 +894,6 @@ export function advancedTabControllers(element) {
         value: 'OR',
       },
     ],
-    default: 'AND',
     conditions: {
       'active_enable': true,
       'active_conditional_other': true,
@@ -996,7 +994,6 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_show_type', {
     type: CONTROLLER_SELECT,
     label: 'Show type',
-    default: 'never',
     responsive: false,
     locked: true,
     options: [

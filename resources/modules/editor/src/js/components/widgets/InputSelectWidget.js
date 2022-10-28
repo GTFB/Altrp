@@ -12,7 +12,6 @@ import parseParamsFromString from "../../../../../front-app/src/js/functions/par
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import {Select} from "@blueprintjs/select";
-import '../../../../../editor/src/sass/blueprint.scss'
 import {MenuItem, Button} from "@blueprintjs/core";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
@@ -1138,7 +1137,6 @@ class InputSelectWidget extends Component {
 
     for(const el of e.composedPath()) {
       if(el.classList?.contains("bp3-popover")) {
-        console.log('c');
         e.preventDefault()
         return
       }
@@ -1210,9 +1208,7 @@ class InputSelectWidget extends Component {
      * @type {FrontElement}
      */
     const {element} = this.props;
-    // console.log(query,
-    //   active,
-    //   handleClick);
+
     if(! element.getResponsiveLockedSetting('create')){
       return null;
     }

@@ -157,6 +157,7 @@ class CustomizerSettingsPanel extends React.Component {
     const time_type = customizer.time_type || "none";
 
     let Url = ''
+    let relativeUrl = ''
 
     if (this.props.customizer.source) {
       let {web_url} = this.props.customizer.source
@@ -164,8 +165,10 @@ class CustomizerSettingsPanel extends React.Component {
         if (this.state.customizer?.settings?.external) {
 
           Url = `${document.location.origin}/api/v1/${this.state.customizer.name}`
+          relativeUrl = `/api/v1/${this.state.customizer.name}`
         } else {
           let strippedDownUrl = new URL(web_url)
+          relativeUrl = strippedDownUrl.pathname
           Url = document.location.origin
             + strippedDownUrl.pathname
         }
@@ -175,19 +178,17 @@ class CustomizerSettingsPanel extends React.Component {
         console.error(e);
       }
     }
-    let relativeUrl = ''
-    if (this.props.customizer.source) {
-      let { web_url } = this.props.customizer.source
-      try{
-        let strippedDownUrl = new URL(web_url)
-        relativeUrl = strippedDownUrl.pathname
-        Url = document.location.origin
-          +strippedDownUrl.pathname
-      }catch (e){
-        alert('Error while parsing source URL')
-        console.error(e);
-      }
-    }
+    // if (this.props.customizer.source) {
+    //   let { web_url } = this.props.customizer.source
+    //   try{
+    //     let strippedDownUrl = new URL(web_url)
+    //     Url = document.location.origin
+    //       +strippedDownUrl.pathname
+    //   }catch (e){
+    //     alert('Error while parsing source URL')
+    //     console.error(e);
+    //   }
+    // }
 
 
     return (
