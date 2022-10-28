@@ -30,9 +30,9 @@ export default function AltrpImage(props: any, device: string) {
     }
     let src: string = _.get(settings, 'content_media.dataUrl') || _.get(settings, 'content_media.url')
     if (src) {
-      let format: string = src.slice(-4)
-      let mediaUrl: string = src.slice(0, -4) + getResponsiveSetting(settings, 'content_image_size', device) + format
-      src = `src="${mediaUrl}"`
+      // let format: string = getFormat(src)
+      // let mediaUrl: string = src.slice(0, -(format.length)) + (getResponsiveSetting(settings, 'content_image_size', device) || '') + format
+      src = `src="${src}"`
     } else {
       src = `src="/img/nullImage.png"`
     }

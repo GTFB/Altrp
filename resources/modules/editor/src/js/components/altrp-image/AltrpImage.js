@@ -6,6 +6,7 @@ import isSSR from "../../../../../front-app/src/js/functions/isSSR";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import {createGlobalStyle} from "styled-components";
 import getResponsiveSetting from '../../../../../front-app/src/js/helpers/get-responsive-setting'
+import {getFormat} from "../../../../../front-app/src/js/functions/getFormat";
 
 const Global = createGlobalStyle`
 .altrp-element .altrp-skeleton.altrp-skeleton,
@@ -162,12 +163,12 @@ class AltrpImage extends Component {
       } else if (noDefault) {
         return ""
       } else {
-        let mediaUrl = '/img/nullImage.png'
-        if (media.url)  {
-          let format = media.url.slice(-4)
-          mediaUrl = media.url.slice(0, -4) + (this.props.element.getResponsiveSetting('content_image_size') || '') + format
-        }
-        media.url = mediaUrl
+        // let mediaUrl = '/img/nullImage.png'
+        // if (media.url)  {
+        //   let format = getFormat(media.url)
+        //   mediaUrl = media.url.slice(0, -(format.length)) + (this.props.element.getResponsiveSetting('content_image_size') || '') + format
+        // }
+        media.url = media.url || '/img/nullImage.png'
         media.name = media.name || 'null';
         media.assetType = media.assetType || undefined;
       }

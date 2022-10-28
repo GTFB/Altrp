@@ -53,35 +53,6 @@ class Image extends BaseElement {
       locked: true,
     });
 
-    this.addControl('content_image_size', {
-        type: CONTROLLER_SELECT,
-        label: 'image size',
-        default: '',
-        options: [
-          {
-            'value': '_150x150',
-            'label': '150x150',
-          },
-          {
-            'value': '_300x300',
-            'label': '300x300',
-          },
-          {
-            'value': '_600x600',
-            'label': '600x600',
-          },
-          {
-            'value': '_1600x900',
-            'label': '1600x900',
-          },
-          {
-            'value': '',
-            'label': 'Full',
-          },
-        ],
-      }
-    );
-
     this.addControl('content_path', {
       type: CONTROLLER_TEXT,
       dynamic: false,
