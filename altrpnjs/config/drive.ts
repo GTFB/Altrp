@@ -5,8 +5,8 @@
  * file.
  */
 
-import Env from '@ioc:Adonis/Core/Env'
-import { DriveConfig } from '@ioc:Adonis/Core/Drive'
+import Env from "@ioc:Adonis/Core/Env";
+import { DriveConfig } from "@ioc:Adonis/Core/Drive";
 import public_path from "../helpers/path/public_path";
 
 /*
@@ -28,7 +28,7 @@ const driveConfig: DriveConfig = {
   | the `DRIVE_DISK` environment variable.
   |
   */
-  disk: Env.get('DRIVE_DISK'),
+  disk: Env.get("DRIVE_DISK"),
 
   disks: {
     /*
@@ -41,8 +41,8 @@ const driveConfig: DriveConfig = {
     |
     */
     local: {
-      driver: 'local',
-      visibility: 'public',
+      driver: "local",
+      visibility: "public",
 
       /*
       |--------------------------------------------------------------------------
@@ -53,7 +53,7 @@ const driveConfig: DriveConfig = {
       | files.
       |
       */
-      root: public_path('/'),
+      root: "",
 
       /*
       |--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ const driveConfig: DriveConfig = {
       | you are not registering routes with this prefix.
       |
       */
-      basePath: '/public',
+      basePath: "/public",
     },
 
     /*
@@ -122,7 +122,7 @@ const driveConfig: DriveConfig = {
     //   keyFilename: Env.get('GCS_KEY_FILENAME'),
     //   bucket: Env.get('GCS_BUCKET'),
 
-      /*
+    /*
       |--------------------------------------------------------------------------
       | Uniform ACL - Google cloud storage only
       |--------------------------------------------------------------------------
@@ -143,6 +143,6 @@ const driveConfig: DriveConfig = {
     //   usingUniformAcl: false
     // },
   },
-}
+};
 
-export default driveConfig
+export default driveConfig;
