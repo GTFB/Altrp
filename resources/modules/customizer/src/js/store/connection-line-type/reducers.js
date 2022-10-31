@@ -1,8 +1,8 @@
 import {SET_ANIMATE_LINE, SET_COLOR_LINE, SET_TYPE_LINE} from "./actions";
 
 const initialState = {
-  typeLine: 'step',
-  animateLine: false,
+  typeLine: 'default',
+  animateLine: true,
   colorLine: '#8E94AA'
 }
 
