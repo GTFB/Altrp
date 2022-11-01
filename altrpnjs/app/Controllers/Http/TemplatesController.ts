@@ -380,7 +380,7 @@ export default class TemplatesController {
       await template.save()
 
       let templateGenerator = new TemplateGenerator()
-      await templateGenerator.run(template)
+      await templateGenerator.run(template, request.input("styles"))
       applyPluginsFiltersAsync('template_updated', template)
 
 

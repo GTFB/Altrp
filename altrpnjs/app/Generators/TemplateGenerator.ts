@@ -11,6 +11,7 @@ import SCREENS from "../../helpers/const/SCREENS";
 import escapeRegExp from "../../helpers/escapeRegExp";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import DEFAULT_BREAKPOINT from "../../helpers/const/DEFAULT_BREAKPOINT";
+import { optimizeStyles } from '../../helpers/screen'
 
 export default class TemplateGenerator extends BaseGenerator {
 
@@ -45,7 +46,7 @@ export default class TemplateGenerator extends BaseGenerator {
     return template.guid + '.edge'
   }
 
-  async run(template: Template): Promise<void> {
+  async run(template: Template, templateStyles?: Record<string, string[]>): Promise<void> {
     if (!template) {
       return
     }
@@ -55,7 +56,7 @@ export default class TemplateGenerator extends BaseGenerator {
     await template.load('currentArea')
 
     this.template = template
-    const styles = JSON.parse(template.styles || "{}")
+    const styles = templateStyles ?? JSON.parse(template.styles || "{}")
     let all_styles = _.get(styles, 'all_styles', [])
     all_styles = all_styles.join('')
     all_styles = parse(all_styles)
@@ -100,6 +101,16 @@ export default class TemplateGenerator extends BaseGenerator {
           })
       }
     }
+
+    const _styles: string[] = []
+    const optimizedStyles = optimizeStyles(queriedStyles)
+
+    optimizedStyles.forEach(([mediaQuery, queryStyles]: string[]) => {
+      mediaQuery ? _styles.push(`${mediaQuery}{${queryStyles}}`) : _styles.push(queryStyles)
+    })
+
+    queriedStyles = _styles.join()
+
     if (template.guid) {
       for (const screen of SCREENS) {
         queriedStyles && await BaseGenerator.generateCssFile(template.guid, queriedStyles, screen.name)
