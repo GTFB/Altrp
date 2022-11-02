@@ -531,6 +531,7 @@ export default class Customizer extends BaseModel {
     let startNode = this.getStartNode()
     let content = startNode ? startNode.getJSContent() : ''
     content = applyPluginsFiltersSync('customizer_render_content', content, this)
+
     return content
   }
 

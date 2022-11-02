@@ -112,6 +112,7 @@ export default class PagesController {
       res.page = page
       await page.parseRoles(request.input('roles'));
       await exec(`node ${base_path('ace')} generator:page --id=${page.id}`)
+      await exec(`node ${base_path('ace')} generator:router`)
       await page.save()
 
       return res
@@ -202,6 +203,7 @@ export default class PagesController {
     const page = await Page.query().preload('roles').where("id", parseInt(params.id)).firstOrFail();
     await page.related('roles').detach()
     await page.delete()
+    await exec(`node ${base_path('ace')} generator:router`)
     return {
       success: true
     }
@@ -343,6 +345,7 @@ export default class PagesController {
       await page.parseRoles(request.input('roles'));
       await page.save()
       await exec(`node ${base_path('ace')} generator:page --id=${page.id}`)
+      await exec(`node ${base_path('ace')} generator:router`)
 
       if(request.input("categories").length > 0) {
 

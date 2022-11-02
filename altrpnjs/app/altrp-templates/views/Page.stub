@@ -84,9 +84,11 @@
         window.altrpMenus = [];
         window.route_args = {{{route_args}}};
         window.container_width = {{{container_width}}};
-        /* ]]> */
+        window.altrp_progress_bar_color = '{{{altrp_progress_bar_color}}}';
+/* ]]> */
       </script>
     <script src="/serviceWorker.js?{{PACKAGE_KEY}}"></script>
+
     <%={{ }}=%>
     <script defer src="{{hAltrp}}"></script>
     {{{extra_footer_styles}}}

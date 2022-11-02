@@ -1,0 +1,6 @@
+.altrp-table{
+  table-layout: fixed;
+}
+.altrp-table-td .altrp-inherit{
+  word-wrap: break-word;
+}

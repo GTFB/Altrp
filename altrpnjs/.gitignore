@@ -22,6 +22,7 @@ app/AltrpOther/
 app/AltrpCRUDs/
 app/AltrpSchedules/
 start/altrp-routes/
+start/routes/custom
 /resources/views/altrp
 
 cert.pem

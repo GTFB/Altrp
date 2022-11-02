@@ -7,6 +7,7 @@ import delay from "../functions/delay"
  */
 export default function addAnimationClasses (){
   const elements = document.querySelectorAll('[data-enter-animation-type]:not(.altrp-an)')
+
   _.each(elements, /** @param {HTMLElement} element */element=>{
     const entranceAnimationType = element.getAttribute('data-enter-animation-type')
     if(! elementInViewport(element) || ! entranceAnimationType){

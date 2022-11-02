@@ -712,6 +712,7 @@ export default class ModelsController {
     } catch (e) {
       await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
       await model.delete()
+      await exec(`node ${base_path('ace')} generator:router`)
       await Promise.all(sources.map(s => s.delete()))
       await controller.delete()
       await Column.query().where('table_id', table.id).delete()
@@ -835,6 +836,7 @@ export default class ModelsController {
 
     }
     await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
+    await exec(`node ${base_path('ace')} generator:router`)
 
     const client = Database.connection(Env.get('DB_CONNECTION'))
     await Customizer.query().where('model_id', model.id).update({

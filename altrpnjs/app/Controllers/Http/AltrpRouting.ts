@@ -27,9 +27,7 @@ import getLatestVersion from "../../../helpers/getLatestVersion";
 import FONTS, {SYSTEM_FONT} from "../../../helpers/const/FONTS";
 import {promisify} from "util";
 import storage_path from "../../../helpers/storage_path";
-import base_path from '../../../helpers/path/base_path';
 import isRobot from "../../../helpers/isRobot";
-import sharp from 'sharp';
 
 export default class AltrpRouting {
 
@@ -50,11 +48,10 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async getContentByUrl(url, httpContext: HttpContextContract):Promise<void>{
+  public async getContentByUrl(url, httpContext: HttpContextContract, pageId = null):Promise<void>{
+
     const asCheck = isRobot(httpContext.request.headers())
     const accept_webp = httpContext.request.header('Accept')?.includes('image/webp')
-    const start = performance.now();
-    console.log(performance.now() - start);
     /**
      * init global object
      */
@@ -76,13 +73,18 @@ export default class AltrpRouting {
     }
     this.setGlobal('altrpSettings', altrpSettings)
     let pageMatch: any = {}
-    let page: Page | undefined | null = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
-      if (matchPath(decodeURI(url), page.path,)?.isExact) {
-        pageMatch = matchPath(decodeURI(url), page.path,)
-      }
-      return matchPath(decodeURI(url), page.path,)?.isExact
-    });
-    httpContext.params = pageMatch.params
+    let page: Page | undefined | null
+    if(pageId){
+      page = await Page.find(pageId)
+    } else {
+      page = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
+        if (matchPath(decodeURI(url), page.path,)?.isExact) {
+          pageMatch = matchPath(decodeURI(url), page.path,)
+        }
+        return matchPath(decodeURI(url), page.path,)?.isExact
+      });
+      httpContext.params = pageMatch.params
+    }
 
     if (!page) {
       httpContext.response.status(404)
@@ -195,8 +197,6 @@ export default class AltrpRouting {
     altrpContext.altrpdata = datasources
     try {
 
-      console.log(performance.now() - start);
-
       let [page_areas, all_styles, content] = await Promise.all(
         [
           promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
@@ -204,95 +204,6 @@ export default class AltrpRouting {
           promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
         ]
       )
-
-      let target = `:"\\/media\\/`;
-      const arr : string[] = [];
-
-      let pos = 0;
-      while (true) {
-        let startPos = page_areas.indexOf(target, pos);
-        if (startPos == -1) break;
-
-        let endPos = page_areas.indexOf('"', startPos+2)
-
-        let findUrl = page_areas.slice(startPos+2, endPos);
-        let url = findUrl.replace(/\\\//g, '/');
-        var ext = url.split('.').pop();
-
-        if (!arr.includes(url) && ext !== '.svg') {
-          arr.push(url)
-        }
-
-        pos = startPos + 1;
-      }
-
-      const sizes = [
-        {
-          with: 100,
-          height: 100,
-        },
-        {
-          with: 300,
-          height: 300,
-        },
-        {
-          with: 600,
-          height: 600,
-        },
-        {
-          with: 1600,
-          height: 900,
-        },
-      ];
-
-      for (const mediaUrl of arr) {
-
-        var filename = base_path('/public/storage'+mediaUrl);
-        var ext = mediaUrl.split('.').pop();
-
-        if (fs.existsSync(filename)){
-          //create webp copy
-          if(ext != 'webp'){
-            var webpCopyFileName = base_path('/public/storage'+mediaUrl.split('.'+ext)[0]+'.webp')
-            if (!fs.existsSync(webpCopyFileName)){
-              await sharp(filename)
-                  .toFormat('webp')
-                  .toFile(webpCopyFileName);
-            }
-          }
-          continue;
-        }
-
-        for (const size of sizes) {
-          
-          var sizeType = '_'+size.with+'x'+size.height+'.'+ext
-
-          if (mediaUrl.includes(sizeType)) {
-
-            var originalFileName = base_path('/public/storage'+mediaUrl.split(sizeType)[0]+'.'+ext)
-
-            if (!fs.existsSync(originalFileName)){
-              continue;
-            }
-
-            await sharp(originalFileName)
-                .resize(size.with, size.height)
-                .toFile(filename);
-
-            if(ext != 'webp'){
-              var webpCopyFileName = base_path('/public/storage'+mediaUrl.split(sizeType)[0]+'_'+size.with+'x'+size.height+'.webp')
-
-              if (!fs.existsSync(webpCopyFileName)){
-                await sharp(originalFileName)
-                    .toFormat('webp')
-                    .resize(size.with, size.height)
-                    .toFile(webpCopyFileName);
-              }
-            }
-          }
-        }
-        
-      }
 
       content = mustache.render(content, {
         ...altrpContext,
@@ -309,16 +220,17 @@ export default class AltrpRouting {
         altrp_skeleton_color: get_altrp_setting('altrp_skeleton_color', '#ccc'),
         altrp_skeleton_highlight_color: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
         altrp_image_lazy: get_altrp_setting('altrp_image_lazy', 'none'),
+        altrp_progress_bar_color: get_altrp_setting('altrp_progress_bar_color', 'rgb(48, 79, 253)'),
         container_width: get_altrp_setting('container_width', '1440'),
         spa_off: get_altrp_setting('spa_off') === 'true',
         device,
       })
+      console.log(get_altrp_setting('altrp_progress_bar_color', 'rgb(48, 79, 253)'));
       mustache?.templateCache?.clear()
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)
       content = content.replace('<<<all_styles>>>', all_styles)
       let res = content
-      console.log(performance.now() - start);
 
       /**
        * Add Custom Headers

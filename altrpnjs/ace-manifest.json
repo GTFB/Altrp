@@ -183,6 +183,18 @@
         }
       ]
     },
+    "generator:router": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorRouter",
+      "commandName": "generator:router",
+      "description": "Run a Router Generator",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
     "generator:schedule": {
       "settings": {
         "loadApp": true,

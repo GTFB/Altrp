@@ -68,6 +68,10 @@ export default function getInputTextCommonStyles(settings, elementId) {
       ['padding', 'position_margin', 'dimensions'],
     '}',
 
+    'input:-internal-autofill-selected',
+      ['background-color', 'background_style_background_color', 'color',],
+
+    '}',
     '.bp3-input.bp3-input',
       ['height', 'field_height', 'slider'],
       ['text-align', 'placeholder_and_value_alignment_position_section', ],

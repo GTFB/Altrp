@@ -150,8 +150,7 @@ class AssetsBrowser extends Component {
   }
 
   selectAsset(e) {
-    console.log(e.currentTarget.dataset.assetname);
-    console.log(this.state.videoAssets);
+
     let selectedAsset = e.currentTarget.dataset.assetname;
     this.setState(state => {
       return { ...state, selectedAsset };

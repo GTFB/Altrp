@@ -31,7 +31,11 @@ import Model from "App/Models/Model";
 import Plugin from "App/Plugin"
 import _ from "lodash";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
+// import base_path from "../../helpers/base_path";
 
+// if(fs.existsSync(base_path('start/routes/custom/routes.' + (isProd() ? 'js' : 'ts')))){
+//   require('./custom/routes')
+// }
 
 const methods = [
   'get', 'post', 'put', 'delete'
@@ -305,10 +309,10 @@ Route.group(() => {
       return await controller[methodName](httpContext)
     } catch (e) {
       return httpContext.response.status(500).json({
+        ...e,
         success: false,
 
-        message: methodName ? `Controller ${controllerName}; Method: ${methodName}
-${e.message}` : `Controller ${controllerName} require error:`,
+        message: methodName ? `Controller ${controllerName}; Method: ${methodName} Message: ${e.message}` : `Controller ${controllerName} method not found error:`,
         trace: e.stack.split('\n'),
       })
     }

@@ -11,6 +11,7 @@ export default class Model {
     const controller = model.altrp_controller
     await exec(`node ${base_path('ace')} generator:model --id=${model.id}`)
     await exec(`node ${base_path('ace')} generator:controller --id=${controller.id}`)
+    await exec(`node ${base_path('ace')} generator:router`)
     // Promise.all([controllerGenerator.run(controller), modelGenerator.run(model)])
   }
 }

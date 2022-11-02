@@ -54,11 +54,6 @@ export default class GeneratorSchedule extends BaseCommand {
         } else {
           await scheduleGenerator.run()
 
-          // if (result) {
-          //   console.log(`Schedule generated for id (${schedule.id}): ${this.colors.cyan(scheduleGenerator.getFileName())}`)
-          // } else {
-          //   throw new Error(`Schedule Customizer (id: ${schedule.id}) is invalid`)
-          // }
         }
       } catch (err) {
         console.error(`Error occurred while generating Schedule ${schedule.guid}: ${err.message}`)

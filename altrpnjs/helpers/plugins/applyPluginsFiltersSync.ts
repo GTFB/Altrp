@@ -41,7 +41,7 @@ export default function applyPluginsFiltersAsync(type: string, content, ...param
     try{
       content = hook.fn.bind(hook.plugin)(content, ...params,)
     } catch (e) {
-      console.error(e);
+      console.error(`Plugin Sync Hook '${type}' Error, ${e.message}`, content, params, e);
     }
   }
   return content

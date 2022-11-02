@@ -5,6 +5,7 @@ import {changeCurrentPage} from "../store/current-page/actions";
 import convertQueryParamsToObject from "../functions/convert-query-params-to-object";
 import delay from "../functions/delay";
 import {changeCurrentModel} from "../store/current-model/actions";
+import loadPageActions from "../functions/actions/load-page-actions";
 
 export default function replacePageContent(url, popstate = false) {
   if (!url) {
@@ -30,35 +31,39 @@ export default function replacePageContent(url, popstate = false) {
   }
 
 
-  // const progressBar = document.createElement('div')
-  // progressBar.style.background = 'rgb(48, 79, 253)'
-  // progressBar.style.boxShadow = 'rgb(0 0 0 / 15%) 0 4px 5px 0px'
-  // progressBar.style.position = 'fixed'
-  // progressBar.style.top = 0
-  // progressBar.style.right = 0
-  // progressBar.style.left = 0
-  // progressBar.style.height = '4px'
-  // progressBar.style.transitionDuration = '500ms'
-  // progressBar.style.zIndex = 100000
-  // progressBar.style.transform = 'translate( - 100% )'
-
-  // document.body.appendChild(progressBar)
+  const progressBar = document.createElement('div')
+  progressBar.classList.add('altrp-loading-bar')
+  progressBar.style.background = window.altrp_progress_bar_color || 'rgb(48, 79, 253)'
+  progressBar.style.boxShadow = 'rgb(0 0 0 / 15%) 0 4px 5px 0px'
+  progressBar.style.position = 'fixed'
+  progressBar.style.top = 0
+  progressBar.style.right = 0
+  progressBar.style.left = 0
+  progressBar.style.height = '4px'
+  progressBar.style.transitionDuration = '100ms'
+  progressBar.style.zIndex = 100000
+  progressBar.style.transform = 'translate( -100% )'
+  delay(100).then(()=>{
+    progressBar.style.transform = 'translate( -90%)'
+  })
+  document.body.appendChild(progressBar)
   if (url.indexOf(location.origin) === 0) {
     url = url.replace(location.origin, '')
   }
   if (url.indexOf(location.host) === 0) {
     url = url.replace(location.host, '')
   }
-  let _url = `/ajax/get-page-content?url=${url}`
+  // let _url = `/ajax/get-page-content?url=${url}`
+  let _url = url
   let xhr = new XMLHttpRequest();
 
 
   console.log('async Page Start: ', performance.now());
   xhr.onprogress = function (e) {
-    if (e.lengthComputable) {
-      let percent = (e.loaded / e.total) * 100;
-      // progressBar.style.transform = 'translate(' + (90 - percent) + '%)'
-    }
+    // if (e.lengthComputable) {
+    //   let percent = (e.loaded / e.total) * 100;
+    //   // progressBar.style.transform = 'translate(' + (90 - percent) + '%)'
+    // }
   };
   xhr.open('GET', _url, true);
   xhr.setRequestHeader('Cache-Control', 'no-cache');
@@ -73,15 +78,18 @@ export default function replacePageContent(url, popstate = false) {
         location.href = url
       }
       try {
-         await _replace(xhr.responseText, popstate ,url)
-        // progressBar.style.transform = 'translate(100%)'
+        progressBar.style.transform = 'translate( -60%)'
+        await _replace(xhr.responseText, popstate ,url, progressBar)
+        progressBar.style.transform = 'translate( -5%)'
 
         console.log('async Page End: ', performance.now());
       } catch (e) {
         console.error(e);
         location.href = url
       } finally {
-        // progressBar.remove()
+        progressBar.style.transform = 'translate( 0% )'
+        await delay(100)
+        progressBar.remove()
       }
     }
   };
@@ -106,7 +114,7 @@ function migrateScript(target, source) {
   })
 }
 
-async function _replace(htmlString, popstate, url) {
+async function _replace(htmlString, popstate, url, progressBar) {
   htmlString = htmlString.replace(/<!([\s\S]+?)>/, '')
   const newHtml = document.createElement('html')
   newHtml.innerHTML = htmlString
@@ -119,6 +127,7 @@ async function _replace(htmlString, popstate, url) {
   const newAreas = newHtml.querySelectorAll('.app-area');
   for (const area of oldAreas) {
     if (!newHtml.querySelector(`.${area.classList.value.replace(/ /g, '.')}`)) {
+      _unmountReact(area)
       area.remove()
     }
   }
@@ -131,15 +140,8 @@ async function _replace(htmlString, popstate, url) {
     document.querySelector('.front-app').appendChild(routeContent)
   }
 
-  for (const idx in newAreas) {
-    // routeContent.appendChild(area)
-
-  }
   newAreas.forEach((a) => {
 
-    // oldAreas.forEach((oa, _idx)=>{
-    //
-    // })
     const oldArea = routeContent
       .querySelector(`.${a.classList.value.replace(/ /g, '.')}`)
 
@@ -164,6 +166,7 @@ async function _replace(htmlString, popstate, url) {
     if (!newSectionWrapper) {
       oldArea.classList.add('app-area__fade-out')
       delay(300).then(() => {
+        _unmountReact(oldArea)
         oldArea.innerHTML = ''
         return delay(300)
       })
@@ -175,13 +178,17 @@ async function _replace(htmlString, popstate, url) {
 
     oldArea.classList.add('app-area__fade-out')
     delay(300).then(() => {
+      _unmountReact(oldArea)
       oldArea.innerHTML = a.innerHTML
       migrateScript(oldArea, a)
     })
 
 
   })
-
+  import('../functions/add-animation-classes').then(module => {
+    document.addEventListener('scroll', module.default)
+    module.default();
+  })
   await delay(300)
   appStore.dispatch(clearCurrentDataStorage())
 
@@ -219,7 +226,7 @@ async function _replace(htmlString, popstate, url) {
   document.body.appendChild(stylesContainer)
 
 
-  const newStyles = newHtml.querySelectorAll('style')
+  const newStyles = newHtml.querySelectorAll('style:not(#altrp-generated-custom-areas-styles)')
   for (const s of newStyles) {
     stylesContainer.appendChild(s)
   }
@@ -255,6 +262,8 @@ async function _replace(htmlString, popstate, url) {
     })
   });
   window.scrollTo(0, 0);
+  progressBar.style.transform = 'translate( -20%)'
+
   await delay(300)
   /**
    * scripts move
@@ -293,7 +302,6 @@ async function _replace(htmlString, popstate, url) {
   // document.body.appendChild(scriptContainer)
   // migrateScript(scriptContainer, newHtml)
   formsManager?.clearAll()
-
   /**
    * Events dispatch
    */
@@ -319,11 +327,11 @@ async function _replace(htmlString, popstate, url) {
   window._hAltrp()
 
   const stylesContainers = document.querySelectorAll('.migrated-styles')
-  if (stylesContainers.length > 2) {
+  if (stylesContainers.length > 1) {
     stylesContainers[0].remove()
   }
   const scriptContainers = document.querySelectorAll('.migrated-scripts')
-  if (scriptContainers.length > 2) {
+  if (scriptContainers.length > 1) {
     scriptContainers[0].remove()
   }
   if (!popstate) {
@@ -342,7 +350,8 @@ async function _replace(htmlString, popstate, url) {
   if (document?.location?.hash && document?.location?.hash.indexOf('=') !== -1) {
     hashParams = convertQueryParamsToObject(document?.location?.hash)
   }
-  console.log(location?.href);
+  window.templateActionsDone = []
+  loadPageActions()
   appStore.dispatch(changeCurrentPage({
     url: location?.href || "",
     title: window?.currentPage?.title || "",
@@ -350,8 +359,19 @@ async function _replace(htmlString, popstate, url) {
     hashParams,
     params,
   }))
+  progressBar.style.transform = 'translate( -80%)'
   return {
     newTitle: newTitle.innerHTML,
     oldTitle
   }
+}
+
+function _unmountReact(element){
+  element.querySelectorAll('[data-react-element]').forEach(el=>{
+    try {
+      ReactDOM.unmountComponentAtNode(el)
+    } catch (e) {
+      console.error(e);
+    }
+  })
 }

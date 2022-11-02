@@ -66,7 +66,8 @@ class Assets extends Component {
       this.resource.delete(assetId).then(res => {
         if (res.success) {
           let newAssets = [...this.state.assets];
-          newAssets = _.filter(newAssets, item => !(item.id === Number(assetId)));
+
+          newAssets = _.filter(newAssets, item => item.id != assetId);
           this.setState(state => {
             return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete' };
           })

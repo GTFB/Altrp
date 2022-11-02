@@ -1404,6 +1404,16 @@ export default class Page extends BaseModel {
       'loading_text',
       'store_state',
     ],
+    section: [
+      'layout_content_width_type',
+      'link_link',
+    ],
+    section_widget: [
+      'layout_content_width_type',
+      'link_link',
+    ],
+    column: [
+    ],
     posts: [
       'current_page_text',
       'prev_icon_position',

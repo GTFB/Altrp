@@ -53,7 +53,7 @@ export default class CustomizerCrud extends BaseCommand {
         modelQuery.where('name', this.modelName)
       })
       .where('type', 'crud')
-    console.log();
+
     customizers = customizers.filter(
       customizer => customizer.settings.event_type === action
         && customizer.settings.event_hook_type === hookType

@@ -2,8 +2,8 @@
 
 ## Changelog
 
-### 1.4.2 build 15
-* Added the Ability to Copy the URL Path
+### 1.4.2 build 28
+* Added the Ability to Copy the URL Path in API-Robotizers
 * Added the Preview Page for Templates 
 
 ### 1.4.1 
