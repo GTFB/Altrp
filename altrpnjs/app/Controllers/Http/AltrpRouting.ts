@@ -225,7 +225,7 @@ export default class AltrpRouting {
         spa_off: get_altrp_setting('spa_off') === 'true',
         device,
       })
-      console.log(get_altrp_setting('altrp_progress_bar_color', 'rgb(48, 79, 253)'));
+
       mustache?.templateCache?.clear()
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)

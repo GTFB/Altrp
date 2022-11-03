@@ -17,7 +17,6 @@
 | import './routes/customer'
 |
 */
-import './admin'
 import Route from '@ioc:Adonis/Core/Route'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Table from "App/Models/Table";
