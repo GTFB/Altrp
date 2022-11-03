@@ -133,6 +133,11 @@ export default class UpdateService {
    */
   private static async upgradePackages() {
     await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
+    try{
+      await promisify(exec)(`sudo npm --prefix ${base_path()} ci --production` )
+    }catch (e) {
+      await promisify(exec)(`su npm --prefix ${base_path()} ci --production` )
+    }
     return true;
   }
 }

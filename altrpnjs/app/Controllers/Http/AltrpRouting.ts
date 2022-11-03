@@ -27,9 +27,9 @@ import getLatestVersion from "../../../helpers/getLatestVersion";
 import FONTS, {SYSTEM_FONT} from "../../../helpers/const/FONTS";
 import {promisify} from "util";
 import storage_path from "../../../helpers/storage_path";
-import base_path from '../../../helpers/path/base_path';
 import isRobot from "../../../helpers/isRobot";
-import sharp from 'sharp';
+import base_path from "../../../helpers/path/base_path";
+import sharp from "sharp";
 
 export default class AltrpRouting {
 
@@ -50,12 +50,11 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async getContentByUrl(url, httpContext: HttpContextContract):Promise<void>{
-    const asCheck = isRobot(httpContext.request.headers())
+  public async getContentByUrl(url, httpContext: HttpContextContract, pageId = null):Promise<void>{
 
     if (url.includes('/storage/media/')) {
 
-      var searchFilename = base_path('/public'+url);
+      let searchFilename = base_path('/public'+url);
 
       if (!await fs.existsSync(searchFilename)){
 
@@ -105,25 +104,28 @@ export default class AltrpRouting {
 
           var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
 
-          if (await fs.existsSync(originalFileName)){
+          if (fs.existsSync(originalFileName)){
 
             if(ext == 'webp'){
               if (width > 0 && height > 0) {
                 await sharp(originalFileName).toFormat('webp').resize(width, height).toFile(searchFilename);
               } else {
                 await sharp(originalFileName).toFormat('webp').toFile(searchFilename);
-              }           
+              }
+              httpContext.response.header('Content-Type', 'image/webp')
+              return httpContext.response.send(fs.readFileSync(searchFilename))
             } else if(width > 0 && height > 0) {
               await sharp(originalFileName).resize(width, height).toFile(searchFilename);
+              httpContext.response.header('Content-Type', 'image/' + ext)
+              return httpContext.response.send(fs.readFileSync(searchFilename))
             }
-
           }
         }
       }
     }
 
-    const start = performance.now();
-    console.log(performance.now() - start);
+    const asCheck = isRobot(httpContext.request.headers())
+    const accept_webp = httpContext.request.header('Accept')?.includes('image/webp')
     /**
      * init global object
      */
@@ -145,13 +147,18 @@ export default class AltrpRouting {
     }
     this.setGlobal('altrpSettings', altrpSettings)
     let pageMatch: any = {}
-    let page: Page | undefined | null = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
-      if (matchPath(decodeURI(url), page.path,)?.isExact) {
-        pageMatch = matchPath(decodeURI(url), page.path,)
-      }
-      return matchPath(decodeURI(url), page.path,)?.isExact
-    });
-    httpContext.params = pageMatch.params
+    let page: Page | undefined | null
+    if(pageId){
+      page = await Page.find(pageId)
+    } else {
+      page = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
+        if (matchPath(decodeURI(url), page.path,)?.isExact) {
+          pageMatch = matchPath(decodeURI(url), page.path,)
+        }
+        return matchPath(decodeURI(url), page.path,)?.isExact
+      });
+      httpContext.params = pageMatch.params
+    }
 
     if (!page) {
       httpContext.response.status(404)
@@ -264,8 +271,6 @@ export default class AltrpRouting {
     altrpContext.altrpdata = datasources
     try {
 
-      console.log(performance.now() - start);
-
       let [page_areas, all_styles, content] = await Promise.all(
         [
           promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
@@ -279,6 +284,7 @@ export default class AltrpRouting {
         altrpContext,
         access_classes,
         asCheck,
+        accept_webp,
         user,
         csrfToken: httpContext.request.csrfToken,
         isProd: isProd(),
@@ -288,16 +294,17 @@ export default class AltrpRouting {
         altrp_skeleton_color: get_altrp_setting('altrp_skeleton_color', '#ccc'),
         altrp_skeleton_highlight_color: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
         altrp_image_lazy: get_altrp_setting('altrp_image_lazy', 'none'),
+        altrp_progress_bar_color: get_altrp_setting('altrp_progress_bar_color', 'rgb(48, 79, 253)'),
         container_width: get_altrp_setting('container_width', '1440'),
         spa_off: get_altrp_setting('spa_off') === 'true',
         device,
       })
+
       mustache?.templateCache?.clear()
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)
       content = content.replace('<<<all_styles>>>', all_styles)
       let res = content
-      console.log(performance.now() - start);
 
       /**
        * Add Custom Headers

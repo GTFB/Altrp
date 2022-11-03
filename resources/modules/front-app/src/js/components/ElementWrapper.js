@@ -1,6 +1,5 @@
 import { withRouter } from "react-router-dom";
 import { addElement } from "../store/elements-storage/actions";
-import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
@@ -297,7 +296,12 @@ class ElementWrapper extends Component {
     if(newProps.formsStore !== this.props.formsStore
       && dependencies.indexOf('altrpforms') === -1){
       ++window.countReduced
+
       if(element.getName().indexOf('input') > -1 || element.getName() === 'textarea'){
+
+        if(! newProps.formsStore.changedField){
+          return true
+        }
         return `${element.getFormId()}.${element.getFieldId()}`
           === newProps.formsStore.changedField
       }

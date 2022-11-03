@@ -98,14 +98,17 @@ export default class ElementRenderer {
       }
       let styles: {} | string = {}
       let deleteOverflowHidden = getResponsiveSetting(settings,"switch_overflow_hidden_section", screenName) ? "overflow: initial" : "";
-      const {layout_content_width_type: widthType, isFixed} = this.element.settings
+      const { isFixed} = this.element.settings
       let section_classes = ''
 
+      const widthType = getResponsiveSetting(settings,
+        'layout_content_width_type', screenName)
       const fitToContent = getResponsiveSetting(settings, "layout_height", screenName)
       if (fitToContent === "fit") {
         section_classes += " section-fit-to-content ";
       }
       switch (this.getName()) {
+        case 'section_widget':
         case 'section': {
           if (widthType === "boxed" && !isFixed) {
             section_classes += " altrp-section_boxed ";
@@ -116,7 +119,7 @@ export default class ElementRenderer {
 
           if (widthType === "full" && !isFixed) {
           }
-          section_classes += getSectionWidthClass(settings)
+          section_classes += getSectionWidthClass(settings, screenName)
 
         }
           break;
@@ -142,7 +145,8 @@ export default class ElementRenderer {
               this.element.children.length,
               this.isLink() ? 'altrp-pointer' : '',
               children_content,
-              section_background
+              section_background,
+              section_classes,
             );
         }
         element_content =

@@ -353,7 +353,6 @@ class Table extends BaseElement {
     repeater.addControl('column_width', {
       label: 'Column Width',
       dynamic: false,
-      type: CONTROLLER_NUMBER,
     });
 
     repeater.addControl('column_header_alignment', {

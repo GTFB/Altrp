@@ -207,6 +207,7 @@ export default class AdminController {
     console.info('Upgrading Models')
 
     console.log(await exec(`node ${base_path('ace')} generator:model`))
+    console.log(await exec(`node ${base_path('ace')} generator:router`))
 
     console.info('Models Upgraded')
   }

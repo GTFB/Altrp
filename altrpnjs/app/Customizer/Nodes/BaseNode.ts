@@ -62,15 +62,22 @@ export  default class BaseNode
    * @param data
    * @return Collection
    */
-  public static  getNodesByType( type , data ): any[]
+  public static  getNodesByType( type, data ): any[]
   {
     const nodes:BaseNode[] = []
     if( ! type ){
       return nodes
     }
     data.forEach(( item )=> {
-      if( data_get( item, 'data.type' ) == type ){
-        nodes.push( item )
+      console.log(typeof type);
+      if(typeof type === 'string'){
+        if( data_get( item, 'data.type' ) == type ){
+          nodes.push( item )
+        }
+      } else {
+        if( item instanceof type){
+          nodes.push( item )
+        }
       }
     })
     return nodes

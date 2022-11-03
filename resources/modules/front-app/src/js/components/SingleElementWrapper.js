@@ -293,10 +293,12 @@ class SingleElementWrapper extends Component {
       ++window.countReduced
       return false
     }
+
     if(newProps.formsStore !== this.props.formsStore
       && dependencies.indexOf('altrpforms') === -1){
       ++window.countReduced
       if(element.getName().indexOf('input') > -1 || element.getName() === 'textarea'){
+
         if(! newProps.formsStore.changedField){
           return true
         }

@@ -77,16 +77,6 @@ class AltrpImage extends Component {
     super(props);
     this.imageRef = React.createRef();
     let visible = true;
-    if(isSSR() && ! props.element?.getResponsiveSetting('lazyload_disable')){
-      visible = false;
-    } else if (isEditor() || props.lazy === false) {
-
-    } else if (window.altrpImageLazy
-        && window.altrpImageLazy !== 'none'
-        && props.element
-        && ! props.element?.getResponsiveSetting('lazyload_disable')) {
-      visible = false;
-    }
     this.state = {
       visible,
       update: 0,

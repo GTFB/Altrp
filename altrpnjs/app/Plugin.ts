@@ -292,7 +292,7 @@ export default class Plugin {
       throw new NotFoundException(`Plugin not '${this.name}' Found`, 404, NotFoundException.code)
     }
     if (is_null(this.plugin_meta_data)) {
-      this.plugin_meta_data = []
+      this.plugin_meta_data = {}
       this.plugin_main_file_content = fs.readFileSync(this.getPath('/plugin_meta'), {encoding: 'utf8'})
 
       for (let item of this.plugin_main_file_content.split('\n')) {

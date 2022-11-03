@@ -272,8 +272,10 @@ export default class CustomizersController {
       }
 
       if (customizer.type === 'schedule') {
-        await exec(`node ${base_path('ace')} generator:schedule --id=${customizer.id}`)
-        customizer.schedule()
+        const result = await exec(`node ${base_path('ace')} generator:schedule --id=${customizer.id}`)
+        if (result !== null) {
+          customizer.schedule()
+        }
       }
 
       if(model) {

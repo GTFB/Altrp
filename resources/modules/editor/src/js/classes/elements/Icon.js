@@ -61,12 +61,15 @@ class Icon extends BaseElement {
     this.addControl('title_text', {
       type: CONTROLLER_TEXT,
       label: 'Title',
+      default: 'Title',
+      responsive: false,
       locked: true,
     })
 
     this.addControl('description', {
       type: CONTROLLER_TEXT,
       label: 'Description',
+      default: 'Icon Description',
       locked: true,
     })
 

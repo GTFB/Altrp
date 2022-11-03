@@ -428,8 +428,8 @@ const animationStyles = {
     animation-name: fadeInRight
 }
 `,
-  fadeInUp: `
-@keyframes fadeInUp {
+  fadeUp: `
+@keyframes fadeUp {
     from {
         opacity: 0;
         transform: translate3d(0, 100%, 0)
@@ -440,8 +440,8 @@ const animationStyles = {
     }
 }
 
-.altrp-an_fadeInUp {
-    animation-name: fadeInUp
+.altrp-an_fadeUp {
+    animation-name: fadeUp
 }
 `,
   lightSpeedIn: `

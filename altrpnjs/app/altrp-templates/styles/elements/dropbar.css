@@ -1,0 +1,98 @@
+
+.altrp-btn-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+.altrp-btn svg {
+  display: block;
+}
+
+.altrp-btn:hover {
+  text-decoration: none;
+}
+
+.altrp-btn {
+  width: auto;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-direction: row;
+  background-color: #343B4C;
+  color: #FFFFFF;
+  padding-top: 20px;
+  padding-right: 25px;
+  padding-bottom: 20px;
+  padding-left: 25px
+}
+
+.altrp-btn_gray {
+  background-color: #8E94AA;
+  color: #fff;
+}
+
+.altrp-btn__icon {
+  transform: scale(0.6);
+}
+
+.altrp-btn-icon {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+
+.btn-container-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-container-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.altrp-btn-icon-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+
+.altrp-btn-icon-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+
+.altrp-btn-icon-top img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+
+.altrp-btn-icon-bottom img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+.altrp-dropbar-container-hide *{
+  transition-duration: 0s;
+}

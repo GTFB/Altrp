@@ -14,6 +14,9 @@
   background-attachment: scroll;
   background-repeat: repeat;
 }
+.altrp-heading img{
+  max-width: 100%;
+}
 
 .altrp-heading-advanced-wrapper {
   position: absolute;

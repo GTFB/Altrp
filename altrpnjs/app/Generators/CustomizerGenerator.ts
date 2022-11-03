@@ -55,10 +55,12 @@ export default class CustomizerGenerator extends BaseGenerator {
     const customizer = this.customizer
 
     if (!customizer || !customizer.type || !customizer.settings) {
+      console.error('Error [CustomizerGenerator]: customizer is not defined or its type or settings property is undefined')
       return false
     }
 
     if (!customizer.settings.event_type || !customizer.settings.event_hook_type) {
+      console.error('Error [CustomizerGenerator]: event_type or event_hook_type is not defined')
       return false
     }
     

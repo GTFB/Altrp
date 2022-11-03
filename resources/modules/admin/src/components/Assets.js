@@ -7,6 +7,7 @@ import { ImageDetail } from "./ImageDetail";
 import { FontsDetail } from "./FontsDetail";
 import IconUpload from "./../svgs/upload.svg"
 import UserTopPanel from "./UserTopPanel";
+import convertUrl from "../js/helpers/convertURL";
 
 class Assets extends Component {
   constructor(props) {
@@ -66,7 +67,8 @@ class Assets extends Component {
       this.resource.delete(assetId).then(res => {
         if (res.success) {
           let newAssets = [...this.state.assets];
-          newAssets = _.filter(newAssets, item => !(item.id === Number(assetId)));
+
+          newAssets = _.filter(newAssets, item => item.id != assetId);
           this.setState(state => {
             return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete' };
           })
@@ -577,6 +579,7 @@ class Assets extends Component {
                        : "admin-assets__list custom-tab__tab-panel assets-shell-blocks"}>
                        {
                          this.state.assets.map(asset => {
+                           const imageURl = convertUrl(asset.url)
                              return (
                                <div key={asset.id} className={this.state.activeLink === 'images' || this.state.activeLink === 'svgs' ? "assets-shell-background" : "assets-shell"}>
 
@@ -585,7 +588,7 @@ class Assets extends Component {
                                        if (this.state.activeLink === 'images' || this.state.activeLink === 'svgs') {
                                          return (
                                            <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
-                                                style={{ 'backgroundImage': `url('${asset.url}')` }} />
+                                                style={{ 'backgroundImage': `url('${imageURl}')` }} />
                                          )
                                        }
                                      }
