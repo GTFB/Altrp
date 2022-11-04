@@ -69,12 +69,12 @@ export  default class BaseNode
       return nodes
     }
     data.forEach(( item )=> {
-      console.log(typeof type);
+
       if(typeof type === 'string'){
         if( data_get( item, 'data.type' ) == type ){
           nodes.push( item )
         }
-      } else {
+      } else if(typeof type === 'function'){
         if( item instanceof type){
           nodes.push( item )
         }

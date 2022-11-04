@@ -16,6 +16,7 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
 
   .icon-widget__icon * {
     width: auto;
+    max-width: 100%;
   }
 
   .title {

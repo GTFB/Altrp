@@ -5,6 +5,7 @@ import { assetsToggle } from "../../store/assets-browser/actions";
 import Resource from "../Resource";
 import '../../../sass/assets-browser.scss';
 import toDataURL from "../../helpers/to-data-url";
+import convertUrl from "../../../../../admin/src/js/helpers/convertURL";
 
 
 class AssetsBrowser extends Component {
@@ -222,11 +223,6 @@ class AssetsBrowser extends Component {
         this.props.onChoose({...asset, rawSVG});
         this.props.dispatch(assetsToggle());
       });
-    } else {
-      toDataURL(asset.url, (dataUrl)=>{
-        this.props.onChoose({...asset, dataUrl});
-        this.props.dispatch(assetsToggle());
-      })
     }
   }
 
@@ -301,7 +297,7 @@ class AssetsBrowser extends Component {
                 }
                 if (this.state.activeTab === "media") {
                   AssetContent = "img";
-                  assetProps.src = asset.url;
+                  assetProps.src = convertUrl(asset.url);
                   classes += " asset-choose_media";
                   asset.name = asset.filename;
                   asset.assetType = "media";

@@ -45,12 +45,13 @@ export default class RouterGenerator {
       .preload('source').preload('altrp_model', query => {
         query.preload('table')
       })
-    let content = ''
+    let content = `
+    `
     customizers = await Promise.all(customizers.map(async c => {
       if(! c.altrp_model || ! c.altrp_model?.table){
         return  null
       }
-      let controllerName = `../../AltrpControllers/${c.altrp_model?.name}Controller`
+      let controllerName = `${c.altrp_model?.name}Controller`
       controllerName = controllerName.replace(/\\/g, '\\\\')
       const methodName = c.name
       const method = await c.getRequestType()
@@ -73,11 +74,17 @@ export default class RouterGenerator {
         allowApi,
       } = c
       content += `
-  Route.${method}('${url}', '${controllerName}.${methodName}').middleware('catch_unhandled_json')${
+Route.${method}('${url}', ${isProd() ? `async (httpContext)=>{
+    let controller = require('../../../app/AltrpControllers/${controllerName}').default;
+    controller = new controller;
+    return await controller.${methodName}(httpContext);
+}` : `'${controllerName}.${methodName}'`}).middleware('catch_unhandled_json')${
         allowApi ? `.middleware('cors')` : ''
       };
       `
     })
+    content +=`
+    `
     return content
   }
 

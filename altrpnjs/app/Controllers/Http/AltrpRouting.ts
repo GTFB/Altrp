@@ -81,7 +81,7 @@ export default class AltrpRouting {
         var parts = url.split('/');
         var folder = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/`);
 
-        var files = []
+        var files: any[] = []
         var width = 0
         var height = 0
 
@@ -126,6 +126,9 @@ export default class AltrpRouting {
 
     const asCheck = isRobot(httpContext.request.headers())
     const accept_webp = httpContext.request.header('Accept')?.includes('image/webp')
+    // console.log(accept_webp);
+    // console.log(httpContext.request.header('Accept'));
+    // console.log(httpContext.request.headers());
     /**
      * init global object
      */

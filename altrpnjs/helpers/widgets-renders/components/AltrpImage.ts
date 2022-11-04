@@ -23,15 +23,42 @@ export default function AltrpImage(props: any, ) {
     svg = svg.slice(0, endSvgTag).slice(startSvgTag);
     return `<svg xmlns="http://www.w3.org/2000/" class="altrp-image" ${objectToAttributesString(_props)}>${svg}</svg>`
   }
-  let src = _.get(settings, 'content_media.dataUrl') || _.get(settings, 'content_media.url')
+  let src:any = _.get(settings, 'content_media.url')
+  let webpUrlEnable = false
+  let webpUrl
   if (src) {
+    src = src.split('.')
+    webpUrl = [...src]
+    if(['jpeg','png', 'jpg'].includes(src[src.length - 1])){
+      webpUrlEnable = true
+    }
+    if(webpUrlEnable){
+      webpUrl[webpUrl.length - 1] = 'webp'
+      webpUrl = webpUrl.join('.')
+    }
+    src = src.join('.')
     src = `src="${src}"`
   } else {
     src = `src="/img/nullImage.png"`
   }
-
-  return `<img class="altrp-image"
+  if(! webpUrlEnable){
+    return `
+  <img class="altrp-image"
     ${settings.raw_url ? `data-replace-attributes-if-exists="src|${settings.raw_url}"` : ''}
     width="${props.width}" height="${props.height}" ${src}/>`
 
+  }
+
+  return `
+{{#accept_webp}}
+ <img class="altrp-image"
+    ${settings.raw_url ? `data-replace-attributes-if-exists="src|${settings.raw_url}"` : ''}
+    width="${props.width}" height="${props.height}" src="${webpUrl}"/>
+{{/accept_webp}}
+{{^accept_webp}}
+ <img class="altrp-image"
+    ${settings.raw_url ? `data-replace-attributes-if-exists="src|${settings.raw_url}"` : ''}
+    width="${props.width}" height="${props.height}" ${src}/>
+{{/accept_webp}}
+  `
 }

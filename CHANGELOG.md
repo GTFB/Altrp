@@ -2,7 +2,10 @@
 
 ## Changelog
 
-### 1.4.2 build 29
+### 1.4.3 build 7
+* Added the Webp Support for Images
+
+### 1.4.2 
 * Added the Ability to Copy the URL Path in API-Robotizers
 * Added the Preview Page for Templates 
 
