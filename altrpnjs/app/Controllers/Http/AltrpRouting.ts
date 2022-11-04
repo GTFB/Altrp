@@ -29,7 +29,8 @@ import {promisify} from "util";
 import storage_path from "../../../helpers/storage_path";
 import isRobot from "../../../helpers/isRobot";
 import base_path from "../../../helpers/path/base_path";
-import sharp from "sharp";
+import sharp from 'sharp';
+import sizeOf from 'image-size';
 
 export default class AltrpRouting {
 
@@ -105,6 +106,23 @@ export default class AltrpRouting {
           var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
 
           if (fs.existsSync(originalFileName)){
+
+            const dimensions = sizeOf(originalFileName)
+            var targetAspectRatio = height / width;
+            var sourceAspectRatio = dimensions.height / dimensions.width;
+
+            if (targetAspectRatio == 1) {
+              if (dimensions.width > dimensions.height) {
+                height = Math.round(height*(dimensions.height/dimensions.width));
+              }
+              if (dimensions.width < dimensions.height) {
+                width = Math.round(width*(dimensions.width/dimensions.height));
+              }
+            } else if(targetAspectRatio < 1 && targetAspectRatio > sourceAspectRatio) {
+              height = Math.round(width * sourceAspectRatio);
+            } else if(targetAspectRatio < 1 && targetAspectRatio < sourceAspectRatio){
+              width = Math.round(height * sourceAspectRatio);
+            }
 
             if(ext == 'webp'){
               if (width > 0 && height > 0) {

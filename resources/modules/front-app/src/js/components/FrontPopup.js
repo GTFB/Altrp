@@ -65,6 +65,12 @@ class FrontPopup extends Component {
     document.body.classList.remove('overflow-hidden');
     window.dispatchEvent(new Event('resize'));
   }
+  componentWillUnmount = () => {
+    console.log(this);
+    document.body.classList.remove('overflow-hidden');
+    window.dispatchEvent(new Event('resize'));
+    this.props.closePopup();
+  }
   onExit = () => {
     const rootElement = this.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')

@@ -367,6 +367,7 @@ async function _replace(htmlString, popstate, url, progressBar) {
 }
 
 function _unmountReact(element){
+  window.popupsContainer && ReactDOM.unmountComponentAtNode(window.popupsContainer)
   element.querySelectorAll('[data-react-element]').forEach(el=>{
     try {
       ReactDOM.unmountComponentAtNode(el)

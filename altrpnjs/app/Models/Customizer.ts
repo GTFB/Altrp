@@ -39,7 +39,7 @@ export default class Customizer extends BaseModel {
 
   public static table = 'altrp_customizers'
 
-  private parsed_data: any
+  public parsed_data: any
 
   @column({isPrimary: true})
   public id: number
