@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 1.4.3 build 8
+### 1.4.3 build 12
 * Added the Webp Support for Images
 
 ### 1.4.2 

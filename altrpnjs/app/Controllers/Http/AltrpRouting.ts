@@ -107,7 +107,7 @@ export default class AltrpRouting {
 
           if (fs.existsSync(originalFileName)){
 
-            const dimensions = sizeOf(originalFileName)
+            const dimensions: any = sizeOf(originalFileName)
             var targetAspectRatio = height / width;
             var sourceAspectRatio = dimensions.height / dimensions.width;
 
@@ -167,7 +167,10 @@ export default class AltrpRouting {
       page_params: httpContext.request.qs(),
     }
     this.setGlobal('altrpSettings', altrpSettings)
-    let pageMatch: any = {}
+    let pageMatch: any = {
+      params: {...httpContext.request.params()},
+    }
+    console.log(pageMatch);
     let page: Page | undefined | null
     if(pageId){
       page = await Page.find(pageId)
@@ -233,7 +236,6 @@ export default class AltrpRouting {
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
         model_data = classInstance ? classInstance.serialize() : {}
-
       } catch (e) {
         console.error(e);
       }

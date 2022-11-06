@@ -273,23 +273,24 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {['api', 'method', 'crud'].includes(type) && <>
-                    {/*  <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>*/}
-                    {/*  <div className="controller-container__label control-select__label controller-label">Middlewares:</div>*/}
-                    {/*  <AltrpSelect id="crud-fields"*/}
-                    {/*               className="controller-field"*/}
-                    {/*               isMulti={true}*/}
-                    {/*               value={Middlewares || []}*/}
-                    {/*               onChange={this.changeMiddlewares}*/}
-                    {/*               options={[*/}
-                    {/*                 {*/}
-                    {/*                   value: 'cors',*/}
-                    {/*                   label: 'CORS',*/}
-                    {/*                 },*/}
+                    {['api', 'method', 'crud'].includes(type)  && <>
+                      { ! this.state.customizer?.settings?.external &&
+                      <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                      <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
+                      <AltrpSelect id="crud-fields"
+                                   className="controller-field"
+                                   isMulti={true}
+                                   value={Middlewares || []}
+                                   onChange={this.changeMiddlewares}
+                                   options={[
+                                     {
+                                       value: 'cors',
+                                       label: 'CORS for all Origins',
+                                     },
 
-                    {/*               ]}*/}
-                    {/*  />*/}
-                    {/*</div>*/}
+                                   ]}
+                      />
+                    </div>}
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Model:</div>
                       <AltrpSelect id="crud-fields"

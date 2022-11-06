@@ -482,6 +482,9 @@ export default class Customizer extends BaseModel {
     data = data.map( item  => {
       const type = data_get( item, 'type' )
       switch( type ){
+        case 'straight':
+        case 'step':
+        case 'smoothstep':
         case 'default': return new Edge( item, customizer )
         case 'switch': return new SwitchNode( item, customizer )
         case 'start': return new StartNode( item , customizer)
@@ -504,7 +507,7 @@ export default class Customizer extends BaseModel {
     })
     data.forEach( ( node_item ) => {
       const node_id = node_item.getId()
-      let edges = BaseNode.getNodesByType(Edge, data)
+      let edges = BaseNode.getNodesByType('Edge', data)
       edges = edges.filter( ( node )=> {
         return node.data['source'] == node_id
       })

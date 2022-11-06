@@ -48,6 +48,10 @@ export default class RouterGenerator {
     let content = `
     `
     customizers = await Promise.all(customizers.map(async c => {
+
+      const middlewares = c.settings?.middlewares || []
+      let cors = ! ! middlewares.find(m => m?.value === 'cors')
+      cors && console.log(c.id);
       if(! c.altrp_model || ! c.altrp_model?.table){
         return  null
       }
@@ -56,12 +60,15 @@ export default class RouterGenerator {
       const methodName = c.name
       const method = await c.getRequestType()
       let url = c.allowApi() ? `api/v1/${methodName}` : `ajax/models/${c.altrp_model?.table?.name}/customizers/${methodName}`
+      if(! cors){
+        cors = c.allowApi()
+      }
       return{
         method,
         url,
         controllerName,
         methodName,
-        allowApi: c.allowApi(),
+        cors,
       }
     }))
     customizers = customizers.filter(c=>c)
@@ -71,15 +78,15 @@ export default class RouterGenerator {
         url,
         controllerName,
         methodName,
-        allowApi,
+        cors,
       } = c
       content += `
-Route.${method}('${url}', ${isProd() ? `async (httpContext)=>{
+Route.${method}('${url}', async (httpContext)=>{
     let controller = require('../../../app/AltrpControllers/${controllerName}').default;
     controller = new controller;
     return await controller.${methodName}(httpContext);
-}` : `'${controllerName}.${methodName}'`}).middleware('catch_unhandled_json')${
-        allowApi ? `.middleware('cors')` : ''
+}).middleware('catch_unhandled_json')${
+        cors ? `.middleware('cors')` : ''
       };
       `
     })

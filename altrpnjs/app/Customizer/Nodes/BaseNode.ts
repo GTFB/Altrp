@@ -1,6 +1,7 @@
 import data_get from '../../../helpers/data_get'
 import Customizer from "App/Models/Customizer";
 import altrpRandomId from "../../../helpers/altrpRandomId";
+import _ from 'lodash'
 
 export default class BaseNode {
   /**
@@ -65,28 +66,29 @@ export default class BaseNode {
     if (!type) {
       return nodes
     }
+
     switch (type) {
       case 'edge':
-      case 'Edge':{
+      case 'Edge': {
         type = [
           'default',
-
+          'straight',
+          'step',
+          'smoothstep',
         ]
       }
-      break;
+        break;
     }
     data.forEach((item) => {
+
       if (typeof type === 'string') {
         if (data_get(item, 'data.type') == type) {
           nodes.push(item)
         }
-      } else if (_.isArray(type)) {
+      } else if (_.isArray(type) && type.find(t=>data_get(item, 'data.type') == t)) {
         nodes.push(item)
       }
-      // if(typeof type !== 'string'){
-      //   console.log(item instanceof type);
-      //   console.log(type);
-      // }
+
     })
     return nodes
   }
