@@ -307,7 +307,7 @@ class SqlEditor extends Component {
         alert(res.message);
       }
     } catch (error) {
-      alert("Ошибка, проверьте еще раз внимательно введенные данные");
+      alert("Error, Checkout your Data");
       console.error(error);
     }
   };

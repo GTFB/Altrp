@@ -44,16 +44,19 @@ class InputRadio extends BaseElement {
 
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
+      locked: true,
       label: "Content"
     });
 
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
+      locked: true,
       label: "Form ID"
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
+      locked: true,
       label: "Field ID (Column Name)"
     });
 
@@ -118,7 +121,6 @@ class InputRadio extends BaseElement {
     this.addControl("label_icon_position", {
       type: CONTROLLER_SELECT,
       label: "Icon Position",
-      default: "default",
       options: [
         {
           value: "row",
@@ -407,10 +409,6 @@ class InputRadio extends BaseElement {
     this.addControl("label_position_top", {
       type: CONTROLLER_SLIDER,
       label: "Label Y Position",
-      default: {
-        unit: "px",
-        size: null
-      },
       conditions: {
         content_label_position_type: ["absolute"]
       },
@@ -432,10 +430,6 @@ class InputRadio extends BaseElement {
     this.addControl("label_position_left", {
       type: CONTROLLER_SLIDER,
       label: "Label X Position",
-      default: {
-        unit: "px",
-        size: null
-      },
       conditions: {
         content_label_position_type: ["absolute"]
       },
@@ -615,15 +609,7 @@ class InputRadio extends BaseElement {
 
     this.addControl("required_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        // size: 13,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      }
+      label: "Typographic"
     });
 
     this.endControlSection();
@@ -653,10 +639,6 @@ class InputRadio extends BaseElement {
     this.addControl("size_style_dot", {
       type: CONTROLLER_SLIDER,
       label: "Active Dot Size",
-      default: {
-        size: 28,
-        unit: "%"
-      },
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
@@ -666,9 +648,6 @@ class InputRadio extends BaseElement {
     this.addControl("background_section_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
       max: 1,
       min: 0,
       step: 0.01

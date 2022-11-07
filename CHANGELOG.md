@@ -1,9 +1,25 @@
 # ALTRP
 
-
 ## Changelog
+## test version build 1
 
-### 1.3.4 build 13
+### 1.4.3 
+* Added the Webp Support for Images
+
+### 1.4.2 
+* Added the Ability to Copy the URL Path in API-Robotizers
+* Added the Preview Page for Templates 
+
+### 1.4.1 
+* Editing Pages in Pages-List
+
+### 1.4.0
+* Added SPA Functionality
+* Optimized Page Generation
+* Added `Reload Page` Action for Elements
+* Added Ability to Create External Request Handlers
+
+### 1.3.4 
 * Added Support for Square Brackets for the Second Level of Data Replacement Nesting in the Content
 
 ### 1.3.3 

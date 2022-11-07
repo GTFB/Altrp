@@ -22,6 +22,9 @@ export const addSchedule = (
     month = date.getMonth();
 
   switch (periodUnit) {
+    case 'minute':
+      rule = `${seconds} */${periodValue} * * * *`
+      break
     case 'hour':
       rule = `${seconds} ${minutes} */${periodValue} * * *`
       break

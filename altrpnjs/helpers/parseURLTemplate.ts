@@ -25,6 +25,9 @@ export default function parseURLTemplate(URLTemplate = "", ) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
+    if(Number(idTemplate.replace(/:|\//g, ""))){
+      return
+    }
     let replace = `{{${idTemplate.replace(/:|\//g, "")}}}`;
     idTemplate = idTemplate.replace("/", "");
     url = url.replace(new RegExp(idTemplate, "g"), replace);

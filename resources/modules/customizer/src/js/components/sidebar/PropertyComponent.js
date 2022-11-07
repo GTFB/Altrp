@@ -275,6 +275,7 @@ class PropertyComponent extends Component {
               disabled={!method}
               text={'Edit'}
               className="button-two"
+              style={{alignSelf: "flex-start"}}
               onClick={this.methodEditToggle}
             />
           </div>

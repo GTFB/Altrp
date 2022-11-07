@@ -3,6 +3,8 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import Scrollbars from "react-custom-scrollbars";
 import upgradeBackend from "../../../../admin/src/js/functions/upgradeBackend";
 import getDataByPath from "../functions/getDataByPath";
+import progressBar from "../../../../admin/src/js/functions/progressBar";
+import delay from "../functions/delay";
 
 class AdminBar extends React.Component {
   constructor(props) {
@@ -137,27 +139,8 @@ class AdminBar extends React.Component {
     JSON.stringify(getDataByPath(this.state.valueInput), null, "\t").select();
     document.execCommand("copy");
   }
-  /**
-   * Запрос на очистку кэша
-   */
-  // clearCache = async () => {
-  //   if(! this.props.idPage){
-  //     return;
-  //   }
-  //   let result  = await confirm('Are You Sure');
-  //   if(! result){
-  //     return;
-  //   }
-  //   try{
-  //     let res = await new window.altrpHelpers.Resource({route:'/admin/ajax/clear_cache'}).delete(this.props.idPage);
-  //   } catch(error){
-  //     await confirm('Error');
-  //
-  //   }
-  //   await confirm('Done');
-  // };
 
-  updateAllBackendResources = async () => {
+  updateCurrentPage = async () => {
     let result = confirm('Are You Sure');
     if(! result){
       return;
@@ -168,7 +151,10 @@ class AdminBar extends React.Component {
       update: true
     }))
 
-    await upgradeBackend()
+
+    console.log(this.props.idPage);
+
+    await upgradeBackend(['pages'], [this.props.idPage])
 
     this.setState(state => ({
       ...state,
@@ -359,48 +345,6 @@ class AdminBar extends React.Component {
               {/*{iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} Clear Cache*/}
             {/*</div>*/}
 
-            <div
-              className="admin-bar__tool"
-              onClick={() => {this.toggleVisiblePopupHistory(); this.getUserHistory();}}
-              ref={this.popupHistoryRef}
-            >
-              User-History
-              {this.state.visiblePopupHistory && (
-                <div className="admin-bar__popup-template admin-bar__popup-history">
-                  <Scrollbars
-                    autoHeight={true}
-                    autoHeightMax='500px'
-                  >
-                    {this.state.arrayRevisions && this.state.arrayRevisions.map((item, index) => {
-                      let secondsAgo = (Date.now() - Date.parse(item.updated_at)) / 1000;
-                      let dateString;
-                      if (secondsAgo < 100) {
-                        dateString = `${secondsAgo} seconds ago`;
-                      } else if (secondsAgo < 6000) {
-                        dateString = `${Math.floor(secondsAgo / 100)} minutes ago`;
-                      } else if (secondsAgo < 144000) {
-                        dateString = `${Math.floor(secondsAgo / 6000)} hours ago`;
-                      } else if (secondsAgo < 4320000) {
-                        dateString = `${Math.floor(secondsAgo / 144000)} days ago`;
-                      } else if (secondsAgo < 51840000) {
-                        dateString = `${Math.floor(secondsAgo / 4320000)} months ago`;
-                      } else {
-                        dateString = `${Math.floor(secondsAgo / 51840000)} years ago`;
-                      }
-
-                      return (
-                        <div className='history-popup__card' key={index}>
-                          <div className="history-popup__card-time">{dateString}</div>
-                          <div className="history-popup__card-author">
-                            by {item.author}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </Scrollbars>
-                </div>
-              )}
-            </div>
             </div>
 
           <div className="admin-bar__left">
@@ -457,9 +401,9 @@ class AdminBar extends React.Component {
               <button
                 disabled={this.state.update}
                 className="admin-bar__button-update"
-                onClick={this.updateAllBackendResources}
+                onClick={this.updateCurrentPage}
               >
-                Update All Backend Resources
+                Update Current Page Content
               </button>
             </div>
 

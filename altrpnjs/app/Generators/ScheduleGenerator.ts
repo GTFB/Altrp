@@ -53,7 +53,8 @@ export default class ScheduleGenerator extends BaseGenerator {
     const customizer = this.customizer
 
     if (!customizer || !customizer.type || !customizer.settings) {
-      return
+      console.error('Error [ScheduleGenerator]: customizer is not defined or its type or settings property is undefined')
+      return false
     }
 
     let imports = this.getImportsContent()
@@ -80,6 +81,8 @@ export default class ScheduleGenerator extends BaseGenerator {
       })
 
     clearRequireCache()
+
+    return true
   }
 
   public delete() {

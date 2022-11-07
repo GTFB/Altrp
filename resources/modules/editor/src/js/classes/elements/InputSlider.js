@@ -53,12 +53,14 @@ class InputSlider extends BaseElement{
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
       label: "Form ID",
+      locked: true,
       responsive: false
     });
 
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: "Field ID (Column Name)"
     });
 

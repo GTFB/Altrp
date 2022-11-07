@@ -132,12 +132,6 @@ class HeadingTypeHeading extends BaseElement {
 
     this.addControl('link_link', {
       type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        tag: 'Link',
-        noFollow: false
-      },
       label: 'Link',
       locked: true,
     });
@@ -285,7 +279,6 @@ class HeadingTypeHeading extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
     });
 
     this.addControl('background_attachment', {
@@ -305,7 +298,6 @@ class HeadingTypeHeading extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
     });
 
     this.addControl('background_repeat', {
@@ -337,7 +329,6 @@ class HeadingTypeHeading extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
     });
 
     this.addControl('background_size', {
@@ -361,7 +352,6 @@ class HeadingTypeHeading extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
     });
 
     this.addControl("background_image_width", {

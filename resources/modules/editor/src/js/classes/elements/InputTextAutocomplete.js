@@ -16,11 +16,9 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_REPEATER,
   CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
-import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
 import { actionsControllers } from "../../decorators/actions-controllers";
 
 class InputTextCommon extends BaseElement {
@@ -77,12 +75,14 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("form_id", {
       responsive: false,
+      locked: true,
       type: CONTROLLER_TEXT,
       label: "Form ID"
     });
 
     this.addControl("field_id", {
       responsive: false,
+      locked: true,
       type: CONTROLLER_TEXT,
       label: "Field ID (Column Name)"
     });
@@ -91,12 +91,14 @@ class InputTextCommon extends BaseElement {
       responsive: false,
       type: CONTROLLER_TEXT,
       label: "Invalid Email Message",
+      locked: true,
       conditions: { content_type: ["email"] }
     });
 
     this.addControl("sort_default", {
       type: CONTROLLER_SWITCHER,
       label: "Sort Default",
+      locked: true,
       conditions: {
         content_type: ["select", "select2"]
       }
@@ -435,6 +437,7 @@ class InputTextCommon extends BaseElement {
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
       label: "Default Value",
+      responsive: false,
       locked: true,
     });
 

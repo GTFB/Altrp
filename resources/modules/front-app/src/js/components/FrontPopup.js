@@ -65,6 +65,12 @@ class FrontPopup extends Component {
     document.body.classList.remove('overflow-hidden');
     window.dispatchEvent(new Event('resize'));
   }
+  componentWillUnmount = () => {
+    console.log(this);
+    document.body.classList.remove('overflow-hidden');
+    window.dispatchEvent(new Event('resize'));
+    this.props.closePopup();
+  }
   onExit = () => {
     const rootElement = this.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
@@ -186,7 +192,7 @@ class FrontPopup extends Component {
     }))
   }
   componentDidCatch = (e)=>{
-    console.log(e);
+    console.error(e);
   }
   render() {
     const template = _.isFunction(this.props.getTemplate) ? this.props.getTemplate() : this.props.template

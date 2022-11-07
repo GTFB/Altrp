@@ -36,7 +36,8 @@ const mapStateToProps = state => {
     elements: _.cloneDeep(state.customizerSettingsData),
     customizer: _.cloneDeep(state.currentCustomizer),
     other: _.cloneDeep(state.otherData),
-    nodeState: state.nodeStoreData.nodes
+    nodeState: state.nodeStoreData.nodes,
+    lineState: state.connectionLineTypeData
   };
 };
 
@@ -169,8 +170,9 @@ class CustomizerEditor extends Component {
   onConnect = params => {
     const customizerStore = store.getState()?.customizerSettingsData;
     params.label = '';
-    params.type = 'default';
-    params.animated = true;
+    params.type = this.props.lineState.typeLine;
+    params.animated = this.props.lineState.animateLine;
+    params.style = {stroke: this.props.lineState.colorLine};
     if (params.sourceHandle === 'no') {
       params.label = 'FALSE';
       params.className = 'red';
@@ -531,9 +533,14 @@ class CustomizerEditor extends Component {
               onDragOver={this.onDragOver}
               nodeTypes={nodesTypesObj}
               onEdgeUpdate={this.onEdgeUpdate}
-              edgeTypes={{
-                custom: CustomEdge,
-              }}
+              // edgeTypes={{
+              //   custom: Bezier,
+              // }}
+              // edgeTypes={{
+              //   straight: StraightEdge,
+              // }}
+              connectionLineType={this.props.lineState.typeLine}
+              connectionLineStyle={{stroke: this.props.lineState.colorLine}}
               connectionLineComponent={ConnectionLine}
               selectNodesOnDrag={false}
             >

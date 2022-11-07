@@ -11,5 +11,5 @@ export default function DropbarWidgetComponent(settings) {
     ...btnStyles(settings)
   ];
 
-  return styledString(styles, settings) + "& .altrp-btn-wrapper{display:flex;flex-direction:column;}";
+  return styledString(styles, settings);
 }

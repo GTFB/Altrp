@@ -21,20 +21,20 @@ export default class CustomizerSchedule extends BaseCommand {
     const customizer = await Customizer.find(id)
 
     if (!customizer || customizer.type !== 'schedule') {
-      return this.logger.error(new Error(`Customizer of id ${id} does not exist`))
+      return console.error(new Error(`Customizer of id ${id} does not exist`))
     }
 
-    this.logger.success(`Found customizer of id ${id}: ${this.colors.cyan(customizer.name)}`)
+    console.log(`Found customizer of id ${id}: ${this.colors.cyan(customizer.name)}`)
 
     const generator = new ScheduleGenerator(customizer)
     const filePath = generator.getFilePath()
 
-    const { default: classCustomizerCRUD } = await import(filePath)
+    const { default: classCustomizerSchedule } = require(filePath)
 
-    if (classCustomizerCRUD) {
-      const customizerCRUD = new classCustomizerCRUD
+    if (classCustomizerSchedule) {
+      const customizerSchedule = new classCustomizerSchedule
 
-      customizerCRUD.run()
+      await customizerSchedule.run()
     }
   }
 }

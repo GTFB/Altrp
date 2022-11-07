@@ -145,9 +145,7 @@ const ModalControl = (
               parameter.parent_field_to_save
             );
             defaultValueNumber = Number(defaultValueNumber);
-            console.log("====================================");
-            console.log(defaultValueNumber);
-            console.log("====================================");
+
             inputComponent = (
               <div className="modal__body-text">
                 <label>
@@ -169,9 +167,7 @@ const ModalControl = (
               defaultValue,
               parameter.parent_field_to_save
             );
-            console.log("====================================");
-            console.log(parameter.parent_field_to_save, defaultValueDate);
-            console.log("====================================");
+
             inputComponent = (
               <div className="modal__body-text">
                 <label>
@@ -256,7 +252,7 @@ const ModalControl = (
   useLayoutEffect(() => {
     if (selected) {
       const feature = state.features.filter(item => item.id === selected);
-      console.log(selected);
+
       if (feature.length > 0) {
         setProperties(feature[0].properties);
       }
@@ -475,7 +471,7 @@ const ModalControl = (
               }
               return { ...item };
             }) || [];
-          console.log(options);
+
           continue;
         }
       }
@@ -524,12 +520,12 @@ const ModalControl = (
       [field_first_connect]: JSON.stringify(dbID),
       [field_second_connect]: JSON.stringify(objID)
     });
-    console.log(response);
+
   }, 350);
 
   const deleteConnectedModel = _.debounce(async rowID => {
     const response = await axios.delete(url_connect + `/${rowID}`);
-    console.log(response);
+
   }, 350);
 
   const renderOption = name => {
@@ -634,7 +630,7 @@ const ModalControl = (
       getLayoutData();
     }
   }, [selected, url_connect, field_first_connect, field_second_connect]);
-  console.log(properties);
+
   return (
     <div className="altrp-map__modal modal">
       <ModalComponent settings={settings} className={!open ? "modal__body" : "modal__body open"}>

@@ -95,3 +95,122 @@
 .disabling-radio {
   margin-left: 15px;
 }
+
+.admin-settings_model {
+  position: fixed;
+  top: 62px;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  width: 600px;
+  z-index: 50;
+  padding-top: 56px;
+  //padding: 56px 20px 20px;
+  height: calc(100% - 62px);
+  box-shadow: -6px 0 6px -6px rgb(34 60 80 / 20%);
+
+  &-arrow {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    cursor: pointer;
+
+    & path {
+      stroke: #8E94AA;
+    }
+  }
+
+  & .form-control-blueprint textarea.bp3-input {
+    height: auto;
+  }
+
+  & input[type="checkbox"]#page-soft_deletes, input[type="checkbox"]#page-time_stamps, input[type="checkbox"]#page-only_user {
+    display: none;
+
+    &:checked {
+      & + .control-switcher_checked {
+        background: #87CA00;
+        box-shadow: inset 1px 1px 2px rgb(0 0 0 / 15%), inset -1px -1px 2px rgb(0 0 0 / 15%);
+        color: #ffffff;
+      }
+
+      & + .control-switcher_checked .control-switcher__on-text {
+        opacity: 1;
+      }
+
+      & + .control-switcher_checked .control-switcher__caret {
+        left: 30px;
+      }
+
+      & + .control-switcher_checked .control-switcher__off-text {
+        opacity: 0;
+      }
+    }
+  }
+
+  & .form-group__multiSelect-model .bp3-menu {
+    width: 560px;
+  }
+
+  & .admin-settings_model-table-tabs {
+    margin-top: 40px;
+    margin-bottom: 10px;
+  }
+
+  & .admin-settings_model-table-tab {
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    background-color: #E6E9EC;
+    border-radius: 4px;
+    padding: 6px 20px;
+    color: #343B4C;
+
+    &.active {
+      background-color: #315EFB;
+      color: white;
+    }
+
+    &:first-child {
+      margin-right: 20px;
+    }
+  }
+
+  & .form-group__inline-wrapper.tb {
+    align-items: center;
+
+    & .btn_add {
+      margin-top: 0;
+    }
+  }
+}
+
+.form-table-wrapper table {
+  border: 1px solid #D5D7DE;
+}
+
+.sidebar-settings-model-enter {
+  transform: translateX(100%);
+}
+
+.sidebar-settings-model-enter-active {
+  transform: translateX(0);
+  transition: transform 0.5s;
+}
+
+.sidebar-settings-model-enter-done {
+  transform: translateX(0);
+}
+
+.sidebar-settings-model-exit {
+  transform: translateX(0);
+}
+
+.sidebar-settings-model-exit-active {
+  transform: translateX(100%);
+  transition: transform 0.5s;
+}
+
+.form-group_width48 {
+  flex-basis: 48%;
+}

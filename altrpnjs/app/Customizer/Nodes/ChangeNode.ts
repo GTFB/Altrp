@@ -64,6 +64,7 @@ export default class ChangeNode extends BaseNode implements NodeInterface
       }
       JSContent += leftJSProperty
     }
+
     for(const child of this.children){
       JSContent += child.getJSContent()
     }

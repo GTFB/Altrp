@@ -5,7 +5,6 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpInput from "../altrp-input/AltrpInput";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
-import '../../../../../editor/src/sass/blueprint.scss'
 
 
 (window.globalDefaults = window.globalDefaults || []).push(`

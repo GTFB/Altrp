@@ -16,9 +16,10 @@ export default function DividerComponent(settings) {
       ["width", "divider_width", "slider"],
       ['border-style', 'divider_style_type'],
       () => {
-        const borderWidth = (getResponsiveSetting(settings, "divider_style_weight")?.size || 1) + "px"
+        const borderWidthValue = getResponsiveSetting(settings, "divider_style_weight")?.size;
+        const borderWidth = borderWidthValue ? borderWidthValue + "px" : "";
+
         return `
-          border-width: 0;
           border-top-width: ${borderWidth};
         `
       },
@@ -145,14 +146,12 @@ export default function DividerComponent(settings) {
         if (imageSize?.size) {
           return `height: ${imageSize?.size}${imageSize?.unit || 'px'}`
         }
-
-        return 'height: 20px;'
       },
     '}',
 
     'altrp-divider-container-label',
       () => {
-        const textStylePosition = getResponsiveSetting(settings, 'label_position') || 'center'
+        const textStylePosition = getResponsiveSetting(settings, 'label_position')
         const textStyleSpacing = getResponsiveSetting(settings, 'label_spacing')
 
         const spacing = (textStyleSpacing?.size ? textStyleSpacing?.size : 0) + (textStyleSpacing?.unit || 'px')
@@ -206,7 +205,7 @@ export default function DividerComponent(settings) {
         () => {
           const borderWidth = getResponsiveSetting(settings, "divider_style_weight", ':hover')
 
-          if (borderWidth?.size) {
+          if (!borderWidth?.size) {
             return ''
           }
 

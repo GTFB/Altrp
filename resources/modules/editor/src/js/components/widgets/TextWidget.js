@@ -37,6 +37,20 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
     max-width: 100%;
 }
 
+.altrp-text ol {
+  counter-reset: list-number 0;
+}
+
+.altrp-text ol li {
+  list-style: none;
+}
+
+.altrp-text ol li::before {
+  margin: 0px 5px 0px 0px;
+  content: counter(list-number) ".";
+  counter-increment: list-number;
+}
+
 .ck.ck-editor__editable_inline{
     padding: 0;
 }

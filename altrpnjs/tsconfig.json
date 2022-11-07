@@ -16,7 +16,8 @@
     "app/altrp-listeners",
     ".env",
     "resources/views/altrp",
-    "build"
+    "build",
+    "start/routes/custom"
   ],
 
   "compilerOptions": {

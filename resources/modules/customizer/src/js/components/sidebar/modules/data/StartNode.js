@@ -116,6 +116,8 @@ class StartNode extends React.Component {
   }
 }
 function mapStateToProps(state){
-  return {customizerSettingsData:state.customizerSettingsData}
+  return {
+    customizerSettingsData:state.customizerSettingsData
+  }
 }
 export default connect(mapStateToProps)(StartNode)

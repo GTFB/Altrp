@@ -1,5 +1,38 @@
 import DefaultIcon from '../../../svgs/icon.svg'
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .icon-widget-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .icon-widget__icon {
+    width: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .icon-widget__icon * {
+    width: auto;
+    max-width: 100%;
+  }
+
+  .title {
+    text-align: center;
+    color: rgb(0,0,0);
+  }
+
+  .description {
+    text-align: center;
+    color: rgb(0,0,0);
+  }
+
+  .content {
+    width: 100%;
+  }
+`);
 
 class IconWidget extends Component {
   constructor(props) {
@@ -41,7 +74,8 @@ class IconWidget extends Component {
   }
 
   render() {
-    const titleText = this.state.settings.title_text === undefined ? 'Title' : this.state.settings.title_text
+    let titleText = this.state.settings.title_text === undefined ? 'Title' : this.state.settings.title_text
+    titleText = replaceContentWithData(titleText)
     const classes = this.getClasses() + (this.state.settings.position_css_classes || "")
     return (
       <div className={`${classes} icon-widget-wrapper`}>
@@ -50,7 +84,8 @@ class IconWidget extends Component {
           {React.createElement(this.state.settings.title_tag || 'h3', {
             className: `${classes} title`,
           }, titleText)}
-          <div className={`${classes} description`}>{this.state.settings.description === undefined ? 'Icon description' : this.state.settings.description}</div>
+          {/*<div className={`${classes} description`}>{this.state.settings.description === undefined ? 'Icon description' : this.state.settings.description}</div>*/}
+          <div className={`${classes} description`}>{this.state.settings.description }</div>
         </div>
       </div>
     )

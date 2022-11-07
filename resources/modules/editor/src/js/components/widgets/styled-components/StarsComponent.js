@@ -8,8 +8,8 @@ export default function StarsComponent(settings) {
       ["flex-direction", "direction"],
       ["grid-gap", "gap", "slider"],
       () => {
-        const direction = getResponsiveSetting(settings, "direction", "", "row");
-        const alignment = getResponsiveSetting(settings, "alignment", "", "flex-start");
+        const direction = getResponsiveSetting(settings, "direction", "");
+        const alignment = getResponsiveSetting(settings, "alignment", "");
         let value = ""
 
         switch (direction) {
@@ -32,8 +32,8 @@ export default function StarsComponent(settings) {
     ["flex-direction", "direction", "", ".state-disabled"],
     ["grid-gap", "gap", "slider", ".state-disabled"],
     () => {
-      const direction = getResponsiveSetting(settings, "direction", ".state-disabled", "row");
-      const alignment = getResponsiveSetting(settings, "alignment", ".state-disabled", "flex-start");
+      const direction = getResponsiveSetting(settings, "direction", ".state-disabled");
+      const alignment = getResponsiveSetting(settings, "alignment", ".state-disabled");
       let value = ""
 
       switch (direction) {
@@ -55,8 +55,8 @@ export default function StarsComponent(settings) {
     ["flex-direction", "direction", "", ".active"],
     ["grid-gap", "gap", "slider", ".active"],
     () => {
-      const direction = getResponsiveSetting(settings, "direction", ".active", "row");
-      const alignment = getResponsiveSetting(settings, "alignment", ".active", "flex-start");
+      const direction = getResponsiveSetting(settings, "direction", ".active");
+      const alignment = getResponsiveSetting(settings, "alignment", ".active");
       let value = ""
 
       switch (direction) {

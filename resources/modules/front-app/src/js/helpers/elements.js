@@ -30,8 +30,7 @@ export function checkElementInViewBox(element, scrollbars){
   } else {
     scrollTop = view.scrollTop;
   }
-  console.log(offsetTop);
-  console.log(scrollTop ,view.offsetHeight );
+
   return offsetTop < (scrollTop + view.offsetHeight + 150);
 }
 

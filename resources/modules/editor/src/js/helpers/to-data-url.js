@@ -1,7 +1,7 @@
 /**
  *
  * @param {string} url
- * @param {function} callback - функция, в которую передается строка в виду dataUrl
+ * @param {function} callback - функция, в которую передается строка в виде dataUrl
  */
 export default function toDataURL(url, callback) {
   var xhr = new XMLHttpRequest();

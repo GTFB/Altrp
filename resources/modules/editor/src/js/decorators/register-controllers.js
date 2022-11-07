@@ -55,6 +55,7 @@ export function advancedTabControllers(element) {
   element.addControl('default_hidden', {
     type: CONTROLLER_SWITCHER,
     label: 'Default Hidden',
+    locked:true,
     default: false,
   });
 
@@ -760,7 +761,6 @@ export function advancedTabControllers(element) {
         value: 'OR',
       },
     ],
-    default: 'AND',
     conditions: {
       'disabled_enable': true,
       'disabled_conditional_other': true,
@@ -894,7 +894,6 @@ export function advancedTabControllers(element) {
         value: 'OR',
       },
     ],
-    default: 'AND',
     conditions: {
       'active_enable': true,
       'active_conditional_other': true,
@@ -988,13 +987,15 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_enable', {
     type: CONTROLLER_SWITCHER,
     responsive: false,
+    locked: true,
     label: 'Enable',
   });
 
   element.addControl('tooltip_show_type', {
     type: CONTROLLER_SELECT,
     label: 'Show type',
-    default: 'never',
+    responsive: false,
+    locked: true,
     options: [
       {
         value: 'never',
@@ -1018,11 +1019,15 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_text', {
     type: CONTROLLER_TEXTAREA,
     label: 'Content',
+    responsive: false,
+    locked: true,
   });
 
   element.addControl('tooltip_position', {
     type: CONTROLLER_SELECT,
     label: 'Position',
+    responsive: false,
+    locked: true,
     options: [
       {
         label: 'top',
@@ -1046,17 +1051,21 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_minimal', {
     type: CONTROLLER_SWITCHER,
     label: 'Minimal',
+    responsive: false,
+    locked: true,
   });
 
   element.addControl('tooltip_position_padding', {
     type: CONTROLLER_DIMENSIONS,
     label: 'Padding',
+    locked: true,
     units: ['px', '%', 'vh', 'vw'],
   });
 
   element.addControl('tooltip_horizontal_offset', {
     type: CONTROLLER_SLIDER,
     label: 'offset x',
+    locked: true,
     units: ['px'],
     max: 1000,
     min: -1000,
@@ -1065,6 +1074,7 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_vertical_offset', {
     type: CONTROLLER_SLIDER,
     label: 'offset y',
+    locked: true,
     units: ['px'],
     max: 1000,
     min: -1000,
@@ -1072,23 +1082,27 @@ export function advancedTabControllers(element) {
 
   element.addControl('tooltip_font_typographic', {
     type: CONTROLLER_TYPOGRAPHIC,
-    label: 'Typographic',
+      locked: true,
+      label: 'Typographic',
   }
   );
 
   element.addControl('tooltip_font_color', {
     type: CONTROLLER_COLOR,
-    label: 'Color',
+      locked: true,
+      label: 'Color',
   }
   );
 
   element.addControl('tooltip_background_color', {
     type: CONTROLLER_COLOR,
+    locked: true,
     label: 'Background Color',
   });
 
   element.addControl('tooltip_border_radius', {
     type: CONTROLLER_DIMENSIONS,
+    locked: true,
     label: 'Border Radius',
     units: ['px', '%', 'vh', 'vw'],
   });
@@ -1103,6 +1117,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('tooltip_background_shadow', {
     type: CONTROLLER_SHADOW,
+    locked: true,
     label: 'Shadow',
   });
 

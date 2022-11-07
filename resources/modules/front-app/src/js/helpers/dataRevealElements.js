@@ -1,4 +1,3 @@
-import checkAppearTopElement from "./elements/check-appear-top-element";
 import mbParseJSON from "../functions/mb-parse-JSON";
 
 export default function dataRevealElements(){

@@ -81,12 +81,15 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("form_id", {
       responsive: false,
+      locked: true,
       type: CONTROLLER_TEXT,
       label: "Form ID",
     });
 
     this.addControl("max_number", {
       type: CONTROLLER_NUMBER,
+      responsive: false,
+      locked: true,
       label: "Max number",
       conditions: {
         content_type: ["number"],
@@ -95,6 +98,8 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("min_number", {
       type: CONTROLLER_NUMBER,
+      responsive: false,
+      locked: true,
       label: "Min number",
       conditions: {
         content_type: ["number"],
@@ -104,6 +109,7 @@ class InputTextCommon extends BaseElement {
     this.addControl("field_id", {
       responsive: false,
       type: CONTROLLER_TEXT,
+      locked: true,
       label: "Field ID (Column Name)",
     });
 
@@ -324,6 +330,7 @@ class InputTextCommon extends BaseElement {
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
       label: "Default Value",
+      responsive: false,
       locked: true,
     });
 

@@ -33,6 +33,9 @@ export default class UpdateService {
     try {
       file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
         responseType: 'arraybuffer',
+        headers: {
+          'x-altrp-domain': env('APP_URL'),
+        },
       }))?.data || '';
     } catch (e) {
       return false;
@@ -92,7 +95,7 @@ export default class UpdateService {
   private static update_files() {
     let archive = new AdmZip(UpdateService.ARCHIVE_PATH)
     if(!archive.test()){
-      throw 'Archive no pass a test'
+      throw new Error('Archive no pass a test')
     }
     if (fs.existsSync(public_path('modules'))) {
       fs.rmSync(public_path('modules'), {recursive: true});
@@ -130,6 +133,11 @@ export default class UpdateService {
    */
   private static async upgradePackages() {
     await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
+    // try{
+    //   await promisify(exec)(`sudo npm --prefix ${base_path()} ci --production` )
+    // }catch (e) {
+    //   await promisify(exec)(`su npm --prefix ${base_path()} ci --production` )
+    // }
     return true;
   }
 }
