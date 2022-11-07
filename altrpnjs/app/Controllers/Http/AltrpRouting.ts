@@ -170,7 +170,7 @@ export default class AltrpRouting {
     let pageMatch: any = {
       params: {...httpContext.request.params()},
     }
-    console.log(pageMatch);
+
     let page: Page | undefined | null
     if(pageId){
       page = await Page.find(pageId)
