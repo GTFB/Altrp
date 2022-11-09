@@ -16,6 +16,8 @@ import Logger from "@ioc:Adonis/Core/Logger";
 import Application from "@ioc:Adonis/Core/Application";
 import LIKE from "../../../../helpers/const/LIKE";
 import { transliterate } from "../../../../helpers/transliterate";
+import sharp from 'sharp';
+import sizeOf from 'image-size';
 
 export default class MediaController {
   private static fileTypes: any;
@@ -88,6 +90,39 @@ export default class MediaController {
       media = media.map((model) => {
         return model.serialize();
       });
+    }
+
+    if (type) {
+      for (const media_item of media) {
+
+        if (type === "image") {
+
+          var width = 150
+          var height = 150
+          var originalFileName = base_path(`/public${media_item.url}`)
+          var ext = media_item.url.split('.').pop();
+          var fileName = media_item.url.split('.'+ext)[0];
+          
+          media_item.url = `${fileName}_${width}x${height}.${ext}`
+          
+          var searchFilename = base_path('/public'+media_item.url);
+
+          if (await fs.existsSync(originalFileName)){
+            if (!await fs.existsSync(base_path(`/public${media_item.url}`))){
+              
+              const dimensions = sizeOf(originalFileName)
+
+              if (dimensions.width > dimensions.height) {
+                height = Math.round(height*(dimensions.height/dimensions.width));
+              }
+              if (dimensions.width < dimensions.height) {
+                width = Math.round(width*(dimensions.width/dimensions.height));
+              }
+              await sharp(originalFileName).resize(width, height).toFile(searchFilename);
+            }
+          }
+        }
+      }
     }
 
     return response.json({
@@ -388,6 +423,12 @@ export default class MediaController {
 
     const stats = fs.statSync(Application.publicPath(media.url));
     let mb = stats.size / (1024 * 1024);
+    let unit = 'Mb'
+
+    if (mb < 1) {
+      mb = mb * 1024;
+      unit = 'Kb'
+    }
 
     const isFloat = !Number.isInteger(mb);
 
@@ -396,7 +437,7 @@ export default class MediaController {
       mb = mb.toFixed(3);
     }
 
-    serialized.filesize = mb + "mb";
+    serialized.filesize = mb + " " + unit;
 
     return serialized;
   }

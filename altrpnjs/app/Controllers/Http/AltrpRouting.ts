@@ -30,6 +30,7 @@ import storage_path from "../../../helpers/storage_path";
 import base_path from '../../../helpers/path/base_path';
 import isRobot from "../../../helpers/isRobot";
 import sharp from 'sharp';
+import sizeOf from 'image-size';
 
 export default class AltrpRouting {
 
@@ -52,6 +53,92 @@ export default class AltrpRouting {
 
   public async getContentByUrl(url, httpContext: HttpContextContract):Promise<void>{
     const asCheck = isRobot(httpContext.request.headers())
+
+    if (url.includes('/storage/media/')) {
+
+      var searchFilename = base_path('/public'+url);
+
+      if (!await fs.existsSync(searchFilename)){
+
+        const sizes = [
+            {
+              width: 150,
+              height: 150,
+            },
+            {
+              width: 300,
+              height: 300,
+            },
+            {
+              width: 600,
+              height: 600,
+            },
+            {
+              width: 1600,
+              height: 900,
+            },
+          ];
+
+        var ext = url.split('.').pop();
+        var parts = url.split('/');
+        var folder = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/`);
+
+        var files = []
+        var width = 0
+        var height = 0
+
+        for (const size of sizes) {
+          var sizeType = '_'+size.width+'x'+size.height+'.'+ext;
+          if (url.includes(sizeType)) {
+            width = size.width
+            height = size.height
+            files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split(sizeType)[0]));
+          }
+        }
+
+        if (files.length == 0) {
+          files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split('.')[0]));
+        }
+
+        //return JSON.stringify(files.length);
+
+        if (files.length > 0) {
+
+          var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
+
+          if (await fs.existsSync(originalFileName)){
+
+            const dimensions = sizeOf(originalFileName)
+            var targetAspectRatio = height / width;
+            var sourceAspectRatio = dimensions.height / dimensions.width;
+
+            if (targetAspectRatio == 1) {
+              if (dimensions.width > dimensions.height) {
+                height = Math.round(height*(dimensions.height/dimensions.width));
+              }
+              if (dimensions.width < dimensions.height) {
+                width = Math.round(width*(dimensions.width/dimensions.height));
+              }
+            } else if(targetAspectRatio < 1 && targetAspectRatio > sourceAspectRatio) {
+              height = Math.round(width * sourceAspectRatio);
+            } else if(targetAspectRatio < 1 && targetAspectRatio < sourceAspectRatio){
+              width = Math.round(height * sourceAspectRatio);
+            }
+
+            if(ext == 'webp'){
+              if (width > 0 && height > 0) {
+                await sharp(originalFileName).toFormat('webp').resize(width, height).toFile(searchFilename);
+              } else {
+                await sharp(originalFileName).toFormat('webp').toFile(searchFilename);
+              }           
+            } else if(width > 0 && height > 0) {
+              await sharp(originalFileName).resize(width, height).toFile(searchFilename);
+            }
+
+          }
+        }
+      }
+    }
 
     const start = performance.now();
     console.log(performance.now() - start);
@@ -204,95 +291,6 @@ export default class AltrpRouting {
           promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
         ]
       )
-
-      let target = `:"\\/media\\/`;
-      const arr : string[] = [];
-
-      let pos = 0;
-      while (true) {
-        let startPos = page_areas.indexOf(target, pos);
-        if (startPos == -1) break;
-
-        let endPos = page_areas.indexOf('"', startPos+2)
-
-        let findUrl = page_areas.slice(startPos+2, endPos);
-        let url = findUrl.replace(/\\\//g, '/');
-        var ext = url.split('.').pop();
-
-        if (!arr.includes(url) && ext !== '.svg') {
-          arr.push(url)
-        }
-
-        pos = startPos + 1;
-      }
-
-      const sizes = [
-        {
-          with: 100,
-          height: 100,
-        },
-        {
-          with: 300,
-          height: 300,
-        },
-        {
-          with: 600,
-          height: 600,
-        },
-        {
-          with: 1600,
-          height: 900,
-        },
-      ];
-
-      for (const mediaUrl of arr) {
-
-        var filename = base_path('/public/storage'+mediaUrl);
-        var ext = mediaUrl.split('.').pop();
-
-        if (fs.existsSync(filename)){
-          //create webp copy
-          if(ext != 'webp'){
-            var webpCopyFileName = base_path('/public/storage'+mediaUrl.split('.'+ext)[0]+'.webp')
-            if (!fs.existsSync(webpCopyFileName)){
-              await sharp(filename)
-                  .toFormat('webp')
-                  .toFile(webpCopyFileName);
-            }
-          }
-          continue;
-        }
-
-        for (const size of sizes) {
-          
-          var sizeType = '_'+size.with+'x'+size.height+'.'+ext
-
-          if (mediaUrl.includes(sizeType)) {
-
-            var originalFileName = base_path('/public/storage'+mediaUrl.split(sizeType)[0]+'.'+ext)
-
-            if (!fs.existsSync(originalFileName)){
-              continue;
-            }
-
-            await sharp(originalFileName)
-                .resize(size.with, size.height)
-                .toFile(filename);
-
-            if(ext != 'webp'){
-              var webpCopyFileName = base_path('/public/storage'+mediaUrl.split(sizeType)[0]+'_'+size.with+'x'+size.height+'.webp')
-
-              if (!fs.existsSync(webpCopyFileName)){
-                await sharp(originalFileName)
-                    .toFormat('webp')
-                    .resize(size.with, size.height)
-                    .toFile(webpCopyFileName);
-              }
-            }
-          }
-        }
-        
-      }
 
       content = mustache.render(content, {
         ...altrpContext,
