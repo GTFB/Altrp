@@ -33,6 +33,7 @@ import { WithRouterAdminTablesDropList } from "./components/AdminTablesDropList"
 import { WithRouterAdminTemplatesDropList } from "./components/AdminTemplatesDropList";
 import { WithRouterAdminUsersDropList } from "./components/AdminUsersDropList";
 import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
+import {WithRouterAdminCustomizersDropList} from "./components/AdminCustomizersDropList";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -325,6 +326,7 @@ class Admin extends Component {
                               <DropletSvg className="icon__droplet"/>
                               <span>Robotizers</span>
                             </Link>
+                            <WithRouterAdminCustomizersDropList menu={this.state.menu}  activeButton={() => this.setState({ activeButton: 4 })}/>
                           </li>
                         ) : (
                           <li>
@@ -520,6 +522,7 @@ class Admin extends Component {
                             >
                               <RobotsSvg className="icon-mini" />
                             </Link>
+                            <WithRouterAdminCustomizersDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                           </li>
                         ) : (
                           <li>

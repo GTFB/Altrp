@@ -1,0 +1,9 @@
+.admin-table__delete-icon {
+    visibility: hidden;
+}
+
+.date-label:hover {
+    .admin-table__delete-icon {
+        visibility: visible;
+    }
+}

@@ -156,6 +156,11 @@ Route.group(() => {
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
     Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
+
+    Route.get('/cron_events', 'admin/CronEventsController.index')
+    Route.get('/cron_events/:id/logs', 'admin/CronEventsController.show')
+    Route.delete('/cron_events/:id/logs', 'admin/CronEventsController.deleteLog')
+
     /**
      *
      * sql_editors

@@ -1,8 +1,9 @@
 import data_get from "../../helpers/data_get";
 import empty from "../../helpers/empty";
-import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne, ManyToMany, manyToMany} from "@ioc:Adonis/Lucid/Orm";
+import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne, ManyToMany, manyToMany, hasMany, HasMany} from "@ioc:Adonis/Lucid/Orm";
 import Model from "App/Models/Model";
 import Category from "App/Models/Category";
+import Cron from "App/Models/Cron";
 import StartNode from "App/Customizer/Nodes/StartNode";
 import BaseNode from "App/Customizer/Nodes/BaseNode";
 import Edge from "App/Customizer/Nodes/Edge";
@@ -99,6 +100,12 @@ export default class Customizer extends BaseModel {
     }
   })
   public source: HasOne<typeof Source>
+
+  @hasMany(() => Cron, {
+    foreignKey: 'customizer_id',
+    localKey: 'id',
+  })
+  public crons: HasMany<typeof Cron>
 
   @manyToMany(() => Category, {
     pivotTable: 'altrp_category_objects',

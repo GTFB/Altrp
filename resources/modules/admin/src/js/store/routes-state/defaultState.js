@@ -42,6 +42,8 @@ import EditModel from "../../../components/models/EditModel"
 import EditField from "../../../components/models/EditField"
 import AddAccessor from "../../../components/models/AddAccessor"
 import SQLBuilder from "../../../components/SQLBuilder"
+import CronEvents from "../../../components/CronEvents"
+import LogPage from "../../../components/LogPage"
 import AddDataSource from "../../../components/models/AddDataSource"
 import RolePage from "../../../components/access/RolePage"
 import PermissionPage from "../../../components/access/PermissionPage"
@@ -90,7 +92,9 @@ const defaultState = [
   { path: "/admin/menus/:id", component: <MenuPage />, exact: false},
   { path: "/admin/menus", component: <MenusList />, exact: false},
   { path: "/admin/robots", component: getAltrpLang() === "javascript" ? null : <Robots />, exact: false},
-  { path: "/admin/customizers", component: <Customizer />, exact: false},
+  { path: "/admin/customizers", component: <Customizer />, exact: true},
+  { path: "/admin/cron_events/:id/logs", component: <LogPage />, exact: true},
+  { path: "/admin/customizers/cron_events", component: <CronEvents />, exact: true},
   { path: "/admin/pages", component: <AllPages />, exact: true},
   { path: "/admin/pages/edit/:id", component: <AddPage />, exact: false},
   { path: "/admin/pages/add", component: <AddPage />, exact: false},
