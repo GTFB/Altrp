@@ -67,26 +67,26 @@ const fromBuildDir = isProd() ? "../" : ""
 
 Route.get("sw.js", "IndicesController.serviceWorker")
 
-Route.get("/modules/*", async ({request, response}) => {
-  const url = request.url()
-
-  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
-
-  const file = await Drive.get(pathToModules + url)
-
-  const splitUrl = url.split(".");
-
-  switch (splitUrl[splitUrl.length - 1]) {
-    case "js":
-      response.header("Content-Type", "text/javascript")
-      break
-    case "css":
-      response.header("Content-Type", "text/css")
-      break
-  }
-
-  return file
-})
+// Route.get("/modules/*", async ({request, response}) => {
+//   const url = request.url()
+//
+//   const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
+//
+//   const file = await Drive.get(pathToModules + url)
+//
+//   const splitUrl = url.split(".");
+//
+//   switch (splitUrl[splitUrl.length - 1]) {
+//     case "js":
+//       response.header("Content-Type", "text/javascript")
+//       break
+//     case "css":
+//       response.header("Content-Type", "text/css")
+//       break
+//   }
+//
+//   return file
+// })
 
 Route.get("/service-worker-files", async ({}) => {
 

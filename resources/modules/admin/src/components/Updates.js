@@ -110,26 +110,26 @@ class Updates extends Component {
    * Отправляет запрос на обноление приложения
    */
   async updateAltrp() {
-    try {
-      progressBar(.1)
-      await axios.post('/admin/ajax/restart-altrp',)
-
-      progressBar(.2)
-      await delay(300)
-
-    } catch (e) {
-      let serverRestarted = false
-      let i = 0
-      do {
-        ++i
-        try {
-          await delay(100)
-          await axios.get('/ajax/_token')
-          serverRestarted = true
-        } catch (e) {
-        }
-      } while (!serverRestarted && i < 100)
-    }
+    // try {
+    //   progressBar(.1)todo: check how it works
+    //   await axios.post('/admin/ajax/restart-altrp',)
+    //
+    //   progressBar(.2)
+    //   await delay(300)
+    //
+    // } catch (e) {
+    //   let serverRestarted = false
+    //   let i = 0
+    //   do {
+    //     ++i
+    //     try {
+    //       await delay(100)
+    //       await axios.get('/ajax/_token')
+    //       serverRestarted = true
+    //     } catch (e) {
+    //     }
+    //   } while (!serverRestarted && i < 100)
+    // }
     store.dispatch(setAdminDisable());
     try {
       progressBar(.3)

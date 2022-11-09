@@ -16,7 +16,6 @@ import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import base_path from '../../../../helpers/base_path'
 import exec from '../../../../helpers/exec'
-import delay from "../../../../helpers/delay";
 
 export default class AdminController {
 
@@ -32,9 +31,7 @@ export default class AdminController {
     }
     try {
       if(isProd()){
-        delay(100).then(() =>{
-          exec('pm2 restart all --update-env')
-        })
+        await exec('pm2 restart all --update-env')
       }
 
     }catch (e) {

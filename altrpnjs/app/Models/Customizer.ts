@@ -57,7 +57,7 @@ export default class Customizer extends BaseModel {
   public guid: string
 
   @column.dateTime({autoCreate: true})
-  public createdAt: DateTime
+    public createdAt: DateTime
 
   @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime

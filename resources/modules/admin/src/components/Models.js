@@ -36,7 +36,7 @@ const columnsModel = [
 ];
 const columnsDataSource = [
   {
-    name: 'name',
+    name: 'title',
     title: 'Name',
     url: true,
     editUrl: true,

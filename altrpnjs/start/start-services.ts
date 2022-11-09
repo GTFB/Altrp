@@ -18,7 +18,7 @@ import base_path from "../helpers/path/base_path";
 import guid from "../helpers/guid";
 import Env from "@ioc:Adonis/Core/Env";
 
-if(! isProd() || env('CLUSTER') != 'true' || process.env.NODE_APP_INSTANCE == '0'){
+if(! isProd() || env('CLUSTER') != 'true' || process.env.INSTANCE_ID == '0'){
 
   if(Application.environment === 'web') {
     console.log('booking schedules...')
