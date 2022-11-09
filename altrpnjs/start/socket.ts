@@ -4,7 +4,7 @@ import applyPluginsFiltersAsync from "../helpers/plugins/applyPluginsFiltersAsyn
 
 AltrpSocket.boot();
 
-AltrpSocket.io.on("connection", async (socket) => {
+AltrpSocket.io?.on("connection", async (socket) => {
   if (isRobot(socket)) {
     socket.disconnect();
     return;

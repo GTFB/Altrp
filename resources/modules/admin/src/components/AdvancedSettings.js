@@ -173,6 +173,7 @@ class AdvancedSettings extends Component {
           console.error(e);
         }
       } while (!serverRestarted && i < 100)
+      await axios.get('/admin/ajax/start-socket',)
     }
     pageReload()
 

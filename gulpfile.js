@@ -159,6 +159,7 @@ const copyPublicToAdonis = gulp.parallel(
   cb=>{
     return gulp.src([
     './CHANGELOG.md',
+    './CHANGELOG.md',
   ]).pipe(gulp.dest('./altrpnjs/build/'))
   },
   cb=>{

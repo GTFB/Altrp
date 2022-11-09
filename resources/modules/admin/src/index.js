@@ -6,8 +6,7 @@ import {withRouter} from "react-router-dom";
 import {io} from "socket.io-client";
 
 window.altrpIo = io( {
-  // path: '/wsaltrp',
-  transports: [ 'websocket' ],
+  path: '/wsaltrp',
   auth: {
   },
 })

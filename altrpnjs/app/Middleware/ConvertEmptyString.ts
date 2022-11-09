@@ -21,6 +21,6 @@ export default class ConvertEmptyString {
       }
     }
     await next()
-    console.log(`END:   ${performance.now() - start}, ${request.url()}`);
+    console.log(`END:   ${performance.now() - start}, ${request.url(true)}`);
   }
 }

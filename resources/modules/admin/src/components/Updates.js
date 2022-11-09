@@ -9,6 +9,7 @@ import {markdown} from "markdown"
 import getAltrpLang from "../js/helpers/get-altrp-lang";
 import axios from "axios";
 import delay from "../../../front-app/src/js/functions/delay";
+import progressBar from "../js/functions/progressBar";
 
 /**
  * Компонент вкладки обновления админки
@@ -94,6 +95,7 @@ class Updates extends Component {
           } catch (e) {
           }
         } while (!serverRestarted && i < 100)
+        await axios.get('/admin/ajax/start-socket',)
       }
       setTimeout(() => {
           res.result ? pageReload() : this.setNeedUpdate();
@@ -109,7 +111,11 @@ class Updates extends Component {
    */
   async updateAltrp() {
     try {
+      progressBar(.1)
       await axios.post('/admin/ajax/restart-altrp',)
+
+      progressBar(.2)
+      await delay(300)
 
     } catch (e) {
       let serverRestarted = false
@@ -126,10 +132,14 @@ class Updates extends Component {
     }
     store.dispatch(setAdminDisable());
     try {
+      progressBar(.3)
       let res = await (new Resource({route: '/admin/ajax/update_altrp'})).post({});
 
       try {
         await axios.post('/admin/ajax/restart-altrp',)
+        progressBar(.8)
+        await delay(300)
+
 
       } catch (e) {
         let serverRestarted = false
@@ -143,15 +153,20 @@ class Updates extends Component {
           } catch (e) {
           }
         } while (!serverRestarted && i < 100)
+        await axios.get('/admin/ajax/start-socket',)
+
+        progressBar(.9)
       }
       setTimeout(() => {
           alert('Updates Success');
           res.result ? pageReload() : this.setNeedUpdate();
+          progressBar(0)
 
         }
         , 1300);
       if(! res.result) {
         store.dispatch(setAdminEnable());
+        progressBar(0)
       }
     } catch (error) {
       console.error(error);

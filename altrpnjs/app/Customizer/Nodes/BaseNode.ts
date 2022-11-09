@@ -52,7 +52,8 @@ export default class BaseNode {
 
   public static findNodeById(id, data: BaseNode[]): BaseNode | undefined {
     return data.find(function (node: BaseNode) {
-      return node.getId() == id
+
+      return node?.getId() == id
     })
   }
 
