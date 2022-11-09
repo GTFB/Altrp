@@ -932,7 +932,7 @@ class InputTextCommonWidget extends Component {
 
     const maxlength = this.props.element.getResponsiveLockedSetting("maxlength_input_text")
     const typeInput = this.state.settings.content_type === 'text' || this.state.settings.content_type === 'password'
-    const enterNextInput = this.props.element.getResponsiveLockedSetting("content_enter_input") ?? true
+    const enterNextInput = !!this.props.element.getResponsiveLockedSetting("content_enter_input")
 
     let input = (
       <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
