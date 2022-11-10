@@ -94,7 +94,6 @@ export default function renderButton(settings, device, elementId) {
     </div>`
   )
   }
-
   if (existingIconsString === 'blrt') {
     buttonInner = (
       `<div class="btn-container-column">
@@ -318,7 +317,7 @@ export default function renderButton(settings, device, elementId) {
         ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
       class="${classes}"
       target="${target}"
-      title="${tooltip || null}"
+      title="${tooltip || ''}"
     >
       ${buttonInner}
       </a>`
@@ -332,12 +331,13 @@ export default function renderButton(settings, device, elementId) {
       ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
       class="${classes}"
     id="${settings.position_css_id || ""}"
-    title="${tooltip || null}"
+    title="${tooltip || ''}"
   >
     ${buttonInner}
     </button>`
   )
   }
+
   // @ts-ignore
   return `<div class="altrp-btn-wrapper">
     ${link || button || buttonMediaRight || buttonMediaLeft || buttonMediaTop || buttonMediaBottom}

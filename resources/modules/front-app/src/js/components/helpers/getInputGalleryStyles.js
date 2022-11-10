@@ -12,7 +12,7 @@ export default function getInputGalleryStyles(settings, elementId) {
       let styles ='&{';
       let columns = getResponsiveSetting(settings, 'columns')
       if(! columns){
-        columns = 6
+        return;
       }
       styles += '.input-gallery-wrapper{grid-template-columns:'
       let width = 100 / columns + '%';

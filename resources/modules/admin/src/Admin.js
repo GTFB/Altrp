@@ -45,11 +45,6 @@ import { getCustomFonts } from "./js/store/custom-fonts/actions";
 import "./sass/admin-style.scss";
 
 import { changeCurrentUser } from "../../front-app/src/js/store/current-user/actions";
-import {
-  setWebsocketsEnabled,
-  setWebsocketsKey,
-  setWebsocketsPort
-} from "./js/store/websockets-storage/actions";
 import AltrpMeta from '../../../modules/editor/src/js/classes/AltrpMeta';
 import {modelsToggle} from "./js/store/models-state/actions";
 import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";

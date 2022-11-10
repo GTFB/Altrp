@@ -14,6 +14,7 @@ import {BrowserRouter as Router} from "react-router-dom";
 import {setCurrentCustomizer} from "../../store/current-customizer/actions";
 import progressBar from "../../../../../admin/src/js/functions/progressBar";
 import upgradeBackend from "../../../../../admin/src/js/functions/upgradeBackend";
+import { Resizable } from "re-resizable";
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -47,54 +48,64 @@ class Sidebar extends React.Component {
     let settingsActive = (activePanel === "settings") ? " active" : "";
 
     return (
-      <div className="left-panel">
-        <div className="editor-top-panel">
-          <button className="btn btn_hamburger" onClick={() => this.props.changeTab("selected")} >
-            <HamburgerIcon className="icon" />
-          </button>
+      <Resizable
+        defaultSize={{
+          width: 450,
+          height: '100vh',
+        }}
+        minWidth={300}
+        maxWidth={750}
+        enable={{top:false, right:true, bottom:false, left:false, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false}}
+      >
+        <div className="left-panel">
+          <div className="editor-top-panel">
+            <button className="btn btn_hamburger" onClick={() => this.props.changeTab("selected")} >
+              <HamburgerIcon className="icon" />
+            </button>
 
-          <a href="/admin/customizers" target="_blank" className="logo">
-            {window.admin_logo ? (
-              renderAsset(window.admin_logo, { className: "editor__logo" })
-            ) : (
-              <LogoIcon className="editor__logo" />
-            )}
-          </a>
+            <a href="/admin/customizers" target="_blank" className="logo">
+              {window.admin_logo ? (
+                renderAsset(window.admin_logo, { className: "editor__logo" })
+              ) : (
+                <LogoIcon className="editor__logo" />
+              )}
+            </a>
 
-          <button className="btn btn_dots" onClick={() => this.props.changeTab('widgets')}>
-            <DotsIcon className="icon" />
-          </button>
-        </div>
-
-        <Router>
-          <div className="left-panel-main">
-            {activePanel === "widgets" && <WidgetsPanel />}
-            {activePanel === "settings" && <CustomizerSettingsPanelCompose
-              sources={ this.props.sources }
-              setSources={ this.props.setSources }
-              onLayout={ this.props.onLayout }
-              updateCustomizer={ this.props.updateCustomizer }
-            />}
-            {activePanel === "selected" && <SelectedPanel
-              customizer={ this.props.customizer }
-              selectNode={this.props.selectNode}
-              selectEdge={ this.props.selectEdge }
-              onLoad={this.props.onLoad}
-            />}
+            <button className="btn btn_dots" onClick={() => this.props.changeTab('widgets')}>
+              <DotsIcon className="icon" />
+            </button>
           </div>
-        </Router>
 
-        <div className="editor-bottom-panel d-flex align-content-center justify-between">
-          <button className={"btn btn_settings" + settingsActive} onClick={() => this.props.changeTab("settings")} >
-            <SettingsIcon className="icon" />
-          </button>
+          <Router>
+            <div className="left-panel-main">
+              {activePanel === "widgets" && <WidgetsPanel />}
+              {activePanel === "settings" && <CustomizerSettingsPanelCompose
+                sources={ this.props.sources }
+                setSources={ this.props.setSources }
+                onLayout={ this.props.onLayout }
+                updateCustomizer={ this.props.updateCustomizer }
+              />}
+              {activePanel === "selected" && <SelectedPanel
+                customizer={ this.props.customizer }
+                selectNode={this.props.selectNode}
+                selectEdge={ this.props.selectEdge }
+                onLoad={this.props.onLoad}
+              />}
+            </div>
+          </Router>
 
-          <button className={"btn font_montserrat font_500 btn_grey " + btnActive}
-                  onClick={this.update} >
-            UPDATE
-          </button>
+          <div className="editor-bottom-panel d-flex align-content-center justify-between">
+            <button className={"btn btn_settings" + settingsActive} onClick={() => this.props.changeTab("settings")} >
+              <SettingsIcon className="icon" />
+            </button>
+
+            <button className={"btn font_montserrat font_500 btn_grey " + btnActive}
+                    onClick={this.update} >
+              UPDATE
+            </button>
+          </div>
         </div>
-      </div>
+      </Resizable>
     );
   }
 }

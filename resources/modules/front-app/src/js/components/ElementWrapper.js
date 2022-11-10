@@ -1,6 +1,5 @@
 import { withRouter } from "react-router-dom";
 import { addElement } from "../store/elements-storage/actions";
-import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
@@ -9,7 +8,6 @@ import { DndProvider } from "react-dnd";
 import React from "react";
 import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
 import isEditor from "../functions/isEditor";
-import setTitle from "../functions/setTitle";
 import altrpRandomId from "../functions/altrpRandomId";
 import altrpCompare from "../functions/altrpCompare";
 import conditionsChecker from "../functions/conditionsChecker";
@@ -140,10 +138,6 @@ class ElementWrapper extends Component {
     ) {
       let title = appStore.getState().currentTitle;
       title = replaceContentWithData(title);
-      if (appStore.getState().altrpPage.getProperty("title") !== title) {
-        appStore.dispatch(changeCurrentPageProperty("title", title));
-      }
-      setTitle(title);
     }
   }
 
@@ -302,7 +296,12 @@ class ElementWrapper extends Component {
     if(newProps.formsStore !== this.props.formsStore
       && dependencies.indexOf('altrpforms') === -1){
       ++window.countReduced
+
       if(element.getName().indexOf('input') > -1 || element.getName() === 'textarea'){
+
+        if(! newProps.formsStore.changedField){
+          return true
+        }
         return `${element.getFormId()}.${element.getFieldId()}`
           === newProps.formsStore.changedField
       }
@@ -490,7 +489,7 @@ class ElementWrapper extends Component {
       element.getCurrentModel().getData()
     );
     const tooltip_minimal = element.getResponsiveSetting('tooltip_minimal')
-    let tooltip_show_type = element.getResponsiveSetting('tooltip_show_type')
+    let tooltip_show_type = element.getResponsiveSetting('tooltip_show_type') || 'never'
     const tooltip_horizontal_offset = element.getResponsiveSetting('tooltip_horizontal_offset')
     const tooltip_vertical_offset = element.getResponsiveSetting('tooltip_vertical_offset')
     if(['column', 'section'].indexOf(element.getType()) !== -1){

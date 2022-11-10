@@ -1,6 +1,8 @@
 import renderAsset from './../renderAsset';
+import replaceContentWithData from "../string/replaceContentWithData";
 
-export default function renderIcon(settings) {
+// @ts-ignore
+export default function renderIcon(settings, device, context) {
   const titleText = settings.title_text === undefined ? 'Title' : settings.title_text
   const dynamicTag = settings.title_tag || 'h3'
   return `<div class='icon-widget-wrapper'>
@@ -9,7 +11,7 @@ export default function renderIcon(settings) {
 </svg>`}</span>
     <div class="content">
       <${dynamicTag} class='title'>
-         ${titleText}
+         ${replaceContentWithData(titleText, context)}
       </${dynamicTag}>
       <div class="description">${settings.description === undefined ? 'Icon description' : settings.description}</div>
     </div>

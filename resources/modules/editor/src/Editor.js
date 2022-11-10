@@ -30,7 +30,6 @@ import store, {
 import Logo from "./svgs/logotext.svg";
 import Navigation from "./svgs/navigation.svg";
 import History from "./svgs/history.svg";
-import Preview from "./svgs/preview.svg";
 import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
@@ -62,6 +61,10 @@ import {setGlobalStylesCss} from "./js/store/global-css-editor/actions";
 import ReactDOM from "react-dom";
 import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
 import ImportantStylesManager from "./js/components/ImportantStylesManager";
+import PreviewButton from './js/components/PreviewButton';
+import PreviewSettingModal from './js/components/PreviewSettingModal';
+import cn from "classnames";
+import NavigationPanelPages from "./js/components/NavigationPanelPages";
 
 /**
  * Главный класс редактора.<br/>
@@ -90,9 +93,12 @@ class Editor extends Component {
       hidePanel: false,
       navigator: false,
       resizeNavigator: false,
-      cssEditor: false
+      tabNavigatorActive: 'elements',
+      cssEditor: false,
+      iframeDisabled: false,
     };
     this.effectRef = React.createRef();
+    this.ctRef = React.createRef()
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showNavigationPanel = this.showNavigationPanel.bind(this);
@@ -386,12 +392,63 @@ class Editor extends Component {
         `var(--${component}-${hide})`
       );
     });
+    if (window.EditorFrame?.contentDocument?.head) {
+      let iframeStyle = document.createElement("style");
+      iframeStyle.textContent = !this.state.hidePanel ? '.overlay{opacity: 0}' : '.overlay{opacity: 1}'
+      window.EditorFrame.contentDocument.head.appendChild(iframeStyle)
+    }
+  }
+
+  resizeLeftSidebar = () => {
+    const root = document.querySelector(':root')
+
+    root.style.setProperty(
+      '--width-padding-default',
+      `${this.ctRef.current.offsetWidth}px`
+    )
+
+    root.style.setProperty(
+      '--width-padding-noHide',
+      `${this.ctRef.current.offsetWidth}px`
+    )
+
+    root.style.setProperty(
+      '--width-editor-default',
+      `${this.ctRef.current.offsetWidth + 5}px`
+    )
+
+    root.style.setProperty(
+      '--width-editor-noHide',
+      `${this.ctRef.current.offsetWidth + 5}px`
+    )
   }
 
   toggleCssEditor = () => {
     this.setState(state => ({
       ...state,
       cssEditor: !state.cssEditor
+    }))
+  }
+
+  unlockIframe = () => {
+    this.setState(state => ({
+      ...state,
+      iframeDisabled: false
+    }))
+  }
+
+
+  blockIframe = () => {
+    this.setState(state => ({
+      ...state,
+      iframeDisabled: true
+    }))
+  }
+
+  changeTab = (e) => {
+    this.setState(state => ({
+      ...state,
+      tabNavigatorActive: e.target.dataset.tab
     }))
   }
 
@@ -427,86 +484,105 @@ class Editor extends Component {
       <DndProvider backend={HTML5Backend}>
 
         <div
-          className={templateClasses}
+          className={cn(templateClasses, {
+            'iframe-disabled': this.state.iframeDisabled,
+            'sidebar-hide': this.state.hidePanel
+          })}
           onClick={this.onClick}
           onDragEnd={this.onDragEnd}
           onKeyDown={this.onKeyDown}
         >
-          <div className="left-panel">
-            <div className="editor-top-panel">
-              <button
-                className="btn btn_hamburger"
-                onClick={this.showCommonPanel}
-              >
-                <Hamburger className="icon" />
-              </button>
-              <a href="/admin/templates" target="_blank" className="logo">
-                {window.admin_logo ? (
-                  renderAsset(window.admin_logo, { className: "editor__logo" })
-                ) : (
-                  <Logo className="editor__logo" />
-                )}
-              </a>
-              <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
-                <Dots className="icon" />
-              </button>
-            </div>
-            <div className="left-panel-main">
-              {this.state.activePanel === "widgets" && <WidgetsPanel />}
-              {this.state.activePanel === "settings" && <SettingsPanel />}
-              {this.state.activePanel === "history" && <HistoryPanel />}
-              {this.state.activePanel === "navigation" &&  <SettingsPanel />}
-              {this.state.activePanel === "common" && (
-               <div style={{width: "100%"}}>
-                 <CommonPanel
-                   showGlobalColorsPanel={this.showGlobalColorsPanel}
-                   showGlobalFontsPanel={this.showGlobalFontsPanel}
-                   showGlobalEffectsPanel={this.showGlobalEffectsPanel}
-                 />
-                 {this.state.cssEditor && (
-                   ReactDOM.createPortal(<CssEditorModal toggleCssEditor={this.toggleCssEditor}/>, document.body)
-                 )}
-                 <div style={{textAlign: 'center'}}>
-                   <button onClick={this.toggleCssEditor} className="btn-css-save">Open css editor</button>
-                 </div>
-               </div>
-              )}
-              {this.state.activePanel === "global_colors" && <GlobalColors />}
-              {this.state.activePanel === "global_fonts" && <GlobalFonts />}
-              {this.state.activePanel === "global_effects" && <GlobalEffects />}
-            </div>
-            <div className="editor-bottom-panel d-flex align-content-center justify-center">
-              <button
-                className={"btn btn_settings" + settingsActive}
-                onClick={this.openPageSettings}
-              >
-                <Settings className="icon" />
-              </button>
-              <button
-                data-navigator="open-sidebar"
-                className={"btn btn_settings" + navigationActive}
-                onClick={this.navigatorPanel}
-              >
-                <Navigation className="icon" />
-              </button>
-              <button className="btn " onClick={this.showHistoryPanel}>
-                <History className="icon" />
-              </button>
-              <div className="btn ">
-                <ResponsiveDdFooter />
+          <Resizable
+            className="left-panel"
+            style={{position: 'fixed'}}
+            defaultSize={{
+              width: 270,
+              height: '100vh',
+            }}
+            minWidth={270}
+            maxWidth={400}
+            onResizeStart={this.blockIframe}
+            onResizeStop={this.unlockIframe}
+            onResize={this.resizeLeftSidebar}
+            enable={{top:false, right:true, bottom:false, left:false, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false}}
+            handleStyles={{right: {right: '0'}}}
+          >
+            <div ref={this.ctRef} className="left-panel-container">
+              <div className="editor-top-panel">
+                <button
+                  className="btn btn_hamburger"
+                  onClick={this.showCommonPanel}
+                >
+                  <Hamburger className="icon" />
+                </button>
+                <a href="/admin/templates" target="_blank" className="logo">
+                  {window.admin_logo ? (
+                    renderAsset(window.admin_logo, { className: "editor__logo" })
+                  ) : (
+                    <Logo className="editor__logo" />
+                  )}
+                </a>
+                <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
+                  <Dots className="icon" />
+                </button>
               </div>
-              <button className="btn ">
-                <Preview className="icon" />
-              </button>
-              <UpdateButton
-                onClick={() => this.toggleModalWindow()}
-                toggleModalWindow={() => this.toggleModalWindow()}
-              />
+              <div className="left-panel-main">
+                {this.state.activePanel === "widgets" && <WidgetsPanel />}
+                {this.state.activePanel === "settings" && <SettingsPanel />}
+                {this.state.activePanel === "history" && <HistoryPanel />}
+                {this.state.activePanel === "navigation" &&  <SettingsPanel />}
+                {this.state.activePanel === "common" && (
+                  <div style={{width: "100%"}}>
+                    <CommonPanel
+                      showGlobalColorsPanel={this.showGlobalColorsPanel}
+                      showGlobalFontsPanel={this.showGlobalFontsPanel}
+                      showGlobalEffectsPanel={this.showGlobalEffectsPanel}
+                    />
+                    {this.state.cssEditor && (
+                      ReactDOM.createPortal(<CssEditorModal toggleCssEditor={this.toggleCssEditor}/>, document.body)
+                    )}
+                    <div style={{textAlign: 'center'}}>
+                      <button onClick={this.toggleCssEditor} className="btn-css-save">Open css editor</button>
+                    </div>
+                  </div>
+                )}
+                {this.state.activePanel === "global_colors" && <GlobalColors />}
+                {this.state.activePanel === "global_fonts" && <GlobalFonts />}
+                {this.state.activePanel === "global_effects" && <GlobalEffects />}
+              </div>
+              <div className="editor-bottom-panel d-flex align-content-center justify-center">
+                <button
+                  className={"btn btn_settings" + settingsActive}
+                  onClick={this.openPageSettings}
+                >
+                  <Settings className="icon" />
+                </button>
+                <button
+                  data-navigator="open-sidebar"
+                  className={"btn btn_settings" + navigationActive}
+                  onClick={this.navigatorPanel}
+                >
+                  <Navigation className="icon" />
+                </button>
+                <button className="btn " onClick={this.showHistoryPanel}>
+                  <History className="icon" />
+                </button>
+                <div className="btn ">
+                  <ResponsiveDdFooter />
+                </div>
+                <PreviewButton />
+
+                <UpdateButton
+                  onClick={() => this.toggleModalWindow()}
+                  toggleModalWindow={() => this.toggleModalWindow()}
+                />
+              </div>
+              <div onClick={this.toggleHidePanel} className="panel-click">
+                <Arrow width={20} height={14} className={`panel-arrow${this.state.hidePanel ? ' panel-arrow-hide' : ''}`} />
+              </div>
             </div>
-            <div onClick={this.toggleHidePanel} className="panel-click">
-              <Arrow width={20} height={14} className={`panel-arrow${this.state.hidePanel ? ' panel-arrow-hide' : ''}`} />
-            </div>
-          </div>
+          </Resizable>
+
           <div className="right-panel" >
             {this.state.showDialogWindow && (
               // <DialogWindow
@@ -520,6 +596,7 @@ class Editor extends Component {
                 <ConditionsPopup/>
               </EditorWindowPopup>
             )}
+            <PreviewSettingModal />
             <EditorWindow />
             <Rnd
               className={this.state.navigator ? "draggable-navigator" : "draggable-navigator-hide"}
@@ -527,13 +604,17 @@ class Editor extends Component {
                 x: 400,
                 y: 100,
                 width: 350,
-                height: 600,
+                height: 300,
               }}
               minWidth={350}
-              minHeight={600}
+              minHeight={300}
               maxWidth={1000}
               maxHeight={800}
               bounds="body"
+              onResizeStart={this.blockIframe}
+              onResizeStop={this.unlockIframe}
+              onDragStart={this.blockIframe}
+              onDragStop={this.unlockIframe}
               resizeHandleStyles={{bottom: {height: '30px', bottom: '0'}}}
             >
               <div className="draggable-popup">
@@ -541,9 +622,32 @@ class Editor extends Component {
                   <h2 className="title-navigator">Navigator</h2>
                   <CloseNavigator onClick={this.navigatorPanel} data-navigator="close-draggable" width={16} height={16} className="exit-navigator"/>
                 </div>
+                <div className="right-panel-sidebar-tabs">
+                  <button
+                    onClick={this.changeTab}
+                    data-tab="elements"
+                    className={cn("right-panel-sidebar-tab", {
+                      'active-tab': this.state.tabNavigatorActive === "elements"
+                    })}
+                  >
+                    Elements
+                  </button>
+                  <button
+                    onClick={this.changeTab}
+                    data-tab="pages"
+                    className={cn("right-panel-sidebar-tab", {
+                      'active-tab': this.state.tabNavigatorActive === "pages"
+                    })}
+                  >
+                    Pages
+                  </button>
+                </div>
                 <div className="draggable-popup-center">
-                  {this.state.navigator && (
+                  {(this.state.navigator && this.state.tabNavigatorActive === "elements") && (
                     <NavigationPanel />
+                  )}
+                  {(this.state.navigator && this.state.tabNavigatorActive === "pages") && (
+                    <NavigationPanelPages/>
                   )}
                 </div>
                 <div className="draggable-popup-bottom">
@@ -567,9 +671,32 @@ class Editor extends Component {
                 <h2 className="right-panel-sidebar-title">Navigator</h2>
                 <CloseNavigator data-navigator="close-sidebar" onClick={this.navigatorPanel} width={20} height={20} className="exit-sidebar-navigator"/>
               </div>
+              <div className="right-panel-sidebar-tabs">
+                <button
+                  onClick={this.changeTab}
+                  data-tab="elements"
+                  className={cn("right-panel-sidebar-tab", {
+                    'active-tab': this.state.tabNavigatorActive === "elements"
+                  })}
+                >
+                  Elements
+                </button>
+                <button
+                  onClick={this.changeTab}
+                  data-tab="pages"
+                  className={cn("right-panel-sidebar-tab", {
+                    'active-tab': this.state.tabNavigatorActive === "pages"
+                  })}
+                >
+                  Pages
+                </button>
+              </div>
               <div className='right-panel-sidebar-center'>
-                {this.state.resizeNavigator && (
-                  <NavigationPanel  />
+                {(this.state.resizeNavigator && this.state.tabNavigatorActive === "elements") && (
+                  <NavigationPanel />
+                )}
+                {(this.state.resizeNavigator && this.state.tabNavigatorActive === "pages") && (
+                  <NavigationPanelPages/>
                 )}
               </div>
               <div className='right-panel-sidebar-bottom'>

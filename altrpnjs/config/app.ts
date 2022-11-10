@@ -126,7 +126,14 @@ export const http: ServerConfig = {
   | client to set the header explicitly.
   |
   */
-  forceContentNegotiationTo: 'application/json',
+  // forceContentNegotiationTo: 'application/json',
+
+  forceContentNegotiationTo: ({request}) : string =>{
+    if(request.url().includes('api') ||request.url().includes('ajax')){
+      return 'application/json'
+    }
+    return request.header('Accept') || 'application/json'
+  },
 }
 
 /*
@@ -234,5 +241,5 @@ export const profiler: ProfilerConfig = {
 export const validator: ValidatorConfig = {
 }
 
-export const altrp_version:string = '1.3.3'
+export const altrp_version:string = '1.4.3'
 export const url:string  = Env.get('APP_URL')

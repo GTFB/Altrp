@@ -452,7 +452,7 @@ function altrpSectionColumnsHeight(settings) {
 
   if (Number(height)) {
     styles += `height: ${height}%; `;
-  } else {
+  } else if (height !== null) {
     styles += `height: ${height}; `;
   }
 
@@ -725,10 +725,7 @@ function altrpSectionFullHover(settings, state=':hover') {
  */
 
 export default function SectionWidgetComponent(settings, childrenLength, elementId) {
-  // console.log(`& > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}`);
   return `
-
-  & > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}
 
   & > .altrp-section,
   & > .altrp-section-full-fill {

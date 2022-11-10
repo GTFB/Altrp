@@ -58,7 +58,7 @@ export default function renderImage(settings, device, widgetId) {
   if(_.get(getResponsiveSetting(settings, 'height_size', device), 'size', '100') === '0') {
     height = ''
   }
-  let altrpImage = AltrpImage({image: media, widgetId,  width, height, settings, class: 'altrp-image' }, device)
+  let altrpImage = AltrpImage({image: media, widgetId,  width, height, settings, class: 'altrp-image' },)
   if (link.toPrevPage) {
     return `<div class='${classNames}'>${altrpImage}</div>`
   } else {

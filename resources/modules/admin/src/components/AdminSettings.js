@@ -5,7 +5,7 @@ import StylesSettings from "./StylesSettings";
 import Websockets from "./settings/integrations/Websockets";
 import Telegram from "./settings/integrations/Telegram";
 import Resource from "../../../editor/src/js/classes/Resource";
-import AutoUpdateCheckbox from "./AutoUpdateCheckbox";
+
 import UserTopPanel from "./UserTopPanel";
 import React from "react";
 import CategoryTable from "./CategoryTable";
@@ -45,7 +45,16 @@ class AdminSettings extends Component {
       GoogleFontsDisabled: value
     }));
   };
-
+  SPAToggle = async e => {
+    let value = e.target.checked;
+    await new Resource({
+      route: "/admin/ajax/settings"
+    }).put("spa_off", { value });
+    this.setState(state => ({
+      ...state,
+      SPA_off: value
+    }));
+  }
   toggleIndexingDisabled = async e => {
     let value = e.target.checked;
     await new Resource({
@@ -85,6 +94,11 @@ class AdminSettings extends Component {
         "altrp_indexing_disabled"
       )
     ).altrp_indexing_disabled;
+    let SPA_off = !!(
+      await new Resource({ route: "/admin/ajax/settings" }).get(
+        "spa_off"
+      )
+    ).spa_off;
 
     //console.log(GoogleFontsDisabled)
 
@@ -92,6 +106,7 @@ class AdminSettings extends Component {
       ...state,
       GoogleFontsDisabled,
       IndexingDisabled,
+      SPA_off,
     }));
   }
   switchTab(activeTab) {
@@ -253,6 +268,18 @@ class AdminSettings extends Component {
                         className="admin-table__td_check"
                         checked={this.state.IndexingDisabled}
                         onChange={this.toggleIndexingDisabled}
+                        type="checkbox"
+                      />
+                      Disable
+                    </td>
+                  </tr>
+                  <tr className="admin-settings-table-row">
+                    <td className="admin-settings-table__td row-text">SPA Off</td>
+                    <td className="admin-settings-table__td ">
+                      <input
+                        className="admin-table__td_check"
+                        checked={this.state.SPA_off || false}
+                        onChange={this.SPAToggle}
                         type="checkbox"
                       />
                       Disable

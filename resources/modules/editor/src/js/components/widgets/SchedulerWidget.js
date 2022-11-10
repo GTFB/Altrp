@@ -8,7 +8,186 @@ import ruLocale from '@fullcalendar/core/locales/ru'
 import enLocale from '@fullcalendar/core/locales/en-gb'
 import {InputGroup, TextArea} from '@blueprintjs/core'
 
+(window.globalDefaults = window.globalDefaults || []).push(`
 
+  .popup {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    width: 800px;
+    max-width: 100%;
+    background-color: white;
+    z-index: 999;
+    border: solid #ddd 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .popup-wrapper {
+    position: relative;
+  }
+
+  .popup__body {
+    padding: 20px;
+  }
+
+  .popup__text-field {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .popup__body .bp3-input {
+    height: 40px;
+  }
+
+  .popup__actions {
+    padding: 16px;
+    border-top: solid #ddd 1px;
+  }
+
+  .popup__field-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .popup__field-title: not(: first-child) {
+    margin-top: 8px;
+  }
+
+  .popup__textarea {
+    height: 80px;
+  }
+
+  .popup__actions .button {
+    border: solid #ddd 1px;
+    background-color: #fff;
+    margin-right: 10px;
+    padding: 9px 15px;
+    border-radius: 3px;
+    font-size: 15px;
+  }
+
+  .popup__actions .button {
+    border: solid #ddd 1px;
+    background-color: #fff;
+    margin-right: 10px;
+    padding: 9px 15px;
+    border-radius: 3px;
+    font-size: 15px;
+  }
+
+  .popup__actions .button.button-danger:hover {
+    background-color: #a62219;
+  }
+
+  .popup__actions input[type="button"]:hover {
+    background-color: #fafafa;
+  }
+
+  .fc-button {
+    background-color: rgba(44,62,80,100) !important;
+  }
+
+  .state-disabled .fc-button {
+    background-color: undefined !important;
+  }
+
+  .active .fc-button {
+    background-color: undefined !important;
+  }
+
+  .fc .fc-button-primary: not(: disabled).fc-button-active,
+  .fc .fc-button-primary: not(: disabled): active {
+    background-color: undefined !important;
+  }
+
+  .fc-button:hover {
+    background-color: undefined !important;
+  }
+
+  .fc-col-header-cell-cushion {
+    color: inherit;
+  }
+
+  .fc-daygrid-day-number {
+    color: inherit;
+  }
+
+  .fc .fc-day-other .fc-daygrid-day-top {
+    opacity: 1;
+  }
+
+  .fc-h-event .fc-event-main {
+    color: inherit;
+  }
+
+  .fc .fc-button {
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-color: rgba(44,62,80,100);
+  }
+
+  .fc-toolbar-title {
+    color: rgba(0,0,0,100);
+  }
+
+  .fc-theme-standard .fc-scrollgrid {
+    border-color: rgba(221,221,221,100);
+  }
+
+  .fc-theme-standard td,.fc-theme-standard th {
+    border-color: rgba(221,221,221,100);
+  }
+
+  .fc-col-header-cell {
+    color: rgba(0,0,0,100);
+    background-color: rgba(255,255,255,100);
+  }
+
+  .fc-daygrid-day: not(.fc-day-other): not(.fc-day-today) {
+    color: rgba(0,0,0,100);
+    background-color: rgba(255,255,255,100);
+  }
+
+  .fc-day-other {
+    color: rgba(34,25,77,100);
+    background-color: rgba(255,255,255,100);
+  }
+
+  .fc-day-today {
+    color: rgba(34,25,77,100);
+    background-color: rgba(255,255,255,100) !important;
+  }
+
+  .state-disabled .fc-day-today {
+    background-color: undefined !important;
+  }
+
+  .active .fc-day-today {
+    background-color: undefined !important;
+  }
+
+  .fc-day-today:hover {
+    background-color: undefined !important;
+  }
+
+  .fc-event {
+    color: rgba(255,255,255,100);
+    background-color: rgba(55,136,216,100);
+    border-color: rgba(55,136,216,100);
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+
+`);
 
 class SchedulerWidget extends Component {
   constructor(props) {
@@ -140,7 +319,7 @@ class SchedulerWidget extends Component {
         end: event.end
       });
     } catch (error) {
-      console.log({error});
+      console.error({error});
     }
   }
 

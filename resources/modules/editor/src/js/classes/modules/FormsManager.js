@@ -82,7 +82,14 @@ class FormsManager {
     this.fieldsStorage = {};
   }
   /**
-   * Отправляет форму
+   * Clear All Data
+   */
+  clearAll(){
+    this.fieldsStorage = {};
+    this.forms = [];
+    this.formIds = [];
+  }
+  /**
    * @param {string} formId
    * @param {int | null} modelID
    * @return {boolean}

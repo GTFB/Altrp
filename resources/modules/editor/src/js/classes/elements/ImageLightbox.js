@@ -89,11 +89,11 @@ class ImageLightbox extends BaseElement {
     });
 
 
-    this.addControl('lazyload_disable', {
-      hideOnEmail: true,
-      type: CONTROLLER_SWITCHER,
-      label: 'Lazyload Disable',
-    });
+    // this.addControl('lazyload_disable', {
+    //   hideOnEmail: true,
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Lazyload Disable',
+    // });
 
     this.endControlSection();
 

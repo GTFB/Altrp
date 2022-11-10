@@ -1,5 +1,7 @@
 .altrp-heading {
   display: block;
+  max-width: 100%;
+  word-break: break-word;
   margin-top: 5px;
   margin-right: 0;
   margin-bottom: 5px;
@@ -11,6 +13,9 @@
   background-position: top left;
   background-attachment: scroll;
   background-repeat: repeat;
+}
+.altrp-heading img{
+  max-width: 100%;
 }
 
 .altrp-heading-advanced-wrapper {

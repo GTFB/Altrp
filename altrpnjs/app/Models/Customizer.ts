@@ -19,6 +19,7 @@ import CrudNode from "App/Customizer/Nodes/crudNode";
 import MessageNode from "App/Customizer/Nodes/MessageNode";
 import CustomizerNode from "App/Customizer/Nodes/CustomizerNode";
 import DiscordNode from "App/Customizer/Nodes/DiscordNode";
+import CustomizerGenerator from 'App/Generators/CustomizerGenerator'
 import {DateTime} from 'luxon'
 import getNextWeek from "../../helpers/getNextWeek";
 import {clearTimeout, setTimeout} from "node:timers";
@@ -39,7 +40,7 @@ export default class Customizer extends BaseModel {
 
   public static table = 'altrp_customizers'
 
-  private parsed_data: any
+  public parsed_data: any
 
   @column({isPrimary: true})
   public id: number
@@ -330,6 +331,27 @@ export default class Customizer extends BaseModel {
     this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
   }
 
+  async callCrud(instanceId) {
+    const customizer = this
+
+    if (customizer.type !== 'crud') {
+      return
+    }
+
+    const generator = new CustomizerGenerator(customizer)
+    const filePath = generator.getFilePath()
+
+    const classCustomizerCRUD = isProd()
+      ? (await require(filePath)).default
+      : (await import(filePath)).default
+
+    if (classCustomizerCRUD) {
+      const customizerCRUD = new classCustomizerCRUD
+
+      customizerCRUD.run(instanceId)
+    }
+  }
+
   public static async scheduleAll() {
     const customizers = await Customizer.query().where('type', 'schedule')
 
@@ -350,21 +372,21 @@ export default class Customizer extends BaseModel {
 
     const date = this.settings.start_at ? new Date(this.settings.start_at) : new Date()
 
-    addSchedule(this.id, date, this.settings.period_unit, this.settings.period, () => {
+    addSchedule(this.id, date, this.settings.period_unit, this.settings.period, async () => {
       if (!this.settings.infinity) {
         if (this.settings.repeat_count > 0) {
           this.settings.repeat_count--
 
-          this.save().then(() => {
-            if (this.settings.repeat_count <= 0) {
-              this.removeSchedule()
-            }
+          await this.save()
 
-            return this.invoke()
-          })
+          if (this.settings.repeat_count <= 0) {
+            this.removeSchedule()
+          }
+
+          return this.invoke()
         }
 
-        this.removeSchedule()
+        return this.removeSchedule()
       }
 
       this.invoke()
@@ -373,11 +395,7 @@ export default class Customizer extends BaseModel {
 
   public async invoke() {
     console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`).then(data => {
-      console.log(data);
-    }).catch(err => {
-      console.error(err);
-    })
+    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`)
   }
 
   public removeSchedule() {
@@ -471,6 +489,9 @@ export default class Customizer extends BaseModel {
     data = data.map( item  => {
       const type = data_get( item, 'type' )
       switch( type ){
+        case 'straight':
+        case 'step':
+        case 'smoothstep':
         case 'default': return new Edge( item, customizer )
         case 'switch': return new SwitchNode( item, customizer )
         case 'start': return new StartNode( item , customizer)
@@ -492,10 +513,8 @@ export default class Customizer extends BaseModel {
       }
     })
     data.forEach( ( node_item ) => {
-      if( node_item instanceof Edge ){
-      }
       const node_id = node_item.getId()
-      let edges = BaseNode.getNodesByType('default', data)
+      let edges = BaseNode.getNodesByType('Edge', data)
       edges = edges.filter( ( node )=> {
         return node.data['source'] == node_id
       })
@@ -520,6 +539,7 @@ export default class Customizer extends BaseModel {
     let startNode = this.getStartNode()
     let content = startNode ? startNode.getJSContent() : ''
     content = applyPluginsFiltersSync('customizer_render_content', content, this)
+
     return content
   }
 

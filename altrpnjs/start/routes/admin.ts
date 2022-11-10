@@ -34,6 +34,7 @@ Route.group(() => {
     Route.get('/templates/options', 'TemplatesController.options')
     Route.get('/templates/:id', 'TemplatesController.get')
     Route.put('/templates/:id', 'TemplatesController.update')
+    Route.post('/templates/:id/publish', 'TemplatesController.publish')
     Route.delete('/templates/:id/reviews', 'TemplatesController.deleteReviews')
     Route.get('/templates/:id/reviews/', 'TemplatesController.getReviews')
     Route.get('/templates/:id/reviews/:review_id', 'TemplatesController.getReview')
@@ -42,6 +43,8 @@ Route.group(() => {
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
     Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
     Route.delete('/reviews', 'TemplatesController.deleteAllReviews')
+    Route.get('/templates/:id/settings', 'TemplatesController.settingsGet')
+    Route.put('/templates/:id/settings', 'TemplatesController.settingsSet')
 
 
     Route.get("/role_options", "OptionsController.roles")
@@ -59,6 +62,7 @@ Route.group(() => {
     Route.delete('/pages/:id', 'admin/PagesController.delete')
     Route.get('/pages/:id', 'admin/PagesController.show')
     Route.put('/pages/:id', 'admin/PagesController.update')
+    Route.post('/pages/:id/publish', 'admin/PagesController.publish')
 
     Route.get("/users", "users/UsersController.index")
     Route.post("/users", "users/UsersController.create")
@@ -294,6 +298,8 @@ Route.group(() => {
 
   Route.get('/editor-content', 'IndicesController.editorContent')
   Route.get('/editor', 'IndicesController.editor')
+
+  Route.get('/altrp-template-preview/:id', 'TemplatesController.preview')
 
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')

@@ -226,11 +226,11 @@ export default class MediaController {
       media.guid = guid();
       const date = new Date();
 
-      let title = transliterate(file.clientName).split(".");
-
+      let title = file.clientName.split(".");
       title.pop();
-
       title = title.join();
+      title = transliterate(title)
+      title = title + '_' + (new Date().valueOf())
 
       let filename = title + "." + ext;
 
@@ -238,9 +238,6 @@ export default class MediaController {
         "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
       let dirname = public_path("/storage" + urlBase);
 
-      if (fs.existsSync(dirname + filename)) {
-        filename = title + "_" + new Date().valueOf() + "." + ext;
-      }
 
       if (!fs.existsSync(dirname)) {
         fs.mkdirSync(dirname, { recursive: true });
@@ -320,7 +317,14 @@ export default class MediaController {
       media.type = MediaController.getTypeForFile(file);
       media.guid = guid();
       const date = new Date();
-      let filename = media.guid + "." + ext;
+
+      let title = file.clientName.split(".");
+      title.pop();
+      title = title.join();
+      title = transliterate(title)
+      title = title + '_' + (new Date().valueOf())
+
+      let filename = title + "." + ext;
       let urlBase =
         "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
       let dirname = public_path("/storage" + urlBase);

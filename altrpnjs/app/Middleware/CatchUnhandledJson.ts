@@ -24,12 +24,10 @@ export default class CatchUnhandledJson {
       response.status(500)
       console.error(e);
       return response.json({
+        ...e,
         success: false,
         message: 'Unhandled Exception: ' + e.message,
         trace: e.stack.split('\n'),
-        config: e.config,
-        response: e.response,
-        request: e.request,
       })
     }
   }

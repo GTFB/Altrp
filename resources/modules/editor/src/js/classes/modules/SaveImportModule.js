@@ -8,7 +8,7 @@ import {
 import CONSTANTS from "../../consts";
 import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
-import { setTitle } from "../../../../../front-app/src/js/helpers";
+import { delay, setTitle } from "../../../../../front-app/src/js/helpers";
 import { setTemplateData } from "../../store/template-data/actions";
 import templateStylesModule from "./TemplateStylesModule";
 import progressBar from "../../../../../admin/src/js/functions/progressBar";
@@ -108,8 +108,8 @@ class SaveImportModule extends BaseModule {
 
 
       await this.resource
-        .put(this.template_id, templateData)
-      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+        .publish(this.template_id, templateData)
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_PUBLISHED));
       rootElement && rootElement.remove();
 
 
@@ -118,7 +118,7 @@ class SaveImportModule extends BaseModule {
         e = await e
       }
       console.error(e);
-      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_PUBLISHED));
       rootElement && rootElement.remove();
       progressBar()
       try {
@@ -136,6 +136,59 @@ ${e}`)
       progressBar(1)
     }
     progressBar(0)
+  }
+
+  async updateTemplate() {
+    let rootElement = null;
+
+    if (window.altrpEditorContent.editorWindow.current) {
+      rootElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName(
+        "sections-wrapper"
+      )[0];
+
+      if (rootElement) {
+        rootElement = rootElement.cloneNode(true);
+      }
+    }
+
+    let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
+
+    progressBar(0.01);
+
+    templateData.styles = await templateStylesModule.generateStyles();
+
+    try {
+      await this.resource.post({
+        ...templateData,
+        type: "review",
+        parent_template: this.template_id
+      });
+      await this.resource.put(this.template_id, templateData);
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+      rootElement && rootElement.remove();
+    } catch (e) {
+      if (e instanceof Promise){
+        e = await e;
+      }
+
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+      rootElement && rootElement.remove();
+      progressBar();
+
+      try {
+        e = JSON.stringify(e);
+      } catch (e) {
+
+      }
+
+      alert(`template not saved\n${e}`);
+
+      return;
+    }
+
+    progressBar(1);
+    await delay(100);
+    progressBar();
   }
 
   /**

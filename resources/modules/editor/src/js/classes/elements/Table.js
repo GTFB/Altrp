@@ -105,10 +105,10 @@ class Table extends BaseElement {
       locked: true,
     });
 
-    this.addControl('table_position_style_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: "Z-index",
-    });
+    // this.addControl('table_position_style_z_index', {
+    //   type: CONTROLLER_NUMBER,
+    //   label: "Z-index",
+    // });
 
     this.endControlSection();
 
@@ -353,7 +353,6 @@ class Table extends BaseElement {
     repeater.addControl('column_width', {
       label: 'Column Width',
       dynamic: false,
-      type: CONTROLLER_NUMBER,
     });
 
     repeater.addControl('column_header_alignment', {
@@ -1178,15 +1177,7 @@ class Table extends BaseElement {
 
     this.addControl('replace_text_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 14,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ''
-      },
+      label: 'Typographic'
     }
     );
 
@@ -2866,10 +2857,6 @@ class Table extends BaseElement {
     this.addControl('table_style_group_border_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_group_font', {
@@ -2971,19 +2958,11 @@ class Table extends BaseElement {
     this.addControl('table_style_footer_border_background', {
       type: CONTROLLER_COLOR,
       label: 'Background',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_footer_border_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      default: {
-        color: '',
-        colorPickedHex: ''
-      },
     });
 
     this.addControl('table_style_footer_font', {

@@ -69,7 +69,7 @@ module.exports = {
       },
 
       {
-        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg)$/,
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg|jsoneditor-icons.svg)$/,
         use: ["file-loader"]
       }
     ]

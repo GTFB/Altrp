@@ -86,17 +86,16 @@ class Image extends BaseElement {
     });
 
 
-    this.addControl('lazyload_disable', {
-      hideOnEmail: true,
-      type: CONTROLLER_SWITCHER,
-      label: 'Lazyload Disable',
-      default: false
-    });
+    // this.addControl('lazyload_disable', {
+    //   hideOnEmail: true,
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Lazyload Disable',
+    //   default: false
+    // });
 
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -121,12 +120,6 @@ class Image extends BaseElement {
 
     this.addControl('image_link', {
       type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false,
-        tag: 'Link'
-      },
       label: 'Link',
       locked: true,
     });
@@ -375,10 +368,6 @@ class Image extends BaseElement {
     this.addControl('width_size', {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: '%',
-      },
       units: [
         'px',
         '%',

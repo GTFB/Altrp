@@ -47,11 +47,13 @@ class InputGallery extends BaseElement {
     this.addControl('form_id', {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: 'Form ID'
     });
 
     this.addControl('field_id', {
       type: CONTROLLER_TEXT,
+      locked: true,
       responsive: false,
       label: 'Field ID (Column Name)'
     });

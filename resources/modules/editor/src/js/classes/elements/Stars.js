@@ -60,18 +60,21 @@ class Stars extends BaseElement {
 
     this.addControl("form_id", {
       responsive: false,
+      locked: true,
       type: CONTROLLER_TEXT,
       label: "Form ID"
     });
 
     this.addControl("field_id", {
-      responsive: false,
       type: CONTROLLER_TEXT,
+      responsive: false,
+      locked: true,
       label: "Field ID (Column Name)"
     });
 
     this.addControl("default_value", {
       type: CONTROLLER_TEXTAREA,
+      responsive: false,
       label: "Default Value",
       locked: true,
     });
