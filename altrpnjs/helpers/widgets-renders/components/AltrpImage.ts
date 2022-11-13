@@ -41,9 +41,11 @@ export default function AltrpImage(props: any, ) {
   } else {
     src = `src="/img/nullImage.png"`
   }
+
   if(! webpUrlEnable){
     return `
   <img class="altrp-image"
+    ${image.title ? `alt="${image.title}"` : ''}
     ${settings.raw_url ? `data-replace-attributes-if-exists="src|${settings.raw_url}"` : ''}
     width="${props.width}" height="${props.height}" ${src}/>`
 
@@ -52,11 +54,13 @@ export default function AltrpImage(props: any, ) {
   return `
 {{#accept_webp}}
  <img class="altrp-image"
+    ${image.title ? `alt="${image.title}"` : ''}
     ${settings.raw_url ? `data-replace-attributes-if-exists="src|${settings.raw_url}"` : ''}
     width="${props.width}" height="${props.height}" src="${webpUrl}"/>
 {{/accept_webp}}
 {{^accept_webp}}
  <img class="altrp-image"
+    ${image.title ? `alt="${image.title}"` : ''}
     ${settings.raw_url ? `data-replace-attributes-if-exists="src|${settings.raw_url}"` : ''}
     width="${props.width}" height="${props.height}" ${src}/>
 {{/accept_webp}}

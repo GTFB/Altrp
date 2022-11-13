@@ -38,7 +38,7 @@ export default class UpdateService {
           'x-altrp-domain': env('APP_URL'),
         },
         params: {
-          version: version
+          version
         }
       }))?.data || '';
     } catch (e) {

@@ -21,6 +21,7 @@ export default class ConvertEmptyString {
       }
     }
     await next()
-    console.log(`END:   ${performance.now() - start}, ${request.url(true)}`);
+    console.log(`END:   ${performance.now() - start}, ${request.url(true)}, ${
+      request.header('X-Real-IP') || ''}`);
   }
 }

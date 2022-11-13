@@ -1,6 +1,7 @@
 import AltrpLink from "../altrp-link/AltrpLink";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
+import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -182,7 +183,7 @@ class HeadingWidget extends Component {
           linkProps.creativelink = this.getContent("heading_settings_html_tag") !== "p" ? this.getContent("creative_link_controller") : null;
 
           if(this.state.settings.link_link.openInNew){
-            linkProps.target = '_black';
+            linkProps.target = altrpRandomId();
           }
           if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
             linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');

@@ -41,6 +41,7 @@ class AdvancedSettings extends Component {
       headEnd,
       bodyStart,
       bodyEnd,
+      site_language,
     ] = await Promise.all([
       (await new Resource({route: '/admin/ajax/settings'}).get('head_start?decrypt=true')).head_start || ''
   ,
@@ -50,6 +51,8 @@ class AdvancedSettings extends Component {
   ,
     (await new Resource({route: '/admin/ajax/settings'}).get('body_end?decrypt=true')).body_end || ''
   ,
+    (await new Resource({route: '/admin/ajax/settings'}).get('site_language')).site_language || ''
+  ,
   ])
 
     this.setState(state => ({
@@ -58,6 +61,7 @@ class AdvancedSettings extends Component {
       debugOn,
       loadByUser,
       altrp_custom_headers,
+      site_language,
       headStart,
       headEnd,
       bodyStart,
@@ -113,6 +117,12 @@ class AdvancedSettings extends Component {
   updateCustomHeaders = async (e) => {
     const value = e.target.value
     await new Resource({route: '/admin/ajax/settings'}).put('altrp_custom_headers', {value, encrypt: true});
+
+  }
+
+  updateSiteLanguage = async (e) => {
+    const value = e.target.value
+    await new Resource({route: '/admin/ajax/settings'}).put('site_language', {value, });
 
   }
   /**
@@ -182,6 +192,7 @@ class AdvancedSettings extends Component {
   render() {
     const {
       altrp_custom_headers,
+      site_language,
       allSiteJavascript,
       headStart,
       headEnd,
@@ -226,6 +237,18 @@ class AdvancedSettings extends Component {
               </button>
             </div>
 
+
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Lang Attribute for HTML</div>
+              <input name="custom_headers"
+                        className="bp3-input"
+                        id="site_language"
+                        placeholder="en"
+                        defaultValue={site_language}
+                        onBlur={this.updateSiteLanguage}
+                        />
+
+            </div>
 
             <div className="admin-styles-advanced-block">
               <div className="advanced-text-custom">Custom Headers for Pages:</div>

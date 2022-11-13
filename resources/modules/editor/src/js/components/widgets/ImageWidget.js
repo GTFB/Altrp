@@ -2,6 +2,7 @@ import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import AltrpImage from "../altrp-image/AltrpImage";
+import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-image {
@@ -207,7 +208,7 @@ class ImageWidget extends Component {
 
       };
       if(link.openInNew){
-        linkProps.target = '_blank';
+        linkProps.target = altrpRandomId();
       }
 
       return (

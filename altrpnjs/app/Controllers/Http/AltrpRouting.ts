@@ -144,9 +144,9 @@ export default class AltrpRouting {
 
     const asCheck = isRobot(httpContext.request.headers())
     const accept_webp = httpContext.request.header('Accept')?.includes('image/webp')
-    // console.log(accept_webp);
-    // console.log(httpContext.request.header('Accept'));
-    // console.log(httpContext.request.headers());
+
+
+
     /**
      * init global object
      */
@@ -290,6 +290,7 @@ export default class AltrpRouting {
 
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
     const device = getCurrentDevice(httpContext.request)
+    const lang = get_altrp_setting('site_language', 'en')
 
     altrpContext.altrpdata = datasources
     try {
@@ -321,6 +322,7 @@ export default class AltrpRouting {
         container_width: get_altrp_setting('container_width', '1440'),
         spa_off: get_altrp_setting('spa_off') === 'true',
         device,
+        lang,
       })
 
       mustache?.templateCache?.clear()

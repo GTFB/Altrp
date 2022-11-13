@@ -3,6 +3,7 @@ import _ from 'lodash'
 import parseURLTemplate from '../parseURLTemplate'
 import objectToAttributesString from './../objectToAttributesString'
 import AltrpImage from "./components/AltrpImage";
+import altrpRandomId from "../altrpRandomId";
 
 export default function renderImage(settings, device, widgetId) {
   const link = settings.image_link || {}
@@ -68,7 +69,7 @@ export default function renderImage(settings, device, widgetId) {
       target?: string
     } = {}
     if(link.openInNew){
-      linkProps.target = '_blank'
+      linkProps.target = altrpRandomId()
     }
     return `
     <div class="altrp-image-container">
