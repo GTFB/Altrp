@@ -38,7 +38,7 @@ class CronEvents extends Component {
     super(props);
     this.state = {
       currentPage: 1,
-      cron_events: [],
+      cronEvents: [],
       activeHeader: 0,
       cronEventsSearch: '',
       sorting: {},
@@ -46,7 +46,7 @@ class CronEvents extends Component {
       pageCount: 1,
     };
     this.changePage = this.changePage.bind(this);
-    this.cron_eventsResource = new Resource({ route: '/admin/ajax/cron_events' });
+    this.cronEventsResource = new Resource({ route: '/admin/ajax/cron-events' });
     this.itemsPerPage = 20;
   }
 
@@ -57,7 +57,7 @@ class CronEvents extends Component {
   async componentDidMount() {
     let url = new URL(location.href);
     let urlS = url.searchParams.get('s');
-    let cron_events = await this.cron_eventsResource.getQueried({
+    let cronEvents = await this.cronEventsResource.getQueried({
       s: urlS === null ? this.state.cronEventsSearch : urlS,
       page: this.state.currentPage,
       pageSize: this.itemsPerPage,
@@ -66,9 +66,9 @@ class CronEvents extends Component {
     this.setState(state => ({
       ...state,
       cronEventsSearch: urlS === null ? this.state.cronEventsSearch : urlS,
-      cron_events: cron_events.cron_events,
-      count: cron_events.count,
-      pageCount: cron_events.pageCount,
+      cronEvents: cronEvents.cronEvents,
+      count: cronEvents.count,
+      pageCount: cronEvents.pageCount,
     }));
 
     window.addEventListener('scroll', this.listenScrollHeader);
@@ -91,7 +91,7 @@ class CronEvents extends Component {
   }
 
   getCronEvents = async () => {
-    let cron_events = await this.cron_eventsResource.getQueried({
+    let cronEvents = await this.cronEventsResource.getQueried({
       s: this.state.cronEventsSearch,
       ...this.state.sorting,
       page: this.state.currentPage,
@@ -100,9 +100,9 @@ class CronEvents extends Component {
 
     this.setState(state => ({
       ...state,
-      cron_events: cron_events.cron_events,
-      count: cron_events.count,
-      pageCount: cron_events.pageCount,
+      cronEvents: cronEvents.cronEvents,
+      count: cronEvents.count,
+      pageCount: cronEvents.pageCount,
     }));
   }
 
@@ -128,32 +128,33 @@ class CronEvents extends Component {
   }
 
   render() {
-    const { cron_events, cronEventsSearch, sorting, currentPage, count, pageCount } = this.state;
+    const { cronEvents, cronEventsSearch, sorting, currentPage, count, pageCount } = this.state;
 
-    let cron_eventsMap = cron_events.map(cron_event => {
-      const lastRun = DateTime.fromISO(cron_event.last_run);
-      const nextRun = DateTime.fromISO(cron_event.next_run);
+    let cronEventsMap = cronEvents.map(cronEvent => {
+      const lastRun = DateTime.fromISO(cronEvent.last_run);
+      const nextRun = DateTime.fromISO(cronEvent.next_run);
       const nextRunHumanText = nextRun
         .diff(DateTime.now())
         .toFormat("y 'years' M 'months' d 'days' h 'hours' m 'minutes' s 'seconds'")
         .replace(/((^1 year)s|( 1 month)s|( 1 day)s|( 1 hour)s|( 1 minute)s|( 1 second)s)/g, '$4')
         .replace(/(0 years |0 months |0 days |0 hours |0 minutes | 0 seconds)/g, '');
 
+      const hasLastRun = lastRun.isValid;
       const hasNextRun = nextRun > DateTime.now();
 
       return {
-        id: cron_event.id,
-        recurrence: cron_event.recurrence,
-        last_run: lastRun.toFormat('yyyy-MM-dd hh:mm:ss'),
+        id: cronEvent.id,
+        recurrence: cronEvent.recurrence,
+        last_run: hasLastRun && lastRun.toFormat('yyyy-MM-dd hh:mm:ss'),
         next_run: hasNextRun && (
           <>
             <div>{nextRun.toFormat('yyyy-MM-dd hh:mm:ss')}</div>
             <div>{nextRunHumanText}</div>
           </>
         ),
-        remain_count: cron_event.remain_count,
-        robotizer: cron_event.customizer.title,
-        editUrl: '/admin/customizers-editor?customizer_id=' + cron_event.id,
+        remain_count: cronEvent.remain_count,
+        robotizer: cronEvent.customizer.title,
+        editUrl: '/admin/customizers-editor?customizer_id=' + cronEvent.id,
       }
     });
 
@@ -176,19 +177,18 @@ class CronEvents extends Component {
           <AdminTable
             columns={columns}
             quickActions={[{
-              tag: 'Link',
-              props: {
-                href: '/admin/customizers-editor/:id',
-              },
+              tag: 'button',
+              method: 'post',
+              route: '/admin/ajax/cron-events/:id/run',
               title: 'Run Now',
             }, {
               tag: 'Link',
               props: {
-                href: '/admin/cron_events/:id/logs'
+                href: '/admin/cron-events/:id/logs'
               },
               title: 'Show Logs',
             }]}
-            rows={cron_eventsMap}
+            rows={cronEventsMap}
             sortingHandler={this.sortingHandler}
             sortingField={sorting.order_by}
             searchTables={{

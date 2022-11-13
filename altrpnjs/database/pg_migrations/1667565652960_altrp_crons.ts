@@ -12,7 +12,7 @@ export default class AltrpCrons extends BaseSchema {
       table.timestamp('next_run', { useTz: true })
       table.bigInteger('remain_count')
       table.string('recurrence', 255).notNullable()
-      table.string('log').nullable()
+      table.text('log').nullable()
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

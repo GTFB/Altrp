@@ -1,3 +1,4 @@
+import Cron from 'App/Models/Cron'
 import Customizer from 'App/Models/Customizer';
 import Model from 'App/Models/Model';
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
@@ -275,6 +276,7 @@ export default class CustomizersController {
         const result = await exec(`node ${base_path('ace')} generator:schedule --id=${customizer.id}`)
         if (result !== null) {
           customizer.schedule()
+          Cron.createByCustomizer(customizer)
         }
       }
 

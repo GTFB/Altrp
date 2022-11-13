@@ -1,6 +1,19 @@
 import data_get from "../../helpers/data_get";
 import empty from "../../helpers/empty";
-import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne, ManyToMany, manyToMany, hasMany, HasMany} from "@ioc:Adonis/Lucid/Orm";
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasOne,
+  hasOne,
+  ManyToMany,
+  manyToMany,
+  hasMany,
+  HasMany,
+  afterCreate,
+  beforeDelete
+} from "@ioc:Adonis/Lucid/Orm";
 import Model from "App/Models/Model";
 import Category from "App/Models/Category";
 import Cron from "App/Models/Cron";
@@ -26,7 +39,7 @@ import {clearTimeout, setTimeout} from "node:timers";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
-import { addSchedule, removeSchedule } from '../../helpers/schedule';
+import { addSchedule, removeSchedule, nextInvocation } from '../../helpers/schedule';
 import exec from '../../helpers/exec'
 import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
 import base_path from "../../helpers/base_path";
@@ -116,6 +129,20 @@ export default class Customizer extends BaseModel {
     pivotRelatedForeignKey: 'category_guid',
   })
   public categories: ManyToMany<typeof Category>
+
+  @afterCreate()
+  public static async afterCreate(customizer: Customizer) {
+    Cron.createByCustomizer(customizer)
+  }
+
+  @beforeDelete()
+  public static async beforeDelete(customizer: Customizer) {
+    if (customizer.type === 'schedule') {
+      const cron = await Cron.findBy('customizer_id', customizer.id)
+
+      await cron?.delete()
+    }
+  }
 
   methodToJS(method, method_settings = []) {
     if (!method) {
@@ -379,10 +406,6 @@ export default class Customizer extends BaseModel {
 
           await this.save()
 
-          if (this.settings.repeat_count <= 0) {
-            this.removeSchedule()
-          }
-
           return this.invoke()
         }
 
@@ -394,14 +417,46 @@ export default class Customizer extends BaseModel {
   }
 
   public async invoke() {
-    console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`)
+    let cronLog = ''
+    let cron = await Cron.findBy('customizer_id', this.id)
+
+    if (!cron) {
+      cron = await Cron.createByCustomizer(this)
+    }
+
+    const headMessage = 'customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)'
+
+    console.log(headMessage)
+    cronLog += headMessage
+
+    try {
+      const result = await exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`)
+
+      if (result) {
+        cronLog = cronLog ? cronLog + '\n' + result : result
+      }
+    } catch (err) {
+      if (err) {
+        cronLog = cronLog ? cronLog + '\n' + err : err
+      }
+    }
+
+    if (cron) {
+      await cron.saveLog(cronLog)
+    }
   }
 
-  public removeSchedule() {
+  public async removeSchedule() {
+    let cronLog = `remove schedule: ${this.name} / ${this.id}`
+    let cron = await Cron.findBy('customizer_id', this.id)
+
     removeSchedule(this.id)
 
-    console.log(`remove schedule: ${this.name} / ${this.id}`)
+    if (cron) {
+      await cron.saveLog(cronLog)
+    }
+
+    console.log(cronLog)
   }
 
   changePropertyToJS(propertyData, value, type = 'set'): string {

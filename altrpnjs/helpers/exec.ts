@@ -8,12 +8,14 @@ async function exec(command: string):Promise<string|null> {
     const { stdout, stderr } = await execAsync(command)
     if (stderr) {
       console.error(stderr)
+      return stderr
     } else if (stdout?.trim()?.length) {
       console.log(stdout.trim())
       return stdout
     }
   } catch(err) {
     console.error(err)
+    return err
   }
   return null
 }

@@ -12,8 +12,8 @@ class AdminCustomizersDropList extends React.Component {
           <ul className={pathnameHaveTables !== -1 ? 'admin-nav-list admin-nav-list--sublist_active' : 'admin-nav-list admin-nav-list--sublist'}>
             <li>
               <Link
-                to="/admin/customizers/cron_events"
-                className={pathname.indexOf('cron_events') !== -1 ? 'admin-nav-list__link font__weightDropList' : 'admin-nav-list__link'}
+                to="/admin/customizers/cron-events"
+                className={pathname.indexOf('cron-events') !== -1 ? 'admin-nav-list__link font__weightDropList' : 'admin-nav-list__link'}
                 onClick={this.props.activeButton}
               >
                 <span>Cron Events</span>
@@ -24,8 +24,8 @@ class AdminCustomizersDropList extends React.Component {
           <ul className="admin-nav-list admin-nav-list--sublist">
             <li>
               <Link
-                to="/admin/customizers/cron_events"
-                className={pathname.indexOf('cron_events') !== -1 ? 'admin-nav-list__link font__weightDropList' : 'admin-nav-list__link'}
+                to="/admin/customizers/cron-events"
+                className={pathname.indexOf('cron-events') !== -1 ? 'admin-nav-list__link font__weightDropList' : 'admin-nav-list__link'}
                 onClick={this.props.activeButton}
               >
                 <span>Cron Events</span>
