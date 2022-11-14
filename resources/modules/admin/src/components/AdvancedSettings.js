@@ -244,7 +244,7 @@ class AdvancedSettings extends Component {
                         className="bp3-input"
                         id="site_language"
                         placeholder="en"
-                        defaultValue={site_language}
+                        defaultValue={site_language || ''}
                         onBlur={this.updateSiteLanguage}
                         />
 

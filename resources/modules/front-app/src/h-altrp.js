@@ -1,6 +1,6 @@
 console.log('FIRST SCRIPT: ', performance.now());
 
-if(! window.asCheck){
+if(!window.asCheck){
   Promise.all([
     import("./js/plugins/loadPluginsHelpers"),
     import("./js/functions/interactions/elementsHandler"),
