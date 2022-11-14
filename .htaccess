@@ -1,9 +1,0 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-
-    RewriteRule ^(.*)$ public/$1 [L]
-
-    Header set cross-origin-resource-policy "cross-origin"
-
-
-</IfModule>

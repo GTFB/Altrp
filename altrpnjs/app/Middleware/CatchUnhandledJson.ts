@@ -22,9 +22,10 @@ export default class CatchUnhandledJson {
       await next()
     }catch (e) {
       response.status(500)
-      console.error(e);
+
       return response.json({
-        ...e,
+        // ...e,
+        axios_response: e.response,
         success: false,
         message: 'Unhandled Exception: ' + e.message,
         trace: e.stack.split('\n'),

@@ -197,6 +197,7 @@ export default class CustomizersController {
     const all = request.all()
     delete all.created_at
     delete all.updated_at
+    delete all.name
 
     if (all.type === 'schedule') {
       all.settings = all.settings || {}
@@ -214,7 +215,6 @@ export default class CustomizersController {
 
     customizer.merge(all)
     customizer.merge({
-      name: request.all().name,
       title: request.all().title,
       type: request.all().type,
       data: request.all().data,

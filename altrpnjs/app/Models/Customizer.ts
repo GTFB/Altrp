@@ -71,7 +71,7 @@ export default class Customizer extends BaseModel {
   public guid: string
 
   @column.dateTime({autoCreate: true})
-  public createdAt: DateTime
+    public createdAt: DateTime
 
   @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime
@@ -560,7 +560,8 @@ export default class Customizer extends BaseModel {
         case 'discordAction': return new DiscordNode(item, customizer)
         default: {
           let classInstance = applyPluginsFiltersSync('get_node_class_instance', type, item, customizer)
-          if(! classInstance){
+
+          if(! classInstance || typeof classInstance === 'string'){
             return new BaseNode( item, customizer )
           }
           return classInstance

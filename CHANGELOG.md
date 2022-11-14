@@ -2,7 +2,10 @@
 
 ## Changelog
 
-### 1.4.3 build 12
+### 1.4.4 build 1
+* Added `lang` Attribute Settings for Site
+
+### 1.4.3 
 * Added the Webp Support for Images
 
 ### 1.4.2 

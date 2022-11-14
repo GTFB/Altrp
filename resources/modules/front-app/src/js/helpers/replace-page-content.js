@@ -8,6 +8,7 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import loadPageActions from "../functions/actions/load-page-actions";
 
 export default function replacePageContent(url, popstate = false) {
+  document.body.style.pointerEvents = 'none'
   if (!url) {
     return
   }
@@ -76,6 +77,7 @@ export default function replacePageContent(url, popstate = false) {
       if (!xhr.responseText || xhr.status !== 200 && xhr.status !== 404) {
         console.error('Response Error: ' + xhr.responseText)
         location.href = url
+        document.body.style.pointerEvents = 'initial'
       }
       try {
         progressBar.style.transform = 'translate( -60%)'
@@ -86,10 +88,12 @@ export default function replacePageContent(url, popstate = false) {
       } catch (e) {
         console.error(e);
         location.href = url
+        document.body.style.pointerEvents = 'initial'
       } finally {
         progressBar.style.transform = 'translate( 0% )'
         await delay(100)
         progressBar.remove()
+        document.body.style.pointerEvents = 'initial'
       }
     }
   };

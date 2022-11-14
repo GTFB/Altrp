@@ -413,7 +413,7 @@ export default class Model extends BaseModel {
         guid: guid(),
         data: customizerData.defaultData
       })
-
+      const sources: Source[] = []
       try {
         if (!customizer.settings) {
           customizer.settings = []
@@ -446,11 +446,22 @@ export default class Model extends BaseModel {
             // }, customizer)
           }
           await source.save()
+          sources.push(source)
         }
       } catch (e) {
         console.error(e);
       }
 
+      const adminRole = await Role.query().where('name', 'admin').first()
+
+      if (adminRole) {
+        await Promise.all(sources.map(s => {
+          return (new SourceRole()).fill({
+            role_id: adminRole.id,
+            source_id: s.id,
+          }).save()
+        }))
+      }
 
     }
   }

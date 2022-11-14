@@ -6,6 +6,7 @@ import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import isProd from "../../helpers/isProd";
 import _ from "lodash"
+import startChildWithSockets from "../../helpers/startChildWithSockets";
 
 Route.group(() => {
 
@@ -41,7 +42,7 @@ Route.group(() => {
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
-    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
+    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer');
     Route.delete('/reviews', 'TemplatesController.deleteAllReviews')
     Route.get('/templates/:id/settings', 'TemplatesController.settingsGet')
     Route.put('/templates/:id/settings', 'TemplatesController.settingsSet')
@@ -189,7 +190,7 @@ Route.group(() => {
     Route.post('/media', 'admin/MediaController.store')
     Route.get('/media/:id', 'admin/MediaController.showFull')
     Route.delete('/media/:id', 'admin/MediaController.destroy')
-    Route.get('media_settings', async({response})=>{
+    Route.get('media_settings', async ({response}) => {
       return response.json([])
     });
     /**
@@ -228,8 +229,8 @@ Route.group(() => {
     Route.post('update-all-resources', 'admin/AdminController.upgradeAllResources').name = 'admin.update-all-resources'
     Route.post('restart-altrp', 'admin/AdminController.restartAltrp').name = 'admin.restart-altrp'
 
-    Route.post('check_update', async (httpContext: HttpContextContract)=>{
-      if(env('APP_ENV') !== 'production'){
+    Route.post('check_update', async (httpContext: HttpContextContract) => {
+      if (env('APP_ENV') !== 'production') {
         return httpContext.response.json({result: false})
       }
       return httpContext.response.json({result: false})
@@ -259,7 +260,7 @@ Route.group(() => {
     const methods = [
       'get', 'post', 'put', 'delete'
     ]
-    for(const method of methods) {
+    for (const method of methods) {
       /**
        * handle all 4 HTTP methods
        */
@@ -269,17 +270,19 @@ Route.group(() => {
         const plugin = plugins.find(plugin => {
           return plugin.name === segments[3]
         })
-        if(! plugin){
+        if (!plugin) {
           httpContext.response.status(404)
           return httpContext.response.json({success: false, message: 'Plugin Not Found'})
         }
-        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js': 'ts'}`)
-        if(fs.existsSync(fileName)){
-          if(isProd()){
-            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js' : 'ts'}`)
+        if (fs.existsSync(fileName)) {
+          if (isProd()) {
+            Object.keys(require.cache).forEach(function (key) {
+              delete require.cache[key]
+            })
           }
           const module = isProd() ? await require(fileName).default : (await import(fileName)).default
-          if(_.isFunction(module)){
+          if (_.isFunction(module)) {
             return await module(httpContext)
           }
         }
@@ -290,6 +293,17 @@ Route.group(() => {
     /**
      * plugins ajax requests END
      */
+
+    Route.get('/start-socket', ({response}) => {
+      if (! isProd()) {
+        return response.json({success: true})
+      }
+      if (env('CLUSTER') != 'true') {
+        return response.json({success: true})
+      }
+      startChildWithSockets()
+      return response.json({success: true})
+    })
   }).middleware('catch_unhandled_json').prefix('/ajax')
 
 
@@ -307,3 +321,4 @@ Route.group(() => {
 })
   .prefix('/admin')
   .middleware('admin')
+

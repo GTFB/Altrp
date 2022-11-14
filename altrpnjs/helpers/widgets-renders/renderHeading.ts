@@ -2,7 +2,7 @@ import getResponsiveSetting from "../getResponsiveSetting"
 import parseURLTemplate from "../parseURLTemplate"
 import AltrpLink from "./components/AltrpLink"
 import objectToStylesString from "../objectToStylesString"
-import * as _ from 'lodash'
+import altrpRandomId from "../altrpRandomId";
 
 export default function renderHeading(settings, device) {
 
@@ -56,7 +56,7 @@ export default function renderHeading(settings, device) {
         linkProps.creativelink = getResponsiveSetting(settings, "heading_settings_html_tag", device) !== "p" ? getResponsiveSetting(settings, "creative_link_controller",device) : null
 
         if (settings.link_link.openInNew) {
-          linkProps.target = '_black'
+          linkProps.target = altrpRandomId()
         }
         if ((settings.link_link.tag === 'Link')) {
           linkProps.to = settings.link_link?.url.replace(':id', '{{id}}' )

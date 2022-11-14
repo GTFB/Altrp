@@ -261,7 +261,7 @@ class AltrpPosts extends React.Component {
       }
       htmlTemplate = prepareHtml(htmlTemplate, post)
       let key = post.altrpRandomKey || post.id || post.altrpIndex;
-      htmlTemplate = replaceContentWithData(htmlTemplate, post)
+      htmlTemplate = isEditor() ? htmlTemplate : replaceContentWithData(htmlTemplate, post)
       if(this.htmlStore[key] !== htmlTemplate){
         this.setState(state=>({
           ...state,
@@ -313,7 +313,7 @@ class AltrpPosts extends React.Component {
     }
     htmlTemplate = prepareHtml(htmlTemplate, post)
     this.htmlStore[key] = htmlTemplate
-    htmlTemplate = replaceContentWithData(htmlTemplate, post)
+    htmlTemplate = isEditor() ? htmlTemplate : replaceContentWithData(htmlTemplate, post)
     // this.oldData = this.props.data
     return (
       <div className={`${this.props?.className} altrp-post`}

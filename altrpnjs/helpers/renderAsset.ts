@@ -1,12 +1,16 @@
 import * as _ from 'lodash'
 import objectToAttributesString from "./objectToAttributesString";
+import toUnicode from "./string/toUnicode";
 /**
  * @param {object} asset
  * @param {object} attrs
  * */
-export default function renderAsset(asset, attrs:object | string  = {}) {
+export default function renderAsset(asset, attrs:any  = {}) {
   if(_.isEmpty(asset)){
     return  ''
+  }
+  if(asset.title){
+    attrs.alt = toUnicode(asset.title)
   }
   // @ts-ignore
   attrs = objectToAttributesString(attrs)

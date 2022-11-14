@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ getLocale() }}">
+{{=<% %>=}}
+<html lang="{{lang}}">
+<%={{ }}=%>
 <head>
 {{{head_start}}}
  {{{fonts}}}
@@ -55,7 +57,7 @@
     </div>
       <script id="main-script-altrp">
         /* <![CDATA[ */
-        {{=<% %>=}}
+{{=<% %>=}}
         window['h-altrp'] = true;
         window.isProd = {{{ isProd }}}
 <%={{ }}=%>

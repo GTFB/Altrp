@@ -31,7 +31,7 @@
       ]
     },
     {
-      "file": "./start/schedules",
+      "file": "./start/start-services",
       "environment": [
         "web"
       ]

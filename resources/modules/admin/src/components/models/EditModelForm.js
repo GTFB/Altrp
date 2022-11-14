@@ -224,16 +224,6 @@ class EditModelForm extends Component {
           <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
         </div>
 
-        <div className="form-group__flexModel">
-          <input type="checkbox" id="page-only_user"
-
-
-            checked={this.state.value.user_id}
-
-            onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
-            />
-          <label htmlFor="page-only_user" className="label_model font__edit">Only for Current User</label>
-        </div>
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>

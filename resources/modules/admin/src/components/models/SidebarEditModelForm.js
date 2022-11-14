@@ -267,23 +267,6 @@ class SidebarEditModelForm extends Component {
           </label>
         </div>
 
-        <div className="form-group__flexModel">
-          <div className="font__edit">Only for Current User</div>
-          <label style={{marginLeft: "10px", marginBottom: '0'}}>
-            <input
-              className="addPage__bottom-checkbox"
-              checked={this.state.value.user_id}
-              onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
-              type="checkbox"
-              id="page-only_user"
-            />
-            <div className="control-switcher control-switcher_checked">
-              <div className="control-switcher__on-text">ON</div>
-              <div className="control-switcher__caret"/>
-              <div className="control-switcher__off-text">OFF</div>
-            </div>
-          </label>
-        </div>
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>

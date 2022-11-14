@@ -15,7 +15,8 @@ import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersA
 
 export default class UpdateService {
 
-  private static UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/'
+  private static UPDATE_DOMAIN = 'https://cdn.altrp.com/api/v1/download_altrp_94nvxm3m7'
+  private static RESERVE_UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/'
 
   private static ARCHIVE_PATH = base_path('temp.zip')
 
@@ -31,13 +32,22 @@ export default class UpdateService {
     console.log("Starting Update")
     let file = ''
     try {
-      file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
+      file = (await axios.get(UpdateService.UPDATE_DOMAIN, {
+        responseType: 'arraybuffer',
+        headers: {
+          'x-altrp-domain': env('APP_URL'),
+        },
+        params: {
+          version
+        }
+      }))?.data || '';
+    } catch (e) {
+      file = (await axios.get(UpdateService.RESERVE_UPDATE_DOMAIN + version, {
         responseType: 'arraybuffer',
         headers: {
           'x-altrp-domain': env('APP_URL'),
         },
       }))?.data || '';
-    } catch (e) {
       return false;
     }
     if (!await UpdateService.write_public_permissions()) {
