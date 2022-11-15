@@ -468,7 +468,6 @@ class AltrpAction extends AltrpModel {
         getAppContext(this.getCurrentModel()),
         true
       );
-      console.log(data);
     }
     if (this.getProperty('forms_bulk')) {
       if (

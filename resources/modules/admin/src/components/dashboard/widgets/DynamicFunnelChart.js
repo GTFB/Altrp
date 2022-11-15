@@ -124,8 +124,8 @@ const DynamicFunnelChart = ({
         }}
         className={classes}
       >
-        <ResponsiveWrapper>
-          className={classes}
+        <ResponsiveWrapper
+          className={classes}>
           {sizes => {
             const dimensions = getSizes(
               sizes.width,

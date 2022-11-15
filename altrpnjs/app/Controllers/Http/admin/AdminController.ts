@@ -204,6 +204,8 @@ export default class AdminController {
   }
 
   private static async upgradeModels() {
+    clearRequireCache()
+
     console.info('Upgrading Models')
 
     console.log(await exec(`node ${base_path('ace')} generator:model`))

@@ -17,10 +17,14 @@ import fs from "fs";
 import base_path from "../helpers/path/base_path";
 import guid from "../helpers/guid";
 import Env from "@ioc:Adonis/Core/Env";
+import startChildWithSockets from "../helpers/startChildWithSockets";
 
-if(! isProd() || env('CLUSTER') != 'true' || process.env.INSTANCE_ID == '0'){
+if(! isProd() || env('CLUSTER') != 'true'  || (
+  env('PM2_ID') && env('PM2_ID') ==  process.env.pm_id || ! env('PM2_ID') && process.env.INSTANCE_ID == '0'
+)){
 
   if(Application.environment === 'web') {
+    startChildWithSockets()
     console.log('booking schedules...')
     Customizer.scheduleAll()
     const plugins = Plugin.getEnabledPlugins()
@@ -37,4 +41,5 @@ if(! isProd() || env('CLUSTER') != 'true' || process.env.INSTANCE_ID == '0'){
     }
     Env.set('PACKAGE_KEY', packageKey)
   }
+
 }

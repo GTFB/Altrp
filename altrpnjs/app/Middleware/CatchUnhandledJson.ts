@@ -22,7 +22,7 @@ export default class CatchUnhandledJson {
       await next()
     }catch (e) {
       response.status(500)
-
+      console.error(e)
       return response.json({
         // ...e,
         axios_response: e.response,

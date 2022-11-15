@@ -6,7 +6,6 @@ import app_path from "../../helpers/path/app_path";
 import fs from "fs";
 import isProd from "../../helpers/isProd";
 import _ from "lodash"
-import startChildWithSockets from "../../helpers/startChildWithSockets";
 
 Route.group(() => {
 
@@ -287,17 +286,6 @@ Route.group(() => {
     /**
      * plugins ajax requests END
      */
-
-    Route.get('/start-socket', ({response}) => {
-      if (! isProd()) {
-        return response.json({success: true})
-      }
-      if (env('CLUSTER') != 'true') {
-        return response.json({success: true})
-      }
-      startChildWithSockets()
-      return response.json({success: true})
-    })
   }).middleware('catch_unhandled_json').prefix('/ajax')
 
 
