@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ResponsiveFunnel, Funnel } from "@nivo/funnel";
 Tooltip;
-import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 import { BoxLegendSvg } from '@nivo/legends'
 import { ResponsiveWrapper } from '@nivo/core'
@@ -65,7 +64,9 @@ const DynamicFunnelChart = ({
   }
 
   if (!data) return <EmptyWidget />
-
+  if(!_.isArray(data)){
+    data = []
+  }
   const scheme = customColorSchemeChecker && customColors.length > 0
     ? customColors
     : colorScheme === "milk"
@@ -168,7 +169,7 @@ const DynamicFunnelChart = ({
               // }}
               colors={scheme}
               legends={legends}
-              motionConfig="wobbly"
+              motionConfig="slow"
               layers={layers}
               {...customProps}
             />

@@ -115,7 +115,7 @@ class WidgetsPanel extends React.Component {
               nodesFilter.map(item => {
               if (item.name === "start" && start) {
                 return (
-                  <div className="customizer-widget" key={item.name}
+                  <div className={`customizer-widget customizer-widget_${item.name}`} key={item.name}
                        onDragStart={(event) => this.onDragStart(event, item.name)} draggable>
                     <item.icon/>
                     <p>{item.title}</p>
@@ -123,7 +123,7 @@ class WidgetsPanel extends React.Component {
                 )
               } else if (item.name !== "start") {
                 return (
-                  <div className="customizer-widget" key={item.name} onDragStart={(event) => this.onDragStart( event, item.name )} draggable>
+                  <div className={`customizer-widget customizer-widget_${item.name}`} key={item.name} onDragStart={(event) => this.onDragStart( event, item.name )} draggable>
                     <item.icon/>
                     <p>{item.title}</p>
                   </div>

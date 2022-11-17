@@ -335,6 +335,17 @@ class AltrpAction extends AltrpModel {
 
       }
         break;
+      default: {
+        try {
+          if(window?.altrp?.customActions[this.getType()]){
+            result = await window?.altrp?.customActions[this.getType()](this)
+          }
+        } catch (e) {
+          // console.error(e);
+          result.success = false
+          result.error = e
+        }
+      }
     }
     let alertText = '';
     if (result.success) {
@@ -1494,7 +1505,6 @@ class AltrpAction extends AltrpModel {
     // console.log( manager);
     // console.log(await manager.getUser());
     let result;
-    console.log(method);
 
     if(_.isFunction(manager[method])){
       try {
@@ -1503,7 +1513,6 @@ class AltrpAction extends AltrpModel {
         return {success:false}
       }
     }
-    console.log(result);
     // await manager.signoutRedirect();
     return {success:true}
   }

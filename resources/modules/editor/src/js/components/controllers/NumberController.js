@@ -46,14 +46,18 @@ class NumberController extends Component {
     if (this.state.show === false) {
       return '';
     }
+    const {
+      fullLength = false,
+      responsive = true,
+    } = this.props
     // let value = this.getSettings(this.props.controlId) || this.getDefaultValue(); todo: удалить если будет работать
     let value = this.state.value || this.getDefaultValue();
     return <div className="controller-container controller-container_number">
       <div className="controller-container__label">
         {this.props.label}
-        <ResponsiveDdMenu />
+        {responsive && <ResponsiveDdMenu />}
       </div>
-      <div className="control-group">
+      <div className={`control-group ${fullLength ? 'control-group_full-length' : ''}`}>
         <input className="control-field"
                onKeyDown={this.onKeyDown}
                onBlur={this.onBlur}

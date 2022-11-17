@@ -498,7 +498,6 @@ export default class Customizer extends BaseModel {
         case 'discordAction': return new DiscordNode(item, customizer)
         default: {
           let classInstance = applyPluginsFiltersSync('get_node_class_instance', type, item, customizer)
-
           if(! classInstance || typeof classInstance === 'string'){
             return new BaseNode( item, customizer )
           }

@@ -66,10 +66,14 @@ export default function renderImage(settings, device, widgetId) {
     let linkUrl = link?.url || ''
     linkUrl = parseURLTemplate(linkUrl)
     const linkProps: {
-      target?: string
+      target?: string,
+      title?: string,
     } = {}
     if(link.openInNew){
       linkProps.target = altrpRandomId()
+    }
+    if(settings.content_media?.title){
+      linkProps.title = settings.content_media.title
     }
     return `
     <div class="altrp-image-container">

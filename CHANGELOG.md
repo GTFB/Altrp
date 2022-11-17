@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 1.4.5 build 6
+### 1.4.5 build 7
 * Default Role for API Robotizers set to Admin  
 
 ### 1.4.4 
