@@ -11,7 +11,6 @@ import {
   manyToMany,
   hasMany,
   HasMany,
-  afterCreate,
   beforeDelete
 } from "@ioc:Adonis/Lucid/Orm";
 import Model from "App/Models/Model";
@@ -129,11 +128,6 @@ export default class Customizer extends BaseModel {
     pivotRelatedForeignKey: 'category_guid',
   })
   public categories: ManyToMany<typeof Category>
-
-  @afterCreate()
-  public static async afterCreate(customizer: Customizer) {
-    Cron.createByCustomizer(customizer)
-  }
 
   @beforeDelete()
   public static async beforeDelete(customizer: Customizer) {
@@ -387,7 +381,7 @@ export default class Customizer extends BaseModel {
     customizers.forEach(customizer => customizer.schedule())
   }
 
-  public schedule() {
+  public async schedule() {
     if (this.type !== 'schedule' || !this.settings) {
       return
     }
@@ -414,49 +408,39 @@ export default class Customizer extends BaseModel {
 
       this.invoke()
     })
+
+    this.settings.next_run = DateTime.fromJSDate(nextInvocation(this.id)?.toDate())
+    await this.save()
   }
 
   public async invoke() {
     let cronLog = ''
-    let cron = await Cron.findBy('customizer_id', this.id)
 
-    if (!cron) {
-      cron = await Cron.createByCustomizer(this)
-    }
-
-    const headMessage = 'customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)'
-
-    console.log(headMessage)
-    cronLog += headMessage
+    console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
 
     try {
       const result = await exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`)
 
       if (result) {
-        cronLog = cronLog ? cronLog + '\n' + result : result
+        cronLog = result
       }
     } catch (err) {
       if (err) {
-        cronLog = cronLog ? cronLog + '\n' + err : err
+        cronLog = err
       }
     }
 
-    if (cron) {
-      await cron.saveLog(cronLog)
-    }
+    await Cron.createByCustomizer(this, cronLog)
+
+    this.settings.last_run = DateTime.now()
+    this.settings.next_run = DateTime.fromJSDate(nextInvocation(this.id)?.toDate())
+    await this.save()
   }
 
   public async removeSchedule() {
-    let cronLog = `remove schedule: ${this.name} / ${this.id}`
-    let cron = await Cron.findBy('customizer_id', this.id)
-
     removeSchedule(this.id)
 
-    if (cron) {
-      await cron.saveLog(cronLog)
-    }
-
-    console.log(cronLog)
+    console.log(`remove schedule: ${this.name} / ${this.id}`)
   }
 
   changePropertyToJS(propertyData, value, type = 'set'): string {

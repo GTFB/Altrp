@@ -1,9 +1,23 @@
 .admin-table__delete-icon {
-    visibility: hidden;
+  visibility: hidden;
+  margin-bottom: 14px;
+}
+
+.admin-content ul li:not(:first-child) {
+  margin-top: 14px;
+
+  .date-label {
+    border-top: 1px solid lightgrey;
+  }
 }
 
 .date-label:hover {
-    .admin-table__delete-icon {
-        visibility: visible;
-    }
+  .admin-table__delete-icon {
+    visibility: visible;
+  }
+}
+
+.cron-log p {
+  font-family: monospace;
+  color: black;
 }
