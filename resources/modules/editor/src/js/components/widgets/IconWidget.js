@@ -13,6 +13,11 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
     justify-content: center;
   }
 
+   .icon-fontawesome {
+    display: flex;
+    justify-content: center;
+   }
+
   .icon-widget__icon * {
     width: auto;
   }
@@ -74,9 +79,17 @@ class IconWidget extends Component {
   render() {
     const titleText = this.state.settings.title_text === undefined ? 'Title' : this.state.settings.title_text
     const classes = this.getClasses() + (this.state.settings.position_css_classes || "")
+    const fontawesomeIcon = this.state.settings.fontawesomeIcon
+
     return (
       <div className={`${classes} icon-widget-wrapper`}>
-        <span className={`${classes} icon-widget__icon`}>{this.state.settings.icon?.id ? renderAsset(this.state.settings.icon) : <DefaultIcon />}</span>
+        <span className={`${classes} ${fontawesomeIcon ? "icon-fontawesome" : "icon-widget__icon"}`}>
+          {fontawesomeIcon ? (
+            <i aria-hidden="true" className={"icon-fontawesome-i " + fontawesomeIcon}/>
+          ) : (
+            this.state.settings.icon?.id ? renderAsset(this.state.settings.icon) : <DefaultIcon />
+          )}
+        </span>
         <div className={`${classes} content`}>
           {React.createElement(this.state.settings.title_tag || 'h3', {
             className: `${classes} title`,

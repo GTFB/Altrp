@@ -14,6 +14,20 @@ const getIconStyles = (settings, id) => {
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '', 'rgb(0, 0, 0)') , 'fill')}
     }`
 
+  styles += `.icon-fontawesome-i {
+        font-size: ${sliderStyled( getResponsiveSetting(settings, 'font-icon-size') )};
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'fill')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'border-color')}
+    }`
+
+  styles += `.icon-fontawesome-i:hover {
+        height: ${sliderStyled( getResponsiveSetting(settings, 'font-icon-size', ':hover') )};
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'border-color')}
+    }`
+
     styles += `.state-disabled .icon-widget-wrapper {
           ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '.state-disabled', 'column') , 'flex-direction')}
       }`

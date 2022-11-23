@@ -359,6 +359,32 @@ class Icon extends BaseElement {
 
     this.endControlSection()
 
+    this.startControlSection('font-icon-styles', {
+      label: 'Font Icon',
+      tab: TAB_STYLE,
+    })
+
+    this.addControl("font-icon-fill", {
+      type: CONTROLLER_COLOR,
+      label: 'Fill color',
+    });
+
+    this.addControl("font-icon-size", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+      max: 200,
+      min: 0,
+    });
+
+
+    this.endControlSection()
+
     advancedTabControllers(this);
   }
 }
