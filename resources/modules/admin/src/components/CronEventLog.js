@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import 'react-tabs/style/react-tabs.scss';
 import axios from 'axios';
 import clsx from 'clsx';
@@ -28,18 +28,18 @@ function CronEventLog() {
       .map(log => ({ ...log, log: log.log.split('\n') }))
   ), [logs, search]);
 
-  useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        const { data } = await axios.get(`/admin/ajax/crons?customizer=${id}`);
-        setLogs(data);
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    };
-
-    fetchLogs();
+  const fetchLogs = useCallback(async () => {
+    try {
+      const { data } = await axios.get(`/admin/ajax/crons?customizer=${id}`);
+      setLogs(data);
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
   }, [id]);
+
+  useEffect(() => {
+    fetchLogs();
+  }, [fetchLogs]);
 
   useWindowScroll(() => {
     setActiveHeader(window.scrollY > 4);
@@ -48,7 +48,7 @@ function CronEventLog() {
   const handleDeleteLog = logId => async () => {
     try {
       await axios.delete(`/admin/ajax/crons/${logId}`);
-      setLogs(data);
+      fetchLogs();
     } catch (error) {
       alert('Error: ' + error.message);
     }
