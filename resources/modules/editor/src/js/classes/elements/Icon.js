@@ -309,7 +309,20 @@ class Icon extends BaseElement {
 
     this.addControl("icon_height", {
       type: CONTROLLER_SLIDER,
-      label: 'Size',
+      label: 'Size Height',
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+      max: 1000,
+      min: 0,
+    });
+
+    this.addControl("icon_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size Width',
       units: [
         'px',
         '%',
