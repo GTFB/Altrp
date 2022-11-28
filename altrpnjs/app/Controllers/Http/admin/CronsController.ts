@@ -27,11 +27,11 @@ export default class CronsController {
     const result = await cronEvents
       .orderBy(orderColumn, orderBy)
       .paginate(page, pageSize)
-    
+
     const data = result.all()
     const count = result.getMeta().total
     const pageCount = result.getMeta().last_page
-    
+
     return response.json({
       data,
       count,
@@ -55,7 +55,6 @@ export default class CronsController {
     } else {
       res = await Cron.all()
     }
-
     return response.json(res)
   }
 

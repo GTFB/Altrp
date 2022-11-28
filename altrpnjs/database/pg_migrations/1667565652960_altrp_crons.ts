@@ -7,9 +7,6 @@ export default class AltrpCrons extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.bigInteger('customizer_id').unsigned()
-      table.timestamp('start_at', { useTz: true })
-      table.timestamp('last_run', { useTz: true })
-      table.timestamp('next_run', { useTz: true })
       table.bigInteger('remain_count')
       table.string('recurrence', 255).notNullable()
       table.text('log', 'longtext').nullable()
