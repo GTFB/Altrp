@@ -11,7 +11,22 @@ const getIconStyles = (settings, id) => {
 
     styles += `.icon-widget__icon * {
         height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height') )};
+        width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width') )};
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '', 'rgb(0, 0, 0)') , 'fill')}
+    }`
+
+  styles += `.icon-fontawesome-i {
+        font-size: ${sliderStyled( getResponsiveSetting(settings, 'font-icon-size') )};
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'fill')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'border-color')}
+    }`
+
+  styles += `.icon-fontawesome-i:hover {
+        height: ${sliderStyled( getResponsiveSetting(settings, 'font-icon-size', ':hover') )};
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'border-color')}
     }`
 
     styles += `.state-disabled .icon-widget-wrapper {
@@ -20,6 +35,7 @@ const getIconStyles = (settings, id) => {
 
     styles += `.state-disabled .icon-widget__icon * {
           height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', '.state-disabled') )};
+          width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width', '.state-disabled') )};
           ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '.state-disabled', 'rgb(0, 0, 0)') , 'fill')}
       }`
 
@@ -29,13 +45,13 @@ const getIconStyles = (settings, id) => {
 
     styles += `.active .icon-widget__icon * {
             height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', '.active') )};
+            width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width', '.active') )};
             ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '.active', 'rgb(0, 0, 0)') , 'fill')}
         }`
 
     styles += `.icon-widget__icon:hover  {
         height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', ':hover') )};
-    }`
-    styles += `.icon-widget__icon:hover * {
+        width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width', ':hover') )};
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
     }`
 
