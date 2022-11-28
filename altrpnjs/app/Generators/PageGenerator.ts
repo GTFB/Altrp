@@ -10,7 +10,6 @@ import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import * as _ from "lodash";
 import getLatestVersion from "../../helpers/getLatestVersion";
 import Env from "@ioc:Adonis/Core/Env";
-import env from "../../helpers/env";
 import base_path from "../../helpers/path/base_path";
 import AltrpMeta from "App/Models/AltrpMeta";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
@@ -20,6 +19,7 @@ import {encode} from "html-entities";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import storage_path from "../../helpers/storage_path";
 import config from "../../helpers/config";
+import altrpRandomId from "../../helpers/altrpRandomId";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -66,6 +66,7 @@ export default class PageGenerator extends BaseGenerator {
       console.error(`Page ${page.id} render error. Need more data`);
       return false
     }
+    const randomString = altrpRandomId()
 
     this.page = page
     this.setGlobal('altrpSettings', {})
@@ -143,7 +144,7 @@ export default class PageGenerator extends BaseGenerator {
         .stub(PageGenerator.template)
         .apply({
           hAltrp: Env.get('PATH_ENV') === 'production'
-            ? `/modules/front-app/h-altrp.js?${env('PACKAGE_KEY')}`
+            ? `/modules/front-app/h-altrp.js?${randomString}`
             : 'http://localhost:3002/src/h-altrp.js',
           children_content,
           fonts,

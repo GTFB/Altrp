@@ -23,12 +23,13 @@ export default class CatchUnhandledJson {
     }catch (e) {
       response.status(500)
 
+      console.error(e?.request || e, e?.response?.data || '') ;
       return response.json({
         // ...e,
         axios_response: e.response,
         success: false,
-        message: 'Unhandled Exception: ' + e.message,
-        trace: e.stack.split('\n'),
+        message: e.response?.data?.message || 'Unhandled Exception: ' + e.message,
+        trace: e?.stack?.split('\n'),
       })
     }
   }

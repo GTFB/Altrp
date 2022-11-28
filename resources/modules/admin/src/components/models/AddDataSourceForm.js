@@ -73,7 +73,7 @@ class AddDataSourceForm extends Component {
 
   ItemPredicate = (query, value) => {
     return (
-      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+      `${value.label?.toLowerCase()}`.indexOf(query?.toLowerCase()) >= 0
     );
   }
 

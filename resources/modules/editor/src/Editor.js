@@ -1,7 +1,5 @@
 import "./sass/editor-style.scss";
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { hot } from "react-hot-loader";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Modules from "./js/classes/Modules";
@@ -725,16 +723,7 @@ function mapStateToProps(state) {
   };
 }
 
-/**
- * Если разработка то включается HMR <br/>
- * По умолчанию просто компонент
- * @member _export
- */
 let _export;
-if (process.env.NODE_ENV === "production") {
-  _export = Editor;
-} else {
-  _export = hot(module)(connect(mapStateToProps)(Editor));
-}
+_export = Editor;
 
 export default _export;

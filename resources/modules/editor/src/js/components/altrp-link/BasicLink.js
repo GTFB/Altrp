@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import altrpRandomId from "../../../../../front-app/src/js/functions/altrpRandomId";
 class BasicLink extends Component {
   render() {
     let classes = this.props.className;
@@ -33,8 +34,8 @@ class BasicLink extends Component {
 
     let target = null;
 
-    if(this.props.target === "_black") {
-      target = "_black"
+    if(this.props.target) {
+      target = altrpRandomId()
     }
 
     let styleChildren = {};

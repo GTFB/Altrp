@@ -35,8 +35,8 @@ class WidgetsPanel extends React.Component {
     let node = true;
 
     if (_.isArray(item)) {
-      item.map(el =>{
-        if(el.type === type) node = false;
+      item.map(el => {
+        if (el.type === type) node = false;
       });
     }
     return node;
@@ -50,7 +50,7 @@ class WidgetsPanel extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if(this.props.customizerSettingsData.length !== nextProps.customizerSettingsData.length || this.state.searchNodes !== nextState.searchNodes) {
+    if (this.props.customizerSettingsData.length !== nextProps.customizerSettingsData.length || this.state.searchNodes !== nextState.searchNodes) {
       return true
     } else {
       return false
@@ -59,11 +59,14 @@ class WidgetsPanel extends React.Component {
 
   render() {
     let start = this.issetNode('start');
-    let finish = this.issetNode('return');
-    // const pluginsNodes =
-    let nodesFilter = this.props.nodeState.filter(item => item.name.includes(this.state.searchNodes.toLowerCase()))
 
-  return <div className="widget-panel-wrapper">
+    // const pluginsNodes =
+    let nodesFilter = this.props.nodeState.filter(item =>{
+      return item.name.toLowerCase().includes(this.state.searchNodes.toLowerCase())
+        || item.title.toLowerCase().includes(this.state.searchNodes.toLowerCase())
+    })
+
+    return <div className="widget-panel-wrapper">
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
         <div className="nodes-panel__search">
           <input
@@ -112,24 +115,25 @@ class WidgetsPanel extends React.Component {
 
             {
               nodesFilter?.length ?
-              nodesFilter.map(item => {
-              if (item.name === "start" && start) {
-                return (
-                  <div className="customizer-widget" key={item.name}
-                       onDragStart={(event) => this.onDragStart(event, item.name)} draggable>
-                    <item.icon/>
-                    <p>{item.title}</p>
-                  </div>
-                )
-              } else if (item.name !== "start") {
-                return (
-                  <div className="customizer-widget" key={item.name} onDragStart={(event) => this.onDragStart( event, item.name )} draggable>
-                    <item.icon/>
-                    <p>{item.title}</p>
-                  </div>
-                )
-              }
-            })
+                nodesFilter.map(item => {
+                  if (item.name === "start" && start) {
+                    return (
+                      <div className={`customizer-widget customizer-widget_${item.name}`} key={item.name}
+                           onDragStart={(event) => this.onDragStart(event, item.name)} draggable>
+                        <item.icon/>
+                        <p>{item.title}</p>
+                      </div>
+                    )
+                  } else if (item.name !== "start") {
+                    return (
+                      <div className={`customizer-widget customizer-widget_${item.name}`} key={item.name}
+                           onDragStart={(event) => this.onDragStart(event, item.name)} draggable>
+                        <item.icon/>
+                        <p>{item.title}</p>
+                      </div>
+                    )
+                  }
+                })
                 : <h2 className="widget-panel__text">Not found</h2>
             }
           </div>

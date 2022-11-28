@@ -40,22 +40,22 @@ const AltrpFunnelDiagram = props => {
         {
             label: 'test',
             id: 1,
-            value: 50
+            value: Math.random()* 100
         },
         {
             label: 'test1',
             id: 2,
-            value: 70
+            value: Math.random()* 100
         },
         {
             label: 'test2',
             id: 3,
-            value: 20
+            value: Math.random()* 100
         },
         {
             label: 'test3',
             id: 4,
-            value: 70
+            value: Math.random() * 100
         },
     ]
   } else {

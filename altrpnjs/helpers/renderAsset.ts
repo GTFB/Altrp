@@ -21,7 +21,7 @@ export default function renderAsset(asset, attrs:any  = {}) {
     const startSvgTag = asset.rawSVG.indexOf('<svg')
     const endSvgTag = asset.rawSVG.indexOf('</svg') + 6
 
-    return asset.rawSVG.slice(0, endSvgTag).slice(startSvgTag);
+    return `<svg>${asset.rawSVG.slice(0, endSvgTag).slice(startSvgTag)}</svg>`;
   }
   switch (asset.assetType) {
     // case "icon": {

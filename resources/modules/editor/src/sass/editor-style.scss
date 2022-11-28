@@ -547,6 +547,8 @@ button {
     & .control-group {
       width: 54px;
       min-width: 54px;
+    }& .control-group.control-group_full-length {
+      width: 100%;
     }
   }
   &_date {
