@@ -2,7 +2,8 @@
 
 ## Changelog
 
-## Test Version build 1
+### 1.4.6 build 1
+* Added CRON Results Logs
 
 ### 1.4.5 
 * Default Role for API Robotizers set to Admin
