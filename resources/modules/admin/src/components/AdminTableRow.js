@@ -186,28 +186,34 @@ export default class AdminTableRow extends Component {
                                             resource[quickAction.method]
                                           )
                                         ) {
-                                          let response;
-                                          switch (quickAction.method) {
-                                            case "get":
-                                              response = await resource[
-                                                quickAction.method
-                                                ](row.id);
-                                              break;
-                                            case "put":
-                                              response = await resource[
-                                                quickAction.method
-                                                ](row.id, quickAction.data);
-                                              break;
+                                          try {
+                                            let response;
+                                            switch (quickAction.method) {
+                                              case "get":
+                                                response = await resource[
+                                                  quickAction.method
+                                                  ](row.id);
+                                                break;
+                                              case "put":
+                                                response = await resource[
+                                                  quickAction.method
+                                                  ](row.id, quickAction.data);
+                                                break;
 
-                                            default:
-                                              response = await resource[
-                                                quickAction.method
-                                                ]();
-                                              break;
+                                              default:
+                                                response = await resource[
+                                                  quickAction.method
+                                                  ]();
+                                                break;
+                                            }
+                                            _.isFunction(quickAction.after)
+                                              ? quickAction.after(response)
+                                              : "";
+                                          } catch (error) {
+                                            _.isFunction(quickAction.onError)
+                                              ? quickAction.onError(error)
+                                              : "";
                                           }
-                                          _.isFunction(quickAction.after)
-                                            ? quickAction.after(response)
-                                            : "";
                                         }
                                       }}
                                     >

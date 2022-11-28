@@ -1,15 +1,17 @@
-import React, { Component } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import 'react-tabs/style/react-tabs.scss';
-import { withRouter } from 'react-router-dom';
 import { DateTime } from 'luxon';
+import clsx from 'clsx';
 
 import AdminTable from './AdminTable';
 import Resource from '../../../editor/src/js/classes/Resource';
 import UserTopPanel from './UserTopPanel';
+import useQuery from '../js/hooks/useQuery';
+import useWindowScroll from '../js/hooks/useWindowScroll';
 
 const columns = [
   {
-    name: 'robotizer',
+    name: 'title',
     title: 'Robotizer',
     url: true,
     editUrl: true,
@@ -33,118 +35,88 @@ const columns = [
   }
 ];
 
-class CronEvents extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentPage: 1,
-      cronEvents: [],
-      activeHeader: 0,
-      cronEventsSearch: '',
-      sorting: {},
-      count: 1,
-      pageCount: 1,
-    };
-    this.changePage = this.changePage.bind(this);
-    this.cronEventsResource = new Resource({ route: '/admin/ajax/cron-events' });
-    this.itemsPerPage = 20;
-  }
+const PARAMS = {
+  PAGE: 'p',
+  HEIGHT: 'h',
+  ORDER_BY: 'ob',
+  ORDER: 'o',
+  SEARCH: 's'
+};
 
-  changePage(currentPage, pagination) {
-    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
-  }
+const cronEventsResource = new Resource({ route: '/admin/ajax/cron-events' });
 
-  async componentDidMount() {
-    let url = new URL(location.href);
-    let urlS = url.searchParams.get('s');
-    let cronEvents = await this.cronEventsResource.getQueried({
-      s: urlS === null ? this.state.cronEventsSearch : urlS,
-      page: this.state.currentPage,
-      pageSize: this.itemsPerPage,
+function CronEvents() {
+  const [query, setQueryParam] = useQuery();
+  const currentPage = useMemo(() => parseInt(query.get(PARAMS.PAGE) || '1'), [query]);
+  const itemsPerPage = useMemo(() => parseInt(query.get(PARAMS.HEIGHT) || '20'), [query]);
+  const orderBy = useMemo(() => query.get(PARAMS.ORDER_BY) || 'title', [query]);
+  const order = useMemo(() => query.get(PARAMS.ORDER) || 'asc', [query]);
+  const search = useMemo(() => query.get(PARAMS.SEARCH) || '', [query]);
+  const [cronEvents, setCronEvents] = useState([]);
+  const [activeHeader, setActiveHeader] = useState(false);
+  const [count, setCount] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
+
+  const fetchResource = useCallback(async () => {
+    const { data, count, pageCount } = await cronEventsResource.getQueried({
+      s: search,
+      page: currentPage,
+      pageSize: itemsPerPage,
+      order_by: orderBy,
+      order
     });
 
-    this.setState(state => ({
-      ...state,
-      cronEventsSearch: urlS === null ? this.state.cronEventsSearch : urlS,
-      cronEvents: cronEvents.cronEvents,
-      count: cronEvents.count,
-      pageCount: cronEvents.pageCount,
-    }));
+    setCronEvents(data);
+    setCount(count);
+    setPageCount(pageCount);
+  }, [search, currentPage, itemsPerPage, orderBy, order]);
 
-    window.addEventListener('scroll', this.listenScrollHeader);
-  }
+  useWindowScroll(() => {
+    setActiveHeader(window.scrollY > 4);
+  });
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.listenScrollHeader);
-  }
+  useEffect(() => {
+    fetchResource();
+  }, [orderBy, order]);
 
-  listenScrollHeader = () => {
-    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
-      this.setState({
-        activeHeader: 1
-      });
-    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
-      this.setState({
-        activeHeader: 0
-      });
-    }
-  }
+  const handleChangePage = currentPage => {
+    setQueryParam(PARAMS.PAGE, currentPage);
+  };
 
-  getCronEvents = async () => {
-    let cronEvents = await this.cronEventsResource.getQueried({
-      s: this.state.cronEventsSearch,
-      ...this.state.sorting,
-      page: this.state.currentPage,
-      pageSize: this.itemsPerPage,
-    });
+  const handleChangeSearch = event => {
+    setQueryParam(PARAMS.SEARCH, event.target.value);
+  };
 
-    this.setState(state => ({
-      ...state,
-      cronEvents: cronEvents.cronEvents,
-      count: cronEvents.count,
-      pageCount: cronEvents.pageCount,
-    }));
-  }
+  const handleSort = (orderBy, order) => {
+    setQueryParam({ [PARAMS.ORDER_BY]: orderBy, [PARAMS.ORDER]: order });
+  };
 
-  sortingHandler = (order_by, order) => {
-    this.setState({ sorting: { order_by, order } }, this.getCronEvents);
-  }
+  const handleSearch = event => {
+    event.preventDefault();
+    fetchResource();
+  };
 
-  searchCronEvents = (e) => {
-    e.preventDefault();
-    let url = new URL(location.href);
-    if (this.state.cronEventsSearch) {
-      url.searchParams.set('s', this.state.cronEventsSearch);
-      this.props.history.push(`${url.pathname + url.search}`);
-    } else {
-      url.searchParams.delete('s');
-      this.props.history.push(`${url.pathname + url.search}`);
-    }
-    this.getCronEvents();
-  }
-
-  changeCronEvents = (e) => {
-    this.setState({ cronEventsSearch: e.target.value });
-  }
-
-  render() {
-    const { cronEvents, cronEventsSearch, sorting, currentPage, count, pageCount } = this.state;
-
-    let cronEventsMap = cronEvents.map(cronEvent => {
-      const lastRun = DateTime.fromISO(cronEvent.last_run);
-      const nextRun = DateTime.fromISO(cronEvent.next_run);
+  const cronEventsRows = useMemo(() => (
+    cronEvents.map(cronEvent => {
+      const settings = cronEvent && cronEvent.settings || {};
+      const lastRun = DateTime.fromISO(settings.last_run);
+      const nextRun = DateTime.fromISO(settings.next_run);
       const nextRunHumanText = nextRun
         .diff(DateTime.now())
         .toFormat("y 'years' M 'months' d 'days' h 'hours' m 'minutes' s 'seconds'")
         .replace(/((^1 year)s|( 1 month)s|( 1 day)s|( 1 hour)s|( 1 minute)s|( 1 second)s)/g, '$4')
         .replace(/(0 years |0 months |0 days |0 hours |0 minutes | 0 seconds)/g, '');
-
       const hasLastRun = lastRun.isValid;
       const hasNextRun = nextRun > DateTime.now();
+      let recurrence = `Every ${settings.period} ${settings.period_unit}s`
+
+      if (settings.period === 1) {
+        recurrence = `Every ${settings.period_unit}`
+      }
 
       return {
         id: cronEvent.id,
-        recurrence: cronEvent.recurrence,
+        recurrence: recurrence,
         last_run: hasLastRun && lastRun.toFormat('yyyy-MM-dd hh:mm:ss'),
         next_run: hasNextRun && (
           <>
@@ -152,65 +124,65 @@ class CronEvents extends Component {
             <div>{nextRunHumanText}</div>
           </>
         ),
-        remain_count: cronEvent.remain_count,
-        robotizer: cronEvent.customizer.title,
+        remain_count: settings.repeat_count,
+        title: cronEvent.title,
         editUrl: '/admin/customizers-editor?customizer_id=' + cronEvent.id,
-      }
-    });
+      };
+    })
+  ), [cronEvents]);
 
-    return (
-      <div className="admin-settings admin-page">
-        <div className={this.state.activeHeader ? 'admin-heading admin-heading-shadow' : 'admin-heading'}>
+  return (
+    <div className="admin-settings admin-page">
+      <div className={clsx('admin-heading', { 'admin-heading-shadow': activeHeader })}>
         <div className="admin-heading-left">
           <div className="admin-breadcrumbs">
             <span className="admin-breadcrumbs__current">Cron Events</span>
           </div>
           <div className="admin-filters">
-              <span className="admin-filters__current">
-                All ({count || '0'})
-              </span>
+            <span className="admin-filters__current">
+              All ({count || '0'})
+            </span>
           </div>
         </div>
-          <UserTopPanel />
-        </div>
-        <div className="admin-content">
-          <AdminTable
-            columns={columns}
-            quickActions={[{
-              tag: 'button',
-              method: 'post',
-              route: '/admin/ajax/cron-events/:id/run',
-              title: 'Run Now',
-            }, {
-              tag: 'Link',
-              props: {
-                href: '/admin/cron-events/:id/logs'
-              },
-              title: 'Show Logs',
-            }]}
-            rows={cronEventsMap}
-            sortingHandler={this.sortingHandler}
-            sortingField={sorting.order_by}
-            searchTables={{
-              submit: this.searchCronEvents,
-              value: cronEventsSearch,
-              change: (e) => this.changeCronEvents(e),
-            }}
-            pageCount={pageCount}
-            currentPage={currentPage}
-            changePage={async (page) => {
-              if (currentPage !== page) {
-                await this.setState({ currentPage: page });
-                await this.getSqlEditors();
-              }
-            }}
-            itemsCount={count}
-            openPagination={true}
-          />
-        </div>
+        <UserTopPanel />
       </div>
-    );
-  }
+      <div className='admin-content'>
+        <AdminTable
+          columns={columns}
+          quickActions={[{
+            tag: 'button',
+            method: 'post',
+            route: '/admin/ajax/cron-events/:id/run',
+            title: 'Run Now',
+            after: () => {
+              alert('Success');
+            },
+            onError: error => {
+              alert('Error: ' + (error.message || error.status));
+            }
+          }, {
+            tag: 'Link',
+            props: {
+              href: '/admin/cron-events/:id/logs',
+            },
+            title: 'Show Logs',
+          }]}
+          rows={cronEventsRows}
+          sortingHandler={handleSort}
+          sortingField={orderBy}
+          searchTables={{
+            submit: handleSearch,
+            value: search,
+            change: handleChangeSearch,
+          }}
+          pageCount={pageCount}
+          currentPage={currentPage}
+          changePage={handleChangePage}
+          itemsCount={count}
+        />
+      </div>
+    </div>
+  )
 }
 
-export default withRouter(CronEvents);
+export default CronEvents;

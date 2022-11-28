@@ -161,10 +161,10 @@ Route.group(() => {
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
     Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
 
-    Route.get('/cron-events', 'admin/CronEventsController.index')
-    Route.get('/cron-events/:id/logs', 'admin/CronEventsController.show')
-    Route.delete('/cron-events/:id/logs', 'admin/CronEventsController.deleteLog')
-    Route.post('/cron-events/:id/run', 'admin/CronEventsController.run')
+    Route.get('/cron-events', 'admin/CronsController.getCronEvents')
+    Route.post('/cron-events/:id/run', 'admin/CronsController.runCronEvent')
+    Route.get('/crons', 'admin/CronsController.index')
+    Route.delete('/crons/:id', 'admin/CronsController.delete')
 
     /**
      *
