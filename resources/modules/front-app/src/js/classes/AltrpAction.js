@@ -337,7 +337,7 @@ class AltrpAction extends AltrpModel {
         break;
       default: {
         try {
-          if(window?.altrp?.customActions[this.getType()]){
+          if(window?.altrp?.customActions && window?.altrp?.customActions[this.getType()]){
             result = await window?.altrp?.customActions[this.getType()](this)
           }
         } catch (e) {

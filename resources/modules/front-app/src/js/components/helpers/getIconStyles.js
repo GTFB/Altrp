@@ -32,8 +32,10 @@ const getIconStyles = (settings, id) => {
             ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '.active', 'rgb(0, 0, 0)') , 'fill')}
         }`
 
-    styles += `.icon-widget__icon *:hover {
+    styles += `.icon-widget__icon:hover  {
         height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', ':hover') )};
+    }`
+    styles += `.icon-widget__icon:hover * {
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
     }`
 

@@ -2,8 +2,9 @@
 
 ## Changelog
 
-### 1.4.5 build 7
-* Default Role for API Robotizers set to Admin  
+### 1.4.5 build 13
+* Default Role for API Robotizers set to Admin
+* Known Bugs Fixed
 
 ### 1.4.4 
 * Added `lang` Attribute Settings for Site

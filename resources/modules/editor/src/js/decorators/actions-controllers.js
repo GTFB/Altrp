@@ -12,7 +12,7 @@ import {
 import Repeater from '../classes/Repeater';
 import axios from "axios";
 import {getElementSettingsSuffix} from "../helpers";
-console.error(window.editorAPI);
+
 let defaultOptions = [
   {
     value: 'form',
