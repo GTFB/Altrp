@@ -164,9 +164,6 @@ class DataStorageUpdater extends AltrpModel {
                   _.get(this.props, "match.params.id")
                 );
                 if (id) {
-                  console.log(dataSource.getWebUrl());
-                  console.log(id);
-                  console.log(this);
                   res = await new Resource({
                     route: dataSource.getWebUrl(),
                   }).get(id);

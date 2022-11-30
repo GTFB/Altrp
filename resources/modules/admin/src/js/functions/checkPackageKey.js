@@ -18,8 +18,8 @@ export default async function checkPackageKey(){
     return
   }
   localStorage.setItem('package_key', serverPackageKey)
-  alert(`Altrp Updated!
-New Package Key Is:
-${serverPackageKey}
-  `)
+//   alert(`Altrp Updated!
+// New Package Key Is:
+// ${serverPackageKey}
+//   `)
 }

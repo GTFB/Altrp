@@ -50,7 +50,7 @@ class GlobalEffects extends Component {
         JSON.stringify(this.props.colors)
       )
     ) {
-      console.log("IM WATCHING UPDATES");
+
     }
   }
 
@@ -60,7 +60,7 @@ class GlobalEffects extends Component {
    * @param {*} effect
    */
   recursiveWalkTree(template, guid, effect) {
-    console.log(template);
+
     if (Array.isArray(template)) {
       template?.forEach(
         /**

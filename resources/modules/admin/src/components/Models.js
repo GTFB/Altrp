@@ -2,13 +2,15 @@ import React, {Component} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
 import {Link, withRouter} from 'react-router-dom'
-
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
 import UserTopPanel from "./UserTopPanel";
 import {connect} from "react-redux";
-import {filterCategories} from "../js/helpers";
 import {compose} from "redux";
+import {CSSTransition} from "react-transition-group";
+import ArrowSidebar from "../svgs/akar-icons_arrow-down.svg";
+import SidebarEditModel from "./models/SidebarEditModel";
+import Scrollbars from "react-custom-scrollbars";
 
 const columnsModel = [
   {
@@ -16,7 +18,8 @@ const columnsModel = [
     title: 'Title',
     url: true,
     editUrl: true,
-    tag: 'Link'
+    tag: 'Link',
+    button__table: true
   },
   {
     name: 'name',
@@ -33,7 +36,7 @@ const columnsModel = [
 ];
 const columnsDataSource = [
   {
-    name: 'name',
+    name: 'title',
     title: 'Name',
     url: true,
     editUrl: true,
@@ -74,6 +77,8 @@ class Models extends Component {
       dataSourcesSorting: {},
       categoryOptions: [],
       activeCategory: 'All',
+      isActive: false,
+      idModel: null
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -306,6 +311,14 @@ class Models extends Component {
     this.setState({dataSourcesSearch: e.target.value})
   }
 
+  closeSidebar = () => {
+    this.setState(state => ({
+      ...state,
+      isActive: false,
+      idModel: null
+    }))
+  }
+
   render() {
     const {
       activeTab,
@@ -361,6 +374,21 @@ class Models extends Component {
         <UserTopPanel/>
       </div>
       <div className="admin-content zeroing__styleTabs">
+       <CSSTransition unmountOnExit in={this.state.isActive} timeout={500} classNames="sidebar-settings-model">
+         <div className="admin-settings_model">
+           <ArrowSidebar onClick={this.closeSidebar} className="admin-settings_model-arrow"/>
+           <Scrollbars
+             renderTrackVertical={({style}) => <div style={{...style, right: "4px", bottom: "2px", top: "2px", borderRadius: "3px"}}  className="track-vertical"/>}
+             autoHide
+             autoHideTimeout={500}
+             autoHideDuration={200}
+           >
+             <div style={{padding: '0 20px 20px'}}>
+               <SidebarEditModel closeSidebar={this.closeSidebar} updateModelsState={this.updateModels} id={this.state.idModel}/>
+             </div>
+           </Scrollbars>
+         </div>
+       </CSSTransition>
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
           <TabList className="nav nav-pills admin-pills">
             <Tab>
@@ -374,18 +402,25 @@ class Models extends Component {
             <AdminTable
               columns={columnsModel}
               quickActions={[
-                {
-                  tag: 'Link',
-                  props: {href: '/admin/tables/models/edit/:id'},
-                  title: 'Edit'
-                },
+                // {
+                //   tag: 'Link',
+                //   props: {href: '/admin/tables/models/edit/:id'},
+                //   title: 'Edit'
+                // },
                 {
                   tag: 'button',
                   route: '/admin/ajax/models/:id',
                   method: 'delete',
                   confirm: 'Are You Sure?',
-                  after: () => {
-                    this.updateModels()
+                  // after: () => {
+                  //   this.updateModels()
+                  // },
+                  callBack: async ({id}) => {
+                    if (window.confirm("Are You Sure?")) {
+                      await (new Resource({route: '/admin/ajax/models'}).delete(id))
+                      this.updateModels()
+                    }
+                    if (id === this.state.idModel) this.closeSidebar()
                   },
                   className: 'quick-action-menu__item_danger',
                   title: 'Delete'
@@ -397,7 +432,18 @@ class Models extends Component {
                 getCategories: this.getCategory,
                 activeCategory: this.state.activeCategory
               }}
-              rows={modelsMap}
+              rows={modelsMap.map(model =>
+                ({
+                  ...model,
+                  button__table: () => {
+                    this.setState(state => ({
+                      ...state,
+                      isActive: true,
+                      idModel: model.id
+                    }))
+                  }
+                })
+              )}
               sortingHandler={this.modelsSortingHandler}
               sortingField={modelsSorting.order_by}
 
@@ -429,17 +475,17 @@ class Models extends Component {
                   props: {href: '/admin/tables/data-sources/edit/:id'},
                   title: 'Edit'
                 },
-                {
-                  tag: 'button',
-                  route: '/admin/ajax/data_sources/:id',
-                  method: 'delete',
-                  confirm: 'Are You Sure?',
-                  after: () => {
-                    this.getDataSources()
-                  },
-                  className: 'quick-action-menu__item_danger',
-                  title: 'Delete'
-                }
+                // {
+                //   tag: 'button',
+                //   route: '/admin/ajax/data_sources/:id',
+                //   method: 'delete',
+                //   confirm: 'Are You Sure?',
+                //   after: () => {
+                //     this.getDataSources()
+                //   },
+                //   className: 'quick-action-menu__item_danger',
+                //   title: 'Delete'
+                // }
               ]}
               rows={dataSourcesMap}
               sortingHandler={this.dataSourcesSortingHandler}

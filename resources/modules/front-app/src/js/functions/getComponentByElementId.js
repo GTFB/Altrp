@@ -11,6 +11,7 @@ export default function getComponentByElementId(elementId = "") {
   }
   elementId = elementId.trim();
   appStore.getState().elements.forEach(el => {
+
     if (!el.elementWrapperRef.current) {
       return;
     }

@@ -240,6 +240,8 @@ class InputSelect2 extends BaseElement {
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      locked: true,
       label: "Default Value"
     });
 

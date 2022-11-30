@@ -20,6 +20,7 @@ class ControlStack extends FrontElement {
    *   [default]: any,
    *   [stateless]: boolean,
    *   [responsive]: boolean,
+   *   [fullLength]: boolean,
    * }} args
    * */
   addControl(controlId, args){

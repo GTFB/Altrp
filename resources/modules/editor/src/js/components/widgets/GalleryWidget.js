@@ -13,6 +13,10 @@ import Overlay from "../altrp-gallery/Overlay";
     justify-content: flex-start;
   }
 
+  .altrp-gallery-overlay-bg {
+    mix-blend-mode: none;
+  }
+
   .altrp-gallery-grid {
     display: grid;
     position: relative;
@@ -24,6 +28,7 @@ import Overlay from "../altrp-gallery/Overlay";
     background-position: center center;
     width: 100%;
     transform-origin: center top;
+    padding-bottom:100%;
   }
 
   .altrp-gallery-img-container {

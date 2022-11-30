@@ -22,6 +22,9 @@ export const addSchedule = (
     month = date.getMonth();
 
   switch (periodUnit) {
+    case 'minute':
+      rule = `${seconds} */${periodValue} * * * *`
+      break
     case 'hour':
       rule = `${seconds} ${minutes} */${periodValue} * * *`
       break
@@ -45,5 +48,15 @@ export const addSchedule = (
 }
 
 export const removeSchedule = id => {
-  jobs[id].cancel()
+  if (jobs[id]) {
+    jobs[id].cancel()
+  }
+}
+
+export const nextInvocation = id => {
+  if (jobs[id]) {
+    return jobs[id].nextInvocation()
+  }
+
+  return null
 }

@@ -5,7 +5,6 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
-import '../../../../../editor/src/sass/blueprint.scss'
 
 import {
   MenuItem,

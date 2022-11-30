@@ -357,11 +357,6 @@ class Section extends BaseElement{
 
     this.addControl('link_link', {
       type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false
-      },
       label: 'Link',
       locked: true,
     });
@@ -468,8 +463,12 @@ class Section extends BaseElement{
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
-      default: {url: ""},
       locked: true,
+    });
+
+    this.addControl("background_image_lazy", {
+      type: CONTROLLER_SWITCHER,
+      label: "Background Image Lazy Loading",
     });
 
     this.addControl('background_position', {
@@ -585,7 +584,6 @@ class Section extends BaseElement{
           label: "set width"
         },
       ],
-      default: "unset",
       label: 'Background Size',
     });
 
@@ -797,7 +795,6 @@ class Section extends BaseElement{
     this.addControl('object_fit_select', {
       type: CONTROLLER_SELECT,
       label: 'object-fit',
-      default: 'cover',
       options: [
         {
           value: 'initial',

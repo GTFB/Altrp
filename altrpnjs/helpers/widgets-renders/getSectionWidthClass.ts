@@ -1,6 +1,10 @@
-export default function getSectionWidthClass(settings){
-  const {layout_content_width_type:widthType, isFixed} = settings
+import getResponsiveSetting from "../getResponsiveSetting";
 
+export default function getSectionWidthClass(settings, screenName){
+  const {isFixed} = settings
+
+  const widthType = getResponsiveSetting(settings,
+    'layout_content_width_type', screenName)
   let section_classes = 'altrp-section_boxed'
   if (widthType === "boxed" && !isFixed) {
     section_classes = "  ";

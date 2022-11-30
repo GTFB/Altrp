@@ -5,7 +5,7 @@ export  const  csrf: ShieldConfig['csrf'] = {
   enabled: true,
   exceptRoutes: (ctx) => {
 
-    return ctx.request.url().includes('/api/')
+    return ctx.request.url().includes('/api/') || ctx.request.url().includes('/wsaltrp')
   },
 
   enableXsrfCookie: true,

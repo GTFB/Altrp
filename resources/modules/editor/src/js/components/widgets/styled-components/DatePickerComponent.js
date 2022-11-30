@@ -7,7 +7,7 @@ import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 
 export default function DatePickerComponent(settings, elementId) {
   const styles = [
-    `altrp-date-picker${elementId}`,
+    `bp3-datepicker.altrp-date-picker${elementId}`,
       ["padding", "picker_padding", "dimensions"],
       ["background-color", "picker_background", "color"],
       ["border-style", "picker_border_type"],

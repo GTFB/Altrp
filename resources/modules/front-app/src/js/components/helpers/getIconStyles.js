@@ -6,115 +6,120 @@ const getIconStyles = (settings, id) => {
     let styles = ``
 
     styles += `.icon-widget-wrapper {
-        display: flex;
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '', 'column') , 'flex-direction')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '') , 'flex-direction')}
     }`
 
     styles += `.icon-widget__icon * {
-        width: auto;
         height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height') )};
+        width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width') )};
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '', 'rgb(0, 0, 0)') , 'fill')}
     }`
 
+  styles += `.icon-fontawesome-i {
+        font-size: ${sliderStyled( getResponsiveSetting(settings, 'font-icon-size') )};
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'fill')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', '', 'rgb(0, 0, 0)') , 'border-color')}
+    }`
+
+  styles += `.icon-fontawesome-i:hover {
+        height: ${sliderStyled( getResponsiveSetting(settings, 'font-icon-size', ':hover') )};
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'font-icon-fill', ':hover', 'rgb(0, 0, 0)') , 'border-color')}
+    }`
+
     styles += `.state-disabled .icon-widget-wrapper {
-          display: flex;
           ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '.state-disabled', 'column') , 'flex-direction')}
       }`
 
     styles += `.state-disabled .icon-widget__icon * {
-          width: auto;
           height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', '.state-disabled') )};
+          width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width', '.state-disabled') )};
           ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '.state-disabled', 'rgb(0, 0, 0)') , 'fill')}
       }`
 
     styles += `.active .icon-widget-wrapper {
-            display: flex;
             ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '.active', 'column') , 'flex-direction')}
         }`
 
     styles += `.active .icon-widget__icon * {
-            width: auto;
             height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', '.active') )};
+            width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width', '.active') )};
             ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '.active', 'rgb(0, 0, 0)') , 'fill')}
         }`
 
-    styles += `.icon-widget__icon *:hover {
-        width: auto;
+    styles += `.icon-widget__icon:hover  {
         height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height', ':hover') )};
+        width: ${sliderStyled( getResponsiveSetting(settings, 'icon_width', ':hover') )};
         ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
     }`
 
-    styles += `.content {
-        width: 100%;
-    }`
-
     styles += `.title {
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '', 'center') , 'text-align')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '') , 'text-align')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin') , "margin")}
     }`
 
     styles += `.state-disabled .title {
-          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled', 'center') , 'text-align')}
+          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled') , 'text-align')}
           ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography', '.state-disabled') )}
-          ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.state-disabled', {color: 'rgb(0, 0, 0)'}) , 'color')}
+          ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.state-disabled') , 'color')}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding', '.state-disabled') , "padding")}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin', '.state-disabled') , "margin")}
     }`
 
     styles += `.active .title {
-            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active', 'center') , 'text-align')}
+            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active') , 'text-align')}
             ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography', '.active') )}
-            ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.active', {color: 'rgb(0, 0, 0)'}) , 'color')}
+            ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '.active') , 'color')}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding', '.active') , "padding")}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin', '.active') , "margin")}
     }`
 
     styles += `.title:hover {
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography', ':hover') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', ':hover', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', ':hover') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding', ':hover') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin', ':hover') , "margin")}
     }`
 
     styles += `.description {
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '', 'center') , 'text-align')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '') , 'text-align')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin') , "margin")}
     }`
 
     styles += `.state-disabled .description {
-          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled', 'center') , 'text-align')}
+          ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.state-disabled') , 'text-align')}
           ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography', '.state-disabled') )}
-          ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.state-disabled', {color: 'rgb(0, 0, 0)'}) , 'color')}
+          ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.state-disabled') , 'color')}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding', '.state-disabled') , "padding")}
           ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', '.state-disabled') , "margin")}
     }`
 
     styles += `.active .description {
-            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active', 'center') , 'text-align')}
+            ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '.active') , 'text-align')}
             ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography', '.active') )}
-            ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.active', {color: 'rgb(0, 0, 0)'}) , 'color')}
+            ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '.active') , 'color')}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding', '.active') , "padding")}
             ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', '.active') , "margin")}
     }`
 
     styles += `.description:hover {
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography', ':hover') )}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', ':hover', {color: 'rgb(0, 0, 0)'}) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', ':hover') , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding', ':hover') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', ':hover') , "margin")}
     }`
 
-    styles += `.icon-widget__icon {
-        width: auto;
-        display: flex;`
+    styles += `.icon-widget__icon {`
 
-    switch (getResponsiveSetting(settings, 'icon_position', '', 'column')) {
+    switch (getResponsiveSetting(settings, 'icon_position', '')) {
         case 'column':
         case 'column-reverse':
             styles += simplePropertyStyled( getResponsiveSetting(settings, 'icon_horizontal_alignment', '', 'center') , 'justify-content')
@@ -130,9 +135,7 @@ const getIconStyles = (settings, id) => {
         ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity') )}
     }`
 
-    styles += `.state-disabled .icon-widget__icon {
-          width: auto;
-          display: flex;`
+    styles += `.state-disabled .icon-widget__icon {`
 
     switch (getResponsiveSetting(settings, 'icon_position', '.state-disabled', 'column')) {
       case 'column':
@@ -150,9 +153,7 @@ const getIconStyles = (settings, id) => {
           ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity', '.state-disabled') )}
       }`
 
-    styles += `.active .icon-widget__icon {
-            width: auto;
-            display: flex;`
+    styles += `.active .icon-widget__icon {`
 
     switch (getResponsiveSetting(settings, 'icon_position', '.active', 'column')) {
       case 'column':

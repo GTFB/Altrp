@@ -109,6 +109,7 @@ function altrpJSZip() {
     '!./altrpnjs/build/public/robots.txt',
     '!./altrpnjs/build/public/sitemap.xml',
     '!./altrpnjs/build/resources/views/altrp/**/*',
+    '!./altrpnjs/build/start/routes/custom/**/*',
   ], {dot: true,}).pipe(zip(filename))
     .pipe(gulp.dest('../'))
     .pipe(notify({
@@ -157,6 +158,7 @@ const copyPublicToAdonis = gulp.parallel(
   },
   cb=>{
     return gulp.src([
+    './CHANGELOG.md',
     './CHANGELOG.md',
   ]).pipe(gulp.dest('./altrpnjs/build/'))
   },

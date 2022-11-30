@@ -2,6 +2,7 @@ import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import AltrpImage from "../altrp-image/AltrpImage";
+import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-image {
@@ -21,6 +22,32 @@ import AltrpImage from "../altrp-image/AltrpImage";
     display: flex;
     justify-content: center;
   }
+
+  .altrp-image-container, .altrp-image-container a {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
+
+  .altrp-image-placeholder {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    height: auto;
+    width: 100%;
+
+    &::before {
+      display: block;
+      content: '';
+      width: 100%;
+      padding-top: 75%;
+    }
+  }
 `)
 
 const Link = window.Link
@@ -35,6 +62,7 @@ class ImageWidget extends Component {
       window.elementDecorator(this);
     }
     this.elementId = props.element.getId()
+    this.element = props.element
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
@@ -63,7 +91,7 @@ class ImageWidget extends Component {
     //   {}
     // );
     let classNames = this.getClasses() + (this.state.settings.position_css_classes || "") + "altrp-image-container"
-    let media = this.state.settings.content_media;
+    let media = this.element.getLockedSettings('content_media', {});
 
     if(cursorPointer) {
       classNames += " cursor-pointer"
@@ -126,7 +154,11 @@ class ImageWidget extends Component {
     }
     let width = this.props.element.getResponsiveSetting('width_size');
     let height = this.props.element.getResponsiveSetting('height_size');
-    width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
+    if(_.get(width, 'size')){
+      width = _.get(width, 'size') + _.get(width, 'unit', '%');
+    } else {
+      width = '';
+    }
     if(_.get(height, 'size')){
       height = _.get(height, 'size') + _.get(height, 'unit', '%');
     } else {
@@ -176,7 +208,7 @@ class ImageWidget extends Component {
 
       };
       if(link.openInNew){
-        linkProps.target = '_blank';
+        linkProps.target = altrpRandomId();
       }
 
       return (

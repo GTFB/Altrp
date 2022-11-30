@@ -1,3 +1,5 @@
+import isUndefined from "lodash/isUndefined";
+
 const a = {
   Ё: "Yo",
   Й: "I",
@@ -66,7 +68,6 @@ const a = {
   б: "b",
   ю: "yu",
 };
-import isUndefined from "lodash/isUndefined";
 
 /**
  * Транслитерация
@@ -82,5 +83,5 @@ export function transliterate(str) {
     .map(function (char) {
       return isUndefined(a[char]) ? char : a[char];
     })
-    .join("");
+    .join("").replace(/(?!\w)[\x00-\xC0]/g, '_');
 }

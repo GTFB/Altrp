@@ -53,7 +53,7 @@ const driveConfig: DriveConfig = {
       | files.
       |
       */
-      root: "",
+      root: public_path("/"),
 
       /*
       |--------------------------------------------------------------------------

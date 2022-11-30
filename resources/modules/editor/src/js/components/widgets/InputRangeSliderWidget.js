@@ -5,23 +5,7 @@ import {RangeSlider} from '@blueprintjs/core'
 
 const Slider = RangeSlider;
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-.bp3-slider-label{
-    white-space: nowrap;
-}
-.bp3-slider-handle{
-    z-index: 2;
-}
-.bp3-slider-label{
-    z-index: 1;
-}
-`);
-
 const SliderWrapper = styled.div`
-  .altrp-field-slider .bp3-slider-handle {
-    background-image: none;
-  }
-
   ${(props) => {
     let styles = "";
 

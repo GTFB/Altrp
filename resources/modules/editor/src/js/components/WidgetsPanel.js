@@ -41,13 +41,13 @@ class WidgetsPanel extends Component {
     for (let elem in elements){
       if(elements.hasOwnProperty(elem) && elements[elem].getGroup){
         if(defaultGroups.map(g=>g.title).indexOf(elements[elem].getGroup()) === -1){
-          console.log(elements[elem].getGroup());
+
           additionalGroups.push(elements[elem].getGroup())
         }
 
       }
     }
-    console.log(additionalGroups);
+
 
     additionalGroups = _.uniq(additionalGroups)
     additionalGroups = additionalGroups.map(ag=>({name: ag, title: ag}))

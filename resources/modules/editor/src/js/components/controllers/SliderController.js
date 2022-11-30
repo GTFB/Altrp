@@ -42,7 +42,7 @@ class SliderController extends Component {
       ...value,
       size: e.target.value
     });
-    // console.log(this.state.value)
+
   };
 
   getDefaultValue() {
@@ -61,7 +61,7 @@ class SliderController extends Component {
       ...value,
       size: e.target.value
     });
-    // console.log(e.target.value)
+
   }
 
   render() {

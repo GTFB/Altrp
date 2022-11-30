@@ -2,6 +2,7 @@
 
 
 @section('head')
+  {{{await applyPluginsFiltersAsync('editor_view_top_script', '')}}}
 
     <script src="{{ url }}?{{env('PACKAGE_KEY')}}" defer></script>
 
@@ -12,6 +13,7 @@
     <script>
         let _altrpVersion = "{{ version }}";
 
+        window.isProd = {{{ isProd }}}
         window.altrp = {
           version: '{{getLatestVersion()}}',
           isNodeJS: true

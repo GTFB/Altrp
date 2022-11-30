@@ -34,14 +34,17 @@ Route.group(() => {
     Route.get('/templates/options', 'TemplatesController.options')
     Route.get('/templates/:id', 'TemplatesController.get')
     Route.put('/templates/:id', 'TemplatesController.update')
+    Route.post('/templates/:id/publish', 'TemplatesController.publish')
     Route.delete('/templates/:id/reviews', 'TemplatesController.deleteReviews')
     Route.get('/templates/:id/reviews/', 'TemplatesController.getReviews')
     Route.get('/templates/:id/reviews/:review_id', 'TemplatesController.getReview')
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
-    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer' );
+    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer');
     Route.delete('/reviews', 'TemplatesController.deleteAllReviews')
+    Route.get('/templates/:id/settings', 'TemplatesController.settingsGet')
+    Route.put('/templates/:id/settings', 'TemplatesController.settingsSet')
 
 
     Route.get("/role_options", "OptionsController.roles")
@@ -59,6 +62,7 @@ Route.group(() => {
     Route.delete('/pages/:id', 'admin/PagesController.delete')
     Route.get('/pages/:id', 'admin/PagesController.show')
     Route.put('/pages/:id', 'admin/PagesController.update')
+    Route.post('/pages/:id/publish', 'admin/PagesController.publish')
 
     Route.get("/users", "users/UsersController.index")
     Route.post("/users", "users/UsersController.create")
@@ -156,6 +160,12 @@ Route.group(() => {
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
     Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
+
+    Route.get('/cron-events', 'admin/CronsController.getCronEvents')
+    Route.post('/cron-events/:id/run', 'admin/CronsController.runCronEvent')
+    Route.get('/crons', 'admin/CronsController.index')
+    Route.delete('/crons/:id', 'admin/CronsController.delete')
+
     /**
      *
      * sql_editors
@@ -179,7 +189,7 @@ Route.group(() => {
     Route.post('/media', 'admin/MediaController.store')
     Route.get('/media/:id', 'admin/MediaController.showFull')
     Route.delete('/media/:id', 'admin/MediaController.destroy')
-    Route.get('media_settings', async({response})=>{
+    Route.get('media_settings', async ({response}) => {
       return response.json([])
     });
     /**
@@ -218,8 +228,8 @@ Route.group(() => {
     Route.post('update-all-resources', 'admin/AdminController.upgradeAllResources').name = 'admin.update-all-resources'
     Route.post('restart-altrp', 'admin/AdminController.restartAltrp').name = 'admin.restart-altrp'
 
-    Route.post('check_update', async (httpContext: HttpContextContract)=>{
-      if(env('APP_ENV') !== 'production'){
+    Route.post('check_update', async (httpContext: HttpContextContract) => {
+      if (env('APP_ENV') !== 'production') {
         return httpContext.response.json({result: false})
       }
       return httpContext.response.json({result: false})
@@ -249,7 +259,7 @@ Route.group(() => {
     const methods = [
       'get', 'post', 'put', 'delete'
     ]
-    for(const method of methods) {
+    for (const method of methods) {
       /**
        * handle all 4 HTTP methods
        */
@@ -259,17 +269,19 @@ Route.group(() => {
         const plugin = plugins.find(plugin => {
           return plugin.name === segments[3]
         })
-        if(! plugin){
+        if (!plugin) {
           httpContext.response.status(404)
           return httpContext.response.json({success: false, message: 'Plugin Not Found'})
         }
-        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js': 'ts'}`)
-        if(fs.existsSync(fileName)){
-          if(isProd()){
-            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js' : 'ts'}`)
+        if (fs.existsSync(fileName)) {
+          if (isProd()) {
+            Object.keys(require.cache).forEach(function (key) {
+              delete require.cache[key]
+            })
           }
           const module = isProd() ? await require(fileName).default : (await import(fileName)).default
-          if(_.isFunction(module)){
+          if (_.isFunction(module)) {
             return await module(httpContext)
           }
         }
@@ -290,8 +302,11 @@ Route.group(() => {
   Route.get('/editor-content', 'IndicesController.editorContent')
   Route.get('/editor', 'IndicesController.editor')
 
+  Route.get('/altrp-template-preview/:id', 'TemplatesController.preview')
+
   Route.get('/', 'IndicesController.admin')
   Route.get('*', 'IndicesController.admin')
 })
   .prefix('/admin')
   .middleware('admin')
+

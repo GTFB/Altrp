@@ -13,7 +13,6 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import AltrpModel from "../../classes/AltrpModel";
 import {Radio, RadioGroup} from '@blueprintjs/core'
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
-import '../../../../../editor/src/sass/blueprint.scss'
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 
@@ -21,6 +20,10 @@ import '../../../../../editor/src/sass/blueprint.scss'
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.altrp-field-radio.bp3-control.bp3-radio input:checked ~ .bp3-control-indicator::before {
+  background-image: radial-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 28%, rgba(0, 0, 0, 0) calc(28% + 6%));
 }
 
 .altrp-field-container .bp3-radio {
@@ -81,6 +84,9 @@ import '../../../../../editor/src/sass/blueprint.scss'
   color: red;
   font-size: inherit;
   padding-left: 10px;
+  line-height: 1.5;
+  font-weight: normal;
+  font-family: Open Sans;
 }
 .altrp-field-label {
   font-size: 16px;
@@ -335,6 +341,7 @@ textarea.altrp-field {
 .altrp-field-label-container {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
 }
 .altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
   padding: 0 8px;
@@ -635,27 +642,27 @@ class InputRadioWidget extends Component {
     }
     let value = "";
     if(content_calculation) {
-      try {
-        content_calculation = content_calculation
-          .replace(/}}/g, "')")
-          .replace(/{{/g, "_.get(context, '");
-        value = eval(content_calculation);
-        if (value === this.state.value) {
-          return;
-        }
-        this.setState(
-          state => ({...state, value}),
-          () => {
-            this.dispatchFieldValueToStore(value);
-          }
-        );
-      } catch (e) {
-        console.error(
-          "Evaluate error in Input: '" + e.message + "'",
-          this.props.element.getId()
-        );
+    try {
+      content_calculation = content_calculation
+        .replace(/}}/g, "')")
+        .replace(/{{/g, "_.get(context, '");
+      value = eval(content_calculation);
+      if (value === this.state.value) {
+        return;
       }
+      this.setState(
+        state => ({ ...state, value }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
+    } catch (e) {
+      console.error(
+        "Evaluate error in Input: '" + e.message + "'",
+        this.props.element.getId()
+      );
     }
+  }
   }
 
   /**
@@ -706,9 +713,8 @@ class InputRadioWidget extends Component {
   /**
    * Изменение значения в виджете
    * @param e
-   * @param  editor для получения изменений из CKEditor
    */
-  onChange = (e, editor = null) =>{
+  onChange = (e) =>{
     let value = "";
     if (e && e.target) {
       value = e.target.value;
@@ -717,6 +723,7 @@ class InputRadioWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
+
 
     this.setState(
       state => ({
@@ -981,7 +988,7 @@ class InputRadioWidget extends Component {
     let classes =
       this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
     const { options = [] } = this.state;
-    let { value = "" } = this.state;
+    let value  = this.getValue();
 
     const fieldName =
       this.props.element.getFieldId() ||
@@ -1010,7 +1017,7 @@ class InputRadioWidget extends Component {
             /**
              * Если значение или опция число, то приведем к числу перед сравнением
              */
-            checked = altrpCompare(value, option.value, "==");
+              checked = altrpCompare(value, option.value, "==");
 
             return (
               <Radio
@@ -1020,19 +1027,6 @@ class InputRadioWidget extends Component {
                 checked={checked}
                 key={`${fieldName}-${idx}`}
               />
-              // <span className="altrp-field-option-span">
-              //   {/*<Radio*/}
-              //   {/*  // type="radio"*/}
-              //   {/*  value={option.value}*/}
-              //   {/*  // name={`${formID}-${fieldName}`}*/}
-              //   {/*  // className={`altrp-field-option__input ${checked ? "active" : ""*/}
-              //   {/*    // }`}*/}
-              //   {/*  // onChange={this.onChange}*/}
-              //   {/*  // checked={checked}*/}
-              //   {/*  // id={`${formID}-${fieldName}-${idx}`}*/}
-              //   {/*/>*/}
-              // </span>
-              // </Radio>
             );
           })}
         </RadioGroup>

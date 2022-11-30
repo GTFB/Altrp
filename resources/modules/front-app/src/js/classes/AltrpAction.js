@@ -25,6 +25,7 @@ import delay from "../functions/delay"
 import altrpCompare from "../functions/altrpCompare"
 import getWrapperHTMLElementByElement from "../functions/getWrapperHTMLElementByElement"
 import Resource from "../../../../editor/src/js/classes/Resource"
+import replacePageContent from "../helpers/replace-page-content";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -212,6 +213,10 @@ class AltrpAction extends AltrpModel {
         result = await this.doActionRedirect();
       }
         break;
+      case 'reload': {
+        result = this.doActionReload();
+      }
+        break;
       case 'toggle_element': {
         result = await this.doActionToggleElements();
       }
@@ -330,6 +335,17 @@ class AltrpAction extends AltrpModel {
 
       }
         break;
+      default: {
+        try {
+          if(window?.altrp?.customActions && window?.altrp?.customActions[this.getType()]){
+            result = await window?.altrp?.customActions[this.getType()](this)
+          }
+        } catch (e) {
+          // console.error(e);
+          result.success = false
+          result.error = e
+        }
+      }
     }
     let alertText = '';
     if (result.success) {
@@ -564,14 +580,27 @@ class AltrpAction extends AltrpModel {
     return result;
   }
 
+  doActionReload(){
+    window.location.reload();
+    return{success: true}
+  }
   /**
    * Делает редирект на страницу form_url
    * @return {Promise<{}>}
    */
   async doActionRedirect() {
     let history = window.history
-    let URL = this.getFormURL();
-    if(! URL){
+    let _URL = this.getFormURL();
+    if(! this.getProperty('back')){
+      let url = _URL.replace(location.origin, '')
+      url = location.origin + url
+      url = new URL(url)
+      if(location.pathname + location.search === url.pathname + url.search){
+        return {success: true}
+      }
+
+    }
+    if(! _URL){
       if (this.getProperty('back')) {
         history.back()
       }
@@ -585,16 +614,28 @@ class AltrpAction extends AltrpModel {
       } else {
         let innerRedirect = !this.getProperty('outer');
         if (innerRedirect) {
-          frontAppRouter.history.push(URL);
+          frontAppRouter.history.push(_URL);
         } else {
-          window.location.assign(URL);
+          window.location.assign(_URL);
         }
       }
     } else {
       if (this.getProperty('back')) {
         history.back()
       } else {
-        window.location.href = URL;
+        try{
+          if(this.getProperty('prevent') || window?.altrp?.spa_off){
+            window.location.href = _URL
+          } else {
+            replacePageContent(_URL)
+          }
+        } catch (e) {
+          console.error(e);
+
+          window.location.href = _URL
+          // alert(e);
+          // window.location.assign(_URL);
+        }
       }
     }
     return {
@@ -1158,6 +1199,7 @@ class AltrpAction extends AltrpModel {
     const change = this.getProperty('forms_change');
     IDs.forEach(id => {
       let component = getComponentByElementId(id);
+
       switch (change) {
         case 'select_all': {
           if (_.get(component, 'elementRef.current.selectAll')) {
@@ -1166,6 +1208,7 @@ class AltrpAction extends AltrpModel {
         }
           break;
         case 'clear': {
+          // console.log(component);
           if (_.get(component, 'elementRef.current.clearValue')) {
             component.elementRef.current.clearValue();
           }
@@ -1462,7 +1505,6 @@ class AltrpAction extends AltrpModel {
     // console.log( manager);
     // console.log(await manager.getUser());
     let result;
-    console.log(method);
 
     if(_.isFunction(manager[method])){
       try {
@@ -1471,7 +1513,6 @@ class AltrpAction extends AltrpModel {
         return {success:false}
       }
     }
-    console.log(result);
     // await manager.signoutRedirect();
     return {success:true}
   }

@@ -10,7 +10,6 @@ import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import { TextArea } from "@blueprintjs/core";
-import '../../../../../editor/src/sass/blueprint.scss'
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
 
@@ -65,6 +64,9 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
   color: red;
   font-size: inherit;
   padding-left: 10px;
+  line-height: 1.5;
+  font-weight: normal;
+  font-family: "Open Sans";
 }
 .altrp-field-label {
   font-size: 16px;

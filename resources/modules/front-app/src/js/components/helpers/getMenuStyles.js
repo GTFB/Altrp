@@ -307,7 +307,7 @@ const getMenuStyles = (settings, id) => {
     styles += '}';
   }
 
-  styles += `.bp3-menu-item.altrp-menu-item${id}{align-items:center;border-radius:0;`;
+  styles += `.bp3-menu-item.altrp-menu-item${id}{`;
 
   let padding = getResponsiveSetting(settings, 'padding');
   if (padding) {
@@ -337,7 +337,7 @@ const getMenuStyles = (settings, id) => {
   styles += '}';
 
   //state disabled
-  styles += `.state-disabled .bp3-menu-item.altrp-menu-item${id}{align-items:center;border-radius:0;`;
+  styles += `.state-disabled .bp3-menu-item.altrp-menu-item${id}{`;
 
   let paddingDisabled = getResponsiveSetting(settings, 'padding', '.state-disabled');
   if (paddingDisabled) {

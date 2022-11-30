@@ -23,7 +23,7 @@ module.exports = {
         // loader: "css-loader",
         use: [
           // Creates `style` nodes from JS strings
-          "file-loader",
+          "style-loader",
           // Translates CSS into CommonJS
           "css-loader"
         ]
@@ -50,26 +50,27 @@ module.exports = {
         //   use: ['css-loader', 'sass-loader'],
         // }),
       },
+      // {
+      //   test: /\.svg$/,
+      //  exclude: /slick.svg$/,
+      //   use: [
+      //     {
+      //       loader: "babel-loader"
+      //     },
+      //     {
+      //       loader: "react-svg-loader",
+      //       options: {
+      //         //jsx: true, // true outputs JSX tags
+      //       }
+      //     }
+      //   ]
+      // },
       {
-        test: /\.svg$/,
-        exclude: /slick.svg$/,
-        use: [
-          {
-            loader: "babel-loader"
-          },
-          {
-            loader: "react-svg-loader",
-            options: {
-              //jsx: true, // true outputs JSX tags
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpg|gif|svg)$/,
         loader: "file-loader",
         options: {
-          name: "[path][name].[ext]"
+          name: "[path][name].[ext]",
+          esModule: false
         }
       },
       {
@@ -98,7 +99,7 @@ module.exports = {
       "Access-Control-Allow-Headers":
         "X-Requested-With, content-type, Authorization"
     },
-    hotOnly: true
+
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -108,7 +109,6 @@ module.exports = {
     new WebpackBuildNotifierPlugin({
       title: "Editor"
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       "process.env": "{}",

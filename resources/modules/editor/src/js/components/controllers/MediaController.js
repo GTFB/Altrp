@@ -7,6 +7,30 @@ import controllerDecorate from "../../decorators/controller";
 import { assetsShow } from "../../store/assets-browser/actions";
 import { iconsManager } from "../../helpers";
 import AltrpSVG from "../altrp-svg/AltrpSVG";
+import {getFormat} from "../../../../../front-app/src/js/functions/getFormat";
+
+const sizeOptions = [
+    {
+      'value': '_150x150',
+      'label': '150x150',
+    },
+    {
+      'value': '_300x300',
+      'label': '300x300',
+    },
+    {
+      'value': '_600x600',
+      'label': '600x600',
+    },
+    {
+      'value': '_1600x900',
+      'label': '1600x900',
+    },
+    {
+      'value': '',
+      'label': 'Full',
+    },
+]
 
 class MediaController extends Component {
   constructor(props) {
@@ -25,6 +49,7 @@ class MediaController extends Component {
     this.dynamicButton = React.createRef();
     this.openAssetsBrowser = this.openAssetsBrowser.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
+    this.onChangeSelect = this.onChangeSelect.bind(this);
   }
 
   openAssetsBrowser(e) {
@@ -47,6 +72,17 @@ class MediaController extends Component {
 
   getDefaultValue() {
     return {};
+  }
+
+  onChangeSelect(e) {
+    if (this.state.value?.url) {
+      let format = getFormat(this.state.value.filename)
+      let mediaUrl = "/storage" + this.state.value.filename.slice(0, -(format.length)) + e.target.value + format
+      let copyValue = _.cloneDeep(this.state.value)
+      copyValue.url = mediaUrl
+      copyValue.media_variation = e.target.value;
+      this._changeValue(copyValue);
+    }
   }
 
   render() {
@@ -83,40 +119,54 @@ class MediaController extends Component {
       Asset = AddIcon
     }
 
-    return <div className="controller-container controller-container_media">
-      <div className="controller-container__label">
-        {this.props.label}
-      </div>
-      {
-        this.state.dynamicValue ? '' : <div className="controller-container__dynamic" ref={this.dynamicButton} onClick={this.openDynamicContent}>
-          Dynamic
-          <DynamicIcon />
-        </div>
-      }
-      {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">
-        <div className="dynamic-placeholder__text">
+    return (
+      <>
+        <div className="controller-container controller-container_media">
+          <div className="controller-container__label">
+            {this.props.label}
+          </div>
           {
-            `${this.state.dynamicValue.modelTitle} ${this.state.dynamicValue.fieldTitle}`
+            this.state.dynamicValue ? '' : <div className="controller-container__dynamic" ref={this.dynamicButton} onClick={this.openDynamicContent}>
+              Dynamic
+              <DynamicIcon />
+            </div>
           }
-        </div>
+          {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">
+            <div className="dynamic-placeholder__text">
+              {
+                `${this.state.dynamicValue.modelTitle} ${this.state.dynamicValue.fieldTitle}`
+              }
+            </div>
 
-        <div className="dynamic-placeholder__remove" onClick={this.removeDynamicSettings}>
-          {
-            iconsManager().renderIcon('times')
+            <div className="dynamic-placeholder__remove" onClick={this.removeDynamicSettings}>
+              {
+                iconsManager().renderIcon('times')
+              }
+            </div>
+          </div> : <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
+            {renderedSvg || (Asset ? <Asset {...assetsProps} /> : '')}
+            {
+              value.name ?
+                <button className="controller-media-choose__button controller-media-choose__button_delete"
+                        onClick={this.deleteAsset}>Delete</button> :
+                <button className="controller-media-choose__button controller-media-choose__button_choose">Choose
+                  Media</button>
+            }
+          </div>
           }
         </div>
-      </div> : <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
-        {renderedSvg || (Asset ? <Asset {...assetsProps} /> : '')}
-        {
-          value.name ?
-            <button className="controller-media-choose__button controller-media-choose__button_delete"
-                    onClick={this.deleteAsset}>Delete</button> :
-            <button className="controller-media-choose__button controller-media-choose__button_choose">Choose
-              Media</button>
-        }
-      </div>
-      }
-    </div>
+        <div className="controller-container controller-container_select">
+          <div className="controller-container__label control-select__label">Image Size</div>
+          <div className="control-container_select-wrapper">
+            <select disabled={!this.state.value?.url || this.state.value?.type === "svg"} onChange={this.onChangeSelect} value={this.state.value?.media_variation || ''} className="control-select control-field">
+              {sizeOptions.map(option => {
+                return <option value={option.value} key={option.value}>{option.label}</option>
+              })}
+            </select>
+          </div>
+        </div>
+      </>
+    )
   }
 }
 

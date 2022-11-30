@@ -8,6 +8,10 @@
     width: 100%;
 }
 
+.bp3-datepicker  .bp3-icon{
+  width: auto;
+  height: auto;
+}
 .bp3-input {
     appearance: none;
     background: #ffffff;

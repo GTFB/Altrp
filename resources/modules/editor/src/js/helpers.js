@@ -176,6 +176,9 @@ export function parseURLTemplate(URLTemplate, object = {}) {
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
   idTemplates.forEach(idTemplate => {
+    if(Number(idTemplate.replace(/:|\//g, ""))){
+      return
+    }
     let replace = object[idTemplate.replace(/:|\//g, "")] || "";
     idTemplate = idTemplate.replace("/", "");
     url = url.replace(new RegExp(idTemplate, "g"), replace);

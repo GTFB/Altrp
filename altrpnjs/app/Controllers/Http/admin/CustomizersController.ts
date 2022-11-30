@@ -1,17 +1,17 @@
+import { DateTime } from 'luxon'
 import Customizer from 'App/Models/Customizer';
 import Model from 'App/Models/Model';
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
 import validGuid from '../../../../helpers/validGuid';
 import * as _ from 'lodash'
+import exec from "../../../../helpers/exec";
 import guid from "../../../../helpers/guid";
 import Source from "App/Models/Source";
 import Event from "@ioc:Adonis/Core/Event";
-import ListenerGenerator from "App/Generators/ListenerGenerator";
-import CustomizerGenerator from 'App/Generators/CustomizerGenerator';
-import ScheduleGenerator from 'App/Generators/ScheduleGenerator';
-// import timers from "App/Services/Timers";
-import timers from "../../../Services/Timers";
 import LIKE from "../../../../helpers/const/LIKE";
+import base_path from '../../../../helpers/base_path'
+import Role from "App/Models/Role";
+// import SourceRole from "App/Models/SourceRole";
 
 export default class CustomizersController {
 
@@ -57,20 +57,23 @@ export default class CustomizersController {
           'api_url': "/" + customizer.name,
           'title': customizer.title,
           'name': customizer.name,
+          'auth': true,
           'type': 'customizer',
           'request_type':await customizer.getRequestType(),
         })
 
         customizer = await Customizer.query().preload("altrp_model").firstOrFail()
 
-        if(customizer?.settings?.time && customizer?.settings?.time_type) {
-          await timers.add(customizer, model)
-        }
         await source.save()
+
+        const adminRole = await Role.query().where('name', 'admin').first()
+
+        if (adminRole) {
+          await source.related('roles').attach([adminRole.id])
+        }
       }
       if(customizer.type === "listener" && model) {
-        const generator = new ListenerGenerator()
-        await generator.run(customizer)
+        await exec(`node ${base_path('ace')} generator:listener --id=${customizer.id}`)
       }
       //@ts-ignore
       if(model){
@@ -186,40 +189,31 @@ export default class CustomizersController {
       )
     }
 
-    // if(customizer.type === "listener") {
-    //   // @ts-ignore
-    //   const generator = new ListenerGenerator()
-    //
-    //   await generator.delete(customizer)
-    //
-    // }
+
     const oldType = customizer.type
-    const oldSettings = customizer.settings
+
     const all = request.all()
     delete all.created_at
     delete all.updated_at
+    delete all.name
 
     if (all.type === 'schedule') {
       all.settings = all.settings || {}
       all.settings.period_unit = all.settings.period_unit || 'day'
+      all.settings.start_at = all.settings.start_at || DateTime.now()
     }
 
     if (oldType === 'crud' && all.type !== 'crud') {
-      const generator = new CustomizerGenerator(customizer)
-
-      generator.delete()
+      await exec(`node ${base_path('ace')} generator:crud --delete --id=${customizer.id}`)
     }
 
     if (oldType === 'schedule' && all.type !== 'schedule') {
-      const generator = new ScheduleGenerator(customizer)
-
-      generator.delete()
+      await exec(`node ${base_path('ace')} generator:schedule --delete --id=${customizer.id}`)
       customizer.removeSchedule()
     }
 
     customizer.merge(all)
     customizer.merge({
-      name: request.all().name,
       title: request.all().title,
       type: request.all().type,
       data: request.all().data,
@@ -265,27 +259,31 @@ export default class CustomizersController {
           'title': customizer.title,
           'name': customizer.name,
           'type': 'customizer',
+          'auth': true,
           'request_type':await customizer.getRequestType(),
         })
         await source.save()
+
+        if(!oldSource){
+          const adminRole = await Role.query().where('name', 'admin').first()
+          if (adminRole) {
+            await source.related('roles').attach([adminRole.id])
+          }
+        }
       }
       if(customizer.type === "listener" && model) {
-        const generator = new ListenerGenerator()
-
-        await generator.run(customizer)
+        await exec(`node ${base_path('ace')} generator:listener --id=${customizer.id}`)
       }
 
       if (customizer.type === 'crud' && model) {
-        const generator = new CustomizerGenerator(customizer)
-
-        await generator.run()
+        await exec(`node ${base_path('ace')} generator:crud --id=${customizer.id}`)
       }
 
       if (customizer.type === 'schedule') {
-        const generator = new ScheduleGenerator(customizer)
-
-        await generator.run()
-        customizer.schedule()
+        const result = await exec(`node ${base_path('ace')} generator:schedule --id=${customizer.id}`)
+        if (result !== null) {
+          customizer.schedule()
+        }
       }
 
       if(model) {
@@ -293,11 +291,6 @@ export default class CustomizersController {
       }
 
 
-      if(customizer?.settings?.time && customizer.settings?.time_type) {
-        await timers.add(customizer, model)
-      } else if(oldSettings?.time_type !== customizer?.settings?.time_type || oldSettings?.time !== customizer?.settings?.time) {
-        // await timers.remove(customizer.guid)
-      }
 
     } catch
       (e) {
@@ -388,18 +381,16 @@ export default class CustomizersController {
     }
     try {
       if(customizer.type === "listener") {
-        const generator = new ListenerGenerator()
-
-        await generator.delete(customizer)
-
+        await exec(`node ${base_path('ace')} generator:listener --delete --id=${customizer.id}`)
       }
 
-      if(customizer?.settings?.time && customizer?.settings?.time_type) {
-        // await timers.remove(customizer.guid)
-      }
-
+      const oldSources =  await Source.query().where('sourceable_id', customizer.id)
+        .where('sourceable_type', Customizer.sourceable_type)
+      await Promise.all(oldSources.map(async s =>{
+        await s.related('roles').detach()
+        await s.delete()
+      }))
       await customizer.delete()
-
     } catch (e) {
       return response.json({
           'success':

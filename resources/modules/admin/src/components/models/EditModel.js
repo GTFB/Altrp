@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter, Redirect } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import EditModelForm from "./EditModelForm";
 import AdminTable from "../AdminTable";
 import Resource from "../../../../editor/src/js/classes/Resource";
@@ -46,10 +46,8 @@ class EditModel extends Component {
       },
       fields: [],
       relations: null,
-      accessors: [],
       id,
       data_source_options: [],
-      isModalOpened: false,
       modalWindow: false,
       modalRelationWindow: false,
       activeHeader: 0,
@@ -61,7 +59,6 @@ class EditModel extends Component {
     if (id) {
       this.fieldsResource = new Resource({ route: `/admin/ajax/models/${id}/fields` });
       this.relationsResource = new Resource({ route: `/admin/ajax/models/${id}/relations` });
-      this.accessorsResource = new Resource({ route: `/admin/ajax/models/${id}/accessors` });
       this.data_source_optionsResource = new Resource({ route: `/admin/ajax/models/${id}/data_source_options` });
     }
   }
@@ -77,10 +74,7 @@ class EditModel extends Component {
     this.setState(state => ({ ...state, relations }));
   }
 
-  updateAccessors = async () => {
-    let accessors = await this.accessorsResource.getAll();
-    this.setState(state => ({ ...state, accessors }));
-  }
+
 
   toggleWindowModal = () => {
     store.dispatch(getModelId(null));
@@ -142,9 +136,6 @@ class EditModel extends Component {
       this.relationsResource.getAll()
         .then(relations => this.setState({ relations }));
 
-      this.accessorsResource.getAll()
-        .then(accessors => this.setState({ accessors }));
-
       this.data_source_optionsResource.getAll()
         .then(data_source_options => this.setState({ data_source_options }));
     }
@@ -196,10 +187,8 @@ class EditModel extends Component {
     this.props.history.push("/admin/tables/models");
   };
   render() {
-    const { model, fields,  relations, sql_editors, accessors, isModalOpened,
-       data_source_options, modalWindow, modalRelationWindow } = this.state;
+    const { model, fields,  relations, sql_editors, data_source_options, modalWindow, modalRelationWindow } = this.state;
 
-    console.log("title", this.state.prevTitle);
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -286,56 +275,6 @@ class EditModel extends Component {
               />
             </div>
            : ''}
-        </div>
-
-
-        <div className="form-group__inline-wrapper table_start">
-
-
-
-          {accessors ?
-            <div className="form-group_width-table47">
-              <div className="form-group__inline-wrapper table__name-top">
-                <h2 className="sub-header">Accessors</h2>
-                <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/accessors/add`}>Add Accessor</Link>
-              </div>
-
-              <AdminTable
-                columns={columns}
-                quickActions={[{
-                  tag: 'Link', props: {
-                    href: `/admin/tables/models/${id}/accessors/edit/:id`,
-                  },
-                  title: 'Edit'
-                }, {
-                  tag: 'button',
-                  route: `/admin/ajax/models/${id}/accessors/:id`,
-                  method: 'delete',
-                  confirm: 'Are You Sure?',
-                  after: () => this.updateAccessors(),
-                  className: 'quick-action-menu__item_danger',
-                  title: 'Delete'
-                }]}
-                rows={accessors.map(accessor => ({ ...accessor, editUrl: `/admin/tables/models/${model.id}/accessors/edit/${accessor.id}` }))}
-                radiusTable={true}
-                offBorderLast={true}
-              />
-            </div>
-           : ''}
-        </div>
-
-
-        <div className="form-group__inline-wrapper table_start">
-
-
-          <div className="form-group_width-table47">
-            <div className="form-group__inline-wrapper table__name-top">
-              <h2 className="sub-header">Validation</h2>
-              <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
-                Add Field
-              </button>
-            </div>
-          </div>
         </div>
 
         {sql_editors ? <>

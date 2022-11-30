@@ -15,7 +15,8 @@ import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersA
 
 export default class UpdateService {
 
-  private static UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/'
+  private static UPDATE_DOMAIN = 'https://cdn.altrp.com/api/v1/download_altrp_94nvxm3m7'
+  private static RESERVE_UPDATE_DOMAIN = 'https://up.altrp.com/downloads/altrp-js/'
 
   private static ARCHIVE_PATH = base_path('temp.zip')
 
@@ -31,10 +32,22 @@ export default class UpdateService {
     console.log("Starting Update")
     let file = ''
     try {
-      file = (await axios.get(UpdateService.UPDATE_DOMAIN + version, {
+      file = (await axios.get(UpdateService.UPDATE_DOMAIN, {
         responseType: 'arraybuffer',
+        headers: {
+          'x-altrp-domain': env('APP_URL'),
+        },
+        params: {
+          version
+        }
       }))?.data || '';
     } catch (e) {
+      file = (await axios.get(UpdateService.RESERVE_UPDATE_DOMAIN + version, {
+        responseType: 'arraybuffer',
+        headers: {
+          'x-altrp-domain': env('APP_URL'),
+        },
+      }))?.data || '';
       return false;
     }
     if (!await UpdateService.write_public_permissions()) {
@@ -92,7 +105,7 @@ export default class UpdateService {
   private static update_files() {
     let archive = new AdmZip(UpdateService.ARCHIVE_PATH)
     if(!archive.test()){
-      throw 'Archive no pass a test'
+      throw new Error('Archive no pass a test')
     }
     if (fs.existsSync(public_path('modules'))) {
       fs.rmSync(public_path('modules'), {recursive: true});
@@ -130,6 +143,11 @@ export default class UpdateService {
    */
   private static async upgradePackages() {
     await promisify(exec)(`npm --prefix ${base_path()} ci --production` )
+    // try{
+    //   await promisify(exec)(`sudo npm --prefix ${base_path()} ci --production` )
+    // }catch (e) {
+    //   await promisify(exec)(`su npm --prefix ${base_path()} ci --production` )
+    // }
     return true;
   }
 }

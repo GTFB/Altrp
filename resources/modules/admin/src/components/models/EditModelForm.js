@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {Link, Redirect} from "react-router-dom";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
-import AltrpSelect from "../altrp-select/AltrpSelect";
 import {InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import {MultiSelect} from "@blueprintjs/select";
 import {altrpRandomId} from "../../../../front-app/src/js/helpers";
@@ -149,10 +148,6 @@ class EditModelForm extends Component {
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width23">
           <label htmlFor="page-title" className="font__edit">Model Title</label>
-          {/*<input type="text" id="page-title" required*/}
-          {/*       value={model.title || ''}*/}
-          {/*       onChange={this.titleChangeHandler}*/}
-          {/*       className="form-control" />*/}
           <InputGroup className="form-control-blueprint"
                       onChange={this.titleChangeHandler}
                       value={model.title || ''}
@@ -164,39 +159,16 @@ class EditModelForm extends Component {
         </div>
         <div className="form-group form-group_width23">
           <label htmlFor="page-name" className="font__edit">Model Name</label>
-          {/*<input type="text" id="page-name" required*/}
-          {/*       value={model.name || ''}*/}
-          {/*       onChange={e => { this.changeValue(e.target.value, 'name') }}*/}
-          {/*       className="form-control" />*/}
           <InputGroup className="form-control-blueprint"
                       onChange={this.nameChangeHandler}
                       value={model.name || ''}
                       type="text"
                       id="page-name"
                       required
-                     // readOnly={this.props.paramsId}
           />
         </div>
-
-        {/*<div className="form-group form-group_width23">*/}
-        {/*  <label htmlFor="page-description" className="font__edit">Parent Model</label>*/}
-        {/*  <input type="text" id="page-description"*/}
-        {/*         value={model.parent_model_id || ''}*/}
-        {/*         onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
-        {/*         className="form-control" />*/}
-        {/*  <InputGroup className="form-control-blueprint"*/}
-        {/*              onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
-        {/*              value={model.parent_model_id || ''}*/}
-        {/*              type="text"*/}
-        {/*              id="page-description"*/}
-        {/*  />*/}
-        {/*</div>*/}
         <div className="form-group form-group_width23 form-group_column">
           <label htmlFor="page-description" className="font__edit">Model Description</label>
-          {/*<input type="text" id="page-description"*/}
-          {/*       value={model.description || ''}*/}
-          {/*       onChange={e => { this.changeValue(e.target.value, 'description') }}*/}
-          {/*       className="form-control" />*/}
           <TextArea className="form-control-blueprint"
                       large={false}
                       onChange={e => { this.changeValue(e.target.value, 'description') }}
@@ -252,16 +224,6 @@ class EditModelForm extends Component {
           <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
         </div>
 
-        <div className="form-group__flexModel">
-          <input type="checkbox" id="page-only_user"
-
-
-            checked={this.state.value.user_id}
-
-            onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
-            />
-          <label htmlFor="page-only_user" className="label_model font__edit">Only for Current User</label>
-        </div>
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>

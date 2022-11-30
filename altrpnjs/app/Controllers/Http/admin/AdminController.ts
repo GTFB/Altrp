@@ -1,32 +1,21 @@
-import Model from "App/Models/Model";
-import ModelGenerator from "App/Generators/ModelGenerator";
-import ControllerGenerator from "App/Generators/ControllerGenerator";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import Controller from "App/Models/Controller";
 import Application from '@ioc:Adonis/Core/Application';
 import jimp from "jimp";
 import FAVICONS_SIZES from "../../../../helpers/const/FAVICONS_SIZES";
 import Drive from '@ioc:Adonis/Core/Drive'
-import Template from "App/Models/Template";
-import TemplateGenerator from "App/Generators/TemplateGenerator";
-import PageGenerator from "App/Generators/PageGenerator";
-import Page from "App/Models/Page";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
-import Customizer from "App/Models/Customizer";
 import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
 import Env from "@ioc:Adonis/Core/Env";
-import {exec} from "child_process";
 import fs from "fs";
-import {promisify} from "util";
 import resource_path from "../../../../helpers/path/resource_path";
-import Logger from "@ioc:Adonis/Core/Logger";
 import View from "@ioc:Adonis/Core/View";
 import {CacheManager} from "edge.js/build/src/CacheManager";
 import env from "../../../../helpers/env";
 import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
-import delay from "../../../../helpers/delay";
+import base_path from '../../../../helpers/base_path'
+import exec from '../../../../helpers/exec'
 
 export default class AdminController {
 
@@ -42,7 +31,7 @@ export default class AdminController {
     }
     try {
       if(isProd()){
-        await promisify(exec)('pm2 restart all --update-env')
+        await exec('pm2 restart all --update-env')
       }
 
     }catch (e) {
@@ -80,6 +69,12 @@ export default class AdminController {
         await AdminController.upgradePages(request)
       }
         break;
+      case 'cruds':
+        await AdminController.upgradeCRUDs()
+        break
+      case 'schedules':
+        await AdminController.upgradeSchedules()
+        break
       default:{
 
         if (fs.existsSync(resource_path('views/altrp'))) {
@@ -92,16 +87,16 @@ export default class AdminController {
 
       }
     }
-    try {
-      if(isProd()){
-        await promisify(exec)('pm2 restart all --update-env')
-      }
-
-    }catch (e) {
-      res.message = 'Error server restarting: \n' + e.message
-      e.message = 'Error server restarting: \n' + e.message
-      console.error(e);
-    }
+    // try {
+    //   if(isProd()){
+    //     await exec('pm2 restart all --update-env')
+    //   }
+    //
+    // }catch (e) {
+    //   res.message = 'Error server restarting: \n' + e.message
+    //   e.message = 'Error server restarting: \n' + e.message
+    //   console.error(e);
+    // }
 
 
     return response.json(res)
@@ -109,34 +104,13 @@ export default class AdminController {
 
 
   private static async upgradeTemplates(request: RequestContract){
-    Logger.info('Upgrading templates')
-    const templateGenerator = new TemplateGenerator()
+    console.info('Upgrading Templates')
 
+    const id = request.input('id')
 
-    let templates
-    let id = request.input('id')
-    if(id){
-      if(id.indexOf(',')){
-        id = id.split(',')
-        templates = await Template.query()
-          .whereIn('id', id)
-          .select('*')
-      } else {
-        templates = await Template.query()
-          .where('id', id)
-          .select('*')
-      }
-    } else {
-      templates = await Template.query().whereNull('deleted_at').select('*')
-    }
-    for (let template of templates) {
-      try{
-        await templateGenerator.run(template)
+    console.log(await exec(`node ${base_path('ace')} generator:template ${id ? `--id=${id}` : ''}`))
 
-      }catch (e) {
-        console.error(`Error while Template ${template.guid} generate: ${e.message}`);
-      }
-    }
+    console.info('Templates Upgraded')
   }
 
   public async updateFavicon({request}) {
@@ -180,7 +154,7 @@ export default class AdminController {
       return httpContext.response.json({
         success: false,
         message: e.message,
-        trace: e.stack.split('\n'),
+        trace: e?.stack?.split('\n'),
       })
     }
 
@@ -206,7 +180,7 @@ export default class AdminController {
       return httpContext.response.json({
         success: false,
         message: e.message,
-        trace: e.stack.split('\n'),
+        trace: e?.stack?.split('\n'),
       })
     }
 
@@ -221,76 +195,27 @@ export default class AdminController {
   }
 
   private static async upgradePages(request: RequestContract) {
-    console.log('Upgrading pages')
+    console.info('Upgrading Pages')
+    const id = request.input('id')
 
-    let pages
+    console.log(await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`))
 
-    let id = request.input('id')
-    if(id){
-      if(id.indexOf(',')){
-        id = id.split(',')
-        pages = await Page.query().whereNull('deleted_at')
-          .whereIn('id', id)
-          .select('*')
-      } else {
-        pages = await Page.query()
-          .where('id', id)
-          .select('*')
-      }
-    } else {
-      pages = await Page.query().whereNull('deleted_at').select('*')
-    }
-
-    for (let page of pages) {
-      const pageGenerator = new PageGenerator()
-      try{
-        await pageGenerator.run(page)
-        await delay(100);
-      }catch (e) {
-
-        console.error(`Error while Page ${page.id} generate: ${e.message}`,
-          e.stack.split('\n'),
-          );
-      }
-    }
+    console.info('Pages Upgraded')
   }
 
   private static async upgradeModels() {
-    console.log('Upgrading models')
+    clearRequireCache()
 
-    const models = await Model.query().select('*')
+    console.info('Upgrading Models')
 
-    const controllerGenerator = new ControllerGenerator()
-    const modelGenerator = new ModelGenerator()
+    console.log(await exec(`node ${base_path('ace')} generator:model`))
+    console.log(await exec(`node ${base_path('ace')} generator:router`))
 
-    for (let model of models) {
-      if (model.name.toLowerCase() === 'user' || model.name.toLowerCase() === 'media') {
-        continue
-      }
-      try{
-        await modelGenerator.run(model)
-      }catch (e) {
-        console.error(`Error while Model generate: ${e.message}`);
-      }
-      let controller: any = await Controller.query().where('model_id', model.id).first()
-      if (!controller) {
-        controller = new Controller();
-        controller.fill({
-          model_id: model.id,
-          description: model.description,
-        })
-        await controller.save()
-      }
-      try{
-        await controllerGenerator.run(controller)
-      }catch (e) {
-        console.error(e);
-      }
-    }
+    console.info('Models Upgraded')
   }
 
   private static async upgradeListeners() {
-    Logger.info('Upgrading Listeners')
+    console.info('Upgrading Listeners')
 
     const listenerGenerator = new ListenerGenerator()
 
@@ -299,12 +224,28 @@ export default class AdminController {
     await listenerGenerator.hookModels()
     await listenerGenerator.hookPages()
     await listenerGenerator.hookListeners()
-    const listeners = await Customizer.query().where('type', 'listener').select('*')
 
-    for (const _l of listeners) {
-      await listenerGenerator.run(_l)
-    }
+    console.log(await exec(`node ${base_path('ace')} generator:listener`))
+
+    console.info('Listeners Upgraded')
   }
+
+  private static async upgradeCRUDs() {
+    console.info('Upgrading CRUDs')
+
+    console.log(await exec(`node ${base_path('ace')} generator:crud`))
+
+    console.info('CRUDs Upgraded')
+  }
+
+  private static async upgradeSchedules() {
+    console.info('Upgrading Schedules')
+
+    console.log(await exec(`node ${base_path('ace')} generator:schedule`))
+
+    console.info('Schedules Upgraded')
+  }
+
   async getHealthCheck({response}:HttpContextContract){
 
     let used = process.memoryUsage().heapUsed / 1024 / 1024;

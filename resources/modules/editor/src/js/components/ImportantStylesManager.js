@@ -26,7 +26,6 @@ class ImportantStylesManager extends Component {
             element={section}
           />
         })}
-        {/*<div> test</div>*/}
       </div>
     </StyleSheetManager>
   }

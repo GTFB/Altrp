@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import {
-  BaseModel,
+  BaseModel, beforeDelete,
   BelongsTo,
   belongsTo,
   column,
@@ -19,7 +19,6 @@ import SQLEditor from "App/Models/SQLEditor";
 import _ from "lodash";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
-import Logger from "@ioc:Adonis/Core/Logger";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import PageDatasource from "App/Models/PageDatasource";
 import altrpRandomId from "../../helpers/altrpRandomId";
@@ -71,6 +70,11 @@ export default class Source extends BaseModel {
 
   @column()
   public bodies: string
+
+  @beforeDelete()
+  public static async beforeDelete(source: Source): Promise<void>{
+    await source.related('roles').detach()
+  }
 
   @column()
   public need_all_roles: boolean
@@ -131,7 +135,7 @@ export default class Source extends BaseModel {
       case 'App\\Altrp\\Query': {
         let url = data_get(this, 'url', '')
         if(! url){
-          Logger.warn(`Source id:${this.id} has not url`)
+          console.error(`Source id:${this.id} has not url`)
         }
         url = url.replace(`/${this.model?.table?.name}`, '')
         return config('app.url') + '/ajax/models/queries/' + this.model?.table?.name + url;
@@ -189,7 +193,7 @@ export default class Source extends BaseModel {
     `;
   }
   private renderRolesCheck():string{
-    if(! this.roles.length){
+    if(! this.roles.length || ! this.auth){
       return ''
     }
     return `
@@ -229,8 +233,8 @@ export default class Source extends BaseModel {
       switch ( this.sourceable_type) {
         case Customizer.sourceable_type:{
           if(!this.customizer?.name){
-            Logger.trace(`Customizer Not found method name type
-             Source: ${this.name}`);
+            console.error(`Customizer Not found method name type
+             Source: ${this.name} id: ${this.id}`);
           }
           return this.customizer?.name || `_${altrpRandomId()}`
         }
@@ -426,6 +430,7 @@ export default class Source extends BaseModel {
     switch (this.type) {
       case 'customizer': {
         this.methodBody = `
+
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
     this.setCustomizerData('context.request', httpContext.request);
     this.setCustomizerData('httpContext', httpContext);

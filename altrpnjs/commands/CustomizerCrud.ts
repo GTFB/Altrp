@@ -53,7 +53,7 @@ export default class CustomizerCrud extends BaseCommand {
         modelQuery.where('name', this.modelName)
       })
       .where('type', 'crud')
-    console.log();
+
     customizers = customizers.filter(
       customizer => customizer.settings.event_type === action
         && customizer.settings.event_hook_type === hookType
@@ -63,7 +63,7 @@ export default class CustomizerCrud extends BaseCommand {
         return
       }
 
-      this.logger.success(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
+      console.log(`Found customizer for ${this.modelName} ${hookType} ${action}: ${this.colors.cyan(customizer.name)}`)
 
       const generator = new CustomizerGenerator(customizer)
       const filePath = generator.getFilePath()

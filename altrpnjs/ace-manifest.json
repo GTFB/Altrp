@@ -62,6 +62,193 @@
       "aliases": [],
       "flags": []
     },
+    "generator:controller": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorController",
+      "commandName": "generator:controller",
+      "description": "Run a controller generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of controller ids (comma separated values without space)"
+        }
+      ]
+    },
+    "generator:crud": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorCrud",
+      "commandName": "generator:crud",
+      "description": "Run a CRUD generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of CRUD ids (comma separated values without space)"
+        },
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated CRUD"
+        }
+      ]
+    },
+    "generator:listener": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorListener",
+      "commandName": "generator:listener",
+      "description": "Run a listener generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of listener ids (comma separated values without space)"
+        },
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated listener"
+        }
+      ]
+    },
+    "generator:model": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorModel",
+      "commandName": "generator:model",
+      "description": "Run a model generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of model ids (comma separated values without space)"
+        },
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated model"
+        }
+      ]
+    },
+    "generator:page": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorPage",
+      "commandName": "generator:page",
+      "description": "Run a page generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of page ids (comma separated values without space)"
+        }
+      ]
+    },
+    "generator:router": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorRouter",
+      "commandName": "generator:router",
+      "description": "Run a Router Generator",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
+    "generator:schedule": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorSchedule",
+      "commandName": "generator:schedule",
+      "description": "Run a schedule generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of schedule ids (comma separated values without space)"
+        },
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated schedule"
+        }
+      ]
+    },
+    "generator:template": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorTemplate",
+      "commandName": "generator:template",
+      "description": "Run a template generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of template ids (comma separated values without space)"
+        },
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated template"
+        }
+      ]
+    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",

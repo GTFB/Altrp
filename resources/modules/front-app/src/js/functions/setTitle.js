@@ -11,6 +11,7 @@ let defaultTitle;
  */
 export default function setTitle(title) {
   let titleElement = document.title;
+
   if (!defaultTitle) {
     defaultTitle = titleElement.innerHTML;
   }

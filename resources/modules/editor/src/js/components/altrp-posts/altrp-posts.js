@@ -225,7 +225,7 @@ class AltrpPosts extends React.Component {
     if(! this.checkStore()){
       return
     }
-    const { currentPage } = this.state;
+
     let { data: posts } = this.props;
     if (!_.isArray(posts) && _.isObject(posts)) {
       posts = [posts];
@@ -234,6 +234,7 @@ class AltrpPosts extends React.Component {
       posts = [];
     }
     let postsStart = 0;
+    const { currentPage } = this.state;
     const posts_per_page =
       Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
     if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {
@@ -260,7 +261,7 @@ class AltrpPosts extends React.Component {
       }
       htmlTemplate = prepareHtml(htmlTemplate, post)
       let key = post.altrpRandomKey || post.id || post.altrpIndex;
-      htmlTemplate = replaceContentWithData(htmlTemplate, post)
+      htmlTemplate = isEditor() ? htmlTemplate : replaceContentWithData(htmlTemplate, post)
       if(this.htmlStore[key] !== htmlTemplate){
         this.setState(state=>({
           ...state,
@@ -312,7 +313,7 @@ class AltrpPosts extends React.Component {
     }
     htmlTemplate = prepareHtml(htmlTemplate, post)
     this.htmlStore[key] = htmlTemplate
-    htmlTemplate = replaceContentWithData(htmlTemplate, post)
+    htmlTemplate = isEditor() ? htmlTemplate : replaceContentWithData(htmlTemplate, post)
     // this.oldData = this.props.data
     return (
       <div className={`${this.props?.className} altrp-post`}

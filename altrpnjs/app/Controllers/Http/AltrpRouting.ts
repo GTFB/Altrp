@@ -28,6 +28,9 @@ import FONTS, {SYSTEM_FONT} from "../../../helpers/const/FONTS";
 import {promisify} from "util";
 import storage_path from "../../../helpers/storage_path";
 import isRobot from "../../../helpers/isRobot";
+import base_path from "../../../helpers/path/base_path";
+import sharp from 'sharp';
+import sizeOf from 'image-size';
 
 export default class AltrpRouting {
 
@@ -48,37 +51,102 @@ export default class AltrpRouting {
     return _.get(this.__altrp_global__, path, _default)
   }
 
-  public async index(httpContext: HttpContextContract) {
-    /**
-     * Игнорим все запросы кроме get
-     */
+  public async getContentByUrl(url, httpContext: HttpContextContract, pageId = null):Promise<void>{
 
-    const url = httpContext.request.url();
-    /**
-     * Игнорим логинизацию
-     */
-    for (const route of IGNORED_ROUTES) {
-      if (route === url) {
-        return
+    if (url.includes('/storage/media/')) {
+
+      let searchFilename = base_path('/public'+url);
+
+      if (!await fs.existsSync(searchFilename)){
+
+        const sizes = [
+            {
+              width: 150,
+              height: 150,
+            },
+            {
+              width: 300,
+              height: 300,
+            },
+            {
+              width: 600,
+              height: 600,
+            },
+            {
+              width: 1600,
+              height: 900,
+            },
+          ];
+
+        var ext = url.split('.').pop();
+        var parts = url.split('/');
+        var folder = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/`);
+
+        var files: any[] = []
+        var width = 0
+        var height = 0
+
+        for (const size of sizes) {
+          var sizeType = '_'+size.width+'x'+size.height+'.'+ext;
+          if (url.includes(sizeType)) {
+            width = size.width
+            height = size.height
+            files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split(sizeType)[0]));
+          }
+        }
+
+        if (files.length == 0) {
+          files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split('.')[0]));
+        }
+
+        //return JSON.stringify(files.length);
+
+        if (files.length > 0) {
+
+          var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
+
+          if (fs.existsSync(originalFileName)){
+
+            const dimensions: any = sizeOf(originalFileName)
+            var targetAspectRatio = height / width;
+            var sourceAspectRatio = dimensions.height / dimensions.width;
+
+            if (targetAspectRatio == 1) {
+              if (dimensions.width > dimensions.height) {
+                height = Math.round(height*(dimensions.height/dimensions.width));
+              }
+              if (dimensions.width < dimensions.height) {
+                width = Math.round(width*(dimensions.width/dimensions.height));
+              }
+            } else if(targetAspectRatio < 1 && targetAspectRatio > sourceAspectRatio) {
+              height = Math.round(width * sourceAspectRatio);
+            } else if(targetAspectRatio < 1 && targetAspectRatio < sourceAspectRatio){
+              width = Math.round(height * sourceAspectRatio);
+            }
+
+            if(ext == 'webp'){
+              if (width > 0 && height > 0) {
+                await sharp(originalFileName).toFormat('webp').resize(width, height).toFile(searchFilename);
+              } else {
+                await sharp(originalFileName).toFormat('webp').toFile(searchFilename);
+              }
+              httpContext.response.header('Content-Type', 'image/webp')
+              return httpContext.response.send(fs.readFileSync(searchFilename))
+            } else if(width > 0 && height > 0) {
+              await sharp(originalFileName).resize(width, height).toFile(searchFilename);
+              httpContext.response.header('Content-Type', 'image/' + ext)
+              return httpContext.response.send(fs.readFileSync(searchFilename))
+            }
+          }
+        }
       }
     }
 
-    const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
-
-    if (httpContext.request.completeUrl().split(modulesUrl).length > 1) {
-      return
-    }
     const asCheck = isRobot(httpContext.request.headers())
+    const accept_webp = httpContext.request.header('Accept')?.includes('image/webp')
 
-    /**
-     * Игнорим админку и ajax
-     */
-    if (url.split('/')[1] === 'admin' || url.split('/')[1] === 'ajax') {
-      return
-    }
 
-    const start = performance.now();
-    console.log(performance.now() - start);
+
     /**
      * init global object
      */
@@ -99,14 +167,22 @@ export default class AltrpRouting {
       page_params: httpContext.request.qs(),
     }
     this.setGlobal('altrpSettings', altrpSettings)
-    let pageMatch: any = {}
-    let page: Page | undefined | null = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
-      if (matchPath(decodeURI(url), page.path,)?.isExact) {
-        pageMatch = matchPath(decodeURI(url), page.path,)
-      }
-      return matchPath(decodeURI(url), page.path,)?.isExact
-    });
-    httpContext.params = pageMatch.params
+    let pageMatch: any = {
+      params: {...httpContext.request.params()},
+    }
+
+    let page: Page | undefined | null
+    if(pageId){
+      page = await Page.find(pageId)
+    } else {
+      page = (await Page.query().whereNull('deleted_at').select('*')).find(page => {
+        if (matchPath(decodeURI(url), page.path,)?.isExact) {
+          pageMatch = matchPath(decodeURI(url), page.path,)
+        }
+        return matchPath(decodeURI(url), page.path,)?.isExact
+      });
+      httpContext.params = pageMatch.params
+    }
 
     if (!page) {
       httpContext.response.status(404)
@@ -155,12 +231,11 @@ export default class AltrpRouting {
         const ModelClass = (await import(`../../AltrpModels/${page.model.name}`)).default
         let classInstance
         if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
-          classInstance = await ModelClass.query().where(page.model_column, pageMatch.params[page.param_name]).first()
+          classInstance = await ModelClass.query().orderBy('id','desc').where(page.model_column, pageMatch.params[page.param_name]).first()
         } else if (pageMatch.params?.id) {
           classInstance = await ModelClass.find(pageMatch.params.id)
         }
         model_data = classInstance ? classInstance.serialize() : {}
-
       } catch (e) {
         console.error(e);
       }
@@ -204,7 +279,7 @@ export default class AltrpRouting {
 
     const altrpContext = {
       ...model_data,
-        ...pageMatch.params,
+      ...pageMatch.params,
       altrpuser,
       altrppage: {
         title,
@@ -215,11 +290,10 @@ export default class AltrpRouting {
 
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
     const device = getCurrentDevice(httpContext.request)
+    const lang = get_altrp_setting('site_language', 'en')
 
     altrpContext.altrpdata = datasources
     try {
-
-      console.log(performance.now() - start);
 
       let [page_areas, all_styles, content] = await Promise.all(
         [
@@ -228,11 +302,13 @@ export default class AltrpRouting {
           promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
         ]
       )
+
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
         access_classes,
         asCheck,
+        accept_webp,
         user,
         csrfToken: httpContext.request.csrfToken,
         isProd: isProd(),
@@ -242,15 +318,18 @@ export default class AltrpRouting {
         altrp_skeleton_color: get_altrp_setting('altrp_skeleton_color', '#ccc'),
         altrp_skeleton_highlight_color: get_altrp_setting('altrp_skeleton_highlight_color', '#d0d0d0'),
         altrp_image_lazy: get_altrp_setting('altrp_image_lazy', 'none'),
+        altrp_progress_bar_color: get_altrp_setting('altrp_progress_bar_color', 'rgb(48, 79, 253)'),
         container_width: get_altrp_setting('container_width', '1440'),
+        spa_off: get_altrp_setting('spa_off') === 'true',
         device,
+        lang,
       })
+
       mustache?.templateCache?.clear()
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)
       content = content.replace('<<<all_styles>>>', all_styles)
       let res = content
-      console.log(performance.now() - start);
 
       /**
        * Add Custom Headers
@@ -267,6 +346,7 @@ export default class AltrpRouting {
         }
       }
 
+      httpContext.response.header('Content-Length', res.length)
       return httpContext.response.send(res)
     } catch (e) {
       console.error(`Error to View Custom Page \`${page.guid}\` : ${e.message}
@@ -298,6 +378,38 @@ export default class AltrpRouting {
          ${e.stack}
          `)
     }
+  }
+
+  public async index(httpContext: HttpContextContract) {
+
+    /**
+     * Игнорим все запросы кроме get
+     */
+
+    const url = httpContext.request.url();
+    /**
+     * Игнорим логинизацию
+     */
+    for (const route of IGNORED_ROUTES) {
+      if (route === url) {
+        return
+      }
+    }
+
+    const modulesUrl = httpContext.request.protocol() + "://" + httpContext.request.host() + "/modules";
+
+    if (httpContext.request.completeUrl().split(modulesUrl).length > 1) {
+      return
+    }
+
+    /**
+     * Игнорим админку и ajax
+     */
+    if (url.split('/')[1] === 'admin' || url.split('/')[1] === 'ajax') {
+      return
+    }
+    httpContext.response.header('Cache-Control', 'no-cache')
+    return this.getContentByUrl(url, httpContext)
   }
   async tryRenderEdgeTemplate({page,
                                 httpContext,
@@ -371,6 +483,7 @@ export default class AltrpRouting {
           }
         }
       }
+      httpContext.response.header('Content-Length', res.length)
       return httpContext.response.send(res)
     } catch (e) {
       console.error(`Error to View Custom Page \`${page.guid}\`: ${e.message}

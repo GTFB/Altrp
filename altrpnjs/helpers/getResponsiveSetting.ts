@@ -14,9 +14,6 @@ export default function getResponsiveSetting(settings: object, settingName:strin
     let setting = settings[_settingName];
 
     if (setting === undefined) {
-      if(elementState){
-        return undefined
-      }
       setting = _.get(settings, settingName, _default);
     }
     return setting;
@@ -51,4 +48,23 @@ export default function getResponsiveSetting(settings: object, settingName:strin
     setting = _.get(settings, settingName, _default);
   }
   return setting;
+}
+export function setResponsiveSetting(settings: object, settingName:string, screenName: string, value:any = null) {
+  let elementState = ''
+  const currentScreen = SCREENS.find(s=>s.name === screenName) || SCREENS.find(s=>s.name === DEFAULT_BREAKPOINT)
+  let _settingName = `${settingName}_${elementState}_`;
+  if(! currentScreen){
+    console.error(`currentScreen not found`);
+    return
+  }
+  if (currentScreen.name === DEFAULT_BREAKPOINT) {
+
+    _.set(settings, settingName, value);
+    return
+  }
+  let suffix = currentScreen.name;
+  _settingName = `${settingName}_${elementState}_${suffix}`;
+
+  _.set(settings, _settingName, value);
+
 }

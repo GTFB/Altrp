@@ -11,7 +11,7 @@ export default function loadPageActions(){
   })
 }
 
-const templateActionsDone = [];
+window.templateActionsDone = [];
 /**
  *
  * @param {{}} templateData

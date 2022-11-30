@@ -38,12 +38,14 @@ class NavigationPanel extends Component {
     this.state = {
       template: template,
       dragOver: false,
-      isDrag: false
+      isDrag: false,
+      isHidden: []
     };
     this.handleExpand = this.handleExpand.bind(this);
     this.handleCollapse = this.handleCollapse.bind(this);
     this.showItem = this.showItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.check = this.check.bind(this);
     store.subscribe(this.storeListener.bind(this));
   }
 
@@ -51,19 +53,25 @@ class NavigationPanel extends Component {
     let currentTree = _.cloneDeep(this.state.template);
     let currentNode = Tree.nodeFromPath(nodePath, currentTree);
     currentNode.isExpanded = true;
-    this.setState(s => ({ ...s, template: currentTree }));
+    let newArrayIsHidden = this.state.isHidden.filter(item => item !== currentNode.id)
+    this.setState(s => ({ ...s, template: currentTree, isHidden: newArrayIsHidden }));
   }
 
   handleCollapse(node, nodePath) {
     let currentTree = _.cloneDeep(this.state.template);
     let currentNode = Tree.nodeFromPath(nodePath, currentTree);
     currentNode.isExpanded = false;
-    this.setState(s => ({ ...s, template: currentTree }));
+    this.setState(s => ({ ...s, template: currentTree, isHidden: [...this.state.isHidden, currentNode.id] }));
   }
 
   showItem(node, nodePath) {
     editorSetCurrentElementByID(node.id);
     getEditor().showSettingsPanel();
+  }
+
+  check(item) {
+    if (this.state.isHidden.includes(item.id)) item.isExpanded = false
+    if (item.childNodes.length > 0) item.childNodes.forEach(child => this.check(child))
   }
 
   storeListener() {
@@ -72,6 +80,7 @@ class NavigationPanel extends Component {
         getEditor().modules.templateDataStorage.getRootElement()
       )
     ];
+    newTemplate.forEach(item => this.check(item))
     const currentTemplate = _.cloneDeep(this.state.template, []);
     if (!_.isEqual(newTemplate, currentTemplate)) {
       this.setState(s => ({ ...s, template: newTemplate }));
@@ -112,7 +121,7 @@ class NavigationPanel extends Component {
           key={template.id}
           text={template.getName()}
           id={template.id}
-        ></NavigationItem>
+        />
       ),
       depth: 2,
       name: template.getName(),
@@ -120,6 +129,7 @@ class NavigationPanel extends Component {
       childNodes: template.children.map((item, index) =>
         this.parseTemplate(item)
       ),
+      isSelected: getEditor().modules.templateDataStorage.getCurrentElement().id === template.id,
       hasCaret: expandable,
       key: template.id,
       isExpanded: expandable,

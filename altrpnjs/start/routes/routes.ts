@@ -17,8 +17,8 @@
 | import './routes/customer'
 |
 */
-import './admin'
 import Route from '@ioc:Adonis/Core/Route'
+import axios from 'axios'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
@@ -31,13 +31,20 @@ import Model from "App/Models/Model";
 import Plugin from "App/Plugin"
 import _ from "lodash";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
+import base_path from "../../helpers/base_path";
+import env from "../../helpers/env";
+import startChildWithSockets from "../../helpers/startChildWithSockets";
 
+
+if (fs.existsSync(base_path('start/routes/custom/routes.' + (isProd() ? 'js' : 'ts')))) {
+  require('./custom/routes')
+}
 
 const methods = [
   'get', 'post', 'put', 'delete'
 ]
 
-Route.get('/altrp-redirect', async ({response, request}:HttpContextContract)=>{
+Route.get('/altrp-redirect', async ({response, request}: HttpContextContract) => {
   const url = request.cookie('__altrp_redirect_from', '/')
   response.clearCookie('__altrp_redirect_from')
   return response.redirect(url)
@@ -60,26 +67,26 @@ const fromBuildDir = isProd() ? "../" : ""
 
 Route.get("sw.js", "IndicesController.serviceWorker")
 
-Route.get("/modules/*", async ({request, response}) => {
-  const url = request.url()
-
-  const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
-
-  const file = await Drive.get(pathToModules + url)
-
-  const splitUrl = url.split(".");
-
-  switch (splitUrl[splitUrl.length - 1]) {
-    case "js":
-      response.header("Content-Type", "text/javascript")
-      break
-    case "css":
-      response.header("Content-Type", "text/css")
-      break
-  }
-
-  return file
-})
+// Route.get("/modules/*", async ({request, response}) => {
+//   const url = request.url()
+//
+//   const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
+//
+//   const file = await Drive.get(pathToModules + url)
+//
+//   const splitUrl = url.split(".");
+//
+//   switch (splitUrl[splitUrl.length - 1]) {
+//     case "js":
+//       response.header("Content-Type", "text/javascript")
+//       break
+//     case "css":
+//       response.header("Content-Type", "text/css")
+//       break
+//   }
+//
+//   return file
+// })
 
 Route.get("/service-worker-files", async ({}) => {
 
@@ -94,10 +101,10 @@ Route.get("/service-worker-files", async ({}) => {
 
   files = files.filter(file => {
 
-    if("node_modules" === file) return false
+    if ("node_modules" === file) return false
 
-    for(const variant of variants) {
-      if(file.split(variant).length > 1) {
+    for (const variant of variants) {
+      if (file.split(variant).length > 1) {
         return false
       }
     }
@@ -161,6 +168,7 @@ Route.group(() => {
   Route.get("/menus/:id", "admin/MenusController.show")
 
   Route.get("/pages/:id", "admin/PagesController.getAreas")
+  Route.get("/get-page-content", "admin/PagesController.getPageContent")
 
   Route.get("/current-user", "users/UsersController.getCurrentUser")
 
@@ -185,20 +193,20 @@ Route.group(() => {
     const segments = httpContext.request.url().split('/').filter(segment => segment)
 
     if (httpContext.request.method() === 'OPTIONS' && segments[3] === 'customizers') {
-      httpContext.response.header( 'Access-Control-Allow-Origin', '*' )
-      httpContext.response.header( 'Access-Control-Allow-Methods', 'GET, OPTIONS' )
-      httpContext.response.header( 'Access-Control-Allow-Credentials', 'true' )
-      httpContext.response.header( 'Access-Control-Allow-Headers', 'Content-Type, Authorization' )
-      return httpContext.response.json({ success: true });
+      httpContext.response.header('Access-Control-Allow-Origin', '*')
+      httpContext.response.header('Access-Control-Allow-Methods', 'GET, OPTIONS')
+      httpContext.response.header('Access-Control-Allow-Credentials', 'true')
+      httpContext.response.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+      return httpContext.response.json({success: true});
     }
     if (httpContext.request.method() === 'GET' && segments[3] === 'customizers') {
-      httpContext.response.header( 'Access-Control-Allow-Origin', '*' )
+      httpContext.response.header('Access-Control-Allow-Origin', '*')
     }
     /**
      * delete `altrp_ajax` from request body
      */
     let methodName
-    if(httpContext.request.input('altrp_ajax') !== undefined){
+    if (httpContext.request.input('altrp_ajax') !== undefined) {
       const body = httpContext.request.all();
       delete body['altrp_ajax']
       httpContext.request.updateBody(body)
@@ -212,9 +220,9 @@ Route.group(() => {
     /**
      * In get options case
      */
-    if(! table && segments[2].indexOf('_options') !== -1){
-      let model = await Model.query().preload('table').where('name', segments[2].replace('_options','')).first()
-      if(model){
+    if (!table && segments[2].indexOf('_options') !== -1) {
+      let model = await Model.query().preload('table').where('name', segments[2].replace('_options', '')).first()
+      if (model) {
         table = model.table
         await table.load('altrp_model')
       }
@@ -242,8 +250,10 @@ Route.group(() => {
 
     const controllerName = app_path(`AltrpControllers/${model.name}Controller`)
     try {
-      if(isProd()){
-        Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+      if (isProd()) {
+        Object.keys(require.cache).forEach(function (key) {
+          delete require.cache[key]
+        })
       }
       const ControllerClass = isProd() ? (await require(controllerName)).default
         // @ts-ignore
@@ -253,40 +263,40 @@ Route.group(() => {
       if (segments[3] === 'customizers' || segments[2] === 'data_sources') {
         methodName = segments[4]
         const customizer = await Customizer.query().where('name', methodName).first()
-        if( !customizer ){
+        if (!customizer) {
           return httpContext.response.status(404).json({
             success: false,
             message: 'Customizer Not Found'
           })
         }
 
-        if(! await customizer.allowMethod(httpContext.request.method())){
+        if (!await customizer.allowMethod(httpContext.request.method())) {
           return httpContext.response.status(405).json({
             success: false,
             message: 'Method not Allowed'
           })
         }
-      }else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
-        methodName = segments[2].indexOf('_options') === -1 ? 'index'  : 'options'
+      } else if (segments[3] === undefined && httpContext.request.method() === 'GET') {
+        methodName = segments[2].indexOf('_options') === -1 ? 'index' : 'options'
 
-      }else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
+      } else if (segments[3] === undefined && httpContext.request.method() === 'POST') {
         methodName = 'add'
-      }else if  (segments[4] === undefined
+      } else if (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'GET') {
         methodName = 'show'
         httpContext.params[model.name] = Number(segments[3])
-      }else if  (segments[4] === undefined
+      } else if (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'DELETE') {
         methodName = 'destroy'
         httpContext.params[model.name] = Number(segments[3])
-      }else if  (segments[4] === undefined
+      } else if (segments[4] === undefined
         && Number(segments[3])
         && httpContext.request.method() === 'PUT') {
         methodName = 'update'
         httpContext.params[model.name] = Number(segments[3])
-      }else if  (segments[5] === undefined
+      } else if (segments[5] === undefined
         && Number(segments[3])
         && segments[4]
       ) {
@@ -294,7 +304,7 @@ Route.group(() => {
         httpContext.params[model.name] = Number(segments[3])
         httpContext.params.column = Number(segments[4])
       }
-      if(! methodName){
+      if (!methodName) {
         return httpContext.response.status(404).json({
           success: false,
           message: `Controller ${controllerName}; Method: ${methodName}
@@ -304,10 +314,10 @@ Route.group(() => {
       return await controller[methodName](httpContext)
     } catch (e) {
       return httpContext.response.status(500).json({
+        ...e,
         success: false,
 
-        message: methodName ? `Controller ${controllerName}; Method: ${methodName}
-${e.message}` : `Controller ${controllerName} require error:`,
+        message: methodName ? `Controller ${controllerName}; Method: ${methodName} Message: ${e.message}` : `Controller ${controllerName} method not found error:`,
         trace: e.stack.split('\n'),
       })
     }
@@ -315,7 +325,7 @@ ${e.message}` : `Controller ${controllerName} require error:`,
   /**
    * plugins ajax requests START
    */
-  for(const method of methods) {
+  for (const method of methods) {
     /**
      * handle all 4 HTTP methods
      */
@@ -325,22 +335,24 @@ ${e.message}` : `Controller ${controllerName} require error:`,
       const plugin = plugins.find(plugin => {
         return plugin.name === segments[2]
       })
-      if(! plugin){
+      if (!plugin) {
         httpContext.response.status(404)
         return httpContext.response.json({success: false, message: `Plugin \`${segments[2]}\` Not Found`})
       }
       const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/${method}/${segments[3]}.${isProd() ? 'js' : 'ts'}`)
 
-      if(fs.existsSync(fileName)){
-        try{
-          if(isProd()){
-            Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
+      if (fs.existsSync(fileName)) {
+        try {
+          if (isProd()) {
+            Object.keys(require.cache).forEach(function (key) {
+              delete require.cache[key]
+            })
           }
           const module = isProd() ? await require(fileName).default : (await import(fileName)).default
-          if(_.isFunction(module)){
+          if (_.isFunction(module)) {
             return await module(httpContext)
           }
-        }catch (e) {
+        } catch (e) {
           httpContext.response.status(500)
           return httpContext.response.json({
             success: false,
@@ -364,57 +376,86 @@ ${e.message}` : `Controller ${controllerName} require error:`,
   /**
    * media for front
    */
-  Route.post('media', 'admin/MediaController.store_from_frontend').name= 'front.media.store'
-  Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name= 'front.media.delete'
+  Route.post('media', 'admin/MediaController.store_from_frontend').name = 'front.media.store'
+  Route.delete('media/:id', 'admin/MediaController.destroy_from_frontend').name = 'front.media.delete'
 
   Route.get("storage/media/:year/:month/:name", "admin/MediaController.show")
 
   Route.post("cookie", "IndicesController.setCookie")
 
-  Route.get('routes', async ({response}:HttpContextContract)=>{
+  Route.get('routes', async ({response}: HttpContextContract) => {
     return response.json({success: true, pages: []})
   })
 
-  Route.get('get-custom-js', async ({response}:HttpContextContract)=>{
+  Route.get('get-custom-js', async ({response}: HttpContextContract) => {
     return response.json({success: true, data: get_altrp_setting('ALL_SITE_JS', '', true)})
   })
 }).middleware('catch_unhandled_json')
   .prefix("/ajax")
 
-Route.group( ()=>{
-    Route.any('*',async httpContext=>{
-      const segments = httpContext.request.url().split('/').filter(segment => segment)
-      // console.log(segments);
+Route.group(() => {
+  Route.any('*', async httpContext => {
+    const segments = httpContext.request.url().split('/').filter(segment => segment)
+    // console.log(segments);
 
-      const customizer:Customizer | null = await Customizer.query().where('name', segments[2]).preload('altrp_model').first()
+    const customizer: Customizer | null = await Customizer.query().where('name', segments[2]).preload('altrp_model').first()
 
-      if(! customizer){
+    if (!customizer) {
 
-        return httpContext.response.status(405).json({
-          success: false,
-          message: 'API URL is not an API'
-        })
-      }
-      if(! customizer.allowApi()){
-        return httpContext.response.status(405).json({
-          success: false,
-          message: 'API for This URL is not Allowed'
-        })
-      }
+      return httpContext.response.status(405).json({
+        success: false,
+        message: 'API URL is not an API'
+      })
+    }
+    if (!customizer.allowApi()) {
+      return httpContext.response.status(405).json({
+        success: false,
+        message: 'API for This URL is not Allowed'
+      })
+    }
 
-      if(! await customizer.allowMethod(httpContext.request.method())){
-        return httpContext.response.status(405).json({
-          success: false,
-          message: 'API Method not Allowed'
-        })
-      }
-      const controllerName = app_path(`AltrpControllers/${customizer.altrp_model?.name}Controller`)
-      const methodName = customizer.name
+    if (!await customizer.allowMethod(httpContext.request.method())) {
+      return httpContext.response.status(405).json({
+        success: false,
+        message: 'API Method not Allowed'
+      })
+    }
+    const controllerName = app_path(`AltrpControllers/${customizer.altrp_model?.name}Controller`)
+    const methodName = customizer.name
 
-      const ControllerClass = isProd() ? (await require(controllerName)).default
-        // @ts-ignore
-        : (await import(controllerName)).default
-      const controller = new ControllerClass()
-      return await controller[methodName](httpContext)
-    })
+    const ControllerClass = isProd() ? (await require(controllerName)).default
+      // @ts-ignore
+      : (await import(controllerName)).default
+    const controller = new ControllerClass()
+    return await controller[methodName](httpContext)
+  })
 }).prefix('api/v1').middleware('catch_unhandled_json').middleware('cors')
+
+Route.any('/wsaltrp', async ({request, response}) => {
+  let res = ''
+  try {
+
+    res = (await axios(`http://${env('HOST')}:${
+      env('SOCKET_PORT', 22045)
+    }`, {
+      // @ts-ignore
+      method: request.method(),
+      params: request.all(),
+      data: request.method().toLowerCase() === 'post' ? request.raw() : null
+    })).data
+
+  } catch (e) {
+    startChildWithSockets()
+    response.status(e.response?.status || 400)
+    return response.json({
+      ...e,
+      status: false,
+      message: e.response?.data?.message || e.message
+    });
+  }
+  // console.log(res);
+  return response.send(res)
+}).middleware('catch_unhandled_json')
+
+
+

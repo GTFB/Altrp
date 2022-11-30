@@ -9,6 +9,7 @@ import {TextArea} from "@blueprintjs/core";
 import {pageReload} from "../js/helpers";
 import delay from '../../../front-app/src/js/functions/delay'
 import upgradeBackend from "../js/functions/upgradeBackend";
+import axios from "axios";
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
 
@@ -40,6 +41,7 @@ class AdvancedSettings extends Component {
       headEnd,
       bodyStart,
       bodyEnd,
+      site_language,
     ] = await Promise.all([
       (await new Resource({route: '/admin/ajax/settings'}).get('head_start?decrypt=true')).head_start || ''
   ,
@@ -49,6 +51,8 @@ class AdvancedSettings extends Component {
   ,
     (await new Resource({route: '/admin/ajax/settings'}).get('body_end?decrypt=true')).body_end || ''
   ,
+    (await new Resource({route: '/admin/ajax/settings'}).get('site_language')).site_language || ''
+  ,
   ])
 
     this.setState(state => ({
@@ -57,6 +61,7 @@ class AdvancedSettings extends Component {
       debugOn,
       loadByUser,
       altrp_custom_headers,
+      site_language,
       headStart,
       headEnd,
       bodyStart,
@@ -114,6 +119,12 @@ class AdvancedSettings extends Component {
     await new Resource({route: '/admin/ajax/settings'}).put('altrp_custom_headers', {value, encrypt: true});
 
   }
+
+  updateSiteLanguage = async (e) => {
+    const value = e.target.value
+    await new Resource({route: '/admin/ajax/settings'}).put('site_language', {value, });
+
+  }
   /**
    * Удалить всю историю всех шаблонов
    * @param e
@@ -132,7 +143,6 @@ class AdvancedSettings extends Component {
   };
 
   /**
-   * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
    * @param e
    */
   updateAllBackendResources = async (e) => {
@@ -146,10 +156,43 @@ class AdvancedSettings extends Component {
     pageReload()
 
   };
+  /**
+   * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
+   * @param e
+   */
+  restartAltrp = async (e) => {
+    let result = await confirm('Are You Sure');
+    if (!result) {
+      return;
+    }
+    store.dispatch(setAdminDisable());
+
+    try {
+      await axios.post('/admin/ajax/restart-altrp',)
+
+    } catch (e) {
+      let serverRestarted = false
+      let i = 0
+      do {
+        ++i
+        try {
+          await delay(100)
+          await axios.get('/ajax/_token')
+          serverRestarted = true
+        } catch (e) {
+          console.error(e);
+        }
+      } while (!serverRestarted && i < 100)
+      await axios.get('/admin/ajax/start-socket',)
+    }
+    pageReload()
+
+  };
 
   render() {
     const {
       altrp_custom_headers,
+      site_language,
       allSiteJavascript,
       headStart,
       headEnd,
@@ -186,6 +229,26 @@ class AdvancedSettings extends Component {
               </button>
             </div>
 
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Restart Altrp:</div>
+              <button className="btn btn_success btn_advanced"
+                      onClick={this.restartAltrp}>
+                Restart
+              </button>
+            </div>
+
+
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Lang Attribute for HTML</div>
+              <input name="custom_headers"
+                        className="bp3-input"
+                        id="site_language"
+                        placeholder="en"
+                        defaultValue={site_language || ''}
+                        onBlur={this.updateSiteLanguage}
+                        />
+
+            </div>
 
             <div className="admin-styles-advanced-block">
               <div className="advanced-text-custom">Custom Headers for Pages:</div>
@@ -323,10 +386,17 @@ class AdvancedSettings extends Component {
    * Сохранить код JS для всего сайта
    */
   updateAllSiteJavascript = async () => {
-    await new Resource({route: '/admin/ajax/settings'}).put('all_site_js', {
-      value: this.state.allSiteJavascript,
-      encrypt: true
-    });
+    try {
+      await new Resource({route: '/admin/ajax/settings'}).put('all_site_js', {
+        value: this.state.allSiteJavascript,
+        encrypt: true
+      });
+    }catch (e) {
+      alert('Error: ' + e.message)
+      console.error();
+    }
+    alert('Success!')
+
   };
 
   updateAdditionalHtml = (e, type = 'headStart') => {

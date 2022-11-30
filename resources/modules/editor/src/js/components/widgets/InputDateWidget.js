@@ -19,6 +19,12 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
   .altrp-date-picker-popover .bp3-datepicker-year-select select {
     padding: 0 0 0 2px;
   }
+
+  .altrp-field-label--required::after {
+    line-height: 1.5;
+    font-weight: normal;
+    font-family: Open Sans;
+  }
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -107,14 +113,7 @@ class InputDateWidget extends Component {
 
 
     let value = this.state.value;
-    // setTimeout(() => {
-    //   this.onChange(this.getValue());
-    // }, 0)
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getLockedContent для получение этого динамического значения
-     * старые динамические данные
-     * */
+
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
@@ -445,6 +444,7 @@ class InputDateWidget extends Component {
     }
 
     if (_.isObject(this.props.appStore) && fieldName && formId) {
+
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
@@ -499,6 +499,7 @@ class InputDateWidget extends Component {
 
       value = _.get(appStore.getState().formsStore, `${formId}`, '')
       value = _.get(value, fieldName, '')
+
       if(!value){
         if(!nullable) {
           value = new Date();
@@ -529,7 +530,7 @@ class InputDateWidget extends Component {
   }
 
   render() {
-    let label = null;
+    let label ;
     const settings = this.props.element.getLockedSettings();
     let classLabel = "";
     let styleLabel = {};
@@ -610,7 +611,7 @@ class InputDateWidget extends Component {
         try {
           value = moment.unix(value / 1000).format("YYYY-MM-DD");
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       }
     }
@@ -652,6 +653,7 @@ class InputDateWidget extends Component {
     }
 
     let classes = this.getClasses()
+
     const input = (
       <div className="altrp-input-wrapper">
         <DateInput

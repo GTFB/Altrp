@@ -12,6 +12,28 @@ import { format, parse } from 'date-fns';
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import store from "../../../store/store";
+import {setAnimateLine, setColorLine, setTypeLine} from "../../../store/connection-line-type/actions";
+import PickrComponent from "../../PickrComponent";
+
+const TypeLineOptions = [
+  {
+    value: 'default',
+    label: 'Default',
+  },
+  {
+    value: 'straight',
+    label: 'Straight',
+  },
+  {
+    value: 'step',
+    label: 'Step',
+  },
+  {
+    value: 'smoothstep',
+    label: 'Smoothstep',
+  }
+];
 
 
 class CustomizerSettingsPanel extends React.Component {
@@ -157,23 +179,38 @@ class CustomizerSettingsPanel extends React.Component {
     const time_type = customizer.time_type || "none";
 
     let Url = ''
+    let relativeUrl = ''
 
     if (this.props.customizer.source) {
-      let { web_url } = this.props.customizer.source
-      try{
-        if(this.state.customizer?.settings?.external){
+      let {web_url} = this.props.customizer.source
+      try {
+        if (this.state.customizer?.settings?.external) {
 
           Url = `${document.location.origin}/api/v1/${this.state.customizer.name}`
-        } else   {
+          relativeUrl = `/api/v1/${this.state.customizer.name}`
+        } else {
           let strippedDownUrl = new URL(web_url)
+          relativeUrl = strippedDownUrl.pathname
           Url = document.location.origin
-            +strippedDownUrl.pathname
+            + strippedDownUrl.pathname
         }
-      }catch (e){
+
+      } catch (e) {
         alert('Error while parsing source URL')
         console.error(e);
       }
     }
+    // if (this.props.customizer.source) {
+    //   let { web_url } = this.props.customizer.source
+    //   try{
+    //     let strippedDownUrl = new URL(web_url)
+    //     Url = document.location.origin
+    //       +strippedDownUrl.pathname
+    //   }catch (e){
+    //     alert('Error while parsing source URL')
+    //     console.error(e);
+    //   }
+    // }
 
 
     return (
@@ -193,8 +230,8 @@ class CustomizerSettingsPanel extends React.Component {
 
                   <div className="controllers-wrapper">
                     <div className="controller-container controller-container_select2">
-                      <button className={"btn font_montserrat font_500 btn_grey"} style={{margin: '10px'}} onClick={() => this.props.onLayout('TB')}>vertical</button>
-                      <button className={"btn font_montserrat font_500 btn_grey"} style={{margin: '10px'}} onClick={() => this.props.onLayout('LR')}>horizontal</button>
+                      <button className={"btn font_montserrat font_500 btn_grey"} style={{marginRight: '20px'}} onClick={() => this.props.onLayout('TB')}>vertical</button>
+                      <button className={"btn font_montserrat font_500 btn_grey"} onClick={() => this.props.onLayout('LR')}>horizontal</button>
                     </div>
 
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
@@ -236,23 +273,24 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
-                    {['api', 'method', 'crud'].includes(type) && <>
-                    {/*  <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>*/}
-                    {/*  <div className="controller-container__label control-select__label controller-label">Middlewares:</div>*/}
-                    {/*  <AltrpSelect id="crud-fields"*/}
-                    {/*               className="controller-field"*/}
-                    {/*               isMulti={true}*/}
-                    {/*               value={Middlewares || []}*/}
-                    {/*               onChange={this.changeMiddlewares}*/}
-                    {/*               options={[*/}
-                    {/*                 {*/}
-                    {/*                   value: 'cors',*/}
-                    {/*                   label: 'CORS',*/}
-                    {/*                 },*/}
+                    {['api', 'method', 'crud'].includes(type)  && <>
+                      { ! this.state.customizer?.settings?.external &&
+                      <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                      <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
+                      <AltrpSelect id="crud-fields"
+                                   className="controller-field"
+                                   isMulti={true}
+                                   value={Middlewares || []}
+                                   onChange={this.changeMiddlewares}
+                                   options={[
+                                     {
+                                       value: 'cors',
+                                       label: 'CORS for all Origins',
+                                     },
 
-                    {/*               ]}*/}
-                    {/*  />*/}
-                    {/*</div>*/}
+                                   ]}
+                      />
+                    </div>}
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Model:</div>
                       <AltrpSelect id="crud-fields"
@@ -378,6 +416,10 @@ class CustomizerSettingsPanel extends React.Component {
                               onChange={this.changePeriodUnit}
                               options={[
                                 {
+                                  value: 'minute',
+                                  label: 'Minute',
+                                },
+                                {
                                   value: 'hour',
                                   label: 'Hour',
                                 },
@@ -463,9 +505,12 @@ class CustomizerSettingsPanel extends React.Component {
                             <div className="controller-container__label control-select__label controller-label">Url:</div>
                             <div className="Customizer-url__block">
                               <CopyToClipboard onCopy={this.UrlCopy} text={Url}>
-                                <button className="btn btn_success">Copy url</button>
+                                <button className="btn btn_success">Copy Full URL</button>
                               </CopyToClipboard>
-                              <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
+                              <CopyToClipboard onCopy={this.UrlCopy} text={relativeUrl}>
+                                <button className="btn btn_success">Copy URL Path</button>
+                              </CopyToClipboard>
+                              <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied!</div>
                             </div>
                             <input value={Url} readOnly={true} className="url-text"/>
                           </div>
@@ -512,6 +557,52 @@ class CustomizerSettingsPanel extends React.Component {
                         </>
                       )
                     }
+                  </div> {/* ./controllers-wrapper */}
+                </div> {/* ./settings-section */}
+
+                <div className="settings-section open">
+                  <div className="settings-section__title d-flex">
+                    <div className="settings-section__icon d-flex">
+                      <Chevron/>
+                    </div>
+                    <div className="settings-section__label">Settings Line</div>
+                  </div>
+
+                  <div className="controllers-wrapper">
+                    <div className="controller-container controller-container_select">
+                      <div className="controller-container__label control-select__label controller-label">Line Type:</div>
+                      <div className="control-container_select-wrapper controller-field">
+                        <select className="control-select control-field"
+                                value={this.props.lineState.typeLine || ''}
+                                onChange={e => {
+                                  store.dispatch(setTypeLine(e.target.value))
+                                }}
+                        >
+                          {TypeLineOptions.map(option => {
+                            return <option value={option.value} key={option.value}>{option.label}</option>
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="controller-container controller-container_select align-items-center">
+                      <div className="controller-container__label control-select__label controller-label">Animate Line</div>
+                      <div className="d-flex align-items-center controller-field">
+                        <Checkbox className="form-control-blueprint"
+                                  type="checkbox"
+                                  id="animate-line"
+                                  checked={this.props.lineState.animateLine}
+                                  onChange={() => store.dispatch(setAnimateLine(!this.props.lineState.animateLine))}
+                        />
+                      </div>
+                    </div>
+                    <div className="controller-container controller-container_select align-items-center">
+                      <div className="controller-container__label control-select__label controller-label">Color Line</div>
+                      <div className="d-flex align-items-center controller-field">
+                        <PickrComponent colorControlled={this.props.lineState.colorLine} saveCallback={(color) => {
+                          store.dispatch(setColorLine(color))
+                        }}/>
+                      </div>
+                    </div>
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
 
@@ -642,7 +733,8 @@ class CustomizerSettingsPanel extends React.Component {
 }
 function  mapStateToProps(state) {
   return {
-    customizer: state.currentCustomizer
+    customizer: state.currentCustomizer,
+    lineState: state.connectionLineTypeData
   }
 }
 

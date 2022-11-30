@@ -180,13 +180,16 @@ class InputPassword extends BaseElement {
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      locked: true,
       label: "Default Value"
     });
 
     this.addControl("content_calculation", {
+      responsive: false,
+      locked: true,
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      locked: true,
       description:
         "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
     });

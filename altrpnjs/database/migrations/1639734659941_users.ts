@@ -8,6 +8,7 @@ export default class UsersSchema extends BaseSchema {
     if(! await this.schema.hasTable(this.tableName)){
       this.schema.createTable(this.tableName, (table) => {
         table.bigIncrements('id').primary()
+        table.bigInteger('media_id').unsigned()
         table.string('email', 255).notNullable().unique()
         table.string('password', 180).notNullable()
         table.timestamp("email_verified_at").nullable()

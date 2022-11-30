@@ -3,6 +3,7 @@ import AdonisServer from '@ioc:Adonis/Core/Server'
 import User from "App/Models/User";
 import Role from "App/Models/Role";
 import _ from "lodash";
+import env from "../../helpers/env";
 
 
 class AltrpSocket {
@@ -13,6 +14,10 @@ class AltrpSocket {
     this.boot()
   }
   public boot() {
+
+    if(env('CLUSTER') == 'true'){
+      return;
+    }
     if (this.booted) {
       return
     }
@@ -24,6 +29,13 @@ class AltrpSocket {
         origin: '*'
       }
     })
+
+    // if(isProd()){
+    //   this.io.adapter(createAdapter());
+    //
+    //   setupWorker(this.io);
+    //
+    // }
   }
 
   async pushClient(client: Socket) {

@@ -5,9 +5,11 @@ import Template from "App/Models/Template";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
-import PageGenerator from "App/Generators/PageGenerator";
 import validGuid from "../../../../helpers/validGuid";
 import LIKE from "../../../../helpers/const/LIKE";
+import AltrpRouting from "App/Controllers/Http/AltrpRouting";
+import base_path from '../../../../helpers/base_path'
+import exec from '../../../../helpers/exec'
 
 export default class PagesController {
   public async getTemplatePagesIds({ request, response}:HttpContextContract){
@@ -109,8 +111,8 @@ export default class PagesController {
       res.success = true
       res.page = page
       await page.parseRoles(request.input('roles'));
-      const pageGenerator = new PageGenerator()
-      await pageGenerator.run(page)
+      await exec(`node ${base_path('ace')} generator:page --id=${page.id}`)
+      await exec(`node ${base_path('ace')} generator:router`)
       await page.save()
 
       return res
@@ -201,9 +203,23 @@ export default class PagesController {
     const page = await Page.query().preload('roles').where("id", parseInt(params.id)).firstOrFail();
     await page.related('roles').detach()
     await page.delete()
+    await exec(`node ${base_path('ace')} generator:router`)
     return {
       success: true
     }
+  }
+
+  public async getPageContent(httpContext:HttpContextContract){
+    let {url} = httpContext.request.all()
+
+    if(url.includes('?')){
+      [url] = url.split('?')
+    }
+    if(! url){
+      return
+    }
+    const altrpRouting = new AltrpRouting
+    return await altrpRouting.getContentByUrl(url, httpContext)
   }
 
   public async getAreas() {
@@ -277,8 +293,59 @@ export default class PagesController {
       await page.related('roles').detach()
       await page.parseRoles(request.input('roles'));
       await page.save()
-      const pageGenerator = new PageGenerator()
-      await pageGenerator.run(page)
+
+      if(request.input("categories").length > 0) {
+
+        await page.related("categories").detach()
+        for (const option of request.input("categories")) {
+
+          const category = await Category.query().where('guid', option.value).firstOrFail();
+
+          if (!category) {
+            response.status(404)
+            return {
+              message: "Category not Found"
+            }
+          } else {
+            await CategoryObject.create({
+              category_guid: category.guid,
+              object_type: "Pages",
+              object_guid: page.guid
+            })
+          }
+        }
+      }
+
+      return {
+        success: true
+      }
+    }
+
+    return {
+      success: false
+    }
+  }
+
+  public async publish({ params, request, response }) {
+    const page = await Page.find(parseInt(params.id))
+
+    if(page) {
+      const body = request.body();
+
+      Object.keys(body).forEach(input => {
+        if(body[input] && input !== "rolesOptions" && input !== "roles") {
+          page[input] = body[input]
+        }
+      })
+
+      page.model_id = body.model_id || null
+      page.parent_page_id = body.parent_page_id || null
+
+      await page.related('roles').detach()
+      await page.parseRoles(request.input('roles'));
+      await page.save()
+      await exec(`node ${base_path('ace')} generator:page --id=${page.id}`)
+      await exec(`node ${base_path('ace')} generator:router`)
 
       if(request.input("categories").length > 0) {
 

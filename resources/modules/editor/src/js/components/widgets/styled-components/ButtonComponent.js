@@ -233,7 +233,7 @@ export function btnStyles(settings) {
     "}",
 
     "& path",
-    ["fill", "icon_color", "cbackground_positionolor"],
+    ["fill", "icon_color", "color"],
     ["stroke", "icon_color_stroke", "color"],
     "}",
     "}",

@@ -115,7 +115,7 @@ export default class MenusController {
 
     const menu = await menuQuery.firstOrFail()
 
-    menu.delete()
+    await menu.delete()
 
     return {
       success: true

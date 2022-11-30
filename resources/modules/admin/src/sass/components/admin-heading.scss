@@ -12,7 +12,8 @@
   transition: box-shadow 0.4s ease-in-out;
 
   &-shadow {
-    box-shadow: 0 10px 24px -4px rgba(34, 60, 80, 0.15);
+    //box-shadow: 0 10px 24px -4px rgba(34, 60, 80, 0.15);
+    box-shadow: 0 6px 6px -6px rgba(34, 60, 80, 0.2);
   }
 
   &-left {

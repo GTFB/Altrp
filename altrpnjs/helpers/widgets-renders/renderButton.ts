@@ -2,6 +2,7 @@ import parseURLTemplate from "../parseURLTemplate"
 import * as _ from 'lodash'
 import getResponsiveSetting from "../getResponsiveSetting"
 import renderAsset from "../renderAsset";
+import altrpRandomId from "../altrpRandomId";
 
 export default function renderButton(settings, device, elementId) {
   let clickActions = settings.actions || []
@@ -94,7 +95,6 @@ export default function renderButton(settings, device, elementId) {
     </div>`
   )
   }
-
   if (existingIconsString === 'blrt') {
     buttonInner = (
       `<div class="btn-container-column">
@@ -311,14 +311,14 @@ export default function renderButton(settings, device, elementId) {
   ) {
 
       let target = _.get(settings, "link_link.openInNew")
-        ? "_blank"
+        ? altrpRandomId()
         : ""
       link = (`<a
           href="${url}"
         ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
       class="${classes}"
       target="${target}"
-      title="${tooltip || null}"
+      title="${tooltip || ''}"
     >
       ${buttonInner}
       </a>`
@@ -332,12 +332,13 @@ export default function renderButton(settings, device, elementId) {
       ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
       class="${classes}"
     id="${settings.position_css_id || ""}"
-    title="${tooltip || null}"
+    title="${tooltip || ''}"
   >
     ${buttonInner}
     </button>`
   )
   }
+
   // @ts-ignore
   return `<div class="altrp-btn-wrapper">
     ${link || button || buttonMediaRight || buttonMediaLeft || buttonMediaTop || buttonMediaBottom}
