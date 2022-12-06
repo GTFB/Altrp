@@ -1,4 +1,4 @@
-import {getSheet, stringifyStylesheet} from "../../../../../front-app/src/js/helpers/elements";
+import {getSheet, parseStylesheetToArray} from "../../../../../front-app/src/js/helpers/elements";
 import {delay} from "../../../../../front-app/src/js/helpers";
 import CONSTANTS from "../../consts";
 import {setCurrentScreen} from "../../store/responsive-switcher/actions";
@@ -16,9 +16,9 @@ class TemplateStylesModule {
    * @returns {{all_styles, important_styles}}
    */
   async generateStyles() {
-    let styles
-    let stylesElements
-    let importantStyles = ''
+    let styles, styleJsons;
+    let stylesElements = [];
+    let importantStyleJsons = {};
     const templateType = getTemplateType()
     const rootElement = getTemplateDataStorage()
       .getRootElement()
@@ -75,11 +75,13 @@ class TemplateStylesModule {
      * проходим по всем разрешениям экрана
      */
 
-    stylesElements = stylesElements.map(style =>
-      style ? style.innerHTML : ""
-    );
+    stylesElements = stylesElements.map(style => {
+      let styleText = style ? style.innerHTML : "";
+      return styleText.replace(/[^{}]*{}/g, '');
+    });
     styles = {};
     stylesElements = _.uniq(stylesElements)
+    styleJsons = {};
 
     for (const screen of [...CONSTANTS.SCREENS, ...CONSTANTS.SCREENS_ADDITIONAL]) {
 
@@ -101,14 +103,11 @@ class TemplateStylesModule {
           })
           store.dispatch(setSections(elements))
         }
-        let css = stringifyStylesheet(
-          getSheet(styledTag, contentDocument)
-        );
+        const sheet = getSheet(styledTag, contentDocument);
+        let jsons = parseStylesheetToArray(sheet);
 
         // let css = styledTag.innerHTML
-        const _stylesElements = [...stylesElements]
-        _stylesElements.push(css);
-        styles[screen.name] = _stylesElements;
+        styleJsons[screen.name] = jsons;
       }
       if (templateType === 'content' || [
         'card',
@@ -122,14 +121,10 @@ class TemplateStylesModule {
 
         const contentDocument = importantStylesElement.getRootNode();
 
-        let css = stringifyStylesheet(
-          getSheet(importantStylesElement, contentDocument)
-        );
+        const sheet = getSheet(importantStylesElement, contentDocument);
+        let jsons = parseStylesheetToArray(sheet);
 
-        if(screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1){
-          css = `${screen.fullMediaQuery}{${css}}`
-        }
-        importantStyles += css
+        importantStyleJsons[screen.name] = jsons;
       }
     }
     /**
@@ -141,18 +136,113 @@ class TemplateStylesModule {
     editorStore.dispatch(setCurrentScreen(currentScreen))
     if (templateType === 'header') {
       for (const screen of CONSTANTS.SCREENS) {
-        if (_.isArray(styles[screen.name])) {
-          let css = styles[screen.name].join('')
-          if (screen.name !== CONSTANTS.DEFAULT_BREAKPOINT && stylesElements.indexOf(css) === -1) {
-            css = `${screen.fullMediaQuery}{${css}}`
-          }
-          importantStyles += css
+        if (_.isArray(styleJsons[screen.name])) {
+          importantStyleJsons[screen.name] = styleJsons[screen.name];
         }
       }
     }
     store.dispatch(setSections([]))
-    styles['important_styles'] = importantStyles
+
+    const importantGlobalStyleMap = {};
+
+    importantStyleJsons[CONSTANTS.DEFAULT_BREAKPOINT].forEach(json => {
+      Object.entries(json.style).map(([key, value]) => {
+        importantGlobalStyleMap[`${json.selectorText}??${key}??${value}`] = true;
+      });
+    });
+
+    Object.keys(importantStyleJsons).forEach(key => {
+      if (key !== CONSTANTS.DEFAULT_BREAKPOINT) {
+        importantStyleJsons[key] = importantStyleJsons[key]
+          .map(json => {
+            const jsonStyleEntries = Object.entries(json.style).filter(([styleKey, styleValue]) => {
+              return !importantGlobalStyleMap[`${json.selectorText}??${styleKey}??${styleValue}`]
+            });
+            if (jsonStyleEntries.length <= 0) {
+              return null;
+            }
+            return { ...json, style: Object.fromEntries(jsonStyleEntries) };
+          })
+          .filter(json => json);
+      }
+    });
+
+    let cssValue = '';
+    for (const screen of [...CONSTANTS.SCREENS, ...CONSTANTS.SCREENS_ADDITIONAL]) {
+      const uniqJsonDomArray = this.dedupJsonDomArray(importantStyleJsons[screen.name]);
+      const screenStyle = this.generateStylesFromJsonDomArray(uniqJsonDomArray);
+      if (styles[screen.name]) {
+        styles[screen.name].push(screenStyle);
+      } else {
+        styles[screen.name] = [screenStyle];
+      }
+      if (screen.name !== CONSTANTS.DEFAULT_BREAKPOINT) {
+        cssValue += screenStyle && `${screen.fullMediaQuery}{${screenStyle}}`;
+      } else {
+        cssValue += screenStyle + stylesElements.join('');
+        styles[screen.name].push(...stylesElements);
+      }
+    }
+    styles['important_styles'] = cssValue;
     return styles
+  }
+
+  dedupJsonDomArray(ary) {
+    if (!ary || !ary.length) {
+      return [];
+    }
+
+    const obj = {};
+
+    ary.forEach(json => {
+      Object.entries(json.style).forEach(([key, value]) => {
+        if (!obj[json.selectorText]) {
+          obj[json.selectorText] = {};
+        }
+        obj[json.selectorText][`${key}??${value}`] = true;
+      });
+    });
+
+    const result = Object.entries(obj).map(([selectorText, attrs]) => {
+      const property = {};
+      Object.keys(attrs).forEach(key => {
+        const [attr, value] = key.split('??');
+        property[attr] = value;
+      });
+      return { selectorText, style: property };
+    });
+
+    return result;
+  }
+
+  generateStylesFromJsonStyle(json) {
+    if (!Object.keys(json).length) {
+      return '';
+    }
+
+    return Object.entries(json).map(([key, value]) => {
+      let attr = key;
+      if (attr === 'background-clip') {
+        attr = '-webkit-background-clip';
+      }
+      return `${attr}:${value};`;
+    }).join('');
+  }
+
+  generateStylesFromJsonDom(json) {
+    if (!json || !Object.keys(json.style).length) {
+      return '';
+    }
+
+    return `${json.selectorText} {${this.generateStylesFromJsonStyle(json.style)}}`;
+  }
+
+  generateStylesFromJsonDomArray(ary) {
+    if (!ary || !ary.length) {
+      return '';
+    }
+
+    return ary.map(json => this.generateStylesFromJsonDom(json)).join('');
   }
 }
 

@@ -86,3 +86,22 @@ export  function stringifyRule(rule) {
   if (rule.cssText?.includes('background-clip: text;')) return rule.cssText.replace('background-clip: text;', '-webkit-background-clip: text;')
   return rule.cssText || ''
 }
+
+export function parseStylesheetToArray(stylesheet) {
+  return stylesheet.cssRules
+      ? Array.from(stylesheet.cssRules)
+        .map(rule => parseRuleToJson(rule))
+      : [];
+}
+
+export function parseRuleToJson(rule) {
+  const styleJson = { selectorText: rule.selectorText, style: {} };
+  Array.from(rule.style).forEach(attr => {
+    if (attr === 'background-clip') {
+      styleJson.style['-webkit-background-clip'] = rule.style[attr]
+    } else {
+      styleJson.style[attr] = rule.style[attr];
+    }
+  });
+  return styleJson;
+}
