@@ -9,6 +9,8 @@
 
 .altrp-btn svg {
   display: block;
+  height: 25px;
+  width: 25px;
 }
 
 .altrp-btn:hover {

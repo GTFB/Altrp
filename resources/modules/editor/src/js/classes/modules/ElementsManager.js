@@ -4,6 +4,7 @@ export default class ElementsManger {
   }
 
   getElementClass(name) {
+
     const {widgetsManager} = window.appStore.getState()
     if (!widgetsManager.elements[name]) {
       throw "Not found element with name " + name;

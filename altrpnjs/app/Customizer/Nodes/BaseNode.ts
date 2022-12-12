@@ -103,4 +103,28 @@ export default class BaseNode {
   }
 
 
+  public static getChildrenBySourceId(id: string[] | number[], data: BaseNode[]): BaseNode[]{
+    let edges = BaseNode.getNodesByType('edge', data)
+    edges = edges.filter(e => {
+      return e.data.source == id
+    })
+    let children = edges.map(e=>{
+      return e?.data?.target
+    })
+    // console.log(children);
+    children = data.filter(c=>{
+      return children.includes(c.data.id)
+    })
+
+    return children
+  }
+
+  public static getEdgesBySourceId(id: string[] | number[], data: BaseNode[]): BaseNode[]{
+    let edges = BaseNode.getNodesByType('edge', data)
+    edges = edges.filter(e => {
+      return e.data.source == id
+    })
+
+    return edges
+  }
 }

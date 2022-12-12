@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import Customizer from 'App/Models/Customizer';
 import Model from 'App/Models/Model';
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
@@ -199,6 +200,7 @@ export default class CustomizersController {
     if (all.type === 'schedule') {
       all.settings = all.settings || {}
       all.settings.period_unit = all.settings.period_unit || 'day'
+      all.settings.start_at = all.settings.start_at || DateTime.now()
     }
 
     if (oldType === 'crud' && all.type !== 'crud') {
@@ -257,9 +259,11 @@ export default class CustomizersController {
           'title': customizer.title,
           'name': customizer.name,
           'type': 'customizer',
-          'auth': true,
           'request_type':await customizer.getRequestType(),
         })
+        if(! oldSource){
+          source.auth = true
+        }
         await source.save()
 
         if(!oldSource){

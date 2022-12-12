@@ -1,8 +1,8 @@
 import ControlStack from "./elements/ControlStack";
 
 class Repeater extends ControlStack{
-  constructor(){
-    super();
+  constructor(data){
+    super(data, true);
     this.name = 'repeater';
     this.section = {};
     this.section.controls = [];

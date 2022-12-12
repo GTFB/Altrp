@@ -5,7 +5,6 @@ import Template from "App/Models/Template";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import CategoryObject from "App/Models/CategoryObject";
-import validGuid from "../../../../helpers/validGuid";
 import LIKE from "../../../../helpers/const/LIKE";
 import AltrpRouting from "App/Controllers/Http/AltrpRouting";
 import base_path from '../../../../helpers/base_path'
@@ -14,28 +13,28 @@ import exec from '../../../../helpers/exec'
 export default class PagesController {
   public async getTemplatePagesIds({ request, response}:HttpContextContract){
     const template_id = request.params().template_id
-    let template
-    let pagesTemplates
-    if(validGuid(template_id)){
-      pagesTemplates = await PagesTemplate.query().where('template_guid', template_id)
-      template = await Template.query().where('guid', template_id)
-    } else {
-      pagesTemplates = await PagesTemplate.query().where('template_id', template_id)
-      template = await Template.find(template_id)
-    }
-    const excludePages = pagesTemplates.filter(pt=>pt.condition_type === 'exclude').map(pt=>pt.page_guid)
-    const includePages = pagesTemplates.filter(pt=>pt.condition_type === 'include').map(pt=>pt.page_guid)
-
-    let pages
-    if(template.all_site){
-      pages = await Page.query().whereNotIn('guid', excludePages)
-    } else {
-      pages = await Page.query().whereIn('guid', includePages)
-    }
-
-
-    pages = pages.map(p=>p.id)
-    return response.json({data:pages, success:true})
+    // let template
+    // let pagesTemplates
+    // if(validGuid(template_id)){
+    //   pagesTemplates = await PagesTemplate.query().where('template_guid', template_id)
+    //   template = await Template.query().where('guid', template_id)
+    // } else {
+    //   pagesTemplates = await PagesTemplate.query().where('template_id', template_id)
+    //   template = await Template.find(template_id)
+    // }
+    // const excludePages = pagesTemplates.filter(pt=>pt.condition_type === 'exclude').map(pt=>pt.page_guid)
+    // const includePages = pagesTemplates.filter(pt=>pt.condition_type === 'include').map(pt=>pt.page_guid)
+    //
+    // let pages
+    // if(template.all_site){
+    //   pages = await Page.query().whereNotIn('guid', excludePages)
+    // } else {
+    //   pages = await Page.query().whereIn('guid', includePages)
+    // }
+    //
+    //
+    // pages = pages.map(p=>p.id)
+    return response.json({data:await Template.getTemplatePagesIds(template_id), success:true})
   }
   public async create({auth, request, response}:HttpContextContract) {
     await auth.use("web").authenticate();

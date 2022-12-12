@@ -154,7 +154,8 @@ export default class ElementRenderer {
             `after_render_widget_${this.getName()}`,
             element_content,
             settings,
-            screenName)
+            screenName,
+            this.getId())
       } else {
         element_content = fs.readFileSync(this.elementStub, {encoding: 'utf8'})
         element_content = mustache.render(element_content, {

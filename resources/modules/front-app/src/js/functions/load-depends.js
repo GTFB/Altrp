@@ -5,28 +5,28 @@ window.LIBS = {
   'section-element-wrapper': () => {
     return import(/* webpackChunkName: 'section-element-wrapper' */'../libs/section-element-wrapper').then(res => {
       window.libsLoaded.push('section-element-wrapper')
-      console.log('LOAD "section-element-wrapper": ', performance.now());
+      //console.log('LOAD "section-element-wrapper": ', performance.now());
       return Promise.resolve(res)
     });
   },
   'moment': () => {
     return import(/* webpackChunkName: 'moment' */'../libs/moment').then(res => {
       window.libsLoaded.push('moment')
-      console.log('LOAD moment: ', performance.now());
+      //console.log('LOAD moment: ', performance.now());
       return Promise.resolve(res)
     });
   },
   'blueprint': () => {
     return import(/* webpackChunkName: 'Blueprint' */'../libs/blueprint').then(res => {
       window.libsLoaded.push('blueprint')
-      console.log('LOAD Blueprint: ', performance.now());
+      //console.log('LOAD Blueprint: ', performance.now());
       return Promise.resolve(res)
     });
   },
   'template-loader': () => {
     return import(/* webpackChunkName: 'template-loader' */'../libs/template-loader').then(res => {
       window.libsLoaded.push('template-loader')
-      console.log('LOAD "template-loader": ', performance.now());
+      //console.log('LOAD "template-loader": ', performance.now());
       return Promise.resolve(res)
     });
   },
@@ -65,12 +65,12 @@ export default function loadDepends(){
   Promise.all(window.libsToLoad).then(res => {
     import (/* webpackChunkName: 'FrontElementsManager' */'../classes/FrontElementsManager').then(module => {
       import (/* webpackChunkName: 'FrontElementsFabric' */'../classes/FrontElementsFabric').then(module => {
-        console.log('LOAD FrontElementsFabric: ', performance.now());
+        //console.log('LOAD FrontElementsFabric: ', performance.now());
         window.loadingCallback && window.loadingCallback();
       });
       return window.frontElementsManager.loadComponents();
     }).then(async components => {
-      console.log('LOAD FrontElementsManager: ', performance.now());
+      //console.log('LOAD FrontElementsManager: ', performance.now());
       window.loadingCallback && window.loadingCallback();
     });
   });

@@ -136,7 +136,7 @@
     width: calc(5% - 10px);
     padding-top: calc(5% - 10px);
     background-color: rgba(0,0,0,0.08);
-    .asset-choose_selected{
+    &.asset-choose_selected{
       background: $turquoise;
     }
   }

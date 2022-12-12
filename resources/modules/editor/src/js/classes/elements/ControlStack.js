@@ -4,8 +4,8 @@ import FrontElement from "../../../../../front-app/src/js/classes/FrontElement";
 
 class ControlStack extends FrontElement {
 
-  constructor(data){
-    super(data)
+  constructor(data, withoutComponent){
+    super(data, withoutComponent)
   }
   /**
    * @param {string} controlId

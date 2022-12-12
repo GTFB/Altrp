@@ -136,6 +136,7 @@ function getSettings(settingName, locked= false) {
   if (this.props.type === "repeater") {
     return this.props.currentElement.getSettings(settingName);
   }
+
   if (this.props.responsive === false) {
     return this.props.currentElement.getSettings(settingName);
   }

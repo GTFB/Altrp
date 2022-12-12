@@ -159,9 +159,16 @@ Route.group(() => {
     Route.get('/customizers-content/:id', 'admin/CustomizersController.content')
     Route.put('/customizers/:id', 'admin/CustomizersController.update')
     Route.delete('/customizers/:id', 'admin/CustomizersController.destroy')
-    Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer');
+    Route.get('/exports/customizers/:id', 'admin/CustomizersController.exportCustomizer' );
+
+    Route.get('/cron-events', 'admin/CronsController.getCronEvents')
+    Route.post('/cron-events/:id/run', 'admin/CronsController.runCronEvent')
+    Route.get('/crons', 'admin/CronsController.index')
+    Route.delete('/crons/:id', 'admin/CronsController.destroy')
+    Route.delete('/cron-delete-by-customizer-id/:id',
+      'admin/CronsController.deleteAllLogs')
+
     /**
-     *
      * sql_editors
      */
     Route.get('/sql_editors', 'admin/SQLEditorController.index')

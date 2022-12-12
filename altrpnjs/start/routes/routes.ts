@@ -34,6 +34,7 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import base_path from "../../helpers/base_path";
 import env from "../../helpers/env";
 import startChildWithSockets from "../../helpers/startChildWithSockets";
+import Application from "@ioc:Adonis/Core/Application";
 
 
 if (fs.existsSync(base_path('start/routes/custom/routes.' + (isProd() ? 'js' : 'ts')))) {
@@ -445,13 +446,32 @@ Route.any('/wsaltrp', async ({request, response}) => {
     })).data
 
   } catch (e) {
-    startChildWithSockets()
-    response.status(e.response?.status || 400)
-    return response.json({
-      ...e,
-      status: false,
-      message: e.response?.data?.message || e.message
-    });
+    if(! isProd() || env('CLUSTER') != 'true'  || (
+      env('PM2_ID') && env('PM2_ID') ==  process.env.pm_id || ! env('PM2_ID') && process.env.INSTANCE_ID == '0'
+    )) {
+      if (Application.environment === 'web') {
+        await startChildWithSockets()
+        try{
+
+          res = (await axios(`http://${env('HOST')}:${
+            env('SOCKET_PORT', 22045)
+          }`, {
+            // @ts-ignore
+            method: request.method(),
+            params: request.all(),
+            data: request.method().toLowerCase() === 'post' ? request.raw() : null
+          })).data
+        }catch (e) {
+
+          response.status(e.response?.status || 400)
+          return response.json({
+            ...e,
+            status: false,
+            message: e.response?.data?.message || e.message
+          });
+        }
+      }
+    }
   }
   // console.log(res);
   return response.send(res)

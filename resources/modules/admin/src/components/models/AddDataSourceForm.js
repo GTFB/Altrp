@@ -73,7 +73,7 @@ class AddDataSourceForm extends Component {
 
   ItemPredicate = (query, value) => {
     return (
-      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+      `${value.label?.toLowerCase()}`.indexOf(query?.toLowerCase()) >= 0
     );
   }
 
@@ -479,47 +479,47 @@ class AddDataSourceForm extends Component {
             </Select>
           </div>
 
-          <div className="form-group__inline-wrapper">
-            <div className="form-group form-group_width47">
-              <label htmlFor="data-source-url" className="data-source-label">Route</label>
-              {/*<input type="text" id="data-source-url" required*/}
-              {/*       value={this.state.value.url}*/}
-              {/*       onChange={e => {*/}
-              {/*         this.changeValue(e.target.value, 'url')*/}
-              {/*       }}*/}
-              {/*       className="form-control"/>*/}
+          {/*<div className="form-group__inline-wrapper">*/}
+          {/*  <div className="form-group form-group_width47">*/}
+          {/*    <label htmlFor="data-source-url" className="data-source-label">Route</label>*/}
+          {/*    /!*<input type="text" id="data-source-url" required*!/*/}
+          {/*    /!*       value={this.state.value.url}*!/*/}
+          {/*    /!*       onChange={e => {*!/*/}
+          {/*    /!*         this.changeValue(e.target.value, 'url')*!/*/}
+          {/*    /!*       }}*!/*/}
+          {/*    /!*       className="form-control"/>*!/*/}
 
-              <InputGroup type="text"
-                          id="data-source-url"
-                          required
-                          value={this.state.value.url}
-                          onChange={e => {
-                            this.changeValue(e.target.value, 'url')
-                          }}
-                          className="form-control-blueprint"
-              />
-            </div>
+          {/*    <InputGroup type="text"*/}
+          {/*                id="data-source-url"*/}
+          {/*                required*/}
+          {/*                value={this.state.value.url}*/}
+          {/*                onChange={e => {*/}
+          {/*                  this.changeValue(e.target.value, 'url')*/}
+          {/*                }}*/}
+          {/*                className="form-control-blueprint"*/}
+          {/*    />*/}
+          {/*  </div>*/}
 
-            <div className="form-group form-group_width47">
-              <label htmlFor="data-source-api_url" className="data-source-label">API Route</label>
-              {/*<input type="text" id="data-source-api_url" required*/}
-              {/*       value={this.state.value.api_url}*/}
-              {/*       onChange={e => {*/}
-              {/*         this.changeValue(e.target.value, 'api_url')*/}
-              {/*       }}*/}
-              {/*       className="form-control"/>*/}
+          {/*  <div className="form-group form-group_width47">*/}
+          {/*    <label htmlFor="data-source-api_url" className="data-source-label">API Route</label>*/}
+          {/*    /!*<input type="text" id="data-source-api_url" required*!/*/}
+          {/*    /!*       value={this.state.value.api_url}*!/*/}
+          {/*    /!*       onChange={e => {*!/*/}
+          {/*    /!*         this.changeValue(e.target.value, 'api_url')*!/*/}
+          {/*    /!*       }}*!/*/}
+          {/*    /!*       className="form-control"/>*!/*/}
 
-              <InputGroup type="text"
-                          id="data-source-api_url"
-                          required
-                          value={this.state.value.api_url}
-                          onChange={e => {
-                            this.changeValue(e.target.value, 'api_url')
-                          }}
-                          className="form-control-blueprint"
-              />
-            </div>
-          </div>
+          {/*    <InputGroup type="text"*/}
+          {/*                id="data-source-api_url"*/}
+          {/*                required*/}
+          {/*                value={this.state.value.api_url}*/}
+          {/*                onChange={e => {*/}
+          {/*                  this.changeValue(e.target.value, 'api_url')*/}
+          {/*                }}*/}
+          {/*                className="form-control-blueprint"*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
           <h2 className="admin-form__subheader centred">Access</h2>
 

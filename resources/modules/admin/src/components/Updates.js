@@ -60,22 +60,7 @@ class Updates extends Component {
   }
 
   async installTestAltrp() {
-    try {
-      await axios.post('/admin/ajax/restart-altrp',)
 
-    } catch (e) {
-      let serverRestarted = false
-      let i = 0
-      do {
-        ++i
-        try {
-          await delay(100)
-          await axios.get('/ajax/_token')
-          serverRestarted = true
-        } catch (e) {
-        }
-      } while (!serverRestarted && i < 100)
-    }
     store.dispatch(setAdminDisable());
     try {
       let res = await (new Resource({route: '/admin/ajax/install_test_altrp'})).post({});

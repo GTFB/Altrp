@@ -10,6 +10,7 @@ import '../../front-app/src/js/libs/template-loader'
 import '../../front-app/src/js/libs/fullcalendar'
 import '../../front-app/src/js/libs/image-crop'
 import '../../front-app/src/js/libs/reacket'
+import {createGlobalStyle} from 'styled-components'
 import _ from "lodash";
 window._ = _;
 
@@ -18,6 +19,14 @@ window._ = _;
  * @type {{}}
  */
 window.editorAPI = window.editorAPI || {}
+/**
+ *
+ * @type {*|{}}
+ */
+window.editorAPI.components = window.editorAPI.components || {
+  createGlobalStyle: createGlobalStyle
+}
+
 /**
  *
  * @type {Object<string, {

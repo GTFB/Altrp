@@ -16,10 +16,10 @@ if(!window.asCheck){
 
 document.addEventListener('DOMContentLoaded',()=>{
   if(! window.asCheck){
-  }
-  import('./js/helpers/dataRevealElements').then(cb=>cb.default())
-  if(document.querySelector('[data-async-content-load]')){
-    import('./js/helpers/dataAsyncContentLoad').then(cb=>cb.default())
+    import('./js/helpers/dataRevealElements').then(cb=>cb.default())
+    if(document.querySelector('[data-async-content-load]')){
+      import('./js/helpers/dataAsyncContentLoad').then(cb=>cb.default())
+    }
   }
 })
 if(document.querySelector('a[href]')){

@@ -127,9 +127,21 @@ class Editor extends Component {
    * Инициализация модулей
    */
 
-  initModules() {
+  initModules =async()=> {
+    try {
+      await window.editorAPI.applyPluginsFiltersAsync('before_editor_init_modules', '')
+    }catch (e) {
+      console.error(e);
+    }
     this.modules = new Modules(this);
     this.modules.loaded();
+    this.setState(state=>({...state, modulesInitialized: true }), ()=>{
+
+      const EditorLoadedEvent = new Event('altrp-editor-modules-initialized')
+      window.dispatchEvent(EditorLoadedEvent);
+      document.dispatchEvent(EditorLoadedEvent);
+    })
+
   }
 
   /**
@@ -478,9 +490,10 @@ class Editor extends Component {
     ) {
       navigationActive = " active";
     }
+    const {modulesInitialized} = this.state
+
     return (
       <DndProvider backend={HTML5Backend}>
-
         <div
           className={cn(templateClasses, {
             'iframe-disabled': this.state.iframeDisabled,
@@ -595,7 +608,7 @@ class Editor extends Component {
               </EditorWindowPopup>
             )}
             <PreviewSettingModal />
-            <EditorWindow />
+            {modulesInitialized&&<EditorWindow />}
             <Rnd
               className={this.state.navigator ? "draggable-navigator" : "draggable-navigator-hide"}
               default={{

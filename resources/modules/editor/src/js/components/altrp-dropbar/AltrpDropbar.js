@@ -17,6 +17,7 @@ class Dropbar extends Component {
     this.leaveHide = this.leaveHide.bind(this);
     this.enterShow = this.enterShow.bind(this);
 
+    this.element = props.element;
     this.children = React.createRef();
   };
 
@@ -73,6 +74,7 @@ class Dropbar extends Component {
     const id = this.props.settings.template_dropbar_section;
 
 
+    const cardModel = this.element.hasCardModel() ? this.element.getCardModel() : null
     return (
       <div className={this.props.conditionalClasses + "altrp-dropbar " + mainClass}>
         <span className={this.props.conditionalClasses + "altrp-dropbar-children-wrapper " + (mainClass ? mainClass + "-wrapper" : '')}
@@ -122,6 +124,7 @@ class Dropbar extends Component {
                   )
                 ) : (
                   <TemplateLoader
+                    cardModel={cardModel}
                     onLoad={() => {
                       this.setState({ updateToken: Math.random() })
                     }}

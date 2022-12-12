@@ -52,6 +52,7 @@ export default function setDataByPath(path = "", value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
+
     if (_.isFunction(dispatch)) {
       dispatch(changePageState(path, value));
     } else {

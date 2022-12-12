@@ -991,10 +991,10 @@ export default class ModelsController {
 
     const dataSourceSchema = schema.create({
       title: schema.string({trim: true}, [
-        rules.maxLength(32)
+        rules.maxLength(255)
       ]),
       name: schema.string({trim: true}, [
-        rules.maxLength(32)
+        rules.maxLength(255)
       ]),
     })
 
@@ -1055,10 +1055,10 @@ export default class ModelsController {
   async storeDataSource({response, request}: HttpContextContract) {
     const dataSourceSchema = schema.create({
       title: schema.string({trim: true}, [
-        rules.maxLength(32)
+        rules.maxLength(255)
       ]),
       name: schema.string({trim: true}, [
-        rules.maxLength(32)
+        rules.maxLength(255)
       ]),
     })
 

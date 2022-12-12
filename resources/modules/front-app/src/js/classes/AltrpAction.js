@@ -337,7 +337,7 @@ class AltrpAction extends AltrpModel {
         break;
       default: {
         try {
-          if(window?.altrp?.customActions[this.getType()]){
+          if(window?.altrp?.customActions && window?.altrp?.customActions[this.getType()]){
             result = await window?.altrp?.customActions[this.getType()](this)
           }
         } catch (e) {
@@ -1047,6 +1047,7 @@ class AltrpAction extends AltrpModel {
     }
     for (let path of paths) {
       path = replaceContentWithData(path, this.getCurrentModel().getData());
+      console.log(path);
       let value = this.getProperty('value') || '';
       value = value.trim();
       const setType = this.getProperty('set_type');
@@ -1067,7 +1068,7 @@ class AltrpAction extends AltrpModel {
               value.replace('{{', '').replace('}}', ''),
               null,
               this.getCurrentModel()
-            );
+          );
           } else if (value.indexOf('|') !== -1) {
             value = parseParamsFromString(
               value,

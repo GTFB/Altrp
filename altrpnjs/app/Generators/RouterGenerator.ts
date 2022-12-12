@@ -47,11 +47,11 @@ export default class RouterGenerator {
       })
     let content = `
     `
-    customizers = await Promise.all(customizers.map(async c => {
+    customizers = await Promise.all(customizers.map(async (c:Customizer) => {
 
       const middlewares = c.settings?.middlewares || []
       let cors = ! ! middlewares.find(m => m?.value === 'cors')
-      cors && console.log(c.id);
+      //cors && console.log(c.id);
       if(! c.altrp_model || ! c.altrp_model?.table){
         return  null
       }
@@ -72,6 +72,9 @@ export default class RouterGenerator {
       }
     }))
     customizers = customizers.filter(c=>c)
+    customizers = _.uniqBy(customizers, c => {
+      return c.url+c.method
+    })
     customizers.forEach((c:any) => {
       const {
         method,
