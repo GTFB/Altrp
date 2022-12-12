@@ -256,6 +256,7 @@
         "node-sass": "^7.0.0",
         "npm-run-all": "^4.1.5",
         "popper.js": "^1.12",
+        "qs": "^6.11.0",
         "react-hot-loader": "^4.12.19",
         "react-svg-loader": "^3.0.3",
         "resolve-url-loader": "^2.3.1",

@@ -524,7 +524,9 @@ export default class Customizer extends BaseModel {
   }
 
   public static parseData( data, customizer ){
-
+    if(!_.isArray(data)){
+      data = []
+    }
     data = data.map( item  => {
       const type = data_get( item, 'type' )
       switch( type ){

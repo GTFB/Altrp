@@ -21,7 +21,6 @@ class ReturnNode extends React.Component {
 
     node = mutate.set(node, `data.${path}`, value)
 
-    console.log(node)
     store.dispatch(setUpdatedNode(node));
   }
 

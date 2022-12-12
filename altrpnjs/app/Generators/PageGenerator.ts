@@ -82,8 +82,9 @@ export default class PageGenerator extends BaseGenerator {
     })
 
     let elements_list: string[] | string = await page.extractElementsNames()
+    let all_elements_list: string[] | string = await page.extractElementsNames(false)
 
-    const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
+    const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list, all_elements_list)
     elements_list = elements_list.map(e => `'${e}'`)
 
     const head_start = get_altrp_setting('head_start', '', true)
@@ -145,7 +146,7 @@ export default class PageGenerator extends BaseGenerator {
         .apply({
           hAltrp: Env.get('PATH_ENV') === 'production'
             ? `/modules/front-app/h-altrp.js?${randomString}`
-            : 'http://localhost:3002/src/h-altrp.js',
+            : `http://localhost:3002/src/h-altrp.js?${randomString}`,
           children_content,
           fonts,
           elements_list,
@@ -168,6 +169,7 @@ export default class PageGenerator extends BaseGenerator {
             version: getLatestVersion(),
             pageGuid: page.guid,
             popupsGuids: await page.getPopupsGuids(),
+            randomString,
             isNodeJS: true
           }),
         }, false, true)
@@ -176,16 +178,17 @@ export default class PageGenerator extends BaseGenerator {
     return true
   }
 
-  async getExtraStyles(elementsList): Promise<{
+  async getExtraStyles(reactElementsList, allElementsList: any = []): Promise<{
     extra_header_styles: string
     extra_footer_styles: string
   }> {
-    const extraStyles = {
+
+    let extraStyles = {
       extra_header_styles: '',
       extra_footer_styles: '',
     }
     extraStyles.extra_header_styles += `<style id="extra_header_styles">`
-    for (let element of elementsList) {
+    for (let element of reactElementsList) {
       const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
       if (fs.existsSync(fileName)) {
         let content = fs.readFileSync(fileName, {encoding: 'utf8'})
@@ -200,6 +203,8 @@ export default class PageGenerator extends BaseGenerator {
       extraStyles.extra_header_styles += global_styles_editor ?
         `<style id="global_styles_editor">${global_styles_editor}</style>` : ''
     }
+    extraStyles = await applyPluginsFiltersAsync('extra_styles_filter', extraStyles, reactElementsList, allElementsList)
+
     return extraStyles
   }
 

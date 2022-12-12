@@ -59,7 +59,7 @@ function _hAltrp() {
           return
         }
         window.altrpContentLoaded = true
-        console.log('h-altrp LOADED: ', performance.now());
+        //console.log('h-altrp LOADED: ', performance.now());
 
         const hAltrpLoadedEvent = new Event('h-altrp-loaded');
         // console.log('h-altrp-loaded');
@@ -85,28 +85,28 @@ function _hAltrp() {
 
       import (/* webpackChunkName: 'appStore' */'./js/store/store').then(() => {
         document.dispatchEvent(new Event('app-store-loaded'))
-        console.log('LOAD appStore: ', performance.now());
+        //console.log('LOAD appStore: ', performance.now());
         loadingCallback();
         loadDepends()
       });
 
       import (/* webpackChunkName: 'SingleElementWrapper' */'./js/components/SingleElementWrapper').then(module => {
         window.ElementWrapper = module.default;
-        console.log('LOAD SingleElementWrapper: ', performance.now());
+        //console.log('LOAD SingleElementWrapper: ', performance.now());
         loadingCallback();
       });
 
       import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
         window.elementDecorator = module.default;
-        console.log('LOAD elementDecorator: ', performance.now());
+        //console.log('LOAD elementDecorator: ', performance.now());
         loadingCallback();
       });
-      console.log('LOAD altrp: ', performance.now());
+      //console.log('LOAD altrp: ', performance.now());
     })
 
 
     import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
-      console.log('LOAD FormsManager: ', performance.now());
+      //console.log('LOAD FormsManager: ', performance.now());
     });
   })
 
@@ -114,7 +114,7 @@ function _hAltrp() {
     window.stylesModuleResolve = resolve;
 
     import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(() => {
-      console.log('LOAD FormsManager: ', performance.now());
+      //console.log('LOAD FormsManager: ', performance.now());
     });
 
     if (process.env.NODE_ENV !== 'production') {

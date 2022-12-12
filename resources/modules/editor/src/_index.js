@@ -36,6 +36,7 @@ if (process.env.NODE_ENV !== "production") {
 function loadEditorContent(EditorContent){
 
   let iframe = document.getElementsByTagName("iframe")[0];
+
   window.EditorFrame = iframe;
   if (!iframe) {
     return;
@@ -43,15 +44,25 @@ function loadEditorContent(EditorContent){
   let editorContentTarget = iframe.contentDocument.getElementById(
     "editor-content"
   );
+  console.log(iframe.contentDocument.readyState);
 
   if (editorContentTarget) {
     ReactDOM.render(<EditorContent />, editorContentTarget);
-  } else {
+  } else if(iframe.contentDocument.readyState === 'complete'){
+    editorContentTarget = iframe.contentDocument.getElementById(
+      "editor-content"
+    );
+    console.error(editorContentTarget);
+    if (editorContentTarget) {
+      ReactDOM.render(<EditorContent />, editorContentTarget);
+    }
+  }else{
     // DOMContentLoaded
     iframe.contentDocument.addEventListener('DOMContentLoaded', ()=>{
-      editorContentTarget = iframe.contentWindow.document.getElementById(
+      editorContentTarget = iframe.contentDocument.getElementById(
         "editor-content"
       );
+
       if (editorContentTarget) {
         ReactDOM.render(<EditorContent />, editorContentTarget);
       }
@@ -116,6 +127,7 @@ import(/* webpackChunkName: 'Editor' */"./Editor.js")
   .then(EditorContent => {
     EditorContent = EditorContent.default;
     let iframe = document.getElementsByTagName("iframe")[0];
+
     if(iframe && iframe.contentDocument.getElementById(
       "editor-content"
     )){
@@ -124,5 +136,20 @@ import(/* webpackChunkName: 'Editor' */"./Editor.js")
       iframe.onload = ()=>{
         loadEditorContent(EditorContent)
       }
+    }else {
+
+      document.addEventListener('altrp-editor-modules-initialized', ()=>{
+        let iframe = document.getElementsByTagName("iframe")[0];
+        if(iframe && iframe.contentDocument.getElementById(
+          "editor-content"
+        )){
+          loadEditorContent(EditorContent)
+        } else if(iframe){
+          iframe.onload = ()=>{
+            loadEditorContent(EditorContent)
+          }
+        }
+
+      })
     }
   });

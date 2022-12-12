@@ -144,7 +144,7 @@ let defaultOptions = [
   }
 ]
 defaultOptions = window.editorAPI.applyPluginsFiltersSync('default_actions_controllers_type_options', defaultOptions)
-console.log(defaultOptions);
+
 /**
  * Добавляет контроллеры действия для элемента
  * @param {BaseElement} element - элемент

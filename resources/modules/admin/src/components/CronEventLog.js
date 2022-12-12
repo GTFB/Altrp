@@ -89,7 +89,7 @@ function CronEventLog() {
             </form>
           </div>
         </div>
-        <ul>
+        <ul className="logs-list">
           {filteredLogs.map(log => (
             <li key={log.id}>
               <div className="date-label pt-3">

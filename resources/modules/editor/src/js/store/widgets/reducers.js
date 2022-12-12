@@ -1,7 +1,9 @@
 import { ADD_WIDGET, FILTER_WIDGETS } from "./actions"
 import defaultState from "./defaultState"
 
-export function widgetsReducer (state = defaultState, action) {
+const _defaultState = window.editorAPI.applyPluginsFiltersSync('default_elements_state_filter', defaultState)
+
+export function widgetsReducer (state = _defaultState, action) {
     switch (action.type) {
         case ADD_WIDGET:
             return {

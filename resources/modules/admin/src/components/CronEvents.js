@@ -166,7 +166,13 @@ function CronEvents() {
               href: '/admin/cron-events/:id/logs',
             },
             title: 'Show Logs',
-          }]}
+          }, {
+            tag: 'button',
+            method: 'delete',
+            route: '/admin/ajax/cron-delete-by-customizer-id/:id',
+            className: 'quick-action-menu__item_danger',
+            title: 'Delete All Logs',
+          },]}
           rows={cronEventsRows}
           sortingHandler={handleSort}
           sortingField={orderBy}

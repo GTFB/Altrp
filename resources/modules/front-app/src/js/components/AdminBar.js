@@ -151,9 +151,6 @@ class AdminBar extends React.Component {
       update: true
     }))
 
-
-    console.log(this.props.idPage);
-
     await upgradeBackend(['pages'], [this.props.idPage])
 
     this.setState(state => ({

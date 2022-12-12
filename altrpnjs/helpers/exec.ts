@@ -9,6 +9,9 @@ async function exec(command: string):Promise<string|null> {
     if (stderr) {
       console.error(`Exec ${command} Command Error:`)
       console.error(stderr)
+      if (stdout?.trim()?.length) {
+        console.log(stdout.trim())
+      }
       return stderr
     } else if (stdout?.trim()?.length) {
       console.log(stdout.trim())

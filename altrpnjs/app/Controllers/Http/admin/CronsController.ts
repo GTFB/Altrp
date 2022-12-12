@@ -46,19 +46,37 @@ export default class CronsController {
     return response.json({})
   }
 
+  public async deleteAllLogs({ request, response }: HttpContextContract){
+    const id = request.params().id
+    if(! id){
+      response.status(403)
+      return response.json({
+        success: false,
+        message: 'No ID Provided'
+      })
+    }
+
+    await Cron.query().where('customizer_id', id).delete()
+
+    return response.json({
+      success: true,
+    })
+  }
+
   public async index({ request, response }: HttpContextContract) {
     const { customizer: customizerId } = request.qs()
     let res: Cron[] = []
 
     if (customizerId) {
       res = await Cron.query().where('customizer_id', customizerId)
+        .orderBy('id', 'desc')
     } else {
       res = await Cron.all()
     }
     return response.json(res)
   }
 
-  public async delete({ params, response }: HttpContextContract) {
+  public async destroy({ params, response }: HttpContextContract) {
     let res = await Cron.find(params.id)
 
     if (res) {

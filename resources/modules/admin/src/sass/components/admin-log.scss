@@ -3,7 +3,7 @@
   margin-bottom: 14px;
 }
 
-.admin-content ul li:not(:first-child) {
+.admin-content ul.logs-list li:not(:first-child) {
   margin-top: 14px;
 
   .date-label {

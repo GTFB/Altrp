@@ -1,5 +1,4 @@
 import * as mustache from'mustache'
-import Env from '@ioc:Adonis/Core/Env'
 import getCurrentDevice from "../../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
@@ -31,6 +30,7 @@ import isRobot from "../../../helpers/isRobot";
 import base_path from "../../../helpers/path/base_path";
 import sharp from 'sharp';
 import sizeOf from 'image-size';
+
 
 export default class AltrpRouting {
 
@@ -385,7 +385,6 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
-
     const url = httpContext.request.url();
     /**
      * Игнорим логинизацию
@@ -435,8 +434,8 @@ export default class AltrpRouting {
       let res = await httpContext.view.render(`altrp/pages/${page.guid}`,
         Edge({
           ...altrpContext,
-          hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
-          url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+          // hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
+          // url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
           title: replaceContentWithData(page.title || 'Altrp', altrpContext),
           altrpContext,
           is_admin,

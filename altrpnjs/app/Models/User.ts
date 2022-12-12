@@ -215,15 +215,15 @@ export default class User extends BaseModel {
     const relation = this.related("permissions");
 
     if(typeof value === "object") {
-      const permission = await relation.query().where("id", value.id).first();
+      const permission = await relation.query().where("permissions.id", value.id).first();
 
       return !!permission
     } else if(typeof value === "number") {
-      const permission = await relation.query().where("id", value).first();
+      const permission = await relation.query().where("permissions.id", value).first();
 
       return !!permission
     }else  {
-      const permission = await relation.query().where("name", value).first();
+      const permission = await relation.query().where("permissions.name", value).first();
 
       return !!permission
     }

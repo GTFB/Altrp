@@ -21,8 +21,8 @@ export default class ConvertEmptyString {
       }
     }
     await next()
-    console.log(`END:   ${((performance.now() - start) + '').substring(0, 8)}  ${
-      (request.method() + '   ').substring(0, 7)
+    console.log(`END:   ${((performance.now() - start) + '').substring(0, 8)} ${
+      (request.method() + '    ').substring(0, 7)
     } ${
       request.url(true)
     }, ${

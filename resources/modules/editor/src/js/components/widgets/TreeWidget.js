@@ -95,7 +95,7 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getLockedSettings("sort_default");
   settings.sortOption = this.props.element.getLockedSettings("options_sorting");
-  let data = _.cloneDeep(getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData()));
+  let data = _.cloneDeep(getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData())) || [];
   settings.columns = this.props.element.getLockedSettings("column_repeater", []);
   settings.flat = this.props.element.getLockedSettings("flat_col", false);
 
@@ -164,7 +164,7 @@ const getMaxDepth = (data, maxDepth=0, depth=0) => {
   }
 
   for(const branch of data) {
-    if(branch.children.length > 0) {
+    if(branch?.children?.length > 0) {
       maxDepth = getMaxDepth(branch.children, maxDepth, depth+1)
     }
   }
@@ -174,7 +174,7 @@ const getMaxDepth = (data, maxDepth=0, depth=0) => {
 
 const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=false, maxDepth) => {
   branch.childNodes = branch.children || []
-
+  branch.childNodes = branch.childNodes.filter(i=>i)
   delete branch.children
 
   branch.depth = depth
@@ -202,12 +202,13 @@ const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=fal
 }
 
 const getColumns = (columns, branch, flat, maxDepth) => {
+
   const filteredColumns = columns.filter(c => {
 
     return branch[c.value] !== null && branch[c.value] !== undefined
   })
 
-  const firstElementWidth = filteredColumns[0].size || "1" + filteredColumns[0].unit || "px"
+  const firstElementWidth = filteredColumns?.[0].size || "1" + filteredColumns?.[0].unit || "px"
   const widths = filteredColumns.slice(1).map(column => {
     if(column.width) {
       return `${(column.width.size || "1") + column.width.unit || "fr"}`
@@ -261,7 +262,7 @@ const getColumns = (columns, branch, flat, maxDepth) => {
               return (
                 <div
                   className={classNames}
-                  key={idx}
+                  key={branch[column.value] + idx}
                 >
                   {
                     branch[column.value]
@@ -302,7 +303,7 @@ const getColumns = (columns, branch, flat, maxDepth) => {
                 return (
                   <div
                     className={classNames}
-                    key={idx}
+                    key={branch[column.value] + idx}
                   >
                     {
                       branch[column.value]
@@ -594,7 +595,7 @@ class TreeWidget extends Component {
       }}>
         {
           columns_repeater.map((column, idx) => (
-            <div className="altrp-tree-heading__column" key={idx}>
+            <div className="altrp-tree-heading__column" key={column.label + idx}>
               <div className="altrp-tree-heading__text">
                 {
                   column.label

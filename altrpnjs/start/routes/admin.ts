@@ -164,10 +164,11 @@ Route.group(() => {
     Route.get('/cron-events', 'admin/CronsController.getCronEvents')
     Route.post('/cron-events/:id/run', 'admin/CronsController.runCronEvent')
     Route.get('/crons', 'admin/CronsController.index')
-    Route.delete('/crons/:id', 'admin/CronsController.delete')
+    Route.delete('/crons/:id', 'admin/CronsController.destroy')
+    Route.delete('/cron-delete-by-customizer-id/:id',
+      'admin/CronsController.deleteAllLogs')
 
     /**
-     *
      * sql_editors
      */
     Route.get('/sql_editors', 'admin/SQLEditorController.index')

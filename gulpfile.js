@@ -164,7 +164,10 @@ const copyPublicToAdonis = gulp.parallel(
   },
   cb=>{
     return gulp.src([
-    './altrpnjs/public/css/creative-link.css'
+    './altrpnjs/public/css/creative-link.css',
+    './altrpnjs/public/css/regular.min.css',
+    './altrpnjs/public/css/solid.min.css',
+    './altrpnjs/public/css/fontawesome.min.css',
   ]).pipe(gulp.dest('./altrpnjs/build/public/css/'))
   },
   cb=>{

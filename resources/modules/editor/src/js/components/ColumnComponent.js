@@ -1,4 +1,4 @@
-import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
+import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-column {
@@ -43,7 +43,7 @@ class ColumnComponent extends Component {
    * @return {boolean}
    */
   columnIsLink() {
-    return ! !_.get(this, 'props.element.settings.link_link.url');
+    return !!_.get(this, 'props.element.settings.link_link.url');
   }
 
   render() {
@@ -55,7 +55,7 @@ class ColumnComponent extends Component {
     );
     let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
     let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes_column || "") + (background_image?.url || background_image_hover?.url ? ' altrp-background-image-columns' : '');
-    if(this.isActive()){
+    if (this.isActive()) {
       className += ' active';
     }
     if (this.columnIsLink()) {
@@ -72,12 +72,15 @@ class ColumnComponent extends Component {
         settings: this.props.element.getSettings()
       },
       this.state.children.map(
-        widget => <ElementWrapper key={widget.getIdForAction()}
-          rootElement={this.props.rootElement}
-          baseRender={this.props.baseRender}
-          ElementWrapper={ElementWrapper}
-          component={widget.componentClass}
-          element={widget} />
+        widget => {
+
+          return <ElementWrapper key={widget.getIdForAction()}
+                                 rootElement={this.props.rootElement}
+                                 baseRender={this.props.baseRender}
+                                 ElementWrapper={ElementWrapper}
+                                 component={widget.componentClass}
+                                 element={widget}/>
+        }
       )
     );
   }

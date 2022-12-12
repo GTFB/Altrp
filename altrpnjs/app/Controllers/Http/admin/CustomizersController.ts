@@ -259,9 +259,11 @@ export default class CustomizersController {
           'title': customizer.title,
           'name': customizer.name,
           'type': 'customizer',
-          'auth': true,
           'request_type':await customizer.getRequestType(),
         })
+        if(! oldSource){
+          source.auth = true
+        }
         await source.save()
 
         if(!oldSource){

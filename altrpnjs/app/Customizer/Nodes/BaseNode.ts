@@ -116,7 +116,6 @@ export default class BaseNode {
       return children.includes(c.data.id)
     })
 
-    console.log(children.map(c=>c.data));
     return children
   }
 

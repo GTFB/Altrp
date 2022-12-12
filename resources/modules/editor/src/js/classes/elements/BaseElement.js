@@ -110,6 +110,10 @@ class BaseElement extends ControlStack {
    * @returns {string}
    */
   getName() {
+    if(!this.constructor.getName()){
+      console.log(this);
+      console.log(this.constructor);
+    }
     return this.constructor.getName();
   }
 

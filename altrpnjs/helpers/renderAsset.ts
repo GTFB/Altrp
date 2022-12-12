@@ -20,8 +20,21 @@ export default function renderAsset(asset, attrs:any  = {}) {
   if (asset.rawSVG && asset.type === "svg") {
     const startSvgTag = asset.rawSVG.indexOf('<svg')
     const endSvgTag = asset.rawSVG.indexOf('</svg') + 6
+    let svg = asset.rawSVG.slice(0, endSvgTag).slice(startSvgTag)
+    let propsString = svg.match(/<svg(.*?)=\"(.*?)\">/gi)
+      ?svg.match(/<svg(.*?)=\"(.*?)\">/gi)[0] : '';
+    svg = svg.replace(/<!--[\s\S]*?-->/g, '')
+    svg = svg.replace(/<![\s\S]*?>/g, '')
+    svg = svg.replace(/<\?[\s\S]*?\?>/g, '')
+    svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+    let props = {};
+    let match;
+    const regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig');
 
-    return `<svg>${asset.rawSVG.slice(0, endSvgTag).slice(startSvgTag)}</svg>`;
+    while (match = regex.exec(propsString)) {
+      props[match[1]] = match[3];
+    }
+    return `<svg ${objectToAttributesString(props)}>${svg}</svg>`;
   }
   switch (asset.assetType) {
     // case "icon": {

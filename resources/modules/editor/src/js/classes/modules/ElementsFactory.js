@@ -1,6 +1,7 @@
 import BaseModule from "./BaseModule";
 import { getEditor } from "../../helpers";
 import BaseElement from "../elements/BaseElement";
+import store  from "../../store/store";
 
 class ElementsFactory extends BaseModule {
   /**
@@ -22,6 +23,7 @@ class ElementsFactory extends BaseModule {
     }
     let children = [];
     const elementsManager = window.elementsManager;
+    // console.error(Object.keys(store.getState().widgetsManager.elements));
     /**
      * @member {BaseElement} element
      * */

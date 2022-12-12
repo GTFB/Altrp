@@ -20,6 +20,7 @@ import Category from "App/Models/Category";
 import RootElementRenderer from "App/Renderers/RootElement";
 import mbParseJSON from '../../helpers/mbParseJSON';
 import _ from "lodash";
+import validGuid from "../../helpers/validGuid";
 
 export default class Template extends BaseModel {
 
@@ -272,5 +273,28 @@ export default class Template extends BaseModel {
       return ""
     }
   }
+  static async getTemplatePagesIds(template_id){
+    let template
+    let pagesTemplates
+    if(validGuid(template_id)){
+      pagesTemplates = await PagesTemplate.query().where('template_guid', template_id)
+      template = await Template.query().where('guid', template_id)
+    } else {
+      pagesTemplates = await PagesTemplate.query().where('template_id', template_id)
+      template = await Template.find(template_id)
+    }
+    const excludePages = pagesTemplates.filter(pt=>pt.condition_type === 'exclude').map(pt=>pt.page_guid)
+    const includePages = pagesTemplates.filter(pt=>pt.condition_type === 'include').map(pt=>pt.page_guid)
 
+    let pages
+    if(template.all_site){
+      pages = await Page.query().whereNotIn('guid', excludePages)
+    } else {
+      pages = await Page.query().whereIn('guid', includePages)
+    }
+
+
+    pages = pages.map(p=>p.id)
+    return pages
+  }
 }
