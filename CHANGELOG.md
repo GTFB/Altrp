@@ -2,10 +2,13 @@
 
 ## Changelog
 
-### 1.4.6 build 21
+## test version build 2
+
+### 1.4.6
 * Added CRON Results Logs
 * Added API for Plugins in Editor Frontend
 * Fix Dropbar in Cards Issue
+* Optimize Style Generate
 
 ### 1.4.5 
 * Default Role for API Robotizers set to Admin

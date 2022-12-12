@@ -1196,7 +1196,7 @@ export default class Page extends BaseModel {
     // @ts-ignore
     delete data.settingsLock
     // }
-    _.each(data.settings, (value, key) => {
+    _.each(data.settings, (value: any, key) => {
       if (_.isObject(value) && _.isEmpty(value)) {
         delete data.settings[key]
         return
@@ -1204,7 +1204,33 @@ export default class Page extends BaseModel {
       if(! value){
         delete data.settings[key]
       }
+
+      if(Page.URL_DEPENDENCIES_SETTINGS[data.name]
+        && Page.URL_DEPENDENCIES_SETTINGS[data.name].includes(key)
+        && ! value?.url){
+        delete data.settings[key]
+      }
     })
+  }
+
+  private static URL_DEPENDENCIES_SETTINGS = {
+    'section': [
+      'link_link',
+      'background_image',
+    ],
+    'column': [
+      'link_link',
+      'background_image',
+    ],
+    'heading': [
+      'link_link',
+    ],
+    'icon': [
+      'icon',
+    ],
+    'image': [
+      'content_media',
+    ],
   }
 
   async getPopupsGuids() {
