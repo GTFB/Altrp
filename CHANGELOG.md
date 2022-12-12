@@ -2,7 +2,9 @@
 
 ## Changelog
 
-### 1.4.6 build 21
+## test version build 2
+
+### 1.4.6
 * Added CRON Results Logs
 * Added API for Plugins in Editor Frontend
 * Fix Dropbar in Cards Issue
