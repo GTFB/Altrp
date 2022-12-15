@@ -1418,6 +1418,7 @@ export default class Page extends BaseModel {
       'link_link',
     ],
     column: [
+      'link_link',
     ],
     posts: [
       'current_page_text',

@@ -446,6 +446,11 @@ Route.any('/wsaltrp', async ({request, response}) => {
     })).data
 
   } catch (e) {
+    if(e.response?.data){
+
+      response.status(e.response?.status || 400)
+      return response.send(e.response?.data);
+    }
     if(! isProd() || env('CLUSTER') != 'true'  || (
       env('PM2_ID') && env('PM2_ID') ==  process.env.pm_id || ! env('PM2_ID') && process.env.INSTANCE_ID == '0'
     )) {

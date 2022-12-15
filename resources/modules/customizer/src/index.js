@@ -46,3 +46,9 @@ if (customizerTarget) window.ReactDOM.render(
     <CustomizerEditor/>
     <AssetsBrowser/>
   </Provider>, customizerTarget);
+
+window.onbeforeunload = function() {
+  if(window.customizerEditor.state.btnActive === 'btn_active'){
+    return false
+  }
+};

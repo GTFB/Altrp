@@ -1,1 +1,1 @@
-<{{layout_html_tag}} class="altrp-column altrp-column-priority {{link_class}} {{column_classes}}">{{{children_content}}}</{{layout_html_tag}}>
+<{{layout_html_tag}} class="altrp-column altrp-column-priority {{link_class}} {{column_classes}}" {{{attributes}}}>{{{children_content}}}</{{layout_html_tag}}>

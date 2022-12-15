@@ -1,1 +1,1 @@
-<{{layout_html_tag}} class="altrp-section altrp-section_columns-{{columns_count}} {{link_class}} {{section_classes}}" style="{{element_styles}}">{{{section_background}}}{{{children_content}}}</{{layout_html_tag}}>
+<{{layout_html_tag}} class="altrp-section altrp-section_columns-{{columns_count}} {{link_class}} {{section_classes}}" style="{{element_styles}}" {{{attributes}}}>{{{section_background}}}{{{children_content}}}</{{layout_html_tag}}>

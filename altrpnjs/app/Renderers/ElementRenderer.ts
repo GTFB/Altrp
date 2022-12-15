@@ -17,7 +17,8 @@ import Role from "App/Models/Role";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import AltrpSkeletonBox from "../../helpers/widgets-renders/components/AltrpSkeletonBox";
 import stringifyWrapperAttributes from "../../helpers/widgets-renders/functions/stringifyWrapperAttributes";
-
+import objectToAttributesString from "../../helpers/objectToAttributesString";
+import qs from "qs";
 
 export default class ElementRenderer {
   static straightRenderIgnore = [
@@ -65,6 +66,11 @@ export default class ElementRenderer {
     this.element.settings = {
       ...this.element.settings,
       ...this.element.settingsLock
+    }
+
+    const attributes = {}
+    if(['section', 'section_widget', 'column'].includes(this.getName()) && this.isLink()){
+      attributes['data-link'] = qs.stringify(_.get(this, 'element.settings.link_link'))
     }
 
     let {
@@ -170,6 +176,7 @@ export default class ElementRenderer {
           text_widget_content,
           link_class: this.isLink() ? 'altrp-pointer' : '',
           columns_count,
+          attributes: _.isEmpty(attributes) ? '' : objectToAttributesString(attributes)
         })
 
       }
@@ -234,6 +241,7 @@ export default class ElementRenderer {
       wrapper_attributes,
       allow_start_tag,
       allow_end_tag,
+      attributes: _.isEmpty(attributes) ? '' : objectToAttributesString(attributes)
     })
     return content
   }

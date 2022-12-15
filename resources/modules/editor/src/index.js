@@ -12,6 +12,7 @@ import '../../front-app/src/js/libs/image-crop'
 import '../../front-app/src/js/libs/reacket'
 import {createGlobalStyle} from 'styled-components'
 import _ from "lodash";
+import CONSTANTS from "./js/consts";
 window._ = _;
 
 /**
@@ -113,3 +114,11 @@ window.editorAPI.applyPluginsFiltersAsync('before_editor_render', '').then(()=>{
 }).then(()=>{
   return import('./_index')
 })
+
+window.onbeforeunload = function() {
+
+  if(editorStore.getState().templateStatus.status !== CONSTANTS.TEMPLATE_UPDATED
+    && editorStore.getState().templateStatus.status !== CONSTANTS.TEMPLATE_PUBLISHED){
+    return false
+  }
+};

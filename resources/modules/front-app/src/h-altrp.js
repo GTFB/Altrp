@@ -22,6 +22,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   }
 })
-if(document.querySelector('a[href]')){
+if(document.querySelector('a[href], [data-link]')){
   import('./js/functions/events-handlers/document-click')
 }
