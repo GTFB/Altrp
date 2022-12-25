@@ -559,6 +559,17 @@ export function actionsControllers(
     locked: true,
   });
 
+  actionsRepeater.addControl('clear_form_success', {
+    label: 'Clear Form On Success',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['form']
+    },
+    locked: true,
+  });
+
   actionsRepeater.addControl('forms_bulk', {
     label: 'Bulk Requests',
     type: CONTROLLER_SWITCHER,

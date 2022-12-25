@@ -1,38 +1,39 @@
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import numberWithSpaces from "../../helpers/number-with-spaces";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import delay from "../../../../../front-app/src/js/functions/delay";
 import {RangeSlider} from '@blueprintjs/core'
 
 const Slider = RangeSlider;
 
 const SliderWrapper = styled.div`
   ${(props) => {
-    let styles = "";
+  let styles = "";
 
-    if(props.handleSize) {
-      if(props.handleSize.size) {
-        styles += `
+  if (props.handleSize) {
+    if (props.handleSize.size) {
+      styles += `
         &.altrp-field-slider-horizontal .bp3-slider-handle.bp3-start {
-          left: calc(${(props.value[0]/props.max*100).toFixed(2)}% - 8px) !important;
+          left: calc(${(props.value[0] / props.max * 100).toFixed(2)}% - 8px) !important;
         }
 
         &.altrp-field-slider-horizontal .bp3-slider-handle.bp3-end {
-          left: calc(${(props.value[1]/props.max*100).toFixed(2)}% - 8px) !important;
+          left: calc(${(props.value[1] / props.max * 100).toFixed(2)}% - 8px) !important;
         }
 
         &.altrp-field-slider-vertical .bp3-slider-handle.bp3-start {
-          bottom: calc(${(props.value[0]/props.max*100).toFixed(2)}% - ${props.handleSize.size - 4}px) !important;
+          bottom: calc(${(props.value[0] / props.max * 100).toFixed(2)}% - ${props.handleSize.size - 4}px) !important;
         }
 
         &.altrp-field-slider-vertical .bp3-slider-handle.bp3-end {
-          bottom: calc(${(props.value[1 ]/props.max*100).toFixed(2)}% - ${props.handleSize.size - 4}px) !important;
+          bottom: calc(${(props.value[1] / props.max * 100).toFixed(2)}% - ${props.handleSize.size - 4}px) !important;
         }
         `
-      }
     }
+  }
 
-    return styles
-  }}
+  return styles
+}}
 `;
 
 class InputRangeSliderWidget extends Component {
@@ -43,7 +44,7 @@ class InputRangeSliderWidget extends Component {
     const min = props.element.getResponsiveLockedSetting("min", "", 0);
     const max = props.element.getResponsiveLockedSetting("max", "", 100);
 
-    if(step) {
+    if (step) {
       step = (max - min) / step;
     }
 
@@ -61,10 +62,9 @@ class InputRangeSliderWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
-    this.onChange = this.onChange.bind(this);
     this.label = this.label.bind(this);
   }
 
@@ -74,12 +74,13 @@ class InputRangeSliderWidget extends Component {
     const min = this.props.element.getResponsiveLockedSetting("min", "", 0);
     const max = this.props.element.getResponsiveLockedSetting("max", "", 100);
 
-    if(step && step < max) {
+    if (step && step < max) {
       step = (max - min) / step;
     }
 
-    if(step !== prevStep) {
-      this.setState((s) => ({...s,
+    if (step !== prevStep) {
+      this.setState((s) => ({
+        ...s,
         step,
         value: [
           this.props.element.getResponsiveLockedSetting("initial", "", 0),
@@ -100,18 +101,20 @@ class InputRangeSliderWidget extends Component {
     let formId;
     let fieldName;
 
-    if(index === 0) {
+    if (index === 0) {
       formId = this.props.element.getFormId("form_id_start");
       fieldName = this.props.element.getFieldId("field_id_start");
-    } else if(index === 1) {
+    } else if (index === 1) {
       formId = this.props.element.getFormId("form_id_end");
       fieldName = this.props.element.getFieldId("field_id_end");
     }
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
-    if (_.isObject(this.props.appStore) && fieldName && formId) {
-      this.props.appStore.dispatch(
+
+    if (fieldName && formId) {
+
+      appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
@@ -168,40 +171,41 @@ class InputRangeSliderWidget extends Component {
       }
     }
 
-    if(!value[0] && !value[1]) {
+    if (!value[0] && !value[1]) {
       return [
         this.props.element.getResponsiveLockedSetting('min', "", 0),
         this.props.element.getResponsiveLockedSetting('max', "", 100),
       ]
     }
 
-    if(!value[0]) {
+    if (!value[0]) {
       value[0] = this.props.element.getResponsiveLockedSetting('min', "", 0);
     }
 
-    if(!value[1]) {
+    if (!value[1]) {
       value[1] = this.props.element.getResponsiveLockedSetting('max', "", 100);
     }
-    value = value.map((value)=>(Number(value) || 0))
+    value = value.map((value) => (Number(value) || 0))
     return value
   }
 
-  onChange(values) {
+  onChange = async (values) => {
     let decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
     decimalPlace = Math.abs(decimalPlace);
 
     values.forEach((value, idx) => {
-      if(!Number.isInteger(value)) {
+      if (!Number.isInteger(value)) {
         values[idx] = value
           .toFixed(decimalPlace)
       }
     });
 
-    if(isEditor()){
+    if (isEditor()) {
       this.setState((s) => ({...s, value: values}))
     } else {
       this.setState((s) => ({...s, value: values}))
       this.dispatchFieldValueToStore(values[0], 0, true)
+      await delay(25)
       this.dispatchFieldValueToStore(values[1], 1, true)
     }
   }
@@ -214,18 +218,18 @@ class InputRangeSliderWidget extends Component {
     const decimalSeparator = this.props.element.getResponsiveLockedSetting("decimal_separator");
     value = Number(value)
 
-    if(!Number.isInteger(value) && decimalPlace) {
+    if (!Number.isInteger(value) && decimalPlace) {
       decimalPlace = Math.abs(decimalPlace);
       value = value
         .toFixed(decimalPlace)
     }
 
-    if(!Number.isInteger(value) && decimalSeparator) {
+    if (!Number.isInteger(value) && decimalSeparator) {
       value = value.toString().replace(".", decimalSeparator)
     }
 
-    if(thousandsSeparator) {
-      if( ! thousandsSeparatorValue){
+    if (thousandsSeparator) {
+      if (!thousandsSeparatorValue) {
         thousandsSeparatorValue = ' '
       }
       value = numberWithSpaces(value, thousandsSeparatorValue);
@@ -240,12 +244,12 @@ class InputRangeSliderWidget extends Component {
   /**
    * Получить css классы для input slider range
    */
-  getClasses = ()=>{
+  getClasses = () => {
     let classes = ` `;
-    if(this.isActive()){
+    if (this.isActive()) {
       classes += 'active '
     }
-    if(this.isDisabled()){
+    if (this.isDisabled()) {
       classes += 'state-disabled '
     }
     return classes;
@@ -265,11 +269,11 @@ class InputRangeSliderWidget extends Component {
 
     let value = this.getValue();
 
-    if(Number.isNaN(value[0])){
+    if (Number.isNaN(value[0])) {
       value[0] = Number(min)
     }
 
-    if(Number.isNaN(value[1])) {
+    if (Number.isNaN(value[1])) {
       value[1] = Number(max);
     }
 

@@ -85,15 +85,15 @@ export default class ModelsController {
   }
 
   static modelSchema = schema.create({
-    title: schema.string({trim: true},),
-  })
+      title: schema.string({trim: true},[]),
+    })
 
-  async updateModel({response, params, request, auth}: HttpContextContract) {
+    async updateModel({response, params, request, auth}: HttpContextContract) {
 
-    let model = await Model.find(params.id)
-    if (!model) {
-      response.status(404)
-      return response.json({
+      let model = await Model.find(params.id)
+      if (!model) {
+        response.status(404)
+        return response.json({
         success: false,
         message: 'Model not found'
       })

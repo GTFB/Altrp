@@ -23,6 +23,7 @@ class ElementWrapper extends Component {
     };
     this.reactElement = this.props.element.getSettings("react_element");
     this.elementId = this.props.element.getId();
+    this.element = this.props.element
     this.settings = this.props.element.getSettings();
     props.element.wrapper = this;
     this.elementWrapperRef = React.createRef();
@@ -127,6 +128,7 @@ class ElementWrapper extends Component {
    * @param {{}} prevState
    */
   componentDidUpdate(prevProps, prevState) {
+
     this.checkElementDisplay();
     if (
       appStore.getState().currentModel.getProperty("altrpModelUpdated") &&
@@ -199,6 +201,7 @@ class ElementWrapper extends Component {
     }
 
     if (element.getSettings("conditional_other")) {
+
       elementDisplay = elementDisplay && conditionsChecker(
         conditions,
         element.getSettings("conditional_other_display") === "AND",
@@ -261,8 +264,7 @@ class ElementWrapper extends Component {
   }
 
   shouldComponentUpdate(newProps, newState){
-    const {element} = this.props;
-    let {dependencies} = element;
+    let {dependencies} = this.element;
 
     if(isEditor()){
       return false
@@ -297,12 +299,12 @@ class ElementWrapper extends Component {
       && dependencies.indexOf('altrpforms') === -1){
       ++window.countReduced
 
-      if(element.getName().indexOf('input') > -1 || element.getName() === 'textarea'){
+      if(this.element.getName().indexOf('input') > -1 || this.element.getName() === 'textarea'){
 
         if(! newProps.formsStore.changedField){
           return true
         }
-        return `${element.getFormId()}.${element.getFieldId()}`
+        return `${this.element.getFormId()}.${this.element.getFieldId()}`
           === newProps.formsStore.changedField
       }
       return false

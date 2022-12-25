@@ -175,10 +175,10 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-checkbox":
     {
-      styles += `.${prefix}${elementId} { ${InputCheckboxComponent(
+      styles += InputCheckboxComponent(
         settings,
         elementId
-      )}}`;
+      );
     }
       break;
     case "input-slider":

@@ -26,6 +26,7 @@ import altrpCompare from "../functions/altrpCompare"
 import getWrapperHTMLElementByElement from "../functions/getWrapperHTMLElementByElement"
 import Resource from "../../../../editor/src/js/classes/Resource"
 import replacePageContent from "../helpers/replace-page-content";
+import {clearFormStorage} from "../store/forms-data-storage/actions";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -348,7 +349,7 @@ class AltrpAction extends AltrpModel {
       }
     }
     let alertText = '';
-    if (result.success) {
+    if (result?.success) {
       alertText = this.getProperty('alert');
     } else {
       alertText = this.getProperty('reject');
@@ -571,6 +572,9 @@ class AltrpAction extends AltrpModel {
     try {
       const response = await form.submit('', '', data, customHeaders, emptyFieldMessage);
       result = _.assign(result, response);
+      if(this.getProperty('clear_form_success')){
+        appStore.dispatch(clearFormStorage(this.getFormId()))
+      }
     } catch (error) {
       console.error(error);
       result.error = error;
@@ -1047,7 +1051,6 @@ class AltrpAction extends AltrpModel {
     }
     for (let path of paths) {
       path = replaceContentWithData(path, this.getCurrentModel().getData());
-      console.log(path);
       let value = this.getProperty('value') || '';
       value = value.trim();
       const setType = this.getProperty('set_type');

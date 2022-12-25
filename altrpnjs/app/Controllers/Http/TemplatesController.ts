@@ -340,9 +340,10 @@ export default class TemplatesController {
     // @ts-ignore
     template.data = mbParseJSON(template.data, template.data)
     // @ts-ignore
-    Page.getDataDependencies(template.data)
+    await Page.getDataDependencies(template.data)
     // @ts-ignore
     template.data = JSON.stringify(template.data)
+
     return template
   }
 

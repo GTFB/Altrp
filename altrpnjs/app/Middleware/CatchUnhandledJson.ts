@@ -27,6 +27,7 @@ export default class CatchUnhandledJson {
       return response.json({
         // ...e,
         axios_response: e.response,
+        messages: e.messages,
         success: false,
         message: e.response?.data?.message || 'Unhandled Exception: ' + e.message,
         trace: e?.stack?.split('\n'),

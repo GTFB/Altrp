@@ -125,24 +125,28 @@ class InputRangeSlider extends BaseElement{
     this.addControl("form_id_start", {
       type: CONTROLLER_TEXT,
       label: "Start Form ID",
+      locked: true,
       responsive: false
     });
 
     this.addControl("field_id_start", {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: "Start field ID (Column Name)"
     });
 
     this.addControl("content_default_value_start", {
       type: CONTROLLER_NUMBER,
       responsive: false,
+      locked: true,
       label: "Start Default Value"
     });
 
     this.addControl("content_calculation_start", {
       type: CONTROLLER_TEXTAREA,
       label: "Start calculation",
+      locked: true,
       responsive: false,
       description:
         "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
@@ -158,18 +162,21 @@ class InputRangeSlider extends BaseElement{
     this.addControl("form_id_end", {
       type: CONTROLLER_TEXT,
       label: "End form ID",
+      locked: true,
       responsive: false
     });
 
     this.addControl("field_id_end", {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: "End field ID (Column Name)"
     });
 
     this.addControl("content_default_value_end", {
       type: CONTROLLER_NUMBER,
       responsive: false,
+      locked: true,
       label: "End default Value"
     });
 
@@ -177,6 +184,7 @@ class InputRangeSlider extends BaseElement{
       type: CONTROLLER_TEXTAREA,
       label: "End calculation",
       responsive: false,
+      locked: true,
       description:
         "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
     });

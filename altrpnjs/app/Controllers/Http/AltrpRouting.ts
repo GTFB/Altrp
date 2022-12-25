@@ -30,6 +30,7 @@ import isRobot from "../../../helpers/isRobot";
 import base_path from "../../../helpers/path/base_path";
 import sharp from 'sharp';
 import sizeOf from 'image-size';
+import getAltrpTime from "../../../helpers/getAltrpTime";
 
 
 export default class AltrpRouting {
@@ -323,6 +324,7 @@ export default class AltrpRouting {
         spa_off: get_altrp_setting('spa_off') === 'true',
         device,
         lang,
+        altrptime: getAltrpTime()
       })
 
       mustache?.templateCache?.clear()

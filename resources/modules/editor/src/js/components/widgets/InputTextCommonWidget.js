@@ -484,6 +484,7 @@ class InputTextCommonWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
+    console.log(this.props.element.getFieldId());
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
@@ -498,10 +499,10 @@ class InputTextCommonWidget extends Component {
           this.dispatchFieldValueToStore(value);
         }
       );
+    } else {
+      this.updateValue(prevProps);
     }
 
-
-    this.updateValue(prevProps);
   }
 
   /**
@@ -518,15 +519,18 @@ class InputTextCommonWidget extends Component {
     const altrpforms = this.props.formsStore;
     const fieldName = this.props.element.getFieldId();
     const formId = this.props.element.getFormId();
+
     if (!content_calculation) {
       /**
        * Обновить значение, если formsStore изменилось из другого компонента
        */
       const path = `${formId}.${fieldName}`;
+
       if (
         this.props.formsStore !== prevProps.formsStore &&
         _.get(altrpforms, path) !== this.state.value
       ) {
+
         this.setState(state => ({
           ...state,
           value: _.get(altrpforms, path)
@@ -933,7 +937,10 @@ class InputTextCommonWidget extends Component {
     const maxlength = this.props.element.getResponsiveLockedSetting("maxlength_input_text")
     const typeInput = this.state.settings.content_type === 'text' || this.state.settings.content_type === 'password'
     const enterNextInput = !!this.props.element.getResponsiveLockedSetting("content_enter_input")
-
+    let value = this.state.value
+    if(value === undefined || value === null){
+      value = ''
+    }
     let input = (
       <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
         <AltrpInput
@@ -941,7 +948,7 @@ class InputTextCommonWidget extends Component {
           name={this.getName()}
           id={this.getName()}
           className={classes}
-          value={this.state.value || ""}
+          value={value}
           maxLength={(maxlength > 0 && typeInput) ? maxlength : null}
           data-enter={enterNextInput ? 'enabled' : null}
           element={this.props.element}

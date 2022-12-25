@@ -55,12 +55,14 @@ class InputDateRange extends BaseElement {
     this.addControl("form_id_start", {
       type: CONTROLLER_TEXT,
       label: "Start form ID",
+      locked: true,
       responsive: false
     });
 
     this.addControl("field_id_start", {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: "Start field ID (Column Name)"
     });
 
@@ -81,12 +83,14 @@ class InputDateRange extends BaseElement {
     this.addControl("form_id_end", {
       type: CONTROLLER_TEXT,
       label: "End form ID",
-      responsive: false
+      responsive: false,
+      locked: true,
     });
 
     this.addControl("field_id_end", {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: "End field ID (Column Name)"
     });
 

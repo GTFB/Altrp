@@ -467,7 +467,7 @@ export function typographicControllerToStyles(data = {}) {
     styles += `font-size: ${size ? size + (sizeUnit || "px") : ""}; `;
   }
   if (!_.isEmpty(family)) {
-    styles += `font-family: ${family}, Arial, sans-serif;`;
+    styles += `font-family: "${family}", Arial, sans-serif;`;
   }
   return styles;
 }

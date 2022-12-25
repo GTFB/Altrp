@@ -509,7 +509,7 @@ class InputCheckbox extends BaseElement {
     });
 
     this.endControlSection();
-
+/*
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
       label: "Input Position"
@@ -595,7 +595,7 @@ class InputCheckbox extends BaseElement {
     });
 
     this.endControlSection();
-
+*/
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
       label: "Font"
