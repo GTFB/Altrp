@@ -2,12 +2,15 @@
 
 ## Changelog
 
+### 1.4.7 build 1
+
+* Fix Checkbox Inputs Issues
+* Fix Range Input Bugs with Values
+
 ### 1.4.6 build 34
 * Added CRON Results Logs
 * Added API for Plugins in Editor Frontend
 * Fix Dropbar in Cards Issue
-* Fix Checkbox Inputs Issues
-* Fix Range Input Bugs with Values
 
 ### 1.4.5 
 * Default Role for API Robotizers set to Admin
