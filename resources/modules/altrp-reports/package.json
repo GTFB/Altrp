@@ -49,7 +49,7 @@
     "redux-undo": "^1.0.1",
     "rrbe": "^1.0.6",
     "style-object-to-css-string": "^1.0.1",
-    "tinymce": "^5.10.0"
+    "tinymce": "^5.10.7"
   },
   "scripts": {
     "start": "react-scripts start",
