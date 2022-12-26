@@ -484,7 +484,6 @@ class InputTextCommonWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    console.log(this.props.element.getFieldId());
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&

@@ -2,12 +2,12 @@
 
 ## Changelog
 
-### 1.4.7 build 1
+### 1.4.7 build 2
 
 * Fix Checkbox Inputs Issues
 * Fix Range Input Bugs with Values
 
-### 1.4.6 build 34
+### 1.4.6
 * Added CRON Results Logs
 * Added API for Plugins in Editor Frontend
 * Fix Dropbar in Cards Issue

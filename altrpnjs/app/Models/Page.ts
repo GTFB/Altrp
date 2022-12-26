@@ -845,6 +845,16 @@ export default class Page extends BaseModel {
       contentStyleLink = `<link href="${cssHref}?${randomString}" id="altrp-content-css-link-${contentGuid}" rel="stylesheet"/>`
     }
 
+    let headerStyleLink = ''
+
+    if (headerGuid) {
+      let cssHref = `/altrp/css${cssPrefix}/${headerGuid}.css`
+      if (!fs.existsSync(public_path(cssHref))) {
+        cssHref = `/altrp/css/${headerGuid}.css`
+      }
+      headerStyleLink = `<link href="${cssHref}?${randomString}" id="altrp-header-css-link-${headerGuid}" rel="stylesheet"/>`
+    }
+
     let footerStyleLink = ''
 
     if (footerGuid) {
@@ -861,10 +871,11 @@ export default class Page extends BaseModel {
       <div class="app-area app-area_content">
       ${contentGuid ? contentContent : ''}
       </div>
-      ${contentStyleLink}
       <div class="app-area app-area_footer">
       ${footerGuid ? footerContent : ''}
       </div>
+      ${headerStyleLink}
+      ${contentStyleLink}
       ${footerStyleLink}
       `
 
