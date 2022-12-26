@@ -8,8 +8,10 @@ import {
   deleteCurrentElementByID,
   getEditor
 } from "../helpers";
-import BaseElement from "../classes/elements/BaseElement";
+
 import store from "../store/store";
+import { contextMenu } from "react-contexify";
+import {setCurrentContextElement} from "../store/current-context-element/actions";
 
 const mapStateToProps = state => {
   return {
@@ -68,7 +70,25 @@ class NavigationPanel extends Component {
     editorSetCurrentElementByID(node.id);
     getEditor().showSettingsPanel();
   }
+  showContextMenu = (item,path, e) =>{
+    e.persist();
+    e.preventDefault();
+    e.stopPropagation();
 
+    const rootElement =  getEditor().modules.templateDataStorage.getRootElement()
+    const element = rootElement.findElementById(item.id)
+
+    store.dispatch(setCurrentContextElement(element, true));
+
+    contextMenu.show({
+      id: "element-menu-main-window",
+      event: e,
+      props: {
+        element,
+        inMainWindow: true,
+      }
+    });
+  }
   check(item) {
     if (this.state.isHidden.includes(item.id)) item.isExpanded = false
     if (item.childNodes.length > 0) item.childNodes.forEach(child => this.check(child))
@@ -115,6 +135,7 @@ class NavigationPanel extends Component {
    */
   parseTemplate(template) {
     const expandable = isExpandable(template.getName());
+
     return {
       label: (
         <NavigationItem
@@ -159,8 +180,11 @@ class NavigationPanel extends Component {
             onNodeExpand={this.handleExpand}
             onNodeCollapse={this.handleCollapse}
             onNodeDoubleClick={this.showItem}
+            onNodeClick={this.showItem}
+            onNodeContextMenu={this.showContextMenu}
           />
         </div>
+        {/*<ElementContextMenu/>*/}
       </Scrollbars>
     );
   }

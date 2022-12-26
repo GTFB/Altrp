@@ -16,7 +16,7 @@ import {
 } from "../modules/ControllersManager";
 import {actionsControllers} from "../../decorators/actions-controllers";
 
-class Accordion extends BaseElement {
+class ActionTrigger extends BaseElement {
   static getName() {
     return "action-trigger";
   }
@@ -114,4 +114,4 @@ class Accordion extends BaseElement {
   }
 }
 
-export default Accordion;
+export default ActionTrigger;

@@ -6,6 +6,7 @@
 
 * Fix Checkbox Inputs Issues
 * Fix Range Input Bugs with Values
+* Add Context Menu in the Elements Navigator
 
 ### 1.4.6
 * Added CRON Results Logs
