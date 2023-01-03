@@ -71,10 +71,11 @@ class Menu extends BaseElement {
     })
 
 
-    this.addControl('caret', {
-      type: CONTROLLER_MEDIA,
-      label: 'Caret',
-    });
+    // this.addControl('caret', {
+    //   type: CONTROLLER_MEDIA,
+    //   label: 'Caret',
+    //   locked: true,
+    // });
 
     this.endControlSection();
 
@@ -141,6 +142,7 @@ class Menu extends BaseElement {
     this.addControl('popover_position', {
       type: CONTROLLER_SELECT,
       label: 'Popover position',
+      locked: true,
       options: popoverPositions
     });
 
@@ -280,7 +282,7 @@ class Menu extends BaseElement {
         },
         {
           icon: 'in_width',
-          value: 'stretch',
+          value: 'space-between',
         }
       ],
     });

@@ -30,11 +30,6 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
   max-height: 200px;
   overflow-y: auto;
 }
-.bp3-icon_text-widget svg{
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-}
 .bp3-icon_right{
     margin: 7px;
 }

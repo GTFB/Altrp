@@ -349,10 +349,13 @@ export default class CustomizersController {
 
     if (search) {
       customizers.where(function (query) {
-        query.orWhere('altrp_customizers.title', LIKE, '%' + search + '%')
+        let _s = search.split(' ')
+        for( const search of _s){
+          query.where('altrp_customizers.title', LIKE, '%' + search + '%')
 
-        if(Number(search)){
-          query.orWhere('altrp_customizers.id', LIKE, '%' + search + '%')
+          if(Number(search)){
+            query.orWhere('altrp_customizers.id',   search )
+          }
         }
       })
     }

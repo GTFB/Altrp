@@ -9,6 +9,8 @@ import isProd from "../../../helpers/isProd";
 import base_path from "../../../helpers/path/base_path";
 import applyPluginsFiltersSync from "../../../helpers/plugins/applyPluginsFiltersSync";
 import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
+import fs from "fs";
+import app_path from "../../../helpers/path/app_path";
 
 
 export default class IndicesController {
@@ -54,7 +56,21 @@ export default class IndicesController {
   }
 
   public editorContent({ view }) {
+    let style = ''
+    const files = fs.readdirSync(app_path('altrp-templates/styles/elements'))
+    for(const f of files){
+
+      if(path.extname(f) === '.css'){
+        try {
+          style += fs.readFileSync(app_path(`altrp-templates/styles/elements/${f}`))
+        }catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
     return view.render('editor-content', Edge({
+      style,
       css: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.css` : null
     }))

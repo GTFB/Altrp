@@ -86,6 +86,7 @@
     "socket.io": "^4.5.4",
     "source-map-support": "^0.5.21",
     "styled-components": "^5.3.3",
+    "svg-parser": "^2.0.4",
     "tar": "^6.1.11",
     "telegraf": "^4.7.0",
     "uuid": "^8.3.2",

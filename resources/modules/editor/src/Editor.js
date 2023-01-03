@@ -723,7 +723,7 @@ class Editor extends Component {
           </Resizable>
         </div>
         <AssetsBrowser rawEnable={true}/>
-         <ImportantStylesManager/>
+        <ImportantStylesManager/>
       </DndProvider>
     );
   }

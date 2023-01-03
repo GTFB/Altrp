@@ -4,7 +4,6 @@ import Times from "../../../svgs/times.svg";
 import { assetsToggle } from "../../store/assets-browser/actions";
 import Resource from "../Resource";
 import '../../../sass/assets-browser.scss';
-import toDataURL from "../../helpers/to-data-url";
 import convertUrl from "../../../../../admin/src/js/helpers/convertURL";
 
 

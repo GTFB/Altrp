@@ -141,7 +141,7 @@ export default class ElementRenderer {
           let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
             : await import(base_path(`helpers/widgets-renders/${filename}`))
           render = render.default
-          element_content = render(this.element.settings, screenName, this.getId())
+          element_content = await render(this.element.settings, screenName, this.getId())
         }
         if (this.getName() === 'section_widget') {
           element_content =

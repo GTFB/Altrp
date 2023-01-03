@@ -607,7 +607,7 @@ class Admin extends Component {
         </div>
         <AdminModal />
         {/*<UserTopPanel />*/}
-        <AssetsBrowser />
+        <AssetsBrowser rawEnable={true}/>
         <iframe src="https://altrp.market/get_api_token" style={{height:0,width:0}}/>
       </div>
     );

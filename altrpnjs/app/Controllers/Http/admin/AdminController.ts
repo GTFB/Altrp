@@ -16,6 +16,7 @@ import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import base_path from '../../../../helpers/base_path'
 import exec from '../../../../helpers/exec'
+import Model from "App/Models/Model";
 
 export default class AdminController {
 
@@ -207,7 +208,11 @@ export default class AdminController {
     clearRequireCache()
 
     console.info('Upgrading Models')
-
+    const models = await Model.all()
+    for (const model of models) {
+      await Model.createDefaultCustomizers(model.toJSON(), model)
+    }
+    console.info('Upgraded Default Models Robotizers')
     console.log(await exec(`node ${base_path('ace')} generator:model`))
     console.log(await exec(`node ${base_path('ace')} generator:router`))
 

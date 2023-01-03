@@ -1,19 +1,22 @@
 import React, {Component} from "react";
 import store from '../../js/store/store'
 import {assetsShow} from "../../../../editor/src/js/store/assets-browser/actions";
-import { iconsManager } from "../../js/helpers";
 import styled from "styled-components";
+import defaultBurgerMenuIcon from "../../../../editor/src/js/components/widgets/misc/defaultBurgerMenuIcon";
 
 const IconSelectWrapper = styled.div`
   & svg{
-    max-width: ${({maxWidth}) => maxWidth || '200px'};
-    max-height: ${({maxHeight}) => maxHeight || '200px'};
+    width: 25px;
+    height: 25px;
   }
-  & .altrp-icon-select__content{
-    padding: 20px;
+  &{
+    width: 60px;
+    height: 60px;
     background-color: #F7F8F9;
     display: flex;
     justify-content: center;
+    align-items: center;
+    cursor: pointer;
   }
 `;
 
@@ -78,14 +81,20 @@ class IconSelect extends Component {
   }
 
   render(){
-    return <IconSelectWrapper
+    return <><IconSelectWrapper
       className={"altrp-icon-select " + this.props.className || ''}
       id={this.props.id}
+      dangerouslySetInnerHTML={{__html: this.props.value || defaultBurgerMenuIcon}}
       onClick={this.openAssetsBrowser} {...this.props}>
-      {this.props.value ?
-        <div className="altrp-icon-select__content " dangerouslySetInnerHTML={{__html: this.props.value}}/>
-        : iconsManager().renderIcon('add')}
+
+
     </IconSelectWrapper>
+      {this.props.value &&
+      <button onClick={()=>{
+        this.props.onChange && this.props.onChange('')
+      }
+      } className="btn btn_link text-danger fs-2 altrp-menu-item__delete">delete Icon</button>}
+    </>
   }
 }
 

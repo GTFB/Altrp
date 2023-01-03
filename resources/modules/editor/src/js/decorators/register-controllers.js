@@ -1924,6 +1924,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('skeleton:primary_color', {
     label: "Primary Color",
+
     type: CONTROLLER_COLOR,
   });
   //

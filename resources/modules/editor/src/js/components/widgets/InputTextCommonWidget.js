@@ -17,11 +17,6 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
   object-fit: contain;
   pointer-events: none;
 }
-.bp3-icon_text-widget svg{
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-}
 .bp3-icon_right{
     margin: 7px;
 }

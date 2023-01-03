@@ -138,7 +138,7 @@ const getMenuStyles = (settings, id) => {
     }
     let buttonColor = getResponsiveSetting(settings, 'button_color')
     if (buttonColor && buttonColor.color) {
-      styles += `svg, path{fill:${buttonColor.color};}`;
+      styles += `svg, path, rect{fill:${buttonColor.color};}`;
     }
 
     let buttonPadding = getResponsiveSetting(settings, 'button_padding')
@@ -168,7 +168,7 @@ const getMenuStyles = (settings, id) => {
     }
     let buttonColorDisabled = getResponsiveSetting(settings, 'button_color', '.state-disabled')
     if (buttonColorDisabled && buttonColorDisabled.color) {
-      styles += `svg, path{fill:${buttonColorDisabled.color};}`;
+      styles += `svg, path, rect{fill:${buttonColorDisabled.color};}`;
     }
     let buttonPaddingDisabled = getResponsiveSetting(settings, 'button_padding', '.state-disabled')
     if (buttonPaddingDisabled) {
@@ -196,7 +196,7 @@ const getMenuStyles = (settings, id) => {
     }
     let buttonColorActive = getResponsiveSetting(settings, 'button_color', '.active')
     if (buttonColorActive && buttonColorActive.color) {
-      styles += `svg, path{fill:${buttonColorActive.color};}`;
+      styles += `svg, path, rect{fill:${buttonColorActive.color};}`;
     }
     let buttonPaddingActive = getResponsiveSetting(settings, 'button_padding', '.active')
     if (buttonPaddingActive) {
@@ -225,7 +225,7 @@ const getMenuStyles = (settings, id) => {
     }
     buttonColor = getResponsiveSetting(settings, 'button_color', ':hover')
     if (buttonColor && buttonColor.color) {
-      styles += `svg, path{fill:${buttonColor.color};}`;
+      styles += `svg, path, rect{fill:${buttonColor.color};}`;
     }
     border = getResponsiveSetting(settings, 'border', ':hover');
     if (border) {
@@ -641,7 +641,7 @@ const getMenuStyles = (settings, id) => {
         let styles = "";
         if (getResponsiveSetting(settings, 'type') === 'horizontal') {
           styles += 'display: flex;';
-          styles += 'flex-direction: row;'
+          //styles += 'flex-direction: row;'
           // styles += '.bp3-submenu{flex-grow:1}';
           styles += '.bp3-icon-caret-right{transform: rotate(90deg);}';
           if(menuAlignment) {

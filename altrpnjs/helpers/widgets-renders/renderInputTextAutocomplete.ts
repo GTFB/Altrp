@@ -86,6 +86,8 @@ export default function renderInputTextAutocomplete(settings, device) {
     type: settings.content_type === 'password' ? (showPassword ? "text" : "password") : settings.content_type,
     placeholder: settings.content_placeholder,
     getName: () => getName(),
+    settings,
+    device,
     readOnly: content_readonly,
     widgetView: "popoverOn"
   })
