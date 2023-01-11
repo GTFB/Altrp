@@ -105,8 +105,8 @@ export default class PageDatasource extends BaseModel {
       }
       httpContext.request.updateQs(this.getParsedParameters(altrpContext))
 
-      await controller[this.source.getMethodName()](httpContext)
-      return httpContext.response.getBody();
+      const res = await controller[this.source.getMethodName()](httpContext)
+      return httpContext.response.getBody() || res;
     } catch (e){
       console.error(`Error in source with name ${this.source.name}:
        ${e.stack}`);

@@ -72,16 +72,20 @@ class CKeditor extends Component {
         </>
       );
     }
+
     return (
       <CKEditor
         config={config}
         body={this.body}
+        ref={this.props.editorRef}
         editor={InlineEditor}
         data={text}
         disabled={this.props.readOnly}
         onReady={editor => {
           editor.plugins.get( 'TextTransformation' ).isEnabled = false;
-
+          if(this.props.onLoad){
+            this.props.onLoad(editor)
+          }
         }}
         onChange={(event, editor) => {
           this.props.onChange(event, editor)

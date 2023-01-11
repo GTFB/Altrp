@@ -515,7 +515,6 @@ export default class Source extends BaseModel {
         routeKey: httpContext.routeKey,
       }
       const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
-
       if(data?.data){
         datasources[pageDatasource.alias] = data.data
 

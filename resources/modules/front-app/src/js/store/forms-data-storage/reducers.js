@@ -8,7 +8,10 @@ export function formsStoreReducer(state, {type, formId, fieldName, value, change
   state = state || defaultState;
   switch (type) {
     case CHANGE_FORM_FIELD_VALUE:{
-      if(_.get(state, [formId, fieldName]) !== value){
+      if(!fieldName && _.isObject(value)) {
+        state = _.cloneDeep(state);
+        _.set(state, formId, value);
+      } else if(_.get(state, [formId, fieldName]) !== value){
         state = _.cloneDeep(state);
         state.changedField = changedField;
         _.set(state, [formId, fieldName], value);
@@ -16,7 +19,7 @@ export function formsStoreReducer(state, {type, formId, fieldName, value, change
     }break;
     case CLEAR_FORM_FIELD_VALUE:{
       if(formId){
-        console.log(...arguments);
+
         state = _.cloneDeep(state);
         _.set(state, [formId], {});
       } else {

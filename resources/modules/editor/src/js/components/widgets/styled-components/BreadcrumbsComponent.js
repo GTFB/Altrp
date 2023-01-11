@@ -55,7 +55,7 @@ const BreadcrumbsComponent = styled.div`
 
     if(color && color.color){
       styles += `color:${color.color};`;
-      styles += `svg, path {fill: ${color.color};`;
+      styles += `svg, path {fill: ${color.color};}`;
     }
     let font = getResponsiveSetting(settings, 'font');
     if(font){
@@ -68,7 +68,7 @@ const BreadcrumbsComponent = styled.div`
 
     if(color && color.color){
       styles += `color:${color.color};`;
-      styles += `svg, path {fill: ${color.color};`;
+      styles += `svg, path {fill: ${color.color};}`;
     }
     font = getResponsiveSetting(settings, 'font', ':hover');
 

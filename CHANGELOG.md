@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 1.4.7 build 11
+### 1.4.7 build 26
 
 * Fix Checkbox Inputs Issues
 * Fix Range Input Bugs with Values

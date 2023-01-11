@@ -9,7 +9,6 @@ import Pagination from "./Pagination";
 import UserTopPanel from "./UserTopPanel";
 import SmallModal from "./SmallModal";
 import TemplateChildrenModal from "./templateChildrenModal";
-import {altrpRandomId} from "../../../front-app/src/js/helpers";
 
 
 class Templates extends Component {

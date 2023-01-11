@@ -151,12 +151,6 @@ class InputAccept extends BaseElement {
       ]
     });
 
-    this.addControl("content_placeholder", {
-      type: CONTROLLER_TEXT,
-      label: "Placeholder",
-      default: "Placeholder"
-    });
-
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required",
@@ -166,12 +160,6 @@ class InputAccept extends BaseElement {
     this.addControl("content_readonly", {
       type: CONTROLLER_SWITCHER,
       label: "Readonly"
-    });
-
-    this.addControl("content_timestamp", {
-      type: CONTROLLER_SWITCHER,
-      label: "Timestamp",
-      default: false
     });
 
     this.addControl("content_default_value", {
@@ -189,133 +177,11 @@ class InputAccept extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("create_options", {
-      tab: TAB_CONTENT,
-      label: "Create Options Settings",
-      conditions: {
-        content_type: ["select2"]
-      }
-    });
-
-    this.addControl("create_allowed", {
-      type: CONTROLLER_SWITCHER,
-      label: "Allowed"
-    });
-
-    this.addControl("create_url", {
-      label: "URL",
-      dynamic: false,
-      responsive: false,
-      description: "/ajax/models/tests",
-      conditions: {
-        create_allowed: true
-      },
-      locked: true,
-    });
-
-    this.addControl("create_label", {
-      label: "Label Field",
-      dynamic: false,
-      responsive: false,
-      conditions: {
-        create_allowed: true
-      },
-      locked: true,
-    });
-
-    this.addControl("create_data", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Data",
-      conditions: {
-        create_allowed: true
-      },
-      description: 'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
-      locked: true,
-    });
-
-    this.endControlSection();
-
     actionsControllers(this, "Blur Actions");
 
     actionsControllers(this, "Focus Actions", "focus_");
 
     actionsControllers(this, "Change Actions", "change_");
-
-    // this.startControlSection('logic_section', {
-    //   tab: TAB_CONTENT,
-    //   label: 'Logic',
-    // });
-    //
-    // this.addControl('logic_action', {
-    //   type: CONTROLLER_SELECT2,
-    //   label: 'Action',
-    //   placeholder: 'action',
-    //   default: '1',
-    //   options: [
-    //     {
-    //       value: '1',
-    //       label: 'Select sd  Content 1'
-    //     },
-    //     {
-    //       value: '2',
-    //       label: 'Select Content 2'
-    //     },
-    //   ]
-    // });
-    //
-    // this.endControlSection();
-    //
-    // this.startControlSection("form_condition_display", {
-    //   tab: TAB_CONTENT,
-    //   label: "Field Condition"
-    // });
-    //
-    // this.addControl("form_condition_display_on", {
-    //   type: CONTROLLER_SELECT,
-    //   label: "Display on",
-    //   responsive: false,
-    //   options: [
-    //     {
-    //       label: "All Conditions Met",
-    //       value: "AND"
-    //     },
-    //     {
-    //       label: "Any Condition Met",
-    //       value: "OR"
-    //     }
-    //   ],
-    //   default: "AND"
-    // });
-    //
-    // const formConditionsRepeater = new Repeater();
-    //
-    // formConditionsRepeater.addControl("field_id", {
-    //   responsive: false,
-    //   dynamic: false,
-    //   label: "Field ID"
-    // });
-    //
-    // formConditionsRepeater.addControl("operator", {
-    //   type: CONTROLLER_SELECT,
-    //   responsive: false,
-    //   default: "empty",
-    //   options: CONDITIONS_OPTIONS
-    // });
-    //
-    // formConditionsRepeater.addControl("value", {
-    //   dynamic: false,
-    //   responsive: false,
-    //   label: "Value"
-    // });
-    //
-    // this.addControl("form_conditions", {
-    //   label: "Conditions",
-    //   type: CONTROLLER_REPEATER,
-    //   fields: formConditionsRepeater.getControls(),
-    //   default: []
-    // });
-    //
-    // this.endControlSection();
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
@@ -500,43 +366,6 @@ class InputAccept extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
     });
 
-    this.addControl("placeholder_and_value_alignment_position_section", {
-      type: CONTROLLER_CHOOSE,
-      label: "Alignment",
-      options: [
-        {
-          icon: "left",
-          value: "left"
-        },
-        {
-          icon: "center",
-          value: "center"
-        },
-        {
-          icon: "right",
-          value: "right"
-        }
-      ]
-    });
-
-    this.addControl("position_margin", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Margin",
-      default: {
-        unit: "px"
-      },
-      units: ['px', '%', 'vh', 'vw'],
-    });
-
-    this.addControl("position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        unit: "px"
-      },
-      units: ['px', '%', 'vh', 'vw'],
-    });
-
     this.addControl("position_z_index", {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
@@ -551,23 +380,6 @@ class InputAccept extends BaseElement {
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
       label: "CSS Classes"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("placeholder_style_section", {
-      tab: TAB_STYLE,
-      label: "Placeholder"
-    });
-
-    this.addControl("placeholder_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
-    });
-
-    this.addControl("placeholder_style_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
     });
 
     this.endControlSection();
@@ -693,36 +505,6 @@ class InputAccept extends BaseElement {
     this.startControlSection("transform_section", {
       tab: TAB_STYLE,
       label: "Transform"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("radio_checkbox_styles", {
-      tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
-    });
-
-    this.addControl("input_position", {
-      label: "Position",
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          label: "Left",
-          value: "row"
-        },
-        {
-          label: "Top",
-          value: "column"
-        },
-        {
-          label: "Right",
-          value: "row-reverse"
-        },
-        {
-          label: "Bottom",
-          value: "column-reverse"
-        }
-      ]
     });
 
     this.endControlSection();

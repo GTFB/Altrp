@@ -26,7 +26,7 @@ class InputImageSelect extends BaseElement {
     return "input-image-select";
   }
   static getTitle() {
-    return "Img Select";
+    return "Image Select";
   }
   static getIconComponent() {
     return FromIcon;

@@ -100,9 +100,10 @@ class MenuWidget extends Component {
    *
    * @param {[]} items
    * @param {int} depth
+   * @param {string} parentId
    * @return {JSX.Element|null}
    */
-  renderSubItems = (items, depth) => {
+  renderSubItems = (items, depth, parentId = null) => {
     if (!items.length) {
       return null;
     }
@@ -111,8 +112,8 @@ class MenuWidget extends Component {
       this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const popoverProps = {
       usePortal: true,
-      // isOpen:true ,
-      portalClassName: `${classes} altrp-portal altrp-portal${this.elementId}`,
+      //isOpen:true ,
+      portalClassName: `${classes} altrp-portal altrp-portal${this.elementId} `,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     let itemClasses = ''
@@ -145,13 +146,15 @@ class MenuWidget extends Component {
 
     return <>
       {items.map((item) => {
+        const _popoverProps = {...popoverProps}
+        _popoverProps.portalClassName += ` altrp-portal-parent-item-key${item.id} `
         return <MenuItem
           ref={ref}
-          popoverProps={popoverProps}
+          popoverProps={_popoverProps}
           depth={depth}
           href={item.url}
           width={100}
-          className={`${classes} ${itemClasses} altrp-menu-item altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
+          className={`${classes} ${itemClasses} altrp-menu-item altrp-menu-item_key${item.id} altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
@@ -167,7 +170,7 @@ class MenuWidget extends Component {
           icon={<span className={`${classes} altrp-menu-item__icon`} dangerouslySetInnerHTML={{__html: item.icon}}/>}
           // text={<Link className="altrp-menu-item__link" to={item.url}>{item.label}</Link>}>
           text={item.label}>
-          {this.renderSubItems(item.children, depth + 1)}
+          {this.renderSubItems(item.children, depth + 1, item.id)}
         </MenuItem>
 
       })}

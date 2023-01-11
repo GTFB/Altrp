@@ -73,6 +73,9 @@ export default class User extends BaseModel {
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
+  @column.dateTime({  })
+  public email_verified_at: DateTime
+
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 

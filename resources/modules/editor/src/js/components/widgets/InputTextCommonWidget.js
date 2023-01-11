@@ -647,9 +647,9 @@ class InputTextCommonWidget extends Component {
 
     const maxNumber = this.props.element.getResponsiveSetting('max_number')
     const minNumber = this.props.element.getResponsiveSetting('min_number')
-    if (maxNumber && minNumber) {
-      if (value < minNumber) value = minNumber
-      if (value > maxNumber) value = maxNumber
+    if (maxNumber || minNumber) {
+      if (minNumber || minNumber == 0 && value < minNumber) value = minNumber
+      if (maxNumber  || maxNumber == 0 && value > maxNumber) value = maxNumber
     }
 
 

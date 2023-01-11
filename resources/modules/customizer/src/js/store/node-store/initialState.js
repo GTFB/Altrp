@@ -10,6 +10,8 @@ import {MessageObj} from "../../components/sidebar/modules/nodes-obj/robot/Messa
 import {CustomizerObj} from "../../components/sidebar/modules/nodes-obj/robot/CustomizerObj";
 import {DiscordObj} from "../../components/sidebar/modules/nodes-obj/robot/DiscordObj";
 import {Handle} from "react-flow-renderer";
+import {QueryBuilderObj} from "../../components/sidebar/modules/nodes-obj/QueryBuilderObj";
+import {ValidatorObj} from "../../components/sidebar/modules/nodes-obj/ValidatorObj";
 // import {BotObj} from "../../components/sidebar/modules/nodes-obj/robot/BotObj";
 
 export const initialState = {
@@ -17,6 +19,8 @@ export const initialState = {
     StartObj,
     SwitchObj,
     ChangeObj,
+    QueryBuilderObj,
+    ValidatorObj,
     ReturnObj,
     // ConditionObj,
     DocumentObj,

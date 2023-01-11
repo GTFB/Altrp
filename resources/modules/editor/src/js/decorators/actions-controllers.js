@@ -489,7 +489,7 @@ export function actionsControllers(
   });
 
   actionsRepeater.addControl('form_customizer', {
-    label: 'Customizer',
+    label: 'Robotizer',
     type: CONTROLLER_SELECT2,
     prefetch_options: true,
     options_resource: '/admin/ajax/customizers_options',
@@ -527,7 +527,7 @@ export function actionsControllers(
           }
         }
       } catch (error) {
-        alert("Customizer request error")
+        alert("Robotizer request error")
         console.error(error)
       }
     },

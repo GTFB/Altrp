@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import store from '../../js/store/store'
 import {assetsShow} from "../../../../editor/src/js/store/assets-browser/actions";
 import styled from "styled-components";
-import defaultBurgerMenuIcon from "../../../../editor/src/js/components/widgets/misc/defaultBurgerMenuIcon";
+
 
 const IconSelectWrapper = styled.div`
   & svg{
@@ -84,7 +84,10 @@ class IconSelect extends Component {
     return <><IconSelectWrapper
       className={"altrp-icon-select " + this.props.className || ''}
       id={this.props.id}
-      dangerouslySetInnerHTML={{__html: this.props.value || defaultBurgerMenuIcon}}
+      dangerouslySetInnerHTML={{__html: this.props.value || `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11 9H20V11H11V20H9V11H0V9H9V0H11V9Z" fill="#333333"/>
+</svg>
+`}}
       onClick={this.openAssetsBrowser} {...this.props}>
 
 

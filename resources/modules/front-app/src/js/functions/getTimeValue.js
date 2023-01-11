@@ -65,6 +65,11 @@ export default function getTimeValue(path, defaultValue = null) {
       value = getWeekStart();
     }
       break;
+    case "year":
+    {
+      let today = new Date();
+      return today.getFullYear();
+    }
   }
   value = moment(value).format("YYYY-MM-DD");
   return value;

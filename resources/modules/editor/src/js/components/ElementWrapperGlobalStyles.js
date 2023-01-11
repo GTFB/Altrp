@@ -156,7 +156,8 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     {
       styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
         settings,
-        elementId
+        elementIdm,
+        elementName
       )}}`;
       //select2 options style
       styles += `${FormComponent.select2Options(settings, elementId)}}`;
@@ -288,7 +289,8 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     {
       styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
         settings,
-        elementId
+        elementId,
+        elementName
       )}}`;
     }
       break;

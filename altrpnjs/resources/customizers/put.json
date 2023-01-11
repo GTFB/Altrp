@@ -170,7 +170,7 @@
               "path": "data.success"
             },
             "right": {
-              "path": "Нет в БД",
+              "path": "Not Found",
               "namespace": "string",
               "method": "",
               "methodSettings": {

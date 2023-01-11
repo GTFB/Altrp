@@ -3,7 +3,7 @@ import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import {MultiSelect} from "@blueprintjs/select";
-import {altrpRandomId} from "../../../../front-app/src/js/helpers";
+import altrpRandomId from "../../../../front-app/src/js/functions/altrpRandomId";
 
 class SidebarEditModelForm extends Component {
   constructor(props) {

@@ -25,11 +25,11 @@ class Dropbar extends Component {
   show =()=> {
 
     const body = document.body
+    let full_window = element.getResponsiveLockedSetting('full_window')
     if(this.state.show){
       body.classList.remove('overflow-hidden')
-    } else {
+    } else if(full_window){
       body.classList.add('overflow-hidden')
-
     }
     if(this.props.settings.show_delay_dropbar_options.size || this.props.settings.hide_delay_dropbar_options.size) {
       if(!this.state.show) {

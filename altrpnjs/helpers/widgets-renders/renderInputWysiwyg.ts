@@ -6,7 +6,7 @@ import objectToStylesString from "../objectToStylesString";
 export default function renderInputWysiwyg(settings, device) {
   const label_icon = getResponsiveSetting(settings, 'label_icon', device)
   const content_label_position_type = getResponsiveSetting(settings, "content_label_position_type", device);
-  const content_value = getResponsiveSetting(settings, "content_default_value", device)
+  //const content_value = getResponsiveSetting(settings, "content_default_value", device)
   const read_only = getResponsiveSetting(settings, "read_only", device)
 
   let label: string = "";
@@ -73,15 +73,15 @@ export default function renderInputWysiwyg(settings, device) {
       </div>
     `
   }
-
   let altrpWysiwyg: string = `
     <div class="${"ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline ck-blurred" + (read_only ? " ck-read-only" : "")}" lang="en" dir="ltr" role="textbox" aria-label="Rich Text Editor, main" contenteditable="true">
-      <p>${content_value ? content_value : `<br data-cke-filler="true">`}</p>
+      <p><br data-cke-filler="true"/></p>
     </div>
   `
 
   return `
-    <div class="altrp-field-container " style="${containerClass}">${content_label_position_type === "top" ? label : ""}${content_label_position_type === "left" ? label : ""}${content_label_position_type === "right" ? label : ""}${content_label_position_type === "absolute" ? label : ""}${altrpWysiwyg}
+    <div class="altrp-field-container " style="${containerClass}">${content_label_position_type === "top" ? label : ""}${content_label_position_type === "left" ? label : ""}${content_label_position_type === "right" ? label : ""}${content_label_position_type === "absolute" ? label : ""}
+${altrpWysiwyg}
       ${content_label_position_type === "bottom" ? label : ""}
     </div>
   `

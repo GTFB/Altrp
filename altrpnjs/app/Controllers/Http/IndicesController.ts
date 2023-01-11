@@ -100,7 +100,7 @@ export default class IndicesController {
 
   public async login({auth, request, response, }: HttpContextContract) {
     const loginSchema = schema.create({
-      password: schema.string({trim: true}, [
+      password: schema.string({trim: true,}, [
         rules.minLength(8)
       ]),
       email: schema.string({trim: true}, [
