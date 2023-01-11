@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "-": "^0.0.1",
-    "@adonisjs/auth": "^8.0.10",
+    "@adonisjs/auth": "^8.2.3",
     "@adonisjs/core": "^5.4.2",
-    "@adonisjs/lucid": "^17.0.0",
+    "@adonisjs/lucid": "^18.3.0",
     "@adonisjs/mail": "^7.2.5",
     "@adonisjs/repl": "^3.1.7",
     "@adonisjs/session": "^6.1.2",
