@@ -18,7 +18,6 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
-import Accessors from "App/Models/Accessor";
 import Model from "App/Models/Model";
 import Table from "App/Models/Table";
 import Column from "App/Models/Column";
@@ -178,11 +177,6 @@ export default class User extends BaseModel {
     for(const page of pages){
       page.user_id = newAdmin ? newAdmin.id : null;
       await page.save()
-    }
-    const accessors = await Accessors.query().where("user_id", user.id)
-    for(const accessor of accessors){
-      accessor.user_id = newAdmin ? newAdmin.id : null;
-      await accessor.save()
     }
     const models = await Model.query().where("user_id", user.id)
     for(const model of models){

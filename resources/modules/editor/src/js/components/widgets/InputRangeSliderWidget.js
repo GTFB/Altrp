@@ -39,11 +39,21 @@ const SliderWrapper = styled.div`
 class InputRangeSliderWidget extends Component {
   constructor(props) {
     super(props);
+    const element = this.props.element;
+    const {replaceContentWithData}  = window.altrpHelpers
 
     let step = props.element.getResponsiveLockedSetting("step", "", null);
-    const min = props.element.getResponsiveLockedSetting("min", "", 0);
-    const max = props.element.getResponsiveLockedSetting("max", "", 100);
 
+    let min = this.props.element.getResponsiveLockedSetting("min", "", 0);
+    min = Number(replaceContentWithData(min, element.getCardModel()))
+    if(_.isNaN(Number(min))) {
+      min = 0
+    }
+    let max = this.props.element.getResponsiveLockedSetting("max", "", 100);
+    max = Number(replaceContentWithData(max, element.getCardModel()))
+    if(_.isNaN(Number(max))) {
+      max = 100
+    }
     if (step) {
       step = (max - min) / step;
     }
@@ -69,11 +79,21 @@ class InputRangeSliderWidget extends Component {
   }
 
   _componentDidUpdate(prevProps, prevState) {
+    const element = this.props.element;
+    const {replaceContentWithData}  = window.altrpHelpers
     const prevStep = prevState.step
     let step = this.props.element.getResponsiveLockedSetting("step", "", null);
-    const min = this.props.element.getResponsiveLockedSetting("min", "", 0);
-    const max = this.props.element.getResponsiveLockedSetting("max", "", 100);
 
+    let min = this.props.element.getResponsiveLockedSetting("min", "", 0);
+    min = Number(replaceContentWithData(min, element.getCardModel()))
+    if(_.isNaN(Number(min))) {
+      min = 0
+    }
+    let max = this.props.element.getResponsiveLockedSetting("max", "", 100);
+    max = Number(replaceContentWithData(max, element.getCardModel()))
+    if(_.isNaN(Number(max))) {
+      max = 0
+    }
     if (step && step < max) {
       step = (max - min) / step;
     }
@@ -88,6 +108,40 @@ class InputRangeSliderWidget extends Component {
         ]
       }))
     }
+    this.updateValue(prevProps);
+
+  }
+
+  updateValue = ()=>{
+
+    if (isEditor()) {
+      return;
+    }
+
+    if (
+      this.props.currentModel.getProperty("altrpModelUpdated") &&
+      this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      !this.state.contentLoaded
+    ) {
+      let content_start_default = Number(this.getContent("content_start_default"))
+      let content_end_default = Number(this.getContent("content_end_default"))
+
+
+      if(! _.isNaN(content_start_default)){
+        this.dispatchFieldValueToStore(content_start_default, 0)
+      }
+      if(! _.isNaN(content_end_default)){
+        this.dispatchFieldValueToStore(content_end_default, 1)
+      }
+      this.setState(
+        state => ({...state, contentLoaded: true}),
+        () => {
+          //this.dispatchFieldValueToStore(value);
+        }
+      );
+      return;
+    }
+    return;
   }
 
   /**
@@ -100,7 +154,7 @@ class InputRangeSliderWidget extends Component {
 
     let formId;
     let fieldName;
-
+    const {replaceContentWithData}  = window.altrpHelpers
     if (index === 0) {
       formId = this.props.element.getFormId("form_id_start");
       fieldName = this.props.element.getFieldId("field_id_start");
@@ -113,11 +167,20 @@ class InputRangeSliderWidget extends Component {
     }
 
     if (fieldName && formId) {
-
       appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
+
       if (userInput) {
+
+        let query_sync = this.props.element.getLockedSettings(
+          "query_sync"
+        );
+
+        if(!isEditor() && query_sync){
+          const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
+          updateQueryString(fieldName, value)
+        }
         const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
@@ -149,8 +212,21 @@ class InputRangeSliderWidget extends Component {
     let formIdEnd = this.props.element.getFormId("form_id_end");
     let fieldNameEnd = this.props.element.getFieldId("field_id_end");
 
+    const element = this.props.element;
+    const {replaceContentWithData}  = window.altrpHelpers
+
+    let min = this.props.element.getResponsiveLockedSetting("min", "", 0);
+    min = Number(replaceContentWithData(min, element.getCardModel()))
+    if(_.isNaN(Number(min))) {
+      min = 0
+    }
+    let max = this.props.element.getResponsiveLockedSetting("max", "", 100);
+    max = Number(replaceContentWithData(max, element.getCardModel()))
+    if(_.isNaN(Number(max))) {
+      max = 100
+    }
     if (isEditor()) {
-      value = this.state.value;
+      return this.state.value;
     } else {
       let valueStart
 
@@ -186,6 +262,15 @@ class InputRangeSliderWidget extends Component {
       value[1] = this.props.element.getResponsiveLockedSetting('max', "", 100);
     }
     value = value.map((value) => (Number(value) || 0))
+
+    if(! _.isNaN(Number(min)) && value[0] < min ){
+      this.dispatchFieldValueToStore(min, 0, true)
+    } else if(value[0] > value[1]){
+      this.dispatchFieldValueToStore(value[1], 0, true)
+    }
+    if(! _.isNaN(Number(max)) && value[1] > max){
+      this.dispatchFieldValueToStore(max, 1, true)
+    }
     return value
   }
 
@@ -204,9 +289,15 @@ class InputRangeSliderWidget extends Component {
       this.setState((s) => ({...s, value: values}))
     } else {
       this.setState((s) => ({...s, value: values}))
-      this.dispatchFieldValueToStore(values[0], 0, true)
-      await delay(25)
-      this.dispatchFieldValueToStore(values[1], 1, true)
+
+
+      if(values[0] != this.getValue()[0]){
+        this.dispatchFieldValueToStore(values[0], 0, true)
+      }
+
+      if(values[1] != this.getValue()[1]){
+        this.dispatchFieldValueToStore(values[1], 1, true)
+      }
     }
   }
 
@@ -256,8 +347,20 @@ class InputRangeSliderWidget extends Component {
   }
 
   render() {
-    const min = this.props.element.getResponsiveLockedSetting("min", "", 0);
-    const max = this.props.element.getResponsiveLockedSetting("max", "", 100);
+    const element = this.props.element;
+    const {replaceContentWithData}  = window.altrpHelpers
+
+    let min = this.props.element.getResponsiveLockedSetting("min", "", 0);
+    min = Number(replaceContentWithData(min, element.getCardModel()))
+    if(_.isNaN(Number(min))) {
+      min = 0
+    }
+    let max = this.props.element.getResponsiveLockedSetting("max", "", 100);
+    max = Number(replaceContentWithData(max, element.getCardModel()))
+    if(_.isNaN(Number(max))) {
+      max = 100
+    }
+
     // const step = this.props.element.getResponsiveLockedSetting("step", "", 1);
     const labelStepSize = this.props.element.getResponsiveLockedSetting("label_step", "", 25);
     const decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
@@ -269,11 +372,11 @@ class InputRangeSliderWidget extends Component {
 
     let value = this.getValue();
 
-    if (Number.isNaN(value[0])) {
+    if (_.isNaN(Number(value[0]))) {
       value[0] = Number(min)
     }
 
-    if (Number.isNaN(value[1])) {
+    if (_.isNaN(Number(value[1]))) {
       value[1] = Number(max);
     }
 

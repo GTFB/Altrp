@@ -499,6 +499,7 @@ class ElementWrapper extends Component {
           }
           <WrapperComponent
             className={classes}
+            isTemplateStylesModule={this.props.isTemplateStylesModule}
             style={{ ...styles, width: layout_column_width }}
             ref={this.wrapper}
             element={this.props.element.getId()}

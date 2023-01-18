@@ -22,6 +22,7 @@ export default class PageDatasourcesController {
     const data = {
       alias: body.alias,
       autoload: body.autoload,
+      query_sync: body.query_sync,
       parameters: body.parameters || null,
       priority: body.priority,
       source_id: body.source_id,
@@ -48,6 +49,7 @@ export default class PageDatasourcesController {
     }
 
     pageDatasource.alias = body.alias;
+    pageDatasource.query_sync = body.query_sync || false;
     pageDatasource.autoload = body.autoload || false;
     pageDatasource.parameters = body.parameters || null;
     pageDatasource.priority = body.priority;
@@ -73,6 +75,7 @@ export default class PageDatasourcesController {
   public async getByPage({params}) {
     const pageQuery = Page.query().preload("pageDatasources", (pageDatasources) => {
       pageDatasources.preload("source")
+      pageDatasources.orderBy('id')
     })
 
     if(isNaN(params.id)) {

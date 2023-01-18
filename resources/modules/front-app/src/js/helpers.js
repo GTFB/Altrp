@@ -64,15 +64,24 @@ export {default as startOfMonth} from "./functions/startOfMonth";
 export {default as startOfYear} from "./functions/startOfYear";
 export {default as isEditor} from "./functions/isEditor";
 export {default as dataFromTable} from "./functions/dataFromTable";
-export {default as dataToCSV} from "./functions/dataToCSV";
-export {default as dataToXML} from "./functions/dataToXML";
 export {default as getAppContext} from "./functions/getAppContext";
-export {default as dataToXLS} from "./functions/dataToXLS";
 export {default as prepareContext} from "./functions/prepareContext";
 export {default as CONDITIONS_OPTIONS} from "./constants/CONDITIONS_OPTIONS";
 export {default as getResponsiveSetting} from "./functions/getResponsiveSetting";
 
+export async function dataToCSV(...a){
+  return (await import(/* webpackChunkName: 'dataToCSV' */'./functions/dataToCSV')).default(...a)
+}
 
+export async function dataToXLS(...a){
+  return (await import(/* webpackChunkName: 'dataToXLS' */'./functions/dataToXLS')).default(...a)
+}
+export async function dataToXML(...a){
+  return (await import(/* webpackChunkName: 'dataToXML' */'./functions/dataToXML')).default(...a)
+}
+export async function updateQueryString(...a){
+  return (await import(/* webpackChunkName: 'updateQueryString' */'./functions/updateQueryString')).default(...a)
+}
 
 /**
  * Вспомогательные функции для работы с данными виджетов

@@ -2,7 +2,6 @@ import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import Edge from "../../../helpers/edge";
 import Env from "@ioc:Adonis/Core/Env";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
 import isProd from "../../../helpers/isProd";
@@ -81,7 +80,9 @@ export default class IndicesController {
 
     response.header("Content-Type", "text/javascript")
 
-    const file = await Drive.get(pathToPublic)
+    const file = fs.readFileSync(pathToPublic, {
+      encoding: 'utf8'
+    })
 
     return file
   }
@@ -156,10 +157,16 @@ export default class IndicesController {
   public async changelog({ response }) {
     const pathToPublic = base_path( "CHANGELOG.md");
     let file:any = ''
-    try {
-       file = await Drive.get(pathToPublic)
-    } catch (e) {
 
+    try {
+       file = fs.readFileSync(pathToPublic, {
+         encoding: 'utf8'
+       })
+    } catch (e) {
+      file = fs.readFileSync(base_path( "../CHANGELOG.md"), {
+        encoding: 'utf8'
+      })
+      console.error(e);
     }
 
     response.header('Content-type', 'text/plain');
@@ -189,10 +196,14 @@ export default class IndicesController {
     const faviconPath = Application.tmpPath("favicon") + `/${params.path}`;
     const defaultFaviconPath = Application.resourcesPath("favicon") + `/altrp_${params.path}`
 
-    if(await Drive.exists(faviconPath)) {
-      value = await Drive.get(faviconPath)
-    } else if(await Drive.exists(defaultFaviconPath)) {
-      value = await Drive.get(defaultFaviconPath)
+    if(fs.existsSync(faviconPath)) {
+      value = fs.readFileSync(faviconPath, {
+        encoding: 'utf8'
+      })
+    } else if(fs.existsSync(defaultFaviconPath)) {
+      value = fs.readFileSync(defaultFaviconPath, {
+        encoding: 'utf8'
+      })
     }
 
     if(value) {

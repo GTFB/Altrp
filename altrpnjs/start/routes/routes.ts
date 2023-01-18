@@ -22,7 +22,6 @@ import axios from 'axios'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
-import Drive from '@ioc:Adonis/Core/Drive'
 import path from "path";
 import app_path from "../../helpers/path/app_path";
 import Customizer from "App/Models/Customizer";
@@ -120,7 +119,7 @@ Route.get("/serviceWorker.js", async ({request, response}) => {
 
   const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
-  const file = await Drive.get(pathToModules + url)
+  const file = fs.readFileSync(pathToModules + url)
 
   response.header("Content-Type", "text/javascript")
 
@@ -132,7 +131,7 @@ Route.get("/sw/*", async ({request, response}) => {
 
   const pathToModules = path.join(__dirname, "../", "../", "../", fromBuildDir, "public");
 
-  const file = await Drive.get(pathToModules + url)
+  const file =  fs.readFileSync(pathToModules + url)
 
   const splitUrl = url.split(".");
 

@@ -23,7 +23,7 @@ class Dropbar extends Component {
   };
 
   show =()=> {
-
+    const element = this.element
     const body = document.body
     let full_window = element.getResponsiveLockedSetting('full_window')
     if(this.state.show){
@@ -112,8 +112,6 @@ class Dropbar extends Component {
               {
                 ref: this.children,
                 onClick: this.props.settings.mode_dropbar_options === "click" ? this.show : null,
-                // onMouseEnter: this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null,
-                // onMouseLeave: this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null
               }
             )
           }

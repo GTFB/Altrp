@@ -2,11 +2,12 @@
 
 ## Changelog
 
-### 1.4.7 build 26
+### 1.4.7 build 40
 
-* Fix Checkbox Inputs Issues
+* Fix Issues in Checkbox Inputs, Range Slider and Gallery Widgets
 * Fix Range Input Bugs with Values
 * Add Context Menu in the Elements Navigator
+* Add Query Sync Feature to Page Datasource, Text Input, Range Slider Checkbox and Radio Button Widgets
 
 ### 1.4.6
 * Added CRON Results Logs

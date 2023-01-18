@@ -1,19 +1,13 @@
 import React from "react";
 import {Select} from "@blueprintjs/select";
 import {Button, MenuItem, ButtonGroup, Alignment, Icon} from "@blueprintjs/core";
-import ButtonController from "../controllers/ButtonController";
 import AltrpMeta from "../../classes/AltrpMeta";
 import {connect} from "react-redux";
-import {controllerMapStateToProps} from "../../decorators/controller";
 import {getCurrentElement} from "../../store/store";
-import Controller from "../../classes/Controller";
-import {editGlobalColor, editGlobalEffect, setGlobalColors} from "../../store/altrp-global-colors/actions";
 import {
-  addUpdateGlobalStylesPreset,
   deleteGlobalStylesPresets,
   updateGlobalStylesPresets
 } from "../../store/altrp-global-styles/actions";
-import CONSTANTS from "../../consts";
 
 /**
  * @return {boolean}

@@ -1,4 +1,6 @@
-import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
+import getDataByPath from "../../../../front-app/src/js/functions/getDataByPath"
+import isEditor from "../../../../front-app/src/js/functions/isEditor"
+import redirect from "../../../../front-app/src/js/functions/redirect"
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-column {
@@ -24,6 +26,7 @@ class ColumnComponent extends Component {
       this.render = props.baseRender(this);
     }
     this.columnCount = 0
+    this.element = this.props.element
   }
 
   /**
@@ -46,6 +49,18 @@ class ColumnComponent extends Component {
     return !!_.get(this, 'props.element.settings.link_link.url');
   }
 
+  getStyles = ()=>{
+    const styles = {}
+    let path_image = this.element.getSettings('path_image')
+    if(path_image){
+      path_image = getDataByPath(path_image, this.element.getCardModel())
+    }
+    if(path_image){
+      styles.backgroundImage = `url("${path_image}")`
+    }
+    return styles
+  }
+
   render() {
     const background_image = this.props.element.getLockedSettings('background_image', {});
     const background_image_hover = this.props.element.getResponsiveLockedSetting(
@@ -66,10 +81,10 @@ class ColumnComponent extends Component {
 
     return React.createElement(layout_html_tag,
       {
+        style:this.getStyles(),
         className,
         id: this.state.settings.position_style_css_id_column || "",
         onClick: this.onClick,
-        settings: this.props.element.getSettings()
       },
       this.state.children.map(
         widget => {

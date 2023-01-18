@@ -126,24 +126,6 @@ function _hAltrp() {
       );
     }
 
-    (async function () {
-
-      let _token = await fetch('/ajax/_token', {
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then(res => {
-        if (res.ok === false) {
-          return Promise.reject({res: res.text(), status: res.status});
-        }
-        return res.json();
-      });
-      if (_token.success) {
-        window._token = _token._token;
-      }
-    })();
-
     /**
      * Изменение скролла для загрузки ленивых изображений
      */

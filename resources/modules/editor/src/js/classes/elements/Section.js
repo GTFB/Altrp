@@ -466,6 +466,11 @@ class Section extends BaseElement{
       locked: true,
     });
 
+    this.addControl('path_image', {
+      locked: true,
+      label: 'Path to Background Image',
+    });
+
     this.addControl("background_image_lazy", {
       type: CONTROLLER_SWITCHER,
       label: "Background Image Lazy Loading",

@@ -502,18 +502,7 @@ export default class Source extends BaseModel {
       .select('*')
 
     for(const pageDatasource of pageDatasources){
-      const newHttpContext = {
-        params: httpContext.params,
-        auth:{
-          user: httpContext.auth.user
-        },
-        request: httpContext.request,
-        response: httpContext.response,
-        logger: httpContext.logger,
-        profiler: httpContext.profiler,
-        route: httpContext.route,
-        routeKey: httpContext.routeKey,
-      }
+      const newHttpContext = _.cloneDeep(httpContext)
       const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
       if(data?.data){
         datasources[pageDatasource.alias] = data.data

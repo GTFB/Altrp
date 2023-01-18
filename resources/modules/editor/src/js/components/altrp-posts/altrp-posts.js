@@ -50,7 +50,11 @@ class AltrpPosts extends React.Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
+
     if (!isEditor()) {
+      if(this.props.data !== nextProps.data && _.isEqual(this.props.data, nextProps.data)){
+        return false
+      }
       return true;
     }
     if (this.props.settings !== nextProps.settings) {
@@ -87,6 +91,7 @@ class AltrpPosts extends React.Component {
     if (this.state.currentPage !== nextState.currentPage) {
       return true;
     }
+    console.log(false);
     return false;
   }
 
@@ -641,13 +646,13 @@ class AltrpPosts extends React.Component {
     );
   }
 }
-
+const defaultData = Array.from({ length: 3 }, () => ({}));
 export default (props) => {
   if (props.settings.choose_datasource === "datasource") {
     if (isEditor()) {
       props = { ...props };
       props.settings = { ...props.settings };
-      props.data = Array.from({ length: 3 }, () => ({}));
+      props.data = defaultData;
       setAltrpIndex(props.data);
     }
     return <AltrpPosts {...props} />;

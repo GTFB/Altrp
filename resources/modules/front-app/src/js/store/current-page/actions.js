@@ -9,7 +9,7 @@ export function changeCurrentPage(pageData) {
 }
 
 export function changeCurrentPageProperty(propertyName, value) {
-  console.error(propertyName, value);
+
   return {
     type: CHANGE_CURRENT_PAGE_PROPERTY,
     propertyName,

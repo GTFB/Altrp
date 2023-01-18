@@ -1487,7 +1487,7 @@ function FormComponent(settings, widgetId, widgetName) {
   fieldLabelRequiredStyles && (styles += fieldLabelRequiredStyles);
   //mask-mismatch-message
   const maskMismatchMessageStyles = maskMismatchMessage(settings);
-  console.log(widgetName);
+
   switch (widgetName) {
     case 'input-accept':{
       styles += acceptStyles(settings)

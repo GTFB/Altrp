@@ -18,7 +18,7 @@ class PageDataSourceForm extends Component {
   };
 
   changeHandler = ({ target: { value, name, checked } }) => {
-    if(name === 'autoload' || name === 'server_side'){
+    if(name === 'autoload' || name === 'server_side' || name==='query_sync') {
       value = checked;
     }
     this.setState({ [name]: value });
@@ -72,7 +72,14 @@ class PageDataSourceForm extends Component {
     this.setState(state => ({...state, isExtendedSettings, parameters}));
   };
   render() {
-    let { source_id, alias, priority, parameters, dataSourceOptions, autoload, isExtendedSettings, server_side } = this.state;
+    let { source_id,
+      alias,
+      priority,
+      parameters,
+      dataSourceOptions,
+      autoload,
+      query_sync,
+      isExtendedSettings, server_side } = this.state;
     dataSourceOptions = dataSourceOptions.map(source=>({value:source.id, label:source.title || source.name}));
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
@@ -112,24 +119,35 @@ class PageDataSourceForm extends Component {
           className="form-control"
         />
       </div>
+      <div className="row">
 
-      <div className="form-group">
-        <label htmlFor="autoload">Autoload</label>
-        <input type="checkbox" id="autoload"
-          name="autoload"
-          checked={autoload}
-          onChange={this.changeHandler}
-          className="form-check-input position-static ml-2"
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="server_side">Server Side</label>
-        <input type="checkbox" id="server_side"
-          name="server_side"
-          checked={server_side}
-          onChange={this.changeHandler}
-          className="form-check-input position-static ml-2"
-        />
+        <div className="form-group col-6">
+          <label htmlFor="autoload">Autoload</label>
+          <input type="checkbox" id="autoload"
+                 name="autoload"
+                 checked={autoload}
+                 onChange={this.changeHandler}
+                 className="form-check-input position-static ml-2"
+          />
+        </div>
+        <div className="form-group col-6">
+          <label htmlFor="server_side">Server Side</label>
+          <input type="checkbox" id="server_side"
+                 name="server_side"
+                 checked={server_side}
+                 onChange={this.changeHandler}
+                 className="form-check-input position-static ml-2"
+          />
+        </div>
+        <div className="form-group col-12">
+          <label htmlFor="server_side">Query String Sync</label>
+          <input type="checkbox" id="server_side"
+                 name="query_sync"
+                 checked={query_sync}
+                 onChange={this.changeHandler}
+                 className="form-check-input position-static ml-2"
+          />
+        </div>
       </div>
       <div className="admin_switcher">
         <div className="admin_switcher__label">Extended Params Settings</div>

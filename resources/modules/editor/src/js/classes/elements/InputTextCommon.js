@@ -86,6 +86,20 @@ class InputTextCommon extends BaseElement {
       label: "Form ID",
     });
 
+    this.addControl("field_id", {
+      responsive: false,
+      type: CONTROLLER_TEXT,
+      locked: true,
+      label: "Field ID (Column Name)",
+    });
+
+    this.addControl("query_sync", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Sync With Query String",
+    });
+
     this.addControl("max_number", {
       type: CONTROLLER_NUMBER,
       responsive: false,
@@ -104,13 +118,6 @@ class InputTextCommon extends BaseElement {
       conditions: {
         content_type: ["number"],
       },
-    });
-
-    this.addControl("field_id", {
-      responsive: false,
-      type: CONTROLLER_TEXT,
-      locked: true,
-      label: "Field ID (Column Name)",
     });
 
     this.addControl("debounce_input", {

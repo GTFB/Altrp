@@ -25,6 +25,7 @@ class SingleElementWrapper extends Component {
       withSkeleton: this.props.withSkeleton
     };
     props.element.wrapper = this;
+    this.element = props.element;
     this.elementWrapperRef = this.props.elementWrapperRef;
     this.elementRef = React.createRef();
     this.wrapper = this.props.elementWrapperRef?.current ? React.createRef() : this.props.elementWrapperRef;
@@ -297,12 +298,30 @@ class SingleElementWrapper extends Component {
     if(newProps.formsStore !== this.props.formsStore
       && dependencies.indexOf('altrpforms') === -1){
       ++window.countReduced
-      if(element.getName().indexOf('input') > -1 || element.getName() === 'textarea'){
+
+      if( this.element.getName() !== 'input-range-slider' && (this.element.getName().indexOf('input') > -1
+        || this.element.getName() === 'textarea')){
+
 
         if(! newProps.formsStore.changedField){
           return true
         }
-        return `${element.getFormId()}.${element.getFieldId()}`
+        return `${this.element.getFormId()}.${this.element.getFieldId()}`
+          === newProps.formsStore.changedField
+      }
+      if(this.element.getName() === 'input-range-slider'){
+
+        if(! newProps.formsStore.changedField){
+          return true
+        }
+        let formIdStart = this.element.getFormId("form_id_start");
+        let fieldNameStart = this.element.getFieldId("field_id_start");
+        let formIdEnd = this.element.getFormId("form_id_end");
+        let fieldNameEnd = this.element.getFieldId("field_id_end");
+
+        return `${formIdStart}.${fieldNameStart}`
+          === newProps.formsStore.changedField ||
+          `${formIdEnd}.${fieldNameEnd}`
           === newProps.formsStore.changedField
       }
       return false

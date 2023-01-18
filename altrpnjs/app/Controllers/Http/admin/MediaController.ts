@@ -238,17 +238,17 @@ export default class MediaController {
       media.title = filename
       let urlBase =
         "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
-      let dirname = public_path("/storage" + urlBase);
+      let dirname = ("/storage" + urlBase);
 
 
-      if (!fs.existsSync(dirname)) {
-        fs.mkdirSync(dirname, { recursive: true });
+      if (!fs.existsSync(public_path(dirname))) {
+        fs.mkdirSync(public_path(dirname), { recursive: true });
       }
       media.filename = urlBase + filename;
 
       // @ts-ignore
       await file.moveToDisk(dirname, { name: filename }, "local");
-      let content = fs.readFileSync(dirname + filename);
+      let content = fs.readFileSync(public_path(dirname + filename));
 
       if (ext == "heic") {
         media.title = file.clientName.split(".")[0] + ".jpg";
@@ -259,7 +259,7 @@ export default class MediaController {
           format: "JPEG",
           quality: 1,
         });
-        fs.writeFileSync(dirname + filename, content);
+        fs.writeFileSync(public_path(dirname + filename), content);
       }
 
       if (ext === "svg") {
@@ -330,14 +330,14 @@ export default class MediaController {
       let filename = title + "." + ext;
       let urlBase =
         "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
-      let dirname = public_path("/storage" + urlBase);
-      if (!fs.existsSync(dirname)) {
-        fs.mkdirSync(dirname, { recursive: true });
+      let dirname = ("/storage" + urlBase);
+      if (!fs.existsSync(public_path("/storage" + urlBase))) {
+        fs.mkdirSync(public_path("/storage" + urlBase), { recursive: true });
       }
       media.filename = urlBase + filename;
       // @ts-ignore
       await file.moveToDisk(dirname, { name: filename }, "local");
-      let content = fs.readFileSync(dirname + filename);
+      let content = fs.readFileSync(public_path(dirname + filename));
 
       if (ext == "heic") {
         media.title = file.clientName.split(".")[0] + ".jpg";
@@ -348,7 +348,7 @@ export default class MediaController {
           format: "JPEG",
           quality: 1,
         });
-        fs.writeFileSync(dirname + filename, content);
+        fs.writeFileSync(public_path(dirname + filename), content);
       }
 
       if (ext === "svg") {

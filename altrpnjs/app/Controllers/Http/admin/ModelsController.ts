@@ -1,7 +1,6 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Model from 'App/Models/Model'
 import Source from 'App/Models/Source'
-import Accessors from 'App/Models/Accessor'
 import exec from '../../../../helpers/exec'
 import empty from '../../../../helpers/empty'
 import CategoryObject from 'App/Models/CategoryObject'
@@ -486,12 +485,6 @@ export default class ModelsController {
       }
     }))
   }
-
-  async getAccessors({params, response}: HttpContextContract) {
-    let accessors = await Accessors.query().where('model_id', params.id).select()
-    return response.json(accessors)
-  }
-
   async storeModel({request, response, auth}: HttpContextContract) {
     let modelData = request.all()
     let model = new Model()

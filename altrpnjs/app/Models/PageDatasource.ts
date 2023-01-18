@@ -25,6 +25,9 @@ export default class PageDatasource extends BaseModel {
   public alias: string;
 
   @column()
+  public query_sync: string;
+
+  @column()
   public parameters: string;
 
   @column()
@@ -103,7 +106,15 @@ export default class PageDatasource extends BaseModel {
           }
         }
       }
-      httpContext.request.updateQs(this.getParsedParameters(altrpContext))
+
+      let newQs = this.getParsedParameters(altrpContext)
+      if(this.query_sync){
+        newQs = {
+          ...newQs,
+          ...httpContext.request.qs(),
+        }
+      }
+      httpContext.request.updateQs(newQs)
 
       const res = await controller[this.source.getMethodName()](httpContext)
       return httpContext.response.getBody() || res;

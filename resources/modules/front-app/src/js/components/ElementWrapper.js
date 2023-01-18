@@ -1,4 +1,3 @@
-import { withRouter } from "react-router-dom";
 import { addElement } from "../store/elements-storage/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
@@ -264,11 +263,11 @@ class ElementWrapper extends Component {
   }
 
   shouldComponentUpdate(newProps, newState){
-    let {dependencies} = this.element;
-
     if(isEditor()){
       return false
     }
+    let {dependencies} = this.element;
+
     if(newState.elementDisplay !== this.state.elementDisplay){
       return true
     }
@@ -299,12 +298,29 @@ class ElementWrapper extends Component {
       && dependencies.indexOf('altrpforms') === -1){
       ++window.countReduced
 
-      if(this.element.getName().indexOf('input') > -1 || this.element.getName() === 'textarea'){
+      if( this.element.getName() !== 'input-range-slider' && (this.element.getName().indexOf('input') > -1
+        || this.element.getName() === 'textarea')){
+
 
         if(! newProps.formsStore.changedField){
           return true
         }
         return `${this.element.getFormId()}.${this.element.getFieldId()}`
+          === newProps.formsStore.changedField
+      }
+      if(this.element.getName() === 'input-range-slider'){
+
+        if(! newProps.formsStore.changedField){
+          return true
+        }
+        let formIdStart = this.element.getFormId("form_id_start");
+        let fieldNameStart = this.element.getFieldId("field_id_start");
+        let formIdEnd = this.element.getFormId("form_id_end");
+        let fieldNameEnd = this.element.getFieldId("field_id_end");
+
+        return `${formIdStart}.${fieldNameStart}`
+          === newProps.formsStore.changedField ||
+          `${formIdEnd}.${fieldNameEnd}`
           === newProps.formsStore.changedField
       }
       return false
@@ -504,6 +520,7 @@ class ElementWrapper extends Component {
       wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay')?.size || 0;
       // wrapperProps.className += ` altrp-invisible`;
     }
+
     return (
       <>
 
@@ -541,12 +558,6 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-let _export;
-if(window['h-altrp']){
-  _export = ElementWrapper;
-} else {
-  _export = withRouter(ElementWrapper)
-}
 export default window.reactRedux.connect(mapStateToProps, null, null, {
   forwardRef: true
-})(_export);
+})(ElementWrapper);

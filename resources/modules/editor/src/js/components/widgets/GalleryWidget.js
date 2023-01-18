@@ -1,56 +1,12 @@
 import GalleryIcon from "../../../svgs/widget_gallery.svg";
 import("../../../sass/altrp-gallery.scss");
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 import HoverImage from "../animations/image/HoverImage";
 import Overlay from "../altrp-gallery/Overlay";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-gallery-overlay {
-    left: 0;
-    top: 0;
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
-
-  .altrp-gallery-overlay-bg {
-    mix-blend-mode: none;
-  }
-
-  .altrp-gallery-grid {
-    display: grid;
-    position: relative;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .altrp-gallery-img {
-    background-size: cover;
-    background-position: center center;
-    width: 100%;
-    transform-origin: center top;
-    padding-bottom:100%;
-  }
-
-  .altrp-gallery-img-container {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .altrp-gallery-icon {
-    height: 35px;
-    width: 35px;
-    opacity: 0.5;
-  }
-
-  .altrp-gallery-empty-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-color: #C4C4C4;
-  }
-
-`);
+//(window.globalDefaults = window.globalDefaults || []).push(``);
 
 class GalleryWidget extends Component {
   constructor(props) {
@@ -61,6 +17,7 @@ class GalleryWidget extends Component {
     this.state = {
       settings,
       simpleRepeater: [],
+      repeaterFromPath: [],
       currentImg: -1,
       lightbox: false,
       shuffled: false,
@@ -76,7 +33,7 @@ class GalleryWidget extends Component {
     this.updateRepeater = this.updateRepeater.bind(this);
   }
 
-  updateRepeater() {
+  updateRepeater(prevProps = null) {
     const propsSimpleRepeater = this.props.element.getResponsiveLockedSetting(
       "repeater_simple_settings",
       "",
@@ -90,11 +47,32 @@ class GalleryWidget extends Component {
     ) {
       this.setState({ simpleRepeater: propsSimpleRepeater });
     }
-  }
 
+    if (
+      prevProps &&
+      !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
+    ){
+      const path = this.props.element.getSettings('path')
+      if(path){
+        this.updateRepeaterFromPath()
+      }
+    }
+  }
+  updateRepeaterFromPath(){
+    const path = this.props.element.getSettings('path')
+    let repeaterFromPath = getDataByPath(path, this.props.element.getCardModel())
+    if(_.isArray(repeaterFromPath) && this.state.repeaterFromPath !== repeaterFromPath && ! isEditor()){
+
+      this.setState(state=>({...state,repeaterFromPath}))
+    }
+  }
   _componentDidMount() {
     this.updateRepeater();
-
+    const path = this.props.element.getSettings('path')
+    if(path){
+      this.updateRepeaterFromPath()
+    }
     let repeater = this.props.element.getResponsiveLockedSetting(
       "repeater_simple_settings",
       "",
@@ -118,7 +96,8 @@ class GalleryWidget extends Component {
   _componentDidUpdate(prevProps, prevState) {
     const orderBy = this.state.settings.order_by_settings || "default";
 
-    this.updateRepeater();
+
+    this.updateRepeater(prevProps);
 
     let repeater = this.props.element.getResponsiveLockedSetting(
       "repeater_simple_settings",
@@ -138,12 +117,6 @@ class GalleryWidget extends Component {
       this.setState({ simpleRepeater: repeater });
     }
 
-    // if(this.state.simpleRepeater.length > 0) {
-    //   const imgUrl = this.state.simpleRepeater[0].simple_media_settings.url;
-    //   let image = new Image();
-    //   image.src = imgUrl
-    //   console.log(image.width)
-    // }
   }
 
   showLightbox(e) {
@@ -209,6 +182,9 @@ class GalleryWidget extends Component {
         size: 800,
       });
     let simpleRepeater = this.state.simpleRepeater;
+    if(this.state.repeaterFromPath?.length){
+      simpleRepeater = this.state.repeaterFromPath
+    }
     let classes =
       this.getClasses() +
       (this.props.element.getResponsiveLockedSetting(
@@ -225,13 +201,18 @@ class GalleryWidget extends Component {
 
     let images = "";
 
-    console.log(this.props.element);
+
+
+
     if (simpleRepeater.length > 0) {
       images = simpleRepeater.map((img, idx) => {
-        let url = img?.simple_media_settings
-          ? img?.simple_media_settings.url
-          : "/img/nullImage.png";
-
+        let url =  img?.simple_media_settings?.url;
+        if(! url && img.url){
+          url = img.url
+        }
+        if(! url){
+          url = "/img/nullImage.png"
+        }
         const imageProps = {
           className: `${classes} altrp-gallery-img`,
           style: { backgroundImage: `url(${url})` },
@@ -300,7 +281,7 @@ class GalleryWidget extends Component {
       imagesSrcs = simpleRepeater.map((img) => img?.simple_media_settings?.url);
     }
 
-    console.log(simpleRepeater);
+
     return simpleRepeater.length > 0 ? (
       <>
         {layoutContainer}
