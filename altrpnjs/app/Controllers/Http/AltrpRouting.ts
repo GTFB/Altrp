@@ -81,8 +81,10 @@ export default class AltrpRouting {
 
         var ext = url.split('.').pop();
         var parts = url.split('/');
-        var folder = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/`);
+        var requestedFileName = parts[parts.length-1];
 
+        //var folder = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/`);
+        var folder = base_path(`/public/${url.replace(requestedFileName, '')}`)
         var files: any[] = []
         var width = 0
         var height = 0
@@ -92,19 +94,21 @@ export default class AltrpRouting {
           if (url.includes(sizeType)) {
             width = size.width
             height = size.height
-            files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split(sizeType)[0]));
+            //files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split(sizeType)[0]));
+            files = await fs.readdirSync(folder).filter(fn => fn.startsWith(requestedFileName.split(sizeType)[0]));
           }
         }
 
         if (files.length == 0) {
-          files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split('.')[0]));
+          //files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split('.')[0]));
+          files = await fs.readdirSync(folder).filter(fn => fn.startsWith(requestedFileName.split('.')[0]));
         }
 
         //return JSON.stringify(files.length);
 
         if (files.length > 0) {
-
-          var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
+          //var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
+          var originalFileName = `${folder}/${files[0]}`;
 
           if (fs.existsSync(originalFileName)){
 
