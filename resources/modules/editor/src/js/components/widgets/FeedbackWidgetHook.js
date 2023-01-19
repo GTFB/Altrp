@@ -26,7 +26,7 @@ function FeedbackWidgetHook({settings, idWidget, classes}) {
     e.path.forEach(item => {
         if (item.className === "block__comment") trackClass = true;
     })
-    const path = e.path
+    const path = e.path || e.composedPath()
     let a = path.includes(containerRef.current)
     if (!a && !trackClass && state.active) {
       setState(state => ({

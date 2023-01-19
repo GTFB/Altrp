@@ -42,7 +42,8 @@ class OffcanvasWidget extends Component {
   }
 
   hide(e) {
-    if (!e.path.includes(this.offcanvasContentRef.current)) {
+    const path = e.path || e.composedPath()
+    if (!path.includes(this.offcanvasContentRef.current)) {
       this.props.close();
       this.setState(state => {
         return {

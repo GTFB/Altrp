@@ -62,6 +62,8 @@ const Wrapper = styled.div`
 
   & .altrp-menu-sortable {
     width: calc(100% - 400px);
+    max-height: calc(100vh - 93px - 75px - 90px);
+    overflow: auto;
     background-color: #fff;
   }
 

@@ -147,7 +147,8 @@ class SingleElementWrapper extends Component {
   }
 
   closeTooltip(e) {
-    if(!e.path.includes(this.wrapper.current)) {
+    const path = e.path || e.composedPath()
+    if(!path.includes(this.wrapper.current)) {
       const checkTooltip = e.path.find(domElem => domElem.classList ? domElem.classList.contains("bp3-popover2") : false);
 
 

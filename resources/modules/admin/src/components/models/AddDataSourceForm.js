@@ -626,45 +626,6 @@ class AddDataSourceForm extends Component {
           </div>
         </div>
 
-        <div className="admin-form-dataSources__create">
-          <div className="admin-form-dataSources__block">
-            <div className="admin-form-dataSources__top">
-              <h2 className="admin-form__subheader">Headers</h2>
-              <button className="btn btn_success" type="button" onClick={this.headerAddHandler}>
-                + New Header
-              </button>
-            </div>
-
-
-            {headers && headers.map((item, index) => <Fragment key={index}>
-             <div className={index !== 0 ? "HeaderComponent__block dataSources__border" : "HeaderComponent__block"}>
-               <HeaderComponent item={item} changeHandler={e => this.headerChangeHandler(e, index)}/>
-               <button className="btn btn_failure" type="button" onClick={() => this.headerDeleteHandler(index)}>
-                 ✖
-               </button>
-             </div>
-            </Fragment>)}
-          </div>
-
-          <div className="admin-form-dataSources__block">
-            <div className="admin-form-dataSources__top">
-              <h2 className="admin-form__subheader">Bodies</h2>
-              <button className="btn btn_success" type="button" onClick={this.bodyAddHandler}>
-                + New Body
-              </button>
-            </div>
-
-
-            {bodies && bodies.map((item, index) => <Fragment key={index}>
-              <div className={index !== 0 ? "HeaderComponent__block dataSources__border" : "HeaderComponent__block"}>
-                <HeaderComponent item={item} changeHandler={e => this.bodyChangeHandler(e, index)}/>
-                <button className="btn btn_failure" type="button" onClick={() => this.bodyDeleteHandler(index)}>
-                  ✖
-                </button>
-              </div>
-            </Fragment>)}
-          </div>
-        </div>
       </form>
     )
   }
