@@ -725,8 +725,15 @@ function altrpSectionFullHover(settings, state=':hover') {
  */
 
 export default function SectionWidgetComponent(settings, childrenLength, elementId) {
-  return `
+  let columnsWidth = ''
 
+  if(childrenLength > 1){
+    columnsWidth = Math.floor(10000/childrenLength) / 100
+    columnsWidth = `& > .altrp-section > .altrp-element_column{width: ${columnsWidth}%;}`
+  }
+
+  return `
+  ${columnsWidth}
   & > .altrp-section,
   & > .altrp-section-full-fill {
     ${altrpSection(settings)}

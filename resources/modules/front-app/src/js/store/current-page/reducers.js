@@ -1,13 +1,13 @@
 import { CHANGE_CURRENT_PAGE, CHANGE_CURRENT_PAGE_PROPERTY } from "./actions";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-import convertQueryParamsToObject from "../../functions/convert-query-params-to-object";
+import qs from "qs";
 
 if (typeof location === "undefined") {
   global.location = {};
 }
 let params = window?.__altrp_settings__?.page_params
 if( ! params){
-  params= convertQueryParamsToObject(document?.location?.search);
+  params= qs.parse(document?.location?.search.replace('?', ''));
 }
 let hashParams = {};
 if(document?.location?.hash && document?.location?.hash.indexOf('=') !== -1){

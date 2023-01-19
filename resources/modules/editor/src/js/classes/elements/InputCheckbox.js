@@ -59,6 +59,14 @@ class InputCheckbox extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
+    this.addControl("query_sync", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Sync With Query String",
+    });
+
+
     const optionsRepeater = new Repeater();
 
     optionsRepeater.addControl("label", {
@@ -509,7 +517,7 @@ class InputCheckbox extends BaseElement {
     });
 
     this.endControlSection();
-
+/*
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
       label: "Input Position"
@@ -595,7 +603,7 @@ class InputCheckbox extends BaseElement {
     });
 
     this.endControlSection();
-
+*/
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
       label: "Font"

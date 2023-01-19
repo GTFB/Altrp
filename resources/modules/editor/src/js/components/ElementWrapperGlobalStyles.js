@@ -62,6 +62,10 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
                                                                settings,
                                                                element,
                                                              }) => {
+  if(element.settings.global_styles_presets){
+    return ''
+  }
+
   let styles = "";
   let prefix = "altrp-element";
   switch (elementName) {
@@ -156,7 +160,8 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     {
       styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
         settings,
-        elementId
+        elementIdm,
+        elementName
       )}}`;
       //select2 options style
       styles += `${FormComponent.select2Options(settings, elementId)}}`;
@@ -175,10 +180,10 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-checkbox":
     {
-      styles += `.${prefix}${elementId} { ${InputCheckboxComponent(
+      styles += InputCheckboxComponent(
         settings,
         elementId
-      )}}`;
+      );
     }
       break;
     case "input-slider":
@@ -288,7 +293,8 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     {
       styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
         settings,
-        elementId
+        elementId,
+        elementName
       )}}`;
     }
       break;

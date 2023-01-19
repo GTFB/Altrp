@@ -1,5 +1,4 @@
 import * as mustache from'mustache'
-import Env from '@ioc:Adonis/Core/Env'
 import getCurrentDevice from "../../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import Page from 'App/Models/Page';
@@ -31,6 +30,8 @@ import isRobot from "../../../helpers/isRobot";
 import base_path from "../../../helpers/path/base_path";
 import sharp from 'sharp';
 import sizeOf from 'image-size';
+import getAltrpTime from "../../../helpers/getAltrpTime";
+
 
 export default class AltrpRouting {
 
@@ -80,8 +81,10 @@ export default class AltrpRouting {
 
         var ext = url.split('.').pop();
         var parts = url.split('/');
-        var folder = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/`);
+        var requestedFileName = parts[parts.length-1];
 
+        //var folder = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/`);
+        var folder = base_path(`/public/${url.replace(requestedFileName, '')}`)
         var files: any[] = []
         var width = 0
         var height = 0
@@ -91,19 +94,21 @@ export default class AltrpRouting {
           if (url.includes(sizeType)) {
             width = size.width
             height = size.height
-            files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split(sizeType)[0]));
+            //files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split(sizeType)[0]));
+            files = await fs.readdirSync(folder).filter(fn => fn.startsWith(requestedFileName.split(sizeType)[0]));
           }
         }
 
         if (files.length == 0) {
-          files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split('.')[0]));
+          //files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split('.')[0]));
+          files = await fs.readdirSync(folder).filter(fn => fn.startsWith(requestedFileName.split('.')[0]));
         }
 
         //return JSON.stringify(files.length);
 
         if (files.length > 0) {
-
-          var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
+          //var originalFileName = base_path(`/public/${parts[1]}/${parts[2]}/${parts[3]}/${parts[4]}/${files[0]}`);
+          var originalFileName = `${folder}/${files[0]}`;
 
           if (fs.existsSync(originalFileName)){
 
@@ -144,9 +149,9 @@ export default class AltrpRouting {
 
     const asCheck = isRobot(httpContext.request.headers())
     const accept_webp = httpContext.request.header('Accept')?.includes('image/webp')
-    // console.log(accept_webp);
-    // console.log(httpContext.request.header('Accept'));
-    // console.log(httpContext.request.headers());
+
+
+
     /**
      * init global object
      */
@@ -290,6 +295,7 @@ export default class AltrpRouting {
 
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
     const device = getCurrentDevice(httpContext.request)
+    const lang = get_altrp_setting('site_language', 'en')
 
     altrpContext.altrpdata = datasources
     try {
@@ -321,6 +327,8 @@ export default class AltrpRouting {
         container_width: get_altrp_setting('container_width', '1440'),
         spa_off: get_altrp_setting('spa_off') === 'true',
         device,
+        lang,
+        altrptime: getAltrpTime()
       })
 
       mustache?.templateCache?.clear()
@@ -383,7 +391,6 @@ export default class AltrpRouting {
     /**
      * Игнорим все запросы кроме get
      */
-
     const url = httpContext.request.url();
     /**
      * Игнорим логинизацию
@@ -433,8 +440,8 @@ export default class AltrpRouting {
       let res = await httpContext.view.render(`altrp/pages/${page.guid}`,
         Edge({
           ...altrpContext,
-          hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
-          url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
+          // hAltrp: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/h-altrp.js' : 'http://localhost:3001/src/bundle.h-altrp.js',
+          // url: Env.get('PATH_ENV') === 'production' ? '/modules/front-app/front-app.js' : 'http://localhost:3001/src/bundle.front-app.js',
           title: replaceContentWithData(page.title || 'Altrp', altrpContext),
           altrpContext,
           is_admin,

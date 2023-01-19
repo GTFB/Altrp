@@ -44,7 +44,9 @@ class ColorController extends Component {
   }
 
   closeColorPicker(e) {
-    if (!e.path.includes(this.contentRef.current)) {
+
+    const path = e.path || e.composedPath()
+    if (!path.includes(this.contentRef.current)) {
       this.setState({ active: false });
       document.removeEventListener("click", this.closeColorPicker);
     }

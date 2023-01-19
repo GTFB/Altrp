@@ -5,6 +5,7 @@ const axios = __importDefault(require("axios")).default;
 const Database = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
 const DB = Database.default;
 const _ = __importStar(require("lodash"));
+const Validator = global[Symbol.for('ioc.use')]("Adonis/Core/Validator");
 
 {{{imports}}}
 

@@ -16,7 +16,7 @@ import {
 } from "../modules/ControllersManager";
 import {actionsControllers} from "../../decorators/actions-controllers";
 
-class Accordion extends BaseElement {
+class ActionTrigger extends BaseElement {
   static getName() {
     return "action-trigger";
   }
@@ -58,7 +58,36 @@ class Accordion extends BaseElement {
           label: 'Timeout',
           value: 'timeout'
         },
+        {
+          label: 'Document Event',
+          value: 'event'
+        },
       ],
+      locked: true,
+    })
+
+    this.addControl('event', {
+      label: 'Event Name',
+      conditions: {
+        type: ['event']
+      },
+      locked: true,
+    })
+    this.addControl('prevent', {
+      label: 'Prevent Default Event Behavior',
+      type: CONTROLLER_SWITCHER,
+      conditions: {
+        type: ['event']
+      },
+      locked: true,
+    })
+
+    this.addControl('stop_event', {
+      label: 'Stop Event Propagation',
+      type: CONTROLLER_SWITCHER,
+      conditions: {
+        type: ['event']
+      },
       locked: true,
     })
 
@@ -85,4 +114,4 @@ class Accordion extends BaseElement {
   }
 }
 
-export default Accordion;
+export default ActionTrigger;

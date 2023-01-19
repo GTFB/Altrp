@@ -2,6 +2,7 @@
 
 
 @section('head')
+  {{{await applyPluginsFiltersAsync('editor_view_top_script', '')}}}
 
     <script src="{{ url }}?{{env('PACKAGE_KEY')}}" defer></script>
 
@@ -15,7 +16,8 @@
         window.isProd = {{{ isProd }}}
         window.altrp = {
           version: '{{getLatestVersion()}}',
-          isNodeJS: true
+          isNodeJS: true,
+          presetStyles: {{{presetStyles}}},
         };
         window.altrpMenus = [];
         window.container_width = {{{ get_altrp_setting( 'container_width', '1440' ) }}};
@@ -27,5 +29,6 @@
     </div>
     {{{await applyPluginsFiltersAsync('editor_view_bottom_script', '')}}}
     <div class="important_styles"></div>
+    <div class="preset_styles"></div>
 @end
 

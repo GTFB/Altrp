@@ -20,7 +20,25 @@ class DataStorageUpdater extends AltrpModel {
     this.setProperty("dataSourcesFormsDependent", []);
     this.setProperty("formsStore", appStore.getState().formsStore);
     appStore.subscribe(this.onStoreUpdate);
+    window.addEventListener("altrp-query-updated", this.onQueryUpdate)
+    this.queryString = location.search
   }
+
+  onQueryUpdate = _.debounce(async ()=>{
+    let currentDataSources = this.getProperty('currentDataSources')
+    currentDataSources = currentDataSources.filter(d=>d.getProperty('query_sync'))
+    if(currentDataSources.length ){
+      const queryString = location.search
+
+      if(this.queryString === queryString){
+        return
+      }
+      this.queryString = queryString
+
+
+      this.updateCurrent(currentDataSources, false)
+    }
+  }, 500)
 
   /**
    *  обновление currentDataStorage
@@ -173,7 +191,9 @@ class DataStorageUpdater extends AltrpModel {
                   ...params,
                   ...newParams,
                 };
-                res = await new Resource({
+                res = dataSource.getProperty('query_sync') ? await new Resource({
+                  route: dataSource.getWebUrl(),
+                }).getQueried(params, null,false, true) : await new Resource({
                   route: dataSource.getWebUrl(),
                 }).getQueried(params);
                 dataSource.params = _.cloneDeep(params);

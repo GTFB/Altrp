@@ -15,360 +15,7 @@ import {Checkbox} from "@blueprintjs/core";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-field-option-span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .altrp-field-radio .bp3-control-indicator.bp3-control-indicator {
-    background-image: none;
-  }
-
-  .altrp-field-container .altrp-field-checkbox.altrp-field-checkbox {
-    margin: 0
-  }
-
-  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator {
-    background-image: none;
-  }
-
-  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator:before {
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-
-.altrp-field {
-  border-style: solid;
-  width: 100%;
-}
-.altrp-field-file{
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.altrp-label-icon svg,
-.altrp-label-icon img {
-  width: 20px;
-}
-.altrp-label-icon svg{
-  height: 20px;
-}
-.altrp-field-file__field{
-  display: none;
-}
-.altrp-field-file__placeholder{
-  display: none;
-}
-.altrp-field-file_empty .altrp-field-file__placeholder{
-  display: block;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  background-color: rgb(52,59,76);
-  color: #fff;
-}
-.input-clear-btn {
-  background: transparent;
-  padding: 0;
-  position: absolute;
-  bottom: calc(50% - 7px);
-  right: 15px;
-  display: none;
-}
-.input-clear-btn:hover {
-  font-weight: bold;
-}
-.altrp-field:hover + .input-clear-btn, .input-clear-btn:hover {
-  display: block;
-}
-.altrp-input-wrapper, .altrp-field-select2 {
-  position: relative;
-  flex-grow: 1;
-}
-.altrp-field-label--required::after {
-  content: "*";
-  color: red;
-  font-size: inherit;
-  padding-left: 10px;
-}
-.altrp-field-label {
-  font-family: "Open Sans", Arial, sans-serif;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.altrp-field-select2__single-value, .altrp-field {
-  font-size: 16px;
-  font-family: "Open Sans", Arial, sans-serif;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.altrp-field-select2__control, .altrp-field {
-  text-align: left;
-  padding-top: 2px;
-  padding-right: 2px;
-  padding-bottom: 2px;
-  padding-left: 2px;
-  border-width: 1px;
-}
-.altrp-field-select2__control:hover{
-  border-width: 1px;
-}
-.altrp-field-container {
-  min-height: 10px;
-  margin: 0;
-}
-.altrp-field::placeholder, .altrp-field-select2__placeholder {
-  font-size: 13px;
-  font-family: "Open Sans", Arial, sans-serif;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.altrp-image-select {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.altrp-image-select img {
-  flex-grow: 1;
-  object-fit: contain;
-}
-.altrp-field {
-  overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.altrp-field.active {
-  border-color: lightcoral;
-}
-.altrp-field-label {
-  text-align: center;
-  display: block;
-}
-.altrp-pagination__select-size .altrp-field-select2__single-value {
-  font-size: 14px;
-}
-.altrp-pagination__select-size .altrp-field-select2__indicator-separator {
-  display: none;
-}
-.altrp-pagination__select-size .altrp-field-select2__indicator {
-  align-items: center;
-}
-.altrp-pagination__select-size .altrp-field-select2__control {
-  width: 100px;
-  min-height: 32px;
-  padding: 0;
-  border-radius: 0;
-  outline: none;
-  border-color: rgb(142,148,170);
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-.altrp-pagination__select-size .altrp-field-select2__control input {
-  border: none;
-}
-.altrp-field-select2 {
-  position: relative;
-  box-sizing: border-box;
-  pointer-events: none;
-}
-.altrp-field-select2__control {
-  webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: hsl(0,0%,100%);
-  border-color: hsl(0,0%,80%);
-  border-style: solid;
-  border-width: 1px;
-  cursor: default;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  min-height: 38px;
-  outline: 0 !important;
-  position: relative;
-  -webkit-transition: all 100ms;
-  transition: all 100ms;
-  box-sizing: border-box;
-}
-.altrp-field-select2__value-container {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  padding: 2px 8px;
-  -webkit-overflow-scrolling: touch;
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-.altrp-field-select2__single-value {
-  color: hsl(0,0%,20%);
-  margin-left: 2px;
-  margin-right: 2px;
-  max-width: calc(100% - 8px);
-  overflow: hidden;
-  position: absolute;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  box-sizing: border-box;
-}
-.altrp-field-select2__indicators {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-align-self: stretch;
-  -ms-flex-item-align: stretch;
-  align-self: stretch;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-.altrp-field-select2__indicator-separator {
-  -webkit-align-self: stretch;
-  -ms-flex-item-align: stretch;
-  align-self: stretch;
-  background-color: hsl(0,0%,80%);
-  margin-bottom: 8px;
-  margin-top: 8px;
-  width: 1px;
-  box-sizing: border-box;
-}
-.altrp-field-select2__indicator {
-  color: hsl(0,0%,80%);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 8px;
-  -webkit-transition: color 150ms;
-  transition: color 150ms;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-}
-.tba-placeholder {
-  display: flex;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: bold;
-}
-.altrp-field-subgroup {
-  display: flex;
-  flex-wrap: wrap;
-}
-.altrp-field-option {
-  display: flex;
-  padding: 10px;
-}
-.altrp-field-option__label {
-  cursor: pointer;
-}
-textarea.altrp-field {
-  display: block;
-}
-.altrp-table__filter-select .altrp-field-select2__placeholder {
-  white-space: nowrap;
-}
-.altrp-table__filter-select .altrp-field-select2__single-value {
-  font-size: 14px;
-}
-.altrp-table__filter-select .altrp-field-select2__indicator-separator {
-  display: none;
-}
-.altrp-table__filter-select .altrp-field-select2__indicator {
-  align-items: center;
-}
-.altrp-table__filter-select .altrp-field-select2__control {
-  width: 100%;
-  min-height: 19px;
-  padding: 0;
-  border-radius: 0;
-  outline: none;
-  border-color: rgb(142, 148, 170);
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-.altrp-table__filter-select .altrp-field-select2__control input {
-  border: none;
-}
-.altrp-table__filter-select .altrp-field-select2__value-container {
-  padding-top: 0;
-  padding-bottom: 0;
-  line-height: 13px;
-}
-.altrp-field-required {
-  color: red;
-  font-size: 18px;
-  padding-left: 10px;
-}
-.altrp-field-container-label {
-  display: flex;
-  flex-direction: row;
-}
-
-.altrp-field-label-container-left {
-  display: flex;
-  align-items: center;
-}
-
-.altrp-field-label-container {
-  display: inline-flex;
-  align-items: center;
-}
-.altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
-  padding: 0 8px;
-  max-height: 14px;
-  overflow: hidden;
-}
-.altrp-field-select2 .altrp-field-select2__value-container {
-  padding: 0px 8px;
-}
-.altrp-field-select2 .css-b8ldur-Input {
-  padding-bottom: 0px;
-  padding-top: 0px;
-  margin: 0 2px;
-}
-.altrp-field-select2 .altrp-field-select2__control {
-  min-height: 14px;
-}
-`)
+//(window.globalDefaults = window.globalDefaults || []).push(``)
 const AltrpFieldContainer = styled.div`
   ${({settings}) => {
     const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
@@ -394,10 +41,9 @@ class InputCheckboxWidget extends Component {
       window.elementDecorator(this);
     }
     this.onChange = this.onChange.bind(this);
-    this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
-      this.getLockedContent("content_default_value") ||
+      this.getLockedContent("content_default_value", true) ||
       (this.valueMustArray() ? [] : "");
     if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
       this.defaultValue = [];
@@ -413,7 +59,7 @@ class InputCheckboxWidget extends Component {
     this.altrpSelectRef = React.createRef();
     const value = this.getValue();
     if (!value && this.getLockedContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value", true));
     }
   }
 
@@ -478,16 +124,12 @@ class InputCheckboxWidget extends Component {
       this.setState(state => ({ ...state, options }));
     }
     let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getLockedContent для получение этого динамического значения
-     * старые динамические данные
-     * */
+
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getLockedContent("content_default_value", true);
     }
 
     /**
@@ -498,7 +140,7 @@ class InputCheckboxWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getLockedContent("content_default_value", true);
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -512,7 +154,7 @@ class InputCheckboxWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getLockedContent("content_default_value", true);
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -557,7 +199,7 @@ class InputCheckboxWidget extends Component {
     ) {
       let value = this.getLockedContent(
         "content_default_value",
-        this.props.element.getLockedSettings("select2_multiple")
+          true,
       );
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -575,7 +217,7 @@ class InputCheckboxWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value", true));
     }
 
     /**
@@ -804,87 +446,6 @@ class InputCheckboxWidget extends Component {
     );
   }
 
-  debounceDispatch = _.debounce(
-    value => this.dispatchFieldValueToStore(value, true),
-    150
-  );
-
-  /**
-   * получить опции
-   */
-  getOptions() {
-    let options = [...this.state.options];
-    const {element} = this.props
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-    const content_options = element.getResponsiveLockedSetting('content_options');
-    const model_for_options = element.getResponsiveLockedSetting('model_for_options');
-    if(_.isString(content_options)
-      && content_options?.indexOf('{{') === 0
-      && ! model_for_options){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
-      if( ! _.isArray(options)){
-        options = [];
-      }
-    }
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
-    if (!this.props.element.getLockedSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-    }
-    return options;
-  }
-
-  /**
-   * Для действие по фокусу
-   * @param e
-   * @return {Promise<void>}
-   */
-
-  onFocus = async e => {
-    const focus_actions = this.props.element.getLockedSettings("focus_actions");
-
-    if (focus_actions && !isEditor()) {
-      const actionsManager = (
-        await import(
-          /* webpackChunkName: 'ActionsManager' */
-          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-          )
-      ).default;
-      await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
-        "focus",
-        focus_actions,
-        this.props.element
-      );
-    }
-  };
-  /**
-   * Потеря фокуса для оптимизации
-   * @param  e
-   * @param  editor для получения изменений из CKEditor
-   */
-  onBlur = async (e, editor = null) => {
-    if (_.get(editor, "getData")) {
-      this.dispatchFieldValueToStore(editor.getData(), true);
-    }
-    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
-      const actionsManager = (
-        await import(
-          /* webpackChunkName: 'ActionsManager' */
-          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-          )
-      ).default;
-      await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
-        "blur",
-        this.props.element.getLockedSettings("actions", []),
-        this.props.element
-      );
-    }
-  };
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
@@ -900,6 +461,14 @@ class InputCheckboxWidget extends Component {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
+
+      let query_sync = this.props.element.getLockedSettings(
+        "query_sync"
+      );
+      if(!isEditor() && query_sync){
+        const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
+        updateQueryString(fieldName, value)
+      }
       if (userInput) {
         const change_actions = this.props.element.getLockedSettings("change_actions");
         if (change_actions && !isEditor()) {
@@ -1028,7 +597,7 @@ class InputCheckboxWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getLockedContent("content_default_value", true);
     }
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),

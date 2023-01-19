@@ -17,7 +17,7 @@ import saveDataToLocalStorage from "./saveDataToLocalStorage";
  * @return {boolean}
  */
 export default function setDataByPath(path = "", value, dispatch = null) {
-  if (!path) {
+  if (!path ||! window.appStore) {
     return false;
   }
   if (path.indexOf(",") !== -1) {
@@ -52,6 +52,7 @@ export default function setDataByPath(path = "", value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
+
     if (_.isFunction(dispatch)) {
       dispatch(changePageState(path, value));
     } else {

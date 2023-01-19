@@ -46,6 +46,7 @@ class InputWysiwygWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    this.editorRef = React.createRef()
     this.onChange = this.onChange.bind(this);
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
@@ -98,7 +99,10 @@ class InputWysiwygWidget extends Component {
    */
   clearValue() {
     let value = "";
-    this.onChange(value);
+    if(this.editor){
+      this.editor.data.set('')
+    }
+    this.onChange({value});
     this.dispatchFieldValueToStore(value, true);
   }
 
@@ -409,7 +413,9 @@ class InputWysiwygWidget extends Component {
       }
     }
   }
-
+  onLoad = (ed)=>{
+    this.editor = ed
+  }
   /**
    * Изменение значения в виджете
    * @param e
@@ -418,7 +424,7 @@ class InputWysiwygWidget extends Component {
   onChange(e, editor = null) {
     let value = "";
     let valueToDispatch;
-    const settings = this.props.element.getSettings();
+
     if (e && e.target) {
       value = e.target.value;
     }
@@ -681,10 +687,12 @@ class InputWysiwygWidget extends Component {
     return classes;
   }
 
-  renderWysiwyg() {
+  renderWysiwyg = () =>{
     return (
       <CKeditor
         onChange={this.onChange}
+        editorRef={this.editorRef}
+        onLoad={this.onLoad}
         onBlur={this.onBlur}
         placeholder={this.props.element.getResponsiveLockedSetting('content_placeholder')}
         changeText={this.dispatchFieldValueToStore}

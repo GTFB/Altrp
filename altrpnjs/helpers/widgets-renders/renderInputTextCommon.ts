@@ -92,6 +92,8 @@ export default function renderInputTextCommon(settings, device) {
     getName: () => getName(),
     readOnly: content_readonly,
     autoComplete: autocomplete,
+    settings,
+    device,
     widgetView: "popoverOff"
   })
 

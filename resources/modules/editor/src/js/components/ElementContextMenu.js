@@ -197,52 +197,94 @@ class ElementContextMenu extends Component {
     const elementPasteDisabled = !Boolean(
       getDataFromLocalStorage("altrp_element_to_copy")
     );
+
     return (
-      <Portal
-        className="altrp-portal altrp-portal_context-menu"
-        container={window.EditorFrame.contentWindow.document.body}>
-        <Menu id="element-menu">
-          <Item onClick={this.onEditItem}>Edit {elementTitle}</Item>
-          <Separator/>
-          <Item onClick={this.onSelectItem}>Copy</Item>
-          <Item onClick={this.duplicateElement}>Duplicate {elementTitle}</Item>
-          <Item onClick={this.onPasteElement} disabled={elementPasteDisabled}>
-            Paste
-          </Item>
-          <Separator/>
-          <Item
-            onClick={() => {
-              this.props.element.resetStyles();
-            }}
-          >
-            Reset Styles
-          </Item>
-          <Item onClick={this.copyStyles}>Copy Styles</Item>
-          <Item disabled={!stylesPasteEnable} onClick={this.pasteStyles}>
-            Paste Styles
-          </Item>
-          {this.showAddNewColumnItem() ? <Separator/> : ""}
-          {this.showAddNewColumnItem() ? (
-            <Item onClick={this.addNewColumn}>Add New Column</Item>
-          ) : (
-            ""
-          )}
-          <Separator/>
-          <Item onClick={this.onSelectItem}>Navigator</Item>
-          {this.showDeleteItem() ? (
-            <Item onClick={this.deleteElement}>Delete {elementTitle}</Item>
-          ) : (
-            ""
-          )}
-        </Menu>
-      </Portal>
+      <>
+        <Portal
+          className="altrp-portal altrp-portal_context-menu altrp-portal_editor-content"
+          container={window.EditorFrame.contentWindow.document.body}>
+          <Menu id="element-menu">
+            <Item onClick={this.onEditItem}>Edit {elementTitle}</Item>
+            <Separator/>
+            <Item onClick={this.onSelectItem}>Copy</Item>
+            <Item onClick={this.duplicateElement}>Duplicate {elementTitle}</Item>
+            <Item onClick={this.onPasteElement} disabled={elementPasteDisabled}>
+              Paste
+            </Item>
+            <Separator/>
+            <Item
+              onClick={() => {
+                this.props.element.resetStyles();
+              }}
+            >
+              Reset Styles
+            </Item>
+            <Item onClick={this.copyStyles}>Copy Styles</Item>
+            <Item disabled={!stylesPasteEnable} onClick={this.pasteStyles}>
+              Paste Styles
+            </Item>
+            {this.showAddNewColumnItem() ? <Separator/> : ""}
+            {this.showAddNewColumnItem() ? (
+              <Item onClick={this.addNewColumn}>Add New Column</Item>
+            ) : (
+              ""
+            )}
+            <Separator/>
+            <Item onClick={this.onSelectItem}>Navigator</Item>
+            {this.showDeleteItem() ? (
+              <Item onClick={this.deleteElement}>Delete {elementTitle}</Item>
+            ) : (
+              ""
+            )}
+          </Menu>
+        </Portal>
+        <Portal
+          className="altrp-portal altrp-portal_context-menu altrp-portal_editor"
+          container={window.document.body}>
+          <Menu id="element-menu-main-window">
+            <Item onClick={this.onEditItem}>Edit {elementTitle}</Item>
+            <Separator/>
+            <Item onClick={this.onSelectItem}>Copy</Item>
+            <Item onClick={this.duplicateElement}>Duplicate {elementTitle}</Item>
+            <Item onClick={this.onPasteElement} disabled={elementPasteDisabled}>
+              Paste
+            </Item>
+            <Separator/>
+            <Item
+              onClick={() => {
+                this.props.element.resetStyles();
+              }}
+            >
+              Reset Styles
+            </Item>
+            <Item onClick={this.copyStyles}>Copy Styles</Item>
+            <Item disabled={!stylesPasteEnable} onClick={this.pasteStyles}>
+              Paste Styles
+            </Item>
+            {this.showAddNewColumnItem() ? <Separator/> : ""}
+            {this.showAddNewColumnItem() ? (
+              <Item onClick={this.addNewColumn}>Add New Column</Item>
+            ) : (
+              ""
+            )}
+            <Separator/>
+            <Item onClick={this.onSelectItem}>Navigator</Item>
+            {this.showDeleteItem() ? (
+              <Item onClick={this.deleteElement}>Delete {elementTitle}</Item>
+            ) : (
+              ""
+            )}
+          </Menu>
+        </Portal>
+      </>
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    element: state.currentContextElement.currentElement
+    element: state.currentContextElement.currentElement,
+    inMainWindow: state.currentContextElement.inMainWindow,
   };
 }
 

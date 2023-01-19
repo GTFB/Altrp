@@ -9,8 +9,9 @@ module.exports ={
   mode: 'production',
   entry: {
     'h-altrp': "./resources/modules/front-app/src/h-altrp",
+    //'lib-altrp': "./resources/modules/front-app/src/js/libs/altrp",
   },
-  devtool: 'source-map',
+  // devtool: 'source-map',
   module: {
     rules: [
       {
@@ -68,32 +69,32 @@ module.exports ={
     filename: "[name].js"
   },
 
-  optimization:{
-    chunkIds: 'named',
-    concatenateModules: true,
-    minimize: false,
-    splitChunks: {
-      chunks: 'async',
-      minSize: 20000,
-      minRemainingSize: 0,
-      minChunks: 1,
-      maxAsyncRequests: 30,
-      maxInitialRequests: 30,
-      enforceSizeThreshold: 50000,
-      cacheGroups: {
-        defaultVendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10,
-          reuseExistingChunk: true,
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true,
-        },
-      },
-    },
-  },
+  // optimization:{
+  //   chunkIds: 'named',
+  //   concatenateModules: true,
+  //   minimize: false,
+  //   splitChunks: {
+  //     chunks: 'async',
+  //     minSize: 20000,
+  //     minRemainingSize: 0,
+  //     minChunks: 1,
+  //     maxAsyncRequests: 30,
+  //     maxInitialRequests: 30,
+  //     enforceSizeThreshold: 50000,
+  //     cacheGroups: {
+  //       defaultVendors: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         priority: -10,
+  //         reuseExistingChunk: true,
+  //       },
+  //       default: {
+  //         minChunks: 2,
+  //         priority: -20,
+  //         reuseExistingChunk: true,
+  //       },
+  //     },
+  //   },
+  // },
   plugins: [
     // new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),

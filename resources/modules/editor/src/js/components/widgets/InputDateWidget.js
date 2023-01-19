@@ -25,6 +25,9 @@ import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-re
     font-weight: normal;
     font-family: Open Sans;
   }
+  .bp3-popover-wrapper.state-disabled {
+    display: block;
+  }
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -132,7 +135,8 @@ class InputDateWidget extends Component {
       value = this.getLockedContent("content_default_value");
 
       if(value) {
-        value = moment(value).locale(this.locale).toDate()
+        const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
+        value = moment(value, format).locale(this.locale).toDate()
         this.setState(
           state => ({ ...state, value, contentLoaded: true }),
           () => {
@@ -271,9 +275,10 @@ class InputDateWidget extends Component {
         this.props.formsStore !== prevProps.formsStore &&
         _.get(altrpforms, path) !== this.state.value
       ) {
+        const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
         this.setState(state => ({
           ...state,
-          value: moment(_.get(altrpforms, path)).locale(this.locale).toDate()
+          value: moment(_.get(altrpforms, path), format).locale(this.locale).toDate()
         }));
       }
       return;
@@ -676,7 +681,7 @@ class InputDateWidget extends Component {
             return moment(str, this.typeDate).locale(locale).toDate();
           }}
           timePickerProps={timePickerProps}
-          disabled={this.state.settings.content_readonly}
+          disabled={this.isDisabled() || this.state.settings.content_readonly}
           placeholder={this.state.settings.content_placeholder}
           formatDate={(date, locale) => {
             return moment(date).locale(locale).format(format);

@@ -10,7 +10,6 @@ import JSONStringifyEscape from "../../helpers/string/JSONStringifyEscape";
 import * as _ from "lodash";
 import getLatestVersion from "../../helpers/getLatestVersion";
 import Env from "@ioc:Adonis/Core/Env";
-import env from "../../helpers/env";
 import base_path from "../../helpers/path/base_path";
 import AltrpMeta from "App/Models/AltrpMeta";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
@@ -20,6 +19,7 @@ import {encode} from "html-entities";
 import get_altrp_setting from "../../helpers/get_altrp_setting";
 import storage_path from "../../helpers/storage_path";
 import config from "../../helpers/config";
+import altrpRandomId from "../../helpers/altrpRandomId";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -66,6 +66,7 @@ export default class PageGenerator extends BaseGenerator {
       console.error(`Page ${page.id} render error. Need more data`);
       return false
     }
+    const randomString = altrpRandomId()
 
     this.page = page
     this.setGlobal('altrpSettings', {})
@@ -81,8 +82,9 @@ export default class PageGenerator extends BaseGenerator {
     })
 
     let elements_list: string[] | string = await page.extractElementsNames()
+    let all_elements_list: string[] | string = await page.extractElementsNames(false)
 
-    const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list)
+    const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list, all_elements_list)
     elements_list = elements_list.map(e => `'${e}'`)
 
     const head_start = get_altrp_setting('head_start', '', true)
@@ -143,8 +145,8 @@ export default class PageGenerator extends BaseGenerator {
         .stub(PageGenerator.template)
         .apply({
           hAltrp: Env.get('PATH_ENV') === 'production'
-            ? `/modules/front-app/h-altrp.js?${env('PACKAGE_KEY')}`
-            : 'http://localhost:3002/src/h-altrp.js',
+            ? `/modules/front-app/h-altrp.js?${randomString}`
+            : `http://localhost:3002/src/h-altrp.js?${randomString}`,
           children_content,
           fonts,
           elements_list,
@@ -167,6 +169,7 @@ export default class PageGenerator extends BaseGenerator {
             version: getLatestVersion(),
             pageGuid: page.guid,
             popupsGuids: await page.getPopupsGuids(),
+            randomString,
             isNodeJS: true
           }),
         }, false, true)
@@ -175,16 +178,17 @@ export default class PageGenerator extends BaseGenerator {
     return true
   }
 
-  async getExtraStyles(elementsList): Promise<{
+  async getExtraStyles(reactElementsList, allElementsList: any = []): Promise<{
     extra_header_styles: string
     extra_footer_styles: string
   }> {
-    const extraStyles = {
+
+    let extraStyles = {
       extra_header_styles: '',
       extra_footer_styles: '',
     }
     extraStyles.extra_header_styles += `<style id="extra_header_styles">`
-    for (let element of elementsList) {
+    for (let element of reactElementsList) {
       const fileName = app_path(`/altrp-templates/styles/elements/${element}.css`)
       if (fs.existsSync(fileName)) {
         let content = fs.readFileSync(fileName, {encoding: 'utf8'})
@@ -199,6 +203,8 @@ export default class PageGenerator extends BaseGenerator {
       extraStyles.extra_header_styles += global_styles_editor ?
         `<style id="global_styles_editor">${global_styles_editor}</style>` : ''
     }
+    extraStyles = await applyPluginsFiltersAsync('extra_styles_filter', extraStyles, reactElementsList, allElementsList)
+
     return extraStyles
   }
 

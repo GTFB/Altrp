@@ -2,6 +2,7 @@ import parseURLTemplate from "../parseURLTemplate"
 import * as _ from 'lodash'
 import getResponsiveSetting from "../getResponsiveSetting"
 import renderAsset from "../renderAsset";
+import altrpRandomId from "../altrpRandomId";
 
 export default function renderButton(settings, device, elementId) {
   let clickActions = settings.actions || []
@@ -310,7 +311,7 @@ export default function renderButton(settings, device, elementId) {
   ) {
 
       let target = _.get(settings, "link_link.openInNew")
-        ? "_blank"
+        ? altrpRandomId()
         : ""
       link = (`<a
           href="${url}"

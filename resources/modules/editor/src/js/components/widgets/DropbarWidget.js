@@ -9,76 +9,7 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-btn-wrapper_dropbar.altrp-btn-wrapper {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-
-    & img {
-      max-width: 100%;
-    }
-  }
-
-  .altrp-dropbar-content p {
-    margin-top: 0;
-    margin-bottom: 10px;
-  }
-
-  .altrp-dropbar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-  }
-
-  .altrp-dropbar-children-wrapper {
-    display: flex;
-    position: relative;
-  }
-
-  .altrp-btn-dropbar {
-    width: 100%;
-  }
-
-  .altrp-dropbar-container {
-    position: absolute;
-    color: #666;
-    padding: 30px;
-    background-color: #f1f3f5;
-  }
-
-  .altrp-dropbar-content {
-    user-select: text;
-  }
-
-  .altrp-dropbar-container-hide {
-    visibility: hidden;
-  }
-
-  .altrp-dropbar-variant-bottom-center .altrp-dropbar-children-wrapper {
-    position: static;
-    justify-content: center;
-  }
-
-  .altrp-dropbar-variant-top-center .altrp-dropbar-children-wrapper {
-    position: static;
-    justify-content: center;
-  }
-
-  .altrp-dropbar-variant-left-center .altrp-dropbar-children-wrapper {
-    align-items: center;
-  }
-
-  .altrp-dropbar-variant-right-center .altrp-dropbar-children-wrapper {
-    align-items: center;
-  }
-
-  .altrp-dropbar-container {
-    z-index: 9999;
-  }
-`);
+(window.globalDefaults = window.globalDefaults || []).push(``);
 
 
 class DropbarWidget extends Component {

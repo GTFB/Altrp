@@ -1,15 +1,10 @@
+import {Checkbox} from "@blueprintjs/core";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
-import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import valueReplacement from "../../../../../front-app/src/js/functions/valueReplacement";
 import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
-import parseParamsFromString from "../../../../../front-app/src/js/functions/parseParamsFromString";
-import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
-import convertData from "../../../../../front-app/src/js/functions/convertData";
-import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import AltrpModel from "../../classes/AltrpModel";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
 
@@ -380,7 +375,7 @@ class InputAcceptWidget extends Component {
       this.defaultValue = [];
     }
     this.state = {
-      settings: { ...props.element.getSettings() },
+      settings: { ...props.element.settings, ...props.element.settingsLock },
       value: this.defaultValue,
       paramsForUpdate: null
     };
@@ -884,6 +879,15 @@ class InputAcceptWidget extends Component {
         };
         classLabel = "altrp-field-label-container-left";
         break;
+      case "right":
+        styleLabel = {
+          marginLeft: this.state.settings.label_style_spacing
+            ? this.state.settings.label_style_spacing.size +
+            this.state.settings.label_style_spacing.unit
+            : 2 + "px"
+        };
+        classLabel = "altrp-field-label-container-left";
+        break;
       case "absolute":
         styleLabel = {
           position: "absolute",
@@ -906,6 +910,7 @@ class InputAcceptWidget extends Component {
           style={styleLabel}
         >
           <label
+            htmlFor={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
             className={`${classes} altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
@@ -966,10 +971,10 @@ class InputAcceptWidget extends Component {
     return (
       <div className={` ${classes} altrp-field-option ${value ? "active" : ""}`}>
         <span className={`${classes} altrp-field-option-span`}>
-          <input
+          <Checkbox
             type="checkbox"
             name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-            className={` ${classes} altrp-field-option__input ${value ? "active" : ""}`}
+            className={` ${classes} altrp-field-checkbox altrp-field-option__input altrp-field-option__input ${value ? "active" : ""}`}
             onChange={this.onChange}
             checked={!!value}
             id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}

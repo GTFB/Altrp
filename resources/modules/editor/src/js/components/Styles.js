@@ -53,7 +53,6 @@ class Styles extends Component {
           elementStyle.styles = styles;
           needUpdate = true;
         } else {
-          // console.log(styles);
         }
       }
     });

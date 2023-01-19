@@ -59,7 +59,9 @@ class SaveImportModule extends BaseModule {
           store.dispatch(setTemplateData(templateData));
           let templateDataStorage = getEditor().modules.templateDataStorage;
           templateDataStorage.setType(templateData.template_type);
+
           let parsedData = this.modules.elementsFactory.parseData(data);
+
           templateDataStorage.setTitle(templateData.title);
           templateDataStorage.replaceAll(parsedData);
           templateDataStorage.setName(templateData.name);

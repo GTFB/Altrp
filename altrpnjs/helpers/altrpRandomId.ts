@@ -1,6 +1,6 @@
 
-export default function altrpRandomId() {
+export default function altrpRandomId():string {
   return Math.random()
     .toString(36)
-    .substr(2, 9);
+    .substring(2, 9);
 }

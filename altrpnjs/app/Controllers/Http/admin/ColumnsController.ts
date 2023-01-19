@@ -43,7 +43,13 @@ export default class ColumnsController {
         const client = Database.connection(Env.get('DB_CONNECTION'))
 
         await client.schema.table(model.table.name,table=>{
-          let query = table[column.type](column.name, column.size)
+          let type = column.type
+          let size: string | number = column.size
+          if(type.toLowerCase() === 'longtext'){
+            type = 'text'
+            size = 'longtext'
+          }
+          let query = table[type](column.name, size)
           if(column.type === 'bigInteger' && column.attribute === 'unsigned'){
             query = query.unsigned()
           }

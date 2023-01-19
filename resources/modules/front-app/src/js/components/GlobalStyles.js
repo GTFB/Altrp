@@ -173,7 +173,8 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEd
         case "input-select2": {
           styles += `.${prefix}${id} {${FormComponent.FormComponent(
             item.settings,
-            id
+            id,
+            item.name
           )}}`;
           //select2 options style
           styles += `${FormComponent.select2Options(item.settings, id)}}`;
@@ -295,7 +296,8 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEd
         case "input-wysiwyg": {
           styles += `.${prefix}${id} {${FormComponent.FormComponent(
             item.settings,
-            id
+            id,
+            item.name
           )}}`;
         }
           break;

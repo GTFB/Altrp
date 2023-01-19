@@ -33,6 +33,7 @@ import { WithRouterAdminTablesDropList } from "./components/AdminTablesDropList"
 import { WithRouterAdminTemplatesDropList } from "./components/AdminTemplatesDropList";
 import { WithRouterAdminUsersDropList } from "./components/AdminUsersDropList";
 import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
+import {WithRouterAdminCustomizersDropList} from "./components/AdminCustomizersDropList";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -49,7 +50,7 @@ import {modelsToggle} from "./js/store/models-state/actions";
 import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
 import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
-import {io} from "socket.io-client";
+//import {io} from "socket.io-client";
 import {addRoute, editModels, setRoutes, setMainMenu} from "./js/store/routes-state/action";
 import getAltrpLang from "./js/helpers/get-altrp-lang";
 import {addAltSeoSettings} from "./js/store/plugins-state/action";
@@ -130,17 +131,17 @@ class Admin extends Component {
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
 
-    if(currentUser.guid && !window.altrpIo) {
-      window.altrpIo = io( {
-        path: '/wsaltrp',
-        auth: {
-          key: currentUser.guid,
-        },
-      })
-      window.altrpIo.on("message", (data) => {
-        console.log(data)
-      })
-    }
+    // if(currentUser.guid && !window.altrpIo) {
+    //   window.altrpIo = io( {
+    //     path: '/wsaltrp',
+    //     auth: {
+    //       key: currentUser.guid,
+    //     },
+    //   })
+    //   window.altrpIo.on("message", (data) => {
+    //     console.log(data)
+    //   })
+    // }
   }
 
   /**
@@ -320,6 +321,7 @@ class Admin extends Component {
                               <DropletSvg className="icon__droplet"/>
                               <span>Robotizers</span>
                             </Link>
+                            <WithRouterAdminCustomizersDropList menu={this.state.menu}  activeButton={() => this.setState({ activeButton: 4 })}/>
                           </li>
                         ) : (
                           <li>
@@ -515,6 +517,7 @@ class Admin extends Component {
                             >
                               <RobotsSvg className="icon-mini" />
                             </Link>
+                            <WithRouterAdminCustomizersDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                           </li>
                         ) : (
                           <li>
@@ -604,7 +607,7 @@ class Admin extends Component {
         </div>
         <AdminModal />
         {/*<UserTopPanel />*/}
-        <AssetsBrowser />
+        <AssetsBrowser rawEnable={true}/>
         <iframe src="https://altrp.market/get_api_token" style={{height:0,width:0}}/>
       </div>
     );

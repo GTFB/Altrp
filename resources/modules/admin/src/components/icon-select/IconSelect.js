@@ -1,19 +1,22 @@
 import React, {Component} from "react";
 import store from '../../js/store/store'
 import {assetsShow} from "../../../../editor/src/js/store/assets-browser/actions";
-import { iconsManager } from "../../js/helpers";
 import styled from "styled-components";
+
 
 const IconSelectWrapper = styled.div`
   & svg{
-    max-width: ${({maxWidth}) => maxWidth || '200px'};
-    max-height: ${({maxHeight}) => maxHeight || '200px'};
+    width: 25px;
+    height: 25px;
   }
-  & .altrp-icon-select__content{
-    padding: 20px;
+  &{
+    width: 60px;
+    height: 60px;
     background-color: #F7F8F9;
     display: flex;
     justify-content: center;
+    align-items: center;
+    cursor: pointer;
   }
 `;
 
@@ -78,14 +81,23 @@ class IconSelect extends Component {
   }
 
   render(){
-    return <IconSelectWrapper
+    return <><IconSelectWrapper
       className={"altrp-icon-select " + this.props.className || ''}
       id={this.props.id}
+      dangerouslySetInnerHTML={{__html: this.props.value || `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11 9H20V11H11V20H9V11H0V9H9V0H11V9Z" fill="#333333"/>
+</svg>
+`}}
       onClick={this.openAssetsBrowser} {...this.props}>
-      {this.props.value ?
-        <div className="altrp-icon-select__content " dangerouslySetInnerHTML={{__html: this.props.value}}/>
-        : iconsManager().renderIcon('add')}
+
+
     </IconSelectWrapper>
+      {this.props.value &&
+      <button onClick={()=>{
+        this.props.onChange && this.props.onChange('')
+      }
+      } className="btn btn_link text-danger fs-2 altrp-menu-item__delete">delete Icon</button>}
+    </>
   }
 }
 

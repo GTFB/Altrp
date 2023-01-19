@@ -66,8 +66,8 @@ class ActionsManager extends AltrpModel{
     for (let action of actions){
       try {
         let result = await action.doAction();
-        if(! result.success){
-          if(result.error){
+        if(! result?.success){
+          if(result?.error){
             console.error(result.error);
             errors.push(result.error);
           }

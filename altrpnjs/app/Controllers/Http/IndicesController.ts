@@ -2,13 +2,16 @@ import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import Edge from "../../../helpers/edge";
 import Env from "@ioc:Adonis/Core/Env";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import Drive from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
 import path from "path";
 import isProd from "../../../helpers/isProd";
 import base_path from "../../../helpers/path/base_path";
 import applyPluginsFiltersSync from "../../../helpers/plugins/applyPluginsFiltersSync";
 import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFiltersAsync";
+import fs from "fs";
+import app_path from "../../../helpers/path/app_path";
+import AltrpMeta from "App/Models/AltrpMeta";
+import mbParseJSON from "../../../helpers/mbParseJSON";
 
 
 export default class IndicesController {
@@ -31,10 +34,17 @@ export default class IndicesController {
     }))
   }
 
-  public editor({view}) {
+  public async editor({view}) {
+    let global_styles:any = (await AltrpMeta.query().where('meta_name', 'global_styles').first())
+    if(global_styles){
+      global_styles = global_styles.meta_value
+    } else {
+      global_styles = '{}'
+    }
     return view.render('editor', Edge({
       isProd: isProd(),
       applyPluginsFiltersSync,
+      presetStyles: global_styles,
       applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.js?${Env.get('PACKAGE_KEY')}` :
@@ -54,7 +64,21 @@ export default class IndicesController {
   }
 
   public editorContent({ view }) {
+    let style = ''
+    const files = fs.readdirSync(app_path('altrp-templates/styles/elements'))
+    for(const f of files){
+
+      if(path.extname(f) === '.css'){
+        try {
+          style += fs.readFileSync(app_path(`altrp-templates/styles/elements/${f}`))
+        }catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
     return view.render('editor-content', Edge({
+      style,
       css: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.css` : null
     }))
@@ -65,7 +89,9 @@ export default class IndicesController {
 
     response.header("Content-Type", "text/javascript")
 
-    const file = await Drive.get(pathToPublic)
+    const file = fs.readFileSync(pathToPublic, {
+      encoding: 'utf8'
+    })
 
     return file
   }
@@ -84,7 +110,7 @@ export default class IndicesController {
 
   public async login({auth, request, response, }: HttpContextContract) {
     const loginSchema = schema.create({
-      password: schema.string({trim: true}, [
+      password: schema.string({trim: true,}, [
         rules.minLength(8)
       ]),
       email: schema.string({trim: true}, [
@@ -140,10 +166,16 @@ export default class IndicesController {
   public async changelog({ response }) {
     const pathToPublic = base_path( "CHANGELOG.md");
     let file:any = ''
-    try {
-       file = await Drive.get(pathToPublic)
-    } catch (e) {
 
+    try {
+       file = fs.readFileSync(pathToPublic, {
+         encoding: 'utf8'
+       })
+    } catch (e) {
+      file = fs.readFileSync(base_path( "../CHANGELOG.md"), {
+        encoding: 'utf8'
+      })
+      console.error(e);
     }
 
     response.header('Content-type', 'text/plain');
@@ -173,10 +205,14 @@ export default class IndicesController {
     const faviconPath = Application.tmpPath("favicon") + `/${params.path}`;
     const defaultFaviconPath = Application.resourcesPath("favicon") + `/altrp_${params.path}`
 
-    if(await Drive.exists(faviconPath)) {
-      value = await Drive.get(faviconPath)
-    } else if(await Drive.exists(defaultFaviconPath)) {
-      value = await Drive.get(defaultFaviconPath)
+    if(fs.existsSync(faviconPath)) {
+      value = fs.readFileSync(faviconPath, {
+        encoding: 'utf8'
+      })
+    } else if(fs.existsSync(defaultFaviconPath)) {
+      value = fs.readFileSync(defaultFaviconPath, {
+        encoding: 'utf8'
+      })
     }
 
     if(value) {

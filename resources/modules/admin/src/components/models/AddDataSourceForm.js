@@ -73,7 +73,7 @@ class AddDataSourceForm extends Component {
 
   ItemPredicate = (query, value) => {
     return (
-      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+      `${value.label?.toLowerCase()}`.indexOf(query?.toLowerCase()) >= 0
     );
   }
 
@@ -479,47 +479,47 @@ class AddDataSourceForm extends Component {
             </Select>
           </div>
 
-          <div className="form-group__inline-wrapper">
-            <div className="form-group form-group_width47">
-              <label htmlFor="data-source-url" className="data-source-label">Route</label>
-              {/*<input type="text" id="data-source-url" required*/}
-              {/*       value={this.state.value.url}*/}
-              {/*       onChange={e => {*/}
-              {/*         this.changeValue(e.target.value, 'url')*/}
-              {/*       }}*/}
-              {/*       className="form-control"/>*/}
+          {/*<div className="form-group__inline-wrapper">*/}
+          {/*  <div className="form-group form-group_width47">*/}
+          {/*    <label htmlFor="data-source-url" className="data-source-label">Route</label>*/}
+          {/*    /!*<input type="text" id="data-source-url" required*!/*/}
+          {/*    /!*       value={this.state.value.url}*!/*/}
+          {/*    /!*       onChange={e => {*!/*/}
+          {/*    /!*         this.changeValue(e.target.value, 'url')*!/*/}
+          {/*    /!*       }}*!/*/}
+          {/*    /!*       className="form-control"/>*!/*/}
 
-              <InputGroup type="text"
-                          id="data-source-url"
-                          required
-                          value={this.state.value.url}
-                          onChange={e => {
-                            this.changeValue(e.target.value, 'url')
-                          }}
-                          className="form-control-blueprint"
-              />
-            </div>
+          {/*    <InputGroup type="text"*/}
+          {/*                id="data-source-url"*/}
+          {/*                required*/}
+          {/*                value={this.state.value.url}*/}
+          {/*                onChange={e => {*/}
+          {/*                  this.changeValue(e.target.value, 'url')*/}
+          {/*                }}*/}
+          {/*                className="form-control-blueprint"*/}
+          {/*    />*/}
+          {/*  </div>*/}
 
-            <div className="form-group form-group_width47">
-              <label htmlFor="data-source-api_url" className="data-source-label">API Route</label>
-              {/*<input type="text" id="data-source-api_url" required*/}
-              {/*       value={this.state.value.api_url}*/}
-              {/*       onChange={e => {*/}
-              {/*         this.changeValue(e.target.value, 'api_url')*/}
-              {/*       }}*/}
-              {/*       className="form-control"/>*/}
+          {/*  <div className="form-group form-group_width47">*/}
+          {/*    <label htmlFor="data-source-api_url" className="data-source-label">API Route</label>*/}
+          {/*    /!*<input type="text" id="data-source-api_url" required*!/*/}
+          {/*    /!*       value={this.state.value.api_url}*!/*/}
+          {/*    /!*       onChange={e => {*!/*/}
+          {/*    /!*         this.changeValue(e.target.value, 'api_url')*!/*/}
+          {/*    /!*       }}*!/*/}
+          {/*    /!*       className="form-control"/>*!/*/}
 
-              <InputGroup type="text"
-                          id="data-source-api_url"
-                          required
-                          value={this.state.value.api_url}
-                          onChange={e => {
-                            this.changeValue(e.target.value, 'api_url')
-                          }}
-                          className="form-control-blueprint"
-              />
-            </div>
-          </div>
+          {/*    <InputGroup type="text"*/}
+          {/*                id="data-source-api_url"*/}
+          {/*                required*/}
+          {/*                value={this.state.value.api_url}*/}
+          {/*                onChange={e => {*/}
+          {/*                  this.changeValue(e.target.value, 'api_url')*/}
+          {/*                }}*/}
+          {/*                className="form-control-blueprint"*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
           <h2 className="admin-form__subheader centred">Access</h2>
 
@@ -626,45 +626,6 @@ class AddDataSourceForm extends Component {
           </div>
         </div>
 
-        <div className="admin-form-dataSources__create">
-          <div className="admin-form-dataSources__block">
-            <div className="admin-form-dataSources__top">
-              <h2 className="admin-form__subheader">Headers</h2>
-              <button className="btn btn_success" type="button" onClick={this.headerAddHandler}>
-                + New Header
-              </button>
-            </div>
-
-
-            {headers && headers.map((item, index) => <Fragment key={index}>
-             <div className={index !== 0 ? "HeaderComponent__block dataSources__border" : "HeaderComponent__block"}>
-               <HeaderComponent item={item} changeHandler={e => this.headerChangeHandler(e, index)}/>
-               <button className="btn btn_failure" type="button" onClick={() => this.headerDeleteHandler(index)}>
-                 ✖
-               </button>
-             </div>
-            </Fragment>)}
-          </div>
-
-          <div className="admin-form-dataSources__block">
-            <div className="admin-form-dataSources__top">
-              <h2 className="admin-form__subheader">Bodies</h2>
-              <button className="btn btn_success" type="button" onClick={this.bodyAddHandler}>
-                + New Body
-              </button>
-            </div>
-
-
-            {bodies && bodies.map((item, index) => <Fragment key={index}>
-              <div className={index !== 0 ? "HeaderComponent__block dataSources__border" : "HeaderComponent__block"}>
-                <HeaderComponent item={item} changeHandler={e => this.bodyChangeHandler(e, index)}/>
-                <button className="btn btn_failure" type="button" onClick={() => this.bodyDeleteHandler(index)}>
-                  ✖
-                </button>
-              </div>
-            </Fragment>)}
-          </div>
-        </div>
       </form>
     )
   }

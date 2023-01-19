@@ -48,7 +48,7 @@ export default class GeneratorPage extends BaseCommand {
           throw new Error(`Page (id: ${page.id}) is invalid`)
         }
       } catch (err) {
-        console.error(`Error occurred while generating Page ${page.guid}: ${err.message}`)
+        console.error(`Error occurred while generating Page ${page.title}: ${err.message}`)
         console.error(err)
         failure.push(err)
       }

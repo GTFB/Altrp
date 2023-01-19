@@ -280,7 +280,11 @@ class Column extends BaseElement {
       type: CONTROLLER_MEDIA,
       locked: true,
       label: 'Background Image',
-      default: { url: "" },
+    });
+
+    this.addControl('path_image', {
+      locked: true,
+      label: 'Path to Background Image',
     });
 
     this.addControl('background_position', {

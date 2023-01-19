@@ -10,7 +10,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts)$/,
         exclude: /(node_modules|bower_components).*/,
         loader: "babel-loader",
         options: {
@@ -99,7 +99,7 @@ module.exports = {
       "Access-Control-Allow-Headers":
         "X-Requested-With, content-type, Authorization"
     },
-    hotOnly: true
+
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -109,7 +109,6 @@ module.exports = {
     new WebpackBuildNotifierPlugin({
       title: "Editor"
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       "process.env": "{}",

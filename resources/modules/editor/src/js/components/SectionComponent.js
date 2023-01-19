@@ -1,5 +1,6 @@
 import isEditor from "../../../../front-app/src/js/functions/isEditor";
 import redirect from "../../../../front-app/src/js/functions/redirect";
+import getDataByPath from "../../../../front-app/src/js/functions/getDataByPath";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-section {
@@ -87,6 +88,7 @@ class SectionComponent extends Component {
     if (props.baseRender) {
       this.render = props.baseRender(this);
     }
+    this.element = this.props.element;
   }
 
   /**
@@ -117,6 +119,13 @@ class SectionComponent extends Component {
       maxWidth: "100%"
     };
 
+    let path_image = this.element.getSettings('path_image')
+    if(path_image){
+      path_image = getDataByPath(path_image, this.element.getCardModel())
+    }
+    if(path_image){
+      styles.backgroundImage = `url("${path_image}")`
+    }
     let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_section")
     if (deleteOverflowHidden) styles.overflow = 'initial'
     const background_image = this.props.element.getLockedSettings(

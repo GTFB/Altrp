@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ getLocale() }}">
+{{=<% %>=}}
+<html lang="{{lang}}">
+<%={{ }}=%>
 <head>
 {{{head_start}}}
  {{{fonts}}}
@@ -55,7 +57,7 @@
     </div>
       <script id="main-script-altrp">
         /* <![CDATA[ */
-        {{=<% %>=}}
+{{=<% %>=}}
         window['h-altrp'] = true;
         window.isProd = {{{ isProd }}}
 <%={{ }}=%>
@@ -102,5 +104,8 @@
     <link rel="dns-prefetch" href="/css/creative-link.css"/>
 
 {{{body_end}}}
+<link rel="stylesheet" href="/css/fontawesome.min.css">
+<link rel="stylesheet" href="/css/regular.min.css">
+<link rel="stylesheet" href="/css/solid.min.css">
 </body>
 </html>

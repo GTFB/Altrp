@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
 import CONSTANTS from "../consts";
+import getDataByPath from "../../../../front-app/src/js/functions/getDataByPath";
 
 // (window.globalDefaults = window.globalDefaults || []).push(`
 //   .altrp-section {
@@ -155,6 +156,13 @@ class SectionWidgetComponent extends Component {
     const layout_html_tag =
       this.props.element.getSettings("layout_html_tag") || "div";
 
+    let path_image = this.props.element.getSettings('path_image')
+    if(path_image){
+      path_image = getDataByPath(path_image, this.element.getCardModel())
+    }
+    if(path_image){
+      styles.backgroundImage = `url("${path_image}")`
+    }
     return React.createElement(
       layout_html_tag,
       {

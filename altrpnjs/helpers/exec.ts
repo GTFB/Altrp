@@ -7,13 +7,20 @@ async function exec(command: string):Promise<string|null> {
   try {
     const { stdout, stderr } = await execAsync(command)
     if (stderr) {
+      console.error(`Exec ${command} Command Error:`)
       console.error(stderr)
+      if (stdout?.trim()?.length) {
+        console.log(stdout.trim())
+      }
+      return stderr
     } else if (stdout?.trim()?.length) {
       console.log(stdout.trim())
       return stdout
     }
   } catch(err) {
+    console.error(`Exec ${command} Command Error:`)
     console.error(err)
+    return err
   }
   return null
 }

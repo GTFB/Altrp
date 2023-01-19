@@ -9,6 +9,7 @@ import {
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 import INPUT_WIDGETS from "../constants/INPUT_WIDGETS";
+
 window.elementsCount = 0
 class FrontElement {
 
@@ -24,7 +25,7 @@ class FrontElement {
     this.id = data.id;
     if(isEditor() && ! withoutComponent && this.getName()){
       this.componentClass = window.elementsManager.getComponentClass(this.getName());
-    } else if(window.frontElementsManager && ! withoutComponent){
+    } else if(window.frontElementsManager && ! withoutComponent && this.name !== 'repeater'){
 
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
@@ -485,6 +486,10 @@ class FrontElement {
     if(this.type === 'root-element'){
       return `.altrp-template-root${this.getId()}`;
     }
+
+    if(this.settings.global_styles_presets){
+      return `.altrp-preset_${this.settings.global_styles_presets}`
+    }
     return `.altrp-element${this.getId()}`;
   }
 
@@ -717,8 +722,13 @@ class FrontElement {
     }
     index = Number(index);
     // model.setProperty('altrpIndex', index);
-    rootElement.cardModel = model;
-    rootElement.isCard = true;
+    if(! rootElement?.cardModel){
+      this.cardModel = model;
+      this.isCard = true;
+    }else {
+      rootElement.cardModel = model;
+      rootElement.isCard = true;
+    }
   }
 
   /**
@@ -728,7 +738,7 @@ class FrontElement {
   hasCardModel(){
     let rootElement = this.getRoot();
     if(! rootElement){
-      return false;
+      return ! ! (this.cardModel && this.isCard);
     }
     return ! ! (rootElement.cardModel && rootElement.isCard)
   }
@@ -741,7 +751,7 @@ class FrontElement {
     if(this.getType() === 'root-element'){
       model = this.cardModel;
     } else {
-      model = this.getRoot().cardModel;
+      model = this.getRoot() ? this.getRoot().cardModel : this.cardModel;
     }
     if(! model instanceof AltrpModel){
       model = new AltrpModel(model);

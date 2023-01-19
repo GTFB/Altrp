@@ -402,11 +402,17 @@ export default class Model extends BaseModel {
     ]
 
     for (let customizerData of defaultCustomizersData) {
-
+      const newCustomizerName =  customizerData.prefix + modelData.name + '_' + Model.defaultCustomizersName
+      if(await Customizer.query()
+        .where('name', newCustomizerName)
+        .first())
+      {
+        continue
+      }
       let customizer = new Customizer()
       customizer.fill({
         title: customizerData.prefix + modelData.name,
-        name: customizerData.prefix + Model.defaultCustomizersName,
+        name: newCustomizerName,
         type: 'api',
         model_guid: model.guid,
         model_id: model.id,
@@ -414,6 +420,7 @@ export default class Model extends BaseModel {
         data: customizerData.defaultData
       })
 
+      const sources: Source[] = []
       try {
         if (!customizer.settings) {
           customizer.settings = []
@@ -431,9 +438,10 @@ export default class Model extends BaseModel {
             'controller_id': model.altrp_controller.id,
             'url': "/" + customizer.name,
             'api_url': "/" + customizer.name,
-            'title': customizer.title,
+            'title': customizer.title + ' Robotizer',
             'name': customizer.name,
             'type': 'customizer',
+            'auth': true,
             'request_type': customizerData.customizerRequestType
           })
 
@@ -446,11 +454,22 @@ export default class Model extends BaseModel {
             // }, customizer)
           }
           await source.save()
+          sources.push(source)
         }
       } catch (e) {
         console.error(e);
       }
 
+      const adminRole = await Role.query().where('name', 'admin').first()
+
+      if (adminRole) {
+        await Promise.all(sources.map(s => {
+          return (new SourceRole()).fill({
+            role_id: adminRole.id,
+            source_id: s.id,
+          }).save()
+        }))
+      }
 
     }
   }

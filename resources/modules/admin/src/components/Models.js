@@ -36,7 +36,7 @@ const columnsModel = [
 ];
 const columnsDataSource = [
   {
-    name: 'name',
+    name: 'title',
     title: 'Name',
     url: true,
     editUrl: true,
@@ -475,17 +475,17 @@ class Models extends Component {
                   props: {href: '/admin/tables/data-sources/edit/:id'},
                   title: 'Edit'
                 },
-                {
-                  tag: 'button',
-                  route: '/admin/ajax/data_sources/:id',
-                  method: 'delete',
-                  confirm: 'Are You Sure?',
-                  after: () => {
-                    this.getDataSources()
-                  },
-                  className: 'quick-action-menu__item_danger',
-                  title: 'Delete'
-                }
+                // {
+                //   tag: 'button',
+                //   route: '/admin/ajax/data_sources/:id',
+                //   method: 'delete',
+                //   confirm: 'Are You Sure?',
+                //   after: () => {
+                //     this.getDataSources()
+                //   },
+                //   className: 'quick-action-menu__item_danger',
+                //   title: 'Delete'
+                // }
               ]}
               rows={dataSourcesMap}
               sortingHandler={this.dataSourcesSortingHandler}

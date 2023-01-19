@@ -32,8 +32,6 @@ class ElementWrapper extends Component {
     };
     this.onDragLeave = this.onDragLeave.bind(this);
     this.onDragOver = this.onDragOver.bind(this);
-    this.onDrop = this.onDrop.bind(this);
-    this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.handleContext = this.handleContext.bind(this);
     this.wrapper = React.createRef();
@@ -44,6 +42,7 @@ class ElementWrapper extends Component {
     this.tooltipOnMouseEnter = this.tooltipOnMouseEnter.bind(this);
     this.tooltipOnMouseLeave = this.tooltipOnMouseLeave.bind(this);
     props.element.wrapperComponent = this;
+    this.childrenLength = this.props.element.children.length || 0;
   }
   onDragLeave(e) {
     e.preventDefault();
@@ -76,6 +75,7 @@ class ElementWrapper extends Component {
     if (!draggableElement) {
       e.stopPropagation();
     }
+
     this.setState(state => {
       return { ...state, dragOver: true, cursorPos };
     });
@@ -109,7 +109,8 @@ class ElementWrapper extends Component {
   }
 
   closeTooltip(e) {
-    if(!e.path.includes(this.wrapper.current)) {
+    const path = e.path || e.composedPath()
+    if(!path.includes(this.wrapper.current)) {
       const checkTooltip = e.path.find(domElem => domElem.classList ? domElem.classList.contains("bp3-popover2") : false);
 
 
@@ -160,7 +161,7 @@ class ElementWrapper extends Component {
   /**
    * событие дропа
    */
-  onDrop(e) {
+  onDrop = (e) => {
     /**
      * @member {HTMLElement} target
      * @member {ElementsManger} elementsManager
@@ -203,12 +204,23 @@ class ElementWrapper extends Component {
      * @member {BaseElement} draggableElement
      * */
     let draggableElement = store.getState().elementDrag.element;
+
     if (draggableElement && typeof draggableElement.getType === "function") {
       if (
         this.props.element.getType() === "widget" &&
         draggableElement.getType() === "widget"
       ) {
-        draggableElement.insertAfter(this.props.element);
+        console.log(this.state.cursorPos);
+        switch (this.state.cursorPos) {
+          case 'top': {
+            draggableElement.insertBefore(this.props.element);
+          }
+            break;
+          default: {
+            draggableElement.insertAfter(this.props.element);
+          }
+            break;
+        }
         e.stopPropagation();
       } else if (
         this.props.element.getType() === "column" &&
@@ -234,17 +246,6 @@ class ElementWrapper extends Component {
     return false;
   }
 
-  /**
-   * событие начало перетаскивания
-   */
-  onDragStart(e) {
-    store.dispatch(startDrag(this.props.element));
-    e.dataTransfer.effectAllowed = "copy";
-    e.dataTransfer.setData("altrp-element", this.props.element);
-    this.setState(state => {
-      return { ...state, isDrag: true };
-    });
-  }
 
   /**
    * событие остановки перетаскивания
@@ -298,6 +299,7 @@ class ElementWrapper extends Component {
     if (this.state.cursorPos) {
       classes += ` altrp-element_drag-${this.state.cursorPos}`;
     }
+
     return classes;
   }
 
@@ -331,9 +333,16 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
+
+    if(nextProps.element.children.length !== this.childrenLength){
+      this.childrenLength = nextProps.element.children.length
+      return true
+    }
     if(this.props.ignoreUpdate){
       return false
     }
+    if(this.state.dragOver !== nextState.dragOver) return true;
+    if(this.state.cursorPos !== nextState.cursorPos) return true;
     let element = getCurrentElement()
     let needUpdate = false;
     while(element){
@@ -359,13 +368,6 @@ class ElementWrapper extends Component {
       return false;
     }
 
-
-    /**
-     * не обновляем элемент, если изменился контроллер не текущего элемента
-     */
-
-
-    if(this.state.cursorPos !== nextState.cursorPos) return true;
     if (
       nextProps.controllerValue === this.props.controllerValue &&
       this.props.element !== this.props.currentElement
@@ -466,6 +468,7 @@ class ElementWrapper extends Component {
       fireAction: this.fireAction,
       CKEditor: CKEditor,
       wrapper: this,
+      isTemplateStylesModule: this.props.isTemplateStylesModule,
     };
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
@@ -527,6 +530,7 @@ class ElementWrapper extends Component {
             <ElementWrapperGlobalStyles
                 settings={this.props.element.getSettings()}
                 elementName={this.props.element.getName()}
+                elementChildren={this.props.element.children}
                 element={this.props.element}
                 elementId={this.elementId}
               />

@@ -41,6 +41,24 @@ class BaseElement extends ControlStack {
   }
 
   /**
+   *
+   * @returns {BaseElement|null}
+   */
+  findElementById(elementId){
+    if(! elementId){
+      return null
+    }
+    if(this.getId() === elementId){
+      return this
+    }
+    for(const el of this.getChildren()){
+      if(el.findElementById(elementId)){
+        return el.findElementById(elementId)
+      }
+    }
+    return null
+  }
+  /**
    * Задать настройки
    * @param settings
    * @param settingsLock
@@ -110,6 +128,10 @@ class BaseElement extends ControlStack {
    * @returns {string}
    */
   getName() {
+    if(!this.constructor.getName()){
+      console.log(this);
+      console.log(this.constructor);
+    }
     return this.constructor.getName();
   }
 
@@ -192,7 +214,7 @@ class BaseElement extends ControlStack {
   }
 
   getChildren() {
-    if (!this.children.length) {
+    if (!this.children?.length) {
       return [];
     }
     return this.children;
@@ -647,7 +669,13 @@ class BaseElement extends ControlStack {
   }
 
   getSelector() {
-    return `.altrp-element${this.getId()}`;
+    let selector =  `.altrp-element${this.getId()}`;
+
+    if(this.settings.global_styles_presets){
+      selector = `.altrp-preset_${this.settings.global_styles_presets}`
+    }
+
+    return selector
   }
   /**
    * @param {string} settingName

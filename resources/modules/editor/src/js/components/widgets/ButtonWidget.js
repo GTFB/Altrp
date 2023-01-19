@@ -5,6 +5,7 @@ import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURL
 import printElements from "../../../../../front-app/src/js/functions/printElements";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import scrollToElement from "../../../../../front-app/src/js/functions/scrollToElement";
+import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-btn-wrapper {
@@ -617,7 +618,7 @@ class ButtonWidget extends Component {
       !this.state.settings.link_link.toPrevPage
     ) {
         let target = _.get(this.state.settings, "link_link.openInNew")
-        ? "_blank"
+        ? altrpRandomId()
           : "";
       if (this.state.settings.link_link.tag === "a" || isEditor()) {
         link = (

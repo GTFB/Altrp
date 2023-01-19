@@ -1,10 +1,7 @@
 import AdminBarWrapper from './AdminBarWrapper';
 import Resource from "../../../../editor/src/js/classes/Resource";
-import Scrollbars from "react-custom-scrollbars";
 import upgradeBackend from "../../../../admin/src/js/functions/upgradeBackend";
 import getDataByPath from "../functions/getDataByPath";
-import progressBar from "../../../../admin/src/js/functions/progressBar";
-import delay from "../functions/delay";
 
 class AdminBar extends React.Component {
   constructor(props) {
@@ -150,9 +147,6 @@ class AdminBar extends React.Component {
       ...state,
       update: true
     }))
-
-
-    console.log(this.props.idPage);
 
     await upgradeBackend(['pages'], [this.props.idPage])
 

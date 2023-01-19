@@ -3,7 +3,7 @@
  */
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {getDataByPath, isJSON, mbParseJSON} from "../helpers";
-
+import qs from "qs"
 class Datasource extends AltrpModel{
   /**
    * получить url для вэба
@@ -36,7 +36,7 @@ class Datasource extends AltrpModel{
   getParams(urlParams = {}, excludePath = ''){
     const {currentModel, currentDataStorage} = appStore.getState();
     let parsedTemplate = this.getProperty('parameters');
-    const params = {};
+    let params = {};
     if(! parsedTemplate){
       return null;
     }
@@ -76,6 +76,13 @@ class Datasource extends AltrpModel{
       }
 
     });
+    if(this.getProperty('query_sync')){
+      const _qs = qs.parse(location.search.replace('?',''))
+      params = {
+        ...params,
+        ..._qs,
+      }
+    }
     return params;
   }
 }

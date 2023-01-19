@@ -2,8 +2,12 @@ import  startOfMonth from "./startOfMonth";
 import  startOfYear from "./startOfYear";
 import moment from 'moment';
 
+
+let tomorrow  = moment().add(1,'days');
+
+let yesterday = moment().add(-1, 'days');
 /**
- * Получить какое-то время по шаблону `YYYY-MM-DD`
+ * Get some time on the pattern `YYYY-MM-DD`
  * @param {string} path
  * @param {string | null} defaultValue
  */
@@ -14,6 +18,16 @@ export default function getTimeValue(path, defaultValue = null) {
     case "now":
     {
       value = _.now();
+    }
+      break;
+    case "tomorrow":
+    {
+      value = tomorrow;
+    }
+      break;
+    case "yesterday":
+    {
+      value = yesterday;
     }
       break;
     case "month_start":
@@ -51,6 +65,11 @@ export default function getTimeValue(path, defaultValue = null) {
       value = getWeekStart();
     }
       break;
+    case "year":
+    {
+      let today = new Date();
+      return today.getFullYear();
+    }
   }
   value = moment(value).format("YYYY-MM-DD");
   return value;

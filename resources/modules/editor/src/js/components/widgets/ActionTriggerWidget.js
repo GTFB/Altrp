@@ -8,12 +8,6 @@ class ActionTriggerWidget extends React.Component {
     this.element = props.element;
     this.elementId = props.element.getId();
     props.element.component = this;
-    // if (window.elementDecorator) {
-    //   window.elementDecorator(this);
-    // }
-    // if(props.baseRender){
-    //   this.render = props.baseRender(this);
-    // }
     this.subscribeActions()
   }
 
@@ -25,14 +19,37 @@ class ActionTriggerWidget extends React.Component {
     if(isEditor() || isSSR()){
       return
     }
-    const type = this.element.getResponsiveLockedSetting('type')
-    switch (type) {
+    this.type = this.element.getResponsiveLockedSetting('type')
+    switch (this.type) {
       case 'interval': this.subscribeIntervalTriggers()
         break;
       case 'timeout': this.subscribeTimeoutTriggers()
         break;
+      case 'event': this.subscribeEventTriggers()
+        break;
     }
   }
+  subscribeEventTriggers=()=>{
+    let event =  this.element.getResponsiveLockedSetting('event') || ''
+    event = event.trim()
+    if(! event){
+      return
+    }
+    document.addEventListener(event, this.onEvent)
+  }
+
+  onEvent = (e)=>{
+    let prevent =  this.element.getResponsiveLockedSetting('prevent')
+    if(prevent){
+      e.preventDefault()
+    }
+    let stop_event =  this.element.getResponsiveLockedSetting('stop_event')
+    if(stop_event){
+      e.stopPropagation()
+    }
+    this.doActions(e.detail.data)
+  }
+
 
   /**
    * Подписать таймаут действия
@@ -55,13 +72,16 @@ class ActionTriggerWidget extends React.Component {
   }
 
   componentWillUnmount() {
-    if(! this.intervalId){
+    if(this.intervalId){
+      clearInterval(this.intervalId)
       return
     }
-    clearInterval(this.intervalId)
+    if(this.type === 'event'){
+      document.removeEventListener(event, this.onEvent)
+    }
   }
 
-  doActions = async ()=>{
+  doActions = async (data)=>{
     if(! this.element.getResponsiveLockedSetting("trigger_actions", null, []).length){
       return
     }
@@ -70,6 +90,8 @@ class ActionTriggerWidget extends React.Component {
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
     ).default;
+    this.props.element.setCardModel(new AltrpModel(data || {}))
+
     await actionsManager.callAllWidgetActions(
       this.props.element.getIdForAction(),
       'trigger_' + this.element.getResponsiveLockedSetting('type'),

@@ -1,8 +1,21 @@
 import data_get from "../../helpers/data_get";
 import empty from "../../helpers/empty";
-import {BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne, ManyToMany, manyToMany} from "@ioc:Adonis/Lucid/Orm";
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasOne,
+  hasOne,
+  ManyToMany,
+  manyToMany,
+  hasMany,
+  HasMany,
+  beforeDelete
+} from "@ioc:Adonis/Lucid/Orm";
 import Model from "App/Models/Model";
 import Category from "App/Models/Category";
+import Cron from "App/Models/Cron";
 import StartNode from "App/Customizer/Nodes/StartNode";
 import BaseNode from "App/Customizer/Nodes/BaseNode";
 import Edge from "App/Customizer/Nodes/Edge";
@@ -25,7 +38,7 @@ import {clearTimeout, setTimeout} from "node:timers";
 import app_path from "../../helpers/path/app_path";
 import isProd from "../../helpers/isProd";
 import HttpContext from "@ioc:Adonis/Core/HttpContext";
-import { addSchedule, removeSchedule } from '../../helpers/schedule';
+import { addSchedule, removeSchedule, nextInvocation } from '../../helpers/schedule';
 import exec from '../../helpers/exec'
 import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
 import base_path from "../../helpers/base_path";
@@ -57,7 +70,7 @@ export default class Customizer extends BaseModel {
   public guid: string
 
   @column.dateTime({autoCreate: true})
-  public createdAt: DateTime
+    public createdAt: DateTime
 
   @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime
@@ -101,6 +114,12 @@ export default class Customizer extends BaseModel {
   })
   public source: HasOne<typeof Source>
 
+  @hasMany(() => Cron, {
+    foreignKey: 'customizer_id',
+    localKey: 'id',
+  })
+  public crons: HasMany<typeof Cron>
+
   @manyToMany(() => Category, {
     pivotTable: 'altrp_category_objects',
     relatedKey: 'guid',
@@ -109,6 +128,15 @@ export default class Customizer extends BaseModel {
     pivotRelatedForeignKey: 'category_guid',
   })
   public categories: ManyToMany<typeof Category>
+
+  @beforeDelete()
+  public static async beforeDelete(customizer: Customizer) {
+    if (customizer.type === 'schedule') {
+      const cron = await Cron.findBy('customizer_id', customizer.id)
+
+      await cron?.delete()
+    }
+  }
 
   methodToJS(method, method_settings = []) {
     if (!method) {
@@ -353,7 +381,7 @@ export default class Customizer extends BaseModel {
     customizers.forEach(customizer => customizer.schedule())
   }
 
-  public schedule() {
+  public async schedule() {
     if (this.type !== 'schedule' || !this.settings) {
       return
     }
@@ -372,10 +400,6 @@ export default class Customizer extends BaseModel {
 
           await this.save()
 
-          if (this.settings.repeat_count <= 0) {
-            this.removeSchedule()
-          }
-
           return this.invoke()
         }
 
@@ -384,14 +408,36 @@ export default class Customizer extends BaseModel {
 
       this.invoke()
     })
+
+    this.settings.next_run = DateTime.fromJSDate(nextInvocation(this.id)?.toDate())
+    await this.save()
   }
 
   public async invoke() {
+    let cronLog = ''
+
     console.log('customizer ' + this.name + ' was invoked (' + this.settings.repeat_count + ' times left)')
-    exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`)
+
+    try {
+      const result = await exec(`node ${base_path('ace')} customizer:schedule ${this.id.toString()}`)
+
+      if (result) {
+        cronLog = result
+      }
+    } catch (err) {
+      if (err) {
+        cronLog = err
+      }
+    }
+
+    await Cron.createByCustomizer(this, cronLog)
+
+    this.settings.last_run = DateTime.now()
+    this.settings.next_run = DateTime.fromJSDate(nextInvocation(this.id)?.toDate())
+    await this.save()
   }
 
-  public removeSchedule() {
+  public async removeSchedule() {
     removeSchedule(this.id)
 
     console.log(`remove schedule: ${this.name} / ${this.id}`)
@@ -478,7 +524,9 @@ export default class Customizer extends BaseModel {
   }
 
   public static parseData( data, customizer ){
-
+    if(!_.isArray(data)){
+      data = []
+    }
     data = data.map( item  => {
       const type = data_get( item, 'type' )
       switch( type ){
@@ -498,7 +546,7 @@ export default class Customizer extends BaseModel {
         case 'discordAction': return new DiscordNode(item, customizer)
         default: {
           let classInstance = applyPluginsFiltersSync('get_node_class_instance', type, item, customizer)
-          if(! classInstance){
+          if(! classInstance || typeof classInstance === 'string'){
             return new BaseNode( item, customizer )
           }
           return classInstance

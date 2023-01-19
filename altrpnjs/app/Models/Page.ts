@@ -1,6 +1,5 @@
 import purifycss from "purify-css"
 import * as mustache from 'mustache'
-import md5 from 'md5'
 import {DateTime} from 'luxon'
 import {
   BaseModel,
@@ -45,6 +44,7 @@ import SCREENS from "../../helpers/const/SCREENS";
 import public_path from "../../helpers/path/public_path";
 import getResponsiveSetting, {setResponsiveSetting} from "../../helpers/getResponsiveSetting";
 import {optimizeStyles} from "../../helpers/screen";
+import altrpRandomId from "../../helpers/altrpRandomId";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -808,6 +808,7 @@ export default class Page extends BaseModel {
 
   async getChildrenContent(screenName = '') {
     let cssPrefix = ''
+    const randomString = altrpRandomId()
     if (screenName) {
       cssPrefix = `/${screenName}`
     }
@@ -843,9 +844,6 @@ export default class Page extends BaseModel {
         headerContent = await _template.getChildrenContent(screenName)
       }
     }
-    //@ts-ignore
-    const footerHash = encodeURI(md5(footerGuid ? footerContent : ''))
-    const contentHash = encodeURI(md5(contentGuid ? contentContent : ''))
 
     let contentStyleLink = ''
 
@@ -854,7 +852,17 @@ export default class Page extends BaseModel {
       if (!fs.existsSync(public_path(cssHref))) {
         cssHref = `/altrp/css/${contentGuid}.css`
       }
-      contentStyleLink = `<link href="${cssHref}?${contentHash}" id="altrp-content-css-link-${contentGuid}" rel="stylesheet"/>`
+      contentStyleLink = `<link href="${cssHref}?${randomString}" id="altrp-content-css-link-${contentGuid}" rel="stylesheet"/>`
+    }
+
+    let headerStyleLink = ''
+
+    if (headerGuid) {
+      let cssHref = `/altrp/css${cssPrefix}/${headerGuid}.css`
+      if (!fs.existsSync(public_path(cssHref))) {
+        cssHref = `/altrp/css/${headerGuid}.css`
+      }
+      headerStyleLink = `<link href="${cssHref}?${randomString}" id="altrp-header-css-link-${headerGuid}" rel="stylesheet"/>`
     }
 
     let footerStyleLink = ''
@@ -864,7 +872,7 @@ export default class Page extends BaseModel {
       if (!fs.existsSync(public_path(cssHref))) {
         cssHref = `/altrp/css/${footerGuid}.css`
       }
-      footerStyleLink = `<link href="${cssHref}?${footerHash}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>`
+      footerStyleLink = `<link href="${cssHref}?${randomString}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>`
     }
 
     let result = `<div class="app-area app-area_header">
@@ -873,10 +881,11 @@ export default class Page extends BaseModel {
       <div class="app-area app-area_content">
       ${contentGuid ? contentContent : ''}
       </div>
-      ${contentStyleLink}
       <div class="app-area app-area_footer">
       ${footerGuid ? footerContent : ''}
       </div>
+      ${headerStyleLink}
+      ${contentStyleLink}
       ${footerStyleLink}
       `
 
@@ -902,10 +911,17 @@ export default class Page extends BaseModel {
           // @ts-ignore
           const _template = await Template.query().where('guid', guid).first()
           if (_template) {
+
+            let cssHref = `/altrp/css${cssPrefix}/${guid}.css`
+            if (!fs.existsSync(public_path(cssHref))) {
+              cssHref = `/altrp/css/${guid}.css`
+            }
             let content = await _template.getChildrenContent(screenName)
             result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
           ${content ? content : ''}
-          </div>`
+          </div>
+          <link href="${cssHref}?${randomString}" id="altrp-custom-area-css-link-${guid}" rel="stylesheet"/>
+          `
           }
 
         }
@@ -1423,6 +1439,7 @@ export default class Page extends BaseModel {
       'link_link',
     ],
     column: [
+      'link_link',
     ],
     posts: [
       'current_page_text',

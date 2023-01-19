@@ -5,32 +5,12 @@ import conditionChecker from "../../../../../front-app/src/js/functions/conditio
 import mbParseJSON from "../../../../../front-app/src/js/functions/mb-parse-JSON";
 
 
-import {Button, ButtonGroup, Menu, MenuItem, Position} from '@blueprintjs/core'
+import {Button,  Menu, MenuItem, Position} from '@blueprintjs/core'
 import {Popover2} from '@blueprintjs/popover2'
+import defaultBurgerMenuIcon from "./misc/defaultBurgerMenuIcon";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-.altrp-menu-item__icon svg {
-    display: block;
-    height: 20px;
-    width: 20px;
-}
 
-.altrp-menu {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-}
-
-.bp3-menu-item {
-  align-items: center;
-  border-radius: 0;
-}
-
-.bp3-menu {
-  flex-direction: column;
-}
-
-`)
+(window.globalDefaults = window.globalDefaults || []).push(``)
 
 class MenuWidget extends Component {
   constructor(props) {
@@ -62,41 +42,12 @@ class MenuWidget extends Component {
         menuData.children = mbParseJSON(menuData.children)
         menuData.settings = mbParseJSON(menuData.settings)
         appStore.dispatch(addMenu(menuData));
+
       }
     }
     this.menuData = menuData
     this.menuGUID = menuGUID
-  }
-
-  renderHorizontalMenu() {
-    this.getMenuData();
-    const {menuData} = this;
-    if (!menuData) {
-      return 'Select Menu';
-    }
-    return <ButtonGroup fill={true} alignText="left">
-      {menuData.children.map(item => {
-        return <Button
-          minimal={true}
-          icon={<span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: item.icon}}/>}
-          rightIcon="caret-down"
-          text={item.label}
-          href={item.url}
-          key={item.id}
-          onClick={(e) => {
-            e.preventDefault();
-            if(! item.url || isEditor() ){
-              return;
-            }
-            if (!this.props.history) {
-              window.location.href = item.url
-              return
-            }
-            this.props.history.push(item.url);
-          }}/>
-      })}
-
-    </ButtonGroup>
+    this.setState(state=>({...state, menuData}))
   }
 
   renderVerticalMenu() {
@@ -139,15 +90,20 @@ class MenuWidget extends Component {
       classes.push('state-disabled')
     }
 
+    let type = this.props.element.getResponsiveLockedSetting('type') || 'vertical';
+
+    classes.push(`altrp-menu_${type}`)
+
     return classes.join(' ');
   }
   /**
    *
    * @param {[]} items
    * @param {int} depth
+   * @param {string} parentId
    * @return {JSX.Element|null}
    */
-  renderSubItems = (items, depth) => {
+  renderSubItems = (items, depth, parentId = null) => {
     if (!items.length) {
       return null;
     }
@@ -156,16 +112,11 @@ class MenuWidget extends Component {
       this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     const popoverProps = {
       usePortal: true,
-      // isOpen:true ,
-      portalClassName: `${classes} altrp-portal altrp-portal${this.elementId}`,
+      //isOpen:true ,
+      portalClassName: `${classes} altrp-portal altrp-portal${this.elementId} `,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
-    let renderButton = this.props.element.getResponsiveLockedSetting('button');
-
-    // if (depth === 1 && element.getResponsiveLockedSetting('type') === 'horizontal' && !renderButton) {
-    //   popoverProps.position = Position.BOTTOM_LEFT;
-    // }
-
+    let itemClasses = ''
     if(depth === 1) {
       const positionSetting = this.props.element.getResponsiveLockedSetting('popover_position', "", "auto");
 
@@ -176,26 +127,34 @@ class MenuWidget extends Component {
       const positionSetting = this.props.element.getResponsiveLockedSetting('sub_popover_position', "", "auto");
 
       popoverProps.position = this.getPosition(positionSetting)
+      itemClasses += ` altrp-menu-item_${popoverProps.position} altrp-menu-item_subitem`
 
       popoverProps.portalClassName += " altrp-sub-portal"
     }
 
-    let caret = "";
 
-    // const caretMedia = this.props.element.getResponsiveLockedSetting("caret");
-    //
-    // if(caretMedia?.type) {
-    //   caret = caretMedia
-    // }
+    const ref = React.createRef()
+
+    if(popoverProps.position?.includes('top') || popoverProps.position?.includes('bottom')){
+      popoverProps.matchTargetWidth = true
+      popoverProps.onOpening = el=>{
+        // console.log(el);
+        // console.log(ref.current);
+      }
+    }
+
 
     return <>
       {items.map((item) => {
+        const _popoverProps = {...popoverProps}
+        _popoverProps.portalClassName += ` altrp-portal-parent-item-key${item.id} `
         return <MenuItem
-          popoverProps={popoverProps}
+          ref={ref}
+          popoverProps={_popoverProps}
           depth={depth}
           href={item.url}
           width={100}
-          className={`${classes} altrp-menu-item altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
+          className={`${classes} ${itemClasses} altrp-menu-item altrp-menu-item_key${item.id} altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
@@ -211,7 +170,7 @@ class MenuWidget extends Component {
           icon={<span className={`${classes} altrp-menu-item__icon`} dangerouslySetInnerHTML={{__html: item.icon}}/>}
           // text={<Link className="altrp-menu-item__link" to={item.url}>{item.label}</Link>}>
           text={item.label}>
-          {this.renderSubItems(item.children, depth + 1)}
+          {this.renderSubItems(item.children, depth + 1, item.id)}
         </MenuItem>
 
       })}
@@ -274,6 +233,10 @@ class MenuWidget extends Component {
       return null;
     }
     let toggle_icon = _.get(menuData, 'settings.toggle_icon', '')
+    if(_.isEmpty(toggle_icon)){
+      toggle_icon = defaultBurgerMenuIcon
+    }
+
     const position = this.props.element.getResponsiveLockedSetting("popover_position_toggle", "", "auto")
     let classes =
       this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")

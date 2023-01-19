@@ -216,7 +216,7 @@ export default class TemplatesController {
       }
     }
     if(body.type !== "review"){
-      console.log(await exec(`node ${base_path('ace')} generator:template --id=${template.id}`))
+      console.log(`result of generator:template --id=${template.id}`,await exec(`node ${base_path('ace')} generator:template --id=${template.id}`))
     }
     applyPluginsFiltersAsync('template_updated', template)
     return {
@@ -340,9 +340,10 @@ export default class TemplatesController {
     // @ts-ignore
     template.data = mbParseJSON(template.data, template.data)
     // @ts-ignore
-    Page.getDataDependencies(template.data)
+    await Page.getDataDependencies(template.data)
     // @ts-ignore
     template.data = JSON.stringify(template.data)
+
     return template
   }
 

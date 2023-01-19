@@ -170,11 +170,11 @@ class Customizer extends Component {
           label: "Customizer Title",
           required: true
         },
-        {
-          name: "is_method",
-          label: "Method",
-          type: "checkbox"
-        },
+        // {
+        //   name: "is_method",
+        //   label: "Method",
+        //   type: "checkbox"
+        // },
       ],
       active: true,
       success: res => {

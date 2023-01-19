@@ -1,7 +1,5 @@
 import "./sass/editor-style.scss";
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { hot } from "react-hot-loader";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Modules from "./js/classes/Modules";
@@ -61,6 +59,7 @@ import {setGlobalStylesCss} from "./js/store/global-css-editor/actions";
 import ReactDOM from "react-dom";
 import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
 import ImportantStylesManager from "./js/components/ImportantStylesManager";
+import RenderPresetStyles from "./js/components/RenderPresetStyles";
 import PreviewButton from './js/components/PreviewButton';
 import PreviewSettingModal from './js/components/PreviewSettingModal';
 import cn from "classnames";
@@ -129,9 +128,21 @@ class Editor extends Component {
    * Инициализация модулей
    */
 
-  initModules() {
+  initModules =async()=> {
+    try {
+      await window.editorAPI.applyPluginsFiltersAsync('before_editor_init_modules', '')
+    }catch (e) {
+      console.error(e);
+    }
     this.modules = new Modules(this);
     this.modules.loaded();
+    this.setState(state=>({...state, modulesInitialized: true }), ()=>{
+
+      const EditorLoadedEvent = new Event('altrp-editor-modules-initialized')
+      window.dispatchEvent(EditorLoadedEvent);
+      document.dispatchEvent(EditorLoadedEvent);
+    })
+
   }
 
   /**
@@ -264,7 +275,7 @@ class Editor extends Component {
     }).getAll();
     currentUser = currentUser.data;
 
-    this.getConnect(currentUser)
+    //this.getConnect(currentUser)
     appStore.dispatch(changeCurrentUser(currentUser));
     const presetColors = await AltrpMeta.getMetaByName("preset_colors");
     let presetGlobalStyles = await AltrpMeta.getMetaByName("global_styles");
@@ -480,9 +491,10 @@ class Editor extends Component {
     ) {
       navigationActive = " active";
     }
+    const {modulesInitialized} = this.state
+
     return (
       <DndProvider backend={HTML5Backend}>
-
         <div
           className={cn(templateClasses, {
             'iframe-disabled': this.state.iframeDisabled,
@@ -597,7 +609,7 @@ class Editor extends Component {
               </EditorWindowPopup>
             )}
             <PreviewSettingModal />
-            <EditorWindow />
+            {modulesInitialized&&<EditorWindow />}
             <Rnd
               className={this.state.navigator ? "draggable-navigator" : "draggable-navigator-hide"}
               default={{
@@ -712,7 +724,8 @@ class Editor extends Component {
           </Resizable>
         </div>
         <AssetsBrowser rawEnable={true}/>
-         <ImportantStylesManager/>
+        <ImportantStylesManager/>
+        <RenderPresetStyles/>
       </DndProvider>
     );
   }
@@ -725,16 +738,7 @@ function mapStateToProps(state) {
   };
 }
 
-/**
- * Если разработка то включается HMR <br/>
- * По умолчанию просто компонент
- * @member _export
- */
 let _export;
-if (process.env.NODE_ENV === "production") {
-  _export = Editor;
-} else {
-  _export = hot(module)(connect(mapStateToProps)(Editor));
-}
+_export = Editor;
 
 export default _export;

@@ -1,7 +1,7 @@
 import {CHANGE_ALTRP_META, REPLACE_ALTRP_META, REPLACE_ALTRP_META_FROM_LOCAL_STORAGE, replaceAltrpMeta} from './actions'
 const { AltrpModel,setAltrpIndex, saveDataToLocalStorage, isSSR} = window.altrpHelpers;
 
-const defaultAltrpMeta = isSSR() ? {} :window.altrpHelpers.getDataFromLocalStorage('altrpmeta', {});
+const defaultAltrpMeta = window.altrpHelpers.getDataFromLocalStorage('altrpmeta', {});
 // console.log();
 /**
  *

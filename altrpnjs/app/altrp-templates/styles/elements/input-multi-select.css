@@ -17,7 +17,7 @@
   min-width: 0;
 }
 
-.bp3-tag-input {
+.bp3-tag-input.bp3-multi-select {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

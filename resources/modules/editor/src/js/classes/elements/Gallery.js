@@ -95,6 +95,7 @@ class Gallery extends BaseElement {
 
     this.addControl('path', {
       label: 'Path',
+      locked: true,
     });
 
     this.addControl("order_by_settings", {

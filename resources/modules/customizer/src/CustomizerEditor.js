@@ -63,6 +63,8 @@ class CustomizerEditor extends Component {
     this.reactFlowRef = React.createRef();
     this.dagreGraph = new dagre.graphlib.Graph();
 
+    window.customizerEditor = this
+
     this.getConnect()
   }
 

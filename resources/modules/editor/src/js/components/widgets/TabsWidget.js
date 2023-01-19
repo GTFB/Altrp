@@ -1,95 +1,7 @@
 import TemplateLoader from "../template-loader/TemplateLoader";
 import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 import {Tab, Tabs} from '@blueprintjs/core'
-(window.globalDefaults = window.globalDefaults || []).push(`
-
-.altrp-tab-btn-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.bp3-tab-panel {
-  margin-top: 20px;
-}
-.bp3-tab {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-}
-
-.altrp-tab-btn p {
-  margin: 0;
-  white-space: nowrap;
-}
-
-.altrp-tab-btn-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.altrp-tab-btn-icon img{
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-.altrp-tabs-left {
-  display: flex;
-  flex-direction: row;
-}
-
-.altrp-tabs-left .altrp-tab-btn-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.altrp-tabs-right {
-  display: flex;
-  flex-direction: row;
-}
-
-.altrp-tabs-right .altrp-tab-btn-container {
-  margin-left: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.altrp-tab-btn-column:last-child {
-  margin-right: 0px !important;
-}
-
-.altrp-tab-btn-row:last-child {
-  margin-bottom: 0px !important;
-}
-
-  .bp3-tab-indicator-wrapper {
-    z-index: 9999
-  }
-
-  .altrp-tab-btn-icon {
-    height: 20px;
-    width: 20px;
-  }
-
-  .altrp-tab-vertical p {
-   margin: 0;
-  }
-
-  .altrp-tab-vertical.bp3-tab.bp3-tab.bp3-tab:last-child {
-   margin-bottom: 0;
-  }
-
-  .altrp-tab-horizontal.bp3-tab.bp3-tab.bp3-tab:last-child {
-   margin-right: 0;
-  }
-
-  .altrp-tab {
-    width: 100%;
-    display: block;
-  }
-`)
 
 class TabsWidget extends Component {
   constructor(props) {
@@ -228,6 +140,14 @@ class TabsWidget extends Component {
             }
           }
         }
+        const props = {
+
+        }
+        if(!tab.card_template){
+          props. dangerouslySetInnerHTML ={
+            __html:replaceContentWithData(tab.wysiwyg_items, this.props.element.getCurrentModel()),
+          }
+        }
         return (
           <Tab
             id={`tab-${idx + 1}`}
@@ -239,12 +159,12 @@ class TabsWidget extends Component {
               (this.state.activeTab === idx ? " active" : "")
             }
             panel={(
-              <div className={`${classes} altrp-tab ${(this.state.selected === `tab-${idx + 1}` ? " active" : "")}`}>
-                {tab.card_template ? (
+              <div
+                {...props}
+                className={`${classes} altrp-tab ${(this.state.selected === `tab-${idx + 1}` ? " active" : "")}`}>
+                {tab.card_template && (
                   <TemplateLoader templateId={tab.card_template} />
-                ) : (
-                  tab.wysiwyg_items
-                )}
+                ) }
               </div>
             )}
             key={idx + 1}

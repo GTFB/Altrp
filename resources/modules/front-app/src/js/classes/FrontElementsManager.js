@@ -30,10 +30,10 @@ class FrontElementsManager {
       //   ).default);
       // });
       componentsToLoad = componentsToLoad.map(el => {
-        console.log(`START Loading Widget Component ${el.name}`, performance.now());
+        // console.log(`START Loading Widget Component ${el.name}`, performance.now());
         return new Promise((resolve, reject) => {
           el.import().then(res=>{
-            console.log(`LOAD Widget Component ${el.name}`, performance.now());
+            // console.log(`LOAD Widget Component ${el.name}`, performance.now());
             this.components[el.name] = res.default
             resolve(res);
           })

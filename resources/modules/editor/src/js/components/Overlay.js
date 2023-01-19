@@ -1,3 +1,5 @@
+import store from "../store/store";
+
 const { connect } = window.reactRedux;
 import AddIcon from "../../svgs/add.svg";
 import DuplicateIcon from "../../svgs/duplicate.svg";
@@ -8,6 +10,7 @@ import {contextMenu} from "react-contexify";
 import EditIcon from "../../svgs/edit.svg";
 import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
+import {startDrag} from "../store/element-drag/actions";
 
 class Overlay extends React.Component {
   constructor(props) {
@@ -55,6 +58,16 @@ class Overlay extends React.Component {
     }
   }
 
+  /**
+   */
+  onDragStart = (e)=> {
+    store.dispatch(startDrag(this.props.element));
+    e.dataTransfer.effectAllowed = "copy";
+    e.dataTransfer.setData("altrp-element", this.props.element);
+    this.setState(state => {
+      return { ...state, isDrag: true };
+    });
+  }
   render() {
 
     let _EditIcon = EditIcon;

@@ -53,7 +53,6 @@ const fieldStyle = settings => {
     placeholder_and_value_alignment_position_section,
     position_z_index,
     input_position,
-    textarea_resize,
     justify_options,
     image_select_item_width,
     image_select_item_height,
@@ -121,9 +120,8 @@ const fieldStyle = settings => {
   (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
-  textarea_resize && (styles += `resize:${textarea_resize};`);
 
-  styles += "}";
+
 
   //checkbox .state-disabled
 
@@ -166,10 +164,11 @@ const fieldStyle = settings => {
   (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
-  textarea_resize && (styles += `resize:${textarea_resize};`);
 
-  styles += "}";
+
+  // styles += "}";
   // end of state disabled setting
+
 
   //checkbox .active
 
@@ -212,7 +211,6 @@ const fieldStyle = settings => {
   (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
-  textarea_resize && (styles += `resize:${textarea_resize};`);
 
   styles += "}";
   // end of state active setting
@@ -355,9 +353,10 @@ const fieldStyle = settings => {
 
   //TODO не нашел как активировать эту штуку
   //cross_size && (styles += `font-size:${cross_size.size}${cross_size.unit};`);
-  styles += "}";
+  //styles += "}";
 
   styles += "}";
+
 
   return styles;
 };
@@ -380,7 +379,6 @@ const fieldStyleHover = settings => {
   const {
     placeholder_and_value_alignment_position_section,
     position_z_index,
-    textarea_resize,
   } = settings;
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
@@ -418,7 +416,6 @@ const fieldStyleHover = settings => {
   (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
-  textarea_resize && (styles += `resize:${textarea_resize};`);
 
   styles += "}";
 
@@ -438,7 +435,6 @@ const fieldStyleActive = settings => {
   const {
     placeholder_and_value_alignment_position_section,
     position_z_index,
-    textarea_resize,
   } = settings;
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
@@ -476,7 +472,6 @@ const fieldStyleActive = settings => {
   (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
-  textarea_resize && (styles += `resize:${textarea_resize};`);
 
   styles += "}";
 
@@ -809,6 +804,7 @@ const placeholderStyle = settings => {
   color && (styles += colorPropertyStyled(color, "color"));
 
   styles += "}";
+
   return styles;
 };
 /**
@@ -890,44 +886,14 @@ const fieldSelect2Option = (settings, id) => {
   styles += "}";
   return styles;
 };
-/**
- * Стили для класса mask-mismatch-message
- * @param {Object} settings style settings of element
- * @returns {String} CSS style string
- */
-const maskMismatchMessage = (settings, id) => {
-  let styles = `&& .mask-mismatch-message{`;
-  let margin, padding, color, typographic;
 
-  settings &&
-  (margin = getResponsiveSetting(settings, "mismatch_message_margin"));
-  margin && (styles += dimensionsControllerToStyles(margin, "margin"));
-
-  settings &&
-  (padding = getResponsiveSetting(settings, "mismatch_message_padding"));
-  padding && (styles += dimensionsControllerToStyles(margin, "padding"));
-
-  settings &&
-  (color = getResponsiveSetting(settings, "mismatch_message_font_color"));
-  color && (styles += colorPropertyStyled(color, "color"));
-
-  settings &&
-  (typographic = getResponsiveSetting(
-    settings,
-    "mismatch_message_typographic"
-  ));
-  typographic && (styles += typographicControllerToStyles(typographic));
-
-  styles += "}";
-  return styles;
-};
 //Точка входа
 function InputCheckboxComponent(settings, id) {
   const parentClass = `.altrp-element${id}`;
 
   let styles = ''
 
-  styles += `.altrp-field-option {`;
+  styles += `${parentClass} .altrp-field-option {`;
   if (settings.input_position) {
     styles += `flex-direction:${settings.input_position};`
   }
@@ -938,6 +904,7 @@ function InputCheckboxComponent(settings, id) {
   //for all element
   background_section_opacity &&
   (styles += `opacity:${background_section_opacity.size};`);
+
   //altrp-input-wrapper
   const inputWrapperStyles = inputWrapperStyle(settings);
   inputWrapperStyles && (styles += inputWrapperStyles);
@@ -947,6 +914,7 @@ function InputCheckboxComponent(settings, id) {
   //altrp-field
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);
+
   //altrp-field:hover
   const fieldStylesHover = fieldStyleHover(settings);
   fieldStylesHover && (styles += fieldStylesHover);
@@ -974,15 +942,16 @@ function InputCheckboxComponent(settings, id) {
   //altrp-field::placeholder altrp-field-select2__placeholder altrp-field-file__placeholder
   const placeholderStyles = placeholderStyle(settings);
   placeholderStyles && (styles += placeholderStyles);
+
   //altrp-field-label--required::after
   const fieldLabelRequiredStyles = fieldLabelRequired(settings);
   fieldLabelRequiredStyles && (styles += fieldLabelRequiredStyles);
-  //mask-mismatch-message
-  const maskMismatchMessageStyles = maskMismatchMessage(settings);
-  maskMismatchMessageStyles && (styles += maskMismatchMessageStyles);
-  //finish
+
+
 
   styles += '}'
+
+
   return styles;
 }
 export default InputCheckboxComponent

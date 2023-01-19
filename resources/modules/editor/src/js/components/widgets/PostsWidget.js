@@ -1,6 +1,7 @@
 import Query from "../../classes/Query";
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import PostsComponent from '../altrp-posts/altrp-posts';
+import RootComponentContext from "../../Contexts/RootComponentContext";
 
 class PostsWidget extends Component {
   constructor(props) {
@@ -67,7 +68,9 @@ class PostsWidget extends Component {
       ...this.props.element.settings,
       ...this.props.element.settingsLock || {},
     };
-
+    if(this.context.isImportantStylesModule){
+      return ''
+    }
     return <PostsComponent query={query}
                            className={classes}
                            currentModel={this.props.currentModel}
@@ -75,6 +78,8 @@ class PostsWidget extends Component {
                            element={this.props.element}
                            settings={settings}/>;
   }
+
+  static contextType = RootComponentContext
 }
 
 export default PostsWidget

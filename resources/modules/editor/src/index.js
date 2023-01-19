@@ -10,133 +10,115 @@ import '../../front-app/src/js/libs/template-loader'
 import '../../front-app/src/js/libs/fullcalendar'
 import '../../front-app/src/js/libs/image-crop'
 import '../../front-app/src/js/libs/reacket'
-import { Provider } from "react-redux";
-import "./installing";
-import ElementsManager from "./js/classes/modules/ElementsManager";
-import ControllersManager from "./js/classes/modules/ControllersManager";
-import store from "../src/js/store/store";
-import IconsManager from "./js/classes/modules/IconsManager";
-import "./sass/editor-style.scss";
-import controllerHistory from "./js/classes/ControllerHistory";
-import {io} from "socket.io-client";
+import {createGlobalStyle} from 'styled-components'
+import _ from "lodash";
+import CONSTANTS from "./js/consts";
+window._ = _;
 
-window.altrpIo = io( {
-  path: '/wsaltrp',
-  auth: {
-  },
+/**
+ * For plugins
+ * @type {{}}
+ */
+window.editorAPI = window.editorAPI || {}
+/**
+ *
+ * @type {*|{}}
+ */
+window.editorAPI.components = window.editorAPI.components || {
+  createGlobalStyle: createGlobalStyle
+}
+
+/**
+ *
+ * @type {Object<string, {
+ *   priority: number | string,
+ *   callback: function
+ * }[]>}
+ * }
+ */
+window.editorAPI.syncFilters = window.editorAPI.syncFilters || {}
+/**
+ *
+ * @type {Object<string, {
+ *   priority: number | string,
+ *   callback: Function
+ * }[]>}
+ * */
+window.editorAPI.asyncFilters = window.editorAPI.asyncFilters || {}
+/**
+ *
+ * @param {string} type
+ * @param {*} content
+ * @param params
+ * @returns {Promise<*>}
+ */
+window.editorAPI.applyPluginsFiltersAsync = async (type, content = null, ...params) => {
+  if(! type){
+    return content
+  }
+  //console.log(`Async Filter '${type}' applying!`);
+  /**
+   *
+   * @type {{
+   *   priority: number | string,
+   *   callback: Function
+   * }[]} filter
+   * */
+  let filter = window.editorAPI.asyncFilters[type]
+  if(! _.isArray(filter)){
+    return content
+  }
+  filter = _.sortBy(filter, i=>(i.priority || 10))
+  await Promise.all(filter.map(async i=>{
+    if(_.isFunction(i.callback)){
+      content = await i.callback(content, ...params)
+    }
+  }))
+  return content
+}
+
+/**
+ *
+ * @param {string} type
+ * @param {*} content
+ * @param params
+ * @returns {*}
+ */
+window.editorAPI.applyPluginsFiltersSync = (type, content = null, ...params) => {
+  if(! type){
+    return content
+  }
+  //console.log(`Sync Filter '${type}' applying!`);
+  /**
+   *
+   * @type {{
+   *   priority: number | string,
+   *   callback: Function
+   * }[]} filter
+   * */
+  let filter = window.editorAPI.syncFilters[type]
+  if(! _.isArray(filter)){
+    return content
+  }
+  filter = _.sortBy(filter, i=>(i.priority || 10))
+  filter.forEach(i=>{
+    if(_.isFunction(i.callback)){
+      content = i.callback(content, ...params)
+    }
+  })
+  return content
+}
+
+window.editorAPI.applyPluginsFiltersAsync('before_editor_render', '').then(()=>{
+  return import('./installing')
+}).then(()=>{
+  return import('./_index')
 })
 
-window.iconsManager = new IconsManager();
+window.onbeforeunload = function() {
 
-window.stylesModulePromise = new Promise(function(resolve) {
-  window.stylesModuleResolve = resolve;
-});
-
-window.elementsManager = new ElementsManager();
-window.controllersManager = new ControllersManager();
-window.controllersManager.init();
-window.editorStore = store;
-
-if (process.env.NODE_ENV !== "production") {
-  console.log("Looks like we are in development mode!");
-} else {
-  console.log(
-    "%cWelcome to Altrp Editor",
-    "color: red; font-size: 24px; font-weight: 900;"
-  );
-}
-
-function loadEditorContent(EditorContent){
-
-  let iframe = document.getElementsByTagName("iframe")[0];
-  window.EditorFrame = iframe;
-  if (!iframe) {
-    return;
+  if(editorStore.getState().templateStatus.status !== CONSTANTS.TEMPLATE_UPDATED
+    && editorStore.getState().templateStatus.status !== CONSTANTS.TEMPLATE_PUBLISHED){
+    return false
   }
-  let editorContentTarget = iframe.contentDocument.getElementById(
-    "editor-content"
-  );
-
-  if (editorContentTarget) {
-    ReactDOM.render(<EditorContent />, editorContentTarget);
-  } else {
-    // DOMContentLoaded
-    iframe.contentDocument.addEventListener('DOMContentLoaded', ()=>{
-      editorContentTarget = iframe.contentWindow.document.getElementById(
-        "editor-content"
-      );
-      if (editorContentTarget) {
-        ReactDOM.render(<EditorContent />, editorContentTarget);
-      }
-    })
-  }
-  if (process.env.NODE_ENV === "production") {
-    let head = iframe.contentWindow.document.getElementsByTagName(
-      "head"
-    )[0];
-    let styleLink = iframe.contentWindow.document.createElement("link");
-    styleLink.rel = "stylesheet";
-    styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
-    head.appendChild(styleLink);
-    head.appendChild(document.querySelector('[data-cke]').cloneNode(true));
-  } else {
-    let head = iframe.contentWindow.document.getElementsByTagName(
-      "head"
-    )[0];
-    let script = iframe.contentWindow.document.createElement("script");
-    script.src = "http://127.0.0.1:3000/src/bundle.js";
-    script.defer = "http://127.0.0.1:3000/src/bundle.js";
-    head.appendChild(script);
-  }
-
-  function listenerHistory(event) {
-    let charCode = String.fromCharCode(event.which).toLowerCase()
-    if (window.parent.appStore.getState().historyStore.active) {
-      if ((event.ctrlKey || event.metaKey) && charCode === 'z' && event.shiftKey) {
-        controllerHistory.redo();
-      } else if ((event.ctrlKey || event.metaKey) && charCode === 'z') {
-        controllerHistory.undo();
-      }
-    }
-  }
-  window.addEventListener("keydown", listenerHistory, false);
-  window.EditorFrame.contentWindow.addEventListener(
-    "keydown",
-    listenerHistory,
-    false
-  );
-}
-// window.ReactDOM.render(<Editor/>, editorTarget);
-/**
- * Импортируем компонент редактора Editor
- */
-import(/* webpackChunkName: 'Editor' */"./Editor.js")
-  .then(Editor => {
-    Editor = Editor.default;
-
-    let editorTarget = document.getElementById("editor");
-
-    if (editorTarget) {
-      window.ReactDOM.render(
-        <Provider store={store}>
-          <Editor />
-        </Provider>,
-        editorTarget
-      );
-    }
-
-    return import(/* webpackChunkName: 'EditorContent' */"./EditorContent");
-  })
-  .then(EditorContent => {
-    EditorContent = EditorContent.default;
-    let iframe = document.getElementsByTagName("iframe")[0];
-    if(iframe && iframe.contentDocument.getElementById(
-      "editor-content"
-    )){
-      loadEditorContent(EditorContent)
-    } else if(iframe){
-      iframe.onload = ()=>{
-        loadEditorContent(EditorContent)
-      }
-    }
-  });
+};

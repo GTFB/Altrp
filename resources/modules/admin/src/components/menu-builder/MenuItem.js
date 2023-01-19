@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {ReactSortable} from "react-sortablejs";
 import IconSelect from "../icon-select/IconSelect";
-import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers"
+import CONDITIONS_OPTIONS  from "../../../../front-app/src/js/constants/CONDITIONS_OPTIONS"
 import AltrpSelect from "../altrp-select/AltrpSelect";
 
 

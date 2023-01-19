@@ -16,7 +16,7 @@ import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 
 export function btnStyles(settings) {
   return [
-    "altrp-btn-wrapper",
+    "altrp-btn-wrapper.altrp-btn-wrapper",
 
     ["align-items", "button_alignment"],
 
@@ -233,7 +233,7 @@ export function btnStyles(settings) {
     "}",
 
     "& path",
-    ["fill", "icon_color", "cbackground_positionolor"],
+    ["fill", "icon_color", "color"],
     ["stroke", "icon_color_stroke", "color"],
     "}",
     "}",

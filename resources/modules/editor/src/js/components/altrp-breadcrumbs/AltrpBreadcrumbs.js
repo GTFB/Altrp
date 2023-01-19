@@ -140,10 +140,4 @@ class AltrpBreadcrumbs extends Component {
     );
   }
 }
-let _export
-if(window['h-altrp']){
-  _export = AltrpBreadcrumbs;
-} else {
-  _export = withRouter(AltrpBreadcrumbs);
-}
-export default _export;
+export default AltrpBreadcrumbs;

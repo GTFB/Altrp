@@ -1,5 +1,5 @@
 export const CHANGE_FORM_FIELD_VALUE = 'CHANGE_FORM_FIELD_VALUE';
-export const CLEAR_FORM_FIELD_VALUE = 'CHANGE_FORM_FIELD_VALUE';
+export const CLEAR_FORM_FIELD_VALUE = 'CLEAR_FORM_FIELD_VALUE';
 
 /**
  * Получает данные поля формы и сохраняет в хранилище

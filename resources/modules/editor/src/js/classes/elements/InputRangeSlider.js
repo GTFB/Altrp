@@ -50,6 +50,14 @@ class InputRangeSlider extends BaseElement{
       label: 'Slider',
     });
 
+    this.addControl("query_sync", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Sync With Query String",
+    });
+
+
     this.addControl('vertical', {
       type: CONTROLLER_SWITCHER,
       label: 'Vertical',
@@ -57,14 +65,12 @@ class InputRangeSlider extends BaseElement{
     });
 
     this.addControl('min', {
-      type: CONTROLLER_NUMBER,
       label: 'Min',
       default: 0,
       locked: true,
     });
 
     this.addControl('max', {
-      type: CONTROLLER_NUMBER,
       label: 'Max',
       default: 100,
       locked: true,
@@ -125,28 +131,32 @@ class InputRangeSlider extends BaseElement{
     this.addControl("form_id_start", {
       type: CONTROLLER_TEXT,
       label: "Start Form ID",
+      locked: true,
       responsive: false
     });
 
     this.addControl("field_id_start", {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: "Start field ID (Column Name)"
     });
 
-    this.addControl("content_default_value_start", {
-      type: CONTROLLER_NUMBER,
+    this.addControl("content_start_default", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Start Default Value",
+      locked: true,
       responsive: false,
-      label: "Start Default Value"
     });
 
-    this.addControl("content_calculation_start", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Start calculation",
-      responsive: false,
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
-    });
+    // this.addControl("content_calculation_start", {
+    //   type: CONTROLLER_TEXTAREA,
+    //   label: "Start calculation",
+    //   locked: true,
+    //   responsive: false,
+    //   description:
+    //     "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+    // });
 
     this.endControlSection();
 
@@ -158,28 +168,32 @@ class InputRangeSlider extends BaseElement{
     this.addControl("form_id_end", {
       type: CONTROLLER_TEXT,
       label: "End form ID",
+      locked: true,
       responsive: false
     });
 
     this.addControl("field_id_end", {
       type: CONTROLLER_TEXT,
       responsive: false,
+      locked: true,
       label: "End field ID (Column Name)"
     });
 
-    this.addControl("content_default_value_end", {
-      type: CONTROLLER_NUMBER,
+    this.addControl("content_end_default", {
+      type: CONTROLLER_TEXTAREA,
+      label: "End Default Value",
+      locked: true,
       responsive: false,
-      label: "End default Value"
     });
 
-    this.addControl("content_calculation_end", {
-      type: CONTROLLER_TEXTAREA,
-      label: "End calculation",
-      responsive: false,
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
-    });
+    // this.addControl("content_calculation_end", {
+    //   type: CONTROLLER_TEXTAREA,
+    //   label: "End calculation",
+    //   responsive: false,
+    //   locked: true,
+    //   description:
+    //     "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+    // });
 
     this.endControlSection();
 

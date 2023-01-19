@@ -1,12 +1,20 @@
 import replacePageContent from "../../helpers/replace-page-content";
 
 document.addEventListener('click', spaNavigation)
-export default function spaNavigation(e){
+export default async function spaNavigation(e){
 
   if(window?.altrp?.spa_off){
     return;
   }
   let target = e.target
+
+
+  if(target.closest('[data-link]')){
+    const qs = await import('qs')
+    altrpHelpers.redirect(qs.parse(target.closest('[data-link]').getAttribute('data-link')), e)
+    return;
+  }
+
   while(target && target.tagName && target.tagName.toLowerCase() !== 'a'){
     target = target.parentNode
   }
@@ -53,11 +61,11 @@ export default function spaNavigation(e){
   }
 }
 
-function _checkUrl(url){
-  console.log(url);
+export function _checkUrl(url){
+
   let segments = url.pathname.split('/')
   let filename = segments[segments.length - 1]
-  console.log(filename);
+
   let ext= filename.split('.')
   ext = ext[ext.length - 1]
   if(ext === filename){

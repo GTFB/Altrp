@@ -8,7 +8,7 @@ import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import {setAltrpIndex} from "../../helpers";
 
 const defaultDataStorage = {
-
+  ...window.altrpPreloadedDatasources
 };
 
 export function currentDataStorageReducer(dataStorage, action) {

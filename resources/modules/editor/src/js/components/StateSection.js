@@ -30,6 +30,7 @@ class StateSection extends Component {
     this.props.dispatch(setCurrentState(button.title, button.value));
   }
 
+
   render() {
     return (
       <div className="state-section-wrapper">

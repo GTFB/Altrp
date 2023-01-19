@@ -344,7 +344,7 @@ class InputFileWidget extends Component {
     }catch (e) {
       console.error(e);
     }
-    const files = e.target.files;
+    const files = e?.target?.files || [];
     const limit = this.props.element.getResponsiveLockedSetting('limit');
     let value;
     if (this.props.element.getResponsiveLockedSetting('multiple')) {

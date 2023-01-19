@@ -2,7 +2,6 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import Application from '@ioc:Adonis/Core/Application';
 import jimp from "jimp";
 import FAVICONS_SIZES from "../../../../helpers/const/FAVICONS_SIZES";
-import Drive from '@ioc:Adonis/Core/Drive'
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import isProd from "../../../../helpers/isProd";
 import UpdateService from "App/Services/UpdateService";
@@ -16,6 +15,7 @@ import clearRequireCache from "../../../../helpers/node-js/clearRequireCache";
 import {RequestContract} from "@ioc:Adonis/Core/Request";
 import base_path from '../../../../helpers/base_path'
 import exec from '../../../../helpers/exec'
+import Model from "App/Models/Model";
 
 export default class AdminController {
 
@@ -108,7 +108,7 @@ export default class AdminController {
 
     const id = request.input('id')
 
-    console.log(await exec(`node ${base_path('ace')} generator:template ${id ? `--id=${id}` : ''}`))
+    console.log(`result of generator:template ${id ? `--id=${id}` : ''}`,await exec(`node ${base_path('ace')} generator:template ${id ? `--id=${id}` : ''}`))
 
     console.info('Templates Upgraded')
   }
@@ -131,7 +131,7 @@ export default class AdminController {
       })
     }
 
-    await Drive.delete(Application.tmpPath("favicon") + `/basic.${favicon.extname}`)
+    fs.unlinkSync(Application.tmpPath("favicon") + `/basic.${favicon.extname}`)
 
     return {
       success: true
@@ -198,16 +198,22 @@ export default class AdminController {
     console.info('Upgrading Pages')
     const id = request.input('id')
 
-    console.log(await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`))
+    console.log(`result of generator:page ${id ? `--id=${id}` : ''}`, await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`))
 
     console.info('Pages Upgraded')
   }
 
   private static async upgradeModels() {
-    console.info('Upgrading Models')
+    clearRequireCache()
 
-    console.log(await exec(`node ${base_path('ace')} generator:model`))
-    console.log(await exec(`node ${base_path('ace')} generator:router`))
+    console.info('Upgrading Models')
+    const models = await Model.all()
+    for (const model of models) {
+      await Model.createDefaultCustomizers(model.toJSON(), model)
+    }
+    console.info('Upgraded Default Models Robotizers')
+    console.log(`result of generator:model`,await exec(`node ${base_path('ace')} generator:model`))
+    console.log(`result of generator:router`,await exec(`node ${base_path('ace')} generator:router`))
 
     console.info('Models Upgraded')
   }
@@ -223,7 +229,7 @@ export default class AdminController {
     await listenerGenerator.hookPages()
     await listenerGenerator.hookListeners()
 
-    console.log(await exec(`node ${base_path('ace')} generator:listener`))
+    console.log(`resul of generator:listener`, await exec(`node ${base_path('ace')} generator:listener`))
 
     console.info('Listeners Upgraded')
   }
@@ -231,7 +237,7 @@ export default class AdminController {
   private static async upgradeCRUDs() {
     console.info('Upgrading CRUDs')
 
-    console.log(await exec(`node ${base_path('ace')} generator:crud`))
+    console.log(`resul of generator:crud`, await exec(`node ${base_path('ace')} generator:crud`))
 
     console.info('CRUDs Upgraded')
   }
@@ -239,7 +245,7 @@ export default class AdminController {
   private static async upgradeSchedules() {
     console.info('Upgrading Schedules')
 
-    console.log(await exec(`node ${base_path('ace')} generator:schedule`))
+    console.log(`result of generator:schedule`, await exec(`node ${base_path('ace')} generator:schedule`))
 
     console.info('Schedules Upgraded')
   }

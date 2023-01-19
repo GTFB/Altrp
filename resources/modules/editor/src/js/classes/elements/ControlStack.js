@@ -4,8 +4,8 @@ import FrontElement from "../../../../../front-app/src/js/classes/FrontElement";
 
 class ControlStack extends FrontElement {
 
-  constructor(data){
-    super(data)
+  constructor(data, withoutComponent){
+    super(data, withoutComponent)
   }
   /**
    * @param {string} controlId
@@ -20,6 +20,7 @@ class ControlStack extends FrontElement {
    *   [default]: any,
    *   [stateless]: boolean,
    *   [responsive]: boolean,
+   *   [fullLength]: boolean,
    * }} args
    * */
   addControl(controlId, args){

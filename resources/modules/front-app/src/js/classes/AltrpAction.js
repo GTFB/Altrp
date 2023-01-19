@@ -26,6 +26,7 @@ import altrpCompare from "../functions/altrpCompare"
 import getWrapperHTMLElementByElement from "../functions/getWrapperHTMLElementByElement"
 import Resource from "../../../../editor/src/js/classes/Resource"
 import replacePageContent from "../helpers/replace-page-content";
+import {clearFormStorage} from "../store/forms-data-storage/actions";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -335,9 +336,20 @@ class AltrpAction extends AltrpModel {
 
       }
         break;
+      default: {
+        try {
+          if(window?.altrp?.customActions && window?.altrp?.customActions[this.getType()]){
+            result = await window?.altrp?.customActions[this.getType()](this)
+          }
+        } catch (e) {
+          // console.error(e);
+          result.success = false
+          result.error = e
+        }
+      }
     }
     let alertText = '';
-    if (result.success) {
+    if (result?.success) {
       alertText = this.getProperty('alert');
     } else {
       alertText = this.getProperty('reject');
@@ -468,7 +480,6 @@ class AltrpAction extends AltrpModel {
         getAppContext(this.getCurrentModel()),
         true
       );
-      console.log(data);
     }
     if (this.getProperty('forms_bulk')) {
       if (
@@ -561,6 +572,9 @@ class AltrpAction extends AltrpModel {
     try {
       const response = await form.submit('', '', data, customHeaders, emptyFieldMessage);
       result = _.assign(result, response);
+      if(this.getProperty('clear_form_success')){
+        appStore.dispatch(clearFormStorage(this.getFormId()))
+      }
     } catch (error) {
       console.error(error);
       result.error = error;
@@ -1057,7 +1071,7 @@ class AltrpAction extends AltrpModel {
               value.replace('{{', '').replace('}}', ''),
               null,
               this.getCurrentModel()
-            );
+          );
           } else if (value.indexOf('|') !== -1) {
             value = parseParamsFromString(
               value,
@@ -1495,7 +1509,6 @@ class AltrpAction extends AltrpModel {
     // console.log( manager);
     // console.log(await manager.getUser());
     let result;
-    console.log(method);
 
     if(_.isFunction(manager[method])){
       try {
@@ -1504,7 +1517,6 @@ class AltrpAction extends AltrpModel {
         return {success:false}
       }
     }
-    console.log(result);
     // await manager.signoutRedirect();
     return {success:true}
   }

@@ -1,4 +1,6 @@
-import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
+import getDataByPath from "../../../../front-app/src/js/functions/getDataByPath"
+import isEditor from "../../../../front-app/src/js/functions/isEditor"
+import redirect from "../../../../front-app/src/js/functions/redirect"
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-column {
@@ -24,6 +26,7 @@ class ColumnComponent extends Component {
       this.render = props.baseRender(this);
     }
     this.columnCount = 0
+    this.element = this.props.element
   }
 
   /**
@@ -43,7 +46,19 @@ class ColumnComponent extends Component {
    * @return {boolean}
    */
   columnIsLink() {
-    return ! !_.get(this, 'props.element.settings.link_link.url');
+    return !!_.get(this, 'props.element.settings.link_link.url');
+  }
+
+  getStyles = ()=>{
+    const styles = {}
+    let path_image = this.element.getSettings('path_image')
+    if(path_image){
+      path_image = getDataByPath(path_image, this.element.getCardModel())
+    }
+    if(path_image){
+      styles.backgroundImage = `url("${path_image}")`
+    }
+    return styles
   }
 
   render() {
@@ -55,7 +70,7 @@ class ColumnComponent extends Component {
     );
     let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
     let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes_column || "") + (background_image?.url || background_image_hover?.url ? ' altrp-background-image-columns' : '');
-    if(this.isActive()){
+    if (this.isActive()) {
       className += ' active';
     }
     if (this.columnIsLink()) {
@@ -66,18 +81,21 @@ class ColumnComponent extends Component {
 
     return React.createElement(layout_html_tag,
       {
+        style:this.getStyles(),
         className,
         id: this.state.settings.position_style_css_id_column || "",
         onClick: this.onClick,
-        settings: this.props.element.getSettings()
       },
       this.state.children.map(
-        widget => <ElementWrapper key={widget.getIdForAction()}
-          rootElement={this.props.rootElement}
-          baseRender={this.props.baseRender}
-          ElementWrapper={ElementWrapper}
-          component={widget.componentClass}
-          element={widget} />
+        widget => {
+
+          return <ElementWrapper key={widget.getIdForAction()}
+                                 rootElement={this.props.rootElement}
+                                 baseRender={this.props.baseRender}
+                                 ElementWrapper={ElementWrapper}
+                                 component={widget.componentClass}
+                                 element={widget}/>
+        }
       )
     );
   }

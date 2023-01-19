@@ -2,10 +2,10 @@ import {defaultStyled, sliderStyled, styledString} from "../../../../../../front
 
 
 
-export default styled.div`
-  ${({settings}) => {
+export default createGlobalStyle`
+  ${({settings, selector}) => {
     const styles = [
-      "&.altrp-dropbar-btn-containter",
+      selector+".altrp-dropbar-btn-containter",
       ["width", "width_dropbar_options-content", "slider"],
 
       ["padding", "padding_dropbar_content_style", "dimensions"],
@@ -22,8 +22,16 @@ export default styled.div`
       ["", "typographic_text_dropbar_content_style", "typographic"],
       "}",
 
+      "altrp-dropbar-btn-content a",
+      ["color", "text_color_dropbar_content_style_link", "color"],
+      "}",
+
+      "altrp-dropbar-btn-content a:hover",
+      ["color", "text_color_dropbar_content_style_link", "color", ':hover'],
+      "}",
+
       //state disabled
-      "&.altrp-dropbar-btn-containter",
+      selector + ".altrp-dropbar-btn-containter",
       ["width", "width_dropbar_options-content", "slider", ".state-disabled"],
 
       ["padding", "padding_dropbar_content_style", "dimensions", ".state-disabled"],
@@ -40,7 +48,7 @@ export default styled.div`
       ["", "typographic_text_dropbar_content_style", "typographic", ".state-disabled"],
       "}",
       //state active
-      "&.active.altrp-dropbar-btn-containter",
+      selector + ".active.altrp-dropbar-btn-containter",
       ["width", "width_dropbar_options-content", "slider", ".active"],
 
       ["padding", "padding_dropbar_content_style", "dimensions", ".active"],
@@ -57,7 +65,7 @@ export default styled.div`
       ["", "typographic_text_dropbar_content_style", "typographic", ".active"],
       "}",
 
-      "&:hover.altrp-dropbar-btn-containter",
+      selector + ":hover.altrp-dropbar-btn-containter",
       ["background-color", "background_dropbar_content_style", "color", ":hover"],
       ["border-style", "border_style_dropbar_content_style", "", ":hover"],
       ["border-width", "border_width_dropbar_content_style", "dimensions", ":hover"],
@@ -66,11 +74,12 @@ export default styled.div`
       ["box-shadow", "box_shadow_dropbar_content_style", "shadow", ":hover"],
       "}",
 
-      "&:hover .altrp-dropbar-btn-content",
+      selector + ":hover .altrp-dropbar-btn-content",
       ["color", "text_color_dropbar_content_style", "color", ":hover"],
       ["", "typographic_text_dropbar_content_style", "typographic", ":hover"],
       "}"
     ];
+
     return styledString(styles, settings)
   }}
 `

@@ -225,7 +225,12 @@ export default function renderInputCheckbox(settings, device, context) {
           checked = altrpCompare(option.value, value, "in");
 
           return (
-            `<div class="${"altrp-field-option" + (checked ? " active" : "")}" key="${fieldName + "-" + idx}"><span class="altrp-field-option-span"><label class="${"bp3-control bp3-checkbox bp3-inline altrp-field-checkbox" + (checked ? " active" : "")}"><input checked="${checked}" name="${formID + "-" + fieldName}" id="${formID + "-" + fieldName + "-" + idx}" type="checkbox"><span class="bp3-control-indicator"></span></label></span><label class="altrp-field-option__label">${option.label}</label></div>`
+            `<div class="${"altrp-field-option" + (checked ? " active" : "")}">
+<span class="altrp-field-option-span">
+<label class="${"bp3-control bp3-checkbox bp3-inline altrp-field-checkbox" + (checked ? " active" : "")}">
+<input  name="${formID + "-" + fieldName}" id="${formID + "-" + fieldName + "-" + idx}" type="checkbox"><span class="bp3-control-indicator"></span></label>
+</span><label class="altrp-field-option__label">${option.label}</label>
+</div>`
           );
         }).join(" ")}
       </div>`

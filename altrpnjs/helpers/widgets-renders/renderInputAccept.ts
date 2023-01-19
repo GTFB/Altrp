@@ -41,24 +41,30 @@ export default function renderInputAccept(settings, device) {
     switch (content_label_position_type) {
       case "top":
         styleLabel = {
-          marginBottom: spacing
+          'margin-bottom': spacing
         };
         break;
       case "bottom":
         styleLabel = {
-          marginTop: spacing
+          'margin-top': spacing
         };
         break;
       case "left":
         styleLabel = {
-          marginRight: spacing
+          'margin-right': spacing
+        };
+        classLabel = "altrp-field-label-container-left";
+        break;
+      case "right":
+        styleLabel = {
+          'margin-left': spacing
         };
         classLabel = "altrp-field-label-container-left";
         break;
       case "absolute":
         styleLabel = {
           position: "absolute",
-          zIndex: 2
+          'z-index': 2
         };
         break;
     }
@@ -66,7 +72,7 @@ export default function renderInputAccept(settings, device) {
     const content_required = getResponsiveSetting(settings, "content_required", device);
     const content_label = getResponsiveSetting(settings, "content_label", device);
     const labelIcon = label_icon && label_icon.assetType && `
-      <span className="altrp-label-icon">
+      <span class="altrp-label-icon">
         ${renderAsset(label_icon)}
       </span>
     `
@@ -95,13 +101,11 @@ export default function renderInputAccept(settings, device) {
     }
     const input =  `
       <div class="altrp-field-option ${value ? "active" : ""}">
-        <span class="altrp-field-option-span">
-          <input
-            type="checkbox"
-            class="altrp-field-option__input ${value ? "active" : ""}"
-            ${value ? 'checked' : ''}
-          />
-        </span>
+
+<span class="altrp-field-option-span">
+<label class="bp3-control bp3-checkbox bp3-inline altrp-field-checkbox">
+<input  type="checkbox"><span class="bp3-control-indicator"></span></label>
+</span>
       </div>
     `;
 

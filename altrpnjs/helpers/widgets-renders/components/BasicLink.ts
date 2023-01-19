@@ -1,4 +1,5 @@
 import * as _ from 'lodash'
+import altrpRandomId from "../../altrpRandomId";
 export default function BasicLink(attrs):string {
   let classes = attrs.className
 
@@ -31,8 +32,8 @@ export default function BasicLink(attrs):string {
 
   let target: string = ''
 
-  if (attrs.target === "_black") {
-    target = "_black"
+  if (attrs.target) {
+    target = altrpRandomId()
   }
 
   let styleChildren = {}

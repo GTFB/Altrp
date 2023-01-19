@@ -13,6 +13,138 @@ import Repeater from '../classes/Repeater';
 import axios from "axios";
 import {getElementSettingsSuffix} from "../helpers";
 
+let defaultOptions = [
+  {
+    value: 'form',
+    label: 'Form'
+  },
+  {
+    value: 'toggle_element',
+    label: 'Toggle Elements'
+  },
+  {
+    value: 'toggle_popup',
+    label: 'Toggle Popup'
+  },
+  {
+    value: 'print_page',
+    label: 'Print Page'
+  },
+  {
+    value: 'print_elements',
+    label: 'Print Elements'
+  },
+  {
+    value: 'scroll_to_element',
+    label: 'Scroll to Element'
+  },
+  {
+    value: 'scroll_to_top',
+    label: 'Scroll to Top'
+  },
+  {
+    value: 'scroll_to_bottom',
+    label: 'Scroll to Bottom'
+  },
+  {
+    value: 'redirect',
+    label: 'Redirect'
+  },
+  {
+    value: 'reload',
+    label: 'Reload Page'
+  },
+  {
+    value: 'trigger',
+    label: 'Trigger Action'
+  },
+  {
+    value: 'page_to_pdf',
+    label: 'Page to PDF'
+  },
+  {
+    value: 'elements_to_pdf',
+    label: 'Elements to PDF'
+  },
+  {
+    value: 'data_to_csv',
+    label: 'Data Convert to CSV'
+  },
+  {
+    value: 'table_to_csv',
+    label: 'Table to CSV'
+  },
+  {
+    value: 'table_to_xml',
+    label: 'Table to XML'
+  },
+  // {
+  //   value: 'table_to_xls',
+  //   label: 'Table to XLS'
+  // },
+  {
+    value: 'login',
+    label: 'Login'
+  },
+  {
+    value: 'logout',
+    label: 'Logout'
+  },
+  {
+    value: 'set_data',
+    label: 'Set Data'
+  },
+  {
+    value: 'forms_manipulate',
+    label: 'Forms Manipulate'
+  },
+  {
+    value: 'update_current_datasources',
+    label: 'Update Current Datasources'
+  },
+  {
+    value: 'update_current_model',
+    label: 'Update Current Model'
+  },
+  {
+    value: 'custom_code',
+    label: 'Custom JS-Code'
+  },
+  {
+    value: 'play_sound',
+    label: 'Play Sound'
+  },
+  {
+    value: 'delay',
+    label: 'Delay'
+  },
+  {
+    value: 'condition',
+    label: 'Condition'
+  },
+  {
+    value: 'vi_toggle',
+    label: 'Version for the Visually Impaired Toggle'
+  },
+  {
+    value: 'oauth',
+    label: 'Oidc Client'
+  },
+  {
+    value: 'socket_receiver',
+    label: 'Socket receiver'
+  },
+  {
+    value: "socket_emit",
+    label: "Socket emit"
+  },
+  {
+    value: "set_cookie",
+    label: "Set cookie"
+  }
+]
+defaultOptions = window.editorAPI.applyPluginsFiltersSync('default_actions_controllers_type_options', defaultOptions)
+
 /**
  * Добавляет контроллеры действия для элемента
  * @param {BaseElement} element - элемент
@@ -20,7 +152,7 @@ import {getElementSettingsSuffix} from "../helpers";
  * @param {string} idPrefix - префикс, который добавляется ко всем id секция и контроллеров
  * @param {string} tab - таб по умолчанию
  * @param {boolean} showChangeEndControllers -
- * @param {boolean} withoutSection
+ * @param forSection
  */
 export function actionsControllers(
   element,
@@ -31,7 +163,7 @@ export function actionsControllers(
   forSection = false
 ) {
   /**
-   * Список произвольных действия для кнопки START
+   * actions START
    */
   if(!forSection) {
     element.startControlSection(idPrefix + 'actions_section', {
@@ -76,140 +208,7 @@ export function actionsControllers(
     isClearable: true,
     nullable: true,
     responsive: false,
-    options: [
-      {
-        value: 'form',
-        label: 'Form'
-      },
-      {
-        value: 'toggle_element',
-        label: 'Toggle Elements'
-      },
-      {
-        value: 'toggle_popup',
-        label: 'Toggle Popup'
-      },
-      {
-        value: 'print_page',
-        label: 'Print Page'
-      },
-      {
-        value: 'print_elements',
-        label: 'Print Elements'
-      },
-      {
-        value: 'scroll_to_element',
-        label: 'Scroll to Element'
-      },
-      {
-        value: 'scroll_to_top',
-        label: 'Scroll to Top'
-      },
-      {
-        value: 'scroll_to_bottom',
-        label: 'Scroll to Bottom'
-      },
-      {
-        value: 'redirect',
-        label: 'Redirect'
-      },
-      {
-        value: 'reload',
-        label: 'Reload Page'
-      },
-      {
-        value: 'trigger',
-        label: 'Trigger Action'
-      },
-      {
-        value: 'page_to_pdf',
-        label: 'Page to PDF'
-      },
-      {
-        value: 'elements_to_pdf',
-        label: 'Elements to PDF'
-      },
-      {
-        value: 'data_to_csv',
-        label: 'Data Convert to CSV'
-      },
-      {
-        value: 'table_to_csv',
-        label: 'Table to CSV'
-      },
-      {
-        value: 'table_to_xml',
-        label: 'Table to XML'
-      },
-      // {
-      //   value: 'table_to_xls',
-      //   label: 'Table to XLS'
-      // },
-      {
-        value: 'login',
-        label: 'Login'
-      },
-      {
-        value: 'logout',
-        label: 'Logout'
-      },
-      {
-        value: 'set_data',
-        label: 'Set Data'
-      },
-      {
-        value: 'forms_manipulate',
-        label: 'Forms Manipulate'
-      },
-      {
-        value: 'update_current_datasources',
-        label: 'Update Current Datasources'
-      },
-      {
-        value: 'update_current_model',
-        label: 'Update Current Model'
-      },
-      {
-        value: 'custom_code',
-        label: 'Custom JS-Code'
-      },
-      {
-        value: 'play_sound',
-        label: 'Play Sound'
-      },
-      {
-        value: 'delay',
-        label: 'Delay'
-      },
-      {
-        value: 'condition',
-        label: 'Condition'
-      },
-      {
-        value: 'vi_toggle',
-        label: 'Version for the Visually Impaired Toggle'
-      },
-      {
-        value: 'oauth',
-        label: 'Oidc Client'
-      },
-      {
-        value: 'metamask_connect',
-        label: 'MetaMask Connect'
-      },
-      {
-        value: 'socket_receiver',
-        label: 'Socket receiver'
-      },
-      {
-        value: "socket_emit",
-        label: "Socket emit"
-      },
-      {
-        value: "set_cookie",
-        label: "Set cookie"
-      }
-    ],
+    options: defaultOptions,
     locked: true,
     onChange: function({value}) {
       if (value === "form" || value === "redirect") {
@@ -490,7 +489,7 @@ export function actionsControllers(
   });
 
   actionsRepeater.addControl('form_customizer', {
-    label: 'Customizer',
+    label: 'Robotizer',
     type: CONTROLLER_SELECT2,
     prefetch_options: true,
     options_resource: '/admin/ajax/customizers_options',
@@ -528,7 +527,7 @@ export function actionsControllers(
           }
         }
       } catch (error) {
-        alert("Customizer request error")
+        alert("Robotizer request error")
         console.error(error)
       }
     },
@@ -556,6 +555,17 @@ export function actionsControllers(
     dynamic: false,
     conditions: {
       type: ['play_sound']
+    },
+    locked: true,
+  });
+
+  actionsRepeater.addControl('clear_form_success', {
+    label: 'Clear Form On Success',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ['form']
     },
     locked: true,
   });
@@ -1053,6 +1063,7 @@ export function actionsControllers(
     label: 'Monitor Session',
     locked: true,
   });
+
   actionsRepeater.addControl('checkSessionInterval', {
     dynamic: false,
     responsive: false,
@@ -1062,6 +1073,7 @@ export function actionsControllers(
     label: 'Check Session Interval',
     locked: true,
   });
+  window.editorAPI.applyPluginsFiltersSync('before_action_repeater_before_control', actionsRepeater, element)
 
 
   actionsRepeater.addControl('confirm', {
@@ -1087,6 +1099,9 @@ export function actionsControllers(
     label: 'Reject',
     locked: true,
   });
+
+
+  window.editorAPI.applyPluginsFiltersSync('before_action_repeater_applied', actionsRepeater, element)
 
   element.addControl(idPrefix + 'actions', {
     label: sectionLabel,

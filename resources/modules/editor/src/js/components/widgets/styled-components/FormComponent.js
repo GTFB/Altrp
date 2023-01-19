@@ -1423,8 +1423,16 @@ const maskMismatchMessage = (settings, id) => {
   styles += "}";
   return styles;
 };
+
+function acceptStyles(settings) {
+  let styles = ''
+  let field_width = getResponsiveSetting(settings, 'field_width')
+  console.log(field_width);
+  return styles;
+}
+
 //Точка входа
-function FormComponent(settings) {
+function FormComponent(settings, widgetId, widgetName) {
   let styles = "";
   const background_section_opacity = getResponsiveSetting(
     settings,
@@ -1479,6 +1487,13 @@ function FormComponent(settings) {
   fieldLabelRequiredStyles && (styles += fieldLabelRequiredStyles);
   //mask-mismatch-message
   const maskMismatchMessageStyles = maskMismatchMessage(settings);
+
+  switch (widgetName) {
+    case 'input-accept':{
+      styles += acceptStyles(settings)
+    }
+    break;
+  }
   maskMismatchMessageStyles && (styles += maskMismatchMessageStyles);
   //finish
   return styles;

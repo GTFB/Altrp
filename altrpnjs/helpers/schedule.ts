@@ -48,5 +48,15 @@ export const addSchedule = (
 }
 
 export const removeSchedule = id => {
-  jobs[id].cancel()
+  if (jobs[id]) {
+    jobs[id].cancel()
+  }
+}
+
+export const nextInvocation = id => {
+  if (jobs[id]) {
+    return jobs[id].nextInvocation()
+  }
+
+  return null
 }

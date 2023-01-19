@@ -1,7 +1,7 @@
 import {SET_CURRENT_CONTEXT_ELEMENT} from './actions'
 
 const defaultState = {
-  currentElement: {}
+  currentElement: {},
 };
 
 export function currentElementContextReducer(state, action) {
@@ -10,6 +10,7 @@ export function currentElementContextReducer(state, action) {
     case SET_CURRENT_CONTEXT_ELEMENT:{
       state = {
         currentElement: action.element,
+        inMainWindow: action.inMainWindow
       };
     }break;
   }

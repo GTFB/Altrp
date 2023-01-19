@@ -60,6 +60,13 @@ class InputRadio extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
+    this.addControl("query_sync", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Sync With Query String",
+    });
+
     const optionsRepeater = new Repeater();
 
     optionsRepeater.addControl("label", {

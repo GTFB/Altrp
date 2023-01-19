@@ -24,11 +24,15 @@ export default class Role extends BaseModel {
     const relation = this.related("permissions");
 
     if(typeof value === "object") {
-        const permission = await relation.query().where("id", value.id).first();
+        const permission = await relation.query().where("permissions.id", value.id).first();
 
         return !!permission
-    } else if(typeof value === "number") {
-      const permission = await relation.query().where("id", value).first();
+    } else if(Number(value)) {
+      const permission = await relation.query().where("permissions.id", value).first();
+
+      return !!permission
+    }else if( value ) {
+      const permission = await relation.query().where("permissions.name", value).first();
 
       return !!permission
     }

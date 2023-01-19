@@ -90,6 +90,8 @@ export default class MediaController {
       });
     }
 
+
+
     return response.json({
       count,
       pageCount,
@@ -219,7 +221,6 @@ export default class MediaController {
       // @ts-ignore
       const ext = file.extname.split(".").pop();
       let media = new Media();
-      media.title = file.clientName;
       media.media_type = file.type || "";
       media.author = user.id;
       media.type = MediaController.getTypeForFile(file);
@@ -228,25 +229,26 @@ export default class MediaController {
 
       let title = file.clientName.split(".");
       title.pop();
-      title = title.join();
+      title = title.join('');
       title = transliterate(title)
       title = title + '_' + (new Date().valueOf())
+      title = title.substring(0, 36)
 
       let filename = title + "." + ext;
-
+      media.title = filename
       let urlBase =
         "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
-      let dirname = public_path("/storage" + urlBase);
+      let dirname = ("/storage" + urlBase);
 
 
-      if (!fs.existsSync(dirname)) {
-        fs.mkdirSync(dirname, { recursive: true });
+      if (!fs.existsSync(public_path(dirname))) {
+        fs.mkdirSync(public_path(dirname), { recursive: true });
       }
       media.filename = urlBase + filename;
 
       // @ts-ignore
       await file.moveToDisk(dirname, { name: filename }, "local");
-      let content = fs.readFileSync(dirname + filename);
+      let content = fs.readFileSync(public_path(dirname + filename));
 
       if (ext == "heic") {
         media.title = file.clientName.split(".")[0] + ".jpg";
@@ -257,7 +259,7 @@ export default class MediaController {
           format: "JPEG",
           quality: 1,
         });
-        fs.writeFileSync(dirname + filename, content);
+        fs.writeFileSync(public_path(dirname + filename), content);
       }
 
       if (ext === "svg") {
@@ -323,18 +325,19 @@ export default class MediaController {
       title = title.join();
       title = transliterate(title)
       title = title + '_' + (new Date().valueOf())
+      title = title.substring(0, 36)
 
       let filename = title + "." + ext;
       let urlBase =
         "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
-      let dirname = public_path("/storage" + urlBase);
-      if (!fs.existsSync(dirname)) {
-        fs.mkdirSync(dirname, { recursive: true });
+      let dirname = ("/storage" + urlBase);
+      if (!fs.existsSync(public_path("/storage" + urlBase))) {
+        fs.mkdirSync(public_path("/storage" + urlBase), { recursive: true });
       }
       media.filename = urlBase + filename;
       // @ts-ignore
       await file.moveToDisk(dirname, { name: filename }, "local");
-      let content = fs.readFileSync(dirname + filename);
+      let content = fs.readFileSync(public_path(dirname + filename));
 
       if (ext == "heic") {
         media.title = file.clientName.split(".")[0] + ".jpg";
@@ -345,7 +348,7 @@ export default class MediaController {
           format: "JPEG",
           quality: 1,
         });
-        fs.writeFileSync(dirname + filename, content);
+        fs.writeFileSync(public_path(dirname + filename), content);
       }
 
       if (ext === "svg") {
@@ -392,6 +395,12 @@ export default class MediaController {
 
     const stats = fs.statSync(Application.publicPath(media.url));
     let mb = stats.size / (1024 * 1024);
+    let unit = 'Mb'
+
+    if (mb < 1) {
+      mb = mb * 1024;
+      unit = 'Kb'
+    }
 
     const isFloat = !Number.isInteger(mb);
 
@@ -400,7 +409,7 @@ export default class MediaController {
       mb = mb.toFixed(3);
     }
 
-    serialized.filesize = mb + "mb";
+    serialized.filesize = mb + " " + unit;
 
     return serialized;
   }
