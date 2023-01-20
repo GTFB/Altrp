@@ -63,7 +63,7 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
                                                                element,
                                                              }) => {
   if(element.settings.global_styles_presets){
-    return ''
+    elementId = `_altrp-preset_${elementName}-${element.settings.global_styles_presets}`
   }
 
   let styles = "";

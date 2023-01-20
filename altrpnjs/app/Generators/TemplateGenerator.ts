@@ -103,7 +103,7 @@ export default class TemplateGenerator extends BaseGenerator {
     }
 
     const _styles: string[] = []
-    const optimizedStyles = optimizeStyles(queriedStyles)
+    const optimizedStyles = await optimizeStyles(queriedStyles)
 
     optimizedStyles.forEach(([mediaQuery, queryStyles]: string[]) => {
       mediaQuery ? _styles.push(`${mediaQuery}{${queryStyles}}`) : _styles.push(queryStyles)

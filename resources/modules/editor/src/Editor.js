@@ -59,7 +59,6 @@ import {setGlobalStylesCss} from "./js/store/global-css-editor/actions";
 import ReactDOM from "react-dom";
 import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
 import ImportantStylesManager from "./js/components/ImportantStylesManager";
-import RenderPresetStyles from "./js/components/RenderPresetStyles";
 import PreviewButton from './js/components/PreviewButton';
 import PreviewSettingModal from './js/components/PreviewSettingModal';
 import cn from "classnames";
@@ -725,7 +724,7 @@ class Editor extends Component {
         </div>
         <AssetsBrowser rawEnable={true}/>
         <ImportantStylesManager/>
-        <RenderPresetStyles/>
+        {/*<RenderPresetStyles/>*/}
       </DndProvider>
     );
   }

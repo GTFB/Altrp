@@ -2,11 +2,11 @@ import map from 'lodash/map'
 import forEach from 'lodash/forEach'
 import isArray from 'lodash/isArray'
 import isEmpty from 'lodash/isEmpty'
-import purifycss from 'purify-css'
 import { toJSON, toCSS } from 'cssjson'
 
 import SCREENS from './const/SCREENS'
 import ArrayObject from './array-object'
+import BaseGenerator from "App/Generators/BaseGenerator";
 
 const nameMapScreen = {}
 
@@ -93,6 +93,7 @@ function optimize(items) {
     item.value.forEach(name => {
       result.remove(map.getAsString(name), name)
       map.add(name, item.id)
+
       result.add(map.getAsString(name), name)
     })
   })
@@ -100,24 +101,21 @@ function optimize(items) {
   return result.getEntries()
 }
 
-export const flatStyleArray = (styleArray, html, purifycssOptions) => {
+export const flatStyleArray = (styleArray, withPreset) => {
   if (!isArray(styleArray)) {
     return null
   }
 
-  const purifiedStyleArray = html
-    ? styleArray
-      .map(style => purifycss(html, style, purifycssOptions))
-      .filter(style => style)
-    : styleArray
 
-  const jsonStyleArray = purifiedStyleArray
+  const jsonStyleArray = styleArray
     .map(style => toJSON(style))
     .map(jsonStyle => {
       const newJson = {}
 
       forEach(jsonStyle.children, (value, key) => {
+
         if (!isEmpty(value.children) || !isEmpty(value.attributes)) {
+
           newJson[key] = value
         }
       })
@@ -127,25 +125,32 @@ export const flatStyleArray = (styleArray, html, purifycssOptions) => {
 
   const flattenStyleArray = jsonStyleArray
     .map(json => {
+
       return map(json, (value: { attributes: Record<string, any> }, key) => [key, value.attributes])
     })
     .flat()
     .map(item => {
+      if(! withPreset && item[0].includes('_altrp-preset_')){
+        return null
+      }
+
       return map(item[1], (style, key) => {
+
         return `${item[0]}??${key}??${style}`
       })
     })
+    .filter(item => item)
     .flat()
-
   return flattenStyleArray
 }
 
-export const mergeStyles = (styles, html, purifycssOptions) => {
+export const mergeStyles = (styles, withPreset = false) => {
   const converted = map(styles, (value, key) => {
+
     return isArray(value)
       ? {
         id: key,
-        value: flatStyleArray(value, html, purifycssOptions)
+        value: flatStyleArray(value, withPreset)
       }
       : null
   }).filter(styles => styles)
@@ -171,24 +176,94 @@ export const mergeStyles = (styles, html, purifycssOptions) => {
   return merged
 }
 
-export const optimizeStyles = (styles, html?, purifycssOptions?) => {
+export const optimizeStyles = async (styles) => {
   const stylesJson = toJSON(styles)
   const queryStylesJson = {}
-
+  const queryPresetStylesJson = {}
   forEach(stylesJson.children, (value, key) => {
+    let _queryStylesJson = queryStylesJson
     if (key.indexOf('@media') < 0) {
       const newKey = `0_10000`
-      if (queryStylesJson[newKey]) {
-        queryStylesJson[newKey].children[key] = value
+      if(key.includes('_altrp-preset_')){
+        key += ' '
+
+        // @ts-ignore
+        let _key: string = key.match(/(?<=_altrp-preset_)([\S]+?)(?=[.\s,])/g)?.[0]
+        if(! _key){
+          console.error('error with preset selector')
+        }
+
+        queryPresetStylesJson[_key] = queryPresetStylesJson[_key] || {}
+        _queryStylesJson = queryPresetStylesJson[_key]
+      }
+
+      if (_queryStylesJson[newKey]) {
+        if(_queryStylesJson[newKey].children[key]){
+          _queryStylesJson[newKey].children[key].attributes = {
+            ..._queryStylesJson[newKey].children[key].attributes,
+            ...value.attributes
+          }
+        }
+        _queryStylesJson[newKey].children[key] = value
       } else {
-        queryStylesJson[newKey] = { children: { [key]: value } }
+        _queryStylesJson[newKey] = { children: { [key]: value } }
       }
     } else {
       const range = mediaQueryToRange(key)
       const newKey = `${range.min}_${range.max}`
-      queryStylesJson[newKey] = [toCSS(value)]
+
+      map(value.children,(value,key )=>{
+
+        if(key.includes('_altrp-preset_')){
+          key += ' '
+
+          // @ts-ignore
+          let _key: string = key.match(/(?<=_altrp-preset_)([\S]+?)(?=[.\s,])/g)?.[0]
+          if(! _key){
+            console.error('error with preset selector')
+          }
+          queryPresetStylesJson[_key] = queryPresetStylesJson[_key] || {}
+          if (queryPresetStylesJson[_key][newKey]) {
+
+            if(queryPresetStylesJson[_key][newKey].children[key]){
+              queryPresetStylesJson[_key][newKey].children[key].attributes = {
+                ...queryPresetStylesJson[_key][newKey].children[key].attributes,
+                ...value.attributes
+              }
+            }
+            queryPresetStylesJson[_key][newKey].children[key] = value
+          } else {
+            queryPresetStylesJson[_key][newKey] = { children: { [key]: value } }
+          }
+        }
+      })
+      _queryStylesJson[newKey] = [toCSS(value)]
+
     }
   })
 
-  return mergeStyles(queryStylesJson, html, purifycssOptions)
+  if(queryStylesJson['0_10000']){
+    queryStylesJson['0_10000'] =  [toCSS(queryStylesJson['0_10000'])]
+  }
+  await Promise.all(map(queryPresetStylesJson, async (queryStylesJson: any, key)=>{
+    map(queryStylesJson, (value, key)=>{
+      queryStylesJson[key] = [toCSS(value)]
+    })
+
+    let styles: any = []
+    const optimizedStyles = mergeStyles(queryStylesJson, true)
+
+    optimizedStyles.forEach(([mediaQuery, queryStyles]: string[]) => {
+      mediaQuery ? styles.push(`${mediaQuery}{${queryStyles}}`) : styles.push(queryStyles)
+    })
+    styles = styles.join('')
+
+    await BaseGenerator.generateCssFile(key, styles, 'altrp-presets')
+  }))
+  // if(queryPresetStylesJson['0_10000']){
+  //   queryPresetStylesJson['0_10000'] =  [toCSS(queryPresetStylesJson['0_10000'])]
+  // }
+
+
+  return mergeStyles(queryStylesJson)
 }

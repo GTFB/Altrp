@@ -33,6 +33,7 @@ export default class ElementRenderer {
     children: [],
     settingsLock: {},
     settings: {
+      global_styles_presets: string;
       conditional_display_choose: string;
       conditional_roles?: [];
       text?: string;
@@ -183,7 +184,12 @@ export default class ElementRenderer {
     }
 
     let content = fs.readFileSync(ElementRenderer.wrapperStub, {encoding: 'utf8'});
-    let classes = `altrp-element altrp-element${this.getId()} altrp-element_${this.getType()} ${getAddingClasses(settings, screenName)} `;
+    let selector = `altrp-element${this.getId()}`
+
+    if(this.element.settings.global_styles_presets){
+      selector = `altrp-element_altrp-preset_${this.getName()}-${this.element.settings.global_styles_presets}`
+    }
+    let classes = `altrp-element ${selector} altrp-element_${this.getType()} ${getAddingClasses(settings, screenName)} `;
 
     if (this.getType() === "widget") {
       classes += ` altrp-widget_${this.getName()}`;

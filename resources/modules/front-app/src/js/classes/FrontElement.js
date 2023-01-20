@@ -488,7 +488,7 @@ class FrontElement {
     }
 
     if(this.settings.global_styles_presets){
-      return `.altrp-preset_${this.settings.global_styles_presets}`
+      return `.altrp-element_altrp-preset_${this.getName()}-${this.settings.global_styles_presets}`
     }
     return `.altrp-element${this.getId()}`;
   }

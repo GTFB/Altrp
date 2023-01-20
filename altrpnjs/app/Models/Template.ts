@@ -1,6 +1,6 @@
 import {DateTime} from 'luxon'
 import {
-  BaseModel, beforeSave,
+  BaseModel,
   column, computed,
   HasMany,
   hasMany,
@@ -9,7 +9,6 @@ import {
   ManyToMany,
   manyToMany
 } from '@ioc:Adonis/Lucid/Orm'
-import CleanCSS from 'clean-css';
 import User from "App/Models/User";
 import Area from "App/Models/Area";
 import Page from "App/Models/Page";
@@ -18,8 +17,7 @@ import empty from "../../helpers/empty";
 import PagesTemplate from "App/Models/PagesTemplate";
 import Category from "App/Models/Category";
 import RootElementRenderer from "App/Renderers/RootElement";
-import mbParseJSON from '../../helpers/mbParseJSON';
-import _ from "lodash";
+
 import validGuid from "../../helpers/validGuid";
 
 export default class Template extends BaseModel {
@@ -41,26 +39,26 @@ export default class Template extends BaseModel {
   @column()
   public styles: string
 
-  @beforeSave()
-  public static async purgeCSS(template: Template): Promise<void> {
-
-    let styles = mbParseJSON(template.styles, template.styles)
-
-    for(let key in styles){
-      if(styles.hasOwnProperty(key) && _.isArray(styles[key])){
-        for(let _k in styles[key])
-        {
-          if(styles[key].hasOwnProperty(_k) && _.isString(styles[key][_k])){
-            let res = await new CleanCSS().minify(styles[key][_k])
-            if(res.styles){
-              styles[key][_k] = res.styles
-            }
-          }
-        }
-      }
-    }
-    template.styles = JSON.stringify(styles)
-  }
+  // @beforeSave()
+  // public static async purgeCSS(template: Template): Promise<void> {
+  //
+  //   let styles = mbParseJSON(template.styles, template.styles)
+  //
+  //   for(let key in styles){
+  //     if(styles.hasOwnProperty(key) && _.isArray(styles[key])){
+  //       for(let _k in styles[key])
+  //       {
+  //         if(styles[key].hasOwnProperty(_k) && _.isString(styles[key][_k])){
+  //           let res = await new CleanCSS().minify(styles[key][_k])
+  //           if(res.styles){
+  //             styles[key][_k] = res.styles
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   template.styles = JSON.stringify(styles)
+  // }
 
   @column()
   public parent_template: number|null

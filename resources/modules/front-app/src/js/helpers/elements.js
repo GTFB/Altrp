@@ -57,6 +57,7 @@ export function getOffsetTopInElement(element, targetElement){
 
 export function getSheet(tag, _document) {
   if (tag.sheet) {
+
     return tag.sheet;
   } // Avoid Firefox quirk where the style element might not have a sheet property
 
@@ -67,6 +68,7 @@ export function getSheet(tag, _document) {
     let  sheet = styleSheets[i];
 
     if (sheet.ownerNode === tag) {
+
       return sheet;
     }
   }
@@ -84,5 +86,6 @@ export function stringifyStylesheet (stylesheet) {
 
 export  function stringifyRule(rule) {
   if (rule.cssText?.includes('background-clip: text;')) return rule.cssText.replace('background-clip: text;', '-webkit-background-clip: text;')
+
   return rule.cssText || ''
 }

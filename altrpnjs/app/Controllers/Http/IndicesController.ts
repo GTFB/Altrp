@@ -11,9 +11,6 @@ import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFilte
 import fs from "fs";
 import app_path from "../../../helpers/path/app_path";
 import AltrpMeta from "App/Models/AltrpMeta";
-import mbParseJSON from "../../../helpers/mbParseJSON";
-
-
 export default class IndicesController {
   async admin({view}) {
     return view.render('admin', Edge({

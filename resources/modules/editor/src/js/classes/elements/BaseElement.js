@@ -672,7 +672,7 @@ class BaseElement extends ControlStack {
     let selector =  `.altrp-element${this.getId()}`;
 
     if(this.settings.global_styles_presets){
-      selector = `.altrp-preset_${this.settings.global_styles_presets}`
+      selector = `.altrp-element_altrp-preset_${this.getName()}-${this.settings.global_styles_presets}`
     }
 
     return selector

@@ -370,11 +370,14 @@ export default class Page extends BaseModel {
   @column.dateTime()
   public deleted_at: DateTime
 
-  async getPageSettings(pageGenerator: PageGenerator): Promise<object> {
+  async getPageSettings(pageGenerator: PageGenerator): Promise<{
+    presets: string[]
+  }> {
     const altrpSettings: any = pageGenerator.__altrp_global__.altrpSettings
     altrpSettings.action_components = []
     altrpSettings.libsToLoad = []
     altrpSettings.altrpMenus = []
+    altrpSettings.presets = []
 
     if (!this.id) {
       return altrpSettings
@@ -403,7 +406,9 @@ export default class Page extends BaseModel {
           }
           if (root_element) {
             recurseMapElements(root_element, function (element) {
-
+              if(element['settings']['global_styles_presets']){
+                altrpSettings.presets.push(`${element['name']}-${element['settings']['global_styles_presets']}`)
+              }
               if (element['name'] === 'menu') {
                 const menuGuid = data_get(element, 'settings.menu')
                 // const menu = await Menu.query().where('guid', guid).select().first()
@@ -472,7 +477,7 @@ export default class Page extends BaseModel {
           }
         ))).filter(menu => menu)
     pageGenerator.setGlobal('fonts', fonts)
-
+    altrpSettings.presets = _.uniq(altrpSettings.presets)
     return altrpSettings
   }
 
@@ -677,13 +682,13 @@ export default class Page extends BaseModel {
               important_styles = important_styles.join('')
             }
 
-            _styles = [purifycss(html, important_styles, purifycssOptions)]
+            _styles = [important_styles]
 
           } else {
             _.forEach(customStyles, (style: string[], key) => {
               const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
               let _style = ''
-              _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
+              _.isArray(style) && (_style = style.map(s => s).join(''))
               if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
                 _style = `${mediaQuery}{${_style}}`
               }
@@ -711,12 +716,12 @@ export default class Page extends BaseModel {
           if (_.isArray(important_styles)) {
             important_styles = important_styles.join('')
           }
-          _styles = [purifycss(html, important_styles, purifycssOptions)]
+          _styles = [important_styles]
         } else {
           _.forEach(headerStyles, (style: string[], key) => {
             const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
             let _style = ''
-            _style = style.map(s => purifycss(html, s, purifycssOptions)).join('');
+            _style = style.map(s => s).join('');
             if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
               _style = `${mediaQuery}{${_style}}`
             }
@@ -743,13 +748,14 @@ export default class Page extends BaseModel {
           if (_.isArray(important_styles)) {
             important_styles = important_styles.join('')
           }
-          _styles = [purifycss(html, important_styles, purifycssOptions)]
+
+          _styles = [important_styles]
 
         } else {
           _.forEach(contentStyles, (style: string[], key) => {
             const mediaQuery = SCREENS.find(s => s.name === key)?.fullMediaQuery
             let _style = ''
-            _.isArray(style) && (_style = style.map(s => purifycss(html, s, purifycssOptions)).join(''))
+            _.isArray(style) && (_style = style.map(s => s).join(''))
             if (mediaQuery && key !== 'DEFAULT_BREAKPOINT') {
               _style = `${mediaQuery}{${_style}}`
             }
@@ -759,14 +765,14 @@ export default class Page extends BaseModel {
           _styles = _styles.filter(s => s)
         }
 
-        const optimizedStyles = optimizeStyles(_styles.join(''))
+        const optimizedStyles = await optimizeStyles(_styles.join(''))
         _styles = []
         optimizedStyles.forEach(([mediaQuery, queryStyles]: string[]) => {
           mediaQuery ? _styles.push(`${mediaQuery}{${queryStyles}}`) : _styles.push(queryStyles)
         })
 
         _styles = _styles.join()
-
+        _styles = purifycss(html, _styles, purifycssOptions)
         styles += `
 <style id="content_style">${_styles}</style>`
       } catch (e) {
