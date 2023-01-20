@@ -157,7 +157,7 @@ class GlobalFonts extends Component {
             ))}
 
             <Button style={{ width: "100%" }} onClick={this.addItem}>
-              {!this.state.new ? "Add Font" : "Cancel"}
+              {!this.state.new ? "➕Add Font➕" : "Cancel"}
             </Button>
           </div>
         </Scrollbars>

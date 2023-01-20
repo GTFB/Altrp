@@ -296,7 +296,7 @@ class GlobalColors extends Component {
         )}
         <Divider/>
         <Button style={{ width: "100%" }} onClick={this.addItem}>
-          Add Color
+          ➕Add Color➕
         </Button>
       </Panel>
     );

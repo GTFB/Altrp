@@ -32,7 +32,6 @@ import sharp from 'sharp';
 import sizeOf from 'image-size';
 import getAltrpTime from "../../../helpers/getAltrpTime";
 
-
 export default class AltrpRouting {
 
   public __altrp_global__: {
@@ -53,7 +52,6 @@ export default class AltrpRouting {
   }
 
   public async getContentByUrl(url, httpContext: HttpContextContract, pageId = null):Promise<void>{
-
     if (url.includes('/storage/media/')) {
 
       let searchFilename = base_path('/public'+url);

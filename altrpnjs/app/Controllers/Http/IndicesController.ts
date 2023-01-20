@@ -11,6 +11,7 @@ import applyPluginsFiltersAsync from "../../../helpers/plugins/applyPluginsFilte
 import fs from "fs";
 import app_path from "../../../helpers/path/app_path";
 import AltrpMeta from "App/Models/AltrpMeta";
+import GlobalStyle from "App/Models/GlobalStyle";
 export default class IndicesController {
   async admin({view}) {
     return view.render('admin', Edge({
@@ -60,7 +61,7 @@ export default class IndicesController {
     }))
   }
 
-  public editorContent({ view }) {
+  public async editorContent({ view }) {
     let style = ''
     const files = fs.readdirSync(app_path('altrp-templates/styles/elements'))
     for(const f of files){
@@ -73,6 +74,18 @@ export default class IndicesController {
         }
       }
     }
+
+
+    const globalStyles = await GlobalStyle.query()
+
+    const groups = {};
+
+    globalStyles.forEach((style) => {
+      if(!groups[style.type]) groups[style.type] = [];
+
+      groups[style.type].push(style)
+    })
+    console.log(groups);
 
     return view.render('editor-content', Edge({
       style,

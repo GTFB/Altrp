@@ -1,5 +1,5 @@
 import loadAdminBar from "../../functions/load-admin-bar";
-import loadEmailRenderer from "../../functions/load-email-renderer";
+//import loadEmailRenderer from "../../functions/load-email-renderer";
 /**
  * @class HAltrp
  */

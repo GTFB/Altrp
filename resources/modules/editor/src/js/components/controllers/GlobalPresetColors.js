@@ -49,6 +49,7 @@ class GlobalPresetColors extends Component {
     return (
       <div className="flexbox-fix control-color-preset-colors">
         {presetColors.map(color => {
+          console.log(color);
           return (
             <div
               className="control-color-preset-colors-wrapper"
@@ -73,16 +74,16 @@ class GlobalPresetColors extends Component {
             </div>
           );
         })}
-        <div className="control-color-preset-colors-wrapper">
-          <button
-            className="control-color-preset-colors__item control-color-preset-colors__item_add"
-            title="Add to Preset Colors"
-            onClick={this.addColorToPreset}
-            tabIndex="0"
-          >
-            <AddIcon width="13px" height="13px" />
-          </button>
-        </div>
+        {/*<div className="control-color-preset-colors-wrapper">*/}
+        {/*  <button*/}
+        {/*    className="control-color-preset-colors__item control-color-preset-colors__item_add"*/}
+        {/*    title="Add to Preset Colors"*/}
+        {/*    onClick={this.addColorToPreset}*/}
+        {/*    tabIndex="0"*/}
+        {/*  >*/}
+        {/*    <AddIcon width="13px" height="13px" />*/}
+        {/*  </button>*/}
+        {/*</div>*/}
       </div>
     );
   }

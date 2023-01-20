@@ -168,7 +168,7 @@ class GlobalEffects extends Component {
             ))}
 
             <Button style={{ width: "100%" }} onClick={this.addItem}>
-              {!this.state.new ? "Add Effect" : "Cancel"}
+              {!this.state.new ? "➕Add Effect➕" : "Cancel"}
             </Button>
           </div>
         </Scrollbars>
