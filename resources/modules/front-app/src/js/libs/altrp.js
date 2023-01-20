@@ -41,11 +41,6 @@ window.altrpHelpers = {
  */
 (async function () {
 
-  // const pageUpdater = (await import('./js/classes/modules/PageUpdater')).default;
-  // function updater(){
-  //   pageUpdater.startUpdating();
-  //   window.removeEventListener('render-altrp', updater);
-  // }
   window.addEventListener && window.addEventListener('render-altrp', replaceApp);
   // window.addEventListener('render-altrp', updater);
 })();

@@ -189,7 +189,7 @@ async function _replace(htmlString, popstate, url, progressBar) {
 
 
   })
-  import('../functions/add-animation-classes').then(module => {
+  import(/* webpackChunkName: 'add-animation-classes' */'../functions/add-animation-classes').then(module => {
     document.addEventListener('scroll', module.default)
     module.default();
   })
