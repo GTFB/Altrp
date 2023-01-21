@@ -1,7 +1,7 @@
 
 export default async function  loadSticky() {
   if (document.querySelector('[data-altrp-sticky]:not([data-altrp-sticky-loaded])')) {
-    const {loadJQuery} = await import('../helpers/plugins');
+    const {loadJQuery} = await import(/* webpackChunkName: 'plugins' */'../helpers/plugins');
     await loadJQuery();
     const frontAppContainer = document.getElementById('front-app');
     if($('[data-altrp-sticky="column_top"]').length) {
@@ -88,5 +88,5 @@ async function loadStickyJS(){
   }
   const stickyJSStyle = document.head.appendChild(document.createElement('style'));
   stickyJSStyle.innerHTML = `.sticky-js-wrapper{width:100%;z-index: 10000;}`
-  window.altrpLibs.Sticky = (await import('sticky-js')).default;
+  window.altrpLibs.Sticky = (await import(/* webpackChunkName: 'sticky-js' */'sticky-js')).default;
 }

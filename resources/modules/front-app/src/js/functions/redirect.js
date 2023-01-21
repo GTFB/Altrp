@@ -40,7 +40,7 @@ export default async function redirect(linkSettings, e, context = {}) {
     if(location.pathname + location.search !== url.pathname + url.search){
 
       try{
-        const replacePageContent = (await import("../helpers/replace-page-content")).default
+        const replacePageContent = (await import(/* webpackChunkName: 'replace-page-content' */"../helpers/replace-page-content")).default
 
         replacePageContent(url.pathname + url.search + url.hash)
       }catch (e) {

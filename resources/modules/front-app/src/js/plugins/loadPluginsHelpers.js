@@ -3,5 +3,5 @@ export default async function loadPluginsHelpers(){
     return
   }
   window.altrpPlugins = {}
-  await import('./loadFrontAppHooks')
+  await import(/* webpackChunkName: 'loadFrontAppHooks' */'./loadFrontAppHooks')
 }

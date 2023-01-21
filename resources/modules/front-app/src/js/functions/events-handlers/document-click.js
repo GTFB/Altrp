@@ -10,7 +10,7 @@ export default async function spaNavigation(e){
 
 
   if(target.closest('[data-link]')){
-    const qs = await import('qs')
+    const qs = await import(/* webpackChunkName: 'qs' */'qs')
     altrpHelpers.redirect(qs.parse(target.closest('[data-link]').getAttribute('data-link')), e)
     return;
   }

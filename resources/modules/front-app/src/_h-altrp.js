@@ -68,7 +68,7 @@ function _hAltrp() {
 
         let actionComponents = _.get(__altrp_settings__, 'action_components', [])
         if (actionComponents.find((action => action === 'toggle_popup'))) {
-          let loadPopups = (await import('./js/functions/load-popups')).default;
+          let loadPopups = (await import(/* webpackChunkName: 'load-popups' */'./js/functions/load-popups')).default;
           loadPopups();
         }
       }
@@ -168,7 +168,7 @@ window.addEventListener('h-altrp-loaded', e => {
 })
 
 if (document.querySelector('[data-enter-animation-type]')) {
-  import('./js/functions/add-animation-classes').then(module => {
+  import(/* webpackChunkName: 'add-animation-classes' */'./js/functions/add-animation-classes').then(module => {
     document.addEventListener('scroll', module.default)
     module.default();
   })
