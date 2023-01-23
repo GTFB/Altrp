@@ -901,60 +901,60 @@ class BaseElement extends ControlStack {
    * @param guid
    * @param value
    */
-  updateAllGlobals(guid, value) {
-    let currentPropsList = _.get(
-      this.settings,
-      `global_styles_storage.${guid}`,
-      []
-    );
-    currentPropsList.forEach(settingName => {
-      // this.settings[settingName] = value;
-      /**
-       * child.addFont(
-            this.props.controller.getSettingName(),
-            value.value
-          );
-       */
-      if (settingName.indexOf("typographic") >= 0) {
-        this.addFont(settingName, value.family);
-        appStore.dispatch(addFont(this.getId(), settingName, value.family));
-      }
-      if (settingName.indexOf("gradient-first-color:") >= 0) {
-        settingName = settingName.replace("gradient-first-color:", "");
-        if (
-          typeof settingName == "undefined" &&
-          !_.isObject(this.settings[settingName])
-        ) {
-          return;
-        }
-        let currentValue = this.settings[settingName];
-        currentValue.value = currentValue.value.replace(
-          currentValue.firstColor,
-          value.color
-        );
-        currentValue.firstColor = value.color;
-        value = currentValue;
-      }
-      if (settingName.indexOf("gradient-second-color:") >= 0) {
-        settingName = settingName.replace("gradient-second-color:", "");
-        if (
-          typeof settingName == "undefined" &&
-          !_.isObject(this.settings[settingName])
-        ) {
-          return;
-        }
-        let currentValue = this.settings[settingName];
-        currentValue.value = currentValue.value.replace(
-          currentValue.secondColor,
-          value.color
-        );
-        currentValue.secondColor = value.color;
-        value = currentValue;
-      }
-      console.log(settingName);
-      this.setSettingValue(settingName, value);
-    });
-    this.updateStyles();
+  updateAllGlobals(guid, value) {//todo: delete this from everywhere
+    // let currentPropsList = _.get(
+    //   this.settings,
+    //   `global_styles_storage.${guid}`,
+    //   []
+    // );
+    // currentPropsList.forEach(settingName => {
+    //   // this.settings[settingName] = value;
+    //   /**
+    //    * child.addFont(
+    //         this.props.controller.getSettingName(),
+    //         value.value
+    //       );
+    //    */
+    //   if (settingName.indexOf("typographic") >= 0) {
+    //     this.addFont(settingName, value.family);
+    //     appStore.dispatch(addFont(this.getId(), settingName, value.family));
+    //   }
+    //   if (settingName.indexOf("gradient-first-color:") >= 0) {
+    //     settingName = settingName.replace("gradient-first-color:", "");
+    //     if (
+    //       typeof settingName == "undefined" &&
+    //       !_.isObject(this.settings[settingName])
+    //     ) {
+    //       return;
+    //     }
+    //     let currentValue = this.settings[settingName];
+    //     currentValue.value = currentValue.value.replace(
+    //       currentValue.firstColor,
+    //       value.color
+    //     );
+    //     currentValue.firstColor = value.color;
+    //     value = currentValue;
+    //   }
+    //   if (settingName.indexOf("gradient-second-color:") >= 0) {
+    //     settingName = settingName.replace("gradient-second-color:", "");
+    //     if (
+    //       typeof settingName == "undefined" &&
+    //       !_.isObject(this.settings[settingName])
+    //     ) {
+    //       return;
+    //     }
+    //     let currentValue = this.settings[settingName];
+    //     currentValue.value = currentValue.value.replace(
+    //       currentValue.secondColor,
+    //       value.color
+    //     );
+    //     currentValue.secondColor = value.color;
+    //     value = currentValue;
+    //   }
+    //
+    //   this.setSettingValue(settingName, value);
+    // });
+    // this.updateStyles();
   }
 
   /**

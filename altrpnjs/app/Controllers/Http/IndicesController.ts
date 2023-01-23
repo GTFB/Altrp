@@ -12,6 +12,7 @@ import fs from "fs";
 import app_path from "../../../helpers/path/app_path";
 import AltrpMeta from "App/Models/AltrpMeta";
 import GlobalStyle from "App/Models/GlobalStyle";
+
 export default class IndicesController {
   async admin({view}) {
     return view.render('admin', Edge({
@@ -74,21 +75,10 @@ export default class IndicesController {
         }
       }
     }
-
-
-    const globalStyles = await GlobalStyle.query()
-
-    const groups = {};
-
-    globalStyles.forEach((style) => {
-      if(!groups[style.type]) groups[style.type] = [];
-
-      groups[style.type].push(style)
-    })
-    console.log(groups);
-
+    const styleVars = `<style id="altrp-css-vars">${await GlobalStyle.getCssVars()}</style>`
     return view.render('editor-content', Edge({
       style,
+      styleVars,
       css: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.css` : null
     }))

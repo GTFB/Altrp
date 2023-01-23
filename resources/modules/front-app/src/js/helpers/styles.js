@@ -440,6 +440,7 @@ export function typographicControllerToStyles(data = {}) {
     weight,
     decoration,
     sizeUnit,
+    fontSize,
     lineHeightUnit
   } = data;
 
@@ -463,11 +464,15 @@ export function typographicControllerToStyles(data = {}) {
   if (style) {
     styles += `font-style: ${style}; `;
   }
-  if (size) {
+  if (size && ! fontSize) {
     styles += `font-size: ${size ? size + (sizeUnit || "px") : ""}; `;
+  } else if(fontSize){
+    styles += `font-size: ${fontSize}; `;
+
   }
   if (!_.isEmpty(family)) {
-    styles += `font-family: "${family}", Arial, sans-serif;`;
+    let _family = family.includes('--altrp-var') ? family : `"${family}", Arial, sans-serif`
+    styles += `font-family: ${_family};`;
   }
   return styles;
 }
@@ -734,7 +739,10 @@ export function shadowStyled(controller = {}, important = '') {
     const blur = controller.blur || 0;
     const spread = controller.spread || 0;
     const color = controller.color || "";
-
+    console.log(controller.cssVar);
+    if(controller.cssVar){
+      return  `box-shadow: ${controller.cssVar};`
+    }
     if(horizontal !== 0 || vertical !== 0 || blur !== 0 || spread !== 0) {
       return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread}px ${color} ${important};`;
     } else return ""

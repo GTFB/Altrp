@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import AddIcon from "../../../svgs/add.svg";
+import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
 
 const mapStateToProps = state => ({
   colors: state.globalStyles.colors
@@ -49,7 +49,8 @@ class GlobalPresetColors extends Component {
     return (
       <div className="flexbox-fix control-color-preset-colors">
         {presetColors.map(color => {
-          console.log(color);
+          color = {...color}
+          color = getCssVarFromGlobalStyle(color)
           return (
             <div
               className="control-color-preset-colors-wrapper"

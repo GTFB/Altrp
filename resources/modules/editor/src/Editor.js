@@ -292,6 +292,7 @@ class Editor extends Component {
         globalStyles.color?.map(color => ({
           id: color.id,
           guid: color.guid,
+          _type: color.type,
           ...color.settings
         })) || []
       )
@@ -302,6 +303,7 @@ class Editor extends Component {
         globalStyles.effect?.map(effect => ({
           id: effect.id,
           guid: effect.guid,
+          _type: effect.type,
           ...effect.settings
         })) || []
       )
@@ -312,6 +314,7 @@ class Editor extends Component {
         globalStyles.font?.map(font => ({
           id: font.id,
           guid: font.guid,
+          _type: font.type,
           ...font.settings
         })) || []
       )

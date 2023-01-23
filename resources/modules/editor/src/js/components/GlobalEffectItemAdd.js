@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {
   ControlGroup,
   FormGroup,
@@ -7,15 +7,15 @@ import {
   Slider,
   MenuItem, Alignment
 } from "@blueprintjs/core";
-import { Select } from "@blueprintjs/select";
-import { SketchPicker } from "react-color";
+import {Select} from "@blueprintjs/select";
+import {SketchPicker} from "react-color";
 import Resource from "../classes/Resource";
 import GlobalPresetColors from "./controllers/GlobalPresetColors";
 
 const typeOptions = [
   {
     value: " ",
-    label: "outline",
+    label: "Outline",
     key: 0
   },
   {
@@ -46,7 +46,7 @@ class GlobalEffectItemAdd extends Component {
       vertical: 0,
       name: ""
     };
-    const { isNew, effect } = props;
+    const {isNew, effect} = props;
     this.state = {
       effect: isNew ? this.defaultValues : effect,
       edit: false
@@ -64,7 +64,10 @@ class GlobalEffectItemAdd extends Component {
 
   globalColor = value => {
     const guid = value.guid;
-    const rgba = `rgba(${value.colorRGB.r}, ${value.colorRGB.g}, ${value.colorRGB.b}, ${value.colorRGB.a})`;
+    let rgba = `rgba(${value.colorRGB.r}, ${value.colorRGB.g}, ${value.colorRGB.b}, ${value.colorRGB.a})`;
+    if (value.cssVar) {
+      rgba = value.cssVar
+    }
     const hex = value.colorPickedHex;
     const rgb = value.colorRGB;
     this.setState(s => ({
@@ -94,6 +97,7 @@ class GlobalEffectItemAdd extends Component {
       }
     }));
   };
+
   /**
    *
    * @param {Event} event
@@ -110,18 +114,18 @@ class GlobalEffectItemAdd extends Component {
   }
 
   onSlide(value, setting) {
-    const { effect } = this.state;
+    const {effect} = this.state;
     effect[setting] = value;
-    this.setState(s => ({ ...s, effect: effect }));
+    this.setState(s => ({...s, effect: effect}));
   }
 
   onSelect(event, value) {
-    this.setState(s => ({ ...s, effect: { ...s.effect, type: value } }));
+    this.setState(s => ({...s, effect: {...s.effect, type: value}}));
   }
 
   onSaveEffect(event) {
     event.preventDefault();
-    const { effect } = this.state;
+    const {effect} = this.state;
     const send = {
       type: "effect",
       settings: JSON.stringify(effect)
@@ -130,6 +134,7 @@ class GlobalEffectItemAdd extends Component {
       const effect = {
         id: success.id,
         guid: success.guid,
+        _type: 'effect',
         ...success.settings
       };
       this.props.addEffect(effect);
@@ -138,7 +143,10 @@ class GlobalEffectItemAdd extends Component {
   }
 
   render() {
-    const { effect } = this.state;
+    const {effect} = this.state;
+    let text = typeOptions.filter(item => item.value === effect.type)[0]?.label || 'Outline'
+    let activeItem = typeOptions.filter(item => item.value === effect.type)[0] || typeOptions[0];
+
     return (
       <>
         <form onSubmit={this.onSaveEffect}>
@@ -186,9 +194,7 @@ class GlobalEffectItemAdd extends Component {
             <label htmlFor="position">Position</label>
             <Select
               matchTargetWidth
-              activeItem={
-                typeOptions.filter(item => item.value === effect.type)[0]
-              }
+              activeItem={activeItem}
               itemRenderer={item => (
                 <MenuItem
                   key={item.key}
@@ -198,12 +204,12 @@ class GlobalEffectItemAdd extends Component {
                 />
               )}
               items={typeOptions}
-              noResults={<MenuItem disabled={true} text="No results." />}
+              noResults={<MenuItem disabled={true} text="No results."/>}
             >
               <Button
                 fill={true}
                 alignText={Alignment.LEFT}
-                text={typeOptions.filter(item => item.value === effect.type)[0].label}
+                text={text}
                 rightIcon="double-caret-vertical"
               />
             </Select>
@@ -255,7 +261,7 @@ class GlobalEffectItemAdd extends Component {
           </FormGroup>
 
           <FormGroup>
-            <button className="btn-global__fonts-save" type="submit" style={{ width: "100%" }}>
+            <button className="btn-global__fonts-save" type="submit" style={{width: "100%"}}>
               Save
             </button>
           </FormGroup>

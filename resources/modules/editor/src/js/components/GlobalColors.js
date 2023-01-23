@@ -207,12 +207,14 @@ class GlobalColors extends Component {
     const color = {};
     color.settings = JSON.stringify(createGlobalColor());
     color.type = "color";
+    color._type = "color";
     this.globalStyleResource.post(color).then(response => {
       const colors = [
         ...this.state.colors,
         {
           id: response.id,
           guid: response.guid,
+          _type: 'color',
           ...response.settings
         }
       ];

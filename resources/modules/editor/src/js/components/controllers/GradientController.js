@@ -22,9 +22,11 @@ class GradientController extends Component {
     let gradient =
       this.getSettings(this.props.controlId) ||
       this.props.currentElement.settings.gradient;
+    let _color = _.isString(color) ? color : `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+
     gradient = {
       ...gradient,
-      [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+      [name]: _color
     };
     const {
       isWithGradient,
@@ -34,7 +36,7 @@ class GradientController extends Component {
       secondColor,
       secondPoint
     } = gradient;
-
+    console.log(gradient);
     this._changeValue({
       ...gradient,
       value: isWithGradient
@@ -168,14 +170,19 @@ class GradientController extends Component {
                 />
                 <GlobalPresetColors
                   presetColors={this.props.globalColors}
-                  value={secondColor}
+                  value={firstColor}
                   changeValue={color => {
                     let value = { ...this.state.value };
-                    value.secondColor = color.color;
+                    value.firstColor = color.color;
                     if (color?.guid) {
-                      this.setGlobal(color.guid, "gradient-second-color");
+                      this.setGlobal(color.guid, "gradient-first-color");
                     }
-                    this._changeValue(value);
+                    if(color.cssVar){
+                      this.colorChange(color.cssVar, "secondColor")
+                      value.firstColor = color.cssVar
+                    }
+                    //console.log(value);
+                    //this._changeValue(value);
                     this.setState(state => ({ ...state, value }));
                   }}
                 />
@@ -262,15 +269,19 @@ class GradientController extends Component {
                 />
                 <GlobalPresetColors
                   presetColors={this.props.globalColors}
-                  value={firstColor}
+                  value={secondColor}
                   changeValue={color => {
                     let value = { ...this.state.value };
-                    value.firstColor = color.color;
+                    value.secondColor = color.color;
                     if (color?.guid) {
-                      this.setGlobal(color.guid, "gradient-first-color");
+                      this.setGlobal(color.guid, "gradient-second-color");
                     }
-                    this._changeValue(value);
-                    this.setState(state => ({ ...state, value }));
+                    if(color.cssVar){
+                      this.colorChange(color.cssVar, "firstColor")
+                      value.secondColor = color.cssVar;
+                    }
+                    // this._changeValue(value);
+                    // this.setState(state => ({ ...state, value }));
                   }}
                 />
               </div>

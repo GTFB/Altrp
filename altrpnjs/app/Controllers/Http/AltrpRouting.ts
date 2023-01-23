@@ -31,6 +31,7 @@ import base_path from "../../../helpers/path/base_path";
 import sharp from 'sharp';
 import sizeOf from 'image-size';
 import getAltrpTime from "../../../helpers/getAltrpTime";
+import GlobalStyle from "App/Models/GlobalStyle";
 
 export default class AltrpRouting {
 
@@ -328,7 +329,7 @@ export default class AltrpRouting {
         lang,
         altrptime: getAltrpTime()
       })
-
+      all_styles+=await `<style id="altrp-css-vars">${await GlobalStyle.getCssVars()}</style>` //todo check speed
       mustache?.templateCache?.clear()
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)

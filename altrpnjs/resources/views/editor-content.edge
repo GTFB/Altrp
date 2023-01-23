@@ -11,6 +11,8 @@
     <style id="element-styles">
       {{style}}
     </style>
+
+    {{{styleVars}}}
     @if(css)
         <link href="{{css}}?{{env('PACKAGE_KEY')}}" rel="stylesheet"/>
     @endif

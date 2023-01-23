@@ -93,14 +93,19 @@ class ColorController extends Component {
   }
 
   colorChangeFromPreset(color) {
+    console.log(color);
     this.setState({
       colorPickedHex: color.colorPickedHex,
       colorPickedRGB: `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
       opacity: color.colorRGB.a,
       colorRGB: color.colorRGB
     });
+    let _color = `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`
+    if(color.cssVar){
+      _color = color.cssVar
+    }
     this._changeValue({
-      color: `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
+      color: _color,
       colorPickedHex: color.colorPickedHex,
       colorRGB: color.colorRGB
     });

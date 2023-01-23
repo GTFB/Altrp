@@ -204,6 +204,7 @@ class GlobalFontItemAdd extends Component {
       const font = {
         id: success.id,
         guid: success.guid,
+        _type: 'font',
         ...success.settings
       };
       this.props.addFont(font);

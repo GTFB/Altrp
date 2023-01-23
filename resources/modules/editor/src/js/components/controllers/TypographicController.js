@@ -18,6 +18,8 @@ import PresetGlobalFonts from "./PresetGlobalFonts";
 import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
+import FONT_PROPERTIES from "../../const/FONT_PROPERTIES";
 
 class TypographicController extends Component {
   constructor(props) {
@@ -104,31 +106,29 @@ class TypographicController extends Component {
 
   setGlobal(guid) {
     const globalFonts = this.props.globalFonts;
-    const guidFont = globalFonts.filter((font) => font.guid == guid)[0];
+    let guidFont = globalFonts.filter((font) => font.guid == guid)[0] || {};
+    guidFont = getCssVarFromGlobalStyle(guidFont)
     const {
-      decoration,
       family,
-      lineHeight,
-      size,
-      spacing,
-      label,
-      sizeUnit,
-      weight,
-      style,
-      transform,
     } = guidFont;
-    const fontValue = {
-      decoration: decoration,
-      family: family,
-      label: label,
-      lineHeight: lineHeight,
-      size: size,
-      spacing: spacing,
-      sizeUnit: sizeUnit,
-      weight: weight,
-      style: style,
-      transform: transform,
+    let fontValue = {
     };
+    if(guidFont){
+      const settings = guidFont
+      FONT_PROPERTIES.forEach(prop => {
+        if(guidFont[`${prop}CssVar`]){
+          fontValue[prop] = guidFont[`${prop}CssVar`]
+        }
+      })
+      fontValue.fontSize = `var(--altrp-var-${settings.type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g,'-')}-font-size)`
+      fontValue.default = {
+        ...guidFont
+      }
+    }
+
+    let value =
+      this.getSettings(this.props.controlId) || this.getDefaultValue();
+    console.log(fontValue);
     if (guidFont) {
       if (family) {
         appStore.dispatch(
@@ -339,6 +339,11 @@ class TypographicController extends Component {
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     const { familyOptions } = this.state;
 
+    if(value.default){
+      value = {
+        ...value.default,
+      }
+    }
     const weightOptions = [
       {
         value: "100",

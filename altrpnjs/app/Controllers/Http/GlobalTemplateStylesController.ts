@@ -69,6 +69,8 @@ export default class GlobalTemplateStylesController {
 
     switch (style.type) {
       case "color":
+      {
+        // @ts-ignore
         const data = JSON.parse(style.settings);
 
         data.name = body.settings.name ?? data.name ?? body.name;
@@ -77,6 +79,21 @@ export default class GlobalTemplateStylesController {
         data.colorRGB = body.settings.colorRGB ?? data.colorRGB ?? body.colorRGB;
 
         style.settings = JSON.stringify(data);
+      }
+        break
+      default:
+      {
+        // @ts-ignore
+        let data: any = JSON.parse(style.settings);
+        data = body.settings ? {
+          ...data,
+          ...body.settings,
+        } : {
+          ...data,
+          ...body,
+        }
+        style.settings = JSON.stringify(data);
+      }
         break
     }
 

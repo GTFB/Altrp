@@ -16,7 +16,7 @@ import GlobalPresetColors from "./controllers/GlobalPresetColors";
 const typeOptions = [
   {
     value: " ",
-    label: "outline",
+    label: "Outline",
     key: 0
   },
   {
@@ -133,7 +133,10 @@ class GlobalEffectItem extends Component {
 
   globalColor = value => {
     const guid = value.guid;
-    const rgba = `rgba(${value.colorRGB.r}, ${value.colorRGB.g}, ${value.colorRGB.b}, ${value.colorRGB.a})`;
+    let rgba = `rgba(${value.colorRGB.r}, ${value.colorRGB.g}, ${value.colorRGB.b}, ${value.colorRGB.a})`;
+    if(value.cssVar){
+      rgba = value.cssVar
+    }
     const hex = value.colorPickedHex;
     const rgb = value.colorRGB;
     this.setState(s => ({
@@ -152,6 +155,8 @@ class GlobalEffectItem extends Component {
     const { effect } = this.state;
     const mgButton = this.state.edit ? '20px' : '0';
 
+    let text = typeOptions.filter(item => item.value === effect.type)[0]?.label || 'Outline'
+    let activeItem = typeOptions.filter(item => item.value === effect.type)[0] || typeOptions[0];
     return (
       <React.Fragment>
         {!this.props.isNew && (
@@ -208,7 +213,7 @@ class GlobalEffectItem extends Component {
             <div className="global-effect__group">
               <label htmlFor="position">Position</label>
               <Select
-                activeItem={typeOptions.filter(item => item.value === effect.type)[0]}
+                activeItem={activeItem}
                 matchTargetWidth
                 itemRenderer={item => (
                   <MenuItem
@@ -226,7 +231,7 @@ class GlobalEffectItem extends Component {
                 <Button
                   fill={true}
                   alignText={Alignment.LEFT}
-                  text={typeOptions.filter(item => item.value === effect.type)[0].label}
+                  text={text}
                   rightIcon="double-caret-vertical"
                 />
               </Select>

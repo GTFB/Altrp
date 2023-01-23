@@ -13,6 +13,7 @@ import {
   DELETE_GLOBAL_FONT,
   EDIT_GLOBAL_COLOR
 } from "./actions";
+import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
 
 const defaultState = [];
 
@@ -44,7 +45,7 @@ export function globalStyleReducer(state, action) {
       break;
     case ADD_GLOBAL_COLOR:
       {
-        const color = {};
+        let color = {};
         color.settings = createGlobalColor();
         color.type = "color";
         globalColorsResource.post(color);

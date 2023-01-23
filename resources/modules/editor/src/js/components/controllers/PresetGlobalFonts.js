@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
 
 const mapStateToProps = state => ({
   fonts: state.globalStyles.fonts
@@ -45,11 +46,13 @@ class PresetGlobalFonts extends Component {
             value={this.state.defaultValue}
           >
             <option>Choose font</option>
-            {this.props.fonts.map((font, index) => (
-              <option key={index} value={font.guid}>
-                {font.name}
-              </option>
-            ))}
+            {this.props.fonts.map((font, index) => {
+              return (
+                <option key={index} value={font.guid}>
+                  {font.name}
+                </option>
+              )
+            })}
           </select>
         </div>
       </div>

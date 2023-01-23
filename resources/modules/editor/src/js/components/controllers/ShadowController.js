@@ -10,6 +10,7 @@ import PresetGlobalEffects from "./PresetGlobalEffects";
 import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import CONSTANTS from "../../consts";
+import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
 
 class ShadowController extends Component {
   constructor(props) {
@@ -68,29 +69,13 @@ class ShadowController extends Component {
 
   setGlobal(guid) {
     const globalEffects = this.props.globalEffects;
-    const guidEffect = globalEffects.filter(effect => effect.guid == guid)[0];
-    const {
-      blur,
-      color,
-      colorPickedHex,
-      colorRGB,
-      horizontal,
-      opacity,
-      spread,
-      type,
-      vertical
-    } = guidEffect;
+    let guidEffect = globalEffects.filter(effect => effect.guid == guid)[0] || {};
+    guidEffect = getCssVarFromGlobalStyle(guidEffect)
+
     const effectValue = {
-      blur: blur,
-      color: color,
-      colorPickedHex: colorPickedHex,
-      colorRGB: colorRGB,
-      horizontal: horizontal,
-      opacity: opacity,
-      spread: spread,
-      type: type,
-      vertical: vertical
+      ...guidEffect,
     };
+    console.log(guidEffect);
     if (guidEffect) {
       this._changeValue({
         ...this.defaultValues,
@@ -116,10 +101,15 @@ class ShadowController extends Component {
       // colorRGB: color.rgb
     });
     const colorRGB = color?.rgb || color.colorRGB;
+    let _color = `rgba(${colorRGB.r}, ${colorRGB.g}, ${colorRGB.b}, ${colorRGB.a})`;
+    if(color.cssVar){
+      _color = color.cssVar
+    }
+
     this._changeValue({
       ...this.defaultValues,
       ...value,
-      color: `rgb(${colorRGB.r}, ${colorRGB.g}, ${colorRGB.b}, ${colorRGB.a})`,
+      color: _color,
       colorRGB: `rgb(${colorRGB.r}, ${colorRGB.g}, ${colorRGB.b}, ${colorRGB.a})`,
       colorPickedHex: color.colorPickedHex,
       opacity: colorRGB.a
