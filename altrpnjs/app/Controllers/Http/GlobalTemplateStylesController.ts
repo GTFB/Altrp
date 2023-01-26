@@ -1,5 +1,5 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-
+import _ from 'lodash';
 import GlobalStyle from "App/Models/GlobalStyle";
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
@@ -7,13 +7,20 @@ import is_null from "../../../helpers/is_null";
 import data_set from "../../../helpers/data_set";
 import data_get from "../../../helpers/data_get";
 import is_array from "../../../helpers/is_array";
+import mbParseJSON from "../../../helpers/mbParseJSON";
 
 export default class GlobalTemplateStylesController {
+  public async getCss(){
+    return {success:true, data:`${await GlobalStyle.getCssVars()}`}
+  }
   public async index() {
 
     try {
-      const globalStyles = await GlobalStyle.query()
-
+      let globalStyles = await GlobalStyle.query()
+      globalStyles = _.sortBy(globalStyles, i=>{
+        const settings = mbParseJSON(i.settings, {})
+        return settings.name
+      })
       const groups = {};
 
       globalStyles.forEach((style) => {

@@ -346,7 +346,9 @@ class ElementWrapper extends Component {
       hide_on_trigger,
       isFixed,
     } = element.settings;
-    let classes = `altrp-element altrp-element${element.getId()} altrp-element_${element.getType()}`;
+    let classes = `altrp-element ${this.props.element
+      .getSelector()
+      .replace(".", "")} altrp-element_${element.getType()}`;
     classes += element.getPrefixClasses() + " ";
     if (element.getType() === "widget") {
       classes += ` altrp-widget_${element.getName()}`;

@@ -11,6 +11,7 @@ import {Select} from "@blueprintjs/select";
 import {SketchPicker} from "react-color";
 import Resource from "../classes/Resource";
 import GlobalPresetColors from "./controllers/GlobalPresetColors";
+import updateCssVars from "../helpers/update-css-vars";
 
 const typeOptions = [
   {
@@ -139,6 +140,7 @@ class GlobalEffectItemAdd extends Component {
       };
       this.props.addEffect(effect);
       this.props.onSaveEffectClose();
+      updateCssVars()
     });
   }
 

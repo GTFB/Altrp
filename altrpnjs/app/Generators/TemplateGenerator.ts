@@ -109,7 +109,7 @@ export default class TemplateGenerator extends BaseGenerator {
       mediaQuery ? _styles.push(`${mediaQuery}{${queryStyles}}`) : _styles.push(queryStyles)
     })
 
-    queriedStyles = _styles.join()
+    queriedStyles = _styles.join('')
 
     if (template.guid) {
       for (const screen of SCREENS) {

@@ -2,7 +2,7 @@ import {
   CHANGE_CURRENT_DATASOURCE,
   CLEAR_CURRENT_DATASOURCE,
   SET_CURRENT_DATASOURCE_LOADED,
-  SET_CURRENT_DATASOURCE_LOADING
+  SET_CURRENT_DATASOURCE_LOADING, UPDATE_WITH_DEFAULT
 } from './actions'
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import {setAltrpIndex} from "../../helpers";
@@ -14,6 +14,11 @@ const defaultDataStorage = {
 export function currentDataStorageReducer(dataStorage, action) {
   dataStorage = dataStorage || new AltrpModel(defaultDataStorage);
   switch (action.type) {
+    case UPDATE_WITH_DEFAULT :{
+      dataStorage = new AltrpModel({
+        ...window.altrpPreloadedDatasources
+      })
+    }break;
     case CHANGE_CURRENT_DATASOURCE:{
       let data = action.data;
       if(_.isArray(data)){

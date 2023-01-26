@@ -297,8 +297,8 @@ export default class PagesController {
 
         await page.related("categories").detach()
         for (const option of request.input("categories")) {
-
-          const category = await Category.query().where('guid', option.value).firstOrFail();
+          const guid = option.value || option.guid
+          const category = await Category.query().where('guid',guid).firstOrFail();
 
           if (!category) {
             response.status(404)

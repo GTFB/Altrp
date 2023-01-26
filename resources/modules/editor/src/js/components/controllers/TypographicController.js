@@ -120,7 +120,7 @@ class TypographicController extends Component {
           fontValue[prop] = guidFont[`${prop}CssVar`]
         }
       })
-      fontValue.fontSize = `var(--altrp-var-${settings.type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g,'-')}-font-size)`
+      fontValue.fontSize = `var(--altrp-var-${settings._type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g,'-')}-font-size)`
       fontValue.default = {
         ...guidFont
       }

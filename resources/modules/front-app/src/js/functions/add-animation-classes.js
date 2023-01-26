@@ -19,7 +19,7 @@ export default function addAnimationClasses (){
 
     const animationsMemo = (window.animationsMemo = window.animationsMemo || []);
 
-    let styles =  `.altrp-element${element.dataset.altrpId}{
+    let styles =  `[data-altrp-id="${element.dataset.altrpId}"]{
   animation-duration:${element.getAttribute('data-enter-animation-duration') || 400}ms;`
     // if(_.get(getResponsiveSetting(settings, 'en_a_delay'), 'size')){
     //   styles +=`animation-delay:${_.get(getResponsiveSetting(settings, 'en_a_delay'), 'size')}ms;`

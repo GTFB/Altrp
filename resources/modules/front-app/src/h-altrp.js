@@ -11,7 +11,7 @@ if(!window.asCheck){
     const HtmlRenderEvent = new Event('html-render')
     document.dispatchEvent(HtmlRenderEvent)
   })
-  console.error('_h-altrp.js')
+
 
   import(/* webpackChunkName: '_h-altrp.js' */'./_h-altrp.js')
 }

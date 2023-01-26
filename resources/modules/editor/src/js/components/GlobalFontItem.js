@@ -12,6 +12,9 @@ import {
 import { Select } from "@blueprintjs/select";
 import Resource from "../classes/Resource";
 import { altrpFontsSet } from "../../../../front-app/src/js/constants/fonts";
+import CONSTANTS from "../consts";
+import mutate from 'dot-prop-immutable'
+import updateCssVars from "../helpers/update-css-vars";
 
 const familyOptions = _.toPairs(altrpFontsSet).map(([font, type]) => {
   return {
@@ -19,6 +22,23 @@ const familyOptions = _.toPairs(altrpFontsSet).map(([font, type]) => {
     value: font
   };
 });
+
+const SCREENS = [
+  ...CONSTANTS.SCREENS,
+  {
+    icon: "2K+",
+    name: "screen_2K+",
+    id: 7,
+    width: "100%",
+    fullMediaQuery: "@media screen and (min-width: 1921px)",
+    mediaQuery: "@media screen and (min-width: 1921px)"
+  },
+]
+const screensOptions = SCREENS.map(s=>({
+  value: s.name,
+  label: s.name,
+  icon: s.icon,
+}))
 
 const units = ["px", "em", "rem", "%", "vw", "vh"];
 
@@ -181,59 +201,125 @@ class GlobalFontItem extends Component {
    * @param {Event} event
    */
   nameChange(event) {
-    const string = event.target.value;
     this.setState(s => ({
       ...s,
       font: {
         ...s.font,
-        name: string
+        name: event.target.value
       }
     }));
   }
 
-  onSelect(event, font) {
+  onSelect(event, _font) {
 
-    this.setState(s => ({
-      ...s,
-      font: { ...s.font, family: font.value, label: font.label }
-    }));
+    let { font } = this.state;
+    let { currentScreen } = this.props;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.label`, _font.label)
+      font = mutate.set(font, `${currentScreen.name}.family`, _font.value)
+    } else {
+      font = mutate.set(font, 'label', _font.label)
+      font = mutate.set(font, 'family', _font.value)
+    }
+    this.setState(s => ({ ...s, font}));
+
   }
 
   changeUnit(event) {
     const unit = event.target.value;
-    this.setState(s => ({ ...s, font: { ...s.font, sizeUnit: unit } }));
+    let { font } = this.state;
+    let { currentScreen } = this.props;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.sizeUnit`, unit)
+    } else {
+      font = mutate.set(font, 'sizeUnit', unit)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   changeSize(value) {
-    this.setState(s => ({ ...s, font: { ...s.font, size: value } }));
+    let { font } = this.state;
+    let { currentScreen } = this.props;
+
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.size`, value)
+    } else {
+      font = mutate.set(font, 'size', value)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   changeLineHeight(value) {
-    this.setState(s => ({ ...s, font: { ...s.font, lineHeight: value } }));
+    let { font } = this.state;
+    let { currentScreen } = this.props;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.lineHeight`, value)
+    } else {
+      font = mutate.set(font, 'lineHeight', value)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   changeSpacing(value) {
-    this.setState(s => ({ ...s, font: { ...s.font, spacing: value } }));
+    const { currentScreen } = this.props;
+    let { font } = this.state;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.spacing`, value)
+    } else {
+      font = mutate.set(font, 'spacing', value)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   changeWeight(event) {
     const weight = event.target.value;
-    this.setState(s => ({ ...s, font: { ...s.font, weight: weight } }));
+
+    const { currentScreen } = this.props;
+    let { font } = this.state;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.weight`, weight)
+    } else {
+      font = mutate.set(font, 'weight', weight)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   changeTransform(event) {
     const transform = event.target.value;
-    this.setState(s => ({ ...s, font: { ...s.font, transform: transform } }));
+
+    const { currentScreen } = this.props;
+    let { font } = this.state;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.transform`, transform)
+    } else {
+      font = mutate.set(font, 'transform', transform)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   changeStyle(event) {
     const style = event.target.value;
-    this.setState(s => ({ ...s, font: { ...s.font, style: style } }));
+
+    const { currentScreen } = this.props;
+    let { font } = this.state;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.style`, style)
+    } else {
+      font = mutate.set(font, 'style', style)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   changeDecoration(event) {
     const decoration = event.target.value;
-    this.setState(s => ({ ...s, font: { ...s.font, decoration: decoration } }));
+    let { font } = this.state;
+    let { currentScreen } = this.props;
+    if(currentScreen.name !== SCREENS[0].name){
+      font = mutate.set(font, `${currentScreen.name}.decoration`, decoration)
+    } else {
+      font = mutate.set(font, 'decoration', decoration)
+    }
+    this.setState(s => ({ ...s, font}));
   }
 
   onSaveFont(event) {
@@ -249,7 +335,9 @@ class GlobalFontItem extends Component {
         s => ({ ...s, edit: false }),
         () => this.props.updateAllTree(font)
       );
+      updateCssVars()
     });
+
   }
 
   onDeleteFont(event) {
@@ -260,12 +348,64 @@ class GlobalFontItem extends Component {
       this.globalStyleResource.delete(font.id).then(success => {
         this.props.deleteFont(font);
         // this.props.onSaveEffectClose();
+        updateCssVars()
       });
+
     }
   }
+  itemRenderer=(item, {handleClick}) => {
+    const {currentScreen} = this.props
+    return <MenuItem
+      text={item.label}
+      key={item.value}
+      active={item.value === currentScreen.name }
+      onClick={handleClick}
+    />
+  }
+  onItemSelect=(item)=>{
+    const currentScreen = SCREENS.find(s=>s.name === item.value)
+    this.props.setScreen(currentScreen)
+  }
 
+  static fontProperties = [
+    'decoration',
+    'label',
+    'family',
+    'weight',
+    'transform',
+    'style',
+    'lineHeight',
+    'spacing',
+    'size',
+    'sizeUnit',
+  ]
+  static reverseScreens = SCREENS.slice().reverse()
+
+  getFont =()=>{
+    let { font } = this.state;
+    const { currentScreen } = this.props;
+    font= {...font}
+    if(currentScreen.name !== SCREENS[0].name){
+      const screenIndex = _.findIndex(GlobalFontItem.reverseScreens, s=>s.name === currentScreen.name)
+      const screens = GlobalFontItem.reverseScreens.slice(screenIndex)
+      GlobalFontItem.fontProperties.forEach(p=>{
+        let value = _.get(font, `${currentScreen.name}.${p}`)
+          screens.forEach(s=>{
+            if(! value){
+              value = _.get(font, `${s.name}.${p}`)
+
+            }
+          })
+
+        font[p] = value ? value : font[p]
+
+      })
+    }
+    return font
+  }
   render() {
-    const { font } = this.state;
+    const {currentScreen} = this.props
+    const font  = this.getFont();
     const mgButton = this.state.edit ? '20px' : '0';
 
     return (
@@ -281,6 +421,24 @@ class GlobalFontItem extends Component {
         )}
         {this.state.edit && (
           <form onSubmit={this.onSaveFont}>
+            <div className="global-font__group">
+              <label htmlFor="size">Screen</label>
+              <ControlGroup fill={true} vertical={false}>
+                <Select
+                  value={currentScreen.name}
+                  itemRenderer={this.itemRenderer}
+                  items={screensOptions}
+                  onItemSelect={this.onItemSelect}>
+
+                  <Button
+                    fill={true}
+                    alignText={Alignment.LEFT}
+                    text={currentScreen.name}
+                    rightIcon="double-caret-vertical"
+                  />
+                </Select>
+              </ControlGroup>
+            </div>
             <div className="global-font__group">
               <label htmlFor="enter_for_name">Enter Font Name</label>
               <InputGroup
@@ -304,7 +462,7 @@ class GlobalFontItem extends Component {
                   <MenuItem
                     text={item.label}
                     key={item.label}
-                    active={item.value === this.state.font.family}
+                    active={item.value === font.family}
                     onClick={e => this.onSelect(e, item)}
                   />
                 )}

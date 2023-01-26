@@ -73,11 +73,6 @@ export default class PageGenerator extends BaseGenerator {
     const altrp_settings = await page.getPageSettings(this)
     const fonts = this.getFonts()
 
-
-    let presetsLinks = altrp_settings.presets.map(p=>{
-      return `<link rel="stylesheet" href="/altrp/css/altrp-presets/${p}.css"/>`
-    }).join('')
-
     await page.load('data_sources', data_source => {
       data_source.preload('source', source => {
         source.preload('model', model => {
@@ -86,8 +81,15 @@ export default class PageGenerator extends BaseGenerator {
       })
     })
 
-    let elements_list: string[] | string = await page.extractElementsNames()
+    const presets = []
+
+    let elements_list: string[] | string = await page.extractElementsNames(true, presets)
     let all_elements_list: string[] | string = await page.extractElementsNames(false)
+
+
+    let presetsLinks = presets.map(p=>{
+      return `<link rel="stylesheet" href="/altrp/css/altrp-presets/${p}.css"/>`
+    }).join('')
 
     const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list, all_elements_list)
     elements_list = elements_list.map(e => `'${e}'`)

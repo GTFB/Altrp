@@ -739,7 +739,7 @@ export function shadowStyled(controller = {}, important = '') {
     const blur = controller.blur || 0;
     const spread = controller.spread || 0;
     const color = controller.color || "";
-    console.log(controller.cssVar);
+
     if(controller.cssVar){
       return  `box-shadow: ${controller.cssVar};`
     }

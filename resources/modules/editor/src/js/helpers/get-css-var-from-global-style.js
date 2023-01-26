@@ -14,7 +14,7 @@ export default function getCssVarFromGlobalStyle(style){
       let varName = `--altrp-var-${style?._type}-${style.name.replace(/[^a-zA-Z0-9]/g,'-')}`
       if(!cachedStyles[varName] || cachedStyles[varName] !== _getValue(style)){
         cachedStyles[varName] = _getValue(style)
-        _updateRules()
+        //_updateRules()
       }
       style = {
       ...style,
@@ -32,7 +32,7 @@ export default function getCssVarFromGlobalStyle(style){
         if(!cachedStyles[varName] || cachedStyles[varName] !== style[p]){
           cachedStyles[varName] = style[p]
 
-          _updateRules()
+          //_updateRules()
         }
         style[`${p}CssVar`] = `var(${varName})`
         let fontSizeKey = `--altrp-var-${settings._type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g,'-')}-font-size`
@@ -43,7 +43,7 @@ export default function getCssVarFromGlobalStyle(style){
         }`
         if(!cachedStyles[fontSizeKey] || cachedStyles[fontSizeKey] !== fontSizeValue){
           cachedStyles[fontSizeKey] = fontSizeValue
-          _updateRules()
+          //_updateRules()
         }
       })
     } break;
@@ -60,14 +60,13 @@ export default function getCssVarFromGlobalStyle(style){
       if(!cachedStyles[varName] || cachedStyles[varName] !== varValue){
         cachedStyles[varName] = varValue
 
-        _updateRules()
+        //_updateRules()
       }
 
       style = {
         ...style,
         cssVar: `var(${varName})`
       }
-      console.log(style.cssVar);
     } break;
   }
 

@@ -78,7 +78,8 @@ class HeadingTypeHeadingWidget extends Component {
       let linkProps = {
         rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
         href: `mailto:mail@gmail.com`,
-        className: `${className} altrp-inherit altrp-inherit_wo-border`,
+        //className: `${className} altrp-inherit altrp-inherit_wo-border`,
+        className: ` altrp-inherit altrp-inherit_wo-border`,
       };
 
       linkProps.tag = this.state.settings.link_link.tag;

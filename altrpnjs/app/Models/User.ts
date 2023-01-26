@@ -63,7 +63,7 @@ export default class User extends BaseModel {
   @column()
   public guid: string
 
-  @column()
+  @column({ serializeAs: null })
   public rememberMeToken: string | null
 
   @column.dateTime()

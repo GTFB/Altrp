@@ -31,7 +31,6 @@ import base_path from "../../../helpers/path/base_path";
 import sharp from 'sharp';
 import sizeOf from 'image-size';
 import getAltrpTime from "../../../helpers/getAltrpTime";
-import GlobalStyle from "App/Models/GlobalStyle";
 
 export default class AltrpRouting {
 
@@ -299,14 +298,14 @@ export default class AltrpRouting {
     altrpContext.altrpdata = datasources
     try {
 
-      let [page_areas, all_styles, content] = await Promise.all(
+      let [page_areas, _all_styles, content] = await Promise.all(
         [
           promisify(fs.readFile)(storage_path(`pages-content/areas/${page.guid}.html`), 'utf8'),
           promisify(fs.readFile)(storage_path(`pages-content/styles/${device}/${page.guid}.html`), 'utf8'),
           promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
         ]
       )
-
+      let all_styles = `<link rel="stylesheet" href="/altrp/css/vars/altrp-vars.css"/>` + _all_styles
       content = mustache.render(content, {
         ...altrpContext,
         altrpContext,
@@ -329,7 +328,6 @@ export default class AltrpRouting {
         lang,
         altrptime: getAltrpTime()
       })
-      all_styles+=await `<style id="altrp-css-vars">${await GlobalStyle.getCssVars()}</style>` //todo check speed
       mustache?.templateCache?.clear()
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)

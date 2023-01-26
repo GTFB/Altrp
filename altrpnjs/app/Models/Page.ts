@@ -163,6 +163,7 @@ export default class Page extends BaseModel {
   //   'image',
   // ]
   private static settingsToMigrate = [
+    'global_styles_presets',
     'default_hidden',
     'section',
     'section_widget',
@@ -406,9 +407,7 @@ export default class Page extends BaseModel {
           }
           if (root_element) {
             recurseMapElements(root_element, function (element) {
-              if(element['settings']['global_styles_presets']){
-                altrpSettings.presets.push(`${element['name']}-${element['settings']['global_styles_presets']}`)
-              }
+
               if (element['name'] === 'menu') {
                 const menuGuid = data_get(element, 'settings.menu')
                 // const menu = await Menu.query().where('guid', guid).select().first()
@@ -771,7 +770,8 @@ export default class Page extends BaseModel {
           mediaQuery ? _styles.push(`${mediaQuery}{${queryStyles}}`) : _styles.push(queryStyles)
         })
 
-        _styles = _styles.join()
+        _styles = _styles.join('')
+
         _styles = purifycss(html, _styles, purifycssOptions)
         styles += `
 <style id="content_style">${_styles}</style>`
@@ -939,7 +939,7 @@ export default class Page extends BaseModel {
 
   }
 
-  async extractElementsNames(_only_react_elements = true) {
+  async extractElementsNames(_only_react_elements = true, presetsStore:string[]| null = null) {
     let elementNames = [];
     const areas = await this.getAreas(true);
 
@@ -950,16 +950,18 @@ export default class Page extends BaseModel {
           data = JSON.parse(data)
           area.template.data = data
         }
-        await this._extractElementsNames(data, elementNames, _only_react_elements);
+        await this._extractElementsNames(data, elementNames, _only_react_elements,  presetsStore);
       }
     }))
 
     elementNames = _.uniq(elementNames)
-
+    if(presetsStore){
+      presetsStore = _.uniq(presetsStore)
+    }
     return elementNames;
   }
 
-  async _extractElementsNames(element, elementNames, only_react_elements) {
+  async _extractElementsNames(element, elementNames, only_react_elements,  presetsStore:string[]| null = null) {
     let plugins_widget_list: any = ''
     if (!plugins_widget_list) {
       plugins_widget_list = []
@@ -968,6 +970,9 @@ export default class Page extends BaseModel {
     }
     if (_.isObject(element.settingsLock)) {
       element.settings = _.merge(element.settings, element.settingsLock)
+    }
+    if(presetsStore && element.settings.global_styles_presets){
+      presetsStore.push(`${element.name}-${element.settings.global_styles_presets}`)
     }
     const reactElements = _.concat(DEFAULT_REACT_ELEMENTS, plugins_widget_list)
     if (!is_array(elementNames)) {
@@ -999,34 +1004,34 @@ export default class Page extends BaseModel {
     }
     if (element.children && is_array(element.children)) {
       for (const child of element.children) {
-        await this._extractElementsNames(child, elementNames, only_react_elements)
+        await this._extractElementsNames(child, elementNames, only_react_elements,  presetsStore)
       }
     }
     if (element.name === 'template' && data_get(element, 'settings.template')) {
-      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template'), elementNames)
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template'), elementNames, presetsStore)
     }
     if (element.name === 'posts' && data_get(element, 'settings.posts_card_template')) {
-      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_template'), elementNames)
-      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames)
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_template'), elementNames, presetsStore)
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames, presetsStore)
     }
     if (element.name === 'posts' && data_get(element, 'settings.posts_card_hover_template')) {
-      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames)
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames, presetsStore)
     }
     if (element.name === 'table'
       && data_get(element, 'settings.row_expand')
       && data_get(element, 'settings.card_template')) {
-      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.card_template'), elementNames)
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.card_template'), elementNames, presetsStore)
     }
     if (element.name === 'dropbar'
       && data_get(element, 'settings.template_dropbar_section')) {
-      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames)
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template_dropbar_section'), elementNames, presetsStore)
     }
     if (element.name === 'carousel'
       && data_get(element, 'settings.slides_repeater', []).length > 0) {
 
       for (const el of data_get(element, 'settings.slides_repeater')) {
         if (el.card_slides_repeater) {
-          await this.extractElementsNamesFromTemplate(el.card_slides_repeater, elementNames)
+          await this.extractElementsNamesFromTemplate(el.card_slides_repeater, elementNames, presetsStore)
         }
       }
     }
@@ -1035,7 +1040,7 @@ export default class Page extends BaseModel {
       let columns = data_get(element, 'settings.tables_columns', [])
       for (let column of columns) {
         if (data_get(column, 'column_template')) {
-          await this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
+          await this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames, presetsStore)
         }
       }
     }
@@ -1044,7 +1049,7 @@ export default class Page extends BaseModel {
       let tabs = data_get(element, 'settings.items_tabs', [])
       for (let tab of tabs) {
         if (data_get(tab, 'card_template')) {
-          this.extractElementsNamesFromTemplate(data_get(tab, 'card_template'), elementNames)
+          await this.extractElementsNamesFromTemplate(data_get(tab, 'card_template'), elementNames, presetsStore)
         }
       }
     }
@@ -1055,14 +1060,20 @@ export default class Page extends BaseModel {
       let columns = data_get(element, 'settings.tables_columns')
       for (let column of columns) {
         if (data_get(column, 'column_template')) {
-          this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames)
+          await this.extractElementsNamesFromTemplate(data_get(column, 'column_template'), elementNames, presetsStore)
         }
       }
     }
 
   }
 
-  async extractElementsNamesFromTemplate(template_id, elementNames) {
+  /**
+   *
+   * @param template_id
+   * @param elementNames
+   * @param presetsStore
+   */
+  async extractElementsNamesFromTemplate(template_id, elementNames, presetsStore?: string[] | null) {
     let template
     if (validGuid(template_id)) {
       template = await Template.query().where('guid', template_id).first();
@@ -1074,7 +1085,7 @@ export default class Page extends BaseModel {
     }
 
     let data = JSON.parse(template.data);
-    this._extractElementsNames(data, elementNames, false);
+    await this._extractElementsNames(data, elementNames, false, presetsStore);
   }
 
 

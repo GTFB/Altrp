@@ -1,4 +1,4 @@
-import {clearCurrentDataStorage} from "../store/current-data-storage/actions";
+import {clearCurrentDataStorage, updateCurrentDatasourceWithDefault} from "../store/current-data-storage/actions";
 import {clearElements} from "../store/elements-storage/actions";
 import mountElements from "../functions/mount-elements";
 import {changeCurrentPage} from "../store/current-page/actions";
@@ -287,7 +287,8 @@ async function _replace(htmlString, popstate, url, progressBar) {
   eval(`(function () {
     ${mainScript.innerHTML}
   })()`)
-
+  appStore.dispatch(updateCurrentDatasourceWithDefault())
+  //console.log(window.altrpPreloadedDatasources);
   let _allSiteScripts = document.querySelector('#all_site_js')?.innerHTML || ''
   let allSiteScripts = document.querySelector('#all_site_js')
   if (allSiteScripts) {

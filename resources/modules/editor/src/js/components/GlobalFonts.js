@@ -1,16 +1,15 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import styled from "styled-components";
-import { Button, Divider, Collapse } from "@blueprintjs/core";
-import { connect } from "react-redux";
+import {Button, Divider, Collapse} from "@blueprintjs/core";
+import {connect} from "react-redux";
 import {
   addGlobalFont,
   editGlobalFont,
   deleteGlobalFont
 } from "../store/altrp-global-colors/actions";
-import BaseElement from "../classes/elements/BaseElement";
 import GlobalFontItemAdd from "./GlobalFontItemAdd";
 import GlobalFontItem from "./GlobalFontItem";
-import { getTemplateDataStorage } from "../helpers";
+import {getTemplateDataStorage} from "../helpers";
 import Scrollbars from "react-custom-scrollbars";
 
 const Panel = styled.div`
@@ -34,12 +33,21 @@ class GlobalFonts extends Component {
     super(props);
     this.state = {
       new: false,
-      fonts: props.fonts
+      fonts: props.fonts,
+      currentScreen: CONSTANTS.SCREENS[0]
     };
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.onSaveFont = this.onSaveFont.bind(this);
     this.updateAllTree = this.updateAllTree.bind(this);
+  }
+
+  /**
+   *
+   * @param {{}}currentScreen
+   */
+  setScreen=(currentScreen = {})=>{
+    this.setState(state=>({...state, currentScreen}))
   }
 
   /**
@@ -83,14 +91,14 @@ class GlobalFonts extends Component {
         }
 
         child.children.length > 0 &&
-          this.recursiveWalkTree(child.children, guid, font);
+        this.recursiveWalkTree(child.children, guid, font);
       }
     );
   }
 
   addItem() {
     this.setState(
-      s => ({ new: !s.new })
+      s => ({new: !s.new})
     );
   }
 
@@ -100,12 +108,13 @@ class GlobalFonts extends Component {
       let effects = _.cloneDeep(this.state.effects, []);
       effects = effects.filter(item => item.id !== id);
       this.setState(
-        s => ({ ...s, effects: effects }),
+        s => ({...s, effects: effects}),
         () => this.props.setEffect(effects)
       );
       this.globalStyleResource.delete(id);
     }
   }
+
   /**
    * Рекурсивно обновляет эффект во всех элементах
    * @param {*} effect
@@ -114,8 +123,8 @@ class GlobalFonts extends Component {
     getTemplateDataStorage()
       .getRootElement()
       .children.forEach(child => {
-        this.recursiveWalkTree(child, effect.guid, effect);
-      });
+      this.recursiveWalkTree(child, effect.guid, effect);
+    });
   }
 
   /**
@@ -123,46 +132,50 @@ class GlobalFonts extends Component {
    * @param {Event} e
    */
   onSaveFont() {
-    this.setState(s => ({ ...s, new: false }));
+    this.setState(s => ({...s, new: false}));
   }
 
   render() {
+    const {currentScreen} = this.state
     return (
       <Panel>
-        <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
-          <div className='panel-global__styles'>
-            {this.state.new && (
-              <GlobalFontItemAdd
-                addFont={this.props.addFont}
-                onSaveFontClose={this.onSaveFont}
-                isNew={true}
-              />
-            )}
+          <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+            <div className='panel-global__styles'>
+              {this.state.new && (
+                <GlobalFontItemAdd
+                  addFont={this.props.addFont}
+                  onSaveFontClose={this.onSaveFont}
+                  isNew={true}
+                />
+              )}
 
-            {!this.state.new &&
-            (this.props.fonts.length > 0 ? (
-              this.props.fonts.map((item, index) => (
-                <div key={index} style={{ marginBottom: "10px" }}>
-                  <GlobalFontItem
-                    font={item}
-                    editFont={this.props.editFont}
-                    deleteFont={this.props.deleteFont}
-                    onSaveFontClose={this.onSaveFont}
-                    updateAllTree={this.updateAllTree}
-                  />
-                </div>
-              ))
-            ) : (
-              <div className="list__empty">Font list empty</div>
-            ))}
+              {!this.state.new &&
+                (this.props.fonts.length > 0 ? (
+                  this.props.fonts.map((item, index) => (
+                    <div key={index} style={{marginBottom: "10px"}}>
+                      <GlobalFontItem
+                        setScreen={this.setScreen}
+                        currentScreen={currentScreen}
+                        font={item}
+                        editFont={this.props.editFont}
+                        deleteFont={this.props.deleteFont}
+                        onSaveFontClose={this.onSaveFont}
+                        updateAllTree={this.updateAllTree}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="list__empty">Font list empty</div>
+                ))}
 
-            <Button style={{ width: "100%" }} onClick={this.addItem}>
-              {!this.state.new ? "➕Add Font➕" : "Cancel"}
-            </Button>
-          </div>
-        </Scrollbars>
+              <Button style={{width: "100%"}} onClick={this.addItem}>
+                {!this.state.new ? "➕Add Font➕" : "Cancel"}
+              </Button>
+            </div>
+          </Scrollbars>
       </Panel>
     );
   }
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(GlobalFonts);

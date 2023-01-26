@@ -7,6 +7,7 @@ import { toJSON, toCSS } from 'cssjson'
 import SCREENS from './const/SCREENS'
 import ArrayObject from './array-object'
 import BaseGenerator from "App/Generators/BaseGenerator";
+import _ from 'lodash'
 
 const nameMapScreen = {}
 
@@ -245,15 +246,24 @@ export const optimizeStyles = async (styles) => {
   if(queryStylesJson['0_10000']){
     queryStylesJson['0_10000'] =  [toCSS(queryStylesJson['0_10000'])]
   }
+  /**
+   * generatePresetStyles
+   */
   await Promise.all(map(queryPresetStylesJson, async (queryStylesJson: any, key)=>{
     map(queryStylesJson, (value, key)=>{
       queryStylesJson[key] = [toCSS(value)]
     })
 
     let styles: any = []
-    const optimizedStyles = mergeStyles(queryStylesJson, true)
-
+    let optimizedStyles = mergeStyles(queryStylesJson, true)
+    optimizedStyles = _.sortBy(optimizedStyles,([mediaQuery]: string[], idx) => {
+      if(! mediaQuery){
+        return -1
+      }
+      return idx
+    })
     optimizedStyles.forEach(([mediaQuery, queryStyles]: string[]) => {
+
       mediaQuery ? styles.push(`${mediaQuery}{${queryStyles}}`) : styles.push(queryStyles)
     })
     styles = styles.join('')

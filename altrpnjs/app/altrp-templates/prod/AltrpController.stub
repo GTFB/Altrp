@@ -6,6 +6,7 @@ const Database = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Dat
 const DB = Database.default;
 const _ = __importStar(require("lodash"));
 const Validator = global[Symbol.for('ioc.use')]("Adonis/Core/Validator");
+const {DateTime} = require("luxon");
 
 {{{imports}}}
 

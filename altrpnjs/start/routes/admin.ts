@@ -111,6 +111,7 @@ Route.group(() => {
     Route.get('/models/:model_id/data_source_options', 'admin/ModelsController.getDataSourcesByModel');
 
     Route.resource('global_template_styles', 'GlobalTemplateStylesController')
+    Route.get('global_template_css', 'GlobalTemplateStylesController.getCss')
 
     Route.get('/reports_options', () => {
       return []

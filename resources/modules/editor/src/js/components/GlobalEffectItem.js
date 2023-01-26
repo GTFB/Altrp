@@ -12,6 +12,7 @@ import { Select } from "@blueprintjs/select";
 import { SketchPicker } from "react-color";
 import Resource from "../classes/Resource";
 import GlobalPresetColors from "./controllers/GlobalPresetColors";
+import updateCssVars from "../helpers/update-css-vars";
 
 const typeOptions = [
   {
@@ -117,6 +118,7 @@ class GlobalEffectItem extends Component {
         s => ({ ...s, edit: false }),
         () => this.props.updateAllTree(effect)
       );
+      updateCssVars()
     });
   }
   onDeleteEffect(event) {
@@ -127,6 +129,7 @@ class GlobalEffectItem extends Component {
       this.globalStyleResource.delete(effect.id).then(success => {
         this.props.deleteEffect(effect);
         // this.props.onSaveEffectClose();
+        updateCssVars()
       });
     }
   }

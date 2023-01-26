@@ -11,6 +11,7 @@ import {
 import { Select } from "@blueprintjs/select";
 import Resource from "../classes/Resource";
 import { altrpFontsSet } from "../../../../front-app/src/js/constants/fonts";
+import updateCssVars from "../helpers/update-css-vars";
 
 const familyOptions = _.toPairs(altrpFontsSet).map(([font, type]) => {
   return {
@@ -209,7 +210,9 @@ class GlobalFontItemAdd extends Component {
       };
       this.props.addFont(font);
       this.props.onSaveFontClose();
+      updateCssVars()
     });
+
   }
 
   changeUnit(event) {

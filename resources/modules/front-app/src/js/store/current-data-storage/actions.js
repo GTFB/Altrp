@@ -2,7 +2,15 @@ export const CHANGE_CURRENT_DATASOURCE = "CHANGE_CURRENT_DATASOURCE";
 export const CLEAR_CURRENT_DATASOURCE = "CLEAR_CURRENT_DATASOURCE";
 export const SET_CURRENT_DATASOURCE_LOADED = "SET_CURRENT_DATASOURCE_LOADED";
 export const SET_CURRENT_DATASOURCE_LOADING = "SET_CURRENT_DATASOURCE_LOADING";
+export const UPDATE_WITH_DEFAULT = "UPDATE_WITH_DEFAULT";
 
+
+
+export function updateCurrentDatasourceWithDefault(){
+  return{
+    type: UPDATE_WITH_DEFAULT
+  }
+}
 /**
  *
  * @param {string}dataStorageName

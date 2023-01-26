@@ -322,7 +322,7 @@ export default class MediaController {
 
       let title = file.clientName.split(".");
       title.pop();
-      title = title.join();
+      title = title.join('');
       title = transliterate(title)
       title = title + '_' + (new Date().valueOf())
       title = title.substring(0, 36)

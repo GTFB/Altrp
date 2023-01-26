@@ -18,6 +18,7 @@ import {
 } from "../store/altrp-global-colors/actions";
 import { createGlobalColor, getTemplateDataStorage } from "../helpers";
 import BaseElement from "../classes/elements/BaseElement";
+import updateCssVars from "../helpers/update-css-vars";
 
 const Panel = styled.div`
   background-color: #fff;
@@ -101,6 +102,8 @@ class GlobalColors extends Component {
             this.recursiveWalkTree(child, color.guid, color);
           });
       });
+    updateCssVars()
+
   }, 50);
 
   /**
@@ -132,6 +135,8 @@ class GlobalColors extends Component {
                 );
               });
           });
+        updateCssVars()
+
       }
       // this.globalStyleResource.put();
     });
@@ -201,6 +206,8 @@ class GlobalColors extends Component {
       settings: { name: value },
       type: "color"
     });
+    updateCssVars()
+
   }, 150);
 
   addItem(e) {
@@ -222,6 +229,8 @@ class GlobalColors extends Component {
         s => ({ ...s, colors: colors }),
         () => this.props.setColors(colors)
       );
+      updateCssVars()
+
     });
   }
 
@@ -235,6 +244,8 @@ class GlobalColors extends Component {
         () => this.props.setColors(colors)
       );
       this.globalStyleResource.delete(id);
+      updateCssVars()
+
     }
   }
 
