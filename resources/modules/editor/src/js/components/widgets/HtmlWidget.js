@@ -12,12 +12,24 @@ class HtmlWidget extends Component {
     if (props.baseRender) {
       this.render = props.baseRender(this);
     }
+    this.ref = React.createRef()
   }
   shouldComponentUpdate(nextProps, nextState){
     let data = this.getLockedContent("data");
     return this.data !== data
   }
 
+  _componentDidMount(){
+    if(this.ref.current){
+      nodeScriptReplace(this.ref.current)
+    }
+  }
+
+  _componentDidUpdate(){
+    if(this.ref.current){
+      nodeScriptReplace(this.ref.current)
+    }
+  }
   /**
    * Получить css классы для html widget
    */
@@ -40,6 +52,7 @@ class HtmlWidget extends Component {
     return (
       <>
         <div
+          ref={this.ref}
           className={classes}
           dangerouslySetInnerHTML={{
             __html: data
@@ -51,3 +64,30 @@ class HtmlWidget extends Component {
 }
 
 export default HtmlWidget;
+function nodeScriptReplace(node) {
+  if ( nodeScriptIs(node) === true ) {
+    node.parentNode.replaceChild( nodeScriptClone(node) , node );
+  }
+  else {
+    var i = -1, children = node.childNodes;
+    while ( ++i < children.length ) {
+      nodeScriptReplace( children[i] );
+    }
+  }
+
+  return node;
+}
+function nodeScriptClone(node){
+  var script  = document.createElement("script");
+  script.text = node.innerHTML;
+
+  var i = -1, attrs = node.attributes, attr;
+  while ( ++i < attrs.length ) {
+    script.setAttribute( (attr = attrs[i]).name, attr.value );
+  }
+  return script;
+}
+
+function nodeScriptIs(node) {
+  return node.tagName === 'SCRIPT';
+}
