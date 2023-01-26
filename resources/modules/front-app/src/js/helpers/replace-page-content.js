@@ -311,7 +311,9 @@ async function _replace(htmlString, popstate, url, progressBar) {
    * Events dispatch
    */
   const event = new Event('DOMContentLoaded')
+  const htmlRenderEvent = new Event('html-render')
   document.dispatchEvent(event)
+  document.dispatchEvent(htmlRenderEvent)
   window.hAltrp.loadComponents()
   appStore.dispatch(clearElements())
   window.altrpContentLoaded = false
