@@ -62,12 +62,13 @@ class InputTextCommonWidget extends Component {
    * @param {{}} e
    */
   handleEnter = e => {
+    if (!e.target.hasAttribute('data-enter')) return;
     if (e.keyCode === 13) {
       e.preventDefault();
       const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
       const index = inputs.indexOf(e.target);
       if (index === undefined) return;
-      if (!e.target.hasAttribute('data-enter')) return;
+
       inputs[index + 1] && inputs[index + 1].focus();
       const {
         create_allowed,
