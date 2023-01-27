@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.3.9",
+    "@adonisjs/vow": "^1.0.17",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "adonis-preset-ts": "^2.1.0",
     "eslint": "^8.0.0",
