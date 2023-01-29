@@ -1,9 +1,12 @@
 # ALTRP
 
 ## Changelog
-## test version build 11
+## test version build 1
 
-### 1.4.7
+### 1.4.8 
+* Add Static Properties to Custom Models
+
+### 1.4.7 
 
 * Fix Issues in Checkbox Inputs, Range Slider and Gallery Widgets
 * Fix Range Input Bugs with Values

@@ -17,7 +17,7 @@ import SourceRole from 'App/Models/SourceRole'
 import guid from '../../../../helpers/guid'
 import SQLEditor from 'App/Models/SQLEditor'
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
-import {parseInt} from 'lodash'
+import _, {parseInt} from 'lodash'
 import {ModelPaginatorContract} from "@ioc:Adonis/Lucid/Orm"
 import Logger from "@ioc:Adonis/Core/Logger";
 import keys from "lodash/keys"
@@ -84,15 +84,15 @@ export default class ModelsController {
   }
 
   static modelSchema = schema.create({
-      title: schema.string({trim: true},[]),
-    })
+    title: schema.string({trim: true}, []),
+  })
 
-    async updateModel({response, params, request, auth}: HttpContextContract) {
+  async updateModel({response, params, request, auth}: HttpContextContract) {
 
-      let model = await Model.find(params.id)
-      if (!model) {
-        response.status(404)
-        return response.json({
+    let model = await Model.find(params.id)
+    if (!model) {
+      response.status(404)
+      return response.json({
         success: false,
         message: 'Model not found'
       })
@@ -118,6 +118,7 @@ export default class ModelsController {
         soft_deletes: modelData.soft_deletes,
         time_stamps: modelData.time_stamps,
         parent_model_id: modelData.parent_model_id || null,
+        settings: modelData.settings || null,
       })
 
       if (modelData.time_stamps) {
@@ -153,8 +154,8 @@ export default class ModelsController {
           const client = Database.connection(Env.get('DB_CONNECTION'))
           try {
             await client.schema.table(model.table.name, table => {
-                table.timestamp('created_at')
-                table.timestamp('updated_at')
+              table.timestamp('created_at')
+              table.timestamp('updated_at')
             })
           } catch (e) {
             console.error(e)
@@ -165,7 +166,7 @@ export default class ModelsController {
         const created_at_column = await Column.query().where('name', '=', 'created_at').andWhere('model_id', '=', model.id)
         const updated_at_column = await Column.query().where('name', '=', 'updated_at').andWhere('model_id', '=', model.id)
 
-        if(created_at_column?.length && updated_at_column?.length) {
+        if (created_at_column?.length && updated_at_column?.length) {
           const client = Database.connection(Env.get('DB_CONNECTION'))
           try {
             await client.schema.table(model.table.name, table => {
@@ -485,6 +486,7 @@ export default class ModelsController {
       }
     }))
   }
+
   async storeModel({request, response, auth}: HttpContextContract) {
     let modelData = request.all()
     let model = new Model()
@@ -506,6 +508,7 @@ export default class ModelsController {
       time_stamps: modelData.time_stamps,
       id: modelData.id,
       parent_model_id: modelData.parent_model_id || null,
+      settings: modelData.settings || null,
       table_id: table.id,
     })
     await model.save()
@@ -574,7 +577,7 @@ export default class ModelsController {
 
     await controller.save()
 
-    await Model.createDefaultCustomizers( modelData, model)
+    await Model.createDefaultCustomizers(modelData, model)
 
     let sources = [
       (new Source()).fill({
@@ -784,9 +787,11 @@ export default class ModelsController {
           }
           try {
             if (relationship[i].type === "belongsTo") {
-              let deleteQuery = `ALTER TABLE ${model.table.name} DROP FOREIGN KEY ${model.table.name}_${relationship[i].local_key}_foreign`
+              let deleteQuery = `ALTER TABLE ${model.table.name}
+                DROP FOREIGN KEY ${model.table.name}_${relationship[i].local_key}_foreign`
               await Database.rawQuery(deleteQuery)
-              deleteQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${model.table.name}_${relationship[i].foreign_key}_foreign`
+              deleteQuery = `ALTER TABLE ${model.table.name}
+                DROP INDEX ${model.table.name}_${relationship[i].foreign_key}_foreign`
               await Database.rawQuery(deleteQuery)
             }
           } catch (e) {
@@ -837,7 +842,7 @@ export default class ModelsController {
     })
     if (table) {
       await Column.query().where('table_id', table.id).delete()
-      if(controller){
+      if (controller) {
         await controller.delete()
       }
 
@@ -966,7 +971,7 @@ export default class ModelsController {
     delete dataSource.permissions
     if (sourceRoles) {
       for (let sourceRole of sourceRoles) {
-            data['access']['roles'].push(sourceRole['id'])
+        data['access']['roles'].push(sourceRole['id'])
       }
     }
 
@@ -994,8 +999,7 @@ export default class ModelsController {
     await request.validate({schema: dataSourceSchema})
 
 
-
-      let dataSource = await Source.query().where('id', params.id).preload("roles").first()
+    let dataSource = await Source.query().where('id', params.id).preload("roles").first()
     if (!dataSource) {
       response.status(404)
       return response.json({
@@ -1006,41 +1010,41 @@ export default class ModelsController {
 
     let data = request.all()
 
-      delete data.notice_settings
-      delete data.web_url
-      delete data.bodies
-      delete data.headers
+    delete data.notice_settings
+    delete data.web_url
+    delete data.bodies
+    delete data.headers
 
     if (data['access']['roles'].lenght <= 1) {
       data['need_all_roles'] = 0
     }
 
-      for (const key of keys(data)) {
-        switch (key) {
-          case "roles":
-            continue
-          case "access":
-            if(data.access) {
-              if(data.access.roles) {
-                //@ts-ignore
-                if(dataSource.roles.length > 0) {
-                  await dataSource.related('roles').detach()
-                }
+    for (const key of keys(data)) {
+      switch (key) {
+        case "roles":
+          continue
+        case "access":
+          if (data.access) {
+            if (data.access.roles) {
+              //@ts-ignore
+              if (dataSource.roles.length > 0) {
+                await dataSource.related('roles').detach()
+              }
 
-                if(data.access.roles.length > 0) {
-                  await dataSource.related('roles').attach(data.access.roles.map(role => role.value))
-                }
+              if (data.access.roles.length > 0) {
+                await dataSource.related('roles').attach(data.access.roles.map(role => role.value))
               }
             }
-          default:
-            //@ts-ignore
-            dataSource[key] = data[key]
-        }
+          }
+        default:
+          //@ts-ignore
+          dataSource[key] = data[key]
       }
+    }
 
     await dataSource.save()
     return response.json({
-        success: false,
+      success: false,
       data: dataSource
     })
   }
@@ -1104,5 +1108,101 @@ export default class ModelsController {
   async getDataSourcesByModel({response, params}: HttpContextContract) {
     let data_sources = await Source.query().where('model_id', params.model_id).select(['title as label', 'id as value'])
     return response.json(data_sources)
+  }
+
+  async getSettingsValue({response, params}: HttpContextContract) {
+    const {model_id, setting_name} = params
+    const model = await Model.find(model_id)
+    let _default: any = null
+    switch (setting_name) {
+      case 'static_props': {
+        _default = []
+      }
+        break
+    }
+
+    return response.json({
+      success: true,
+      data: _.get(model, `settings.${setting_name}`, _default)
+    })
+
+  }
+
+  async updateSettingValue({response, params, request}: HttpContextContract) {
+
+    const {model_id, setting_name, prop_name} = params
+    const model = await Model.findOrFail(model_id)
+    if(! model.settings){
+      model.settings = {}
+    }
+    switch (setting_name) {
+      case 'static_props': {
+        let static_props = _.get(model, 'settings.static_props', [])
+        let current_value = static_props.find(i=>i.prop_name === prop_name)
+        static_props = [...static_props]
+        if(! current_value){
+          current_value = {
+            prop_name,
+            prop_value: request.input('prop_value')
+          }
+          static_props.push(current_value)
+        } else {
+          current_value.prop_value = request.input('prop_value')
+        }
+        model.settings.static_props = static_props
+        await model.save()
+        let data = static_props.find(i => i.prop_name === prop_name)?.prop_value || null
+        return response.json({
+          success: true,
+          data
+        })
+      }
+    }
+  }
+
+  async deleteSettingValue({response, params}: HttpContextContract) {
+
+    const {model_id, setting_name, prop_name} = params
+    const model = await Model.findOrFail(model_id)
+    if(! model.settings){
+      model.settings = {}
+    }
+    switch (setting_name) {
+      case 'static_props': {
+        let static_props = _.get(model, 'settings.static_props', [])
+        static_props = static_props.filter(i=>i.prop_name !== prop_name)
+        model.settings.static_props = static_props
+        await model.save()
+        let data = static_props.find(i => i.prop_name === prop_name)?.prop_value || null
+        return response.json({
+          success: true,
+          data
+        })
+      }
+    }
+  }
+
+  async getSettingValue({response, params}: HttpContextContract) {
+
+    const {model_id, setting_name, prop_name} = params
+    const model = await Model.findOrFail(model_id)
+
+    let _default: any = null
+    switch (setting_name) {
+      case 'static_props': {
+        let static_props = _.get(model, 'settings.static_props', [])
+        let data = static_props.find(i => i.prop_name === prop_name)?.prop_value || null
+
+        return response.json({
+          success: true,
+          data
+        })
+      }
+    }
+
+    return response.json({
+      success: true,
+      data: _default
+    })
   }
 }

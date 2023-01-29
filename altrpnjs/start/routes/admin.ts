@@ -110,6 +110,11 @@ Route.group(() => {
     Route.delete('/data_sources/:id', 'admin/ModelsController.destroyDataSource');
     Route.get('/models/:model_id/data_source_options', 'admin/ModelsController.getDataSourcesByModel');
 
+    Route.get('/models/:model_id/settings/:setting_name', 'admin/ModelsController.getSettingsValue');
+    Route.put('/models/:model_id/settings/:setting_name/:prop_name', 'admin/ModelsController.updateSettingValue');
+    Route.get('/models/:model_id/settings/:setting_name/:prop_name', 'admin/ModelsController.getSettingValue');
+    Route.delete('/models/:model_id/settings/:setting_name/:prop_name', 'admin/ModelsController.deleteSettingValue');
+
     Route.resource('global_template_styles', 'GlobalTemplateStylesController')
     Route.get('global_template_css', 'GlobalTemplateStylesController.getCss')
 
