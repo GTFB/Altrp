@@ -2,7 +2,10 @@
 
 ## Changelog
 
-### 1.4.7 build 43
+### 1.4.8 build 1
+* Add Static Properties to Custom Models
+
+### 1.4.7 
 
 * Fix Issues in Checkbox Inputs, Range Slider and Gallery Widgets
 * Fix Range Input Bugs with Values

@@ -146,12 +146,53 @@ import {softDeleteQuery, softDelete} from "../../helpers/delete";
   }
 
   private _getProdPropertiesContent(): string {
-    return ``
+
+    const {settings = {}} = this.model
+
+    const {static_props = []} = settings
+    return `
+  ${static_props.map(({
+   // @ts-ignore
+   prop_value,
+   // @ts-ignore
+   prop_name,})=>{
+        if(!prop_name || !prop_value){
+          return ''
+        }
+        return `
+  static get ${prop_name}(){
+    return \`${prop_value}\`
+  }`
+      }
+    ).join('\n')}
+
+    `
   }
 
   private _getDevPropertiesContent(): string {
+    const {settings = {}} = this.model
+
+    const {static_props = []} = settings
+
+
     return `
   public static table = '${this.table.name}'
+  ${static_props.map(({
+       // @ts-ignore
+        prop_value,
+     // @ts-ignore
+        prop_name,
+    })=>{
+      if(!prop_name || !prop_value){
+          return ''
+        }
+        return `
+  static get ${prop_name}(){
+    return \`${prop_value}\`
+  }`
+      }
+    ).join('\n')}
+
     `
   }
 

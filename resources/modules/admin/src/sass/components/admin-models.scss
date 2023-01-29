@@ -171,7 +171,7 @@
       color: white;
     }
 
-    &:first-child {
+    &:not(:last-child) {
       margin-right: 20px;
     }
   }

@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import {string} from '@ioc:Adonis/Core/Helpers'
 import {DateTime} from 'luxon'
 import {
-
+  afterUpdate,
   afterFind,
   BaseModel,
   BelongsTo,
@@ -30,10 +30,20 @@ import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
 import LIKE from "../../helpers/const/LIKE";
+import exec from "../../helpers/exec";
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
   private static defaultCustomizersName: string = 'default';
+  @afterUpdate()
+  public static async afterUpdate(model){
+
+    exec(`node ${base_path('ace')} generator:model --id=${model.id}`)
+      .then(()=>{
+        return exec(`node ${base_path('ace')} generator:router`)
+      })
+
+  }
 
   @afterFind()
   public static async createController(model:Model) {
@@ -53,6 +63,9 @@ export default class Model extends BaseModel {
 
   @column()
   public soft_deletes: boolean
+
+  @column()
+  public settings: { static_props?: {}[] }
 
   @column()
   public time_stamps: boolean
