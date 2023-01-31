@@ -274,6 +274,12 @@ export const optimizeStyles = async (styles) => {
   //   queryPresetStylesJson['0_10000'] =  [toCSS(queryPresetStylesJson['0_10000'])]
   // }
 
-
-  return mergeStyles(queryStylesJson)
+  let optimizedStyles = mergeStyles(queryStylesJson)
+  optimizedStyles = _.sortBy(optimizedStyles, ([mediaQuery]: string[], idx) => {
+    if(! mediaQuery){
+      return -1
+    }
+    return idx
+  })
+  return optimizedStyles
 }
