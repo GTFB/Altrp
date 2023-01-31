@@ -506,7 +506,7 @@ export default class Source extends BaseModel {
       if(httpContext.auth){
         Object.defineProperty(newHttpContext, 'auth', {
           get: function() {
-            return this.httpContext.auth;
+            return httpContext.auth;
           },
         });
       }
