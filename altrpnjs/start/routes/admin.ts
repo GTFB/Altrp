@@ -148,12 +148,14 @@ Route.group(() => {
     Route.get('/models/:id/relations', 'admin/ModelsController.getModelRelations')
     Route.post('/models/:id/relations', 'admin/RelationshipsController.addRelationship')
     Route.get('/models/:id/relations/:relationship_id', 'admin/RelationshipsController.getRelationship')
+    Route.get('/models/relations/options', 'admin/RelationshipsController.options')
     Route.put('/models/:id/relations/:relationship_id', 'admin/RelationshipsController.updateRelationship')
     Route.delete('/models/:id/relations/:relationship_id', 'admin/RelationshipsController.deleteRelationship')
     Route.get('/models/:id/data_source_options', 'admin/ModelsController.getDataSourcesOptionsByModel')
     Route.get('/models/:id/queries', 'admin/ModelsController.getQueries')
     Route.get('/models/:id/accessors', 'admin/ModelsController.getAccessors')
     Route.get('/models_options', 'admin/ModelsController.models_options').name = 'admin.models_options'
+
 
     /**
      * Customizers

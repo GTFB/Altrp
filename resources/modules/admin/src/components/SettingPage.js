@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
-import {Link,  withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import AdminTable from "./AdminTable";
 import AdminModal2 from "./AdminModal2";
 import PageDataSourceForm from "./pages/PageDataSourceForm";
@@ -54,7 +54,7 @@ class SettingPage extends Component {
         path: "",
         redirect: "",
         roles: [],
-        rolesOptions: [{ value: "guest", label: "Guest" }],
+        rolesOptions: [{value: "guest", label: "Guest"}],
         title: "",
         _categories: [],
         categories: [],
@@ -67,13 +67,14 @@ class SettingPage extends Component {
       dataSources: [],
       editingDataSource: null,
       pagesOptions: [],
+      relationsOptions: [],
       dataSourceSearch: '',
       currentPage: 1,
       currentTab: 'content',
       categoryOptions: [],
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
-    this.rolesOptionsResource = new Resource( {route: "/admin/ajax/role_options"} )
+    this.rolesOptionsResource = new Resource({route: "/admin/ajax/role_options"})
     this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
     this.pagesOptionsResource = new Resource({
       route: "/admin/ajax/pages_options"
@@ -88,6 +89,18 @@ class SettingPage extends Component {
     this.savePage = this.savePage.bind(this);
   }
 
+  updateRelationsOptions = async()=>{
+    let relationsOptions =
+      await ((new Resource({route: "/admin/ajax/models/relations/options"}))
+        .getQueried({
+          valueColumn:'name',
+          model_id: this.state.value.model_id
+        }))
+
+    relationsOptions = relationsOptions.data || []
+
+    this.setState(state=>({...state, relationsOptions}))
+  }
 
   getData = async () => {
     let res = await this.templateResource.getOptions();
@@ -95,7 +108,7 @@ class SettingPage extends Component {
       return {...state, templates: res};
     });
 
-    const { data } = await this.categoryOptions.getAll();
+    const {data} = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
       categoryOptions: data
@@ -158,6 +171,7 @@ class SettingPage extends Component {
             model_column: pageData.model_column,
             param_name: pageData.param_name,
             not_found: pageData.not_found,
+            settings: pageData.settings,
             id
           },
           id
@@ -220,9 +234,10 @@ class SettingPage extends Component {
    */
   componentDidMount() {
     this.getData()
+    this.updateRelationsOptions()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.id !== this.props.id && this.props.id !== null) {
       this.setState(state => ({
         ...state,
@@ -230,15 +245,14 @@ class SettingPage extends Component {
         value: {
           ...state.value,
           roles: [],
-          rolesOptions: [{ value: "guest", label: "Guest" }],
+          rolesOptions: [{value: "guest", label: "Guest"}],
         }
       }))
       this.getData()
     }
-  }
-
-  getInfoPage = async () => {
-    let id = this.props.id;
+    if(this.state.value.model_id !== prevState.value.model_id) {
+      this.updateRelationsOptions()
+    }
   }
 
   getDataSources = async () => {
@@ -341,7 +355,7 @@ class SettingPage extends Component {
     }
   }
 
-  handlePublish = async(e) =>{
+  handlePublish = async (e) => {
 
     if (this.state.value.path === undefined ||
       this.state.value.path === '' ||
@@ -412,6 +426,12 @@ class SettingPage extends Component {
       value = value.replace(/\W/g, '');
       value = value.replace(/[0-9]/g, '');
     }
+    if (field === "model_id") {
+      this.setState(state=>({
+        ...state,
+        value: mutate.set(state.value, 'settings.modelRelations', [])
+      }))
+    }
     this.setState(state => {
       const newState = _.cloneDeep(state);
       newState.value[field] = value;
@@ -445,13 +465,29 @@ class SettingPage extends Component {
   };
 
   tagRenderer = (item) => {
+    console.log(item.label);
     return item.label;
   };
 
   isItemSelectedRoles = (item) => {
-    return this.state.value.roles.some(c=>c.value === item.value);
+    return this.state.value.roles.some(c => c.value === item.value);
+  };
+  isItemSelectedRelations = (item) => {
+    const modelRelations = _.get(this, 'state.value.settings.modelRelations', [])
+    return modelRelations.some(c => c.value === item.value);
   };
 
+  handleItemSelectRelation = (item) => {
+    if (!this.isItemSelectedRelations(item)) {
+      const modelRelations = [..._.get(this, 'state.value.settings.modelRelations', [])]
+      modelRelations.push(item)
+      let value = mutate.set(this.state.value, 'settings.modelRelations', modelRelations)
+      this.setState(state => ({
+        ...state,
+        value
+      }));
+    }
+  };
   handleItemSelectRoles = (item) => {
     if (!this.isItemSelectedRoles(item)) {
       this.setState(state => ({
@@ -471,6 +507,16 @@ class SettingPage extends Component {
         ...state.value,
         roles: [...state.value.roles].filter((i) => i.label !== item)
       },
+    }));
+  };
+   handleTagRemoveRelations= (item) => {
+    let {value} = this.state
+    let modelRelations = _.get(value, 'settings.modelRelations', [])
+    modelRelations = modelRelations.filter((i) => i.label !== item)
+    value = mutate.set(value, 'settings.modelRelations', modelRelations)
+    this.setState(state => ({
+      ...state,
+      value
     }));
   };
 
@@ -503,7 +549,7 @@ class SettingPage extends Component {
   }
 
   isItemSelectedCategory = (item) => {
-    return this.state.value.categories.some(c=>c.value === item.value);
+    return this.state.value.categories.some(c => c.value === item.value);
   }
 
   handleItemSelectCategory = (item) => {
@@ -537,180 +583,185 @@ class SettingPage extends Component {
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
       <>
-        {this.props.emptyExit ? (
-          <>
-            <div className={this.state.currentTab === 'Datasource' ? "tab-datasource"
-              : "tab-content"}>
-              <div className="custom-tab__tabs">
-                <button
-                  className={this.state.currentTab === "content" ?
-                    "custom-tab__tab custom-tab__tab--selected" :
-                    "custom-tab__tab"}
-                  onClick={this.changeCurrentTab('content')}
-                >
-                  Content
-                </button>
-                <button
-                  className={this.state.currentTab === "Datasource" ?
-                    "custom-tab__tab custom-tab__tab--selected" :
-                    "custom-tab__tab"}
-                  onClick={this.changeCurrentTab('Datasource')}
-                >
-                  Datasource
-                </button>
+      {this.props.emptyExit ? (
+        <>
+          <div className={this.state.currentTab === 'Datasource' ? "tab-datasource"
+            : "tab-content"}>
+            <div className="custom-tab__tabs">
+              <button
+                className={this.state.currentTab === "content" ?
+                  "custom-tab__tab custom-tab__tab--selected" :
+                  "custom-tab__tab"}
+                onClick={this.changeCurrentTab('content')}
+              >
+                Content
+              </button>
+              <button
+                className={this.state.currentTab === "Datasource" ?
+                  "custom-tab__tab custom-tab__tab--selected" :
+                  "custom-tab__tab"}
+                onClick={this.changeCurrentTab('Datasource')}
+              >
+                Datasource
+              </button>
 
-                {(this.props.id && this.props.alt_seo) && (
-                  <button
-                    className={this.state.currentTab === this.props.alt_seo.name ?
-                      "custom-tab__tab custom-tab__tab--selected" :
-                      "custom-tab__tab"}
-                    onClick={this.changeCurrentTab(this.props.alt_seo.name)}
-                  >
-                    {this.props.alt_seo.title}
-                  </button>
-                )}
-              </div>
-              <div className="custom-tab__tab-panel">
-                <div
-                  className={this.state.currentTab === 'Datasource' ? "admin-form-pages__datasource mb-2" : "admin-form-pages mb-2"}
+              {(this.props.id && this.props.alt_seo) && (
+                <button
+                  className={this.state.currentTab === this.props.alt_seo.name ?
+                    "custom-tab__tab custom-tab__tab--selected" :
+                    "custom-tab__tab"}
+                  onClick={this.changeCurrentTab(this.props.alt_seo.name)}
                 >
-                  {(() => {
-                    if (this.state.currentTab === 'content') {
-                      return (
-                        <React.Fragment>
-                          <div className="form-group__inline-wrapper">
-                            <div className="form-group form-group_width47">
-                              <label htmlFor="page-title" className="font__edit">Title</label>
-                              <InputGroup type="text"
-                                          id="page-title"
-                                          required={1}
-                                          value={this.state.value.title || ""}
-                                          onChange={e => {
-                                            this.changeValue(e.target.value, "title");
-                                          }}
-                                          className="form-control-blueprint"
+                  {this.props.alt_seo.title}
+                </button>
+              )}
+            </div>
+            <div className="custom-tab__tab-panel">
+              <div
+                className={this.state.currentTab === 'Datasource' ? "admin-form-pages__datasource mb-2" : "admin-form-pages mb-2"}
+              >
+                {(() => {
+                  if (this.state.currentTab === 'content') {
+                    return (
+                      <React.Fragment>
+                        <div className="form-group__inline-wrapper">
+                          <div className="form-group form-group_width47">
+                            <label htmlFor="page-title" className="font__edit">Title</label>
+                            <InputGroup type="text"
+                                        id="page-title"
+                                        required={1}
+                                        value={this.state.value.title || ""}
+                                        onChange={e => {
+                                          this.changeValue(e.target.value, "title");
+                                        }}
+                                        className="form-control-blueprint"
+                            />
+                          </div>
+
+                          <div
+                            className="form-group overflow-select__blueprint flex-grow__selectBlueprint form-group_width47">
+                            <label htmlFor="parent_page_id" className="font__edit">Parent Page</label>
+                            <Select items={this.state.pagesOptions}
+                                    matchTargetWidth
+                                    id="parent_page_id"
+                                    itemPredicate={this.onQueryChange}
+                                    noResults={<MenuItem disabled={true} text="No results."/>}
+                                    itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                      return <MenuItem
+                                        text={item.label}
+                                        key={item.value}
+                                        active={item.value === this.state.value.parent_page_id}
+                                        onClick={handleClick}
+                                      />
+                                    }}
+                                    onItemSelect={current => {
+                                      this.parentChangeHandler(current.value);
+                                    }}
+                                    fill={true}
+                            >
+
+                              <Button fill
+                                      large
+                                      alignText={Alignment.LEFT}
+                                      text={this.state.pagesOptions.find(item => (item.value === this.state.value.parent_page_id))?.label || 'None'}
+                                      rightIcon="caret-down"
                               />
-                            </div>
+                            </Select>
+                          </div>
+                        </div>
 
-                            <div
-                              className="form-group overflow-select__blueprint flex-grow__selectBlueprint form-group_width47">
-                              <label htmlFor="parent_page_id" className="font__edit">Parent Page</label>
-                              <Select items={this.state.pagesOptions}
-                                      matchTargetWidth
-                                      id="parent_page_id"
-                                      itemPredicate={this.onQueryChange}
-                                      noResults={<MenuItem disabled={true} text="No results."/>}
-                                      itemRenderer={(item, {handleClick, modifiers, query}) => {
-                                        return <MenuItem
-                                          text={item.label}
-                                          key={item.value}
-                                          active={item.value === this.state.value.parent_page_id}
-                                          onClick={handleClick}
-                                        />
-                                      }}
-                                      onItemSelect={current => {
-                                        this.parentChangeHandler(current.value);
-                                      }}
-                                      fill={true}
-                              >
+                        <div className="form-group__inline-wrapper">
+                          <div className="form-group form-group_width47">
+                            <label htmlFor="page-path" className="font__edit">Path</label>
+                            <InputGroup type="text"
+                                        id="page-path"
+                                        required={1}
+                                        value={this.state.value.path || ""}
+                                        onChange={e => {
+                                          this.changeValue(e.target.value, "path");
+                                        }}
+                                        className="form-control-blueprint"
+                            />
+                          </div>
+                          <div
+                            className="form-group overflow-select__blueprint-pages flex-grow__selectBlueprint form-group_width47">
+                            <label htmlFor="page-model" className="font__edit">Model</label>
+                            <Select items={this.state.models}
+                                    matchTargetWidth
+                                    id="page-model"
+                                    itemPredicate={this.onQueryChange}
+                                    noResults={<MenuItem disabled={true} text="No results."/>}
+                                    itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                      return <MenuItem
+                                        text={item.label}
+                                        key={item.value}
+                                        active={item.value === this.state.value.model_id}
+                                        onClick={handleClick}
+                                      />
+                                    }}
+                                    onItemSelect={current => {
+                                      this.changeValue(current.value, "model_id")
+                                    }}
+                                    fill={true}
+                            > <Button fill
+                                      large
+                                      alignText={Alignment.LEFT}
+                                      text={this.state.models.find(item => (item.value === this.state.value.model_id))?.label || 'None'}
+                                      rightIcon="caret-down"
+                            />
+                            </Select>
+                          </div>
+                        </div>
+                        {
+                          this.state.value.model_id &&
+                          <div className="form-group__inline-wrapper flex-wrap">
+                            <h4 className="w-100">Model Settings</h4>
+                            <div className="form-group form-group_width47">
+                              <div className="form-group">
+                                <label htmlFor="column">Column for Search</label>
 
-                                <Button fill
-                                        large
-                                        alignText={Alignment.LEFT}
-                                        text={this.state.pagesOptions.find(item => (item.value === this.state.value.parent_page_id))?.label || 'None'}
-                                        rightIcon="caret-down"
+                                <InputGroup type="text"
+                                            id="column"
+                                            value={this.state.value.model_column || ""}
+                                            onChange={e => {
+                                              this.changeValue(e.target.value, "model_column");
+                                            }}
+                                            className="form-control-blueprint"
                                 />
-                              </Select>
-                            </div>
-                          </div>
+                              </div>
 
-                          <div className="form-group__inline-wrapper">
+                            </div>
                             <div className="form-group form-group_width47">
-                              <label htmlFor="page-path" className="font__edit">Path</label>
-                              <InputGroup type="text"
-                                          id="page-path"
-                                          required={1}
-                                          value={this.state.value.path || ""}
-                                          onChange={e => {
-                                            this.changeValue(e.target.value, "path");
-                                          }}
-                                          className="form-control-blueprint"
-                              />
-                            </div>
-                            <div
-                              className="form-group overflow-select__blueprint-pages flex-grow__selectBlueprint form-group_width47">
-                              <label htmlFor="page-model" className="font__edit">Model</label>
-                              <Select items={this.state.models}
-                                      matchTargetWidth
-                                      id="page-model"
-                                      itemPredicate={this.onQueryChange}
-                                      noResults={<MenuItem disabled={true} text="No results."/>}
-                                      itemRenderer={(item, {handleClick, modifiers, query}) => {
-                                        return <MenuItem
-                                          text={item.label}
-                                          key={item.value}
-                                          active={item.value === this.state.value.model_id}
-                                          onClick={handleClick}
-                                        />
-                                      }}
-                                      onItemSelect={current => {
-                                        this.changeValue(current.value, "model_id")
-                                      }}
-                                      fill={true}
-                              > <Button fill
-                                        large
-                                        alignText={Alignment.LEFT}
-                                        text={this.state.models.find(item => (item.value === this.state.value.model_id))?.label || 'None'}
-                                        rightIcon="caret-down"
-                              />
-                              </Select>
-                              {
-                                this.state.value.model_id && <div className="form-group">
-                                  <label htmlFor="page-path">Column for Search</label>
+                              <div className="form-group">
+                                <label htmlFor="param">Param for Search</label>
+                                <InputGroup type="text"
+                                            id="param"
+                                            value={this.state.value.param_name || ""}
+                                            onChange={e => {
+                                              this.changeValue(e.target.value, "param_name");
+                                            }}
+                                            className="form-control-blueprint"
+                                />
+                              </div>
 
-                                  <InputGroup type="text"
-                                              id="page-path"
-                                              value={this.state.value.model_column || ""}
-                                              onChange={e => {
-                                                this.changeValue(e.target.value, "model_column");
-                                              }}
-                                              className="form-control-blueprint"
-                                  />
-                                </div>
-                              }
-                              {
-                                this.state.value.model_id && <div className="form-group">
-                                  <label htmlFor="page-path">Param for Search</label>
-
-                                  <InputGroup type="text"
-                                              id="page-path"
-                                              value={this.state.value.param_name || ""}
-                                              onChange={e => {
-                                                this.changeValue(e.target.value, "param_name");
-                                              }}
-                                              className="form-control-blueprint"
-                                  />
-                                </div>
-                              }
                             </div>
-                          </div>
-                          <div className="form-group__inline-wrapper">
                             <div
                               className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages form-group_width47">
-                              <label htmlFor="page-roles" className="font__edit">Roles</label>
+                              <label htmlFor="page-roles" className="font__edit">Preload Relations</label>
 
-                              <MultiSelect tagRenderer={this.tagRenderer} id="roles"
-                                           items={this.state.value.rolesOptions}
+                              <MultiSelect tagRenderer={this.tagRenderer}
+                                           id="relations"
+                                           items={this.state.relationsOptions}
                                            itemPredicate={this.onQueryChange}
                                            noResults={<MenuItem disabled={true} text="No results."/>}
                                            fill={true}
-                                           placeholder="All..."
-                                           selectedItems={this.state.value.rolesOptions.filter(i=>this.isItemSelectedRoles(i))}
-                                           onItemSelect={this.handleItemSelectRoles}
+                                           placeholder="Relations..."
+                                           selectedItems={this.state.relationsOptions.filter(i => this.isItemSelectedRelations(i))}
+                                           onItemSelect={this.handleItemSelectRelation}
                                            itemRenderer={(item, {handleClick, modifiers, query}) => {
                                              return (
                                                <MenuItem
-                                                 icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                                                 icon={this.isItemSelectedRelations(item) ? "tick" : "blank"}
                                                  text={item.label}
                                                  key={item.value}
                                                  onClick={handleClick}
@@ -718,37 +769,7 @@ class SettingPage extends Component {
                                              )
                                            }}
                                            tagInputProps={{
-                                             onRemove: this.handleTagRemoveRoles,
-                                             large: false,
-                                           }}
-                                           popoverProps={{
-                                             usePortal: false
-                                           }}
-                              />
-                            </div>
-
-                            <div className="form-group form-group_width47 form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages">
-                              <label htmlFor="categories-pages" className="font__edit">Categories</label>
-                              <MultiSelect tagRenderer={this.tagRenderer} id="categories"
-                                           items={this.state.categoryOptions}
-                                           itemPredicate={this.onQueryChangeMulti}
-                                           noResults={<MenuItem disabled={true} text="No results."/>}
-                                           fill={true}
-                                           placeholder="Categories..."
-                                           selectedItems={this.state.value.categories}
-                                           onItemSelect={this.handleItemSelectCategory}
-                                           itemRenderer={(item, {handleClick, modifiers, query}) => {
-                                             return (
-                                               <MenuItem
-                                                 icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
-                                                 text={item.label}
-                                                 key={item.value}
-                                                 onClick={handleClick}
-                                               />
-                                             )
-                                           }}
-                                           tagInputProps={{
-                                             onRemove: this.handleTagRemoveCategory,
+                                             onRemove: this.handleTagRemoveRelations,
                                              large: false,
                                            }}
                                            popoverProps={{
@@ -757,179 +778,255 @@ class SettingPage extends Component {
                               />
                             </div>
                           </div>
+                        }
+                        <div className="form-group__inline-wrapper">
+                          <div
+                            className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages form-group_width47">
+                            <label htmlFor="page-roles" className="font__edit">Roles</label>
 
-                          <div className="form-group__inline-wrapper">
-                            <div className="form-group form-group_width47">
-                              <label htmlFor="redirect" className="font__edit">Redirect</label>
+                            <MultiSelect tagRenderer={this.tagRenderer}
+                                         id="roles"
+                                         items={this.state.value.rolesOptions}
+                                         itemPredicate={this.onQueryChange}
+                                         noResults={<MenuItem disabled={true} text="No results."/>}
+                                         fill={true}
+                                         placeholder="All..."
+                                         selectedItems={this.state.value.rolesOptions.filter(i => this.isItemSelectedRoles(i))}
+                                         onItemSelect={this.handleItemSelectRoles}
+                                         itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                           return (
+                                             <MenuItem
+                                               icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                                               text={item.label}
+                                               key={item.value}
+                                               onClick={handleClick}
+                                             />
+                                           )
+                                         }}
+                                         tagInputProps={{
+                                           onRemove: this.handleTagRemoveRoles,
+                                           large: false,
+                                         }}
+                                         popoverProps={{
+                                           usePortal: false
+                                         }}
+                            />
+                          </div>
+
+                          <div
+                            className="form-group form-group_width47 form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages">
+                            <label htmlFor="categories-pages" className="font__edit">Categories</label>
+                            <MultiSelect tagRenderer={this.tagRenderer} id="categories"
+                                         items={this.state.categoryOptions}
+                                         itemPredicate={this.onQueryChangeMulti}
+                                         noResults={<MenuItem disabled={true} text="No results."/>}
+                                         fill={true}
+                                         placeholder="Categories..."
+                                         selectedItems={this.state.value.categories}
+                                         onItemSelect={this.handleItemSelectCategory}
+                                         itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                           return (
+                                             <MenuItem
+                                               icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
+                                               text={item.label}
+                                               key={item.value}
+                                               onClick={handleClick}
+                                             />
+                                           )
+                                         }}
+                                         tagInputProps={{
+                                           onRemove: this.handleTagRemoveCategory,
+                                           large: false,
+                                         }}
+                                         popoverProps={{
+                                           usePortal: false
+                                         }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="form-group__inline-wrapper">
+                          <div className="form-group form-group_width47">
+                            <label htmlFor="redirect" className="font__edit">Redirect</label>
 
 
-                              <InputGroup type="text"
-                                          id="redirect"
-                                          value={this.state.value.redirect || ""}
-                                          onChange={e => {
-                                            this.changeValue(e.target.value, "redirect");
-                                          }}
-                                          className="form-control-blueprint"
-                              />
-                            </div>
-                            <div className="addPage__bottom">
-                              <div className="addPage__bottom-block">
-                                <label style={{marginBottom: 0, marginRight: '16px'}}>
-                                  <input
-                                    className="addPage__bottom-checkbox"
-                                    checked={this.state.value.not_found || ""}
-                                    onChange={e => {
-                                      this.changeValue(e.target.checked, "not_found");
-                                    }}
-                                    type="checkbox"
-                                    id="not_found"
-                                  />
-                                  <div className="control-switcher control-switcher_checked">
-                                    <div className="control-switcher__on-text">ON</div>
-                                    <div className="control-switcher__caret"/>
-                                    <div className="control-switcher__off-text">OFF</div>
-                                  </div>
-                                </label>
-                                {/*<input type="checkbox" id="404"*/}
-                                {/*       checked={this.state.value.not_found || ""}*/}
-                                {/*       onChange={e => {*/}
-                                {/*         this.changeValue(e.target.checked, "not_found");*/}
-                                {/*       }}*/}
-                                {/*       className="addPage__bottom-checkbox"/>*/}
-                                <div className="addPage__bottom-label font__edit">404</div>
-                              </div>
-
-                              <div className="addPage__bottom-page_icon">
-                                <label htmlFor="icon" className="addPage__bottom-label font__edit">Page Icon</label>
-                                <IconSelect
-                                  id="icon"
-                                  returnType="text"
-                                  value={this.state.value.icon}
-                                  maxWidth="50px"
-                                  maxHeight="50px"
-                                  className="addPage__bottom-icon"
-                                  onChange={(icon) => {
-                                    let value = mutate.set(this.state.value, 'icon', icon);
-                                    this.setState(state => ({...state, value}));
+                            <InputGroup type="text"
+                                        id="redirect"
+                                        value={this.state.value.redirect || ""}
+                                        onChange={e => {
+                                          this.changeValue(e.target.value, "redirect");
+                                        }}
+                                        className="form-control-blueprint"
+                            />
+                          </div>
+                          <div className="addPage__bottom">
+                            <div className="addPage__bottom-block">
+                              <label style={{marginBottom: 0, marginRight: '16px'}}>
+                                <input
+                                  className="addPage__bottom-checkbox"
+                                  checked={this.state.value.not_found || ""}
+                                  onChange={e => {
+                                    this.changeValue(e.target.checked, "not_found");
                                   }}
+                                  type="checkbox"
+                                  id="not_found"
                                 />
-                              </div>
+                                <div className="control-switcher control-switcher_checked">
+                                  <div className="control-switcher__on-text">ON</div>
+                                  <div className="control-switcher__caret"/>
+                                  <div className="control-switcher__off-text">OFF</div>
+                                </div>
+                              </label>
+                              {/*<input type="checkbox" id="404"*/}
+                              {/*       checked={this.state.value.not_found || ""}*/}
+                              {/*       onChange={e => {*/}
+                              {/*         this.changeValue(e.target.checked, "not_found");*/}
+                              {/*       }}*/}
+                              {/*       className="addPage__bottom-checkbox"/>*/}
+                              <div className="addPage__bottom-label font__edit">404</div>
+                            </div>
+
+                            <div className="addPage__bottom-page_icon">
+                              <label htmlFor="icon" className="addPage__bottom-label font__edit">Page Icon</label>
+                              <IconSelect
+                                id="icon"
+                                returnType="text"
+                                value={this.state.value.icon}
+                                maxWidth="50px"
+                                maxHeight="50px"
+                                className="addPage__bottom-icon"
+                                onChange={(icon) => {
+                                  let value = mutate.set(this.state.value, 'icon', icon);
+                                  this.setState(state => ({...state, value}));
+                                }}
+                              />
                             </div>
                           </div>
-                        </React.Fragment>
-                      );
-                    }
-                  })()}
-                  {(this.state.currentTab === "content") && (
-                    <button onClick={this.savePage} className="btn btn_success" style={{marginRight: '20px'}}>
-                      Save
-                    </button>
-                  )}
-                  {(this.state.currentTab === "content" && !!this.state.id) && (
-                    <button
-                      className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}
-                      onClick={this.handlePublish}
-                    >
-                      Publish
-                    </button>
-                  )}
-                </div>
-                {this.state.currentTab === 'Datasource' && (
-                  <div>
-                    <button onClick={() => this.setState({isModalOpened: true})} style={{margin: '14px 0'}} className="btn btn_add">
-                      Add Data Source
-                    </button>
-                    <AdminTable
-                      columns={columns}
-                      quickActions={[
-                        {
-                          callBack: data => this.editHandler(data),
-                          title: 'Edit'
-                        },
-                        {
-                          tag: 'button',
-                          route: `/admin/ajax/page_data_sources/:id`,
-                          method: 'delete',
-                          confirm: 'Are You Sure?',
-                          after: () => this.getDataSources(),
-                          className: 'quick-action-menu__item_danger',
-                          title: 'Delete'
-                        }
-                      ]}
-                      rows={dataSources.slice(
-                        this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
-                        this.state.currentPage * this.itemsPerPage
-                      )}
-                    />
-                    <Pagination
-                      pageCount={Math.ceil(this.state.dataSources.length / this.itemsPerPage) || 1}
-                      currentPage={this.state.currentPage}
-                      itemsCount={this.state.dataSources.length}
-                      changePage={page => {
-                        if (this.state.currentPage !== page) {
-                          this.setState({ currentPage: page });
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-                {(this.props.alt_seo && this.state.currentTab === this.props.alt_seo.name) && (
-                  this.props.alt_seo.component
-                )}
-              </div>
-
-              {isModalOpened && (
-                <AdminModal2
-                  closeHandler={() =>
-                    this.setState({isModalOpened: false, editingDataSource: null})
+                        </div>
+                      </React.Fragment>
+                    );
                   }
-                >
-                  <PageDataSourceForm
-                    id={this.props.id}
-                    updateHandler={this.getDataSources}
-                    dataSource={editingDataSource}
-                  />
-                </AdminModal2>
-              )}
-            </div>
-            <div>
-              <Link className="btn btn_add btn_mrRight" to={`/admin/pages/edit/${this.props.id}`}>Open as a separate page</Link>
-              <a href={`${this.state.value.path}`} className="btn btn_add btn_mrRight" target="_blank">
-                Go To Page
-              </a>
-              <button onClick={() => this.deletePages(id)} className="btn btn_failure btn_mrRight">
-                Delete Page
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="noEmpty-container">
-            <div className="noEmpty-block">
-              <h2 className="noEmpty-title">
-                There's nothing here.
-              </h2>
-              <p className="noEmpty-description">
-                Select a page to view the settings on that panel
-              </p>
-            </div>
-          </div>
-        )}
-      </>
-    );
-  }
-}
+                })()}
+      {(this.state.currentTab === "content") && (
+        <button onClick={this.savePage} className="btn btn_success" style={{marginRight: '20px'}}>
+          Save
+        </button>
+      )}
+      {(this.state.currentTab === "content" && !!this.state.id) && (
+        <button
+          className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}
+          onClick={this.handlePublish}
+        >
+          Publish
+        </button>
+      )}
+      </div>
+    {
+      this.state.currentTab === 'Datasource' && (
+        <div>
+          <button onClick={() => this.setState({isModalOpened: true})} style={{margin: '14px 0'}}
+                  className="btn btn_add">
+            Add Data Source
+          </button>
+          <AdminTable
+            columns={columns}
+            quickActions={[
+              {
+                callBack: data => this.editHandler(data),
+                title: 'Edit'
+              },
+              {
+                tag: 'button',
+                route: `/admin/ajax/page_data_sources/:id`,
+                method: 'delete',
+                confirm: 'Are You Sure?',
+                after: () => this.getDataSources(),
+                className: 'quick-action-menu__item_danger',
+                title: 'Delete'
+              }
+            ]}
+            rows={dataSources.slice(
+              this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+              this.state.currentPage * this.itemsPerPage
+            )}
+          />
+          <Pagination
+            pageCount={Math.ceil(this.state.dataSources.length / this.itemsPerPage) || 1}
+            currentPage={this.state.currentPage}
+            itemsCount={this.state.dataSources.length}
+            changePage={page => {
+              if (this.state.currentPage !== page) {
+                this.setState({currentPage: page});
+              }
+            }}
+          />
+        </div>
+      )
+    }
+    {
+      (this.props.alt_seo && this.state.currentTab === this.props.alt_seo.name) && (
+        this.props.alt_seo.component
+      )
+    }
+  </div>
 
-const mapStateToProps = (state) => {
-  return {
-    standardModels: state.modelsState.standardModels,
-    modelsState: state.modelsState.toggleModels,
-    alt_seo: state.pluginsState.alt_seo
+    {
+      isModalOpened && (
+        <AdminModal2
+          closeHandler={() =>
+            this.setState({isModalOpened: false, editingDataSource: null})
+          }
+        >
+          <PageDataSourceForm
+            id={this.props.id}
+            updateHandler={this.getDataSources}
+            dataSource={editingDataSource}
+          />
+        </AdminModal2>
+      )
+    }
+  </div>
+    <div>
+      <Link className="btn btn_add btn_mrRight" to={`/admin/pages/edit/${this.props.id}`}>Open as a separate page</Link>
+      <a href={`${this.state.value.path}`} className="btn btn_add btn_mrRight" target="_blank">
+        Go To Page
+      </a>
+      <button onClick={() => this.deletePages(id)} className="btn btn_failure btn_mrRight">
+        Delete Page
+      </button>
+    </div>
+  </>
+  ) :
+    (
+      <div className="noEmpty-container">
+        <div className="noEmpty-block">
+          <h2 className="noEmpty-title">
+            There's nothing here.
+          </h2>
+          <p className="noEmpty-description">
+            Select a page to view the settings on that panel
+          </p>
+        </div>
+      </div>
+    )
   }
-}
+  </>
+  )
+    ;
+  }
+  }
 
-SettingPage = compose(
+  const mapStateToProps = (state) => {
+    return {
+      standardModels: state.modelsState.standardModels,
+      modelsState: state.modelsState.toggleModels,
+      alt_seo: state.pluginsState.alt_seo
+    }
+  }
+
+  SettingPage = compose(
   connect(mapStateToProps),
   withRouter
-)(SettingPage)
+  )(SettingPage)
 
-export default SettingPage;
+  export default SettingPage;

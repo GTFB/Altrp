@@ -2,7 +2,6 @@ import * as _ from 'lodash'
 import {string} from '@ioc:Adonis/Core/Helpers'
 import {DateTime} from 'luxon'
 import {
-  afterUpdate,
   afterFind,
   BaseModel,
   BelongsTo,
@@ -30,25 +29,15 @@ import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
 import LIKE from "../../helpers/const/LIKE";
-import exec from "../../helpers/exec";
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
   private static defaultCustomizersName: string = 'default';
-  @afterUpdate()
-  public static async afterUpdate(model){
-
-    exec(`node ${base_path('ace')} generator:model --id=${model.id}`)
-      .then(()=>{
-        return exec(`node ${base_path('ace')} generator:router`)
-      })
-
-  }
 
   @afterFind()
-  public static async createController(model:Model) {
+  public static async createController(model: Model) {
     await model.load('altrp_controller')
-    if(! model.altrp_controller){
+    if (!model.altrp_controller) {
       const controller = new Controller()
       controller.fill({
         model_id: model.id,
@@ -64,7 +53,11 @@ export default class Model extends BaseModel {
   @column()
   public soft_deletes: boolean
 
-  @column()
+  @column({
+    consume: (data) => {
+      return data  || {}
+    },
+  })
   public settings: { static_props?: {}[] }
 
   @column()
@@ -217,7 +210,7 @@ export default class Model extends BaseModel {
 
   public static async getBySearch(search, orderColumn = 'title', orderType = 'desc', categories = null) {
     // @ts-ignore
-    let sortType:'asc' | 'desc' = 'orderBy' + (orderType == 'asc' ? '' : orderType)
+    let sortType: 'asc' | 'desc' = 'orderBy' + (orderType == 'asc' ? '' : orderType)
     let models = Model.query()
     if (categories && _.isString(categories)) {
       // @ts-ignore
@@ -236,8 +229,8 @@ export default class Model extends BaseModel {
   }
 
   public async createController() {
-    let controller = await Controller.query().where('model_id',this.id).first()
-    if(! controller){
+    let controller = await Controller.query().where('model_id', this.id).first()
+    if (!controller) {
       controller = new Controller()
       controller.fill({
         model_id: this.id,
@@ -368,7 +361,7 @@ export default class Model extends BaseModel {
     }
   }
 
-  public static async createDefaultCustomizers( modelData, model) {
+  public static async createDefaultCustomizers(modelData, model) {
     const pathToFiles = 'resources/customizers/'
 
     let getContent = fs.readFileSync(base_path(`${pathToFiles}get.json`), 'utf8')
@@ -378,10 +371,19 @@ export default class Model extends BaseModel {
     getByIdContent = mustache.render(getByIdContent, {model_name: model.name, context_data: '{{context.data}}'})
 
     let postContent = fs.readFileSync(base_path(`${pathToFiles}post.json`), 'utf8')
-    postContent = mustache.render(postContent, {model_name: model.name, context_data: '{{context.data}}', context_order: '{{context.order}}'})
+    postContent = mustache.render(postContent, {
+      model_name: model.name,
+      context_data: '{{context.data}}',
+      context_order: '{{context.order}}'
+    })
 
     let putContent = fs.readFileSync(base_path(`${pathToFiles}put.json`), 'utf8')
-    putContent = mustache.render(putContent, {model_name: model.name, context_data_data: '{{context.data.data}}', context_order: '{{context.order}}', context_data: '{{context.data}}'})
+    putContent = mustache.render(putContent, {
+      model_name: model.name,
+      context_data_data: '{{context.data.data}}',
+      context_order: '{{context.order}}',
+      context_data: '{{context.data}}'
+    })
 
     let deleteContent = fs.readFileSync(base_path(`${pathToFiles}delete.json`), 'utf8')
     deleteContent = mustache.render(deleteContent, {model_name: model.name, context_data: '{{context.data}}'})
@@ -415,11 +417,10 @@ export default class Model extends BaseModel {
     ]
 
     for (let customizerData of defaultCustomizersData) {
-      const newCustomizerName =  customizerData.prefix + modelData.name + '_' + Model.defaultCustomizersName
-      if(await Customizer.query()
+      const newCustomizerName = customizerData.prefix + modelData.name + '_' + Model.defaultCustomizersName
+      if (await Customizer.query()
         .where('name', newCustomizerName)
-        .first())
-      {
+        .first()) {
         continue
       }
       let customizer = new Customizer()

@@ -104,6 +104,14 @@ export default class Page extends BaseModel {
   public icon: string
 
   @column()
+  public settings: {
+    modelRelations?: {
+      label: string,
+      value: string,
+    }[]
+  } | null
+
+  @column()
   public param_name: string
 
   @column()
@@ -617,7 +625,7 @@ export default class Page extends BaseModel {
   async getAllStyles(html) {
     let styles = ''
     const elements = await this.extractElementsNames(false)
-    styles += `<style type="text/css" id="elements_static_styles">`
+    styles += `<style  id="elements_static_styles">`
     for (const elementName of elements) {
       if (fs.existsSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`))) {
         styles += fs.readFileSync(app_path(`/altrp-templates/styles/elements/${elementName}.css`), 'utf8')
@@ -952,6 +960,18 @@ export default class Page extends BaseModel {
         }
         await this._extractElementsNames(data, elementNames, _only_react_elements,  presetsStore);
       }
+      if(area?.templates && area?.templates.length) {
+        await Promise.all(area?.templates.map(async template => {
+          let data = template.data
+          if (_.isString(data)) {
+            data = JSON.parse(data)
+            area.template.data = data
+          }
+          await this._extractElementsNames(data, elementNames, _only_react_elements,  presetsStore)
+
+          }
+        ))
+      }
     }))
 
     elementNames = _.uniq(elementNames)
@@ -971,6 +991,7 @@ export default class Page extends BaseModel {
     if (_.isObject(element.settingsLock)) {
       element.settings = _.merge(element.settings, element.settingsLock)
     }
+
     if(presetsStore && element.settings.global_styles_presets){
       presetsStore.push(`${element.name}-${element.settings.global_styles_presets}`)
     }

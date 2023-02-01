@@ -8,6 +8,7 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import loadPageActions from "../functions/actions/load-page-actions";
 
 export default function replacePageContent(url, popstate = false) {
+
   document.body.style.pointerEvents = 'none'
   if (!url) {
     return
@@ -308,10 +309,33 @@ async function _replace(htmlString, popstate, url, progressBar) {
   // migrateScript(scriptContainer, newHtml)
   formsManager?.clearAll()
   /**
+   * Routes updates
+   */
+
+  const [
+    {changeAppRoutes},
+    {default:Route},
+  ] = await Promise.all([
+      import("../store/routes/actions"),
+      import("../classes/Route")
+    ],
+  )
+
+  let routes = [];
+  if(window.altrpPages){
+    for (let _data of window.altrpPages) {
+      routes.push(Route.routeFabric(_data));
+    }
+  }
+
+  appStore.dispatch(changeAppRoutes(routes))
+  /**
    * Events dispatch
    */
+
   const event = new Event('DOMContentLoaded')
   const htmlRenderEvent = new Event('html-render')
+  delete window.breadcrumbsItems
   document.dispatchEvent(event)
   document.dispatchEvent(htmlRenderEvent)
   window.hAltrp.loadComponents()

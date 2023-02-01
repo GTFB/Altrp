@@ -198,7 +198,7 @@ export function getHeadingTypeAnimatingStyles(settings, id) {
   styles += `} `;
 
   //state disabled
-  styles += `${parentClass} .state-disabled .altrp-heading-no-animating-text {`;
+  styles += `${parentClass} .state-disabled.altrp-heading-no-animating-text {`;
 
   const typographicNoAnimatingDisabled = getResponsiveSetting(
     settings,
@@ -221,7 +221,7 @@ export function getHeadingTypeAnimatingStyles(settings, id) {
   styles += `} `;
 
   //state active
-  styles += `${parentClass} .active .altrp-heading-no-animating-text {`;
+  styles += `${parentClass} .active.altrp-heading-no-animating-text {`;
 
   const typographicNoAnimatingActive = getResponsiveSetting(
     settings,

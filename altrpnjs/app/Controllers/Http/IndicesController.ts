@@ -15,6 +15,7 @@ import GlobalStyle from "App/Models/GlobalStyle";
 
 export default class IndicesController {
   async admin({view}) {
+
     return view.render('admin', Edge({
       isProd: isProd(),
       applyPluginsFiltersSync,

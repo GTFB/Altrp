@@ -110,11 +110,20 @@ decorate([
     } = {
 
     }
+
     if(this.foreign_key){
-      options.foreignKey = this.foreign_key
+      if(this.type !== 'belongsTo'){
+        options.foreignKey = this.foreign_key
+      } else {
+        options.localKey = this.foreign_key
+      }
     }
     if(this.local_key){
-      options.localKey = this.local_key
+      if(this.type !== 'belongsTo'){
+        options.localKey = this.local_key
+      } else {
+        options.foreignKey = this.local_key
+      }
     }
     return JSON.stringify(options)
   }

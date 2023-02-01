@@ -3,11 +3,14 @@ import {Select} from "@blueprintjs/select";
 import {Button, MenuItem, ButtonGroup, Alignment, Icon} from "@blueprintjs/core";
 import AltrpMeta from "../../classes/AltrpMeta";
 import {connect} from "react-redux";
-import {getCurrentElement} from "../../store/store";
+import store, {getCurrentElement} from "../../store/store";
 import {
   deleteGlobalStylesPresets,
   updateGlobalStylesPresets
 } from "../../store/altrp-global-styles/actions";
+import {controllerValue} from "../../store/controller-value/actions";
+import {changeTemplateStatus} from "../../store/template-status/actions";
+import CONSTANTS from "../../consts";
 
 /**
  * @return {boolean}
@@ -221,7 +224,11 @@ class GlobalStylesPresets extends React.Component {
     _.keys(presetSettings).forEach((controllerName) => {
       currentElement.setSettingValue(controllerName, presetSettings[controllerName])
     })
+
     currentElement.setSettingValue("global_styles_presets", current)
+
+    store.dispatch(controllerValue(current, 'global_styles_presets'));
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
 
     // setSettingValue
 

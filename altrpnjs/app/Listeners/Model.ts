@@ -8,10 +8,7 @@ export default class Model {
   // }
   public async updated(model: ORMModel){
     await model.load('altrp_controller')
-    const controller = model.altrp_controller
-    console.log(await exec(`node ${base_path('ace')} generator:model --id=${model.id}`))
-    await exec(`node ${base_path('ace')} generator:controller --id=${controller.id}`)
+    await exec(`node ${base_path('ace')} generator:model --id=${model.id}`)
     await exec(`node ${base_path('ace')} generator:router`)
-    // Promise.all([controllerGenerator.run(controller), modelGenerator.run(model)])
   }
 }

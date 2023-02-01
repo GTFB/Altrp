@@ -1,10 +1,11 @@
 # ALTRP
 
 ## Changelog
-## test version build 6
+## test version build 10
 
-### 1.4.8 
+### 1.4.8
 * Add Static Properties to Custom Models
+* Add Preloading Relations on Page's Models
 
 ### 1.4.7 
 

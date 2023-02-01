@@ -9,9 +9,9 @@
 */
 import Event from '@ioc:Adonis/Core/Event'
 console.log('Start Listen Events');
-Event.on('model:updating', 'Model.updating');
+// Event.on('model:updating', 'Model.updating');
 Event.on('model:updated', 'Model.updated');
-Event.on('model:deleting', 'Model.deleting');
-Event.on('model:deleted', 'Model.deleted');
+// Event.on('model:deleting', 'Model.deleting');
+// Event.on('model:deleted', 'Model.deleted');
 Event.on('altrp:message', 'Message.receiver')
 Event.on('altrp_event', "AltrpEvent.listener")

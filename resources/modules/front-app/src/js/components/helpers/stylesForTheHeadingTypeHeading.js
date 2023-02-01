@@ -169,7 +169,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   styles += `} `;
 
   //state disabled
-  styles += `${parentClass} .state-disabled .altrp-heading, ${parentClass} .altrp-heading a {`;
+  styles += `${parentClass} .state-disabled.altrp-heading, ${parentClass}.altrp-heading a {`;
 
   const colorDisabled = getResponsiveSetting(settings, "heading_style_color", ".state-disabled");
 
@@ -239,7 +239,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   styles += `} `;
   //end of disabled
   //state active
-  styles += `${parentClass} .active .altrp-heading, ${parentClass} .altrp-heading a {`;
+  styles += `${parentClass} .active.altrp-heading, ${parentClass} .altrp-heading a {`;
 
   const colorActive = getResponsiveSetting(settings, "heading_style_color", ".active");
 
@@ -348,7 +348,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   styles += `} `;
 
   //state disabled
-  styles += `${parentClass} .state-disabled .altrp-heading {`;
+  styles += `${parentClass} .state-disabled.altrp-heading {`;
 
   const borderTypeDisabled = getResponsiveSetting(settings, "style_border_type", ".state-disabled");
 
@@ -376,7 +376,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   styles += `} `;
   //end of state disabled
   //start state active
-  styles += `${parentClass} .active .altrp-heading {`;
+  styles += `${parentClass} .active.altrp-heading {`;
 
   const borderTypeActive = getResponsiveSetting(settings, "style_border_type", ".active");
 
@@ -592,7 +592,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   styles += `} `;
 
   //start state disabled
-  styles += `${parentClass} .state-disabled .altrp-heading.altrp-background-image {`;
+  styles += `${parentClass} .state-disabled.altrp-heading.altrp-background-image {`;
 
   const backgroundImageDisabled = getResponsiveSetting(settings, "background_image", ".state-disabled");
 
@@ -647,7 +647,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   //end state disabled
 
   //start state active
-  styles += `${parentClass} .active .altrp-heading.altrp-background-image {`;
+  styles += `${parentClass} .active.altrp-heading.altrp-background-image {`;
 
   const backgroundImageActive = getResponsiveSetting(settings, "background_image", ".active");
 

@@ -31,6 +31,7 @@ import base_path from "../../../helpers/path/base_path";
 import sharp from 'sharp';
 import sizeOf from 'image-size';
 import getAltrpTime from "../../../helpers/getAltrpTime";
+import {pluralize} from "@poppinss/utils/build/src/Helpers/string";
 
 export default class AltrpRouting {
 
@@ -233,11 +234,40 @@ export default class AltrpRouting {
       try {
         const ModelClass = (await import(`../../AltrpModels/${page.model.name}`)).default
         let classInstance
+        const query = ModelClass.query()
+        query.orderBy('id','desc')
         if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
-          classInstance = await ModelClass.query().orderBy('id','desc').where(page.model_column, pageMatch.params[page.param_name]).first()
+          query.where(page.model_column, pageMatch.params[page.param_name])
         } else if (pageMatch.params?.id) {
-          classInstance = await ModelClass.find(pageMatch.params.id)
+          query.where('id', pageMatch.params.id)
         }
+
+        if(page.settings?.modelRelations?.length){
+          page.settings.modelRelations.forEach(r=>{
+            query.preload(r.value)
+          })
+          page.settings.modelRelations.forEach(r=>{
+
+            _.forEach(pageMatch.params, (matchValue, matchName)=>{
+              if(!matchName.includes('|')){
+                return
+              }
+              const [relationName, relationField] = matchName.split('|')
+
+              if(relationName !== r.value){
+                return
+              }
+
+              query.whereHas(relationName, query=>{
+                const tableName = pluralize(relationName)
+                query.where(`${tableName}.${relationField}`, matchValue)
+              })
+            })
+
+          })
+        }
+        classInstance = await query.first()
+
         model_data = classInstance ? classInstance.serialize() : {}
       } catch (e) {
         console.error(e);

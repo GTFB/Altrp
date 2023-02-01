@@ -3,18 +3,7 @@ import replaceContentWithData from "../../../../../front-app/src/js/functions/re
 import getBreadcrumbsItems from "../../../../../front-app/src/js/functions/getBreadcrumbsItems";
 import getResponsiveSetting from "../../../../../front-app/src/js/functions/getResponsiveSetting";
 import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
-import {Breadcrumbs} from "@blueprintjs/core";
-
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .bp3-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .altrp-menu-item__icon {
-    display: flex;
-  }
-`);
+import {Breadcrumb, Breadcrumbs} from "@blueprintjs/core";
 
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings})=>{
@@ -74,7 +63,8 @@ class BreadcrumbsWidget extends Component {
     super(props);
     this.state = {
       settings: props.element.getSettings(),
-      pending: false
+      pending: false,
+      key: 1,
     };
     this.element = props.element;
     this.elementId = props.element.getId();
@@ -111,6 +101,7 @@ class BreadcrumbsWidget extends Component {
       ];
     } else {
       data = getBreadcrumbsItems()
+
       data = data.map((item, idx) =>{
         const newItem = {
           text: replaceContentWithData(item.title, this.props.element.getCurrentModel()),
@@ -120,21 +111,27 @@ class BreadcrumbsWidget extends Component {
         }
         if(idx + 1 < data.length){
           newItem.href = item.path
-          newItem.onClick = e => {
-            e.preventDefault();
-            if (isEditor() || !this.props.history) {
-              window.location.href = item.path
-              return
-            }
-            window.altrpHistory?.push(item.path)
-          };
         }
         return newItem;
       });
     }
     return  data;
   }
+  breadcrumbRenderer=(props)=>{
+    delete props.onClick
+    return <Breadcrumb {...props}/>
+  }
+  currentBreadcrumbRenderer=(props)=>{
 
+    props.current = true
+    delete props.onClick
+    return <Breadcrumb   {...props} />
+  }
+  onDOMContentLoaded=()=>{
+    this.setState({
+      key: Math.random()
+    })
+  }
   render() {
     const breadcrumbsProps = {
       items: this.getBreadcrumbsItems(),
@@ -142,10 +139,12 @@ class BreadcrumbsWidget extends Component {
       popoverProps: {
         portalClassName: `altrp-portal altrp-portal${this.elementId}`,
       },
+      breadcrumbRenderer: this.breadcrumbRenderer,
+      currentBreadcrumbRenderer: this.currentBreadcrumbRenderer,
     };
     return <>
       <GlobalStyles settings={this.element.getSettings()} elementId={this.elementId}/>
-      <Breadcrumbs {...breadcrumbsProps}/>
+      <Breadcrumbs {...breadcrumbsProps} key={this.state.key}/>
     </>;
   }
 }

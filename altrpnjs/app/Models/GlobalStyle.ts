@@ -191,11 +191,6 @@ export default class GlobalStyle extends BaseModel {
       }
         break;
       case 'font': {
-        //console.log(settings?.name);
-        // if(settings?.name === 'H1'){
-        //   console.log(settings);
-        // }
-
       }
     }
     return cssVar

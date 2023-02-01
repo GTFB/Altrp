@@ -333,6 +333,7 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
+    //console.error('updated');
 
     if(nextProps.element.children.length !== this.childrenLength){
       this.childrenLength = nextProps.element.children.length

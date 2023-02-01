@@ -33,15 +33,15 @@ export default class RelationshipsController {
     try {
 
         if (relationshipData.type === 'belongsTo') {
-          const sourceRealtion = await Relationship.query()
-              .where('model_id', relationshipData.target_model_id)
-              .where('local_key', relationshipData.foreign_key)
-              .where('foreign_key', relationshipData.local_key)
-              .first()
-          if(!sourceRealtion){
-            response.status(404)
-            return response.json({success:false, message: 'Not found reverse relation'})
-          }
+          // const sourceRealtion = await Relationship.query()
+          //     .where('model_id', relationshipData.target_model_id)
+          //     .where('local_key', relationshipData.foreign_key)
+          //     .where('foreign_key', relationshipData.local_key)
+          //     .first()
+          // if(!sourceRealtion){
+          //   response.status(404)
+          //   return response.json({success:false, message: 'Not found reverse relation'})
+          // }
         }
 
         let targetModel = await Model.find(relationshipData.target_model_id)
@@ -376,4 +376,33 @@ export default class RelationshipsController {
     return response.json({success: true,})
   }
 
+
+  async options({request, response}:HttpContextContract){
+
+    const query = Relationship.query()
+    const qs = request.qs()
+
+    if(qs.model_id){
+      //query.whereHas('altrp_model', query)
+      query.where('model_id', qs.model_id)
+    }
+
+    query.orderBy('name')
+
+
+    let data: any[] = await query
+
+    data = data.map((r:any)=>{
+      r = r.toJSON()
+      return {
+        label: r.title,
+        value: r[qs.valueColumn] || r.id
+      }
+
+    })
+    return response.json({
+      success: true,
+      data
+    })
+  }
 }

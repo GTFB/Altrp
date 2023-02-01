@@ -274,7 +274,7 @@ class AdminSettings extends Component {
                     </td>
                   </tr>
                   <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">SPA Off</td>
+                    <td className="admin-settings-table__td row-text">SPA Disable</td>
                     <td className="admin-settings-table__td ">
                       <input
                         className="admin-table__td_check"
