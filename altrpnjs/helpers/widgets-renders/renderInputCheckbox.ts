@@ -1,4 +1,3 @@
-import getContent from '../getContent'
 import _ from 'lodash'
 import getResponsiveSetting from '../getResponsiveSetting'
 import objectToStylesString from "../objectToStylesString";

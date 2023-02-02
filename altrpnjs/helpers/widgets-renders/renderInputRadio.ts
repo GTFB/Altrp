@@ -1,6 +1,5 @@
 import getResponsiveSetting from "../getResponsiveSetting";
 import _ from "lodash";
-import getContent from "../getContent";
 import renderAsset from "../renderAsset";
 import objectToStylesString from "../objectToStylesString";
 

@@ -260,7 +260,7 @@ export default class Template extends BaseModel {
     return data
   }
 
-  async getChildrenContent(screenName:string, randomString):Promise<string> {
+  async getChildrenContent(screenName:string, randomString = ''):Promise<string> {
     try {
       const data = JSON.parse(this.data)
       const renderer = new RootElementRenderer(data)
