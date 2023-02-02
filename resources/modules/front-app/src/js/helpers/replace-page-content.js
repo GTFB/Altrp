@@ -6,6 +6,7 @@ import convertQueryParamsToObject from "../functions/convert-query-params-to-obj
 import delay from "../functions/delay";
 import {changeCurrentModel} from "../store/current-model/actions";
 import loadPageActions from "../functions/actions/load-page-actions";
+import qs from 'qs'
 
 export default function replacePageContent(url, popstate = false) {
 
@@ -236,6 +237,17 @@ async function _replace(htmlString, popstate, url, progressBar) {
     stylesContainer.appendChild(s)
   }
 
+  if (!popstate) {
+    /**
+     * need for back navigation
+     */
+    window.history.replaceState({
+      altrpCustomNavigation: true
+    }, '', location.href)
+    window.history.pushState({
+      altrpCustomNavigation: true
+    }, '', url)
+  }
   const title = document.querySelector('title')
   const oldTitle = title.innerHTML
   const newTitle = newHtml.querySelector('title')
@@ -308,6 +320,26 @@ async function _replace(htmlString, popstate, url, progressBar) {
   // document.body.appendChild(scriptContainer)
   // migrateScript(scriptContainer, newHtml)
   formsManager?.clearAll()
+
+  let params = window?.__altrp_settings__?.page_params
+
+  if (!params) {
+    params = qs.parse(document?.location?.search.replace('?',''));
+  }
+
+  let hashParams = {};
+  if (document?.location?.hash && document?.location?.hash.indexOf('=') !== -1) {
+    hashParams = convertQueryParamsToObject(document?.location?.hash)
+  }
+
+  appStore.dispatch(changeCurrentPage({
+    url: location?.href || "",
+    title: window?.currentPage?.title || "",
+    hash: document?.location?.hash,
+    hashParams,
+    params,
+  }))
+
   /**
    * Routes updates
    */
@@ -342,8 +374,6 @@ async function _replace(htmlString, popstate, url, progressBar) {
   appStore.dispatch(clearElements())
   window.altrpContentLoaded = false
 
-  let params = window?.__altrp_settings__?.page_params
-
   let defaultModel = {...window.model_data};
   defaultModel.altrpModelUpdated = true
   if (_.isObject(window.route_args)) {
@@ -365,31 +395,8 @@ async function _replace(htmlString, popstate, url, progressBar) {
   if (scriptContainers.length > 1) {
     scriptContainers[0].remove()
   }
-  if (!popstate) {
-    window.history.replaceState({
-      altrpCustomNavigation: true
-    }, oldTitle, location.href)
-    window.history.pushState({
-      altrpCustomNavigation: true
-    }, newTitle.innerHTML, url)
-  }
-  if (!params) {
-    params = convertQueryParamsToObject(document?.location?.search);
-  }
-
-  let hashParams = {};
-  if (document?.location?.hash && document?.location?.hash.indexOf('=') !== -1) {
-    hashParams = convertQueryParamsToObject(document?.location?.hash)
-  }
   window.templateActionsDone = []
   loadPageActions()
-  appStore.dispatch(changeCurrentPage({
-    url: location?.href || "",
-    title: window?.currentPage?.title || "",
-    hash: document?.location?.hash,
-    hashParams,
-    params,
-  }))
   progressBar.style.transform = 'translate( -80%)'
   return {
     newTitle: newTitle.innerHTML,

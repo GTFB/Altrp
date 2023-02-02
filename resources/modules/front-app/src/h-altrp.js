@@ -12,7 +12,6 @@ if(!window.asCheck){
     document.dispatchEvent(HtmlRenderEvent)
   })
 
-
   import(/* webpackChunkName: '_h-altrp.js' */'./_h-altrp.js')
 }
 
