@@ -66,7 +66,6 @@ class FrontPopup extends Component {
     window.dispatchEvent(new Event('resize'));
   }
   componentWillUnmount = () => {
-    console.log(this);
     document.body.classList.remove('overflow-hidden');
     window.dispatchEvent(new Event('resize'));
     this.props.closePopup();

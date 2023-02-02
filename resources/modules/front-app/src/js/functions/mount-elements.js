@@ -37,7 +37,7 @@ export default function mountElements(){
     </window.Provider>,  container, ()=>{
     })
   })
-  console.error('HAltrp')
+
   import(/* webpackChunkName: 'HAltrp' */'../classes/modules/HAltrp');
   import(/* webpackChunkName: 'section-element-wrapper' */'../libs/section-element-wrapper');
   window.removeEventListener('h-altrp-loaded', mountElements);

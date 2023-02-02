@@ -6,10 +6,15 @@ import {changeCurrentPageProperty} from "../store/current-page/actions";
  * @param paramValue{any}
  */
 const updateQueryString = (paramName, paramValue) => {
+
   if(!paramName || ! _.isString(paramName)){
     return
   }
   let _qs = qs.parse(location.search.replace('?',''))
+
+  if(! _qs[paramName] && ! paramValue){
+    return;
+  }
   if(_.isEqual(_qs[paramName], paramValue)){
     return;
   }
@@ -19,7 +24,7 @@ const updateQueryString = (paramName, paramValue) => {
   }
   const newLocation = new URL(location.toString());
   newLocation.search = qs.stringify(_qs)
-
+  console.error('push', newLocation)
   history.pushState({
     altrpQueryNavigation: true
   }, '',newLocation.toString());

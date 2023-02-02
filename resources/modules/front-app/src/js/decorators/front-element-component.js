@@ -88,6 +88,7 @@ function subscribeToModels(id){
  * так что лучше его использовать, если в данной настройке хранится строка
  * @param {string} settingName
  * @param {boolean} returnRaw - возврщать ли объект в том виде, в котором он хранится (если false, возвращаем строку)
+ * @param locked
  * @return {*}
  */
 function getContent(settingName, returnRaw = false, locked = false) {

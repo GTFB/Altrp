@@ -154,7 +154,8 @@ class InputCheckboxWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getLockedContent("content_default_value", true);
+      value = this.getContent("content_default_value", true);
+
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -201,6 +202,7 @@ class InputCheckboxWidget extends Component {
         "content_default_value",
           true,
       );
+// conl
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -466,6 +468,8 @@ class InputCheckboxWidget extends Component {
         "query_sync"
       );
       if(!isEditor() && query_sync){
+
+
         const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
         updateQueryString(fieldName, value)
       }
