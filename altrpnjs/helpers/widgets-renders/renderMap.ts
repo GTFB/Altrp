@@ -1,7 +1,7 @@
 import objectToStylesString from "../objectToStylesString"
 import getResponsiveSetting from "../getResponsiveSetting"
 //@ts-ignore
-export default function renderMap(settings, device, context) {
+export default function renderMap(settings, device, ) {
   const height = getResponsiveSetting(settings, 'style_height', device, {size: 400, unit: 'px'})
   const margin = getResponsiveSetting(settings, 'style_margin', device, {top: 0, bottom: 0, left: 0, right: 0, unit: 'px'})
 

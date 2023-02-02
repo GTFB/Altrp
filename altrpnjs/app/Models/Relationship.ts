@@ -1,6 +1,5 @@
-import {BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany,} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, BelongsTo, belongsTo, column, afterUpdate, afterCreate} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
-import Source from 'App/Models/Source';
 import Model from 'App/Models/Model';
 import isProd from "../../helpers/isProd";
 
@@ -37,6 +36,15 @@ export default class Relationship extends BaseModel {
 
   @column()
   public model_id: number
+
+  @afterUpdate()
+  @afterCreate()
+  public static async updateModel(relationship: Relationship){
+    await relationship.load('altrp_model')
+    await relationship.load('altrp_target_model')
+    relationship.altrp_model.save()
+    relationship.altrp_target_model.save()
+  }
 
   @belongsTo(() => Model, {
     foreignKey: 'model_id'
@@ -80,10 +88,10 @@ export default class Relationship extends BaseModel {
   public user: BelongsTo<typeof User>
 
 
-  @hasMany(() => Source, {
-    foreignKey: 'id'
-  })
-  public altrp_table: HasMany<typeof Source>
+  // @hasMany(() => Source, {
+  //   foreignKey: 'id'
+  // })
+  // public altrp_table: HasMany<typeof Source>
 
   renderForModelDev():string {
     return `

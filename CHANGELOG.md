@@ -1,11 +1,12 @@
 # ALTRP
 
 ## Changelog
-## test version build 10
+## test version build 13
 
 ### 1.4.8
 * Add Static Properties to Custom Models
 * Add Preloading Relations on Page's Models
+* Rendering Template Widget on Server Side
 
 ### 1.4.7 
 

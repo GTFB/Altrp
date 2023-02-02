@@ -2,7 +2,7 @@ import getResponsiveSetting from "../getResponsiveSetting"
 import _ from 'lodash'
 import renderAsset from "../renderAsset";
 
-export default function renderImageLightbox(settings, device, context) {
+export default function renderImageLightbox(settings, device, ) {
   const getMedia = () => {
     let media = getResponsiveSetting(settings, 'content_media', device);
     /**
@@ -10,9 +10,9 @@ export default function renderImageLightbox(settings, device, context) {
      */
     if (
       getResponsiveSetting(settings, 'content_path', device) &&
-      _.isObject(_.get(getResponsiveSetting(settings, 'content_path', device), context))
+      _.isObject(_.get(getResponsiveSetting(settings, 'content_path', device), ))
     ) {
-      media = _.get(getResponsiveSetting(settings, 'content_path', device), context);
+      media = _.get(getResponsiveSetting(settings, 'content_path', device), );
       /**
        * Проверим массив ли с файлами content_path
        */
@@ -23,9 +23,9 @@ export default function renderImageLightbox(settings, device, context) {
       }
     } else if (
       getResponsiveSetting(settings, 'content_path', device) &&
-      _.isString(_.get(getResponsiveSetting(settings, 'content_path', device), context))
+      _.isString(_.get(getResponsiveSetting(settings, 'content_path', device), ))
     ) {
-      media = _.get(getResponsiveSetting(settings, 'content_path', device), context);
+      media = _.get(getResponsiveSetting(settings, 'content_path', device), );
       media = {
         assetType: "media",
         url: media,

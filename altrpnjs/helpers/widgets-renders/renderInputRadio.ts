@@ -4,14 +4,10 @@ import getContent from "../getContent";
 import renderAsset from "../renderAsset";
 import objectToStylesString from "../objectToStylesString";
 
-export default function renderInputRadio(settings, device, context) {
+export default function renderInputRadio(settings, device) {
   const label_icon = getResponsiveSetting(settings, 'label_icon', device)
   const content_label_position_type = getResponsiveSetting(settings, "content_label_position_type", device);
   const content_options = getResponsiveSetting(settings, "content_options", device);
-
-  const valueMustArray = () => {
-    return true;
-  }
 
   const extractPathFromString = (string = "") => {
     let path = "";
@@ -30,24 +26,17 @@ export default function renderInputRadio(settings, device, context) {
     }
     let options = string.split("\n");
     let path = extractPathFromString(string);
-    let _optionsFromData = _.get(context, path, device);
-    if (_.isArray(_optionsFromData)) {
-      return _optionsFromData;
+    if(path){
+      return []
     }
+
     options = options.map(option => {
       let value = option.split("|")[0];
       value = value.trim();
-      let valuePath = extractPathFromString(value);
-      if (valuePath) {
-        value = _.get(context, valuePath, device);
-      }
+
       let label = option.split("|")[1] || value || "";
-      !_.isString(label) && (label = "");
       label = label.trim();
-      let labelPath = extractPathFromString(label);
-      if (labelPath) {
-        label = _.get(context, labelPath, device);
-      }
+
       return {
         value,
         label
@@ -58,15 +47,8 @@ export default function renderInputRadio(settings, device, context) {
 
   let options = parseOptionsFromSettings(content_options)
 
-  let value = getContent(settings, context,"content_default_value", device) || (valueMustArray() ? [] : "");
-  if (valueMustArray() && !_.isArray(value)) {
-    value = [];
-  }
   let label: string = "";
 
-  if (value && value.dynamic) {
-    value = "";
-  }
   let classLabel: string = "";
   let containerClass: string = "";
   let styleLabel = {};
@@ -220,10 +202,7 @@ export default function renderInputRadio(settings, device, context) {
     const formID = Math.random().toString(36).substr(2, 9);
 
     return `<div class="altrp-field-subgroup"><div class="altrp-field-radio-group">${options.map((option) => {
-      // let checked = false;
-      //
-      // value = _.isArray(value) ? value : value ? [value] : [];
-      // checked = altrpCompare(option.value, value, "in");
+
 
       return (
         `<label class="${"bp3-control bp3-radio" + (!inline ? " bp3-inline" : "") + " altrp-field-radio"}"><input name="${formID + "-" + fieldName}" type="radio"><span class="bp3-control-indicator"></span>${option.label}</label>`

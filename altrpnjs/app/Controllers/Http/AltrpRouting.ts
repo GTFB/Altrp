@@ -244,7 +244,9 @@ export default class AltrpRouting {
 
         if(page.settings?.modelRelations?.length){
           page.settings.modelRelations.forEach(r=>{
-            query.preload(r.value)
+            if(ModelClass.$hasRelation(r.value)){
+              query.preload(r.value);
+            }
           })
           page.settings.modelRelations.forEach(r=>{
 
@@ -252,16 +254,20 @@ export default class AltrpRouting {
               if(!matchName.includes('|')){
                 return
               }
-              const [relationName, relationField] = matchName.split('|')
+              let [relationName, relationField] = matchName.split('|')
 
+              relationName = relationName.trim()
               if(relationName !== r.value){
                 return
               }
+              relationField = relationField.trim()
+              if(ModelClass.$hasRelation(relationName)) {
+                query.whereHas(relationName, query=>{
+                  const tableName = pluralize(relationName)
 
-              query.whereHas(relationName, query=>{
-                const tableName = pluralize(relationName)
-                query.where(`${tableName}.${relationField}`, matchValue)
-              })
+                  query.where(`${tableName}.${relationField}`, matchValue)
+                })
+              }
             })
 
           })
@@ -302,13 +308,6 @@ export default class AltrpRouting {
     if (user) {
       altrpuser = user.toObject()
     }
-    // await page.load('data_sources', data_source => {
-    //   data_source.preload('source', source => {
-    //     source.preload('model', model => {
-    //       model.preload('table')
-    //     })
-    //   })
-    // })
 
     const altrpContext = {
       ...model_data,

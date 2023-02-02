@@ -1,5 +1,5 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import _ from 'lodash';
+import _, {parseInt} from 'lodash';
 import GlobalStyle from "App/Models/GlobalStyle";
 import { v4 as uuid } from "uuid";
 import Template from "App/Models/Template";
@@ -36,7 +36,7 @@ export default class GlobalTemplateStylesController {
   }
 
   public async store({ request, response }) {
-    const data = request.body()
+    let data = request.body()
 
     if(!data.type || !data.settings) {
       response.status(500)
@@ -44,7 +44,8 @@ export default class GlobalTemplateStylesController {
     }
 
     data.guid = uuid()
-
+    //@ts-ignore
+    delete data._type
     try {
       const style = await GlobalStyle.create(data)
       return style

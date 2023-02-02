@@ -10,7 +10,6 @@ import {Popover2} from '@blueprintjs/popover2'
 import defaultBurgerMenuIcon from "./misc/defaultBurgerMenuIcon";
 
 
-(window.globalDefaults = window.globalDefaults || []).push(``)
 
 class MenuWidget extends Component {
   constructor(props) {
@@ -24,9 +23,16 @@ class MenuWidget extends Component {
     if (props.baseRender) {
       this.render = props.baseRender(this);
     }
-    this.elementId = props.element.getId();
+    this.element = props.element;
   }
 
+  getSelector(){
+
+    if(this.element.settings.global_styles_presets){
+      return `_altrp-preset_${this.element.getName()}-${this.element.settings.global_styles_presets}`
+    }
+    return this.element.id
+  }
   getMenuData = async () => {
     let menuGUID = this.props.element.getResponsiveLockedSetting('menu')
     if ((this.state.menuData || !menuGUID) && this.menuGUID === menuGUID ) {
@@ -47,6 +53,7 @@ class MenuWidget extends Component {
     }
     this.menuData = menuData
     this.menuGUID = menuGUID
+    await window.altrpHelpers.delay(100)
     this.setState(state=>({...state, menuData}))
   }
 
@@ -113,7 +120,7 @@ class MenuWidget extends Component {
     const popoverProps = {
       usePortal: true,
       //isOpen:true ,
-      portalClassName: `${classes} altrp-portal altrp-portal${this.elementId} `,
+      portalClassName: `${classes} altrp-portal altrp-portal${this.getSelector()} `,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     let itemClasses = ''
@@ -154,7 +161,7 @@ class MenuWidget extends Component {
           depth={depth}
           href={item.url}
           width={100}
-          className={`${classes} ${itemClasses} altrp-menu-item altrp-menu-item_key${item.id} altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
+          className={`${classes} ${itemClasses} altrp-menu-item altrp-menu-item_key${item.id} altrp-menu-item${this.getSelector()} ${this.mbItemActive(item) ? 'active' : ''}`}
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
@@ -245,7 +252,7 @@ class MenuWidget extends Component {
         className={`${classes} altrp-popover`}
         position={position}
         portalContainer={window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
-        portalClassName={`altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
+        portalClassName={`altrp-portal altrp-portal_main altrp-portal${this.getSelector()}`}
         minimal={true}
       >
         <Button

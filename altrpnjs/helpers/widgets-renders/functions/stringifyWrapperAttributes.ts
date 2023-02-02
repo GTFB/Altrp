@@ -49,7 +49,7 @@ export default function stringifyWrapperAttributes(settings: {
 
   if(settings?.conditional_other){
     altrpSettings['conditional_other'] = settings?.conditional_other
-    altrpSettings['conditional_other_display'] = settings?.conditional_other_display
+    altrpSettings['conditional_other_display'] = settings?.conditional_other_display || 'AND'
     altrpSettings['conditions'] = settings?.conditions
   }
   if(_.isEmpty(altrpSettings)){

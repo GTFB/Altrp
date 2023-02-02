@@ -47,6 +47,7 @@ class Template extends BaseElement {
         textTemplate: 'Go to Template',
       },
       nullable: true,
+      locked: true,
     });
 
     this.endControlSection();

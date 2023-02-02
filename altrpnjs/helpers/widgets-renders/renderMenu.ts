@@ -2,19 +2,60 @@ import { parse } from 'svg-parser';
 import getResponsiveSetting from "../getResponsiveSetting"
 import _ from 'lodash'
 import Menu from "App/Models/Menu";
-export default async function renderMenu(settings, device, ):Promise<string> {
+import prepareSVG from "../string/prepareSVG";
+export default async function renderMenu(settings, device, elementID):Promise<string> {
 
   let shouldRenderButton = getResponsiveSetting(settings,'button', device);
 
+  const menu = await Menu.query().where('guid', settings.menu|| '').first()
   if(shouldRenderButton){
-    return renderButton(settings,  device,)
+    return renderButton(settings,  device,menu)
   }
-  return `
+  if(! menu){
+    return `
   `
+  }
+  const menuData= menu ? menu.toJSON() : {};
+  if(menu){
+    menuData.children = JSON.parse(menu.children);
+  }
+  return _renderMenu(settings,  device, menuData.children, elementID)
 }
 
-async  function renderButton  (settings,  device,):Promise<string>  {
-  const menu = await Menu.query().where('guid', settings.menu|| '').first()
+function _renderMenu(settings,  device, children, elementID):string{
+
+  const  type = getResponsiveSetting(settings, 'type', device) || 'vertical';
+return `
+<ul class="bp3-menu altrp-menu altrp-menu_${type}">
+  ${
+  children.map(menuItem=>{
+    let {
+      children = [],
+      url,
+      label,
+      icon,
+    } = menuItem
+    if(icon){
+      icon = prepareSVG(icon)
+    }
+
+    return `
+    <li class="${children?.length ? 'bp3-submenu' :''}">
+<a tabindex="0"  href="${url}" width="100" class="bp3-menu-item bp3-popover-dismiss   altrp-menu-item  altrp-menu-item${elementID} ">
+<span class=" altrp-menu-item__icon">${icon || ''}</span>
+<div class="bp3-fill bp3-text-overflow-ellipsis">${label}</div>
+${children.length ? `<span  class="bp3-icon bp3-icon-caret-right"><svg data-icon="caret-right" width="16" height="16" viewBox="0 0 16 16"><desc>Open sub menu</desc><path d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z" fill-rule="evenodd"></path></svg></span>`
+    : ''}
+</a>
+</li>
+    `
+  }).join('')
+}
+</ul>
+`
+}
+
+async  function renderButton  (settings,  device, menu):Promise<string>  {
 
   const menuData= menu ? menu.toJSON() : {};
   if(menu){

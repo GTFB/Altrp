@@ -1,6 +1,6 @@
 import getResponsiveSetting from '../getResponsiveSetting';
 //@ts-ignore
-export default function renderInputCropImage(settings, device, context) {
+export default function renderInputCropImage(settings, device) {
   const text = getResponsiveSetting(settings, 'text', device)
   const required = getResponsiveSetting(settings, 'required', device)
 

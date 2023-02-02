@@ -1,5 +1,5 @@
 // @ts-ignore
-export default function renderInputHidden(settings, device, context) {
+export default function renderInputHidden() {
   return `
     <input type="hidden" />
   `

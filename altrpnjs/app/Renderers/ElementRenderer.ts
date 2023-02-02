@@ -56,7 +56,7 @@ export default class ElementRenderer {
     }/${this.element.name}.stub`)
   }
 
-  async render(screenName: string): Promise<string> {
+  async render(screenName: string, randomString): Promise<string> {
     const settings: any = this.element.settings
     let reactElement = this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     if(! reactElement && this.element.settings['skeleton:enable']){
@@ -82,7 +82,7 @@ export default class ElementRenderer {
     let children_content = ''
     for (const child of this.element.children) {
       let renderer = new ElementRenderer(child)
-      children_content += await renderer.render(screenName)
+      children_content += await renderer.render(screenName, randomString)
     }
     let element_content = '';
     const columns_count = this.element.children.length;
@@ -142,7 +142,7 @@ export default class ElementRenderer {
           let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
             : await import(base_path(`helpers/widgets-renders/${filename}`))
           render = render.default
-          element_content = await render(this.element.settings, screenName, this.getId())
+          element_content = await render(this.element.settings, screenName, this.getId(), randomString)
         }
         if (this.getName() === 'section_widget') {
           element_content =
@@ -223,7 +223,7 @@ export default class ElementRenderer {
       data-enter-animation-duration="${getResponsiveSetting(settings, 'en_a_duration', screenName, 0)?.size || 400}"
       `
       : ''}
-      ${reactElement ? `data-react-element="${this.getId()}"` : ''}
+      ${reactElement ? `data-react-element="${this.getIdForAction()}"` : ''}
     ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_click_actions', screenName)) ? '' : `data-altrp-wrapper-click-actions="${this.getIdForAction()}"`}
     ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearB_actions', screenName)) ? '' : `data-altrp-wrapper-appear-bottom-actions="${this.getIdForAction()}"`}
     ${_.isEmpty(getResponsiveSetting(settings, 'wrapper_appearT_actions', screenName)) ? '' : `data-altrp-wrapper-appear-top-actions="${this.getIdForAction()}"`}
@@ -232,7 +232,7 @@ export default class ElementRenderer {
       `data-altrp-sticky="${getResponsiveSetting(settings, 'sticky', screenName)}"
     data-altrp-sticky-spacing="${getResponsiveSetting(settings, 'st_spacing', screenName)}"
     data-margin-top="${getResponsiveSetting(settings, 'st_spacing', screenName, 0)}"`}
-    data-altrp-id="${this.getId()}" data-altrp-element="${this.getName()}"
+    data-altrp-id="${this.getIdForAction()}" data-altrp-element="${this.getName()}"
     `
 
     wrapper_attributes = wrapper_attributes.replace(/\s+/g, ' ');
@@ -253,6 +253,9 @@ export default class ElementRenderer {
   }
 
   private getId() {
+    if(this.element.settings.global_styles_presets){
+      return `_altrp-preset_${this.getName()}-${this.element.settings.global_styles_presets}`
+    }
     return this.element.id
   }
 

@@ -7,7 +7,6 @@ export default class Model {
   //   model.id
   // }
   public async updated(model: ORMModel){
-    await model.load('altrp_controller')
     await exec(`node ${base_path('ace')} generator:model --id=${model.id}`)
     await exec(`node ${base_path('ace')} generator:router`)
   }

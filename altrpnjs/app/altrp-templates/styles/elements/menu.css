@@ -17,14 +17,59 @@
   flex-grow: 0;
 }
 .bp3-menu-item {
-  align-items: center;
-  border-radius: 0;
+
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  border-radius: 2px;
+  color: inherit;
+  line-height: 20px;
+  padding: 5px 7px;
+  text-decoration: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .bp3-menu {
   flex-direction: column;
+  background: #ffffff;
+  border-radius: 3px;
+  color: #182026;
+  list-style: none;
+  margin: 0;
+  min-width: 180px;
+  padding: 5px;
+  text-align: left;
 }
-
+.bp3-menu-item > .bp3-fill {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  -ms-flex-negative: 1;
+  flex-shrink: 1;
+}
+.bp3-icon > svg:not([fill]) {
+  fill: currentColor;
+}
+.bp3-menu-item > * {
+  margin-right: 7px;
+}
+.bp3-menu-item > .bp3-icon {
+  color: #5c7080;
+  margin-top: 2px;
+}
+.bp3-menu-item > :last-child {
+  margin-right: 0;
+}
 .altrp-menu-toggle.bp3-button:not([class*=bp3-intent-]),
 .altrp-menu-toggle.bp3-button:not([class*=bp3-intent-]):hover{
   background-color: #f5f8fa;

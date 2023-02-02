@@ -56,7 +56,7 @@ export default function getBreadcrumbsItems(){
       if(!i.path.includes(':')){
         return
       }
-       i.path = i.path.split('/').map((segment, idx)=>{
+      i.path = i.path.split('/').map((segment, idx)=>{
         if(!segment.includes(':')){
           return segment
         }

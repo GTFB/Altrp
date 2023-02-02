@@ -103,7 +103,9 @@ export default class Page extends BaseModel {
   @column()
   public icon: string
 
-  @column()
+  @column({
+    serialize: value => value || {}
+  })
   public settings: {
     modelRelations?: {
       label: string,
@@ -831,18 +833,18 @@ export default class Page extends BaseModel {
     let footer: { guid } | Template = await Template.getTemplate(this.id, 'footer')
     let footerContent = ''
     if (footer instanceof Template) {
-      footerContent = await footer.getChildrenContent(screenName)
+      footerContent = await footer.getChildrenContent(screenName, randomString)
     } else if (footer?.guid) {
       const _template = await Template.query().where('guid', footer.guid).first()
       if (_template) {
-        footerContent = await _template.getChildrenContent(screenName)
+        footerContent = await _template.getChildrenContent(screenName, randomString)
       }
     }
     let content = await Template.getTemplate(this.id, 'content')
     let contentGuid = data_get(content, 'guid')
     let contentContent = ''
     if (content instanceof Template) {
-      contentContent = await content.getChildrenContent(screenName)
+      contentContent = await content.getChildrenContent(screenName, randomString)
     }
     let footerGuid = data_get(footer, 'guid')
 
@@ -851,11 +853,11 @@ export default class Page extends BaseModel {
     let headerGuid = data_get(header, 'guid')
     let headerContent = ''
     if (header instanceof Template) {
-      headerContent = await header.getChildrenContent(screenName)
+      headerContent = await header.getChildrenContent(screenName, randomString)
     } else if (header?.guid) {
       const _template = await Template.query().where('guid', header.guid).first()
       if (_template) {
-        headerContent = await _template.getChildrenContent(screenName)
+        headerContent = await _template.getChildrenContent(screenName, randomString)
       }
     }
 
@@ -915,7 +917,7 @@ export default class Page extends BaseModel {
         continue
       }
       if (template instanceof Template) {
-        let content = await template.getChildrenContent(screenName)
+        let content = await template.getChildrenContent(screenName, randomString)
         result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
           ${content ? content : ''}
           </div>`
@@ -930,7 +932,7 @@ export default class Page extends BaseModel {
             if (!fs.existsSync(public_path(cssHref))) {
               cssHref = `/altrp/css/${guid}.css`
             }
-            let content = await _template.getChildrenContent(screenName)
+            let content = await _template.getChildrenContent(screenName, randomString)
             result += `<div class="app-area app-area_${area.name} ${area.getAreaClasses().join(' ')}">
           ${content ? content : ''}
           </div>

@@ -203,7 +203,7 @@ class ElementWrapper extends Component {
 
       elementDisplay = elementDisplay && conditionsChecker(
         conditions,
-        element.getSettings("conditional_other_display") === "AND",
+        (element.getSettings("conditional_other_display")|| "AND") === "AND",
         this.props.element.getCurrentModel(),
         true
       );

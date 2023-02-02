@@ -35,7 +35,7 @@ const AltrpFieldContainer = (settings, child) => {
 }
 
 // @ts-ignore
-export default function renderInputImageSelect(settings, device, context) {
+export default function renderInputImageSelect(settings, device,) {
   let label = '';
 
   const image_select_options = getResponsiveSetting(settings, "image_select_options", device);

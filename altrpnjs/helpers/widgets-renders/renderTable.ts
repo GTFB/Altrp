@@ -1,6 +1,6 @@
 //import getResponsiveSetting from "../getResponsiveSetting"
 //@ts-ignore
-export default function renderTable(settings, device, context) {
+export default function renderTable(settings, device, ) {
   return ''
   // const columns = getResponsiveSetting(settings, 'tables_columns', device) || []
   // const additionalRows = getResponsiveSetting(settings, 'additional_rows', device) || []
