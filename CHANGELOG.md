@@ -7,6 +7,7 @@
 * Add Static Properties to Custom Models
 * Add Preloading Relations on Page's Models
 * Rendering Template Widget on Server Side
+* Add `Mapper` Node for Robotizers
 
 ### 1.4.7 
 

@@ -24,7 +24,7 @@ const updateQueryString = (paramName, paramValue) => {
   }
   const newLocation = new URL(location.toString());
   newLocation.search = qs.stringify(_qs)
-  console.error('push', newLocation)
+
   history.pushState({
     altrpQueryNavigation: true
   }, '',newLocation.toString());

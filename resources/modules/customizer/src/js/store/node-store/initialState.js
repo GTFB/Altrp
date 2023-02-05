@@ -12,6 +12,7 @@ import {DiscordObj} from "../../components/sidebar/modules/nodes-obj/robot/Disco
 import {Handle} from "react-flow-renderer";
 import {QueryBuilderObj} from "../../components/sidebar/modules/nodes-obj/QueryBuilderObj";
 import {ValidatorObj} from "../../components/sidebar/modules/nodes-obj/ValidatorObj";
+import {MapperObj} from "../../components/sidebar/modules/nodes-obj/MapperObj";
 // import {BotObj} from "../../components/sidebar/modules/nodes-obj/robot/BotObj";
 
 export const initialState = {
@@ -19,6 +20,7 @@ export const initialState = {
     StartObj,
     SwitchObj,
     ChangeObj,
+    MapperObj,
     QueryBuilderObj,
     ValidatorObj,
     ReturnObj,

@@ -1012,12 +1012,7 @@ class InputTextCommon extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       stateless: true,
     })
-    this.addControl('input_icons_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      units: ['px', '%', 'vh', 'vw'],
-      stateless: true,
-    })
+
     this.addControl('input_icons_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',

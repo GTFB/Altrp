@@ -44,6 +44,7 @@ import ApiNodeV2 from "App/Customizer/Nodes/ApiNodeV2";
 import base_path from "../../helpers/base_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import applyPluginsFiltersSync from "../../helpers/plugins/applyPluginsFiltersSync";
+import MapperNode from "App/Customizer/Nodes/MapperNode";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -535,6 +536,7 @@ export default class Customizer extends BaseModel {
         case 'smoothstep':
         case 'default': return new Edge( item, customizer )
         case 'switch': return new SwitchNode( item, customizer )
+        case 'mapper': return new MapperNode( item, customizer )
         case 'start': return new StartNode( item , customizer)
         case 'return': return new ReturnNode( item, customizer )
         case 'change': return new ChangeNode( item, customizer )

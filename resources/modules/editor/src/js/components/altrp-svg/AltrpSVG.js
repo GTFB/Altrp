@@ -92,7 +92,7 @@ class AltrpSVG extends Component {
       divElement.children[0]?.removeAttribute('height')
       svg = divElement.children[0]?.outerHTML;
     }
-    return <svg {...props}  dangerouslySetInnerHTML={{__html: svg || this.state.svg}}/>
+    return <span {...props}  dangerouslySetInnerHTML={{__html: svg || this.state.svg}}/>
   }
 }
 
