@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink, withRouter } from "react-router-dom";
 import AdminTable from "./AdminTable";
+import Pagination from "./Pagination";
 import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
@@ -34,7 +35,7 @@ class Assets extends Component {
       haveNextFont: true,
       havePreviousFont: true,
       imageSettings: [],
-      changeTable: false,
+      changeTable: true,
       tableSearch: '',
       currentPage: 1,
       pageCount: 1,
@@ -606,10 +607,23 @@ class Assets extends Component {
                            }
                          )
                        }
-                     </div>
-                   )}
+                      </div>
+                   )} 
                  </div>
                )}
+                <div>
+                  {!this.state.changeTable ? (<Pagination
+                      pageCount={pageCount}
+                      currentPage={currentPage}
+                      changePage={async (page) => {
+                                 if (currentPage !== page) {
+                                   await this.setState({currentPage: page})
+                                   await this.filterAssets(this.state.activeLink)
+                                 }
+                               }}
+                      itemsCount={count}
+                    />) : ''}
+                </div>
                {(this.state.activeLink !== "images" && this.state.activeLink !== 'svgs') && (
                  <div>
                    {/*{*/}
