@@ -163,7 +163,7 @@ class StylesSettings extends Component {
                 )}
                 <input
                     type="file"
-                    accept="image/png, image/jpeg, image/gif, image/jpg"
+                    accept="image/png, image/jpeg, image/gif, image/jpg, image/ico"
                     onChange={this.inputFileImage}
                     className="uploader__input"
                 />

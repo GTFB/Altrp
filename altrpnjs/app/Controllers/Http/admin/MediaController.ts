@@ -21,8 +21,8 @@ export default class MediaController {
   private static fileTypes: any;
   async index({ response, request }: HttpContextContract) {
     const params = request.qs();
-    const page = parseInt(params.page);
-    const pageSize = parseInt(params.pageSize);
+    const page = parseInt(params.page) || 1;
+    const pageSize = parseInt(params.pageSize) || 20;
     const searchWord = params.s;
     let media;
     const mediaToUpdate = await Media.query().whereNull("guid").select("*");
@@ -75,8 +75,34 @@ export default class MediaController {
       count = media.getMeta().total;
       pageCount = media.getMeta().last_page;
 
-      media = media.all().map((model) => {
-        return model.serialize();
+      media = await media.all().map((model) => {
+
+        let stats = fs.statSync(Application.publicPath(model.url));
+        let item = {
+          id: model.id,
+          author: model.author,
+          width: model.width,
+          height: model.height,
+          filename: model.filename,
+          url: model.url,
+          media_type: model.media_type,
+          type: model.type,
+          title: model.title,
+          alternate_text: model.alternate_text,
+          caption: model.caption,
+          description: model.description,
+          main_color: model.main_color,
+          guest_token: model.guest_token,
+          guid: model.guid,
+          created_at: model.created_at,
+          updated_at: model.updated_at,
+          media_variation: model.media_variation,
+          categories: model.categories,
+          size: MediaController.readableSize(stats.size),
+        }
+
+        //return model.serialize();
+        return item;
       });
     } else {
       media = await query
@@ -89,8 +115,6 @@ export default class MediaController {
         return model.serialize();
       });
     }
-
-
 
     return response.json({
       count,
@@ -394,25 +418,32 @@ export default class MediaController {
     const serialized = media.serialize();
 
     const stats = fs.statSync(Application.publicPath(media.url));
-    let mb = stats.size / (1024 * 1024);
+    serialized.filesize = await MediaController.readableSize(stats.size)
+
+    return serialized;
+  }
+
+
+  static readableSize(size) {
+
+    let mb = size / (1024 * 1024);
     let unit = 'Mb'
 
     if (mb < 1) {
       mb = mb * 1024;
       unit = 'Kb'
     }
-
     const isFloat = !Number.isInteger(mb);
 
     if (isFloat) {
       //@ts-ignore
-      mb = mb.toFixed(3);
+      mb = mb.toFixed(2);
     }
 
-    serialized.filesize = mb + " " + unit;
-
-    return serialized;
+    let filesize = mb + " " + unit;
+    return filesize;
   }
+
 
   async show({ params, response }) {
     const path = `/storage/media/${params.year}/${params.month}/${params.name}`;
