@@ -123,11 +123,19 @@ export default class AdminController {
     }
 
     for (const variant of FAVICONS_SIZES) {
-      jimp.read(Application.tmpPath("favicon") + `/basic.${favicon.extname}`, (err, lenna) => {
-        if(err) throw err;
-        lenna
-          .resize(variant.size, variant.size)
-          .write(Application.tmpPath("favicon") + `/favicon_${variant.size}.png`)
+      await new Promise((resolve, reject) => {
+        jimp.read(Application.tmpPath("favicon") + `/basic.${favicon.extname}`, (err, lenna) => {
+          if(err) {
+            reject(err)
+          }
+          lenna
+            .resize(variant.size, variant.size)
+            .write(Application.tmpPath("favicon") + `/favicon_${variant.size}.png`)
+          lenna
+            .resize(variant.size, variant.size)
+            .write(Application.publicPath("favicon") + `/favicon_${variant.size}.png`)
+          resolve('success')
+        })
       })
     }
 

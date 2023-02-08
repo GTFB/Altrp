@@ -24,7 +24,6 @@ export default class AltrpEvent {
         customizer => customizer.settings.event_type === actionType
           && customizer.settings.event_hook_type === hookType
       )
-      console.error(customizers.map(customizer => customizer.toJSON()));
 
       for (let customizer of customizers) {
         customizer.callCrud(data.id)

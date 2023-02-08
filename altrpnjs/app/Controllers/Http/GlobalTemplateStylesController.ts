@@ -6,15 +6,19 @@ import Template from "App/Models/Template";
 import is_null from "../../../helpers/is_null";
 import data_set from "../../../helpers/data_set";
 import data_get from "../../../helpers/data_get";
+import public_path from "../../../helpers/path/public_path";
 import is_array from "../../../helpers/is_array";
 import mbParseJSON from "../../../helpers/mbParseJSON";
+import fs from "fs";
 
 export default class GlobalTemplateStylesController {
   public async getCss(){
     return {success:true, data:`${await GlobalStyle.getCssVars()}`}
   }
   public async index() {
-
+    if(! fs.existsSync(public_path('altrp/css/vars/altrp-vars.css'))){
+      GlobalStyle.updateCssFile()
+    }
     try {
       let globalStyles = await GlobalStyle.query()
       globalStyles = _.sortBy(globalStyles, i=>{

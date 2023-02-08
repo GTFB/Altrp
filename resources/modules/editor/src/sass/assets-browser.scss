@@ -32,6 +32,12 @@
     border: 1px solid $border-gray;
     border-radius: 3px;
     background-color: #fff;
+    .pagination{
+      padding: 10px 25px !important;
+      .pagination__prev{
+        background-image: none;
+      }
+    }
   }
   &__close{
     position: absolute;

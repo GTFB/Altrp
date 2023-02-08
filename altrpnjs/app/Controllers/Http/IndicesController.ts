@@ -198,12 +198,12 @@ export default class IndicesController {
     }
   }
 
-  public async favicons({params, response}) {
+  public async favicons({params, response, }: HttpContextContract) {
     response.header('Content-type', 'image/png');
-
     let value: any = null
 
     const faviconPath = Application.tmpPath("favicon") + `/${params.path}`;
+
     const defaultFaviconPath = Application.resourcesPath("favicon") + `/altrp_${params.path}`
 
     if(fs.existsSync(faviconPath)) {

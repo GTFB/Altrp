@@ -20,6 +20,8 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import storage_path from "../../helpers/storage_path";
 import config from "../../helpers/config";
 import altrpRandomId from "../../helpers/altrpRandomId";
+import public_path from "../../helpers/path/public_path";
+import GlobalStyle from "App/Models/GlobalStyle";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -65,6 +67,10 @@ export default class PageGenerator extends BaseGenerator {
     if (!page.guid) {
       console.error(`Page ${page.id} render error. Need more data`);
       return false
+    }
+
+    if(! fs.existsSync(public_path('altrp/css/vars/altrp-vars.css'))){
+      GlobalStyle.updateCssFile()
     }
     const randomString = altrpRandomId()
 

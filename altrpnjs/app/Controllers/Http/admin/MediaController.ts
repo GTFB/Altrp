@@ -23,7 +23,7 @@ export default class MediaController {
     const params = request.qs();
     const page = parseInt(params.page) || 1;
     const pageSize = parseInt(params.pageSize) || 20;
-    const searchWord = params.s;
+    const searchWord = params.s || '';
     let media;
     const mediaToUpdate = await Media.query().whereNull("guid").select("*");
     await Promise.all(
@@ -64,8 +64,10 @@ export default class MediaController {
         .whereIn("altrp_category_objects.category_guid", categories);
     }
     let count;
+
     let pageCount = 1;
     if (pageSize && page) {
+
       media = await query
         .orderBy("id", "desc")
         .select("altrp_media.*")
@@ -105,6 +107,7 @@ export default class MediaController {
         return item;
       });
     } else {
+
       media = await query
         .orderBy("id", "desc")
         .select("altrp_media.*")
@@ -255,8 +258,8 @@ export default class MediaController {
       title.pop();
       title = title.join('');
       title = transliterate(title)
-      title = title + '_' + (new Date().valueOf())
       title = title.substring(0, 36)
+      title = title + '_' + (new Date().valueOf())
 
       let filename = title + "." + ext;
       media.title = filename
@@ -269,7 +272,7 @@ export default class MediaController {
         fs.mkdirSync(public_path(dirname), { recursive: true });
       }
       media.filename = urlBase + filename;
-
+      console.log(filename);
       // @ts-ignore
       await file.moveToDisk(dirname, { name: filename }, "local");
       let content = fs.readFileSync(public_path(dirname + filename));
@@ -348,8 +351,8 @@ export default class MediaController {
       title.pop();
       title = title.join('');
       title = transliterate(title)
-      title = title + '_' + (new Date().valueOf())
       title = title.substring(0, 36)
+      title = title + '_' + (new Date().valueOf())
 
       let filename = title + "." + ext;
       let urlBase =

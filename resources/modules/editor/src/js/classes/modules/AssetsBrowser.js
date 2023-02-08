@@ -5,6 +5,7 @@ import { assetsToggle } from "../../store/assets-browser/actions";
 import Resource from "../Resource";
 import '../../../sass/assets-browser.scss';
 import convertUrl from "../../../../../admin/src/js/helpers/convertURL";
+import Pagination from "../../../../../admin/src/components/Pagination";
 
 
 class AssetsBrowser extends Component {
@@ -36,10 +37,11 @@ class AssetsBrowser extends Component {
         }
       ],
       svgAssets: [],
-      assets: this.getAssets("media"),
-      // assets: this.getAssets('icons'),
+      assets: [],
       selectedAsset: null,
       mediaAssets: [],
+      page: 1,
+                  itemsCount: 0,
       videoAssets: []
     };
     this.mediaResource = new Resource({ route: "/admin/ajax/media?type=image" });
@@ -65,39 +67,78 @@ class AssetsBrowser extends Component {
   }
 
   async componentDidMount() {
+    this.updateAssets()
+    document.addEventListener('keydown', (event) => {
+      if (event.key === "Escape") {
+          this.toggleBrowser();
+      }
+    });
+  }
+
+
+  selectAsset(e) {
+
+    let selectedAsset = e.currentTarget.dataset.assetname;
+    this.setState(state => {
+      return { ...state, selectedAsset };
+    });
+  }
+
+  tabClick(e) {
+    this.setActiveTab(e.target.dataset.tab);
+  }
+
+  setActiveTab(tab) {
+    this.setState(state => {
+      return { ...state, activeTab: tab, page: 1, selectedAsset: null };
+    }, ()=>{
+      this.updateAssets();
+    });
+  }
+
+  updateAssets = async () => {
+
     try {
-      // this.videoResource.getAll()
-      //   .then(videoAssets => this.setState({ videoAssets }));
+      let itemsCount = 0
+      let media
+      switch (this.state.activeTab) {
+        case 'media':{
 
-      // this.setState(state => {
-      //   return { ...state, svgAssets: resSvg };
-      // });
+          let _resMedia = await this.mediaResource.getQueried({
+            page: this.state.page
+          });
+           media = _resMedia.media;
+          itemsCount = _resMedia.count || 0
+        }
+          break;
+        case 'icons':{
+          let _resSvg = await this.svgResource.getQueried({
+            page: this.state.page
+          });
+           media = _resSvg.media;
 
-      // if(_.isArray(resVideo.media)){
-      //   resVideo = resVideo.media
-      // }
+          itemsCount = _resSvg.count || 0
+        }
+          break;
+        case 'video':{
 
-      // if(_.isArray(resSvg.media)){
-      //   resSvg = resSvg.media
-      // }
-
-      // if(_.isArray(resMedia.media)){
-      //   resMedia = resMedia.media
-      // }
-
-      let {media: resMedia = []} = await this.mediaResource.getAll();
-      let {media: resVideo = []} = await this.videoResource.getAll();
-      let {media: resSvg = []} = await this.svgResource.getAll();
-
+          let _resVideo = await this.videoResource.getQueried({
+            page: this.state.page
+          });
+          media = _resVideo.media;
+          itemsCount = _resVideo.count || 0
+        }
+          break;
+      }
       this.setState(state => {
         state = {
           ...state,
-          mediaAssets: _.isArray(resMedia) ? resMedia : [],
-          videoAssets: _.isArray(resVideo) ? resVideo : [],
-          svgAssets: _.isArray(resSvg) ? resSvg : []
+          itemsCount,
         };
-        if (state.activeTab === "media") {
-          state.assets = resMedia;
+        if(this.state.activeTab === 'video'){
+          state.videoAssets =  media
+        } else  {
+          state.assets = media;
         }
         if (window.altrpEditor?.altimageEnabled) {
           state.tabs = [
@@ -126,45 +167,6 @@ class AssetsBrowser extends Component {
       console.log("error", error);
     }
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key === "Escape") {
-          this.toggleBrowser();
-      }
-    });
-  }
-  getAssets(tab) {
-    if (! tab) {
-      tab = this.state.activeTab;
-    }
-
-    switch (tab) {
-      case "icons": {
-        return this.state.svgAssets
-        // return [ ...iconsManager().getIconsList(), ...this.state.svgAssets];
-      }
-      case "media": {
-        return this.state ? this.state.mediaAssets : [];
-      }
-    }
-    return [];
-  }
-
-  selectAsset(e) {
-
-    let selectedAsset = e.currentTarget.dataset.assetname;
-    this.setState(state => {
-      return { ...state, selectedAsset };
-    });
-  }
-
-  tabClick(e) {
-    this.setActiveTab(e.target.dataset.tab);
-  }
-
-  setActiveTab(tab) {
-    this.setState(state => {
-      return { ...state, activeTab: tab, assets: this.getAssets(tab) };
-    });
   }
 
   toggleBrowser() {
@@ -224,7 +226,9 @@ class AssetsBrowser extends Component {
       });
     }
   }
-
+  getPageCount = ()=>{
+    return Math.ceil(this.state.itemsCount / 20)
+  }
   render() {
     const { videoAssets, activeTab } = this.state;
     const { rawEnable, } = this.props;
@@ -242,6 +246,7 @@ class AssetsBrowser extends Component {
     if(! this.props.active){
       return  '';
     }
+    const pageCount = this.getPageCount();
 
     return (
       <div className={classes}>
@@ -271,7 +276,7 @@ class AssetsBrowser extends Component {
               })}
             </div>
           </div>
-          {this.state.assets.length ? (
+          {activeTab !== 'video' && this.state.assets.length ? (
             <div className="assets-browser-choose-frame">
               {this.state.assets.map(asset => {
                 let AssetContent;
@@ -338,6 +343,19 @@ class AssetsBrowser extends Component {
             })}
           </div>}
           <div className="assets-browser-bottom">
+            <Pagination
+              pageCount={pageCount}
+              itemsCount={this.state.itemsCount}
+              currentPage={this.state.page}
+              changePage={async (page) => {
+                if (this.state.page !== page) {
+                  await this.setState({page: page, selectedAsset: null}, ()=>{
+                    this.updateAssets(this.state.activeLink)
+                  })
+                }
+              }}
+
+            />
             {!(activeTab === 'icons') && (
               <button className={buttonClasses} onClick={this.chooseAsset}>
                 Choose
