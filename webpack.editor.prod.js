@@ -27,7 +27,7 @@ module.exports = {
         loader: "babel-loader",
         options: {
           presets: ["@babel/env", "@babel/preset-react"],
-          plugins: ["@babel/plugin-syntax-jsx", ]
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
         }
       },
       // {
@@ -69,22 +69,7 @@ module.exports = {
       },
 
       {
-        test: /\.svg$/,
-        exclude: /slick.svg$|spritesheet.svg$|jsoneditor-icons.svg$/,
-        use: [
-          {
-            loader: "babel-loader"
-          },
-          {
-            loader: "react-svg-loader",
-            options: {
-              jsx: true // true outputs JSX tags
-            }
-          }
-        ]
-      },
-      {
-        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg|jsoneditor-icons.svg)$/,
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg|jsoneditor-icons.svg|left.svg)$/,
         use: ["file-loader"]
       }
     ]

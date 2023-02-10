@@ -48,7 +48,10 @@ export default function renderTabs(settings, device,) {
       // })
 
       const Template = `<div className="inner-template"></div>`
+      let wysiwyg_items = tab.wysiwyg_items || ''
 
+      wysiwyg_items = wysiwyg_items.replace(/{{/g, '{{{')
+      wysiwyg_items = wysiwyg_items.replace(/}}/g, '}}}')
       return {
         id: `tab-${idx + 1}`,
         className: "altrp-tab-btn" +
@@ -61,7 +64,7 @@ export default function renderTabs(settings, device,) {
             ${tab.card_template ? `
               ${Template}
             ` : `
-              ${tab.wysiwyg_items}
+              ${wysiwyg_items}
             `}
           </div>
         `,

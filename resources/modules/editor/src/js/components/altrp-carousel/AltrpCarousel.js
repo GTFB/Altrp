@@ -31,7 +31,8 @@ class AltrpCarousel extends Component {
   }
 
   componentDidMount() {
-    this.props.slides_repeater.forEach(image => {
+    let slides_repeater = getResponsiveSetting(this.props,'slides_repeater', '', []) ;
+    slides_repeater.forEach(image => {
       this.setState((state) => {
 
         let img = {...image.image_slides_repeater} || {};
@@ -44,10 +45,11 @@ class AltrpCarousel extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.slides_repeater !== prevProps.slides_repeater
+    let slides_repeater = getResponsiveSetting(this.props,'slides_repeater', '', []) ;
+    if(slides_repeater !== prevProps.slides_repeater
         && getResponsiveSetting(this.props, 'slides_item_source', '', 'custom') !== 'custom') {
       let sliderImagesArray = [];
-      this.props.slides_repeater.forEach(image => {
+      slides_repeater.forEach(image => {
         let img = {...image.image_slides_repeater} || {};
         img.url = img.url || '/img/nullImage.png';
         sliderImagesArray.push(img.url);
@@ -68,6 +70,7 @@ class AltrpCarousel extends Component {
       }
     }
     let {synchronized_id} = this.props;
+
     if(synchronized_id){
       synchronized_id = synchronized_id.split(',');
       synchronized_id.forEach(id=>{
@@ -78,7 +81,37 @@ class AltrpCarousel extends Component {
       });
     }
   }
+  wrapperClick = (e)=>{
+    if(isEditor()){
+      return
+    }
+    if(! _.isArray(this.carouselsToSynchronize)){
+      return;
+    }
+    let maxView = Number(this.props.elementSettings.getResponsiveLockedSetting('per_view_slides_content')) || 1;
+    const trackDiv = e.target.closest('.slick-track')
+    if(! trackDiv){
+      return;
+    }
+    const slidesLength = trackDiv.querySelectorAll('.slick-slide').length
+    if(maxView < slidesLength){
+      return
+    }
 
+    let slideIndex = e.target.closest('.slick-slide')
+    if(! slideIndex){
+      return;
+    }
+    slideIndex = Number(slideIndex.getAttribute('data-index'))
+
+    if(_.isNaN(slideIndex)){
+      return
+    }
+    e.preventDefault()
+    e.stopPropagation()
+    this.carouselsToSynchronize.forEach(carousel => {carousel.setSlide(slideIndex)})
+
+  }
   /**
    * Добавляем компонент слайдера к синхронизируемым
    */
@@ -134,10 +167,12 @@ class AltrpCarousel extends Component {
     let dotsClasses = `${classes} altrp-carousel-dots`;
 
     let sliderClasses = `${classes} altrp-carousel-slides`;
+    let dots_navigation_content = getResponsiveSetting(this.props,'dots_navigation_content') ;
+    let dots_position_navigation_content = getResponsiveSetting(this.props,'dots_position_navigation_content') ;
 
     //позиция точек
-    if(this.props.dots_navigation_content) {
-      switch (this.props.dots_position_navigation_content) {
+    if(dots_navigation_content) {
+      switch (dots_position_navigation_content) {
         case "topLeft":
           dotsClasses += " altrp-carousel-dots-top-left";
           sliderClasses += " altrp-carousel-slides-dots-top";
@@ -165,9 +200,10 @@ class AltrpCarousel extends Component {
     }
     // настройки слайдера
 
-    let infinite = this.props.infinite_loop_additional_content;
+    let infinite = this.props.elementSettings.getResponsiveLockedSetting('infinite_loop_additional_content')
     let maxView = Number(this.props.elementSettings.getResponsiveLockedSetting('per_view_slides_content')) || 1;
     let rows = Number(this.props.elementSettings.getResponsiveLockedSetting('per_row_slides_content')) || 1;
+    let vertical = this.props.elementSettings.getResponsiveLockedSetting('vertical') || false;
 
     if(rows > 1) {
       maxView = maxView * rows
@@ -177,7 +213,13 @@ class AltrpCarousel extends Component {
       infinite = false
     }
 
+    const transition_duration_additional_content = getResponsiveSetting(this.props, 'transition_duration_additional_content')
+    const autoplay_additional_content = getResponsiveSetting(this.props, 'autoplay_additional_content')
+    const pause_on_interaction_loop_additional_content = getResponsiveSetting(this.props, 'pause_on_interaction_loop_additional_content')
+    const transition_autoplay_duration_additional_content = getResponsiveSetting(this.props, 'transition_autoplay_duration_additional_content')
+
     let settings = {
+      vertical,
       arrows: false,
       customPaging: (idx) => {
         let active = false;
@@ -190,13 +232,13 @@ class AltrpCarousel extends Component {
             </a>
         )},
       dotsClass: dotsClasses,
-      dots: this.props.dots_navigation_content,
+      dots: dots_navigation_content,
       infinite,
-      pauseOnHover: this.props.pause_on_interaction_loop_additional_content,
-      autoplay: this.props.autoplay_additional_content,
+      pauseOnHover: pause_on_interaction_loop_additional_content,
+      autoplay: autoplay_additional_content,
       className: sliderClasses,
-      autoplaySpeed: Number(this.props.transition_autoplay_duration_additional_content),
-      speed: Number(this.props.transition_duration_additional_content),
+      autoplaySpeed: Number(transition_autoplay_duration_additional_content),
+      speed: Number(transition_duration_additional_content),
       slidesToShow: Number(this.props.elementSettings.getResponsiveLockedSetting('per_view_slides_content')),
       slidesToScroll: Number(this.props.elementSettings.getResponsiveLockedSetting('to_scroll_slides_content')),
       rows,
@@ -206,6 +248,8 @@ class AltrpCarousel extends Component {
       },
       // adaptiveHeight: false,
     };
+    const lightbox_slides_content = getResponsiveSetting(this.props, 'lightbox_slides_content')
+    const overlay_select_heading_additional_content = getResponsiveSetting(this.props, 'overlay_select_heading_additional_content')
 
     // слайды
     const itemsSourceType = getResponsiveSetting(this.props, 'slides_item_source', '', 'custom');
@@ -242,7 +286,7 @@ class AltrpCarousel extends Component {
               <div className={`${classes} altrp-carousel-slide`} key={slide.id}
                    onClick={()=>{
                      this.slider.slickGoTo(slide.id);
-                     if(this.props.lightbox_slides_content && getResponsiveSetting(this.props, 'lightbox_s_click')) {
+                     if(ightbox_slides_content && getResponsiveSetting(this.props, 'lightbox_s_click')) {
                        this.setState((state) => ({
                          ...state,
                          activeSlide: slide.id,
@@ -252,7 +296,7 @@ class AltrpCarousel extends Component {
                    }}
                    onDoubleClick={ () => {
                      this.slider.slickGoTo(slide.id);
-                     if(this.props.lightbox_slides_content) {
+                     if(lightbox_slides_content) {
                        this.setState((state) => ({
                          ...state,
                          activeSlide: slide.id,
@@ -265,7 +309,7 @@ class AltrpCarousel extends Component {
                   content
                 }
                 {
-                  this.props.overlay_select_heading_additional_content === "text" ? (
+                  overlay_select_heading_additional_content === "text" ? (
                       <div className={`${classes} altrp-carousel-slide-overlay`}>
                         <p className={`${classes} altrp-carousel-slide-overlay-text`}>{slide.overlay_text_repeater}</p>
                       </div>
@@ -373,7 +417,7 @@ class AltrpCarousel extends Component {
                 <div className={`${classes} altrp-carousel-slide`} key={idx}
                      onClick={()=>{
                        this.slider.slickGoTo(idx);
-                       if(this.props.lightbox_slides_content) {
+                       if(lightbox_slides_content) {
                          this.setState((state) => ({
                            ...state,
                            openLightBox: true
@@ -382,7 +426,7 @@ class AltrpCarousel extends Component {
                      }}
                      onDoubleClick={ () => {
                        this.slider.slickGoTo(idx);
-                       if(this.props.lightbox_slides_content) {
+                       if(lightbox_slides_content) {
                          this.setState((state) => ({
                            ...state,
                            openLightBox: true
@@ -405,8 +449,9 @@ class AltrpCarousel extends Component {
     let nextArrow = ` ${classes} `;
 
     let arrowsClasses = ` ${classes} `;
+    const arrows_position_navigation_content = getResponsiveSetting(this.props, 'arrows_position_navigation_content')
 
-    switch (this.props.arrows_position_navigation_content) {
+    switch (arrows_position_navigation_content) {
       case "topLeft":
         arrowsClasses += " altrp-carousel-arrow-top-left altrp-carousel-arrow-top-wrapper";
         break;
@@ -428,20 +473,24 @@ class AltrpCarousel extends Component {
     }
 
     //стрелки
-    prevArrow = this.props.arrows_navigation_content ? (
+    const arrows_navigation_content = getResponsiveSetting(this.props, 'arrows_navigation_content')
+    const slides_repeater = getResponsiveSetting(this.props, 'slides_repeater')
+    const color_lightbox_style = getResponsiveSetting(this.props, 'color_lightbox_style')
+
+    prevArrow = arrows_navigation_content ? (
         <div className={`${classes} altrp-carousel-arrow-prev altrp-carousel-arrow`} onClick={this.previous}>
           <ArrowIcon/>
         </div>
       ) : "";
 
-    nextArrow = this.props.arrows_navigation_content ? (
+    nextArrow = arrows_navigation_content ? (
       <div className={`${classes} altrp-carousel-arrow-next altrp-carousel-arrow`} onClick={this.next}>
         <ArrowIcon/>
       </div>
     ) : "";
 
     let lightbox = "";
-    if(this.props.lightbox_slides_content) {
+    if(lightbox_slides_content) {
       let imagesSrcs = this.state.sliderImages;
 
       lightbox =  this.state.openLightBox ? (
@@ -449,27 +498,29 @@ class AltrpCarousel extends Component {
           images={imagesSrcs}
           current={this.state.activeSlide}
           carousel={true}
-          carouselItems={this.props.slides_repeater}
+          carouselItems={slides_repeater}
           settings={{
             onCloseRequest: () => this.setState({openLightBox: false})
           }}
-          color={this.props.color_lightbox_style}
+          color={color_lightbox_style}
         />
       ) : ""
 
     }
     slidesMap
-    return <AltrpCarouselWrapper settings={{...this.props}} className={`${classes} altrp-carousel`}>
+    return <AltrpCarouselWrapper
+      onClick={this.wrapperClick}
+      settings={{...this.props}} className={`${classes} altrp-carousel`}>
       {
-        this.props.lightbox_slides_content ? lightbox : ""
+        lightbox_slides_content ? lightbox : ""
       }
-      { this.props.arrows_position_navigation_content === "center" ?
+      { arrows_position_navigation_content === "center" ?
         prevArrow
         : ""
       }
       <div className={carouselContainerClasses}>
         {
-          this.props.arrows_position_navigation_content !== "center" ? (
+          arrows_position_navigation_content !== "center" ? (
             <div className={"altrp-carousel-arrows-container" + arrowsClasses}>
               {prevArrow}
               {nextArrow}
@@ -483,7 +534,7 @@ class AltrpCarousel extends Component {
           }
         </Slider>
       </div>
-      { this.props.arrows_position_navigation_content === "center" ? nextArrow : "" }
+      { arrows_position_navigation_content === "center" ? nextArrow : "" }
     </AltrpCarouselWrapper>
   }
 }

@@ -1,7 +1,7 @@
 
 
 export default function renderText(settings) {
-  let text = settings.text
+  let text = settings.text || ''
   text = text.replace(/{{/g, '{{{')
   text = text.replace(/}}/g, '}}}')
   return `<div class="altrp-text ck ck-content${(settings.position_css_classes || "")

@@ -369,7 +369,6 @@ class Carousel extends BaseElement {
     this.addControl('arrows_navigation_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Arrows',
-      default: false,
       locked: true,
     });
 
@@ -477,6 +476,13 @@ class Carousel extends BaseElement {
       locked: true,
     });
 
+    this.addControl('vertical', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Vertical',
+      default: false,
+      locked: true,
+    });
+
     this.addControl('transition_autoplay_duration_additional_content', {
       conditions: {
         'autoplay_additional_content': true,
@@ -527,78 +533,78 @@ class Carousel extends BaseElement {
       locked: true,
     });
 
-    this.addControl('overlay_animation_text_heading_additional_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Animation',
-        default: 'fade',
-        options: [
-          {
-            'value': 'none',
-            'label': 'none',
-          },
-          {
-            'value': 'fade',
-            'label': 'fade',
-          },
-          {
-            'value': 'scaleUp',
-            'label': 'scale up',
-          },
-          {
-            'value': 'scaleDown',
-            'label': 'scale down',
-          },
-          {
-            'value': 'slideTop',
-            'label': 'slide top',
-          },
-          {
-            'value': 'slideBottom',
-            'label': 'slide bottom',
-          },
-          {
-            'value': 'slideLeft',
-            'label': 'slide left',
-          },
-          {
-            'value': 'slideRight',
-            'label': 'slide right',
-          },
-          {
-            'value': 'slideTopSmall',
-            'label': 'slide top small',
-          },
-          {
-            'value': 'slideBottomSmall',
-            'label': 'slide bottom small',
-          },
-          {
-            'value': 'slideLeftSmall',
-            'label': 'slide left small',
-          },
-          {
-            'value': 'slideRightSmall',
-            'label': 'slide right small',
-          },
-          {
-            'value': 'slideTopMedium',
-            'label': 'slide top medium',
-          },
-          {
-            'value': 'slideBottomMedium',
-            'label': 'slide bottom medium',
-          },
-          {
-            'value': 'slideLeftMedium',
-            'label': 'slide left medium',
-          },
-          {
-            'value': 'slideRightMedium',
-            'label': 'slide right medium',
-          },
-        ],
-      }
-    );
+    // this.addControl('overlay_animation_text_heading_additional_content', {
+    //     type: CONTROLLER_SELECT,
+    //     label: 'Animation',
+    //     default: 'fade',
+    //     options: [
+    //       {
+    //         'value': 'none',
+    //         'label': 'none',
+    //       },
+    //       {
+    //         'value': 'fade',
+    //         'label': 'fade',
+    //       },
+    //       {
+    //         'value': 'scaleUp',
+    //         'label': 'scale up',
+    //       },
+    //       {
+    //         'value': 'scaleDown',
+    //         'label': 'scale down',
+    //       },
+    //       {
+    //         'value': 'slideTop',
+    //         'label': 'slide top',
+    //       },
+    //       {
+    //         'value': 'slideBottom',
+    //         'label': 'slide bottom',
+    //       },
+    //       {
+    //         'value': 'slideLeft',
+    //         'label': 'slide left',
+    //       },
+    //       {
+    //         'value': 'slideRight',
+    //         'label': 'slide right',
+    //       },
+    //       {
+    //         'value': 'slideTopSmall',
+    //         'label': 'slide top small',
+    //       },
+    //       {
+    //         'value': 'slideBottomSmall',
+    //         'label': 'slide bottom small',
+    //       },
+    //       {
+    //         'value': 'slideLeftSmall',
+    //         'label': 'slide left small',
+    //       },
+    //       {
+    //         'value': 'slideRightSmall',
+    //         'label': 'slide right small',
+    //       },
+    //       {
+    //         'value': 'slideTopMedium',
+    //         'label': 'slide top medium',
+    //       },
+    //       {
+    //         'value': 'slideBottomMedium',
+    //         'label': 'slide bottom medium',
+    //       },
+    //       {
+    //         'value': 'slideLeftMedium',
+    //         'label': 'slide left medium',
+    //       },
+    //       {
+    //         'value': 'slideRightMedium',
+    //         'label': 'slide right medium',
+    //       },
+    //     ],
+    //   }
+    // );
 
     this.addControl('image_heading_additional_content', {
       type: CONTROLLER_HEADING,
@@ -634,6 +640,7 @@ class Carousel extends BaseElement {
     this.addControl('synchronized_id', {
       label: 'Another Carousel IDs',
       dynamic: false,
+      locked: true,
     });
 
     this.endControlSection();
@@ -829,10 +836,8 @@ class Carousel extends BaseElement {
       },
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset (no center)',
-      default: {
-        unit: 'px',
-      },
       units: ['px', '%', 'vh', 'vw'],
+      locked: true,
       max: 200,
       min: -200,
     });
@@ -853,11 +858,9 @@ class Carousel extends BaseElement {
       },
       type: CONTROLLER_SLIDER,
       label: 'Dots size',
-      default: {
-        unit: 'px',
-      },
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
+      locked: true,
       min: 0,
     });
 

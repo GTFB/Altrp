@@ -1258,11 +1258,11 @@ export default class Page extends BaseModel {
     delete data.settingsLock
     // }
     _.each(data.settings, (value, key) => {
-      if (_.isObject(value) && _.isEmpty(value)) {
+      if (_.isObject(value) && _.isEmpty(value) ) {
         delete data.settings[key]
         return
       }
-      if(! value){
+      if(! value && value !== false && value !== 0){
         delete data.settings[key]
       }
     })
