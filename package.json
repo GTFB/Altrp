@@ -135,7 +135,7 @@
         "mustache": "^4.2.0",
         "nivo": "^0.31.0",
         "node-html-parser": "^3.2.0",
-        "nodemon": "^2.0.7",
+        "nodemon": "^2.0.20",
         "object-diff": "^0.0.4",
         "oidc-client": "^1.11.5",
         "passport": "^0.4.1",
