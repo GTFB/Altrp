@@ -78,33 +78,33 @@ export default class MediaController {
       pageCount = media.getMeta().last_page;
 
       media = await media.all().map((model) => {
-
-        let stats = fs.statSync(Application.publicPath(model.url));
-        let item = {
-          id: model.id,
-          author: model.author,
-          width: model.width,
-          height: model.height,
-          filename: model.filename,
-          url: model.url,
-          media_type: model.media_type,
-          type: model.type,
-          title: model.title,
-          alternate_text: model.alternate_text,
-          caption: model.caption,
-          description: model.description,
-          main_color: model.main_color,
-          guest_token: model.guest_token,
-          guid: model.guid,
-          created_at: model.created_at,
-          updated_at: model.updated_at,
-          media_variation: model.media_variation,
-          categories: model.categories,
-          size: MediaController.readableSize(stats.size),
+        if (fs.existsSync(Application.publicPath(model.url))) {
+          let stats = fs.statSync(Application.publicPath(model.url));
+          let item = {
+            id: model.id,
+            author: model.author,
+            width: model.width,
+            height: model.height,
+            filename: model.filename,
+            url: model.url,
+            media_type: model.media_type,
+            type: model.type,
+            title: model.title,
+            alternate_text: model.alternate_text,
+            caption: model.caption,
+            description: model.description,
+            main_color: model.main_color,
+            guest_token: model.guest_token,
+            guid: model.guid,
+            created_at: model.created_at,
+            updated_at: model.updated_at,
+            media_variation: model.media_variation,
+            categories: model.categories,
+            size: MediaController.readableSize(stats.size),
+          }
+          return item;
         }
-
-        //return model.serialize();
-        return item;
+        return model.serialize();
       });
     } else {
 
