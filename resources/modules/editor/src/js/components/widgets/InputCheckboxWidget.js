@@ -4,7 +4,6 @@ import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/
 import parseParamsFromString from "../../../../../front-app/src/js/functions/parseParamsFromString";
 import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
-import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
 import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
 import altrpCompare from "../../../../../front-app/src/js/functions/altrpCompare";
@@ -468,8 +467,6 @@ class InputCheckboxWidget extends Component {
         "query_sync"
       );
       if(!isEditor() && query_sync){
-
-
         const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
         updateQueryString(fieldName, value)
       }

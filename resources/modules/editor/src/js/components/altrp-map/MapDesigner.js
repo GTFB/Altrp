@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import  { useSelector,  } from "react-redux";
 import L, { CRS } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
@@ -70,7 +71,7 @@ function MapDesigner({
       return {
         feature: {
           geometry: {
-            coordinates: [elem.marker_lat, elem.marker_long]
+            coordinates: [ elem.marker_long, elem.marker_lat,]
           },
           properties: {
             tooltip: elem.marker_tooltip
@@ -82,6 +83,46 @@ function MapDesigner({
 
   const [markers, setMarkers] = useState(dynamicMarkers || null);
 
+  const path = element.getLockedSettings("path");
+  const  use_path = element.getLockedSettings("use_path");
+  const reduxState = useSelector(state=>state)
+  useEffect(()=>{
+    if(isEditor()){
+      return
+    }
+    if(! use_path && ! path){
+      return;
+    }
+    let data = window.altrpHelpers?.getDataByPath(path)
+    if(! data || !_.isArray(data)){
+      return;
+    }
+    data = data.filter(i=>{
+      if(!Number(i.marker_lat) && Number(i.marker_lat) !== 0){
+        return false
+      }
+      if(!Number(i.marker_long) && Number(i.marker_long) !== 0){
+        return false
+      }
+      return  ! ! i.marker_tooltip
+    })
+    data = data.map(elem => {
+      return {
+        feature: {
+          geometry: {
+            coordinates: [ elem.marker_long, elem.marker_lat,]
+          },
+          properties: {
+            tooltip: elem.marker_tooltip
+          }
+        }
+      }
+    })
+    setMarkers(data)
+  }, [
+    isEditor(),
+    reduxState
+  ])
   const updateGeoObjectToModel = geoObject => {
     const { dbID } = geoObject;
     let data = _.cloneDeep(geoObject, {});
@@ -383,7 +424,7 @@ function MapDesigner({
 
   let parent = useState(document.body);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isEditor()) {
       parent[1](
         document.getElementById("editorContent").contentWindow.document.body

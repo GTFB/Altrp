@@ -599,10 +599,8 @@ class InputRadioWidget extends Component {
         >
           {options.map((option, idx) => {
             let checked;
-            /**
-             * Если значение или опция число, то приведем к числу перед сравнением
-             */
-              checked = altrpCompare(value, option.value, "==");
+
+            checked = altrpCompare(value, option.value, "==");
 
             return (
               <Radio

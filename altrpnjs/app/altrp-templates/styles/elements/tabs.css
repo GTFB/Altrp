@@ -201,6 +201,7 @@
 .altrp-tab {
     width: 100%;
     display: block !important;
+    word-wrap: break-word;
 }
 
 .bp3-tab-list > *:not(:last-child) {

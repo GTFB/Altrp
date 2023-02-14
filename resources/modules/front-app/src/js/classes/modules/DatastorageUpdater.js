@@ -35,7 +35,6 @@ class DataStorageUpdater extends AltrpModel {
       }
       this.queryString = queryString
 
-
       this.updateCurrent(currentDataSources, false)
     }
   }, 500)
@@ -114,7 +113,6 @@ class DataStorageUpdater extends AltrpModel {
         })
       );
     });
-
     // dataSources = _.sortBy(dataSources, ['data.priority']);
     /**
      * @member {Datasource} dataSource
@@ -169,7 +167,7 @@ class DataStorageUpdater extends AltrpModel {
                 window.altrpPreloadedDatasources,
                 dataSource.getAlias()
               );
-              if (preloadedData) {
+              if (preloadedData && ! dataSource.getProperty('query_sync')) {
                 res = preloadedData;
                 _.unset(
                   window.altrpPreloadedDatasources,
@@ -187,6 +185,7 @@ class DataStorageUpdater extends AltrpModel {
                   }).get(id);
                 }
               } else if (!_.isEmpty(params)) {
+
                 params = {
                   ...params,
                   ...newParams,
@@ -198,6 +197,7 @@ class DataStorageUpdater extends AltrpModel {
                 }).getQueried(params);
                 dataSource.params = _.cloneDeep(params);
               } else {
+
                 res = await new Resource({
                   route: dataSource.getWebUrl(),
                 }).getAll();

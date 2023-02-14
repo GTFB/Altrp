@@ -12,6 +12,7 @@ const MarkerCluster = ({ markers, FG }) => {
   const { map } = useMap();
 
   let markersData = markers.map(item => {
+
     return {
       position: {
         lat: parseFloat(item.feature?.geometry?.coordinates[1]),
@@ -26,6 +27,7 @@ const MarkerCluster = ({ markers, FG }) => {
   useEffect(() => {
     mcg.clearLayers();
     markersData.forEach(({ position, tooltip, popup, icon }) => {
+
       const marker = L.marker(new L.LatLng(position.lat, position.lng), {
         icon: customIcon(icon, "#3388ff", [25, 41])
       })

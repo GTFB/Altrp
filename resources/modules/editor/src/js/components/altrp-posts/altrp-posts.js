@@ -15,32 +15,63 @@ import Pagination from "../altrp-table/components/Pagination";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 import replaceContentWithData from '../../../../../front-app/src/js/functions/replaceContentWithData'
 import prepareHtml from "../../../../../front-app/src/js/helpers/prepareHtml";
+import getQueryString from "../../../../../front-app/src/js/functions/getQueryString";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
+import updateQueryString from "../../../../../front-app/src/js/functions/updateQueryString";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+
+    let state = {
       simpleTemplate: "",
       simpleTemplateId: null,
       currentPage: 1,
       posts: [],
       finalHtml: {}
     };
+    if(! isEditor()){
+      this.query_sync = props.element.getResponsiveSetting('query_sync')
+    }
+    state.pageSize =
+      Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
     this.htmlStore = {}
     this.postsComponents = {};
-    if(_.get(this.props.settings, "load-html-cards")){
-      appStore.subscribe(()=>this.onStoreUpdate())
+    if (_.get(this.props.settings, "load-html-cards")) {
+      appStore.subscribe(() => this.onStoreUpdate())
     }
+    const qs = getQueryString()
+    if (this.query_sync && qs.page && qs.page != state.currentPage) {
+      state.currentPage = Number(qs.page)
+    }
+
+    this.state = state
   }
 
   /**
    * Компонент загрузился
    */
   async componentDidMount() {
-    const { settings } = this.props;
+    const {settings} = this.props;
     let simpleTemplateId = _.get(settings, "posts_card_template");
     if (simpleTemplateId) {
       this.updateSimpleTemplate(simpleTemplateId)
+    }
+    if (this.props.element.getResponsiveSetting('query_update')
+      && this.query_sync
+      && !isEditor()) {
+      document.addEventListener('altrp-query-updated', this.onQueryUpdated)
+    }
+  }
+
+  onQueryUpdated = (e) => {
+    const {data} = (e.detail)
+    if(! data?.changed?.page){
+      this.setState({currentPage: 1})
+      updateQueryString({
+        page: 1,
+        pageSize: this.state.pageSize
+      })
     }
   }
 
@@ -52,11 +83,17 @@ class AltrpPosts extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
 
     if (!isEditor()) {
-      if(this.props.data !== nextProps.data && _.isEqual(this.props.data, nextProps.data)){
+
+      if (this.query_sync
+        && nextState.currentPage !== this.state.currentPage) {
+        return false
+      }
+      if (this.props.data !== nextProps.data && _.isEqual(this.props.data, nextProps.data)) {
         return false
       }
       return true;
     }
+
     if (this.props.settings !== nextProps.settings) {
       return true;
     }
@@ -91,37 +128,39 @@ class AltrpPosts extends React.Component {
     if (this.state.currentPage !== nextState.currentPage) {
       return true;
     }
-    console.log(false);
+
     return false;
   }
 
-  updateSimpleTemplate = (simpleTemplateId)=>{
-    const { settings } = this.props;
+
+  updateSimpleTemplate = (simpleTemplateId) => {
+    const {settings} = this.props;
     const loadHtmlCards = _.get(settings, "load-html-cards")
     this.setState(
-      (state) => ({ ...state, simpleTemplateId }),
+      (state) => ({...state, simpleTemplateId}),
       async () => {
-        if(loadHtmlCards){
+        if (loadHtmlCards) {
           let htmlTemplate = await templateLoader.loadHtmlTemplate(
             simpleTemplateId
           );
-          this.setState((state) => ({ ...state, htmlTemplate }));
+          this.setState((state) => ({...state, htmlTemplate}));
         } else {
           let template = await templateLoader.loadParsedTemplate(
             simpleTemplateId
           );
-          this.setState((state) => ({ ...state, simpleTemplate: template }));
+          this.setState((state) => ({...state, simpleTemplate: template}));
         }
       }
     );
   }
+
   /**
    * Компонент обновился
    * @param {{}} prevProps
    */
   async componentDidUpdate(prevProps) {
-    const { settings } = this.props;
-    const { simpleTemplateId, hoverSimpleTemplateId } = this.state;
+    const {settings} = this.props;
+    const {simpleTemplateId, hoverSimpleTemplateId} = this.state;
     const newSimpleTemplateId = _.get(settings, "posts_card_template");
 
     const newHoverSimpleTemplateId = _.get(
@@ -134,7 +173,7 @@ class AltrpPosts extends React.Component {
         ...state,
         posts: prevProps.data,
       }));
-      if (this.state.currentPage > 1) this.setPage(1)
+      if (this.state.currentPage > 1 && ! this.query_sync) this.setPage(1)
     }
     if (this.props.data !== prevProps.data) {
       this.postsComponents = {};
@@ -169,7 +208,7 @@ class AltrpPosts extends React.Component {
         async () => {
 
           const loadHtmlCards = _.get(settings, "load-html-cards")
-          if(loadHtmlCards){
+          if (loadHtmlCards) {
             let hoverHtmlTemplate = await templateLoader.loadHtmlTemplate(newHoverSimpleTemplateId)
 
             this.setState((state) => ({
@@ -191,31 +230,31 @@ class AltrpPosts extends React.Component {
     }
   }
 
-  checkStore(){
+  checkStore() {
     const state = appStore.getState()
-    if(this.altrpPageState !== state.altrpPageState){
+    if (this.altrpPageState !== state.altrpPageState) {
       this.altrpPageState = state.altrpPageState
       return true
     }
-    if(this.currentDataStorage !== state.currentDataStorage){
+    if (this.currentDataStorage !== state.currentDataStorage) {
       this.currentDataStorage = state.currentDataStorage
       return true
     }
-    if(this.altrpresponses !== state.altrpresponses){
+    if (this.altrpresponses !== state.altrpresponses) {
       this.altrpresponses = state.altrpresponses
       return true
     }
 
-    if(this.altrpresponses !== state.altrpresponses){
+    if (this.altrpresponses !== state.altrpresponses) {
       this.altrpresponses = state.altrpresponses
       return true
     }
 
-    if(this.currentModel !== state.currentModel){
+    if (this.currentModel !== state.currentModel) {
       this.currentModel = state.currentModel
       return true
     }
-    if(this.formsStore !== state.formsStore){
+    if (this.formsStore !== state.formsStore) {
       this.formsStore = state.formsStore
       return true
     }
@@ -223,15 +262,15 @@ class AltrpPosts extends React.Component {
     return false;
   }
 
-  onStoreUpdate = ()=>{
-    if(! this.state.htmlTemplate){
+  onStoreUpdate = () => {
+    if (!this.state.htmlTemplate) {
       return
     }
-    if(! this.checkStore()){
+    if (!this.checkStore()) {
       return
     }
 
-    let { data: posts } = this.props;
+    let {data: posts} = this.props;
     if (!_.isArray(posts) && _.isObject(posts)) {
       posts = [posts];
     }
@@ -239,7 +278,7 @@ class AltrpPosts extends React.Component {
       posts = [];
     }
     let postsStart = 0;
-    const { currentPage } = this.state;
+    const {currentPage} = this.state;
     const posts_per_page =
       Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
     if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {
@@ -248,16 +287,16 @@ class AltrpPosts extends React.Component {
       }
       posts = posts.slice(postsStart, postsStart + posts_per_page);
     }
-    posts.forEach((p, idx)=>{
+    posts.forEach((p, idx) => {
 
       const transitionType = _.get(
         this.props.settings,
         "posts_transition_type",
         null
       );
-      let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
+      let {hoverHtmlTemplate = '', htmlTemplate} = this.state
       let post = this.props.data[idx] || this.props.data;
-      if(hoverHtmlTemplate){
+      if (hoverHtmlTemplate) {
         htmlTemplate += `<div
             class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
           >
@@ -267,8 +306,8 @@ class AltrpPosts extends React.Component {
       htmlTemplate = prepareHtml(htmlTemplate, post)
       let key = post.altrpRandomKey || post.id || post.altrpIndex;
       htmlTemplate = isEditor() ? htmlTemplate : replaceContentWithData(htmlTemplate, post)
-      if(this.htmlStore[key] !== htmlTemplate){
-        this.setState(state=>({
+      if (this.htmlStore[key] !== htmlTemplate) {
+        this.setState(state => ({
           ...state,
           finalHtml: {
             ...state.finalHtml,
@@ -279,7 +318,7 @@ class AltrpPosts extends React.Component {
     })
   }
 
-  renderPostViaHtml =(idx)=>{
+  renderPostViaHtml = (idx) => {
     let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
     let post = this.props.data[idx] || this.props.data;
     let key = post.altrpRandomKey || post.id || post.altrpIndex;
@@ -287,7 +326,7 @@ class AltrpPosts extends React.Component {
       const HtmlRenderEvent = new Event('html-render')
       document.dispatchEvent(HtmlRenderEvent)
     }, 1)
-    if(this.state.finalHtml[key]){
+    if (this.state.finalHtml[key]) {
       return (
         <div className={`${this.props?.className} altrp-post`}
              style={deleteOverflowHidden ? {overflow: "initial"} : null}
@@ -298,7 +337,7 @@ class AltrpPosts extends React.Component {
         </div>
       );
     }
-    let { hoverHtmlTemplate = '',  htmlTemplate } = this.state
+    let {hoverHtmlTemplate = '', htmlTemplate} = this.state
 
     const transitionType = _.get(
       this.props.settings,
@@ -309,7 +348,7 @@ class AltrpPosts extends React.Component {
      * subscribe on store updates
      */
 
-    if(hoverHtmlTemplate){
+    if (hoverHtmlTemplate) {
       htmlTemplate += `<div
             class="altrp-post altrp-post--hover altrp-post--hover--${transitionType}"
           >
@@ -335,13 +374,13 @@ class AltrpPosts extends React.Component {
    * @param {int} idx - индекс в массиве записей
    */
   renderPost = (idx) => {
-    const { settings } = this.props;
+    const {settings} = this.props;
     const loadHtmlCards = _.get(settings, "load-html-cards")
     const {hoverSimpleTemplateId, hoverHtmlTemplate, simpleTemplateId, htmlTemplate} = this.state
-    if(loadHtmlCards &&
+    if (loadHtmlCards &&
       simpleTemplateId && htmlTemplate &&
       (!hoverSimpleTemplateId || hoverSimpleTemplateId && hoverHtmlTemplate)
-    ){
+    ) {
       return this.renderPostViaHtml(idx)
     }
     const transitionType = _.get(
@@ -351,6 +390,7 @@ class AltrpPosts extends React.Component {
     );
 
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
+
     let PostContentComponent = post.component || "";
     let HoverPostContentComponent = post.component || "";
     if (
@@ -443,7 +483,12 @@ class AltrpPosts extends React.Component {
    */
 
   getPageCount() {
-    let { data: posts } = this.props;
+    if (this.query_sync
+      && this.props.element.getResponsiveSetting('query_max_page')) {
+      return Number(getDataByPath(this.props.element.getResponsiveSetting('query_max_page')))
+    }
+
+    let {data: posts} = this.props;
     const posts_per_page =
       Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
     if (!posts_per_page || !_.get(posts, "length")) {
@@ -458,6 +503,7 @@ class AltrpPosts extends React.Component {
    */
   setPage(page) {
     page = Number(page);
+
     if (!page) {
       page = 1;
     }
@@ -470,7 +516,14 @@ class AltrpPosts extends React.Component {
     if (this.state.currentPage === page) {
       return;
     }
-    this.setState((state) => ({ ...state, currentPage: page }));
+    this.setState((state) => ({...state, currentPage: page}), () => {
+      if (this.props.element.getSettings('query_sync')) {
+        updateQueryString({
+          page,
+          pageSize: this.state.pageSize
+        })
+      }
+    });
   }
 
   /**
@@ -478,35 +531,38 @@ class AltrpPosts extends React.Component {
    * @return {*}
    */
   renderPagination() {
-    const settings = { ...this.props.settings };
+    const settings = {...this.props.settings};
     const element = this.props.element;
-    let { data: posts } = this.props;
+    let {data: posts} = this.props;
     if (!posts.length && !isEditor()) {
       return null;
     }
-
-    if (
-      getResponsiveSetting(this.props.settings, "posts_per_page") >=
-        posts?.length ||
-      getResponsiveSetting(this.props.settings, "posts_per_page") <= 0
-    ) {
-      return null;
+    if (!isEditor()) {
+      if( !this.query_sync&& getResponsiveSetting(this.props.settings, "posts_per_page") >=
+        posts?.length || getResponsiveSetting(this.props.settings, "posts_per_page") <= 0
+      ){
+        return null
+      }
+      if(this.query_sync && this.getPageCount() < 1){
+        return null
+      }
     }
     let prev_text = element.getResponsiveLockedSetting(
       "prev_text",
       "",
-      "Previous Page"
     );
+
     let next_text = element.getResponsiveLockedSetting(
       "next_text",
       "",
-      "Next Page"
     );
     let posts_pagination_type =
       getResponsiveSetting(this.props.settings, "posts_pagination_type") || "";
     if (posts_pagination_type) {
-      const { currentPage } = this.state;
+      const {currentPage} = this.state;
+
       const pageCount = this.getPageCount();
+
       if (posts_pagination_type === "pages") {
         settings.hide_pagination_select = true;
         settings.hide_page_input = true;
@@ -539,11 +595,12 @@ class AltrpPosts extends React.Component {
             }
             disabled={currentPage <= 1}
             onClick={() => {
+              const {currentPage} = this.state;
               this.setPage(currentPage - 1);
             }}
           >
-            <span>{settings.posts_prev_text || ""}</span>
             {renderAssetIcon(settings.prev_icon)}
+            <span>{prev_text || ""}</span>
           </button>
 
           <button
@@ -553,10 +610,11 @@ class AltrpPosts extends React.Component {
             }
             disabled={currentPage === pageCount}
             onClick={() => {
+              const {currentPage} = this.state;
               this.setPage(currentPage + 1);
             }}
           >
-            <span>{settings.posts_next_text || ""}</span>
+            <span>{next_text || ""}</span>
             {renderAssetIcon(settings.next_icon)}
           </button>
         </div>
@@ -568,7 +626,7 @@ class AltrpPosts extends React.Component {
               onClick={() => this.setPage(currentPage - 1)}
               disabled={currentPage <= 1}
             >
-              <span dangerouslySetInnerHTML={{ __html: prev_text }} />
+              <span dangerouslySetInnerHTML={{__html: prev_text}}/>
               {renderAssetIcon(settings.prev_icon)}
             </button>
           )}
@@ -581,7 +639,7 @@ class AltrpPosts extends React.Component {
               onClick={() => this.setPage(currentPage + 1)}
               disabled={currentPage === pageCount}
             >
-              <span dangerouslySetInnerHTML={{ __html: next_text }} />
+              <span dangerouslySetInnerHTML={{__html: next_text}}/>
               {renderAssetIcon(settings.next_icon)}
             </button>
           )}
@@ -604,17 +662,22 @@ class AltrpPosts extends React.Component {
     return null;
   }
 
-  render() {
-    const { currentPage } = this.state;
-    const posts_per_page =
-      Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
-    let { data: posts } = this.props;
+
+  getPosts = () => {
+    let {data: posts} = this.props;
+    if (this.query_sync && !isEditor()) {
+      return posts
+    }
     if (!_.isArray(posts) && _.isObject(posts)) {
       posts = [posts];
     }
     if (!_.isArray(posts)) {
       posts = [];
     }
+    const {currentPage} = this.state;
+    const posts_per_page =
+      Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
+
     let postsStart = 0;
     if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {
       if (currentPage > 1) {
@@ -622,6 +685,25 @@ class AltrpPosts extends React.Component {
       }
       posts = posts.slice(postsStart, postsStart + posts_per_page);
     }
+    return posts
+  }
+
+  render() {
+
+    const {currentPage} = this.state;
+    const posts_per_page =
+      Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;
+
+    let postsStart = 0;
+    if (this.query_sync && !isEditor()) {
+      postsStart = 0
+    } else if (posts_per_page && Number(posts_per_page) && posts_per_page > 0) {
+      if (currentPage > 1) {
+        postsStart = (currentPage - 1) * posts_per_page;
+      }
+    }
+
+    const posts = this.getPosts()
     let columnsCount =
       Number(getResponsiveSetting(this.props.settings, "posts_columns")) || 1;
     let posts_columns_gap =
@@ -646,12 +728,13 @@ class AltrpPosts extends React.Component {
     );
   }
 }
-const defaultData = Array.from({ length: 3 }, () => ({}));
+
+const defaultData = Array.from({length: 3}, () => ({}));
 export default (props) => {
   if (props.settings.choose_datasource === "datasource") {
     if (isEditor()) {
-      props = { ...props };
-      props.settings = { ...props.settings };
+      props = {...props};
+      props.settings = {...props.settings};
       props.data = defaultData;
       setAltrpIndex(props.data);
     }
@@ -659,7 +742,7 @@ export default (props) => {
   }
   return (
     <AltrpQueryComponent {...props}>
-      <AltrpPosts />
+      <AltrpPosts/>
     </AltrpQueryComponent>
   );
 };

@@ -170,8 +170,12 @@ class MapWidget extends Component {
 
   render() {
     let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+
     return (
-        <AltrpMap element={this.props.element} classes={classes} settings={this.state.settings} id={this.props.element.id} />
+        <AltrpMap element={this.props.element} classes={classes} settings={{
+          ...this.props.element.getSettings(),
+          ...this.props.element.getSettings(true),
+        }} id={this.props.element.id} />
     );
   }
 }

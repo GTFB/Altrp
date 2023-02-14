@@ -4,12 +4,14 @@ import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXT,
   CONTROLLER_SWITCHER,
+  CONTROLLER_TEXTAREA,
   CONTROLLER_NUMBER,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SLIDER,
   CONTROLLER_QUERY,
   CONTROLLER_EVENT_HANDLER,
   TAB_CONTENT,
+  CONTROLLER_SELECT,
   TAB_STYLE, CONTROLLER_REPEATER,
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
@@ -50,38 +52,50 @@ class Map extends BaseElement {
     this.addControl("lat", {
       type: CONTROLLER_TEXT,
       label: "Latitude",
-      default: 50.7496449,
+      default: 52.518621,
       locked: true,
     });
 
     this.addControl("lng", {
       type: CONTROLLER_TEXT,
       label: "Longitude",
-      default: 86.1250068,
+      default: 13.375142,
       locked: true,
     });
 
     this.addControl("zoom", {
       type: CONTROLLER_NUMBER,
       label: "Zoom",
-      default: 6,
+      default: 11,
       locked: true,
     });
 
-    this.addControl("query", {
-      type: CONTROLLER_QUERY,
-      locked: true,
-    });
+    // this.addControl("query", {
+    //   type: CONTROLLER_QUERY,
+    //   locked: true,
+    // });
 
-    this.addControl("handler", {
-      type: CONTROLLER_EVENT_HANDLER,
-      label: "Event handler",
-      default: {
-        evt: "",
-        params: "",
-      },
-      locked: true,
-    });
+    // this.addControl("lang", {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Language',
+    //   options:[
+    //     {
+    //       label: "English",
+    //       value: "en",
+    //     },
+    //   ],
+    //   locked: true,
+    // });
+
+    // this.addControl("handler", {
+    //   type: CONTROLLER_EVENT_HANDLER,
+    //   label: "Event handler",
+    //   default: {
+    //     evt: "",
+    //     params: "",
+    //   },
+    //   locked: true,
+    // });
 
     this.endControlSection();
 
@@ -113,10 +127,31 @@ class Map extends BaseElement {
       locked: true,
     });
 
+    this.addControl('use_path', {
+      label: 'Use Path for Markers',
+      type: CONTROLLER_SWITCHER,
+      fields: repeater.getControls(),
+      default: false,
+      locked: true,
+    });
+
+    this.addControl('path', {
+      label: 'Path',
+      type: CONTROLLER_TEXTAREA,
+      conditions: {
+        use_path: true
+      },
+      default: [],
+      locked: true,
+    });
+
     this.addControl('markers', {
       label: 'Markers',
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
+      conditions: {
+        'use_path!': true
+      },
       default: [],
       locked: true,
     });
@@ -132,7 +167,7 @@ class Map extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "height",
       default: {
-        size: 400,
+        size: 450,
         unit: "px",
       },
       units: ['px', '%', 'vh', 'vw'],

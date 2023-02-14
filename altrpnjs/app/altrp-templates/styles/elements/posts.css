@@ -1,0 +1,4 @@
+.altrp-pagination__previous img, .altrp-pagination__next img,
+.altrp-pagination__previous svg, .altrp-pagination__next svg {
+  width: 60px;
+}

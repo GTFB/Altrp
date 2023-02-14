@@ -66,7 +66,6 @@ class InputCheckbox extends BaseElement {
       label: "Sync With Query String",
     });
 
-
     const optionsRepeater = new Repeater();
 
     optionsRepeater.addControl("label", {

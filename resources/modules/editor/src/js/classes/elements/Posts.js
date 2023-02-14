@@ -274,6 +274,33 @@ class Table extends BaseElement {
       },
     });
 
+    this.addControl('query_sync', {
+      label: 'Sync With Query String',
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      locked: true,
+    });
+
+
+    this.addControl('query_update', {
+      label: 'Reset `page` and `pageSize` Params on Query String Updates',
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      conditions: {
+        query_sync: true,
+      },
+      locked: true,
+    });
+
+    this.addControl('query_max_page', {
+      label: 'Path to Page Size',
+      responsive: false,
+      conditions: {
+        query_sync: true,
+      },
+      locked: true,
+    });
+
     this.addControl('prev_text', {
       label: 'Prev Text',
       default: 'Prev Page',
@@ -282,6 +309,7 @@ class Table extends BaseElement {
 
     this.addControl('prev_icon', {
       type: CONTROLLER_MEDIA,
+      locked: true,
       label: 'Prev Page Icon',
     });
 
@@ -317,6 +345,7 @@ class Table extends BaseElement {
 
     this.addControl('next_icon', {
       type: CONTROLLER_MEDIA,
+      locked: true,
       label: 'Next Page Icon',
     });
 
