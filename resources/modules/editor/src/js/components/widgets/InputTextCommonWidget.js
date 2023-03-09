@@ -5,7 +5,6 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpInput from "../altrp-input/AltrpInput";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
-import updateQueryString from "../../../../../front-app/src/js/functions/updateQueryString";
 
 
 //(window.globalDefaults = window.globalDefaults || []).push(``)
@@ -51,10 +50,25 @@ class InputTextCommonWidget extends Component {
   /**
    * Чистит значение
    */
-  clearValue() {
+  clearValue = async ()=> {
     let value = "";
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
+
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "blur",
+        this.props.element.getLockedSettings("actions", []),
+        this.props.element
+      );
+    }
   }
 
   /**
@@ -611,6 +625,7 @@ class InputTextCommonWidget extends Component {
     if(value === undefined || value === null){
       value = ''
     }
+
     let input = (
       <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
         <AltrpInput

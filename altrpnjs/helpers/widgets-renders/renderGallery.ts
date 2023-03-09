@@ -20,9 +20,9 @@ export default function renderGallery(settings, device) {
     images = repeater.map((img, idx) => {
       let url = img.simple_media_settings?.url ? img.simple_media_settings?.url : '/img/nullImage.png';
 
-      if(url) {
-        url = "/ajax" + url
-      }
+      // if(url) {
+      //   url = "/ajax" + url
+      // }
 
       let containerClassNames = "altrp-gallery-img-container";
 

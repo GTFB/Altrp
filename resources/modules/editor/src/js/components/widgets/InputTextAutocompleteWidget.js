@@ -379,7 +379,7 @@ const AltrpFieldContainer = styled.div`
 }}
 `;
 
-class InputTextCommonWidget extends Component {
+class InputTextAutocompleteWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -416,9 +416,24 @@ class InputTextCommonWidget extends Component {
   /**
    * Чистит значение
    */
-  clearValue() {
+  clearValue =async ()=> {
     let value = "";
     this.dispatchFieldValueToStore(value, true);
+
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "blur",
+        this.props.element.getLockedSettings("actions", []),
+        this.props.element
+      );
+    }
   }
 
   /**
@@ -1100,4 +1115,4 @@ class InputTextCommonWidget extends Component {
   }
 }
 
-export default InputTextCommonWidget;
+export default InputTextAutocompleteWidget;

@@ -7,7 +7,7 @@ export default async function  loadSticky() {
     if($('[data-altrp-sticky="column_top"]').length) {
       await loadStickyJS()
       if(! window.altrpLibs || ! window.altrpLibs.Sticky){
-        console.error('Не загрузилось "sticky-js"');
+        console.error('"sticky-js" not loaded');
         return
       }
       let sticky = new window.altrpLibs.Sticky('[data-altrp-sticky="column_top"]', {
@@ -23,8 +23,10 @@ export default async function  loadSticky() {
     }
     $('[data-altrp-sticky]:not([data-altrp-sticky-loaded])').each(function(){
       let $this = $(this)
-      const stickyOptions = {
+      const elementId = $this.attr('data-altrp-id')
 
+      const stickyOptions = {
+        wrapperClassName: `sticky-wrapper sticky-wrapper${elementId}`
       };
 
       switch($this.data('altrp-sticky')){

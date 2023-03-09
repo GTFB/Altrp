@@ -29,16 +29,17 @@ class InputFileWidget extends Component {
       window.elementDecorator(this);
     }
     this.wrapperRef = React.createRef()
-    this.defaultValue = this.getLockedContent("default_value");
+    this.defaultValue = this.getLockedContent("default_value", true)?.id || null;
 
     this.state = {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
-      imageUrls_0: _.get(props.element.getResponsiveLockedSetting('preview_placeholder'), 'url'),
+      imageUrls_0: this.defaultValue ?  this.getLockedContent("default_value", true)?.url :
+        _.get(props.element.getResponsiveLockedSetting('preview_placeholder'), 'url'),
     };
     this.altrpSelectRef = React.createRef();
     if (this.defaultValue) {
-      this.dispatchFieldValueToStore(this.getLockedContent("default_value"), true);
+      this.dispatchFieldValueToStore(this.defaultValue, true);
     }
   }
 
@@ -93,7 +94,7 @@ class InputFileWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("default_value");
+      value = this.getLockedContent("default_value", true)?.id || null;;
     }
 
     /**
@@ -104,7 +105,7 @@ class InputFileWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("default_value");
+      value = this.getLockedContent("default_value", true)?.id || null;
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -119,7 +120,7 @@ class InputFileWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getLockedContent("default_value");
+      value = this.getLockedContent("default_value", true)?.id || null;
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -156,8 +157,8 @@ class InputFileWidget extends Component {
     ) {
       let value = this.getLockedContent(
         "default_value",
-        this.props.element.getLockedSettings("select2_multiple")
-      );
+        true
+      )?.id || null;
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -174,7 +175,7 @@ class InputFileWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getLockedContent("default_value"));
+      this.dispatchFieldValueToStore(this.getLockedContent("default_value", true)?.id || null);
     }
 
     if (content_options && !model_for_options) {

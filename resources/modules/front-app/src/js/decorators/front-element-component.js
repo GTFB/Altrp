@@ -171,6 +171,10 @@ function componentDidMount() {
  */
 function shouldComponentUpdate(nextProps) {
   // console.log(this.elementName);
+
+  if(this.props.altrpPageState !== nextProps.altrpPageState){
+    return  true
+  }
   if(this.props.formsStore !== nextProps.formsStore
     && ELEMENTS_IGNORES_FORM_UPDATE.indexOf(this.elementName) !== -1){
     return  false

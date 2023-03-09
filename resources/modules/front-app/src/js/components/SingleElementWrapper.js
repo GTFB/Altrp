@@ -269,6 +269,7 @@ class SingleElementWrapper extends Component {
   shouldComponentUpdate(newProps, newState){
     const {element} = this.props;
     let {dependencies} = element;
+
     if(isEditor()){
       return false
     }
@@ -277,7 +278,6 @@ class SingleElementWrapper extends Component {
     if(newState.elementDisplay !== this.state.elementDisplay){
       return true
     }
-
     if(newProps.altrpPageState !== this.props.altrpPageState
       && dependencies.indexOf('altrppagestate') === -1){
       ++window.countReduced
@@ -333,6 +333,7 @@ class SingleElementWrapper extends Component {
       return false
     }
     ++window.count;
+
     return true
   }
   /**

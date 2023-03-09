@@ -15,6 +15,12 @@ export default function renderHeading(settings, device) {
 
       const textStrokeSwitch = getResponsiveSetting(settings, 'style_text_stroke_switcher', device, false)
       let text = getResponsiveSetting(settings,'text', device)
+      const count = (text.match(/{{/g) || []).length;
+      if(count === 1 ){
+        text = text.replace(/{{/g, '{{{')
+        text = text.replace(/}}/g, '}}}')
+      }
+
       let link
       const className = "altrp-heading " +
          (background_image?.url ? ' altrp-background-image' : '') + (textStrokeSwitch ? "text-stroke-included" : "")

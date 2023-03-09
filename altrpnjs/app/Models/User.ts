@@ -11,6 +11,8 @@ import {
   BaseModel,
   manyToMany,
   ManyToMany,
+  BelongsTo,
+  belongsTo,
   hasOne,
   HasOne,
   computed,
@@ -40,6 +42,11 @@ export default class User extends BaseModel {
   }})
   public name: string
 
+  @column({ serialize: (value, _attribute, model: User) => {
+    return value || model.email
+  }})
+  public username: string
+
   @column()
   public last_name: string
 
@@ -54,14 +61,38 @@ export default class User extends BaseModel {
 
   @computed()
   public get fullName():string{
-    if( !this.usermeta){
-      return ''
+    if( !this.usermeta?.first_name && !this.usermeta?.second_name){
+      let fullName = ''
+      if(this.name){
+        fullName += this.name
+      }
+      if(this.last_name){
+        fullName += ` ${this.last_name}`
+      }
+      return fullName
     }
     return `${this.usermeta.first_name} ${this.usermeta.second_name}`
+  }
+  @computed()
+  public get nameFull():string{
+    if( !this.usermeta?.first_name && !this.usermeta?.second_name){
+      let fullName = ''
+      if(this.last_name){
+        fullName += this.last_name
+      }
+      if(this.name){
+        fullName += ` ${this.name}`
+      }
+      return fullName
+    }
+    return `${this.usermeta.second_name} ${this.usermeta.first_name}`
   }
 
   @column()
   public guid: string
+
+  @column()
+  public media_id: string
 
   @column({ serializeAs: null })
   public rememberMeToken: string | null
@@ -85,6 +116,7 @@ export default class User extends BaseModel {
     }
   }
 
+
   @beforeCreate()
   public static async addGuid (user: User) {
     if (!user.$dirty.guid) {
@@ -107,6 +139,13 @@ export default class User extends BaseModel {
     pivotRelatedForeignKey: 'role_id',
   })
   public roles: ManyToMany<typeof Role>
+
+  @belongsTo(()=>Media,{
+    localKey: 'id',
+    foreignKey: 'media_id',
+  })
+  public avatar: BelongsTo<typeof Media>
+
 
   @manyToMany(() => Permission, {
     pivotTable: 'permission_user',

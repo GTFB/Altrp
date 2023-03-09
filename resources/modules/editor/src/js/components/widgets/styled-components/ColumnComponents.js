@@ -10,13 +10,13 @@ import {
   backgroundImageControllerToStyles, dimensionsStyled,
 } from "../../../../../../front-app/src/js/helpers/styles";
 
-const ColumnComponent = (settings) => {
+const ColumnComponent = (settings, elementId) => {
   let styles = "";
 
   let flexWrap, flexDirection, align, justifyContent, overflow, backgroundColor, gradient, zIndex, borderType, borderWidth, borderColor, borderRadius, boxShadow, borderGradient;
   let backgroundColorH, gradientH, borderTypeH, borderWidthH, borderColorH, borderRadiusH, boxShadowH, borderGradientH;
   let marginBottom, marginBottomH, backgroundImage, backgroundPosition, backgroundAttachment, backgroundRepeat, backgroundSizeInUnits, backgroundSize;
-  let backgroundImageH, backgroundPositionH, backgroundAttachmentH, backgroundRepeatH, backgroundSizeInUnitsH, backgroundSizeH, margin, marginH, padding, paddingH, width;
+  let backgroundImageH, backgroundPositionH, backgroundAttachmentH, backgroundRepeatH, backgroundSizeInUnitsH, backgroundSizeH, margin,  padding;
 
   styles += "& > .altrp-column.altrp-column-priority {";
 
@@ -569,17 +569,36 @@ const ColumnComponent = (settings) => {
   //</editor-fold>
 
   const layout_column_width = getResponsiveSetting(settings, 'layout_column_width');
+
   if(layout_column_width){
     if (
       Number(layout_column_width)
     ){
-      styles += `&&&&{width:${layout_column_width}%;}`;
+      styles += `div:not(.sticky-wrapper) > &&&{width:${layout_column_width}%;}`;
 
     }else {
-      styles += `&&&&{width:${layout_column_width};}`;
+      styles += `div:not(.sticky-wrapper) > &&&{width:${layout_column_width};}`;
+
     }
   }
   return styles;
 };
 
 export default ColumnComponent
+export function columnStickyStyles(settings, elementId){
+
+  const layout_column_width = getResponsiveSetting(settings, 'layout_column_width');
+  const sticky = getResponsiveSetting(settings, 'sticky');
+  let styles = ''
+  if(layout_column_width && sticky){
+    if (
+      Number(layout_column_width)
+    ){
+      styles += `.sticky-wrapper.sticky-wrapper${elementId}{width:${layout_column_width}%;}`;
+    }else {
+      styles += `.sticky-wrapper.sticky-wrapper${elementId}{width:${layout_column_width};}`;
+    }
+  }
+
+  return styles
+}

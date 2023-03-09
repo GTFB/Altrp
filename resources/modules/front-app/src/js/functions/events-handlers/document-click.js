@@ -6,8 +6,8 @@ export default async function spaNavigation(e){
   if(window?.altrp?.spa_off){
     return;
   }
-  let target = e.target
 
+  let target = e.target
 
   if(target.closest('[data-link]')){
     const qs = await import(/* webpackChunkName: 'qs' */'qs')

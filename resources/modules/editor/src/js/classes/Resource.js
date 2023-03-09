@@ -3,6 +3,7 @@ import replaceContentWithData from "../../../../front-app/src/js/functions/repla
 import getCookie from "../helpers/getCookie";
 import qs from "qs";
 window.queryString = queryString;
+window.qs = qs;
 /**
  * @class Resource
  * */

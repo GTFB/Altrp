@@ -17,7 +17,9 @@ import DashboardComponent from "../../../../editor/src/js/components/widgets/sty
 import AdvancedComponent from "../../../../editor/src/js/components/widgets/styled-components/AdvancedComponent";
 import SectionWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
-import ColumnComponent from "../../../../editor/src/js/components/widgets/styled-components/ColumnComponents";
+import ColumnComponent, {
+  columnStickyStyles
+} from "../../../../editor/src/js/components/widgets/styled-components/ColumnComponents";
 import DropbarWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
 import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
@@ -126,7 +128,8 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEd
           styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1, id)}}`;
           break;
         case "column":
-          styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;
+          styles += `.${prefix}${id} {${ColumnComponent(item.settings, id)}}`;
+          styles += columnStickyStyles(settings, id)
           break;
         case "dropbar":
           styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;

@@ -430,7 +430,8 @@ export default class Source extends BaseModel {
     switch (this.type) {
       case 'customizer': {
         this.methodBody = `
-
+    const qs = httpContext?.request.qs() || {};
+    const all = httpContext?.request.all() || {};
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
     this.setCustomizerData('context.request', httpContext.request);
     this.setCustomizerData('httpContext', httpContext);

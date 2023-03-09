@@ -8,6 +8,7 @@ export default function renderDropbar(settings, device) {
   const customClasses = getResponsiveSetting(settings,"position_css_classes", device, null);
   const background_image = getResponsiveSetting(settings,"background_image", device, {});
   const buttonMedia = getResponsiveSetting(settings,"button_icon", device, {});
+  let dynamic_icon = getResponsiveSetting(settings,"dynamic_icon", device) || '';
 
 
   const showIcon = buttonMedia?.url;
@@ -25,13 +26,29 @@ export default function renderDropbar(settings, device) {
   //   classes.push('state-disabled');
   // }
 
+  let icon = ''
+  if(showIcon){
+    icon = `<span class="altrp-btn-icon">${renderAsset(buttonMedia)}</span>`
+    dynamic_icon = dynamic_icon.trim()
+    if(dynamic_icon){
+      //dynamic_icon = `{{${dynamic_icon}}}`
+      icon =`
+      {{#${dynamic_icon}}}
+      <img src="{{${dynamic_icon}}}" alt="{{${dynamic_icon}}}"/>
+      {{/${dynamic_icon}}}
+      {{^${dynamic_icon}}}
+      ${icon}
+      {{/${dynamic_icon}}}
+      `
+    }
+  }
 
   const buttonTemplate: string = `<div class="altrp-btn-wrapper_dropbar altrp-btn-wrapper">
       <div class="altrp-dropbar altrp-dropbar-altrp-dropbar-btn">
         <span class="altrp-dropbar-children-wrapper altrp-dropbar-btn-wrapper">
           <button class='${_.join(classes, " ")}' id='${id}'>
             ${buttonText}
-            ${ showIcon ? `<span class="altrp-btn-icon">${renderAsset(buttonMedia)}</span>` : "" }
+            ${icon}
           </button>
         </span>
       </div>

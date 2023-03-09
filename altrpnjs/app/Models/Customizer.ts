@@ -181,6 +181,7 @@ export default class Customizer extends BaseModel {
       case 'string': {
         JSContent += `'` + path + `'`
       }
+
         break
       case 'expression': {
         JSContent += JSExpression
@@ -450,8 +451,15 @@ export default class Customizer extends BaseModel {
     }
     let namespace = data_get(propertyData, 'namespace', 'context')
     let path = data_get(propertyData, 'path')
+    let JSExpression = data_get(propertyData, 'JSExpression')
     let JSContent
     switch (namespace) {
+      case 'expression':{
+        JSContent = `${JSExpression} = ${value};
+`
+
+      }
+        break;
       case 'context': {
         if (!path) {
           path = namespace

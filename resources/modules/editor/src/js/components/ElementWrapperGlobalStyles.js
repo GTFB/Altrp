@@ -9,7 +9,7 @@ import ListComponent from "./widgets/styled-components/ListComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import TreeComponent from "./widgets/styled-components/TreeComponent";
 import SectionWidgetComponent from "./widgets/styled-components/SectionWidgetComponent";
-import ColumnComponent from "./widgets/styled-components/ColumnComponents";
+import ColumnComponent, {columnStickyStyles} from "./widgets/styled-components/ColumnComponents";
 import DropbarWidgetComponent from "./widgets/styled-components/DropbarWidgetComponent";
 import DashboardComponent from "./widgets/styled-components/DashboardComponent";
 import getImageStyles from "../../../../front-app/src/js/components/helpers/stylesForTheImage";
@@ -108,7 +108,8 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       )}}`;
       break;
     case "column":
-      styles += `.${prefix}${elementId} {${ColumnComponent(settings)}}`;
+      styles += `.${prefix}${elementId} {${ColumnComponent(settings, elementId)}}`;
+      styles += columnStickyStyles(settings, elementId)
       break;
     case "dropbar":
       styles += `.${prefix}${elementId} {${DropbarWidgetComponent(settings)}}`;

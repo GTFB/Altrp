@@ -102,6 +102,7 @@ class AltrpInput extends Component {
           <MaskedInput
             mask={content_mask}
             inputProps={_inputProps}
+            element={this.props.element}
             maybeRenderLeftElement={this.maybeRenderLeftElement}
             maybeRenderRightElement={this.maybeRenderRightElement}
           />

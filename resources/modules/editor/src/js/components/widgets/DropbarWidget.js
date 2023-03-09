@@ -1,6 +1,4 @@
-import React, {Component, Suspense} from "react";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
-import isSSR from "../../../../../front-app/src/js/functions/isSSR";
 import getComponentByElementId from "../../../../../front-app/src/js/functions/getComponentByElementId";
 import getHTMLElementById from "../../../../../front-app/src/js/functions/getHTMLElementById";
 import printElements from "../../../../../front-app/src/js/functions/printElements";
@@ -194,9 +192,17 @@ class DropbarWidget extends Component {
     );
     const buttonMedia = this.props.element.getResponsiveLockedSetting("button_icon", "", {});
     const dropbarDelay = this.props.element.getResponsiveLockedSetting("show_delay_dropbar_options");
-
+    let dynamic_icon = this.props.element.getResponsiveLockedSetting("dynamic_icon");
     const showIcon = buttonMedia.url;
-
+    let icon = ''
+    if(showIcon){
+      dynamic_icon = window.altrpHelpers.getDataByPath(dynamic_icon)
+      icon = dynamic_icon ?
+          <img src={dynamic_icon}/>
+        :  (<span className={`${classesState} altrp-btn-icon`}>
+          {renderAsset(buttonMedia)}
+          </span>)
+    }
     if (this.state.pending) {
       classes.push("altrp-disabled");
     }
@@ -224,13 +230,7 @@ class DropbarWidget extends Component {
         id={id}
       >
         {buttonText}
-        {
-          showIcon ? (
-            ! isSSR() && <span className={`${classesState} altrp-btn-icon`}>
-          {renderAsset(buttonMedia)}
-          </span>
-          ) : ""
-        }
+        {icon}
       </button>
     );
     return <div className={`${classesState} altrp-btn-wrapper_dropbar altrp-btn-wrapper`}>

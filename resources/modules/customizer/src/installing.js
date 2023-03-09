@@ -4,6 +4,7 @@ import {Handle} from "react-flow-renderer";
 import "./js/helpers/nodeDecorator";
 import {assetsShow, assetsToggle} from "../../editor/src/js/store/assets-browser/actions";
 import MediaController from "./js/components/MediaController";
+import formatVariableName from "./js/helpers/formatVariableName";
 window.ReactComponent = Component
 
 window.customizerComponents = window.customizerComponents || {}
@@ -22,3 +23,6 @@ window.customizerComponents.functions = {
 window.storeActions = window.storeActions || {}
 window.storeActions.assetsShow = assetsShow
 window.storeActions.assetsToggle = assetsToggle
+window.customizerHelpers = {
+  formatVariableName,
+}

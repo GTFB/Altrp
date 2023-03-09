@@ -4,8 +4,9 @@ import getResponsiveSetting from "../getResponsiveSetting"
 import renderAsset from "../renderAsset";
 import altrpRandomId from "../altrpRandomId";
 
-export default function renderButton(settings, device, elementId) {
+export default function renderButton(settings, device, ) {
   let clickActions = settings.actions || []
+  let {__elementId} = settings
   const { link_link = {}, advanced_tooltip: tooltip } = settings
   const background_image = getResponsiveSetting(
     settings,
@@ -297,7 +298,7 @@ export default function renderButton(settings, device, elementId) {
   // @ts-ignore
   let button = `<button
   class="${classes}"
-  ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
+  ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${__elementId}"`}
   id="${settings.position_css_id || ""}"
   title="${tooltip || ''}"
 >
@@ -315,7 +316,7 @@ export default function renderButton(settings, device, elementId) {
         : ""
       link = (`<a
           href="${url}"
-        ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
+        ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${__elementId}"`}
       class="${classes}"
       target="${target}"
       title="${tooltip || ''}"
@@ -329,7 +330,7 @@ export default function renderButton(settings, device, elementId) {
   if (_.get(settings, "link_link.toPrevPage")) {
     link = (
       `<button
-      ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${elementId}"`}
+      ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${__elementId}"`}
       class="${classes}"
     id="${settings.position_css_id || ""}"
     title="${tooltip || ''}"

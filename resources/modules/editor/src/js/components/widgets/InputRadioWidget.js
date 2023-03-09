@@ -601,7 +601,7 @@ class InputRadioWidget extends Component {
             let checked;
 
             checked = altrpCompare(value, option.value, "==");
-
+            console.log(checked);
             return (
               <Radio
                 className={`${classes} altrp-field-radio ${checked ? "active" : ""} ${radioPosition == 'right' ? 'bp3-align-right' : ''}`}

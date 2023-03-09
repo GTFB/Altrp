@@ -114,7 +114,6 @@ export const flatStyleArray = (styleArray, withPreset) => {
       const newJson = {}
 
       forEach(jsonStyle.children, (value, key) => {
-
         if (!isEmpty(value.children) || !isEmpty(value.attributes)) {
 
           newJson[key] = value
@@ -127,7 +126,16 @@ export const flatStyleArray = (styleArray, withPreset) => {
   const flattenStyleArray = jsonStyleArray
     .map(json => {
 
-      return map(json, (value: { attributes: Record<string, any> }, key) => [key, value.attributes])
+      return map(json, (value: {
+        attributes: Record<string, any> ,
+        children: Record<string, any> ,
+      }, key) => {
+        if(!_.isEmpty(value.children)){
+
+          return [key, value.children]
+        }
+        return [key, value.attributes]
+      })
     })
     .flat()
     .map(item => {
@@ -136,7 +144,12 @@ export const flatStyleArray = (styleArray, withPreset) => {
       }
 
       return map(item[1], (style, key) => {
-
+        if( _.isObject(style)){
+          //console.log(key);
+          // console.log(item[0]);
+          // console.log(toCSS(style));
+          return  `${item[0]}??${key}??{${toCSS(style)}}`
+        }
         return `${item[0]}??${key}??${style}`
       })
     })
@@ -147,6 +160,7 @@ export const flatStyleArray = (styleArray, withPreset) => {
 
 export const mergeStyles = (styles, withPreset = false) => {
   const converted = map(styles, (value, key) => {
+
 
     return isArray(value)
       ? {
@@ -160,7 +174,6 @@ export const mergeStyles = (styles, withPreset = false) => {
     .map(([keyGroup, styles]) => {
       const keys = keyGroup.split(',')
       const style = {}
-
       styles.forEach(item => {
         const [className, key, value] = item.split("??")
 
@@ -173,7 +186,6 @@ export const mergeStyles = (styles, withPreset = false) => {
 
       return [mergeScreenQuery(keys), toCSS({ children: style, attributes: {} })]
     })
-
   return merged
 }
 
@@ -244,6 +256,7 @@ export const optimizeStyles = async (styles) => {
   })
 
   if(queryStylesJson['0_10000']){
+
     queryStylesJson['0_10000'] =  [toCSS(queryStylesJson['0_10000'])]
   }
   /**
@@ -275,6 +288,7 @@ export const optimizeStyles = async (styles) => {
   // }
 
   let optimizedStyles = mergeStyles(queryStylesJson)
+
   optimizedStyles = _.sortBy(optimizedStyles, ([mediaQuery]: string[], idx) => {
     if(! mediaQuery){
       return -1

@@ -28,6 +28,7 @@ export default class MapperNode extends BaseNode implements NodeInterface
     let bodyChild = edges.find(e=>{
       return e.data.sourceHandle === 'body'
     })
+
     if(bodyChild){
       bodyChild = this.customizer.parsed_data.find(c=>{
         // @ts-ignore
@@ -71,8 +72,8 @@ export default class MapperNode extends BaseNode implements NodeInterface
       result = `
     this.setCustomizerData('context.${store}',
         ${result});
-      `
+    `
     }
-    return result
+    return result + after
   }
 }

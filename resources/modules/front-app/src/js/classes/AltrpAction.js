@@ -595,6 +595,11 @@ class AltrpAction extends AltrpModel {
   async doActionRedirect() {
     let history = window.history
     let _URL = this.getFormURL();
+    let outer = this.getProperty('outer')
+    if(outer){
+      window.location.href = _URL
+      return
+    }
     if(! this.getProperty('back')){
       let url = _URL.replace(location.origin, '')
       url = location.origin + url
@@ -1235,6 +1240,8 @@ class AltrpAction extends AltrpModel {
       const evaluateResult = eval(code);
       if(_.isFunction(evaluateResult)){
         await evaluateResult()
+      } if (evaluateResult instanceof Promise){
+        await evaluateResult
       }
       return actionResult;
     } catch (error) {

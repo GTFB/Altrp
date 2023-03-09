@@ -214,8 +214,13 @@ export default class AltrpRouting {
     if(user){
       access_classes += ` front-app_auth-type-auth `
 
-      await user.load('roles')
-      await user.load('permissions')
+
+      await Promise.all([
+        user.load('avatar'),
+        user.load('permissions'),
+        user.load('roles'),
+      ])
+
 
       user.roles && user.roles.forEach(role =>{
         access_classes += ` front-app_role-${role.name} `
@@ -309,7 +314,7 @@ export default class AltrpRouting {
       is_guest: true,
     }
     if (user) {
-      altrpuser = user.toObject()
+      altrpuser = user.toJSON()
     }
 
     const altrpContext = {

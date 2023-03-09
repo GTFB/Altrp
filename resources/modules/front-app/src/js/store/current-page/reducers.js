@@ -17,6 +17,7 @@ const defaultPage = {
   url: location?.href || "",
   title: window?.currentPage?.title || "",
   hash:document?.location?.hash,
+  pathname:document?.location?.pathname,
   params,
   hashParams,
 };

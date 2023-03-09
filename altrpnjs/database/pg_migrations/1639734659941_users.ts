@@ -15,7 +15,8 @@ export default class UsersSchema extends BaseSchema {
         table.string('remember_me_token').nullable()
         table.string('last_name').nullable()
         table.string('telegram_user_id').nullable()
-        table.string('name')
+        table.string('name').nullable()
+        table.string('username').index().nullable()
         table.text('local_storage', 'longtext').nullable()
 
         /**

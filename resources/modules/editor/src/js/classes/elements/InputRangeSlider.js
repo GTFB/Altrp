@@ -21,6 +21,7 @@ import {
   CONTROLLER_LINK
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
+import {actionsControllers} from "../../decorators/actions-controllers";
 
 class InputRangeSlider extends BaseElement{
 
@@ -197,6 +198,7 @@ class InputRangeSlider extends BaseElement{
 
     this.endControlSection();
 
+    actionsControllers(this, "Change Actions", "change_");
 
     this.startControlSection('slider_styles', {
       tab: TAB_STYLE,

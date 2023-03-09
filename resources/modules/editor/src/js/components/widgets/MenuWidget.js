@@ -165,6 +165,10 @@ class MenuWidget extends Component {
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
+            if(! window.altrp?.spa_off){
+
+              return;
+            }
             if(isEditor() || ! item.url){
               return;
             }

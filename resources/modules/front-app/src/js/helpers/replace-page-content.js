@@ -336,6 +336,7 @@ async function _replace(htmlString, popstate, url, progressBar) {
     url: location?.href || "",
     title: window?.currentPage?.title || "",
     hash: document?.location?.hash,
+    pathname:document?.location?.pathname,
     hashParams,
     params,
   }))

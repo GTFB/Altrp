@@ -142,7 +142,10 @@ export default class ElementRenderer {
           let render = isProd() ? require(base_path(`helpers/widgets-renders/${filename}`))
             : await import(base_path(`helpers/widgets-renders/${filename}`))
           render = render.default
-          element_content = await render(this.element.settings, screenName, this.getId(), randomString)
+          element_content = await render({
+            ...this.element.settings,
+            __elementId: this.getForIdActions()
+          }, screenName, this.getId(), randomString)
         }
         if (this.getName() === 'section_widget') {
           element_content =
@@ -256,6 +259,9 @@ export default class ElementRenderer {
     if(this.element.settings.global_styles_presets){
       return `_altrp-preset_${this.getName()}-${this.element.settings.global_styles_presets}`
     }
+    return this.element.id
+  }
+  private getForIdActions() {
     return this.element.id
   }
 

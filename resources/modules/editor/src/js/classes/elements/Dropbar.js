@@ -93,6 +93,13 @@ class Dropbar extends BaseElement {
       locked: true,
     });
 
+
+    this.addControl('dynamic_icon', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Path to Dynamic Icon',
+      locked: true,
+    });
+
     this.addControl('button_icon_position', {
       type: CONTROLLER_SELECT,
       label: 'Icon Position',
@@ -245,6 +252,13 @@ class Dropbar extends BaseElement {
           label: "Hover"
         }
       ],
+      locked: true,
+    });
+
+    this.addControl("prevent", {
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      label: "Prevent Closing by Content Click",
       locked: true,
     });
 

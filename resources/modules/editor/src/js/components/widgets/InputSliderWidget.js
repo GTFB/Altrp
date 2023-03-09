@@ -77,6 +77,26 @@ class InputSliderWidget extends Component {
     this.label = this.label.bind(this);
   }
 
+  debouncedChangeAction = _.debounce(async ()=>{
+
+    const change_actions = this.props.element.getLockedSettings("change_actions");
+
+    if (change_actions && !isEditor()) {
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+        await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          "change",
+          change_actions,
+          this.props.element
+        );
+    }
+  }, 500)
+
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
@@ -88,27 +108,13 @@ class InputSliderWidget extends Component {
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
+
     if (_.isObject(this.props.appStore) && fieldName && formId) {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getLockedSettings("change_actions");
-
-        if (change_actions && !isEditor()) {
-          const actionsManager = (
-            await import(
-              /* webpackChunkName: 'ActionsManager' */
-              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-              )
-          ).default;
-          await actionsManager.callAllWidgetActions(
-            this.props.element.getIdForAction(),
-            "change",
-            change_actions,
-            this.props.element
-          );
-        }
+        this.debouncedChangeAction()
       }
     }
   };
@@ -129,7 +135,7 @@ class InputSliderWidget extends Component {
       this.setState((s) => ({...s, value}))
     } else {
       this.setState((s) => ({...s, value}))
-      this.dispatchFieldValueToStore(value)
+      this.dispatchFieldValueToStore(value, true)
     }
   }
 

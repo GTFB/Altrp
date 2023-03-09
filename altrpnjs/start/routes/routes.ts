@@ -156,12 +156,18 @@ Route.get('/data/current-user', async ({response, auth}: HttpContextContract) =>
 window.current_user = ${JSON.stringify({is_guest: true})}
   `);
   }
+
   // @ts-ignore
   await user.load('roles')
   // @ts-ignore
   await user.load('permissions')
   // @ts-ignore
-  return response.send(`window.current_user = ${JSON.stringify(user.toObject())}`);
+  await user.load('avatar')
+  // @ts-ignore
+  user = user.toJSON()
+  // @ts-ignore
+  delete  user.password
+  return response.send(`window.current_user = ${JSON.stringify(user)}`);
 })
 
 Route.group(() => {

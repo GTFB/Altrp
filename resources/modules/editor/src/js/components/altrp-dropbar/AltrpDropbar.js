@@ -21,7 +21,11 @@ class Dropbar extends Component {
     this.element = props.element;
     this.children = React.createRef();
   };
-
+  onContainerClick = e=>{
+    if(!this.props.settings?.prevent){
+      this.show()
+    }
+  }
   show =()=> {
     const element = this.element
     const body = document.body
@@ -131,7 +135,9 @@ class Dropbar extends Component {
               }
             }}
           >
-            <div className={this.props.conditionalClasses + "altrp-dropbar-container " +
+            <div
+              onClick={this.onContainerClick}
+              className={this.props.conditionalClasses + "altrp-dropbar-container " +
                               (` altrp-dropbar${this.props.elemenentId} `) +
                               "altrp-dropbar-btn-containter " +
                               (mainClass ? mainClass + "-containter" : '') +

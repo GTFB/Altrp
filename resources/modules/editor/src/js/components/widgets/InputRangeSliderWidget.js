@@ -181,22 +181,7 @@ class InputRangeSliderWidget extends Component {
           const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
           updateQueryString(fieldName, value)
         }
-        const change_actions = this.props.element.getLockedSettings("change_actions");
-
-        if (change_actions && !isEditor()) {
-          const actionsManager = (
-            await import(
-              /* webpackChunkName: 'ActionsManager' */
-              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-              )
-          ).default;
-          await actionsManager.callAllWidgetActions(
-            this.props.element.getIdForAction(),
-            "change",
-            change_actions,
-            this.props.element
-          );
-        }
+        this.debouncedChangeAction()
       }
     }
   };
@@ -274,6 +259,25 @@ class InputRangeSliderWidget extends Component {
     return value
   }
 
+  debouncedChangeAction = _.debounce(async ()=>{
+
+    const change_actions = this.props.element.getLockedSettings("change_actions");
+
+    if (change_actions && !isEditor()) {
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "change",
+        change_actions,
+        this.props.element
+      );
+    }
+  }, 500)
   onChange = async (values) => {
     let decimalPlace = this.props.element.getResponsiveLockedSetting("decimal_place", "", null);
     decimalPlace = Math.abs(decimalPlace);
