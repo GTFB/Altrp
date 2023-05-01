@@ -9,7 +9,7 @@ export default function renderInputFile(settings, device) {
   const preview = getResponsiveSetting(settings, 'preview', device)
   let imageUrls_0 = getResponsiveSetting(settings, 'preview_placeholder', device)?.url
 
-  let defaultValue = getResponsiveSetting(settings, 'default_value', device)
+  let defaultValue = getResponsiveSetting(settings, 'default_value', device) || ''
   if(defaultValue.indexOf('{{') === 0){
     defaultValue = defaultValue.replace('}}', '.url}}')
     imageUrls_0 =`${defaultValue}`

@@ -672,7 +672,13 @@ export default class TemplatesController {
             break
           case "page":
             await Promise.all(condition.object_ids.map(async objectId => {
-              const page = await Page.find(objectId)
+              let page
+              try{
+                 page = await Page.find(objectId)
+              }catch (e) {
+                console.error(e)
+                return
+              }
               if(!page) {
                 return
               }

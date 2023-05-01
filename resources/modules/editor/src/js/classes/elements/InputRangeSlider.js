@@ -20,7 +20,6 @@ import {
   CONTROLLER_SWITCHER,
   CONTROLLER_LINK
 } from "../modules/ControllersManager";
-import Repeater from "../Repeater";
 import {actionsControllers} from "../../decorators/actions-controllers";
 
 class InputRangeSlider extends BaseElement{

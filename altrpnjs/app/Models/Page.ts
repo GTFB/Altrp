@@ -1033,6 +1033,14 @@ export default class Page extends BaseModel {
     if (element.name === 'template' && data_get(element, 'settings.template')) {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.template'), elementNames, presetsStore)
     }
+    if (element.name === 'carousel'
+      && data_get(element, 'settings.cards_on')
+      && data_get(element, 'settings.slides_item_source') === 'path'
+      && data_get(element, 'settings.card')
+      && data_get(element, 'settings.slides_path')
+    ) {
+      await this.extractElementsNamesFromTemplate(data_get(element, 'settings.card'), elementNames, presetsStore)
+    }
     if (element.name === 'posts' && data_get(element, 'settings.posts_card_template')) {
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_template'), elementNames, presetsStore)
       await this.extractElementsNamesFromTemplate(data_get(element, 'settings.posts_card_hover_template'), elementNames, presetsStore)
@@ -1174,6 +1182,7 @@ export default class Page extends BaseModel {
     }
     const dependenciesList = [
       'altrppagestate',
+      'altrppage',
       'altrpdata',
       'altrpforms',
       'altrpmeta',
@@ -1237,19 +1246,19 @@ export default class Page extends BaseModel {
     }
     const oldSettings = data.settings
     data.settings = {...data.settingsLock}
-    _.each(Page.requiredFields, (item, elementName) => {
+    _.each(Page.requiredFields, (items, elementName) => {
       if (data.name !== elementName) {
         return
       }
-      item.forEach(settingName => {
+      items.forEach(settingName => {
         for (let s of SCREENS) {
-          if (getResponsiveSetting(data.settings, settingName, s.name)) {
-            return
+          if (getResponsiveSetting(data.settings, settingName, s.name, null, true)) {
+            continue
           }
-          if (getResponsiveSetting(oldSettings, settingName, s.name)) {
-
+          if (getResponsiveSetting(oldSettings, settingName, s.name, null, true)) {
 
             setResponsiveSetting(data.settings, settingName, s.name, getResponsiveSetting(oldSettings, settingName, s.name))
+
           }
         }
       })
@@ -1274,6 +1283,9 @@ export default class Page extends BaseModel {
   }
 
   protected static requiredFields = {
+    'text': [
+      'text',
+    ],
     'input-text-common': [
       'form_id',
       'field_id',

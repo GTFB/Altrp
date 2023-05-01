@@ -1,6 +1,7 @@
 console.log('FIRST SCRIPT: ', performance.now());
 
 if(!window.asCheck){
+
   Promise.all([
     import(/* webpackChunkName: 'loadPluginsHelpers' */"./js/plugins/loadPluginsHelpers"),
     import(/* webpackChunkName: 'elementsHandler' */"./js/functions/interactions/elementsHandler"),
@@ -11,7 +12,10 @@ if(!window.asCheck){
     const HtmlRenderEvent = new Event('html-render')
     document.dispatchEvent(HtmlRenderEvent)
   })
-
+  /**
+   * events handlers
+   */
+  import(/* webpackChunkName: 'altrp-query-updated.js' */'./js/functions/altrp-query-updated')
   import(/* webpackChunkName: '_h-altrp.js' */'./_h-altrp.js')
 }
 

@@ -6,7 +6,7 @@
   <title>Altrp | Login</title>
 </head>
 <body bgcolor="#F7F8F9">
-<div class="mt-100 flex-center">
+<a href="/" target="_blank" class="mt-100 flex-center">
   @if( ! get_logo_url() )
     <svg width="90" height="30" viewBox="0 0 90 30" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M14.9481 30C23.2037 30 29.8962 23.2843 29.8962 15C29.8962 6.71573 23.2037 0 14.9481 0C6.69249 0 0 6.71573 0 15C0 23.2843 6.69249 30 14.9481 30Z" fill="#87CA00"/>
@@ -20,7 +20,7 @@
   @else
     <img src="{{ get_logo_url() }}" alt="Logo">
   @endif
-</div>
+</a>
 <form  method="POST" action="{{ route('post.login') }}" class="flex-center">
   {{csrfField()}}
   <div class="contain">

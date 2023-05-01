@@ -1119,3 +1119,8 @@ textarea.control-field{
     width: auto;
   }
 }
+.customizer-multiselect-popover{
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

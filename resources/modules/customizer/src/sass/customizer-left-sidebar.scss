@@ -27,3 +27,14 @@
 .controller-label{
   font-weight: bold;
 }
+.controller-container_validator-params .bp3-popover-wrapper{
+  width: 100%;
+  margin-left: 8px ;
+  margin-top: 8px;
+  .bp3-popover-target{
+    width: 100%;
+  }
+  .bp3-multi-select-tag-input-input{
+    width: 100%;
+  }
+}

@@ -76,7 +76,21 @@
               },
               "namespace": "expression",
               "size": "120px",
-              "JSExpression":"await require('../AltrpModels/{{model_name}}').default.create({{context_order}})"
+              "JSExpression": "await require('../AltrpModels/{{model_name}}').default.create({{context_order}})"
+            }
+          },
+          {
+            "id": "bc1gu8vvp",
+            "left": {
+              "path": "data.success"
+            },
+            "right": {
+              "namespace": "number",
+              "method": "",
+              "methodSettings": {
+                "parameters": []
+              },
+              "path": "1"
             }
           }
         ]

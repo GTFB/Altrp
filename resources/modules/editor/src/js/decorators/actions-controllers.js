@@ -736,6 +736,20 @@ export function actionsControllers(
     locked: true,
   });
 
+
+  actionsRepeater.addControl('spacing', {
+    label: 'Spacing',
+    dynamic: false,
+    responsive: true,
+    description: 'px',
+    conditions: {
+      type: [
+        'scroll_to_element',
+      ],
+      // 'all_sources': false
+    },
+  });
+
   actionsRepeater.addControl('template_data', {
     label: 'Data',
     type: CONTROLLER_TEXTAREA,

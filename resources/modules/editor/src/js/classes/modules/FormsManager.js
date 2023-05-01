@@ -67,6 +67,7 @@ class FormsManager {
    */
   addField(formId, field){
     let form = this.getForm(formId);
+
     if(! form){
       this.fieldsStorage[formId] = this.fieldsStorage[formId] || [];
       this.fieldsStorage[formId].push(field);

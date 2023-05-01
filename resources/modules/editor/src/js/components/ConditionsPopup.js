@@ -32,7 +32,11 @@ function ConditionsPopup() {
 
     const getConditions = async () => {
       let conditions = await axios.get(`/admin/ajax/templates/${getTemplateId()}/conditions`, {signal: abortController.signal});
-      let pageOptions = await axios.get("/admin/ajax/pages_options", {signal: abortController.signal});
+      let pageOptions = await axios.get("/admin/ajax/pages_options?with_id=1", {
+        signal: abortController.signal
+      });
+      console.log(pageOptions)
+      console.log(conditions)
       setState(state => ({
         ...state,
         value: conditions.data.data || [],
@@ -135,6 +139,7 @@ function ConditionsPopup() {
   }
 
   const handleTagRemove = (item, conditionId, test) => {
+
     let removeTag = {}
     if (test === 'page') {
       removeTag = state.pageOptions.find(tag => tag.label === item)

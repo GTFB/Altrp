@@ -5,7 +5,7 @@ import {getOffsetTopInElement} from "../helpers/elements";
  * @param {{} | HTMLElement}scrollbars
  * @param {{}}element
  */
-export default function scrollToElement(scrollbars, element) {
+export default function scrollToElement(scrollbars, element, spacing=0) {
   let { container } = scrollbars;
   if(scrollbars instanceof HTMLElement){
     container = scrollbars;
@@ -42,6 +42,12 @@ export default function scrollToElement(scrollbars, element) {
     top += parent.offsetTop;
     parent = parent.offsetParent;
   }
+  if(_.isString(spacing)){
+    spacing = Number(spacing)
+  }
+  if(spacing){
+    top += spacing
+  }
   /**
    * не получили каеое-либо значение
    */
@@ -51,6 +57,7 @@ export default function scrollToElement(scrollbars, element) {
 
 
   console.log(scrollbars.scrollTo);
+  console.log(top);
   scrollbars.scrollTop && scrollbars.scrollTop(top);
   scrollbars.scrollTo && scrollbars.scrollTo({
     top,

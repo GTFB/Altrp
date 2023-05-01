@@ -20,7 +20,7 @@ export default async function  set_altrp_setting( setting_name = '', value = '',
   }
   await envWriter([{
     key: setting_key,
-    value: value,
+    value: `${value}`,
   }])
   Env.set(setting_key, value)
   return

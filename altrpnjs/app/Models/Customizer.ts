@@ -45,6 +45,7 @@ import base_path from "../../helpers/base_path";
 import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersAsync";
 import applyPluginsFiltersSync from "../../helpers/plugins/applyPluginsFiltersSync";
 import MapperNode from "App/Customizer/Nodes/MapperNode";
+import ValidatorNode from "App/Customizer/Nodes/ValidatorNode";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -548,6 +549,7 @@ export default class Customizer extends BaseModel {
         case 'start': return new StartNode( item , customizer)
         case 'return': return new ReturnNode( item, customizer )
         case 'change': return new ChangeNode( item, customizer )
+        case 'validator': return new ValidatorNode( item, customizer )
         case 'documentAction': return new DocumentNode(item, customizer)
         case 'crudAction': return new CrudNode(item, customizer)
         case 'apiAction': return new ApiNodeV2(item, customizer)

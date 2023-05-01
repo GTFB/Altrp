@@ -4,52 +4,6 @@ import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPa
 import AltrpImage from "../altrp-image/AltrpImage";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-image {
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    opacity: 1;
-    object-fit: cover;
-  }
-
-  .altrp-image-container {
-    display: flex;
-    justify-content: center;
-  }
-
-  .altrp-image-container, .altrp-image-container a {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-  }
-
-  .altrp-image-placeholder {
-    position: relative;
-    max-width: 100%;
-    overflow: hidden;
-    height: auto;
-    width: 100%;
-
-    &::before {
-      display: block;
-      content: '';
-      width: 100%;
-      padding-top: 75%;
-    }
-  }
-`)
-
 const Link = window.Link
 class ImageWidget extends Component {
   constructor(props) {

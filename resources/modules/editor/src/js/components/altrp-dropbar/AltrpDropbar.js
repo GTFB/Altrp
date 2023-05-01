@@ -5,7 +5,9 @@ import TemplateLoader from "../../../js/components/template-loader/TemplateLoade
 import DropbarComponent from "../widgets/styled-components/DropbarComponent";
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import iconsManager from "../../../../../front-app/src/js/functions/iconsManager";
-
+const {
+  isEditor
+} = window.altrpHelpers
 class Dropbar extends Component {
   constructor(props) {
     super(props);
@@ -14,13 +16,20 @@ class Dropbar extends Component {
       show: false,
       updateToken: undefined
     };
-
-    this.leaveHide = this.leaveHide.bind(this);
-    this.enterShow = this.enterShow.bind(this);
-
     this.element = props.element;
     this.children = React.createRef();
+    if(! isEditor() && props.settings.mode_dropbar_options === 'click'){
+      document.addEventListener('click', this.onDocumentClick)
+    }
   };
+  onDocumentClick = e=>{
+    if(! this.state.show){
+      return
+    }
+    if(! e.target.closest(`.altrp-dropbar${this.props.elemenentId}`) && ! e.target.closest(`.altrp-element${this.props.elemenentId}`)){
+      this.setState({show: false});
+    }
+  }
   onContainerClick = e=>{
     if(!this.props.settings?.prevent){
       this.show()
@@ -35,16 +44,16 @@ class Dropbar extends Component {
     } else if(full_window){
       body.classList.add('overflow-hidden')
     }
-    if(this.props.settings.show_delay_dropbar_options.size || this.props.settings.hide_delay_dropbar_options.size) {
+    if(this.props.settings.show_delay_dropbar_options?.size || this.props.settings.hide_delay_dropbar_options?.size) {
       if(!this.state.show) {
 
         setTimeout(() => {
           this.setState((state) => ({ show: !state.show }));
-        }, this.props.settings.show_delay_dropbar_options.size);
+        }, this.props.settings.show_delay_dropbar_options?.size);
       } else {
         setTimeout(() => {
           this.setState((state) => ({ show: !state.show }));
-        }, this.props.settings.hide_delay_dropbar_options.size);
+        }, this.props.settings.hide_delay_dropbar_options?.size);
       }
     } else {
       this.setState((state) => ({ show: !state.show }));
@@ -52,26 +61,53 @@ class Dropbar extends Component {
 
   };
 
-  leaveHide() {
+  leaveHide = ()=> {
+    if(this.props.settings.hide_delay_dropbar_options?.size) {
 
-    if(this.props.settings.hide_delay_dropbar_options.size) {
       setTimeout(() => {
-        this.setState({ show: false });
-      }, this.props.settings.hide_delay_dropbar_options.size)
+        if(! this.state.overContainer && !this.state.overButton){
+          this.setState({ show: false });
+        }
+      }, this.props.settings.hide_delay_dropbar_options?.size)
     } else {
       this.setState({ show: false });
     };
   };
-
-  enterShow(e) {
+  onContainerOver = ()=>{
+    if(! this.state.overContainer){
+      this.setState({ overContainer: true });
+    }
+  }
+  onButtonOver = ()=>{
+    if(! this.state.overButton){
+      this.setState({ overButton: true });
+    }
+  }
+  onContainerLeave = ()=>{
+    if( this.state.overContainer){
+      this.setState({ overContainer: false });
+      this.leaveHide()
+    }
+  }
+  onButtonLeave = ()=>{
+    if( this.state.overButton){
+      this.setState({ overButton: false });
+      this.leaveHide()
+    }
+  }
+  enterShow = (e)=> {
     let current = e.currentTarget;
-    if(this.props.showDelay.size && !this.state.show) {
+
+    if(this.props.showDelay?.size && !this.state.show) {
       setTimeout(() => {
         this.setState({ show: true });
-      }, this.props.showDelay.size);
-    } else {
-      this.setState((state) => ({ show: !state.show }));
-    };
+      }, this.props.showDelay?.size);
+    }
+    // else {
+    //   console.log('update');
+    //   console.log(this.state.show);
+    //   this.setState((state) => ({ show: !state.show }));
+    // };
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -109,7 +145,8 @@ class Dropbar extends Component {
         <span className={this.props.conditionalClasses + "altrp-dropbar-children-wrapper " + (mainClass ? mainClass + "-wrapper" : '')}
               style={{width: '100%'}}
               onMouseEnter={this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null}
-              onMouseLeave={this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null}
+              onMouseOver={this.props.settings.mode_dropbar_options === "hover" ? this.onButtonOver : null}
+              onMouseLeave={this.props.settings.mode_dropbar_options === "hover" ? this.onButtonLeave : null}
         >
           {
             React.cloneElement(children,
@@ -137,6 +174,8 @@ class Dropbar extends Component {
           >
             <div
               onClick={this.onContainerClick}
+              onMouseOver={this.props.settings.mode_dropbar_options === "hover" ? this.onContainerOver : null}
+              onMouseLeave={this.props.settings.mode_dropbar_options === "hover" ? this.onContainerLeave : null}
               className={this.props.conditionalClasses + "altrp-dropbar-container " +
                               (` altrp-dropbar${this.props.elemenentId} `) +
                               "altrp-dropbar-btn-containter " +

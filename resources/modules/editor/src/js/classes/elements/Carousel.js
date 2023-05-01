@@ -148,7 +148,7 @@ class Carousel extends BaseElement {
     });
 
     this.addControl('slides_repeater', {
-      label: 'Carousel Items',
+      label: 'Carousel Items List',
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
       default: [
@@ -158,6 +158,8 @@ class Carousel extends BaseElement {
       },
       locked: true,
     });
+
+
 
     this.addControl('slides_path', {
       label: 'Path to Items',
@@ -169,9 +171,44 @@ class Carousel extends BaseElement {
       locked: true,
     });
 
+    this.addControl('cards_on', {
+      label: 'Cards Slides',
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      conditions: {
+        'slides_item_source': 'path',
+      },
+      responsive: false,
+      locked: true,
+    });
+
+
+    this.addControl("card", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Cards Template",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
+      conditions: {
+        'slides_item_source': 'path',
+        'cards_on': true,
+      },
+      nullable: true,
+      responsive: false,
+      locked: true,
+    });
+
     this.addControl('lightbox_slides_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Lightbox',
+      conditions: {
+        'slides_item_source': 'path',
+        'cards_on!': true,
+      },
       default: false,
       locked: true,
     });
@@ -181,12 +218,18 @@ class Carousel extends BaseElement {
       label: 'Single Click for Lightbox',
       conditions:{
         'lightbox_slides_content' : true,
+        'slides_item_source': 'path',
+        'cards_on!': true,
       },
       locked: true,
     });
 
     this.addControl('img_content', {
       type: CONTROLLER_SWITCHER,
+      conditions: {
+        'slides_item_source': 'path',
+        'cards_on!': true,
+      },
       label: '<img/> Tag',
     });
 

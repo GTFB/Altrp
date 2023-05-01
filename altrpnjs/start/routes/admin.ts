@@ -155,6 +155,7 @@ Route.group(() => {
     Route.get('/models/:id/queries', 'admin/ModelsController.getQueries')
     Route.get('/models/:id/accessors', 'admin/ModelsController.getAccessors')
     Route.get('/models_options', 'admin/ModelsController.models_options').name = 'admin.models_options'
+    Route.get('/fields_options', 'admin/ColumnsController.options').name = 'admin.fields_options'
 
 
     /**

@@ -13,15 +13,6 @@ import CKeditor from "../ckeditor/CKeditor";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
 
-(window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
-
-  .altrp-field-label--required::after {
-    line-height: 1.5;
-    font-weight: normal;
-    font-family: "Open Sans";
-  }
-`)
 const AltrpFieldContainer = styled.div`
   ${({settings}) => {
     const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
@@ -106,6 +97,8 @@ class InputWysiwygWidget extends Component {
     this.dispatchFieldValueToStore(value, true);
   }
 
+  componentWillUnmount() {
+  }
 
   /**
    * Загрузка виджета
@@ -121,7 +114,6 @@ class InputWysiwygWidget extends Component {
       this.setState(state => ({ ...state, options }));
     }
     let value = this.state.value;
-
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getLockedContent для получение этого динамического значения
@@ -194,6 +186,7 @@ class InputWysiwygWidget extends Component {
    */
   async _componentDidUpdate(prevProps, prevState) {
     const { content_options, model_for_options } = this.state.settings;
+
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
@@ -415,6 +408,7 @@ class InputWysiwygWidget extends Component {
   }
   onLoad = (ed)=>{
     this.editor = ed
+    console.log(ed);
   }
   /**
    * Изменение значения в виджете
@@ -422,6 +416,7 @@ class InputWysiwygWidget extends Component {
    * @param  editor для получения изменений из CKEditor
    */
   onChange(e, editor = null) {
+
     let value = "";
     let valueToDispatch;
 
@@ -664,7 +659,14 @@ class InputWysiwygWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
-
+  onKeypress=(e, )=>{
+    console.log(e,);
+    if(e.key === 'Enter' && e.ctrlKey){
+      e.stopPropagation();
+      e.preventDefault();
+      return true
+    }
+  }
   /**
    * Взовращает имя для атрибута name
    * @return {string}
@@ -814,7 +816,6 @@ class InputWysiwygWidget extends Component {
       <AltrpFieldContainer
         settings={settings}
         className={`${classes} altrp-field-container`}
-
         id={this.state.settings.position_css_id || ""}
       >
         {content_label_position_type === "top" ? label : ""}

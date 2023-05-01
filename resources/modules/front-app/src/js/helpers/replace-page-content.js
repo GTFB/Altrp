@@ -2,7 +2,6 @@ import {clearCurrentDataStorage, updateCurrentDatasourceWithDefault} from "../st
 import {clearElements} from "../store/elements-storage/actions";
 import mountElements from "../functions/mount-elements";
 import {changeCurrentPage} from "../store/current-page/actions";
-import convertQueryParamsToObject from "../functions/convert-query-params-to-object";
 import delay from "../functions/delay";
 import {changeCurrentModel} from "../store/current-model/actions";
 import loadPageActions from "../functions/actions/load-page-actions";
@@ -329,7 +328,7 @@ async function _replace(htmlString, popstate, url, progressBar) {
 
   let hashParams = {};
   if (document?.location?.hash && document?.location?.hash.indexOf('=') !== -1) {
-    hashParams = convertQueryParamsToObject(document?.location?.hash)
+    hashParams = qs.parse(document?.location?.hash.replace('#', ''))
   }
 
   appStore.dispatch(changeCurrentPage({

@@ -6,11 +6,8 @@ import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
 import axios from "axios";
 import elementsToPdf from "../functions/elementsToPdf";
-import altrpLogin from "../functions/altrpLogin"
-import altrpLogout from "../functions/altrpLogout"
 import dataFromTable from "../functions/dataFromTable"
 import dataToCSV from "../functions/dataToCSV"
-import dataToXML from "../functions/dataToXML"
 import getAppContext from "../functions/getAppContext"
 import getComponentByElementId from "../functions/getComponentByElementId"
 import getHTMLElementById from "../functions/getHTMLElementById"
@@ -768,7 +765,7 @@ class AltrpAction extends AltrpModel {
       scroller = window;
     }
     if (element) {
-      scrollToElement(scroller, element);
+      scrollToElement(scroller, element, await this.getResponsiveProperty('spacing') || 0);
     }
     return {
       success: true
@@ -826,7 +823,9 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
-
+  async getResponsiveProperty(name, defaultValue){
+    return (await import(/* webpackChunkName: 'getResponsiveSetting' */'../functions/getResponsiveSetting')).default(this.data, name, defaultValue)
+  }
   /**
    * Страницу в PDF
    * @return {Promise<{}>}
@@ -935,6 +934,7 @@ class AltrpAction extends AltrpModel {
     }
     let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     try {
+      const dataToXML = (await import(/* webpackChunkName: 'dataToXML' */'../functions/dataToXML')).default
       return await dataToXML(data, filename);
     } catch (error) {
       console.error(error);
@@ -1026,6 +1026,7 @@ class AltrpAction extends AltrpModel {
     if (!success) {
       return {success: false};
     }
+    const altrpLogin = (await import(/* webpackChunkName: 'altrpLogin' */'../functions/altrpLogin')).default
     return await altrpLogin(form.getData(), this.getFormId());
   }
 
@@ -1034,6 +1035,8 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionLogout() {
+    const altrpLogout = (await import(/* webpackChunkName: 'altrpLogout' */'../functions/altrpLogout')).default
+
     return await altrpLogout();
   }
 
@@ -1385,11 +1388,13 @@ class AltrpAction extends AltrpModel {
    */
   async doActionPlaySound() {
     const duration = this.getProperty('milliseconds') || 0;
-    const url = this.getProperty('media_url');
+    let url = this.getProperty('media_url');
+    url = replaceContentWithData(url, this.getCurrentModel().getData());
+
     const loop = this.getProperty('loop');
     if (url) {
       const {playSound} = await import(/* webpackChunkName: 'helpers-sounds' */'../helpers/sounds');
-      playSound(url, loop, duration);
+      await playSound(url, loop, duration);
       await delay(20);
     }
     return {success: true};

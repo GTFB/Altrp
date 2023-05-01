@@ -2,7 +2,13 @@ import DEFAULT_BREAKPOINT from './const/DEFAULT_BREAKPOINT';
 import SCREENS from './const/SCREENS';
 import * as _ from 'lodash'
 
-export default function getResponsiveSetting(settings: object, settingName:string, screenName: string, _default:any = null) {
+export default function getResponsiveSetting(
+  settings: object,
+  settingName:string,
+  screenName: string,
+  _default:any = null,
+  exactMatch: boolean = false
+  ) {
   let elementState = ''
   const currentScreen = SCREENS.find(s=>s.name === screenName) || SCREENS.find(s=>s.name === DEFAULT_BREAKPOINT)
   let _settingName = `${settingName}_${elementState}_`;
@@ -21,6 +27,14 @@ export default function getResponsiveSetting(settings: object, settingName:strin
   let suffix = currentScreen.name;
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
+  if(exactMatch){
+    // if(settingName === 'posts_per_page'){
+    //   console.log(setting);
+    //   console.log(_settingName);
+    //   console.log(screenName);
+    // }
+    return setting === undefined ? _default : setting
+  }
   if (setting === undefined) {
     for (let screen of [...SCREENS].reverse()) {
       if (
@@ -64,7 +78,10 @@ export function setResponsiveSetting(settings: object, settingName:string, scree
   }
   let suffix = currentScreen.name;
   _settingName = `${settingName}_${elementState}_${suffix}`;
-
+  if(settingName === 'posts_per_page'){
+    console.log(_settingName);
+    console.log(value);
+  }
   _.set(settings, _settingName, value);
 
 }

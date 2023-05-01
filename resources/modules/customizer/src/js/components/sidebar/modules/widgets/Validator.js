@@ -9,7 +9,7 @@ class Validator extends React.Component {
 
   render() {
     let nodeClasses = "flow-node-api";
-    if (this.props.selectedNode === 'change' && this.props.id === this.props.selectedNodeId) nodeClasses += " selected";
+    if (this.props.id === this.props.selectedNodeId) nodeClasses += " selected";
 
     return (
       <div className={nodeClasses}>

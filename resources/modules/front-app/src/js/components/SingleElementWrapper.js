@@ -283,6 +283,11 @@ class SingleElementWrapper extends Component {
       ++window.countReduced
       return false
     }
+    if(newProps.altrpPage !== this.props.altrpPage
+      && dependencies.indexOf('altrppage') === -1){
+      ++window.countReduced
+      return false
+    }
     if(newProps.currentDataStorage !== this.props.currentDataStorage
       && dependencies.indexOf('altrpdata') === -1 &&
       newProps.currentDataStorage.getProperty("currentDataStorageLoaded") ===
@@ -439,6 +444,7 @@ class SingleElementWrapper extends Component {
           formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
           altrpPageState: this.props.altrpPageState,
+          altrpPage: this.props.altrpPage,
           altrpMeta: this.props.altrpMeta,
           updateToken: this.state.updateToken,
           currentScreen: this.props.currentScreen,
@@ -462,6 +468,7 @@ class SingleElementWrapper extends Component {
           formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
           altrpPageState: this.props.altrpPageState,
+          altrpPage: this.props.altrpPage,
           altrpMeta: this.props.altrpMeta,
           updateToken: this.state.updateToken,
           currentScreen: this.props.currentScreen,
@@ -566,6 +573,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
+    altrpPage: state.altrpPage,
     currentScreen: state.currentScreen
   };
 }

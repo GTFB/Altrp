@@ -86,3 +86,5 @@ dhparam.pem
 /test.scss
 /test.html
 /test.log
+/test.ts
+/test.sql

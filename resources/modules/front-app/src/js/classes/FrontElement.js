@@ -149,6 +149,13 @@ class FrontElement {
       this.formInit();
       return;
     }
+    if(this.getName() === "input-range-slider" &&
+      this.getFormId("form_id_start") &&
+      this.getFormId("form_id_end")
+    ) {
+      this.formInit();
+      return;
+    }
 
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
       this.formInit();
@@ -275,6 +282,7 @@ class FrontElement {
       case 'input-tel':
       case 'input-number':
       case 'input-hidden':
+      case 'input-slider':
       case 'input-text':
       case 'input-text-common':
       case 'input-text-autocomplete':
@@ -286,6 +294,11 @@ class FrontElement {
       break;
 
       case 'input-date-range': {
+        formsManager.addField(this.getFormId("form_id_start"), this);
+        formsManager.addField(this.getFormId("form_id_end"), this);
+      }
+      break;
+      case 'input-range-slider': {
         formsManager.addField(this.getFormId("form_id_start"), this);
         formsManager.addField(this.getFormId("form_id_end"), this);
       }

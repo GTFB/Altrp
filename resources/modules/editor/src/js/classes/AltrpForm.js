@@ -282,6 +282,7 @@ class AltrpForm {
         }
       });
     }
+
     return data;
   }
 

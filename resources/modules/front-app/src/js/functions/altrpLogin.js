@@ -31,7 +31,7 @@ export default async function altrpLogin(data = {}, formId = "login") {
       success: false
     };
   }
-  _token = res._token;
+  //_token = res._token;
 
   let currentUser = await new Resource({
     route: "/ajax/current-user"

@@ -12,6 +12,7 @@ export default class UsersSchema extends BaseSchema {
         table.string('email', 255).notNullable().unique()
         table.string('password', 180).notNullable()
         table.timestamp("email_verified_at").nullable()
+        table.timestamp("telegram_verified_at").nullable()
         table.string('remember_me_token').nullable()
         table.string('last_name').nullable()
         table.string('telegram_user_id').nullable()

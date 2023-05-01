@@ -507,9 +507,7 @@ class BaseElement extends ControlStack {
         settingName
       );
 
-      if(settingName === "button_text") {
-        console.log(control, settings[settingName]);
-      }
+
       if (!control || !control.default) {
         if (_.isString(_default)) {
           return _default;
@@ -517,9 +515,7 @@ class BaseElement extends ControlStack {
         return _default || null;
       }
       settings[settingName] = control.default;
-      if(settingName === "button_text") {
-        console.log(control, settings[settingName]);
-      }
+
     }
 
     return settings[settingName] || _default;

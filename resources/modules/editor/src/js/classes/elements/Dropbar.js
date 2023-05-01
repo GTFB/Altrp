@@ -265,9 +265,6 @@ class Dropbar extends BaseElement {
     this.addControl("show_delay_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: 'Dropbar show delay',
-      default: {
-        unit: 'ms',
-      },
       units: [
         'ms'
       ],

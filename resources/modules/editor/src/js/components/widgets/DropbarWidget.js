@@ -6,10 +6,6 @@ import scrollToElement from "../../../../../front-app/src/js/functions/scrollToE
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
-
-(window.globalDefaults = window.globalDefaults || []).push(``);
-
-
 class DropbarWidget extends Component {
   constructor(props) {
     super(props);

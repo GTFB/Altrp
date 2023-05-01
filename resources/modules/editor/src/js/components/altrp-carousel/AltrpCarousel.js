@@ -22,11 +22,21 @@ class AltrpCarousel extends Component {
     super(props);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
+    const card = getResponsiveSetting(props, 'card');
+    const cards_on = getResponsiveSetting(props, 'cards_on');
+    const slides_item_source = getResponsiveSetting(props, 'slides_item_source');
+    let slidesMap = []
+    if(cards_on && slides_item_source === 'path' && card && isEditor()){
+      slidesMap = generateSlidesForTemplatePreview(card)
+    }
+
     this.state = {
       activeSlide: 0,
       openLightBox: false,
       sliderImages: [],
       updateToken: null,
+      slidesMap,
+      card,
     }
   }
 
@@ -45,6 +55,22 @@ class AltrpCarousel extends Component {
   }
 
   componentDidUpdate(prevProps) {
+
+    const card = getResponsiveSetting(this.props, 'card')
+    if( this.state.card !== card){
+      const cards_on = getResponsiveSetting(this.props, 'cards_on')
+      const slides_item_source = getResponsiveSetting(this.props, 'slides_item_source')
+      let slidesMap = this.state.slidesMap
+      if(cards_on && slides_item_source === 'path' && card && isEditor()){
+        slidesMap = generateSlidesForTemplatePreview(card)
+      }
+
+      this.setState(state => ({
+        ...state,
+        slidesMap,
+        card
+      }))
+    }
     let slides_repeater = getResponsiveSetting(this.props,'slides_repeater', '', []) ;
     if(slides_repeater !== prevProps.slides_repeater
         && getResponsiveSetting(this.props, 'slides_item_source', '', 'custom') !== 'custom') {
@@ -151,14 +177,22 @@ class AltrpCarousel extends Component {
   render(){
     let classes = this.props.classes
     let carouselContainerClasses = `${classes} altrp-carousel-container`;
+    const itemsSourceType = getResponsiveSetting(this.props, 'slides_item_source', '', 'custom');
 
     carouselContainerClasses += (!this.props.arrows_navigation_content ? " altrp-carousel-container-no-arrow" : "");
 
     //точки
     let slides = getResponsiveSetting(this.props,'slides_repeater', '', []) ;
-    if (slides.length === 0) {
+
+    if (slides.length === 0 && itemsSourceType !== 'path') {
       if (isEditor()) {
-        return 'No Slides'
+        //return 'No Slides'
+        slides = [
+          {},
+          {},
+          {},
+          {},
+        ]
       } else {
         return ''
       }
@@ -217,6 +251,12 @@ class AltrpCarousel extends Component {
     const autoplay_additional_content = getResponsiveSetting(this.props, 'autoplay_additional_content')
     const pause_on_interaction_loop_additional_content = getResponsiveSetting(this.props, 'pause_on_interaction_loop_additional_content')
     const transition_autoplay_duration_additional_content = getResponsiveSetting(this.props, 'transition_autoplay_duration_additional_content')
+    const cards_on = getResponsiveSetting(this.props, 'cards_on')
+    const slides_item_source = getResponsiveSetting(this.props, 'slides_item_source')
+    let card
+    if(cards_on){
+      card = getResponsiveSetting(this.props, 'card')
+    }
 
     let settings = {
       vertical,
@@ -252,7 +292,6 @@ class AltrpCarousel extends Component {
     const overlay_select_heading_additional_content = getResponsiveSetting(this.props, 'overlay_select_heading_additional_content')
 
     // слайды
-    const itemsSourceType = getResponsiveSetting(this.props, 'slides_item_source', '', 'custom');
     let slidesMap;
     switch(itemsSourceType){
       case 'custom':{
@@ -273,7 +312,7 @@ class AltrpCarousel extends Component {
             className: `${classes} altrp-carousel-slide-img`,
           });
 
-          if(typeSlide === true) {
+           if(typeSlide === true ) {
             content = <TemplateLoader
               onLoad={() => {
                 this.setState({ updateToken: Math.random() })
@@ -320,75 +359,82 @@ class AltrpCarousel extends Component {
         });
       }break;
       case 'path':{
+
         if(isEditor()){
-          slidesMap = [
-            (
-              <div className={`${classes} altrp-carousel-slide`} key={1}>{
-                renderAsset({
-                  url: '/img/nullImage.png',
-                  assetType: 'mediaBackground',
-                }, {
-                  key: 1,
-                  className: `${classes} altrp-carousel-slide-img`,
-                })
-              }</div>
-            ),
-            (
-              <div className={`${classes} altrp-carousel-slide`} key={2}>{
-                renderAsset({
-                  url: '/img/nullImage.png',
-                  assetType: 'mediaBackground',
-                }, {
-                  key: 1,
-                  className: `${classes} altrp-carousel-slide-img`,
-                })
-              }</div>
-            ),
-            (
-              <div className={`${classes} altrp-carousel-slide`} key={3}>{
-                renderAsset({
-                  url: '/img/nullImage.png',
-                  assetType: 'mediaBackground',
-                }, {
-                  key: 1,
-                  className: `${classes} altrp-carousel-slide-img`,
-                })
-              }</div>
-            ),
-            (
-              <div className={`${classes} altrp-carousel-slide`} key={4}>{
-                renderAsset({
-                  url: '/img/nullImage.png',
-                  assetType: 'mediaBackground',
-                }, {
-                  key: 1,
-                  className: `${classes} altrp-carousel-slide-img`,
-                })
-              }</div>
-            ),
-            (
-              <div className={`${classes} altrp-carousel-slide`} key={5}>{
-                renderAsset({
-                  url: '/img/nullImage.png',
-                  assetType: 'mediaBackground',
-                }, {
-                  key: 1,
-                  className: `${classes} altrp-carousel-slide-img`,
-                })
-              }</div>
-            ),
-            (
-              <div className={`${classes} altrp-carousel-slide`} key={6}>{
-                renderAsset({
-                  url: '/img/nullImage.png',
-                  assetType: 'mediaBackground',
-                }, {
-                  key: 1,
-                  className: `${classes} altrp-carousel-slide-img`,
-                })
-              }</div>
-            ),
-          ];
+
+          if(cards_on && slides_item_source === 'path' && card){
+            slidesMap = this.state.slidesMap
+
+          } else {
+            slidesMap = [
+              (
+                <div className={`${classes} altrp-carousel-slide`} key={1}>{
+                  renderAsset({
+                    url: '/img/nullImage.png',
+                    assetType: 'mediaBackground',
+                  }, {
+                    key: 1,
+                    className: `${classes} altrp-carousel-slide-img`,
+                  })
+                }</div>
+              ),
+              (
+                <div className={`${classes} altrp-carousel-slide`} key={2}>{
+                  renderAsset({
+                    url: '/img/nullImage.png',
+                    assetType: 'mediaBackground',
+                  }, {
+                    key: 1,
+                    className: `${classes} altrp-carousel-slide-img`,
+                  })
+                }</div>
+              ),
+              (
+                <div className={`${classes} altrp-carousel-slide`} key={3}>{
+                  renderAsset({
+                    url: '/img/nullImage.png',
+                    assetType: 'mediaBackground',
+                  }, {
+                    key: 1,
+                    className: `${classes} altrp-carousel-slide-img`,
+                  })
+                }</div>
+              ),
+              (
+                <div className={`${classes} altrp-carousel-slide`} key={4}>{
+                  renderAsset({
+                    url: '/img/nullImage.png',
+                    assetType: 'mediaBackground',
+                  }, {
+                    key: 1,
+                    className: `${classes} altrp-carousel-slide-img`,
+                  })
+                }</div>
+              ),
+              (
+                <div className={`${classes} altrp-carousel-slide`} key={5}>{
+                  renderAsset({
+                    url: '/img/nullImage.png',
+                    assetType: 'mediaBackground',
+                  }, {
+                    key: 1,
+                    className: `${classes} altrp-carousel-slide-img`,
+                  })
+                }</div>
+              ),
+              (
+                <div className={`${classes} altrp-carousel-slide`} key={6}>{
+                  renderAsset({
+                    url: '/img/nullImage.png',
+                    assetType: 'mediaBackground',
+                  }, {
+                    key: 1,
+                    className: `${classes} altrp-carousel-slide-img`,
+                  })
+                }</div>
+              ),
+            ];
+          }
         } else {
           slidesMap = getDataByPath(getResponsiveSetting(this.props, 'slides_path'));
           if(! _.isArray(slidesMap) && _.isObject(slidesMap)){
@@ -398,21 +444,32 @@ class AltrpCarousel extends Component {
           }
 
           slidesMap = slidesMap.map((media, idx)=>{
-            if(_.isObject(media.media)){
-              media = media.media;
+            let content
+
+            if(cards_on && slides_item_source === 'path' && card){
+              content = <div className={`${classes} altrp-carousel-slide`} key={6}>
+                <TemplateLoader
+                  cardModel={new altrpHelpers.AltrpModel(media)}
+                  templateId={card}
+                /></div>
+            } else {
+
+              if(_.isObject(media.media)){
+                media = media.media;
+              }
+
+              media.url = media.url || '/img/nullImage.png';
+              media.name = media.name || 'null';
+              media.assetType = media.assetType || 'mediaBackground';
+              if(media.assetType === 'media') {
+                media.assetType = 'mediaBackground';
+              }
+
+              content = renderAsset(media, {
+                className: `${classes} altrp-carousel-slide-img`,
+              });
+
             }
-
-            media.url = media.url || '/img/nullImage.png';
-            media.name = media.name || 'null';
-            media.assetType = media.assetType || 'mediaBackground';
-            if(media.assetType === 'media') {
-              media.assetType = 'mediaBackground';
-            }
-
-            let content = renderAsset(media, {
-              className: `${classes} altrp-carousel-slide-img`,
-            });
-
             return (
                 <div className={`${classes} altrp-carousel-slide`} key={idx}
                      onClick={()=>{
@@ -507,7 +564,7 @@ class AltrpCarousel extends Component {
       ) : ""
 
     }
-    slidesMap
+
     return <AltrpCarouselWrapper
       onClick={this.wrapperClick}
       settings={{...this.props}} className={`${classes} altrp-carousel`}>
@@ -540,3 +597,38 @@ class AltrpCarousel extends Component {
 }
 
 export default AltrpCarousel
+
+function generateSlidesForTemplatePreview(card){
+  return [
+    (
+      <div className={`altrp-carousel-slide`} key={1}>
+        <TemplateLoader
+          templateId={card}
+        /></div>),
+    (
+      <div className={`altrp-carousel-slide`} key={2}>
+        <TemplateLoader
+          templateId={card}
+        /></div>),
+    (
+      <div className={`altrp-carousel-slide`} key={3}>
+        <TemplateLoader
+          templateId={card}
+        /></div>),
+    (
+      <div className={`altrp-carousel-slide`} key={4}>
+        <TemplateLoader
+          templateId={card}
+        /></div>),
+    (
+      <div className={`altrp-carousel-slide`} key={5}>
+        <TemplateLoader
+          templateId={card}
+        /></div>),
+    (
+      <div className={`altrp-carousel-slide`} key={6}>
+        <TemplateLoader
+          templateId={card}
+        /></div>),
+  ]
+}

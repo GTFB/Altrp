@@ -144,12 +144,12 @@ export const flatStyleArray = (styleArray, withPreset) => {
       }
 
       return map(item[1], (style, key) => {
-        if( _.isObject(style)){
-          //console.log(key);
-          // console.log(item[0]);
-          // console.log(toCSS(style));
-          return  `${item[0]}??${key}??{${toCSS(style)}}`
-        }
+        // if( _.isObject(style)){
+        //   //console.log(key);
+        //   // console.log(item[0]);
+        //   // console.log(toCSS(style));
+        //   return  `${item[0]}??${key}??{${toCSS(style)}}`
+        // }
         return `${item[0]}??${key}??${style}`
       })
     })

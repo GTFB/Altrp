@@ -9,3 +9,9 @@
 .ck.ck-editor__editable_inline>:first-child {
     margin-top: 0.9em;
 }
+
+.altrp-field-label--required::after {
+  line-height: 1.5;
+  font-weight: normal;
+  font-family: "Arial", sans-serif;
+}

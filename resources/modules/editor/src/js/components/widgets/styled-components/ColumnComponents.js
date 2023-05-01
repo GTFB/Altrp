@@ -493,7 +493,6 @@ const ColumnComponent = (settings, elementId) => {
   if (backgroundImageH) {
     styles += backgroundImageControllerToStyles(backgroundImageH);
   }
-  styles += "} ";
 
 
   //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
@@ -565,6 +564,7 @@ const ColumnComponent = (settings, elementId) => {
   if (boxShadowH) {
     styles += shadowStyled(boxShadowH);
   }
+  styles += "} ";
 
   //</editor-fold>
 
@@ -581,6 +581,7 @@ const ColumnComponent = (settings, elementId) => {
 
     }
   }
+
   return styles;
 };
 

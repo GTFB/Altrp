@@ -215,7 +215,7 @@ export default class MediaController {
     return MediaController.fileTypes;
   }
   static getTypeForFile(file) {
-    let extensionLoaded = file.extname.split(".").pop();
+    let extensionLoaded = file.clientName.split(".").pop();
 
     let type = "";
     let file_types = MediaController.getFileTypes();
@@ -246,7 +246,7 @@ export default class MediaController {
         continue;
       }
       // @ts-ignore
-      const ext = file.extname.split(".").pop();
+      const ext = file.clientName.split(".").pop();
       let media = new Media();
       media.media_type = file.type || "";
       media.author = user.id;
@@ -334,7 +334,7 @@ export default class MediaController {
         continue;
       }
       // @ts-ignore
-      const ext = file.extname.split(".").pop();
+      const ext = file.clientName.split(".").pop();
       let media = new Media();
       media.title = file.clientName;
       media.media_type = file.type || "";

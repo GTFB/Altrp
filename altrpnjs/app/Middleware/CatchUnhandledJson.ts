@@ -14,7 +14,7 @@ export default class CatchUnhandledJson {
    * Handle request
    */
   public async handle (
-    { response }: HttpContextContract,
+    { response, request, auth }: HttpContextContract,
     next: () => Promise<void>,
   ) {
     response.header('Content-Type', 'application/json')
@@ -22,8 +22,16 @@ export default class CatchUnhandledJson {
       await next()
     }catch (e) {
       response.status(500)
-
-      console.error(e?.request || e, e?.response?.data || '') ;
+      const all = request.all()
+      if(all.password){
+        delete all.password
+      }
+      console.error(e?.request || e, e?.response?.data || '', `
+====== METHOD ${request.method()}
+====== URL ${request.url()}
+====== DATA: ${JSON.stringify(all, null, 2)}
+====== USER_ID: ${auth.user?.id}
+`) ;
       return response.json({
         // ...e,
         axios_response: e.response,

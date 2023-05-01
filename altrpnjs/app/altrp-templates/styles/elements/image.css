@@ -1,0 +1,38 @@
+.altrp-image {
+  margin:0;
+  padding: 0;
+  opacity: 1;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.altrp-image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.altrp-image-container, .altrp-image-container a {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.altrp-image-placeholder {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  height: auto;
+  width: 100%;
+}
+.altrp-image-placeholder::before {
+   display: block;
+   content: '';
+   width: 100%;
+   padding-top: 75%;
+ }
+

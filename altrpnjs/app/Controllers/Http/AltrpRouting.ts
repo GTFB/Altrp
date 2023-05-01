@@ -249,8 +249,6 @@ export default class AltrpRouting {
 
         if(page.settings?.modelRelations?.length){
           page.settings.modelRelations.forEach(r=>{
-            console.log(ModelClass.$hasRelation(r.value));
-            console.log(r.value);
             if(ModelClass.$hasRelation(r.value)){
               query.preload(r.value);
             }
@@ -271,8 +269,6 @@ export default class AltrpRouting {
               if(ModelClass.$hasRelation(relationName)) {
                 query.whereHas(relationName, query=>{
                   const tableName = pluralize(relationName)
-                  console.log(tableName);
-                  console.log(relationName);
                   query.where(`${tableName}.${relationField}`, matchValue)
                 })
               }

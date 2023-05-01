@@ -45,9 +45,9 @@ class Switch extends React.Component {
           <div className="condition-text">{this.props?.data?.label}</div>
           <div className="condition-type">{this.props?.type}</div>
         </div>
-        {handle}
         {
           items.map((item, idx) => {
+
             return <Handle
               type="source"
               position="top"

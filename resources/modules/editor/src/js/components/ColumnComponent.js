@@ -2,15 +2,6 @@ import getDataByPath from "../../../../front-app/src/js/functions/getDataByPath"
 import isEditor from "../../../../front-app/src/js/functions/isEditor"
 import redirect from "../../../../front-app/src/js/functions/redirect"
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-column {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
-    align-content: flex-start;
-  }
-`);
-
 class ColumnComponent extends Component {
   constructor(props) {
     super(props);

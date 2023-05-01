@@ -1,4 +1,4 @@
-// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Page from "App/Models/Page";
 import Role from "App/Models/Role";
@@ -10,11 +10,22 @@ import Template from "App/Models/Template";
 import filtration from "../../../helpers/filtration";
 import User from "App/Models/User";
 import Customizer from "App/Models/Customizer";
-import HttpContextContract from "helpers/plugins/adonis-core/HttpContextContract";
 
 export default class OptionsController {
-  public async pages() {
+  public async pages({request}: HttpContextContract) {
     const pages = await Page.all()
+
+    const {with_id} = request.qs()
+
+    if(with_id){
+      return (await Page.all()).map(p=>{
+
+        return {
+          value: p.id,
+          label: `${p.title} (${p.id})`
+        }
+      })
+    }
 
     return options(pages, {
       value: "id",

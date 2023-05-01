@@ -1130,13 +1130,6 @@ class InputMultiSelectWidget extends Component {
   }
 
   /**
-   *
-   * @param {
-   *   {
-   *     label: string
-   *     value: string
-   *   }
-   * }value
    * @returns {string}
    */
   tagRender(value) {

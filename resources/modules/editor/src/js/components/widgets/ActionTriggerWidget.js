@@ -61,9 +61,10 @@ class ActionTriggerWidget extends React.Component {
    * Подписать интервальные действия
    */
   subscribeIntervalTriggers() {
-    const timeout = this.element.getResponsiveLockedSetting('timeout')
+    const timeout = Number(this.element.getResponsiveLockedSetting('timeout'))
     if(timeout){
       setTimeout(()=>{
+        this.doActions()
         this.intervalId = setInterval(this.doActions, this.element.getResponsiveLockedSetting('interval') || 1000)
       }, timeout)
     } else {
@@ -76,7 +77,10 @@ class ActionTriggerWidget extends React.Component {
       clearInterval(this.intervalId)
       return
     }
+    let event =  this.element.getResponsiveLockedSetting('event') || ''
+
     if(this.type === 'event'){
+      console.log('removeEventListener', event);
       document.removeEventListener(event, this.onEvent)
     }
   }

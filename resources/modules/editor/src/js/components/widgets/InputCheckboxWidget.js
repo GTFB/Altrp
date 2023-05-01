@@ -44,6 +44,8 @@ class InputCheckboxWidget extends Component {
     this.defaultValue =
       this.getLockedContent("content_default_value", true) ||
       (this.valueMustArray() ? [] : "");
+
+    this.defaultValue = altrpHelpers.mbParseJSON(this.defaultValue, this.defaultValue)
     if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
       this.defaultValue = [];
     }
@@ -58,7 +60,7 @@ class InputCheckboxWidget extends Component {
     this.altrpSelectRef = React.createRef();
     const value = this.getValue();
     if (!value && this.getLockedContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value", true));
+      this.dispatchFieldValueToStore(this.defaultValue);
     }
   }
 
@@ -140,6 +142,7 @@ class InputCheckboxWidget extends Component {
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
       value = this.getLockedContent("content_default_value", true);
+      value = altrpHelpers.mbParseJSON(value, value)
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -153,7 +156,9 @@ class InputCheckboxWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value", true);
+      value = this.getLockedContent("content_default_value", true);
+
+      value = altrpHelpers.mbParseJSON(value, value)
 
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -201,7 +206,7 @@ class InputCheckboxWidget extends Component {
         "content_default_value",
           true,
       );
-// conl
+      value = altrpHelpers.mbParseJSON(value, value)
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -218,7 +223,13 @@ class InputCheckboxWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value", true));
+
+      let value = this.getLockedContent(
+        "content_default_value",
+        true,
+      );
+      value = altrpHelpers.mbParseJSON(value, value)
+      this.dispatchFieldValueToStore(value);
     }
 
     /**
@@ -454,6 +465,7 @@ class InputCheckboxWidget extends Component {
    */
   dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
+
     let fieldName = this.props.element.getFieldId();
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
@@ -594,19 +606,6 @@ class InputCheckboxWidget extends Component {
 
     let value = this.state.value;
 
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getLockedContent("content_default_value", true);
-    }
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(

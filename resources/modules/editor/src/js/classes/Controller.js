@@ -98,9 +98,10 @@ class Controller {
        * @type {RepeaterController}
        * @public
        */
+
       this.data.repeater.changeValue(
         this.data.itemIndex,
-        this.data.controlId + getElementSettingsSuffix(this, true),
+        this.data.controlId + getElementSettingsSuffix(this, ! this.data.responsive),
         value
       );
       // console.error(this.data.controlId + getElementSettingsSuffix(this, true));

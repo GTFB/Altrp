@@ -106,6 +106,9 @@ export default class User extends BaseModel {
   @column.dateTime({  })
   public email_verified_at: DateTime
 
+  @column.dateTime({  })
+  public telegram_verified_at: DateTime
+
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 

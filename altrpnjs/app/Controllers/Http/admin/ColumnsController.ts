@@ -4,6 +4,7 @@ import Model from "App/Models/Model";
 import Event from '@ioc:Adonis/Core/Event'
 import Column from "App/Models/Column";
 import Database from "@ioc:Adonis/Lucid/Database";
+import * as _ from "lodash"
 
 export default class ColumnsController {
 
@@ -281,5 +282,37 @@ export default class ColumnsController {
     }
     return response.json({success:true, })
   }
+  async options(
+    {
+      request
+    }:HttpContextContract){
 
+    const {
+      model_id,
+      value,
+    } = request.qs()
+
+    const query = Column.query()
+
+    query.orderBy('name')
+
+    if(model_id){
+      query.where('model_id', model_id)
+    }
+    query.select('name', 'id')
+
+    let data: any[] = await query
+    data = data.map(item =>{
+      return {
+        value: value ? item[value] : item.id,
+        label: item.name
+      }
+    })
+    data = _.uniqBy(data, 'label')
+    return {
+      success: true,
+      data,
+    }
+
+  }
 }

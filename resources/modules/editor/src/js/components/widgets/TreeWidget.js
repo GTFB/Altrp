@@ -6,68 +6,6 @@ import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/
 
 import {Tree as TreeBlueprint} from '@blueprintjs/core'
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-tree-columns {
-    display: grid;
-  }
-
-  .altrp-tree-heading {
-    display: grid;
-    padding-left: 60px;
-    align-items: center;
-  }
-
-  .altrp-tree-heading__text {
-    display: inline-block;
-  }
-
-  .altrp-tree {
-    overflow-x: auto;
-  }
-
-  .bp3-tree-root > .bp3-tree-node {
-    padding-left: 0;
-  }
-
-  .bp3-tree-node__border_last > .bp3-tree-node-content .altrp-tree-columns__column_divider {
-     border-bottom: none;
-  }
-
-  .bp3-tree-node {
-    padding-left: 20px
-  }
-
-  .bp3-tree-node-caret-none {
-    z-index: 99;
-  }
-
-  .bp3-collapse .bp3-tree-node-content {
-      padding: 0;
-  }
-
-  .altrp-tree-columns__column {
-    display: flex;
-    align-items: center;
-  }
-
-  .bp3-tree-node-expanded > .bp3-tree-node-content .altrp-tree-columns__column_divider {
-    border-bottom: none;
-  }
-
-  .bp3-tree-node-list > .bp3-tree-node__border_last {
-    margin-bottom: 10px
-  }
-
-  .altrp-tree-columns__column {
-    position-relative
-  }
-
-  .altrp-tree-container {
-    display: flex;
-  }
-`)
-
-
 export const normalizeValues = function(branch, iconValue=this.props.element.getSettings("icon")) {
   const folderIcon = "folder-close";
 
@@ -201,14 +139,13 @@ const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=fal
   return branch
 }
 
-const getColumns = (columns, branch, flat, maxDepth) => {
-
+const getColumns = (columns, branch,  flat, maxDepth) => {
   const filteredColumns = columns.filter(c => {
 
     return branch[c.value] !== null && branch[c.value] !== undefined
   })
 
-  const firstElementWidth = filteredColumns?.[0].size || "1" + filteredColumns?.[0].unit || "px"
+  const firstElementWidth = filteredColumns?.[0]?.size || "1" + filteredColumns?.[0]?.unit || "px"
   const widths = filteredColumns.slice(1).map(column => {
     if(column.width) {
       return `${(column.width.size || "1") + column.width.unit || "fr"}`
@@ -221,6 +158,12 @@ const getColumns = (columns, branch, flat, maxDepth) => {
     classNames: "altrp-tree-columns__column",
     marginRight: 0,
     translateX: 0
+  }
+
+  let tag = 'div'
+  if(branch.url){
+    values.href = branch.url
+    tag = 'a'
   }
 
   if(flat) {
@@ -257,36 +200,29 @@ const getColumns = (columns, branch, flat, maxDepth) => {
                 classNames += " altrp-tree-columns__column_divider"
               }
 
-              // console.log(marginRight)
+
 
               return (
-                <div
-                  className={classNames}
-                  key={branch[column.value] + idx}
-                >
-                  {
-                    branch[column.value]
-                  }
-                </div>
+                React.createElement(tag, {
+                    className:classNames,
+                    href: values.href,
+                    key:branch[column.value] + idx,
+                  }, branch[column.value] )
+
               )
             })
           }
         </div>
       ) : (
         <>
-          {
-            <div
-              className={values.classNames}
-              style={{
-                width: firstElementWidth,
-                marginRight: values.marginRight,
-                float: "left"
-              }}
-            >
-              {
-                branch[columns[0].value]
-              }
-            </div>
+          { React.createElement(tag, {
+            className:values.classNames,
+            href: values.href,
+            style:{
+              width: firstElementWidth,
+              marginRight: values.marginRight,
+              float: "left"
+            }}, branch[columns[0].value] )
           }
           <div className="altrp-tree-columns_flat altrp-tree-columns" style={{
             transform: `translateX(-${values.translateX}px)`,
@@ -297,8 +233,6 @@ const getColumns = (columns, branch, flat, maxDepth) => {
                 if(idx === 0) return "";
 
                 let classNames = "altrp-tree-columns__column";
-
-                // console.log(marginRight)
 
                 return (
                   <div
@@ -462,6 +396,7 @@ class TreeWidget extends Component {
 
       const data = this.getFromDatasource(settings) || [];
 
+
       this.setState((s) => ({
         ...s,
         repeater: data
@@ -578,7 +513,7 @@ class TreeWidget extends Component {
   }
 
   getTreeHeading() {
-    const columns_repeater = this.props.element.getLockedSettings("column_repeater");
+    const columns_repeater = this.props.element.getLockedSettings("tree_repeater") || [];
     const activated = this.props.element.getLockedContent("columns_heading_activator")
 
     const widths = columns_repeater.map(column => {

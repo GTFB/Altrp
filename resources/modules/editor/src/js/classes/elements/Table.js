@@ -1074,6 +1074,7 @@ class Table extends BaseElement {
 
     this.addControl('row_select', {
       type: CONTROLLER_SWITCHER,
+      locked: true,
       label: 'Row Select',
       default: false,
     });
@@ -1081,6 +1082,7 @@ class Table extends BaseElement {
     this.addControl('checkbox_checked_icon', {
       type: CONTROLLER_MEDIA,
       label: 'Checked Icon',
+      locked: true,
       conditions: {
         row_select: true,
       },
@@ -1089,6 +1091,7 @@ class Table extends BaseElement {
     this.addControl('checkbox_unchecked_icon', {
       type: CONTROLLER_MEDIA,
       label: 'Unchecked Icon',
+      locked: true,
       conditions: {
         row_select: true,
       },
@@ -1097,6 +1100,7 @@ class Table extends BaseElement {
     this.addControl('checkbox_indeterminate_icon', {
       type: CONTROLLER_MEDIA,
       label: 'Indeterminate Icon',
+      locked: true,
       conditions: {
         row_select: true,
       },
@@ -1114,6 +1118,7 @@ class Table extends BaseElement {
     this.addControl('row_select_all', {
       type: CONTROLLER_SWITCHER,
       label: 'Select All',
+      locked: true,
       default: false,
       conditions: {
         row_select: true,
@@ -1124,6 +1129,7 @@ class Table extends BaseElement {
     this.addControl('selected_storage', {
       label: 'Selected Storage',
       dynamic: false,
+      locked: true,
       responsive: false,
       conditions: {
         row_select: true,
@@ -1134,6 +1140,7 @@ class Table extends BaseElement {
       label: 'Selected IDs Storage',
       dynamic: false,
       responsive: false,
+      locked: true,
       conditions: {
         row_select: true,
       },

@@ -190,6 +190,7 @@ class Table extends BaseElement {
     this.addControl('posts_per_page', {
       type: CONTROLLER_NUMBER,
       label: 'Posts per Page',
+      //locked: true,
       default: 3,
     });
 

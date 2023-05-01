@@ -1,6 +1,7 @@
 import store, { getCurrentScreen, getElementState } from "../store/store";
 import { toggleDynamicContent } from "../store/dynamic-content/actions";
 import { getElementSettingsSuffix } from "../helpers";
+import getResponsiveSetting from "../../../../front-app/src/js/functions/getResponsiveSetting";
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
@@ -102,12 +103,17 @@ function getSettings(settingName, locked= false) {
         this.props.controller.data.repeater.props.controlId
       )[this.props.controller.data.itemIndex]
     ) {
-      // console.log(this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true));
+      // responsive controllers in repeater
+      if(this.props.controller.data.responsive){
+        return getResponsiveSetting(this.props.controller.data.repeater.getSettings(
+          this.props.controller.data.repeater.props.controlId
+        )[this.props.controller.data.itemIndex], this.props.controller.data.controlId)
+      }
       return this.props.controller.data.repeater.getSettings(
         this.props.controller.data.repeater.props.controlId
       )[this.props.controller.data.itemIndex][
         this.props.controller.data.controlId +
-          getElementSettingsSuffix(this.props.controller, true)
+          getElementSettingsSuffix(this.props.controller,true)
       ];
     }
     /**

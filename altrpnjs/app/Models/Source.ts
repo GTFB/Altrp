@@ -199,7 +199,7 @@ export default class Source extends BaseModel {
     return `
     if(! await httpContext.auth?.user?.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
       httpContext.response.status(403);
-      return httpContext.response.json({success: false,  message: 'Permission denied'});
+      return httpContext.response.json({success: false,  message: 'Permission denied (roles)'});
     }
     `
   }
@@ -211,7 +211,7 @@ export default class Source extends BaseModel {
     return `
     if(! await httpContext.auth?.user?.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
       httpContext.response.status(403);
-      return httpContext.response.json({success: false, message: 'Permission denied'});
+      return httpContext.response.json({success: false, message: 'Permission denied (permissions)'});
     }
     `
   }
@@ -433,15 +433,16 @@ export default class Source extends BaseModel {
     const qs = httpContext?.request.qs() || {};
     const all = httpContext?.request.all() || {};
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
-    this.setCustomizerData('context.request', httpContext.request);
+    this.setCustomizerData('context.request', httpContext?.request);
     this.setCustomizerData('httpContext', httpContext);
-    this.setCustomizerData('request', httpContext.request);
-    this.setCustomizerData('context.response', httpContext.response);
-    this.setCustomizerData('response', httpContext.response);
-    this.setCustomizerData('session', httpContext.session);
+    this.setCustomizerData('request', httpContext?.request);
+    this.setCustomizerData('context.response', httpContext?.response);
+    this.setCustomizerData('response', httpContext?.response);
+    this.setCustomizerData('session', httpContext?.session);
     this.setCustomizerData('this', this);
-    this.setCustomizerData('current_user', httpContext.auth?.user);
-    this.setCustomizerData('context.current_user', httpContext.auth?.user);
+    this.setCustomizerData('altrpuser', httpContext?.auth?.user);
+    this.setCustomizerData('current_user', httpContext?.auth?.user);
+    this.setCustomizerData('context.current_user', httpContext?.auth?.user);
     ${this?.customizer?.getMethodContent() || ''}
     `}
       break;

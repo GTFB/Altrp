@@ -1,5 +1,5 @@
 import qs from 'qs'
-import {changeCurrentPageProperty} from "../store/current-page/actions";
+import { changeCurrentPageProperty} from "../store/current-page/actions";
 /**
  *
  * @param paramName{string | {}}
