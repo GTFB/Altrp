@@ -44,8 +44,8 @@ export const mergeScreenQuery = (names: string[]) => {
   const ranges = merge(names.map(name => {
     if (!nameMapScreen[name]) {
       const match = name.match(/(\d+)_(\d+)/)
-
       if (match) {
+
         return { min: Number(match[1]), max: Number(match[2]) }
       }
 
@@ -144,12 +144,7 @@ export const flatStyleArray = (styleArray, withPreset) => {
       }
 
       return map(item[1], (style, key) => {
-        // if( _.isObject(style)){
-        //   //console.log(key);
-        //   // console.log(item[0]);
-        //   // console.log(toCSS(style));
-        //   return  `${item[0]}??${key}??{${toCSS(style)}}`
-        // }
+
         return `${item[0]}??${key}??${style}`
       })
     })
@@ -160,7 +155,6 @@ export const flatStyleArray = (styleArray, withPreset) => {
 
 export const mergeStyles = (styles, withPreset = false) => {
   const converted = map(styles, (value, key) => {
-
 
     return isArray(value)
       ? {
@@ -190,10 +184,13 @@ export const mergeStyles = (styles, withPreset = false) => {
 }
 
 export const optimizeStyles = async (styles) => {
+
   const stylesJson = toJSON(styles)
   const queryStylesJson = {}
   const queryPresetStylesJson = {}
+
   forEach(stylesJson.children, (value, key) => {
+
     let _queryStylesJson = queryStylesJson
     if (key.indexOf('@media') < 0) {
       const newKey = `0_10000`
@@ -226,7 +223,6 @@ export const optimizeStyles = async (styles) => {
       const newKey = `${range.min}_${range.max}`
 
       map(value.children,(value,key )=>{
-
         if(key.includes('_altrp-preset_')){
           key += ' '
 

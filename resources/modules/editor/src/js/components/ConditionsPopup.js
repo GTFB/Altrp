@@ -35,8 +35,7 @@ function ConditionsPopup() {
       let pageOptions = await axios.get("/admin/ajax/pages_options?with_id=1", {
         signal: abortController.signal
       });
-      console.log(pageOptions)
-      console.log(conditions)
+      conditions.data = preparePageIds(conditions.data, pageOptions.data)
       setState(state => ({
         ...state,
         value: conditions.data.data || [],
@@ -290,3 +289,26 @@ function ConditionsPopup() {
 }
 
 export default ConditionsPopup;
+
+function preparePageIds (conditions, options = []){
+  if(! conditions){
+    return  {data:[]}
+  }
+  const _options = options.map(o=>o.value)
+  conditions.data = conditions.data ||[]
+  conditions.data = conditions.data.map(c=>{
+    if(c.object_type !== 'page'){
+      return c
+    }
+    c.object_ids = c.object_ids || []
+
+    c.object_ids = c.object_ids.filter(id=>{
+      return _options.includes(id)
+    })
+
+    return c
+  })
+  console.log(options)
+  console.log(conditions.data)
+  return conditions
+}

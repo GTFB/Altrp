@@ -202,7 +202,7 @@ class SidebarEditModel extends Component {
       <div className="admin-settings_model-container">
         <SidebarEditModelForm
           paramsId={this.props.id}
-          submitText="Save"
+          submitText="Update Files"
           onSubmit={this.onSubmit}
           closeSidebar={this.props.closeSidebar}
           updateModelsState={this.props.updateModelsState}

@@ -56,6 +56,7 @@ Server.middleware.registerNamed({
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
   catch_unhandled_json: () => import("App/Middleware/CatchUnhandledJson"),
+  strip_tags: () => import("App/Middleware/StripTags"),
 })
 
 

@@ -56,7 +56,7 @@ const SCREENS:{
     icon: "small_phone",
     name: "Small-Phone",
     id: 6,
-    fullMediaQuery: "@media screen and (max-width: 320px)",
+    fullMediaQuery: "@media screen and (max-width: 320px) and (min-width: 1px)",
     width: "320px",
     mediaQuery: "@media screen and (max-width: 320px)"
   },

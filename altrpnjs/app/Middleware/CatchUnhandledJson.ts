@@ -29,7 +29,7 @@ export default class CatchUnhandledJson {
       console.error(e?.request || e, e?.response?.data || '', `
 ====== METHOD ${request.method()}
 ====== URL ${request.url()}
-====== DATA: ${JSON.stringify(all, null, 2)}
+====== DATA: ${JSON.stringify(all, null, 2).substr(0,100)}
 ====== USER_ID: ${auth.user?.id}
 `) ;
       return response.json({

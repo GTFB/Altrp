@@ -88,7 +88,8 @@ Route.${method}('${url}', async (httpContext)=>{
     let controller = require('../../../app/AltrpControllers/${controllerName}').default;
     controller = new controller;
     return await controller.${methodName}(httpContext);
-}).middleware('catch_unhandled_json')${
+}).middleware('catch_unhandled_json')
+  .middleware('strip_tags')${
         cors ? `.middleware('cors')` : ''
       };
       `
