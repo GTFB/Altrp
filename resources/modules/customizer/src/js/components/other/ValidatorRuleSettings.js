@@ -39,6 +39,39 @@ class ValidatorRuleSettings extends Component {
         </div>
       </div>)
   }
+  mbRenderRegexSettings = ()=>{
+    const names = [
+      'regex',
+    ]
+    const {
+      settings = {},
+    } = this.props
+    const {
+      name,
+      regex = '',
+    } = settings
+    if(! names.includes(name)){
+      return ''
+    }
+    return (
+      <div className="controller-container controller-container_select">
+        <div className="controller-container__label control-select__label controller-label">
+          Regular Expression
+        </div>
+        <div className="bp3-control-group bp3-numeric-input">
+          <div className="bp3-input-group">
+            <input type="text"
+                   id="regular-expression"
+                   onChange={(e)=>{
+                     this.changeByPath(e.target.value, 'regex');
+                   }}
+                   className="bp3-input"
+                   value={regex}/>
+          </div>
+
+        </div>
+      </div>)
+  }
   mbRenderMaxSettings = ()=>{
     const names = [
       'maxLength',
@@ -194,6 +227,7 @@ class ValidatorRuleSettings extends Component {
           </div>
         </div>
         {this.mbRenderFieldSettings()}
+        {this.mbRenderRegexSettings()}
         {this.mbRenderMaxSettings()}
         {this.mbRenderMinSettings()}
         {this.mbRenderTableColumnSettings()}

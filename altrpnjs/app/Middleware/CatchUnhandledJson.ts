@@ -1,4 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {ValidationException} from "@ioc:Adonis/Core/Validator";
+import {inspect} from "util";
 
 /**
  * Auth middleware is meant to restrict un-authenticated access to a given route
@@ -29,9 +31,34 @@ export default class CatchUnhandledJson {
       console.error(e?.request || e, e?.response?.data || '', `
 ====== METHOD ${request.method()}
 ====== URL ${request.url()}
-====== DATA: ${JSON.stringify(all, null, 2).substr(0,100)}
+====== DATA: ${inspect(all)}
 ====== USER_ID: ${auth.user?.id}
 `) ;
+      if(e instanceof ValidationException){
+        // @ts-ignore
+        let errors: any[] = e.messages?.errors || []
+        let textErrors:string[] = []
+        let mergedErrors = {}
+        errors.forEach(e=>{
+          mergedErrors[e.field] = mergedErrors[e.field] || []
+          mergedErrors[e.field].push(e.message)
+          textErrors.push( e.message)
+        })
+
+        return response.json({
+          // @ts-ignore
+          messages: e.messages,
+          // @ts-ignore
+          thrownMessage: e.message,
+          mergedErrors,
+          textErrors: textErrors.join('\n'),
+          success: false,
+          // @ts-ignore
+          message: e.message,
+          // @ts-ignore
+          trace: e?.stack?.split('\n'),
+        })
+      }
       return response.json({
         // ...e,
         axios_response: e.response,

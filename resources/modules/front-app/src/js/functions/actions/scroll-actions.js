@@ -33,7 +33,7 @@ function scrollActions(e) {
       el.dataset.wrapper_appearB_actions = 'inAction'
       window.actionsManager.callAllWidgetActions(
         element.getIdForAction(),
-        'wrapper_click_actions',
+        'wrapper_appearB_actions',
         actions,
         element
       )

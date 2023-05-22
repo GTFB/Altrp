@@ -15,25 +15,21 @@ export default class StripTags {
     if(['post', 'put', 'patch'].indexOf(request.method().toLowerCase()) !== -1) {
       let qs = request.qs()
       let body = request.body()
-      console.log(body)
-      console.log(qs)
-      body = processObject(body, (value, key)=>{
+
+      body = processObject(body, (value, )=>{
         if(typeof value === 'string'){
           return removeScriptsAttributes(removeScripts(value))
         }
         return value
       })
-      qs = processObject(qs, (value, key)=>{
+      qs = processObject(qs, (value, )=>{
         if(typeof value === 'string'){
           return removeScriptsAttributes(removeScripts(value))
         }
         return value
 
       })
-      console.log(body)
-      console.log(qs)
-      request.updateBody(body)
-      request.updateQs(qs)
+
     }
     await next()
 

@@ -1,0 +1,35 @@
+
+.icon-widget-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.icon-widget__icon {
+  width: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.icon-fontawesome {
+  display: flex;
+  justify-content: center;
+}
+
+.icon-widget__icon * {
+  width: auto;
+  max-width: 100%;
+}
+
+.title {
+  text-align: center;
+  color: rgb(0,0,0);
+}
+
+.description {
+  text-align: center;
+  color: rgb(0,0,0);
+}
+
+.content {
+  width: 100%;
+}

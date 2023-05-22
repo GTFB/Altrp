@@ -273,18 +273,18 @@ class AdminSettings extends Component {
                       Disable
                     </td>
                   </tr>
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">SPA Disable</td>
-                    <td className="admin-settings-table__td ">
-                      <input
-                        className="admin-table__td_check"
-                        checked={this.state.SPA_off || false}
-                        onChange={this.SPAToggle}
-                        type="checkbox"
-                      />
-                      Disable
-                    </td>
-                  </tr>
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">SPA Disable</td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <input*/}
+                  {/*      className="admin-table__td_check"*/}
+                  {/*      checked={this.state.SPA_off || false}*/}
+                  {/*      onChange={this.SPAToggle}*/}
+                  {/*      type="checkbox"*/}
+                  {/*    />*/}
+                  {/*    Disable*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
 
 
                   {/*<tr className="admin-settings-table-row">*/}

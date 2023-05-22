@@ -13,14 +13,9 @@ export default class RoleUsers extends BaseSchema {
       table.bigInteger('role_id').unsigned()
       table.string('user_type').defaultTo('App\\User').nullable()
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
 
-      table.foreign('user_id').references('users.id')
-      table.foreign('role_id').references('roles.id')
+      table.foreign('user_id').references('users.id').onDelete('cascade');
+      table.foreign('role_id').references('roles.id').onDelete('cascade');
     })
   }
 

@@ -11,7 +11,7 @@ if( ! params){
 }
 let hashParams = {};
 if(document?.location?.hash && document?.location?.hash.indexOf('=') !== -1){
-  hashParams = convertQueryParamsToObject(document?.location?.hash)
+  hashParams = qs.parse(document?.location?.hash.replace('#', ''))
 }
 const defaultPage = {
   url: location?.href || "",

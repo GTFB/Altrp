@@ -1,7 +1,16 @@
-export default function random(length = 10) {
+export default function random(length = 10, scope = '') {
   length = length || 10
   let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  switch (scope){
+    case 'h':{
+      characters = '0123456789abcdef'
+    }break;
+    case 'n':{
+      characters = '0123456789'
+    }break;
+  }
+
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {

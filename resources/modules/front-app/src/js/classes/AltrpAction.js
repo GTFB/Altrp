@@ -1093,6 +1093,16 @@ class AltrpAction extends AltrpModel {
         case 'toggle_set': {
           let currentValue = getDataByPath(path);
           value = value.split('\n').map(v => v.trim());
+          value = value.map(v=>{
+            if(v.includes('{{')){
+              v = getDataByPath(
+                v.replace('{{', '').replace('}}', ''),
+                null,
+                this.getCurrentModel()
+              );
+            }
+            return v
+          })
           if (value.length === 1) {
             value.push('');
           }

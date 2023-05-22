@@ -5,6 +5,14 @@ const SCHEMA_RULES_OPTIONS = {
       value: 'email',
     },
     {
+      label: 'Regular Expression',
+      value: 'regex',
+    },
+    {
+      label: 'Phone',
+      value: 'mobile',
+    },
+    {
       label: 'Confirmed',
       value: 'confirmed',
     },
@@ -87,6 +95,36 @@ const SCHEMA_RULES_OPTIONS = {
 
   ],
   file: [
+    {
+      label: 'Required If Exists',
+      value: 'requiredIfExists',
+    },
+    {
+      label: 'Unique',
+      value: 'unique',
+    },
+    {
+      label: 'Exists',
+      value: 'exists',
+    },
+
+  ],
+  array: [
+    {
+      label: 'Required If Exists',
+      value: 'requiredIfExists',
+    },
+    {
+      label: 'Unique',
+      value: 'unique',
+    },
+    {
+      label: 'Exists',
+      value: 'exists',
+    },
+
+  ],
+  object: [
     {
       label: 'Required If Exists',
       value: 'requiredIfExists',

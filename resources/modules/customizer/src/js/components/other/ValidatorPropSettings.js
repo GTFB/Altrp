@@ -17,51 +17,91 @@ class ValidatorPropSettings extends Component {
       popoverClassName: 'customizer-multiselect-popover'
     }
   }
+
   itemsEqual(item1, item2) {
     return item1?.value === item2?.value
   }
-  handleTagRemove = (tag, idx)=>{
-    let rules =  [...this.props.settings.rules || []]
+
+  handleTagRemove = (tag, idx) => {
+    let rules = [...this.props.settings.rules || []]
     rules.splice(idx, 1)
     this.changeByPath(rules, 'rules')
   }
-  handleClear = ()=>{
+  handleClear = () => {
     this.changeByPath([], 'rules')
   }
-  onItemSelect = (value)=>{
-    let rules =  this.props.settings.rules || []
-    let mark =  this.props.settings.mark || ''
+  onItemSelect = (value) => {
+    let rules = this.props.settings.rules || []
+    let mark = this.props.settings.mark || ''
     rules = [...rules]
     rules.push({
       name: value.value,
-      label:value.label,
-      id: altrpRandomId()})
+      label: value.label,
+      id: altrpRandomId()
+    })
 
-    if(rules.find(r=>r.name === 'requiredIfExists') && (mark !== 'optional')){
+    if (rules.find(r => r.name === 'requiredIfExists') && (mark !== 'optional')) {
       this.changeByPath('optional', 'mark')
     }
     this.changeByPath(rules, 'rules')
 
   }
+
   tagRender(value) {
     return value.label || ''
   }
-  changeType = (e)=>{
+
+  changeType = (e) => {
     const type = e.target.value
     let {
       rules = [],
     } = this.props.settings
-    rules = rules.filter(r=>{
-      return SCHEMA_RULES_OPTIONS[type].find(o=>o.value === r.name)
+    rules = rules.filter(r => {
+      return SCHEMA_RULES_OPTIONS[type].find(o => o.value === r.name)
     })
 
     this.changeByPath(type, 'type')
     this.changeByPath(rules, 'rules')
 
   }
-  changeByPath=(value, path)=>{
+  changeByPath = (value, path) => {
     this.props.changeByPath(value, path)
   }
+
+  changeArrayMembers = (e)=>{
+    const array_members = e.target.value
+    this.changeByPath(array_members, 'array_members')
+  }
+  mbRenderArrayMembers = () => {
+
+    const {
+      type = 'string',
+      array_members = 'string',
+    } = this.props.settings
+    if(type !== 'array'){
+      return  ''
+    }
+
+    const options = SCHEMA_TYPE_OPTIONS.filter(o=>{
+      return o.value !== 'array' && o.value !== 'object'
+    })
+    return <div className="controller-container controller-container_select">
+      <div className="controller-container__label control-select__label controller-label">
+        Expected Data Type for Array Members:
+      </div>
+      <div className="control-container_select-wrapper controller-field">
+        <select className="control-select control-field"
+                value={array_members}
+                onChange={this.changeArrayMembers}
+        >
+          {options.map(option => {
+            return <option value={option.value} key={option.value}>{option.label}</option>
+          })}
+        </select>
+      </div>
+    </div>
+  }
+
   render() {
 
     const {
@@ -71,19 +111,19 @@ class ValidatorPropSettings extends Component {
       rules = [],
     } = this.props.settings
     const {
-      propName ,
+      propName,
     } = this.props
 
     const options = SCHEMA_RULES_OPTIONS[type]
-    let selectedItems = rules.map(r=>{
-      return SCHEMA_RULES_OPTIONS[type].find(o=>o.value === r.name)
+    let selectedItems = rules.map(r => {
+      return SCHEMA_RULES_OPTIONS[type].find(o => o.value === r.name)
     })
-    selectedItems = selectedItems.filter(i=>i)
-    let markOptions= SCHEMA_MARKS_OPTIONS
-    if(rules.find(r=>r.name === 'requiredIfExists')){
+    selectedItems = selectedItems.filter(i => i)
+    let markOptions = SCHEMA_MARKS_OPTIONS
+    if (rules.find(r => r.name === 'requiredIfExists')) {
       markOptions = [SCHEMA_MARKS_OPTIONAL_OPTION]
     }
-    return(
+    return (
       <div className="controllers-wrapper validator-prop-settings-wrapper">
         <div className="settings-section__label QueryBuilderNode__label">
           {propName}
@@ -105,7 +145,7 @@ class ValidatorPropSettings extends Component {
             </select>
           </div>
         </div>
-        {! mark &&
+        {!mark &&
 
           <div className="controller-container controller-container_select">
             <div className="controller-container__label control-select__label controller-label">
@@ -115,7 +155,7 @@ class ValidatorPropSettings extends Component {
               <div className="bp3-input-group">
                 <input type="text"
                        id="mapper-source"
-                       onChange={(e)=>{
+                       onChange={(e) => {
                          this.changeByPath(e.target.value, 'required_message');
                        }}
                        className="bp3-input"
@@ -140,64 +180,64 @@ class ValidatorPropSettings extends Component {
             </select>
           </div>
         </div>
-
+        {this.mbRenderArrayMembers()}
         <div className="controller-container controller-container_select controller-container_validator-params">
-            <div className="controller-container__label control-select__label controller-label">
-              Rules:
-            </div>
-
-            <MultiSelect
-              placeholder={`Select or Add Params`}
-              //onQueryChange={this.onQueryChange}
-              itemsEqual={this.itemsEqual}
-              //resetOnSelect={reset_input}
-              //openOnKeyDown={openPopoverKeyDown}
-              popoverProps={this.popoverProps}
-              //createNewItemFromQuery={ this.createNewItemFromQuery }
-              //createNewItemRenderer={this.createNewItemRenderer}
-              itemRenderer={(item, {handleClick, modifiers, query, index}) => {
-                if (!modifiers.matchesPredicate) {
-                  return null;
-                }
-                return <MenuItem
-                  text={item.label}
-                  key={index}
-                  disabled={modifiers.disabled || item.disabled}
-                  onClick={handleClick}
-                  //className={`${classes}`}
-                />
-              }}
-              itemPredicate={(query, item) => {
-                if (query === undefined || query.length === 0) {
-                  return true
-                }
-                return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
-              }}
-              items={options}
-              // itemRenderer={({label})=>label}
-              noResults={<MenuItem disabled={true} text={'No results'}/>}
-              //name={this.getName()}
-              onItemSelect={this.onItemSelect}
-              selectedItems={selectedItems}
-              tagInputProps={{
-                onRemove: this.handleTagRemove,
-                rightElement: <Button icon="cross" minimal={true} className={` altrp-clear`} onClick={this.handleClear} />,
-                // tagProps: getTagProps,
-              }}
-              //id={position_css_id}
-              tagRenderer={this.tagRender}
-              //className={classes}
-            >
-            </MultiSelect>
-
+          <div className="controller-container__label control-select__label controller-label">
+            Rules:
           </div>
 
+          <MultiSelect
+            placeholder={`Select or Add Params`}
+            //onQueryChange={this.onQueryChange}
+            itemsEqual={this.itemsEqual}
+            //resetOnSelect={reset_input}
+            //openOnKeyDown={openPopoverKeyDown}
+            popoverProps={this.popoverProps}
+            //createNewItemFromQuery={ this.createNewItemFromQuery }
+            //createNewItemRenderer={this.createNewItemRenderer}
+            itemRenderer={(item, {handleClick, modifiers, query, index}) => {
+              if (!modifiers.matchesPredicate) {
+                return null;
+              }
+              return <MenuItem
+                text={item.label}
+                key={index}
+                disabled={modifiers.disabled || item.disabled}
+                onClick={handleClick}
+                //className={`${classes}`}
+              />
+            }}
+            itemPredicate={(query, item) => {
+              if (query === undefined || query.length === 0) {
+                return true
+              }
+              return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
+            }}
+            items={options}
+            // itemRenderer={({label})=>label}
+            noResults={<MenuItem disabled={true} text={'No results'}/>}
+            //name={this.getName()}
+            onItemSelect={this.onItemSelect}
+            selectedItems={selectedItems}
+            tagInputProps={{
+              onRemove: this.handleTagRemove,
+              rightElement: <Button icon="cross" minimal={true} className={` altrp-clear`} onClick={this.handleClear}/>,
+              // tagProps: getTagProps,
+            }}
+            //id={position_css_id}
+            tagRenderer={this.tagRender}
+            //className={classes}
+          >
+          </MultiSelect>
+
+        </div>
+
         {
-          rules.map((r, idx)=>{
+          rules.map((r, idx) => {
             return <ValidatorRuleSettings
               settings={r}
               key={r.id}
-              changeByPath={(value, path)=>{
+              changeByPath={(value, path) => {
                 this.changeByPath(value, `rules.${idx}.${path}`)
               }}
             />

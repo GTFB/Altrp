@@ -7,113 +7,6 @@ import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import scrollToElement from "../../../../../front-app/src/js/functions/scrollToElement";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-btn-wrapper {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-
-
-  }
-
-  .altrp-btn svg {
-    display: block;
-  }
-  .altrp-btn:hover {
-    text-decoration: none;
-    color: #fff;
-  }
-
-  .altrp-btn {
-    width: auto;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    flex-direction: row;
-    background-color: #343B4C;
-    color: #FFFFFF;
-    padding-top: 20px;
-    padding-right: 25px;
-    padding-bottom: 20px;
-    padding-left: 25px
-
-    &_gray {
-      background-color: #8E94AA;
-      color: #fff;
-    }
-
-    &__icon {
-      transform: scale(0.6);
-    }
-
-    &-icon {
-      display: flex;
-      justify-content: center;
-    }
-
-
-
-    & img {
-      height: 25px;
-      width: 25px;
-    }
-  }
-
-  .btn-container-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .btn-container-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .altrp-btn-icon-right img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-
-
-  .altrp-btn-icon-left img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-
-
-  .altrp-btn-icon-top img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-
-
-  .altrp-btn-icon-bottom img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .altrp-btn-icon-bottom svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .altrp-background-image_btn{
-    background-size: unset;
-  }
-`);
 
 const Link = window.Link;
 
@@ -350,7 +243,10 @@ class ButtonWidget extends Component {
     }
 
     existingIconsString = existingIconsString.split('').sort().join('');
-    let buttonInner = <span className="altrp-btn-text">{buttonText || ""}</span>
+    buttonText = buttonText || ''
+    let buttonInner = <span className="altrp-btn-text" dangerouslySetInnerHTML={{
+      __html: buttonText
+    }}/>
 
     if (existingIconsString === 'r') {
       buttonInner = (

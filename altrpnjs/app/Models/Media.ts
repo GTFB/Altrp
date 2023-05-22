@@ -3,10 +3,11 @@ import {
   BaseModel,
   BelongsTo,
   belongsTo,
-  column, ManyToMany, manyToMany,
+  column, computed, ManyToMany, manyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
 import Category from "App/Models/Category";
+import changeFileExtension from "../../helpers/string/changeFileExtension";
 
 export default class Media extends BaseModel {
 
@@ -85,5 +86,10 @@ export default class Media extends BaseModel {
     pivotRelatedForeignKey: 'category_guid',
   })
   public categories: ManyToMany<typeof Category>
+
+  @computed()
+  get webp_url(){
+    return changeFileExtension(this.url || '', 'webp')
+  }
 
 }

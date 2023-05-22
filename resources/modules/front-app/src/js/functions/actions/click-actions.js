@@ -44,6 +44,7 @@ export default function clickActions(e){
     }
 
     e.preventDefault();
+    e.stopPropagation();
     import(/* webpackChunkName: 'ActionsManager' */'../../classes/modules/ActionsManager').then(()=>{
       window.actionsManager.callAllWidgetActions(
         element.getIdForAction(),

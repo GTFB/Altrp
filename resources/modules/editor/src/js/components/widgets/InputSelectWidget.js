@@ -526,7 +526,6 @@ class InputSelectWidget extends Component {
    */
   clearValue() {
     let value = "";
-    this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
 
@@ -856,45 +855,6 @@ class InputSelectWidget extends Component {
         }));
       }
     }
-  }
-
-  /**
-   * Изменение значения в виджете
-   * @param e
-   */
-  onChange = (e)=> {
-    let value = "";
-    let valueToDispatch;
-    const settings = this.props.element.getSettings();
-    value = e.target.value;
-
-    if (e && e.value) {
-      value = e.value;
-    }
-
-    if (_.isArray(e)) {
-      value = _.cloneDeep(e);
-    }
-
-    this.setState(
-      state => ({
-        ...state,
-        value
-      }),
-      () => {
-
-        if (
-          ["text", "email", "phone", "tel", "number", "password"].indexOf(
-            this.state.settings.content_type
-          ) === -1
-        ) {
-          this.dispatchFieldValueToStore(
-            valueToDispatch !== undefined ? valueToDispatch : value,
-            true
-          );
-        }
-      }
-    );
   }
 
   async onItemSelect(value, e) {

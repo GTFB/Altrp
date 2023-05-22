@@ -2,43 +2,6 @@ import DefaultIcon from '../../../svgs/icon.svg'
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .icon-widget-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .icon-widget__icon {
-    width: auto;
-    display: flex;
-    justify-content: center;
-  }
-
-   .icon-fontawesome {
-    display: flex;
-    justify-content: center;
-   }
-
-  .icon-widget__icon * {
-    width: auto;
-    max-width: 100%;
-  }
-
-  .title {
-    text-align: center;
-    color: rgb(0,0,0);
-  }
-
-  .description {
-    text-align: center;
-    color: rgb(0,0,0);
-  }
-
-  .content {
-    width: 100%;
-  }
-`);
-
 class IconWidget extends Component {
   constructor(props) {
     super(props);
@@ -96,9 +59,15 @@ class IconWidget extends Component {
         <div className={`${classes} content`}>
           {React.createElement(this.state.settings.title_tag || 'h3', {
             className: `${classes} title`,
-          }, titleText)}
+            dangerouslySetInnerHTML: {
+              __html: titleText
+            }
+          } )}
           {/*<div className={`${classes} description`}>{this.state.settings.description === undefined ? 'Icon description' : this.state.settings.description}</div>*/}
-          <div className={`${classes} description`}>{this.state.settings.description }</div>
+          <div className={`${classes} description`} dangerouslySetInnerHTML={
+            {__html: this.state.settings.description}
+          }
+          />
         </div>
       </div>
     )

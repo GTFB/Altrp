@@ -14,3 +14,8 @@ if (window.ALTRP_DEBUG) {
   };
 }
 export default appStore;
+
+appStore.subscribe(()=>{
+  window.dispatchEvent(new Event('altrp-store-updates'))
+  document.dispatchEvent(new Event('altrp-store-updates'))
+})

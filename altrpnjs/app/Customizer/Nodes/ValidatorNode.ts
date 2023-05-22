@@ -25,7 +25,7 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
       }
     } catch(e) {
       console.error('Error in Validator Node "${label}"');
-      console.error(e);
+      //console.error(e);
       throw e;
     }
       `
@@ -70,20 +70,48 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
     propertyContent += '('
     if(type === 'string'){
       propertyContent += '{}, ['
+    } else {
+      propertyContent += '['
     }
     rules.forEach(r=>{
       propertyContent += this.renderRule(r)
     })
-    propertyContent+=`]),`
+
+    let members = this.renderMembers(settings)
+
+    propertyContent+=`])${members},`
     return propertyContent
+  }
+
+  renderMembers(settings){
+
+    const {
+      type = 'string',
+      array_members = 'string',
+    } = settings
+
+    if(type !== 'array' && type !== 'object'){
+      return ''
+    }
+
+    if(type === 'object'){
+      return `.members({})`
+    }
+    if(type === 'array'){
+      return `.members(schema.${array_members}())`
+    }
   }
   renderRule = (rule)=>{
     let ruleContent = `
         rules.${rule.name}(`
     switch (rule.name) {
-      case 'email': {
+      case 'email':
+      case 'mobile':
         break;
+      case 'regex':{
+        ruleContent += rule.regex || ''
       }
+        break;
     }
     ruleContent+='),'
     return ruleContent
