@@ -706,6 +706,7 @@ export default class ModelsController {
         }
       })
     } catch (e) {
+      console.error(e)
       await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
       await model.delete()
       await exec(`node ${base_path('ace')} generator:router`)

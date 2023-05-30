@@ -593,7 +593,7 @@ class AltrpAction extends AltrpModel {
     let history = window.history
     let _URL = this.getFormURL();
     let outer = this.getProperty('outer')
-    if(outer){
+    if(outer && _URL){
       window.location.href = _URL
       return
     }

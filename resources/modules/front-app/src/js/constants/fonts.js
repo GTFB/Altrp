@@ -348,6 +348,7 @@ export const altrpFontsSet =
     'Fontdiner Swanky': GOOGLE_FONT,
     'Forum': GOOGLE_FONT,
     'Francois One': GOOGLE_FONT,
+    'Fraunces': GOOGLE_FONT,
     'Frank Ruhl Libre': GOOGLE_FONT,
     'Freckle Face': GOOGLE_FONT,
     'Fredericka the Great': GOOGLE_FONT,

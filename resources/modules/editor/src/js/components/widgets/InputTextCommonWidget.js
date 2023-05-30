@@ -307,7 +307,8 @@ class InputTextCommonWidget extends Component {
     } catch (e) {
       console.error(
         "Evaluate error in Input: '" + e.message + "'",
-        this.props.element.getId()
+        this.props.element.getId(),
+        content_calculation
       );
     }
   }

@@ -28,12 +28,6 @@ export default class CatchUnhandledJson {
       if(all.password){
         delete all.password
       }
-      console.error(e?.request || e, e?.response?.data || '', `
-====== METHOD ${request.method()}
-====== URL ${request.url()}
-====== DATA: ${inspect(all)}
-====== USER_ID: ${auth.user?.id}
-`) ;
       if(e instanceof ValidationException){
         // @ts-ignore
         let errors: any[] = e.messages?.errors || []
@@ -45,6 +39,12 @@ export default class CatchUnhandledJson {
           textErrors.push( e.message)
         })
 
+        console.error( `Validation error:
+====== ERRORS "${textErrors.join('\n')}"
+====== METHOD ${request.method()}
+====== URL ${request.url()}
+====== USER_ID: ${auth.user?.id}
+`) ;
         return response.json({
           // @ts-ignore
           messages: e.messages,
@@ -59,6 +59,13 @@ export default class CatchUnhandledJson {
           trace: e?.stack?.split('\n'),
         })
       }
+
+      console.error(e?.request || e, e?.response?.data || '', `
+====== METHOD ${request.method()}
+====== URL ${request.url()}
+====== DATA: ${inspect(all)}
+====== USER_ID: ${auth.user?.id}
+`) ;
       return response.json({
         // ...e,
         axios_response: e.response,
