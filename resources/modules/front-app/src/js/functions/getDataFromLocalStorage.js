@@ -20,5 +20,5 @@ export default function getDataFromLocalStorage(name, _default = undefined) {
   if (_.isString(value) && Number(value)) {
     value = Number(value);
   }
-  return value || _default;
+  return value !== null ? value : _default;
 }

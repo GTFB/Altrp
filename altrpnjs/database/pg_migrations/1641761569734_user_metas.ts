@@ -21,7 +21,7 @@ export default class UserMetas extends BaseSchema {
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
 
-      table.foreign('user_id').references('users.id')
+      table.foreign('user_id').references('users.id').onDelete('cascade').onUpdate('cascade')
     })
   }
 
