@@ -90,7 +90,7 @@ To launch all scripts needed for development, run the `npm run run-all` at the r
 
 ## 5. Using platform
 
-Go to the browser and open `${APP_URL}:${PORT}/admin ([http://127.0.0.1:46554/admin](http://127.0.0.1:46554/admin) from this example)`
+Go to the browser and open `${APP_URL}:${PORT}/admin` ([http://127.0.0.1:46554/admin](http://127.0.0.1:46554/admin) for this example)
 
 To log in, use the previously specified email and password:
 
