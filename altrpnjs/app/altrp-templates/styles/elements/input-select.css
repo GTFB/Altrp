@@ -124,3 +124,6 @@
   position: relative;
   width: 100%;
 }
+.altrp-field-label-container{
+  flex-shrink: 0;
+}

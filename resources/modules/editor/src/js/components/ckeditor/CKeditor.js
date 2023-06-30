@@ -76,6 +76,7 @@ class CKeditor extends Component {
     return (
       <CKEditor
         config={config}
+
         body={this.body}
         ref={this.props.editorRef}
         editor={InlineEditor}

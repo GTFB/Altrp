@@ -353,7 +353,7 @@ class AltrpAction extends AltrpModel {
     }
     if (alertText) {
       alertText = replaceContentWithData(alertText, this.getCurrentModel().getData());
-      alert(alertText);
+      alertText && alert(alertText);
     }
     return result;
   }
@@ -1318,9 +1318,13 @@ class AltrpAction extends AltrpModel {
     /**
      * @type {DataStorageUpdater}
      */
+    const params = parseParamsFromString(
+      this.getProperty('params'),
+      getAppContext(this.getCurrentModel()),
+      true
+    );
 
-
-    await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false);
+    await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false, params);
     return {success: true};
   }
 

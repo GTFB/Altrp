@@ -217,6 +217,10 @@ decorate([
     (0, Orm.beforeFetch)(),
     __metadata("design:type", Object)
 ], ${this.model.name}, "softDeletesFetch", void 0);
+decorate([
+    (0, Orm.beforePaginate)(),
+    __metadata("design:type", Object)
+], ${this.model.name}, "softDeletesFetch", void 0);
 ` : ''}
 `
   }
@@ -237,6 +241,9 @@ ${columns.map(column => column.renderForModel()).join('')}
   public static softDeletesFind = softDeleteQuery;
 
   @Orm.beforeFetch()
+  public static softDeletesFetch = softDeleteQuery;
+
+  @Orm.beforePaginate()
   public static softDeletesFetch = softDeleteQuery;
 
 

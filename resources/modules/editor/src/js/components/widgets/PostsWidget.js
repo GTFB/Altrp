@@ -63,11 +63,9 @@ class PostsWidget extends Component {
       console.log(path)
       path = path.replace(/}}/g, '').replace(/{{/g, '');
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
-      console.log(data)
+
     }
-    console.log(this.state)
-    console.log(this.props)
-    console.trace(data)
+
     const settings = {
       ...this.props.element.settings,
       ...this.props.element.settingsLock || {},

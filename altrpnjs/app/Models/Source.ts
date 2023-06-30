@@ -432,7 +432,7 @@ export default class Source extends BaseModel {
         this.methodBody = `
     const qs = httpContext?.request.qs() || {};
     const all = httpContext?.request.all() || {};
-    const status = httpContext?.response.status || ()=>{};
+    const status = httpContext?.response.status || (()=>{});
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
     this.setCustomizerData('context.request', httpContext?.request);
     this.setCustomizerData('httpContext', httpContext);

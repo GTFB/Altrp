@@ -9,10 +9,9 @@ import User from 'App/Models/User';
 import Category from "App/Models/Category";
 import changeFileExtension from "../../helpers/string/changeFileExtension";
 // import fs from "fs";
-// import base_path from "../../helpers/path/base_path";
+import public_path from "../../helpers/path/public_path";
 // import sizeOf from 'image-size';
 // import sharp from 'sharp';
-
 export default class Media extends BaseModel {
 
   public static table = 'altrp_media'
@@ -91,6 +90,10 @@ export default class Media extends BaseModel {
   })
   public categories: ManyToMany<typeof Category>
 
+  @computed()
+  get absolute_path() {
+    return public_path(`/storage${this.filename}`)
+  }
   @computed()
   get webp_url() {
     return changeFileExtension(this.url || '', 'webp')

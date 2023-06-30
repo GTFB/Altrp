@@ -50,6 +50,7 @@ class DataStorageUpdater extends AltrpModel {
     initialUpdate = true,
     newParams = {}
   ) {
+
     dataSources = dataSources.map((ds) => {
       if (ds instanceof Datasource) {
         return ds;
@@ -138,6 +139,10 @@ class DataStorageUpdater extends AltrpModel {
               "altrpforms."
             );
 
+            params = {
+              ...params,
+              ...newParams,
+            };
             let defaultParams = _.cloneDeep(params);
             let needUpdateFromForms = false;
             _.each(params, (paramValue, paramName) => {
@@ -186,10 +191,6 @@ class DataStorageUpdater extends AltrpModel {
                 }
               } else if (!_.isEmpty(params)) {
 
-                params = {
-                  ...params,
-                  ...newParams,
-                };
                 res = dataSource.getProperty('query_sync') ? await new Resource({
                   route: dataSource.getWebUrl(),
                 }).getQueried(params, null,false, true) : await new Resource({

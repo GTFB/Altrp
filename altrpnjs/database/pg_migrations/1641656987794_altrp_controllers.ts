@@ -21,7 +21,7 @@ export default class AltrpControllers extends BaseSchema {
         table.timestamp('created_at', {useTz: true})
         table.timestamp('updated_at', {useTz: true})
 
-        table.foreign('model_id').references('altrp_models.id')
+        table.foreign('model_id').references('altrp_models.id').onDelete('cascade')
 
       })
     }

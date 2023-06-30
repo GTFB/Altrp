@@ -39,9 +39,9 @@ export default class AltrpColumns extends BaseSchema {
         table.timestamp('created_at', {useTz: true})
         table.timestamp('updated_at', {useTz: true})
 
-        table.foreign('user_id').references('users.id')
-        table.foreign('model_id').references('altrp_models.id')
-        table.foreign('table_id').references('tables.id')
+        table.foreign('user_id').references('users.id').onDelete('cascade')
+        table.foreign('model_id').references('altrp_models.id').onDelete('cascade')
+        table.foreign('table_id').references('tables.id').onDelete('cascade')
 
       })
     }

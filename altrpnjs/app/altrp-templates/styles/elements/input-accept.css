@@ -1,3 +1,8 @@
 .altrp-field-container .altrp-field-checkbox.altrp-field-checkbox {
   margin: 0;
 }
+
+.bp3-control.bp3-inline {
+  display: inline-block;
+  margin-right: 20px;
+} 

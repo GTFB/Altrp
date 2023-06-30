@@ -32,8 +32,8 @@ export default class AltrpSources extends BaseSchema {
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
 
-      table.foreign('model_id').references('altrp_models.id')
-      table.foreign('controller_id').references('altrp_controllers.id')
+      table.foreign('model_id').references('altrp_models.id').onDelete('cascade')
+      table.foreign('controller_id').references('altrp_controllers.id').onDelete('cascade')
 
     })
   }

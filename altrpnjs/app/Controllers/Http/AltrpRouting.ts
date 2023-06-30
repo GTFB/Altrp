@@ -53,7 +53,10 @@ export default class AltrpRouting {
   }
 
   public async getContentByUrl(url, httpContext: HttpContextContract, pageId = null):Promise<void>{
-    if (url.includes('/storage/media/')) {
+
+    var ext = url.split('.').pop();
+
+    if (url.includes('/storage/media/') && ['jpg', 'jpeg', 'webp'].includes(ext)) {
 
       let searchFilename = base_path('/public'+url);
 
@@ -78,7 +81,6 @@ export default class AltrpRouting {
             },
           ];
 
-        var ext = url.split('.').pop();
         var parts = url.split('/');
         var requestedFileName = parts[parts.length-1];
 

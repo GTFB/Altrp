@@ -787,6 +787,17 @@ export function actionsControllers(
     },
     locked: true,
   });
+  actionsRepeater.addControl('params', {
+    type: CONTROLLER_TEXTAREA,
+    label: 'Params for Update',
+    responsive: false,
+    dynamic: false,
+    description: 'param_1 | {{altrpdata.alias}}',
+    conditions: {
+      type: ['update_current_datasources']
+    },
+    locked: true,
+  });
 
   actionsRepeater.addControl('condition_left', {
     type: CONTROLLER_TEXTAREA,

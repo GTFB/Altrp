@@ -695,6 +695,7 @@ class InputWysiwygWidget extends Component {
         onChange={this.onChange}
         editorRef={this.editorRef}
         onLoad={this.onLoad}
+        className={`ck-${this.props.element.getId()}`}
         onBlur={this.onBlur}
         placeholder={this.props.element.getResponsiveLockedSetting('content_placeholder')}
         changeText={this.dispatchFieldValueToStore}

@@ -415,3 +415,8 @@ textarea.altrp-field {
 .altrp-field-select2 .altrp-field-select2__control {
   min-height: 14px;
 }
+
+.bp3-control.bp3-inline {
+  display: inline-block;
+  margin-right: 20px;
+}

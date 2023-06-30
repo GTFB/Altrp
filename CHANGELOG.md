@@ -1,9 +1,13 @@
 # ALTRP
 
 ## Changelog
-## test version build 69
+### test version  build 11
 
-### 1.4.8
+### 1.4.9 
+* Add `Validator` Node for Robotizers
+* Add `Params` Settings for Current Datasource Update Action
+
+### 1.4.8 
 * Add Pagination to Media Browser
 * Add Static Properties to Custom Models
 * Add Preloading Relations on Page's Models

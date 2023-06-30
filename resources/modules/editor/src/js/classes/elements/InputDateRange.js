@@ -8,6 +8,7 @@ import {
   TAB_STYLE
 } from "../modules/ControllersManager";
 import {advancedTabControllers} from "../../decorators/register-controllers";
+import {actionsControllers} from "../../decorators/actions-controllers";
 
 class InputDateRange extends BaseElement {
   static getName() {
@@ -50,6 +51,34 @@ class InputDateRange extends BaseElement {
         }
       ],
       locked: true,
+    });
+
+    this.addControl("query_sync", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Sync With Query String",
+    });
+
+
+    this.addControl("allow_single_day_range", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Allow Single Day Range",
+    });
+
+
+    this.addControl("min_date", {
+      responsive: false,
+      locked: true,
+      label: "Min Date (path)",
+    });
+
+    this.addControl("max_date", {
+      responsive: false,
+      locked: true,
+      label: "Max Date (path)",
     });
 
     this.addControl("form_id_start", {
@@ -114,7 +143,7 @@ class InputDateRange extends BaseElement {
     // });
 
     this.endControlSection();
-
+    actionsControllers(this, 'Change Actions', 'change_');
     this.startControlSection("inputs_styles", {
       tab: TAB_STYLE,
       label: "Inputs"

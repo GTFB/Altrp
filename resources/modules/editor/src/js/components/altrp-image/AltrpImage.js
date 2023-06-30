@@ -46,7 +46,7 @@ ${(props) => {
   return '';
 }};
 }
-${({elementId})=>`.altrp-element${elementId}`} .altrp-image-placeholder::before{
+${({elementId})=>`.altrp-element${elementId}`} .altrp-image-placeholder.altrp-image-placeholder::before{
 
 ${(props) => {
   const {settings, height} = props;

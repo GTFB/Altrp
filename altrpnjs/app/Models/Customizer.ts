@@ -172,6 +172,7 @@ export default class Customizer extends BaseModel {
     }
     let namespace = data_get(property, 'namespace', 'context')
     let path = data_get(property, 'path')
+
     let JSExpression = data_get(property, 'JSExpression', 'null')
     JSExpression = Customizer.replaceMustache(JSExpression)
     let method = data_get(property, 'method')
@@ -201,7 +202,8 @@ export default class Customizer extends BaseModel {
       case 'this':
       case 'current_user': {
         if (!path) {
-          path = namespace
+          return '""'
+
         } else {
           path = namespace + '.' + path
         }

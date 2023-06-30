@@ -1,8 +1,14 @@
 import { DateTime } from 'luxon';
 import {BaseModel, ModelQueryBuilderContract} from "@ioc:Adonis/Lucid/Orm";
+import * as _ from 'lodash'
 
-export const softDeleteQuery = (query: ModelQueryBuilderContract<typeof BaseModel>) => {
-  query.whereNull('deleted_at')
+export const softDeleteQuery = (query: ModelQueryBuilderContract<typeof BaseModel> | [ModelQueryBuilderContract<typeof BaseModel>, ModelQueryBuilderContract<typeof BaseModel>]) => {
+  if(_.isArray(query)){
+    query[0].whereNull('deleted_at')
+    query[1].whereNull('deleted_at')
+  } else {
+    query.whereNull('deleted_at')
+  }
 }
 export const softDelete = async (instance) => {
   // @ts-ignore

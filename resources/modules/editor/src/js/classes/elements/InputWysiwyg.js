@@ -235,6 +235,16 @@ class InputWysiwyg extends BaseElement {
 
     this.endControlSection();
 
+    // this.startControlSection('layout', {
+    //   label: 'Layout'
+    // })
+    //
+    // this.addControl("focus", {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: "Focus on Load",
+    //   locked: true,
+    // });
+    // this.endControlSection();
     //actionsControllers(this, "CTRL + Enter Actions", "ce_");
 
     actionsControllers(this, "Blur Actions");

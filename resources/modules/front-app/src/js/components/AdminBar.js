@@ -99,7 +99,18 @@ class AdminBar extends React.Component {
   }
 
   renderResultSearch(resultSearch = null) {
-    return JSON.stringify(getDataByPath(this.state.valueInput), null, 2);
+    return JSON.stringify(getDataByPath(this.state.valueInput), (_, v) =>{
+        switch (typeof v){
+          case "bigint":
+          case "BigInt":{
+            return v.toString()
+          }
+          default:{
+            return v
+          }
+        }
+    }
+      , 2);
   }
 
 
@@ -133,7 +144,18 @@ class AdminBar extends React.Component {
   }
 
   handleClickCopy() {
-    JSON.stringify(getDataByPath(this.state.valueInput), null, "\t").select();
+    JSON.stringify(getDataByPath(this.state.valueInput), (_, v) =>{
+        switch (typeof v){
+          case "bigint":
+          case "BigInt":{
+            return v.toString()
+          }
+          default:{
+            return v
+          }
+        }
+      }
+      , "\t").select();
     document.execCommand("copy");
   }
 
