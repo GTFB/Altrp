@@ -996,6 +996,13 @@ class InputSelectWidget extends Component {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
+      let query_sync = this.props.element.getLockedSettings(
+        "query_sync"
+      );
+      if(!isEditor() && query_sync){
+        const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
+        updateQueryString(fieldName, value)
+      }
       if (userInput) {
         const change_actions = this.props.element.getLockedSettings("change_actions");
 

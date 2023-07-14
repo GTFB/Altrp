@@ -22,7 +22,12 @@ class AltrpModel {
    */
   getData(clone = true) {
     if(clone){
-      return cloneDeep(this.data);
+      try {
+        return cloneDeep(this.data);
+      }catch (e) {
+        console.error('Error while cloning AltrpModel Data',e, this)
+        return  this.data
+      }
     }
     return this.data;
   }

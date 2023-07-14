@@ -55,6 +55,12 @@ export const defaultState = [
     }
   },
   {
+    name: "input-tel",
+    import: async () => {
+      return await import(/* webpackChunkName: 'InputTelWidget' */ "../../../../../editor/src/js/components/widgets/InputTelWidget");
+    }
+  },
+  {
     name: "input-text-autocomplete",
     import: async () => {
       return await import(/* webpackChunkName: 'InputTextCommonWidget' */ "../../../../../editor/src/js/components/widgets/InputTextAutocompleteWidget");

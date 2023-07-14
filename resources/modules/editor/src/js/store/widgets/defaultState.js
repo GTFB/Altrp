@@ -1,5 +1,7 @@
 import InputTextCommon from "../../classes/elements/InputTextCommon";
+import InputTel from "../../classes/elements/InputTel";
 import InputTextCommonWidget from "../../components/widgets/InputTextCommonWidget";
+import InputTelWidget from "../../components/widgets/InputTelWidget";
 import InputSelect from "../../classes/elements/InputSelect";
 import InputSelectWidget from "../../components/widgets/InputSelectWidget";
 import InputSelect2 from "../../classes/elements/InputSelect2";
@@ -150,6 +152,7 @@ elements[Text.getName()] = Text;
 elements[Breadcrumbs.getName()] = Breadcrumbs;
 
 elements[InputTextCommon.getName()] = InputTextCommon;
+elements[InputTel.getName()] = InputTel;
 elements[InputTextarea.getName()] = InputTextarea;
 elements[InputCheckbox.getName()] = InputCheckbox;
 elements[InputRadio.getName()] = InputRadio;
@@ -218,6 +221,7 @@ components[Breadcrumbs.getName()] = BreadcrumbsWidget;
 components[Button.getName()] = ButtonWidget;
 // components[Input.getName()] = InputWidget;
 components[InputTextCommon.getName()] = InputTextCommonWidget;
+components[InputTel.getName()] = InputTelWidget;
 components[InputTextAutocomplete.getName()] = InputTextAutocompleteWidget;
 components[InputSelect.getName()] = InputSelectWidget;
 components[InputSelectTree.getName()] = InputSelectTreeWidget;

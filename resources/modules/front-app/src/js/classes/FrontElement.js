@@ -564,6 +564,7 @@ class FrontElement {
     switch (elementName) {
       case 'input':
       case 'input-textarea':
+      case 'input-tel':
       case 'input-text-autocomplete':
       case 'stars':
       case  'input-date-range':

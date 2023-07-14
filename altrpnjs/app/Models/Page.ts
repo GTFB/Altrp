@@ -1533,6 +1533,7 @@ export default class Page extends BaseModel {
     'text',
     'breadcrumbs',
     'input-text-common',
+    'input-tel',
     'input-textarea',
     'input-checkbox',
     'input-radio',

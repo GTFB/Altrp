@@ -65,6 +65,7 @@ import getFeedbackStyles from "./helpers/getFeedbackStyles";
 import getInputPaginationStyles from "./helpers/getInputPaginationStyles";
 import animationStyles from "../helpers/animations/animations-styles";
 import isEditor from "../functions/isEditor";
+import getInputTelStyles from "./helpers/getInputTelStyles";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEditor }) => {
   let styles = "";
@@ -238,6 +239,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas, globalCssEd
           break
         case "input-text-common":{
           styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
+        }
+          break
+        case "input-tel":{
+          styles += `.${prefix}${id} {${getInputTelStyles(item.settings, id)}}`
         }
           break
         case "input-text-autocomplete":{

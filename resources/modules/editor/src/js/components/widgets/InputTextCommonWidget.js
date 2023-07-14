@@ -424,7 +424,9 @@ class InputTextCommonWidget extends Component {
         "query_sync"
       );
       if(!isEditor() && query_sync){
-        const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
+        const updateQueryString = (await import(
+          /* webpackChunkName: 'updateQueryString' */
+          '../../../../../front-app/src/js/functions/updateQueryString')).default
         updateQueryString(fieldName, value)
       }
       if (userInput) {

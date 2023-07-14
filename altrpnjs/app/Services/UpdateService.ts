@@ -42,13 +42,19 @@ export default class UpdateService {
         }
       }))?.data || '';
     } catch (e) {
-      file = (await axios.get(UpdateService.RESERVE_UPDATE_DOMAIN + version, {
-        responseType: 'arraybuffer',
-        headers: {
-          'x-altrp-domain': env('APP_URL'),
-        },
-      }))?.data || '';
-      return false;
+      try {
+        file = (await axios.get(UpdateService.RESERVE_UPDATE_DOMAIN + version, {
+          responseType: 'arraybuffer',
+          headers: {
+            'x-altrp-domain': env('APP_URL'),
+          },
+        }))?.data || '';
+
+      }catch (e) {
+        console.error(e)
+        return false
+      }
+      console.error(e)
     }
     if (!await UpdateService.write_public_permissions()) {
       console.error('Failed to update file read mode');

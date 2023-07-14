@@ -197,7 +197,7 @@ export default class Source extends BaseModel {
       return ''
     }
     return `
-    if(httpContext?.auth?.user && ! await httpContext?.auth?.user?.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
+    if(httpContext && ! await httpContext?.auth?.user?.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false,  message: 'Permission denied (roles)'});
     }
@@ -209,7 +209,7 @@ export default class Source extends BaseModel {
       return ''
     }
     return `
-    if( httpContext?.auth?.user && ! await httpContext.auth.user.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
+    if( httpContext&& ! await httpContext.auth.user.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false, message: 'Permission denied (permissions)'});
     }
@@ -515,6 +515,7 @@ export default class Source extends BaseModel {
       }
 
       const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
+      console.log(data)
       if(data?.data){
         datasources[pageDatasource.alias] = data.data
 

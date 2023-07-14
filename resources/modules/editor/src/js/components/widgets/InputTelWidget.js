@@ -1,39 +1,39 @@
-import Resource from "../../classes/Resource";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
-import convertData from "../../../../../front-app/src/js/functions/convertData";
-import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
-import parseParamsFromString from "../../../../../front-app/src/js/functions/parseParamsFromString";
-import parseURLTemplate from "../../../../../front-app/src/js/functions/parseURLTemplate";
 import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 import getDataFromLocalStorage from "../../../../../front-app/src/js/functions/getDataFromLocalStorage";
-import renderAssetIcon from "../../../../../front-app/src/js/functions/renderAssetIcon";
-import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import AltrpModel from "../../classes/AltrpModel";
-import AltrpInput from "../altrp-input/AltrpInput";
+import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
+import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
-
-
-(window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
-`)
+import PhoneInput from "react-phone-input-2";
+import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 
 const AltrpFieldContainer = styled.div`
   ${({settings}) => {
-    const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
-    switch (content_label_position_type) {
-      case "left": {
-        return "display: flex";
-      }
-      case "right": {
-        return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
-      }
+
+  const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
+  switch (content_label_position_type) {
+    case "left": {
+      return "display: flex";
     }
-    return "";
-  }}
+    case "right": {
+      return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
+    }
+  }
+  return "";
+}}
 `;
 
-class InputTelWidget extends Component {
-  timeInput = null;
+export  default class InputTelWidget extends Component {
+  getDropdownStyle = ()=>{
+    if( this.inputRef.current?.offsetWidth){
+      return {
+        width: this.inputRef.current.offsetWidth
+      }
+
+    }
+    return {}
+  };
+
 
   constructor(props) {
     super(props);
@@ -41,30 +41,41 @@ class InputTelWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.onChange = this.onChange.bind(this);
-    this.debounceDispatch = this.debounceDispatch.bind(this);
+    this.inputRef= React.createRef()
+    this.defaultValue = this.getLockedContent("content_default_value")
 
-    this.defaultValue = this.getContent("content_default_value") || "";
     this.state = {
-      settings: { ...props.element.getSettings() },
-      value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
-      ),
-      paramsForUpdate: null
+      settings: {...props.element.getSettings()},
+      showPassword: false,
     };
-    this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+    const value = this.getValue();
+    if (!value && this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
     }
   }
 
   /**
    * Чистит значение
    */
-  clearValue() {
-    this.onChange("");
-    this.dispatchFieldValueToStore("", true);
+  clearValue = async ()=> {
+    let value = "";
+    this.onChange(value);
+    this.dispatchFieldValueToStore(value, true);
+
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "blur",
+        this.props.element.getLockedSettings("actions", []),
+        this.props.element
+      );
+    }
   }
 
   /**
@@ -72,11 +83,13 @@ class InputTelWidget extends Component {
    * @param {{}} e
    */
   handleEnter = e => {
+    if (!e.target.hasAttribute('data-enter')) return;
     if (e.keyCode === 13) {
       e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
+      const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
       const index = inputs.indexOf(e.target);
       if (index === undefined) return;
+
       inputs[index + 1] && inputs[index + 1].focus();
       const {
         create_allowed,
@@ -95,27 +108,12 @@ class InputTelWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
-      let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
-      );
 
-      this.setState(state => ({ ...state, options }));
-    }
-
-    let value = this.state.value;
-
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * старые динамические данные
-     * */
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
+    let value = this.getValue();
+    this.setState(state => ({
+      ...state,
+      value
+    }))
 
     /**
      * Если модель обновилась при смене URL
@@ -125,107 +123,70 @@ class InputTelWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
       return;
     }
-
     if (
       this.props.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getLockedContent("content_default_value");
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
       return;
     }
-
-    if (this.state.value !== value) {
-      this.setState(
-        state => ({ ...state, value }),
-        () => {
-          this.dispatchFieldValueToStore(value);
-        }
-      );
-    }
   }
 
   /**
-   * Получить url для запросов
+   *
+   * @returns {string}
    */
-  getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
-
-    if (url.indexOf("/") === -1) {
-      return `/ajax/models/${url}_options`;
+  getValue = () => {
+    let value;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
-    if (url.indexOf("{{") !== -1) {
-      url = replaceContentWithData(url);
-    }
-    return url;
+    return value;
   }
 
   /**
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const { content_options, model_for_options } = this.state.settings;
-
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
-        "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+      let value = this.getLockedContent(
+        "content_default_value"
       );
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
+    } else {
+      this.updateValue(prevProps);
     }
 
-    /**
-     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
-     */
-    if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
-      this.state.value &&
-      this.state.value.dynamic
-    ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
-    }
-
-    /**
-     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции c сервера
-     */
-    if (
-      this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel ||
-      this.props.currentDataStorage !== prevProps.currentDataStorage
-    ) {
-      this.updateOptions();
-    }
-    if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
-      if (!_.isEqual(options, this.state.options)) {
-        this.setState(state => ({ ...state, options }));
-      }
-    }
-    this.updateValue(prevProps);
   }
 
   /**
@@ -233,12 +194,10 @@ class InputTelWidget extends Component {
    * @param {{}} prevProps
    */
   updateValue(prevProps) {
-
     if (isEditor()) {
       return;
     }
-
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.props.element.getLockedSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
@@ -247,9 +206,10 @@ class InputTelWidget extends Component {
 
     if (!content_calculation) {
       /**
-       * Обновить значение, если formsStore изменилось из другого компонента
+       *
        */
       const path = `${formId}.${fieldName}`;
+
       if (
         this.props.formsStore !== prevProps.formsStore &&
         _.get(altrpforms, path) !== this.state.value
@@ -263,6 +223,7 @@ class InputTelWidget extends Component {
     }
 
     const prevContext = {};
+
     const altrpdata = this.props.currentDataStorage.getData();
     const altrpmodel = this.props.currentModel.getData();
     const altrpuser = this.props.currentUser.getData();
@@ -270,7 +231,6 @@ class InputTelWidget extends Component {
     const altrpresponses = this.props.altrpresponses.getData();
     const altrpmeta = this.props.altrpMeta.getData();
     const context = this.props.element.getCurrentModel().getData();
-
     if (content_calculation.indexOf("altrpdata") !== -1) {
       context.altrpdata = altrpdata;
       if (!altrpdata.currentDataStorageLoaded) {
@@ -279,7 +239,6 @@ class InputTelWidget extends Component {
         prevContext.altrpdata = prevProps.currentDataStorage.getData();
       }
     }
-
     if (content_calculation.indexOf("altrpforms") !== -1) {
       context.altrpforms = altrpforms;
       /**
@@ -291,32 +250,26 @@ class InputTelWidget extends Component {
         prevContext.altrpforms = prevProps.formsStore;
       }
     }
-
     if (content_calculation.indexOf("altrpmodel") !== -1) {
       context.altrpmodel = altrpmodel;
       prevContext.altrpmodel = prevProps.currentModel.getData();
     }
-
     if (content_calculation.indexOf("altrpuser") !== -1) {
       context.altrpuser = altrpuser;
       prevContext.altrpuser = prevProps.currentUser.getData();
     }
-
     if (content_calculation.indexOf("altrpuser") !== -1) {
       context.altrpuser = altrpuser;
       prevContext.altrpuser = prevProps.currentUser.getData();
     }
-
     if (content_calculation.indexOf("altrppagestate") !== -1) {
       context.altrppagestate = altrppagestate;
       prevContext.altrppagestate = prevProps.altrpPageState.getData();
     }
-
     if (content_calculation.indexOf("altrpmeta") !== -1) {
       context.altrpmeta = altrpmeta;
       prevContext.altrpmeta = prevProps.altrpMeta.getData();
     }
-
     if (content_calculation.indexOf("altrpresponses") !== -1) {
       context.altrpresponses = altrpresponses;
       prevContext.altrpresponses = prevProps.altrpresponses.getData();
@@ -337,16 +290,13 @@ class InputTelWidget extends Component {
     ) {
       return;
     }
-
     if (
       !_.isEqual(prevProps.formsStore, this.props.formsStore) &&
       `${formId}.${fieldName}` === altrpforms.changedField
     ) {
       return;
     }
-
     let value = "";
-
     try {
       content_calculation = content_calculation
         .replace(/}}/g, "')")
@@ -356,7 +306,7 @@ class InputTelWidget extends Component {
         return;
       }
       this.setState(
-        state => ({ ...state, value }),
+        state => ({...state, value}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
@@ -364,149 +314,27 @@ class InputTelWidget extends Component {
     } catch (e) {
       console.error(
         "Evaluate error in Input: '" + e.message + "'",
-        this.props.element.getId()
+        this.props.element.getId(),
+        content_calculation
       );
     }
   }
 
-  /**
-   * Обновляет опции для селекта при обновлении данных, полей формы
-   */
-  async updateOptions() {
-    {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
-      let formData = _.get(this.props.formsStore, [formId], {});
-      paramsForUpdate = parseParamsFromString(
-        paramsForUpdate,
-        new AltrpModel(formData)
-      );
-      /**
-       * Сохраняем параметры запроса, и если надо обновляем опции
-       */
-      let options = [...this.state.options];
-
-      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-        if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
-            paramsForUpdate = JSON.stringify(paramsForUpdate);
-            options = await new Resource({
-              route: this.getRoute()
-            }).getQueried({ filters: paramsForUpdate });
-          } else {
-            options = await new Resource({ route: this.getRoute() }).getQueried(
-              paramsForUpdate
-            );
-          }
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        } else if (this.state.paramsForUpdate) {
-          options = await new Resource({ route: this.getRoute() }).getAll();
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        }
-
-        this.setState(state => ({
-          ...state,
-          paramsForUpdate,
-          options
-        }));
-      }
-    }
-  }
 
   /**
    * Изменение значения в виджете
    * @param e
-   * @param  editor для получения изменений из CKEditor
    */
-  onChange(e, editor = null) {
-    let value = "";
-    let valueToDispatch;
+  onChange =(value, data, e, formattedValue)=> {
 
-    if (e && e.target) {
-      value = e.target.value;
+    if(! _.isEqual(this.data, data)){
+      this.dispatchFieldValueToStore(formattedValue, true)
     }
+    this.data = data
+    this.setState(state=>({...state, value}))
 
-    if (e && e.value) {
-      value = e.value;
-    }
-
-    if (_.get(editor, "getData")) {
-      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
-    }
-
-    if (_.isArray(e)) {
-      value = _.cloneDeep(e);
-    }
-
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
-
-    this.setState(
-      state => ({
-        ...state,
-        value
-      }),
-      () => {
-        /**
-         * Обновляем хранилище только если не текстовое поле
-         */
-
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
-          "change_change_end"
-        );
-        const change_change_end_delay = this.props.element.getSettings(
-          "change_change_end_delay"
-        );
-
-        if (change_actions && !change_change_end && !isEditor()) {
-          this.debounceDispatch(
-            valueToDispatch !== undefined ? valueToDispatch : value
-          );
-        }
-        if (change_actions && change_change_end && !isEditor()) {
-          this.timeInput && clearTimeout(this.timeInput);
-          this.timeInput = setTimeout(() => {
-            this.debounceDispatch(
-              valueToDispatch !== undefined ? valueToDispatch : value
-            );
-          }, change_change_end_delay);
-        }
-      }
-    );
   }
 
-  debounceDispatch = _.debounce(
-    value => this.dispatchFieldValueToStore(value, true),
-    150
-  );
-
-  /**
-   * получить опции
-   */
-  getOptions() {
-    let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
-
-    if (!this.props.element.getSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-    }
-
-    return options;
-  }
 
   /**
    * Для действие по фокусу
@@ -515,14 +343,14 @@ class InputTelWidget extends Component {
    */
 
   onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
+    const focus_actions = this.props.element.getLockedSettings("focus_actions");
 
     if (focus_actions && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -538,30 +366,25 @@ class InputTelWidget extends Component {
    * @param  e
    * @param  editor для получения изменений из CKEditor
    */
-
   onBlur = async (e, editor = null) => {
+
     this.dispatchFieldValueToStore(e.target.value, true);
 
-    if (_.get(editor, "getData")) {
-      this.dispatchFieldValueToStore(editor.getData(), true);
-    }
-
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         "blur",
-        this.props.element.getSettings("actions", []),
+        this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
     }
   };
-
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
@@ -570,26 +393,34 @@ class InputTelWidget extends Component {
   dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
 
     if (_.isObject(this.props.appStore) && fieldName && formId) {
+
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
 
+      let query_sync = this.props.element.getLockedSettings(
+        "query_sync"
+      );
+      if(!isEditor() && query_sync){
+        const updateQueryString = (await import('../../../../../front-app/src/js/functions/updateQueryString')).default
+        updateQueryString(fieldName, value)
+      }
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.props.element.getLockedSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
             await import(
               /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-            )
+              )
           ).default;
+
           await actionsManager.callAllWidgetActions(
             this.props.element.getIdForAction(),
             "change",
@@ -602,86 +433,6 @@ class InputTelWidget extends Component {
   };
 
   /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const { value: inputValue } = e.target;
-
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getSettings();
-
-    if (!create_label && !create_url) {
-      return;
-    }
-
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({ ...state, isDisabled: true }));
-
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-
-        this.setState(
-          state => ({ ...state, isDisabled: false }),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-
-            this.setState(
-              state => ({ ...state, options, value }),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({ ...state, isDisabled: false }));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({ ...state, isDisabled: false }));
-    }
-  };
-
-  /**
    * Взовращает имя для атрибута name
    * @return {string}
    */
@@ -689,63 +440,88 @@ class InputTelWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   * Получить css классы для InputTextCommonWidget
+   */
+  getClasses = ()=>{
+    let classes = ``;
+    if(this.isActive()){
+      classes += 'active '
+    }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
+    return classes;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
+    const country = this.getContent('country');
+    let onlyCountries = this.getContent('onlyCountries');
+
+    let preferredCountries = this.getContent('preferredCountries');
+    let excludeCountries = this.getContent('excludeCountries');
+    if(excludeCountries && _.isString(excludeCountries)){
+      if(excludeCountries.includes('{{') && excludeCountries.includes('}}')){
+        excludeCountries = getDataByPath(excludeCountries.replaceAll('{{', '').replaceAll('}}', ''))
+      } else {
+        excludeCountries = excludeCountries.split(',').map(e=>e.trim())
+      }
+    }
+
+    if(onlyCountries && _.isString(onlyCountries)){
+      if(onlyCountries.includes('{{') && onlyCountries.includes('}}')){
+        onlyCountries = getDataByPath(onlyCountries.replaceAll('{{', '').replaceAll('}}', ''))
+      } else {
+        onlyCountries = onlyCountries.split(',').map(e=>e.trim())
+      }
+    }
+    if(preferredCountries && _.isString(preferredCountries)){
+      if(preferredCountries.includes('{{') && preferredCountries.includes('}}')){
+        preferredCountries = getDataByPath(preferredCountries.replaceAll('{{', '').replaceAll('}}', ''))
+      } else {
+        preferredCountries = preferredCountries.split(',').map(e=>e.trim())
+      }
+    }
+
+    const {element} = this.props;
+    let classes = this.getClasses()
     const {
       content_readonly,
-      select2_multiple: isMultiple,
-      label_icon
     } = settings;
-
-    let value = this.state.value;
-
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
-
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-
-    if (value && value.dynamic) {
-      value = "";
-    }
 
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
-
+    const label_icon_position = this.props.element.getResponsiveLockedSetting('label_icon_position')
+    let label_style_spacing = this.props.element.getResponsiveLockedSetting('label_style_spacing')
     switch (content_label_position_type) {
       case "top":
         styleLabel = {
-          marginBottom: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginBottom: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
-          marginTop: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginTop: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
-          marginRight: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginRight: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
@@ -758,69 +534,75 @@ class InputTelWidget extends Component {
         classLabel = "";
         break;
     }
+    let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    let content_placeholder = this.props.element.getResponsiveLockedSetting("content_placeholder")
+    content_label = replaceContentWithData(content_label, this.props.element.getCurrentModel()?.getData())
+    let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
 
-    if (this.state.settings.content_label) {
+    if (content_label || label_icon) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
+            htmlFor={this.getName()}
+            style={{
+              display: 'flex',
+              flexDirection: label_icon_position,
+            }}
+            className={`altrp-field-label altrp-field-label_text-widget ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
-              }`}
+            }`}
           >
-            {this.state.settings.content_label}
-          </label>
-          {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
-              {renderAssetIcon(label_icon)}
+            {content_label}
+
+            {label_icon && label_icon.type && (
+              <span className="altrp-label-icon">
+              {renderAsset(label_icon)}
             </span>
-          )}
+            )}
+          </label>
         </div>
       );
     } else {
       label = null;
     }
+    const enterNextInput = !!this.props.element.getResponsiveLockedSetting("content_enter_input")
+    let value = this.state.value || ''
 
-    let autocomplete = "off";
-    if (this.state.settings.content_autocomplete) {
-      autocomplete = "on";
-    } else {
-      autocomplete = "off";
-    }
-
-    const isClearable = this.state.settings.content_clearable;
-
-    const input = (
-      <div className="altrp-input-wrapper">
-        <AltrpInput
-          type="tel"
-          name={this.getName()}
-          value={value || ""}
-          element={this.props.element}
-          readOnly={content_readonly}
-          autoComplete={autocomplete}
-          placeholder={this.state.settings.content_placeholder}
-          className={
-            "altrp-field " + this.state.settings.position_css_classes
-          }
-          settings={this.props.element.getSettings()}
-          onKeyDown={this.handleEnter}
+    let input = (
+      <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
+        <PhoneInput
+          dropdownStyle={this.getDropdownStyle()}
+          containerClass={`bp3-input-group ${classes}`}
+          inputClass={`bp3-input `}
+          value={value}
           onChange={this.onChange}
           onBlur={this.onBlur}
           onFocus={this.onFocus}
-          id={this.state.settings.position_css_id}
+          onClick={this.onClick}
+          preferredCountries={preferredCountries}
+          onlyCountries={onlyCountries}
+          excludeCountries={excludeCountries}
+          country={country}
+          placeholder={ content_placeholder !== null ? content_placeholder : undefined}
+          inputProps={{
+            name: this.getName(),
+            ref: this.inputRef,
+            required: true,
+            autoFocus: true,
+            'data-enter': enterNextInput,
+          }}
         />
-        {isClearable && (
-          <button
-            className="input-clear-btn"
-            onClick={() => this.setState({ value: this.defaultValue })}
-          >
-            ✖
-          </button>
-        )}
+        {/*<PhoneInput*/}
+        {/*  inputProps={{*/}
+        {/*    name: this.getName(),*/}
+        {/*    required: true,*/}
+        {/*    autoFocus: true,*/}
+        {/*  }}*/}
+        {/*/>*/}
       </div>
     );
 
@@ -841,4 +623,3 @@ class InputTelWidget extends Component {
   }
 }
 
-export default InputTelWidget;

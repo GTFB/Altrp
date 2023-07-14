@@ -305,7 +305,6 @@ export default class AltrpRouting {
 
     }
 
-    let title = replaceContentWithData(page.title, model_data)
 
     // const datasources= {}
     let altrpuser: any = {
@@ -320,17 +319,18 @@ export default class AltrpRouting {
       ...pageMatch.params,
       altrpuser,
       altrppage: {
-        title,
         url,
         params: httpContext.request.qs()
       }
     }
-
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
     const device = getCurrentDevice(httpContext.request)
     const lang = get_altrp_setting('site_language', 'en')
 
     altrpContext.altrpdata = datasources
+    let title = replaceContentWithData(page.title, altrpContext)
+    altrpContext.altrppage.title = title
+
     try {
 
       let [page_areas, _all_styles, content] = await Promise.all(

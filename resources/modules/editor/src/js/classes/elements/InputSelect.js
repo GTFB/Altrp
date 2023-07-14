@@ -60,6 +60,13 @@ class InputSelect extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
+    this.addControl("query_sync", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Sync With Query String",
+    });
+
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
       label: "Label",

@@ -30,3 +30,36 @@ document.addEventListener('DOMContentLoaded',()=>{
 if(document.querySelector('a[href], [data-link]')){
   import(/* webpackChunkName: 'document-click' */'./js/functions/events-handlers/document-click')
 }
+
+function userInteraction(){
+  document.dispatchEvent(new Event('user-interaction'))
+  window.dispatchEvent(new Event('user-interaction'))
+}
+window.addEventListener(('user-interaction'), ()=>{
+  if(window.altrp){
+    let popups = altrp.popupsGuids
+    if(popups){
+      popups.forEach(p=>{
+        const stylesUrl = `/altrp/css/DEFAULT_BREAKPOINT/${p}.css?${window.altrp.randomString}`
+        if(document.querySelector(`link[href="${stylesUrl}"]`)){
+          return
+        }
+        const link = document.createElement('link')
+        link.setAttribute('href', stylesUrl)
+        link.setAttribute('rel', 'stylesheet')
+        document.body.appendChild(link)
+      })
+    }
+  }
+})
+document.addEventListener('click', userInteraction)
+document.addEventListener('focus', userInteraction)
+document.addEventListener('mousedown', userInteraction)
+document.addEventListener('mouseleave', userInteraction)
+document.addEventListener('mouseenter', userInteraction)
+document.addEventListener('touchend', userInteraction)
+document.addEventListener('touchmove', userInteraction)
+document.addEventListener('touchstart', userInteraction)
+document.addEventListener('keydown', userInteraction)
+document.addEventListener('keyup', userInteraction)
+window.addEventListener('scroll', userInteraction)
