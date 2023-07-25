@@ -984,6 +984,9 @@ export default class Page extends BaseModel {
   }
 
   async _extractElementsNames(element, elementNames, only_react_elements,  presetsStore:string[]| null = null) {
+    if(! Page.coreElements.includes(element.name)){
+      return
+    }
     let plugins_widget_list: any = ''
     if (!plugins_widget_list) {
       plugins_widget_list = []
@@ -1017,6 +1020,9 @@ export default class Page extends BaseModel {
         || element.name === 'section_widget') {
 
         recurseMapElements(element, function (element) {
+          if(! Page.coreElements.includes(element.name)){
+            return
+          }
             if (element.name && elementNames.indexOf(element.name) === -1) {
               elementNames.push(element.name)
             }
@@ -1182,6 +1188,7 @@ export default class Page extends BaseModel {
     }
     const dependenciesList = [
       'altrppagestate',
+      'altrpstorage',
       'altrppage',
       'altrpdata',
       'altrpforms',

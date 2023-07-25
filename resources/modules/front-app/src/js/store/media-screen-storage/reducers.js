@@ -16,7 +16,7 @@ const defaultScreen =
       : false;
   }) || CONSTANTS.SCREENS[0];
 if(!window.altrpHelpers.isEditor()){
-  window.Cookies.set('__altrp_current_device', defaultScreen.name);
+  window.Cookies.set('__altrp_current_device', defaultScreen.name, { expires: 365 });
 }
 export function mediaScreenReducer(currentScreen, action) {
   currentScreen = currentScreen || defaultScreen;

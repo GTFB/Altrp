@@ -53,10 +53,12 @@ export default class SwitchNode extends BaseNode implements NodeInterface
     let items = this.getItems()
     let property = this.getProperty()
     let leftJSProperty = this.customizer.propertyToJS( property )
+    let idx= 0
     for(let key in items){
       if( !items.hasOwnProperty(key)){
         continue
       }
+
       let item = items[key]
       if( ! data_get( item,'operator')){
         continue
@@ -65,7 +67,7 @@ export default class SwitchNode extends BaseNode implements NodeInterface
       let compare = this.customizer.customizerBuildCompare(data_get( item,'operator'), leftJSProperty,  rightJSProperty)
       if(data_get( item,'operator') !== 'default') {
         if (data_get(item, 'operator') !== 'else') {
-          JSContent += `if( ${compare} ){`
+          JSContent += idx === 0 ? `if( ${compare} ){` : `else if( ${compare} ){`
         } else {
           JSContent += `else {`
         }
@@ -76,6 +78,7 @@ export default class SwitchNode extends BaseNode implements NodeInterface
       if(data_get( item,'operator') !== 'default') {
         JSContent += '}'
       }
+      idx ++
     }
     return JSContent
   }

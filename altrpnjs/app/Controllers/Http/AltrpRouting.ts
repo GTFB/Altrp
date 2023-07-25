@@ -204,7 +204,7 @@ export default class AltrpRouting {
       httpContext.response.cookie('__altrp_redirect_from', url, {
         maxAge: Date.now() + 864000000,
       })
-      return httpContext.response.redirect(page.redirect || '/')
+      return httpContext.response.redirect(page.redirect || '/', true)
     }
 
     await page.load('model');
@@ -297,7 +297,7 @@ export default class AltrpRouting {
         }
 
         if (!await page.allowedForUser(this)) {
-          return httpContext.response.redirect(page.redirect || '/')
+          return httpContext.response.redirect(page.redirect || '/', true)
         }
 
         await page.load('model');

@@ -143,7 +143,7 @@ let defaultOptions = [
     label: "Set cookie"
   }
 ]
-console.error('trace')
+
 defaultOptions = window.editorAPI.applyPluginsFiltersSync('default_actions_controllers_type_options', defaultOptions)
 
 /**

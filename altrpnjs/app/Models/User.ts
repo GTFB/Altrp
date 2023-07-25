@@ -154,8 +154,8 @@ export default class User extends BaseModel {
     pivotTable: 'permission_user',
     localKey: 'id',
     relatedKey: 'id',
-    pivotForeignKey: 'permission_id',
-    pivotRelatedForeignKey: 'user_id',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'permission_id',
   })
   public permissions: ManyToMany<typeof Permission>
 

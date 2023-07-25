@@ -515,7 +515,6 @@ export default class Source extends BaseModel {
       }
 
       const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
-      console.log(data)
       if(data?.data){
         datasources[pageDatasource.alias] = data.data
 

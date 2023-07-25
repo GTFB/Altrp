@@ -15,7 +15,7 @@ class TemplateWidget extends Component {
   }
 
   render() {
-    console.log(this.props.element.getSettings());
+    //console.log(this.props.element.getSettings());
     return <AltrpTemplate settings={this.props.element.getSettings() || {}}/>
   }
 }
