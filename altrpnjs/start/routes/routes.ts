@@ -167,6 +167,8 @@ window.current_user = ${JSON.stringify({is_guest: true})}
   user = user.toJSON()
   // @ts-ignore
   delete  user.password
+  // @ts-ignore
+  delete  user.guid
   return response.send(`window.current_user = ${JSON.stringify(user)}`);
 })
 

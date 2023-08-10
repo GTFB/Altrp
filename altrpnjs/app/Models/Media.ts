@@ -1,4 +1,6 @@
+import { parseString } from "xml2js";
 import {DateTime} from 'luxon'
+import axios from 'axios'
 import {
   BaseModel,
   BelongsTo,
@@ -10,6 +12,12 @@ import Category from "App/Models/Category";
 import changeFileExtension from "../../helpers/string/changeFileExtension";
 // import fs from "fs";
 import public_path from "../../helpers/path/public_path";
+import MediaController from "App/Controllers/Http/admin/MediaController";
+import {transliterate} from "../../helpers/transliterate";
+import fs from "fs";
+import convert from "lodash/fp/convert";
+import data_get from "../../helpers/data_get";
+import imageSize from "image-size";
 // import sizeOf from 'image-size';
 // import sharp from 'sharp';
 export default class Media extends BaseModel {
@@ -130,6 +138,74 @@ export default class Media extends BaseModel {
   get standard_webp_url(): string {
     return changeFileExtension(this.getPathVariation(1600, 1080), 'webp')
   }
+
+  static async importFromUrl(fileUrl: string, filename: string, user_id: number):Promise<Media>{
+    let media = new Media();
+    const date = new Date();
+    const ext = filename.split(".").pop();
+
+    let title: string[]| string = filename.split(".");
+    title.pop();
+    title = title.join('');
+    title = transliterate(title)
+    // @ts-ignore
+    title = title.substring(0, 36)
+    title = title + '_' + (new Date().valueOf())
+
+    filename = title + "." + ext;
+
+    const response = await  axios.get(fileUrl, { responseType: 'arraybuffer' })
+
+    media.media_type = response.headers['content-type']?.split('/')[0] || ''
+
+    let urlBase =
+      "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
+
+    if (!fs.existsSync(public_path("/storage" + urlBase))) {
+      fs.mkdirSync(public_path("/storage" + urlBase), { recursive: true });
+    }
+    let dirname = ("/storage" + urlBase);
+    media.filename = urlBase + filename;
+    media.title = filename
+    media.type = MediaController.getTypeForFile(filename);
+    //media.media_type = file.type || "";
+    media.author = user_id;
+    //const
+
+    let content = Buffer.from(response.data, 'binary');
+    fs.writeFileSync(public_path(dirname + filename), content);
+    //let content = fs.readFileSync(public_path(dirname + filename));
+    if (ext == "heic") {
+      media.title = media.title.split(".")[0] + ".jpg";
+      media.media_type = "image/jpeg";
+      media.type = "image";
+      content = convert({
+        buffer: content,
+        format: "JPEG",
+        quality: 1,
+      });
+      fs.writeFileSync(public_path(dirname + filename), content);
+    }
+
+    if (ext === "svg") {
+      let svg = content;
+      svg = parseString(svg);
+      media.width = data_get(svg, "$.width", 150);
+      media.height = data_get(svg, "$.height", 150);
+    } else {
+      let dimensions;
+      try {
+        dimensions = imageSize(content);
+      } catch (e) {}
+      media.width = data_get(dimensions, "width", 0);
+      media.height = data_get(dimensions, "height", 0);
+    }
+    media.main_color = "";
+    media.url = "/storage" + urlBase + filename;
+    await media.save();
+    return media
+  }
+
   private getPathVariation(width, height): string {
 
     const url = this.url

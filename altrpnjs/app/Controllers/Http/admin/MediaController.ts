@@ -215,7 +215,13 @@ export default class MediaController {
     return MediaController.fileTypes;
   }
   static getTypeForFile(file) {
-    let extensionLoaded = file.clientName.split(".").pop();
+    let extensionLoaded
+
+    if(typeof file === 'string'){
+      extensionLoaded = file.split(".").pop();
+    } else {
+      extensionLoaded = file.clientName.split(".").pop();
+    }
 
     let type = "";
     let file_types = MediaController.getFileTypes();
@@ -272,7 +278,6 @@ export default class MediaController {
         fs.mkdirSync(public_path(dirname), { recursive: true });
       }
       media.filename = urlBase + filename;
-      console.log(filename);
       // @ts-ignore
       await file.moveToDisk(dirname, { name: filename }, "local");
       let content = fs.readFileSync(public_path(dirname + filename));

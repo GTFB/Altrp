@@ -117,7 +117,9 @@ class Dropbar extends Component {
 
   render() {
     const children = React.Children.only(this.props.children);
-
+    let classesState = (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+    const classes = ["altrp-btn", "dropbar", `${classesState}`];
+    this.state.show ? classes.push('active') : null;
     const {element} = this.props
     let mainClass = this.props.className ? `altrp-dropbar-${this.props.className}` : '';
     let type = this.props.settings.type_dropbar_section || "text";
@@ -153,6 +155,7 @@ class Dropbar extends Component {
               {
                 ref: this.children,
                 onClick: this.props.settings.mode_dropbar_options === "click" ? this.show : null,
+                className:classes.join(' '),
               }
             )
           }
