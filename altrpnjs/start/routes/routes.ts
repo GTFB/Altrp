@@ -202,7 +202,7 @@ Route.group(() => {
     if (httpContext.request.method() === 'GET' && segments[3] === 'customizers') {
       httpContext.response.header('Access-Control-Allow-Origin', '*')
     }
-    else {
+    if (!segments.includes('customizers')) {
       return httpContext.response.status(403).json({
         success: false,
         message: 'Access Denied'
