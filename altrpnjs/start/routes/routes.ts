@@ -202,12 +202,14 @@ Route.group(() => {
     if (httpContext.request.method() === 'GET' && segments[3] === 'customizers') {
       httpContext.response.header('Access-Control-Allow-Origin', '*')
     }
-    if (!segments.includes('customizers')) {
+    const containsSubstring = segments.some(item => item.includes('options'));
+    if (!segments.includes('customizers') && !containsSubstring) {
       return httpContext.response.status(403).json({
         success: false,
         message: 'Access Denied'
-      })
+      });
     }
+
     /**
      * delete `altrp_ajax` from request body
      */
