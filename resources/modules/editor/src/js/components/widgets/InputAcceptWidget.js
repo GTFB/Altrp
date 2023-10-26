@@ -901,6 +901,7 @@ class InputAcceptWidget extends Component {
 
 
     let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    content_label = replaceContentWithData(content_label, this.props.element.getCurrentModel()?.getData())
     let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
 
     if (content_label || label_icon) {

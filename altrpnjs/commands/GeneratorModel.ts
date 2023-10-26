@@ -31,7 +31,7 @@ export default class GeneratorModel extends BaseCommand {
     const { default: ControllerGenerator } = await import('App/Generators/ControllerGenerator')
 
     let models
-    
+
     if (this.id) {
       models = await Model.query()
         .andWhereIn('id', this.id)
@@ -54,10 +54,10 @@ export default class GeneratorModel extends BaseCommand {
       try {
         if (this.isDelete) {
           modelGenerator.deleteFiles(model)
-          console.log(`Model of id (${model.id}) deleted: ${this.colors.cyan(modelGenerator.getFilename(model))}`)
+          //console.log(`Model of id (${model.id}) deleted: ${this.colors.cyan(modelGenerator.getFilename(model))}`)
         } else {
           await modelGenerator.run(model)
-          console.log(`Model generated for id (${model.id}): ${this.colors.cyan(modelGenerator.getFilename(model))}`)
+          //console.log(`Model generated for id (${model.id}): ${this.colors.cyan(modelGenerator.getFilename(model))}`)
         }
       } catch (err) {
         console.error(`Error occurred while ${this.isDelete ? 'deleting' : 'generating'} Model ${model.guid}: ${err.message}`)
@@ -65,12 +65,13 @@ export default class GeneratorModel extends BaseCommand {
         failure.push(err)
       }
 
-      let controller = await Controller.firstOrCreate({ model_id: model.id }, { description: model.description })
+      let controller = await Controller.firstOrCreate({ model_id: model.id })
 
       try {
         if (!this.isDelete) {
+
           await controllerGenerator.run(controller)
-          console.log(`Controller generated for id (${controller.id}): ${this.colors.cyan(controllerGenerator.getFilename())}`)
+          //console.log(`Controller generated for id (${controller.id}): ${this.colors.cyan(controllerGenerator.getFilename())}`)
         }
       } catch (err) {
         console.error(`Error occurred while ${this.isDelete ? 'deleting' : 'generating'} Controller ${controller.id}: ${err.message}`)

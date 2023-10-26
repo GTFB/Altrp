@@ -81,8 +81,9 @@ dhparam.pem
 /AltrpObservers/
 /Controllers/
 /Entities/
-/test.js
+/js.js
 /test.css
+/css.css
 /test.scss
 /test.html
 /test.log

@@ -63,6 +63,9 @@ export default class User extends BaseModel {
   public get fullName():string{
     if( !this.usermeta?.first_name && !this.usermeta?.second_name){
       let fullName = ''
+      if(! this.name && !this.last_name){
+        return this.email;
+      }
       if(this.name){
         fullName += this.name
       }

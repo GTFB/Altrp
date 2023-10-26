@@ -592,7 +592,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Background color",
       rules: {
-        "body{{STATE}}": "background-color: {{COLOR}};"
+        "{{THEME}} body{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -600,7 +600,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       rules: {
-        "body{{STATE}}": "background-image: url({{URL}});"
+        "{{THEME}} body{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -646,7 +646,7 @@ class RootElement extends BaseElement {
       ],
       label: 'Background Position',
       rules: {
-        "body{{STATE}}": "background-position: {{VALUE}};"
+        "{{THEME}} body{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -668,7 +668,7 @@ class RootElement extends BaseElement {
       ],
       label: 'Background Attachment',
       rules: {
-        "body{{STATE}}": "background-attachment: {{VALUE}};"
+        "{{THEME}} body{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -702,7 +702,7 @@ class RootElement extends BaseElement {
       ],
       label: 'Background Repeat',
       rules: {
-        "body{{STATE}}": "background-repeat: {{VALUE}};"
+        "{{THEME}} body{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -720,7 +720,7 @@ class RootElement extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        "body{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        "{{THEME}} body{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -746,7 +746,7 @@ class RootElement extends BaseElement {
       ],
       label: 'Background Size',
       rules: {
-        "body{{STATE}}": "background-size: {{VALUE}};"
+        "{{THEME}} body{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
@@ -754,7 +754,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
       rules: {
-        "body{{STATE}}": "background-image: {{VALUE}}"
+        "{{THEME}} body{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -767,7 +767,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        'body{{STATE}}': [
+        '{{THEME}} body{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',

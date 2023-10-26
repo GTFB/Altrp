@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import BindIcon from "../../../svgs/bind.svg";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
+import RotateLeft from "../../../svgs/rotate-left.svg";
 
 class DimensionsController extends Component {
   constructor(props) {
@@ -125,6 +127,7 @@ class DimensionsController extends Component {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     return <div className="controller-container controller-container_dimensions">
+
       <div className="control-dimensions-header">
         <div className="controller-dimensions__label">
           {this.props.label}
@@ -145,6 +148,12 @@ class DimensionsController extends Component {
               </div>
             })
           }
+
+          <div className="control-shadow-toggle " onClick={this.reset}>
+
+            <RotateLeft id="shadowContentIcon" fill="#8E94AA" width="16" height="16" viewBox="0 0 24 24"
+                        className="control-shadow-svg-content"/>
+          </div>
         </div>
       </div>
       <div className="control-group">

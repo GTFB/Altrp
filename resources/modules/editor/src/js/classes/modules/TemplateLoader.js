@@ -170,7 +170,7 @@ export class TemplateLoader {
         resolve(frontElementsFabric.parseData(templateData))
       })
       link.setAttribute('rel', 'stylesheet')
-      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${templateGUID}.css`)
+      link.setAttribute('href',  `/altrp/css/DEFAULT_BREAKPOINT/${templateGUID}.css?${window?.altrp?.randomString || 0}`)
 
       _doc.head.appendChild(link)
 

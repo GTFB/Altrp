@@ -45,6 +45,7 @@ import public_path from "../../helpers/path/public_path";
 import getResponsiveSetting, {setResponsiveSetting} from "../../helpers/getResponsiveSetting";
 import {optimizeStyles} from "../../helpers/screen";
 import altrpRandomId from "../../helpers/altrpRandomId";
+import PagesTemplate from "App/Models/PagesTemplate";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -146,6 +147,11 @@ export default class Page extends BaseModel {
     pivotRelatedForeignKey: 'template_id'
   })
   public templates: ManyToMany<typeof Template>
+
+  @hasMany(() => PagesTemplate, {
+    foreignKey: 'page_id'
+  })
+  public pages_templates: HasMany<typeof PagesTemplate>
 
   @belongsTo(() => Model, {
     foreignKey: 'model_id',

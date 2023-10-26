@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon'
+import {DateTime} from 'luxon'
 import {
   BaseModel, beforeDelete,
   BelongsTo,
@@ -26,7 +26,7 @@ import altrpRandomId from "../../helpers/altrpRandomId";
 export default class Source extends BaseModel {
   public static table = 'altrp_sources'
 
-  @column({ isPrimary: true })
+  @column({isPrimary: true})
   public id: number
 
   @column()
@@ -42,7 +42,7 @@ export default class Source extends BaseModel {
   public request_type: string
 
   @column()
-  public name : string
+  public name: string
 
   @column()
   public title: string
@@ -72,7 +72,8 @@ export default class Source extends BaseModel {
   public bodies: string
 
   @beforeDelete()
-  public static async beforeDelete(source: Source): Promise<void>{
+  public static async beforeDelete(source: Source): Promise<void> {
+    await PageDatasource.query().where('source_id', source.id).delete()
     await source.related('roles').detach()
   }
 
@@ -116,25 +117,25 @@ export default class Source extends BaseModel {
   })
   public source_permissions: ManyToMany<typeof Permission>
 
-  public customizer: Customizer| null
+  public customizer: Customizer | null
 
-  public sQLEditor: SQLEditor| null
+  public sQLEditor: SQLEditor | null
 
   private methodBody: string = ''
 
   @computed()
-  public get notice_settings(){
+  public get notice_settings() {
     return []
   }
 
   @computed()
-  public get web_url(){
+  public get web_url() {
 
-    switch ( this.sourceable_type ){
+    switch (this.sourceable_type) {
       case SQLEditor.sourceable_type:
       case 'App\\Altrp\\Query': {
         let url = data_get(this, 'url', '')
-        if(! url){
+        if (!url) {
           console.error(`Source id:${this.id} has not url`)
         }
         url = url.replace(`/${this.model?.table?.name}`, '')
@@ -142,15 +143,15 @@ export default class Source extends BaseModel {
       }
       case 'App\\Altrp\\Customizer':
       case Customizer.sourceable_type:
-        return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get( this, 'url' );
-      default:{
-        let url = data_get( this, 'url', '' )
-        if(url.indexOf('{') !== -1){
+        return config('app.url') + '/ajax/models/' + this.model?.table?.name + '/customizers' + data_get(this, 'url');
+      default: {
+        let url = data_get(this, 'url', '')
+        if (url.indexOf('{') !== -1) {
           url = url.replace(/{/g, '').replace(/}/g, '')
         }
         return this.type != 'remote'
           ? config('app.url') + '/ajax/models' + url
-          : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get( this, 'name' );
+          : config('app.url') + '/ajax/models/data_sources/' + this.model?.table?.name + '/' + data_get(this, 'name');
       }
     }
   }
@@ -160,29 +161,29 @@ export default class Source extends BaseModel {
   })
   public controller: BelongsTo<typeof Controller>
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({autoCreate: true})
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime
 
 
-  async getControllerInstance(){
+  async getControllerInstance() {
     // @ts-ignore
     await this.load(`altrp_model`)
-    if(!this.altrp_model?.name){
+    if (!this.altrp_model?.name) {
       return null
     }
     const path = app_path(`AltrpControllers/${this.altrp_model.name}Controller`)
-    try{
-      let controller = isProd() ? require(path).default : (await  import(path)).default
+    try {
+      let controller = isProd() ? require(path).default : (await import(path)).default
       return new controller()
-    }catch (e) {
+    } catch (e) {
       console.error(e);
     }
   }
 
-  renderForController(modelClassName:string):string {
+  renderForController(modelClassName: string): string {
     this.prepareContent()
     return `
   async ${this.getMethodName()}(httpContext){
@@ -192,62 +193,75 @@ export default class Source extends BaseModel {
   }
     `;
   }
-  private renderRolesCheck():string{
-    if(! this.roles.length || ! this.auth){
+
+  private renderRolesCheck(): string {
+
+    if(!this.auth){
       return ''
+
+    }
+    if (!this.roles.length) {
+        return `
+    if(httpContext && ! httpContext?.auth?.user){
+      httpContext.response.status(403);
+      return httpContext.response.json({success: false,  message: 'Access denied'});
+    }
+    `
+
     }
     return `
-    if(httpContext && ! await httpContext?.auth?.user?.hasRole([${this.roles.map(r=>`'${r.name}'`)}])){
+    if(httpContext && ! await httpContext?.auth?.user?.hasRole([${this.roles.map(r => `'${r.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false,  message: 'Permission denied (roles)'});
     }
     `
   }
 
-  private renderPermissionsCheck():string {
-    if(! this.permissions.length){
+  private renderPermissionsCheck(): string {
+    if (!this.permissions.length) {
       return ''
     }
     return `
-    if( httpContext&& ! await httpContext.auth.user.hasPermission([${this.permissions.map(p=>`'${p.name}'`)}])){
+    if( httpContext&& ! await httpContext.auth.user.hasPermission([${this.permissions.map(p => `'${p.name}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false, message: 'Permission denied (permissions)'});
     }
     `
   }
-  getMethodName():string{
-    if(!this.sourceable_type){
-      switch ( this.type) {
-        case 'get':{
+
+  getMethodName(): string {
+    if (!this.sourceable_type) {
+      switch (this.type) {
+        case 'get': {
           return 'index'
         }
-        case 'delete':{
+        case 'delete': {
           return 'destroy'
         }
 
         default: {
-          return   this.type
+          return this.type
         }
       }
     } else {
-      switch ( this.sourceable_type) {
-        case Customizer.sourceable_type:{
-          if(!this.customizer?.name){
+      switch (this.sourceable_type) {
+        case Customizer.sourceable_type: {
+          if (!this.customizer?.name) {
             console.error(`Customizer Not found method name type
              Source: ${this.name} id: ${this.id}`);
           }
           return this.customizer?.name || `_${altrpRandomId()}`
         }
-        case SQLEditor.sourceable_type:{
+        case SQLEditor.sourceable_type: {
 
-          if(!this.sQLEditor?.name){
+          if (!this.sQLEditor?.name) {
             console.error(`SQLEditor Not found method name type
              Source: ${this.name}`);
           }
           return this.sQLEditor?.name || `_${altrpRandomId()}`
         }
       }
-      if(!this.sQLEditor?.name){
+      if (!this.sQLEditor?.name) {
         console.error(`Not found method name type
              Source: ${this.name}`);
       }
@@ -255,9 +269,9 @@ export default class Source extends BaseModel {
     }
   }
 
-  private renderMethodBody(modelClassName:string):string {
+  private renderMethodBody(modelClassName: string): string {
 
-    if(!this.sourceable_type){
+    if (!this.sourceable_type) {
 
       switch (this.type) {
         case 'show': {
@@ -332,8 +346,8 @@ export default class Source extends BaseModel {
     return ''
   }
 
-  private renderOptionsBody(modelClassName:string):string{
-    return   `
+  private renderOptionsBody(modelClassName: string): string {
+    return `
     let query = ${modelClassName}.query();
 
     let filters = {};
@@ -369,7 +383,7 @@ export default class Source extends BaseModel {
         `
   }
 
-  private renderIndexMethodBody(modelClassName: string):string {
+  private renderIndexMethodBody(modelClassName: string): string {
     return `
     const query = ${modelClassName}.query();
 
@@ -445,9 +459,11 @@ export default class Source extends BaseModel {
     this.setCustomizerData('current_user', httpContext?.auth?.user);
     this.setCustomizerData('context.current_user', httpContext?.auth?.user);
     ${this?.customizer?.getMethodContent() || ''}
-    `}
-      break;
-      default : return
+    `
+      }
+        break;
+      default :
+        return
     }
   }
 
@@ -459,19 +475,20 @@ export default class Source extends BaseModel {
     if (_.isArray(paths)) {
       paths.forEach(path => {
         path = path.replace("{{", "");
-        let [namespace = '',prop = ''] = path.split(':');
+        let [namespace = '', prop = ''] = path.split(':');
         prop = prop.trim()
         namespace = namespace.trim()
-        switch (namespace){
-          case 'REQUEST':{
+        switch (namespace) {
+          case 'REQUEST': {
             namespace = 'httpContext.request.qs()'
           }
             break;
-          case 'CURRENT_USER':{
+          case 'CURRENT_USER': {
             namespace = '_.get(httpContext, \'auth.user\', {})'
           }
             break;
-          default: return
+          default:
+            return
         }
         let value = `\${${namespace}.${prop} ? ${namespace}.${prop} : ''}`
         path = Source.escapeRegExp(path)
@@ -487,62 +504,95 @@ export default class Source extends BaseModel {
      }, httpContext.request )});
     `;
   }
+
   static escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
-  static async fetchDatasourcesForPage(id: number, httpContext: HttpContextContract, altrpContext: any):Promise<{}> {
 
-    const datasources:any = {}
-    if(! id){
+  static async fetchDatasourcesForPage(id: number, httpContext: HttpContextContract, altrpContext: any): Promise<{}> {
+
+    const datasources: any = {}
+    if (!id) {
       return datasources
     }
 
-    const pageDatasources:any[] = await PageDatasource.query()
+    const pageDatasources: any[] = await PageDatasource.query()
       .where('page_id', id)
       .preload('source')
       .where('server_side', true)
       .preload('source')
       .select('*')
 
-    for(const pageDatasource of pageDatasources){
-      const newHttpContext:HttpContextContract = _.cloneDeep(httpContext)
-      if(httpContext.auth){
+    for (const pageDatasource of pageDatasources) {
+      const newHttpContext: HttpContextContract = _.cloneDeep(httpContext)
+      if (httpContext.auth) {
         Object.defineProperty(newHttpContext, 'auth', {
-          get: function() {
+          get: function () {
             return httpContext.auth;
           },
         });
       }
 
       const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
-      if(data?.data){
+      if (data?.data) {
         datasources[pageDatasource.alias] = data.data
 
-      } else if(data){
+      } else if (data) {
         datasources[pageDatasource.alias] = data
       }
     }
 
     return datasources
   }
-  async preloadSourceable(){
-    if(this.sourceable_id){
-      switch (this.sourceable_type){
-        case Customizer.sourceable_type:{
-          this.customizer = await Customizer.find( this.sourceable_id)
-          if(this.customizer){
+
+  async preloadSourceable() {
+    if (this.sourceable_id) {
+      switch (this.sourceable_type) {
+        case Customizer.sourceable_type: {
+          this.customizer = await Customizer.find(this.sourceable_id)
+          if (this.customizer) {
             await this.customizer.load('source')
           }
         }
           break
-        case SQLEditor.sourceable_type:{
-          this.sQLEditor = await SQLEditor.find( this.sourceable_id)
-          if(this.sQLEditor){
+        case SQLEditor.sourceable_type: {
+          this.sQLEditor = await SQLEditor.find(this.sourceable_id)
+          if (this.sQLEditor) {
             await this.sQLEditor.load('source')
           }
         }
           break
       }
     }
+  }
+
+  static async createForCustomizer(customizer: Customizer): Promise<Source> {
+    await customizer.load('altrp_model')
+
+    await customizer.altrp_model.load('altrp_controller')
+
+    let source = await Source.query().where({
+      sourceable_id: customizer.id,
+      sourceable_type: 'App\\Altrp\\Customizer',
+    }).first()
+
+    if (!source) {
+      source = await Source.create({
+        sourceable_id: customizer.id,
+        sourceable_type: 'App\\Altrp\\Customizer',
+        model_id: customizer.altrp_model.id,
+        controller_id: customizer.altrp_model.altrp_controller.id,
+        'url': "/" + customizer.name,
+        'api_url': "/" + customizer.name,
+        'title': customizer.title + ' Robotizer',
+        'name': customizer.name,
+        'type': 'customizer',
+        'auth': true,
+        'request_type': await customizer.getRequestType()
+      })
+
+
+    }
+    return source
   }
 }

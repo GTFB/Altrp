@@ -346,12 +346,12 @@ export default class Plugin {
         })
       await altrp_static_meta.save()
     }
-    let value = JSON.parse(altrp_static_meta.meta_value)
+    let value = altrp_static_meta.meta_value
 
     for (let item of Plugin.STATIC_LOCATIONS_LIST) {
       data_set(value, item + '.' + this.name, null)
     }
-    altrp_static_meta.meta_value = JSON.stringify(value)
+    altrp_static_meta.meta_value = value
     altrp_static_meta.save()
     await Plugin.writePluginsSettings()
   }
@@ -369,7 +369,7 @@ export default class Plugin {
         })
       await altrp_static_meta.save()
     }
-    let value = JSON.parse(altrp_static_meta.meta_value)
+    let value = altrp_static_meta.meta_value
 
     for (let item of Plugin.STATIC_LOCATIONS_LIST) {
       let statics_list: any = data_get(value, item)
@@ -410,17 +410,17 @@ export default class Plugin {
       altrp_static_meta.fill(
         {
           meta_name: Plugin.ALTRP_STATIC_META,
-          meta_value: '{}',
+          meta_value: {},
         })
       await altrp_static_meta.save()
     }
-    let value = JSON.parse(altrp_static_meta.meta_value)
+    let value = altrp_static_meta.meta_value
 
     for (let item of Plugin.STATIC_LOCATIONS_LIST) {
       data_set(value, item + '.' + this.name, this.getMeta(item)
       )
     }
-    altrp_static_meta.meta_value = JSON.stringify(value)
+    altrp_static_meta.meta_value = value
     altrp_static_meta.save()
     await Plugin.writePluginsSettings()
   }

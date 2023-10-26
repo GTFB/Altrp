@@ -1063,7 +1063,13 @@ class InputSelectWidget extends Component {
     const value = this.getValue()
 
     const options = this.getOptions() || []
-    return options.find(option => option.value == value)?.label || ''
+
+    return options.find(option => {
+      if(! value && ! option.value){
+        return true
+      }
+      return option.value == value
+    })?.label || ''
   }
 
   /**

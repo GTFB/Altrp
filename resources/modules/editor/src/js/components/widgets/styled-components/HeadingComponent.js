@@ -16,7 +16,7 @@ import {
 
 const HeadingComponent = styled.div`
   /* && .altrp-heading,
-  && .altrp-heading-wrapper {
+  & .altrp-heading-wrapper.altrp-heading-wrapper {
 
     ${props => {
 
@@ -126,7 +126,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-heading-sub:hover {
+  & .altrp-heading-sub.altrp-heading-sub:hover {
 
     ${props => {
 
@@ -236,7 +236,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-heading-wrapper-sub-bottom .altrp-heading-sub:hover {
+  & .altrp-heading-wrapper-sub-bottom.altrp-heading-wrapper-sub-bottom .altrp-heading-sub:hover {
 
     ${props => {
 
@@ -286,7 +286,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-heading-wrapper-sub-top .altrp-heading-sub:hover {
+  & .altrp-heading-wrapper-sub-top.altrp-heading-wrapper-sub-top .altrp-heading-sub:hover {
 
     ${props => {
 
@@ -336,7 +336,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-heading-wrapper-sub-left .altrp-heading-sub:hover {
+  & .altrp-heading-wrapper-sub-left.altrp-heading-wrapper-sub-left .altrp-heading-sub:hover {
 
     ${props => {
 
@@ -386,7 +386,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-heading-wrapper-sub-right .altrp-heading-sub:hover {
+  & .altrp-heading-wrapper-sub-right.altrp-heading-wrapper-sub-right .altrp-heading-sub:hover {
 
     ${props => {
 
@@ -551,7 +551,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-heading-advanced:hover {
+  & .altrp-heading-advanced.altrp-heading-advanced:hover {
 
     ${props => {
 
@@ -711,7 +711,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-icon-header:hover {
+  & .altrp-icon-header.altrp-icon-header:hover {
 
     ${props => {
 
@@ -812,7 +812,7 @@ const HeadingComponent = styled.div`
   } */
 
   /* && .altrp-heading,
-  && .altrp-heading a {
+  & .altrp-heading.altrp-heading a {
 
     ${props => {
 
@@ -1262,7 +1262,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-heading-no-animating-text:hover {
+  & .altrp-heading-no-animating-text.altrp-heading-no-animating-text:hover {
 
     ${props => {
 
@@ -1332,7 +1332,7 @@ const HeadingComponent = styled.div`
     }
   }
 
-  && .altrp-animating-highlighted-svg:hover svg path {
+  & .altrp-animating-highlighted-svg.altrp-animating-highlighted-svg:hover svg path {
 
     ${props => {
 

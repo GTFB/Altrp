@@ -9,7 +9,7 @@ const BreadcrumbsComponent = styled.div`
     height:${getResponsiveSetting(settings, 'icon_height') || '20px'};`
 
     styles += `}`;
-    styles += `&& .bp3-icon{`;
+    styles += `& .bp3-icon.bp3-icon{`;
     let icon_ml = getResponsiveSetting(settings, 'icon_ml');
     if(icon_ml){
       styles += `margin-left:${icon_ml};`;

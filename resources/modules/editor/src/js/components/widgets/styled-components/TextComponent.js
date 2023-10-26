@@ -11,7 +11,7 @@ import {
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 const TextComponent = styled.div`
-  && .altrp-text {
+  & .altrp-text.altrp-text {
 
     ${props => {
       const { settings } = props;

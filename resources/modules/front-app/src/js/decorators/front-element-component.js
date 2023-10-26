@@ -169,8 +169,7 @@ function componentDidMount() {
  *
  * @param nextProps
  */
-function shouldComponentUpdate(nextProps) {
-  // console.log(this.elementName);
+function shouldComponentUpdate(nextProps, nextState) {
 
   if(this.props.altrpPageState !== nextProps.altrpPageState){
     return  true

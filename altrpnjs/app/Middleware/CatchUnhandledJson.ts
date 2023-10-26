@@ -29,6 +29,7 @@ export default class CatchUnhandledJson {
         delete all.password
       }
       if(e instanceof ValidationException){
+        response.status(400)
         // @ts-ignore
         let errors: any[] = e.messages?.errors || []
         let textErrors:string[] = []
@@ -44,6 +45,7 @@ export default class CatchUnhandledJson {
 ====== METHOD ${request.method()}
 ====== URL ${request.url()}
 ====== USER_ID: ${auth.user?.id}
+====== USER_IP: ${request.header('X-Real-IP')}
 `) ;
         return response.json({
           // @ts-ignore
@@ -73,7 +75,7 @@ export default class CatchUnhandledJson {
         thrownMessage: e.message,
         textErrors: e.message,
         success: false,
-        message: e.response?.data?.message || 'Unhandled Exception: ' + e.message,
+        message: e.response?.data?.message || 'Unhandled Exception: ' + (e.message || e),
         trace: e?.stack?.split('\n'),
       })
     }

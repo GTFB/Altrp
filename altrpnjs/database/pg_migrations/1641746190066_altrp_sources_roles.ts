@@ -19,8 +19,8 @@ export default class AltrpSourcesRoles extends BaseSchema {
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
 
-      table.foreign('source_id').references('altrp_sources.id')
-      table.foreign('role_id').references('roles.id')
+      table.foreign('source_id').references('altrp_sources.id').onDelete('cascade').onUpdate('cascade')
+      table.foreign('role_id').references('roles.id').onDelete('cascade').onUpdate('cascade')
     })
   }
 

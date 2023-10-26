@@ -160,14 +160,14 @@ class InputRadio extends BaseElement {
       default: false
     });
 
-    this.addControl("model_for_options", {
-      type: CONTROLLER_SELECT2,
-      label: "Choose Datasource for Select Options",
-      default: "",
-      nullable: true,
-      options_resource: "/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1",
-      locked: true,
-    });
+    // this.addControl("model_for_options", {
+    //   type: CONTROLLER_SELECT2,
+    //   label: "Choose Datasource for Select Options",
+    //   default: "",
+    //   nullable: true,
+    //   options_resource: "/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1",
+    //   locked: true,
+    // });
 
     this.addControl("params_for_update", {
       type: CONTROLLER_TEXTAREA,

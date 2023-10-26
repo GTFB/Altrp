@@ -866,12 +866,21 @@ class FrontElement {
     const rootElement = this.getRoot();
     return rootElement ? (rootElement.templateType || 'content') : 'content';
   }
+  deleteSetting(settingName){
+    const newSettings = {...this.settings}
+    delete newSettings[settingName]
 
+    this.settings = newSettings;
+    if(this.component){
+      this.component.setState(state => ({...state, settings: newSettings}));
+    }
+  }
   /**
    * Обновляем настройки элемента на фронте с обновлением компонента
    * @param value
    * @param settingName
    */
+
   updateSetting(value, settingName = ''){
     let newSettings;
     if(! settingName && _.isObject(value)){

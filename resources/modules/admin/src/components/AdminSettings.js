@@ -236,7 +236,7 @@ class AdminSettings extends Component {
             <TabList className="nav nav-pills admin-pills">
               <Tab>General</Tab>
               <Tab>Style</Tab>
-              <Tab>Integrations</Tab>
+              {/*<Tab>Integrations</Tab>*/}
               <Tab>Advanced</Tab>
               <Tab>Updates</Tab>
               <Tab>Mail</Tab>
@@ -450,12 +450,12 @@ class AdminSettings extends Component {
             <TabPanel>
               <StylesSettings />
             </TabPanel>
-            <TabPanel>
-              <div className="admin_settings_integrations">
-                <Websockets />
-                <Telegram />
-              </div>
-            </TabPanel>
+            {/*<TabPanel>*/}
+            {/*  <div className="admin_settings_integrations">*/}
+            {/*    <Websockets />*/}
+            {/*    <Telegram />*/}
+            {/*  </div>*/}
+            {/*</TabPanel>*/}
             <TabPanel>
               <React.Suspense fallback={"Loading"}>
                 <AdvancedSettings />

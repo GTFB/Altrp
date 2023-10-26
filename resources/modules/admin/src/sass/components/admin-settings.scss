@@ -146,6 +146,9 @@
             & .control-switcher__off-text {
                 opacity: 0;
             }
+            & .control-switcher__on-text {
+                opacity: 1;
+            }
             & .control-switcher__caret {
                 left: 30px;
             }

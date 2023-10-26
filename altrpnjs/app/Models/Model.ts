@@ -29,6 +29,7 @@ import * as mustache from 'mustache'
 import base_path from "../../helpers/path/base_path";
 import fs from "fs";
 import LIKE from "../../helpers/const/LIKE";
+import mbParseJSON from "../../helpers/mbParseJSON";
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
@@ -55,8 +56,19 @@ export default class Model extends BaseModel {
 
   @column({
     consume: (data) => {
+      if(typeof data === 'string'){
+        return mbParseJSON(data, {})
+      }
       return data  || {}
     },
+    prepare: (data)=>{
+
+      // @ts-ignore
+      if(Model.query().client.connection.name === 'mysql'){
+        data = JSON.stringify(data)
+      }
+      return data
+    }
   })
   public settings: { static_props?: {}[] }
 
@@ -487,5 +499,6 @@ export default class Model extends BaseModel {
 
     }
   }
+
 
 }

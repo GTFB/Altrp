@@ -294,7 +294,7 @@ class Table extends BaseElement {
     });
 
     this.addControl('query_max_page', {
-      label: 'Path to Page Size',
+      label: 'Path to Page Count',
       responsive: false,
       conditions: {
         query_sync: true,

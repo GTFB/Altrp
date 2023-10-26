@@ -1,4 +1,5 @@
 import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
+import {DateTime} from "luxon";
 
 export default class GeneratorPage extends BaseCommand {
   public static commandName = 'generator:page'
@@ -44,6 +45,8 @@ export default class GeneratorPage extends BaseCommand {
 
         if (result) {
           console.log(`Page generated for id (${page.id}): ${this.colors.cyan(pageGenerator.getFilename(page))}`)
+          page.updatedAt = DateTime.now()
+          await  page.save()
         } else {
           throw new Error(`Page (id: ${page.id}) is invalid`)
         }

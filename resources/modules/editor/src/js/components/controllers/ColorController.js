@@ -5,6 +5,7 @@ import { SketchPicker } from "react-color";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import GlobalPresetColors from "./GlobalPresetColors";
+import RotateLeft from "../../../svgs/rotate-left.svg";
 
 class ColorController extends Component {
   constructor(props) {
@@ -70,7 +71,8 @@ class ColorController extends Component {
       this.state.colorPickedHex !== nextState.colorPickedHex ||
       nextState.active !== this.state.active ||
       nextState.show !== this.state.show ||
-      nextProps.currentState !== this.props.currentState
+      nextProps.currentState !== this.props.currentState||
+      nextProps.altrp_themes !== this.props.altrp_themes
     ) {
       return true;
     } else {
@@ -93,7 +95,7 @@ class ColorController extends Component {
   }
 
   colorChangeFromPreset(color) {
-    console.log(color);
+
     this.setState({
       colorPickedHex: color.colorPickedHex,
       colorPickedRGB: `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
@@ -172,7 +174,13 @@ class ColorController extends Component {
               {(this.state.opacity * 100).toFixed() + "%"}
             </label>
           </div>
+          <div className="control-shadow-toggle " onClick={this.reset}>
+
+            <RotateLeft id="shadowContentIcon" fill="#8E94AA" width="16" height="16" viewBox="0 0 24 24"
+                        className="control-shadow-svg-content"/>
+          </div>
         </div>
+
         <div
           ref={this.contentRef}
           className={

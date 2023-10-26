@@ -24,6 +24,7 @@ import getWrapperHTMLElementByElement from "../functions/getWrapperHTMLElementBy
 import Resource from "../../../../editor/src/js/classes/Resource"
 import replacePageContent from "../helpers/replace-page-content";
 import {clearFormStorage} from "../store/forms-data-storage/actions";
+import {pageReload} from "../../../../admin/src/js/helpers";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -304,6 +305,14 @@ class AltrpAction extends AltrpModel {
         break;
       case 'condition': {
         result = await this.doActionCondition();
+      }
+        break;
+      case 'toggle_theme': {
+        result = await this.doActionToggleTheme();
+      }
+        break;
+      case 'set_lang': {
+        result = await this.doActionSetLang();
       }
         break;
       case 'vi_toggle': {
@@ -1258,7 +1267,7 @@ class AltrpAction extends AltrpModel {
       }
       return actionResult;
     } catch (error) {
-      console.error('Evaluate error in doActionCustomCode: "' + error.message + '"');
+      console.error('Evaluate error in doActionCustomCode: "' + error.message + '"', this.getElement());
       return {success: false};
     }
   }
@@ -1545,6 +1554,35 @@ class AltrpAction extends AltrpModel {
     }
     // await manager.signoutRedirect();
     return {success:true}
+  }
+  async doActionToggleTheme(){
+    const html = document.documentElement
+    const res = await  (new Resource({
+      route: '/ajax/set_theme'
+    })).post({
+      theme: html.classList.contains('altrp-theme_dark') ? 'altrp-theme_normal' : 'altrp-theme_dark'
+    })
+    if(! res.success){
+      return {success:false}
+    }
+    html.classList.toggle('altrp-theme_dark')
+    html.classList.toggle('altrp-theme_normal')
+    return  {success:true}
+  }
+  async doActionSetLang(){
+    const lang = this.getProperty('lang') || 'en'
+
+    const res = await  (new Resource({
+      route: '/ajax/set_lang'
+    })).post({
+      lang
+    })
+    if(! res.success){
+      return {success:false}
+    }
+    pageReload()
+    return  {success:true}
+
   }
 }
 

@@ -57,18 +57,25 @@ import {connect} from "react-redux";
 import hoverTransitions from "./widgets/styled-components/hoverTransitions";
 import getInputTelStyles from "../../../../front-app/src/js/components/helpers/getInputTelStyles";
 
-let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
-                                                               elementName,
-                                                               elementId,
-                                                               settings,
-                                                               element,
-                                                             }) => {
+
+const stylesGenerator = ({
+                           elementName,
+                           elementId,
+                           settings,
+                           element,
+                           theme,
+                         }) => {
   if(element.settings.global_styles_presets){
     elementId = `_altrp-preset_${elementName}-${element.settings.global_styles_presets}`
   }
 
+
+
   let styles = "";
   let prefix = "altrp-element";
+  // if(theme){
+  //   prefix = `${theme} .altrp-element`
+  // }
   switch (elementName) {
     case "image-lightbox":
       styles += ImageLightboxComponent(settings, elementId);
@@ -361,9 +368,23 @@ let ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     );
   }
   styles += hoverTransitions(settings, elementId)
+  if(settings.themes){
+    _.forEach(settings?.themes, (settings, theme)=>{
+      styles += `.${theme} {${stylesGenerator({
+        elementId,
+        elementName,
+        settings,
+        element,
+        theme,
+      })}}`
 
+    })
+
+  }
   return styles;
-}}`;
+}
+
+let ElementWrapperGlobalStyles = window.createGlobalStyle`${stylesGenerator}`;
 ElementWrapperGlobalStyles = connect((state)=>{
   return {
     currentScreen: state.currentScreen

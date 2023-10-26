@@ -25,6 +25,24 @@ class PresetGlobalFonts extends Component {
       });
     }
   }
+  componentDidUpdate(prevProps) {
+    if(prevProps.update === this.props.update){
+      return
+    }
+    const fonts = this.props.fonts;
+    if (fonts.length > 0) {
+      let exists = false
+      fonts.forEach(fonts => {
+        if (this.props.checkGlobal(fonts.guid)) {
+          exists = true
+          this.setState(s => ({ ...s, defaultValue: fonts.guid }));
+        }
+      });
+      if(! exists){
+        this.setState(s => ({ ...s, defaultValue: '' }));
+      }
+    }
+  }
 
   onChange(e) {
     const guid = e.target.value;

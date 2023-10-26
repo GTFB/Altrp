@@ -499,7 +499,7 @@ export default class Customizer extends BaseModel {
     return this.imports.join('\n')
   }
 
-  private getStartNode(): StartNode | null {
+  public getStartNode(): StartNode | null {
     if(!this.data){
       return null
     }

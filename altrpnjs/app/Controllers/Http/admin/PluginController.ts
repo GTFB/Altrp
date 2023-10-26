@@ -147,6 +147,7 @@ export default class PluginController {
     let plugin = new Plugin({'name': request.input('name'),})
     await plugin.updatePluginSettings()
     plugin.copyStaticFiles()
+    await plugin.callUpdateHooks()
     return response.json(res)
   }
 

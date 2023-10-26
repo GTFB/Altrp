@@ -99,6 +99,9 @@ export default class GlobalStyle extends BaseModel {
               if (p === 'family') {
                 value = `"${value}", Arial, sans-serif`
               }
+              if (p === 'spacing') {
+                value = `${value}em`
+              }
               css += `--altrp-var-${this.type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g, '-')}-${p}: ${value};`
             }
           })

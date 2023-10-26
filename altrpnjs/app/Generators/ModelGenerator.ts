@@ -10,6 +10,7 @@ import ControllerGenerator from "./ControllerGenerator";
 import isProd from "../../helpers/isProd";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
+import Customizer from "App/Models/Customizer";
 
 export default class ModelGenerator extends BaseGenerator {
 
@@ -90,7 +91,7 @@ export default class ModelGenerator extends BaseGenerator {
         columns: this.getColumnsContent(),
         computed: this.getComputedContent(),
         relations: this.getRelationsContent(),
-        methods: this.getMethodsContent(),
+        methods: await this.getMethodsContent(),
         constructor: this.getConstructorContent(),
         custom,
         custom_end,
@@ -234,7 +235,40 @@ ${columns.map(column => column.renderForModel()).join('')}
 `
   }
 
-  private getMethodsContent(): string {
+  private async getMethodsContent(): Promise<string> {
+
+    const customizerQuery = Customizer.query()
+
+    customizerQuery.where('model_guid', this.model.guid)
+    customizerQuery.where('type', 'method')
+
+    const methods = await customizerQuery
+
+    let methodsContent = ''
+
+    for(const method of methods){
+      try{
+        const startNode = method.getStartNode()
+
+        if(! startNode){
+          continue
+        }
+        let _static = startNode.isStaticMethod() ? ' static ' : ''
+        let _async = startNode.isAsyncMethod() ? ' async ' : ''
+        let params = startNode.getMethodParams()
+        let methodContent = `
+/**
+ * Automatically generated class method
+ */
+${_static}${_async} ${method.name}(${params.join(', ')}){
+  ${startNode.getJSContent()}
+          }
+`
+        methodsContent +=  methodContent
+      }catch (e) {
+        console.error('Error While Render Method-Customizer', e)
+      }
+    }
     if(this.model.soft_deletes && ! isProd()){
       return `
   @Orm.beforeFind()
@@ -264,9 +298,9 @@ ${columns.map(column => column.renderForModel()).join('')}
       return false
     }
   }
-      `
+${methodsContent}`
     }
-    return ''
+    return methodsContent
   }
 
   private getComputedContent(): string {

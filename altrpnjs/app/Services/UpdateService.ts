@@ -41,6 +41,8 @@ export default class UpdateService {
           version
         }
       }))?.data || '';
+      console.log("receive update files")
+
     } catch (e) {
       try {
         file = (await axios.get(UpdateService.RESERVE_UPDATE_DOMAIN + version, {
@@ -67,6 +69,7 @@ export default class UpdateService {
 
 
     UpdateService.update_files()
+    console.log("update local files")
     await   applyPluginsFiltersAsync('altrp_files_updated', '')
 
     if (!await UpdateService.write_public_permissions('public')) {

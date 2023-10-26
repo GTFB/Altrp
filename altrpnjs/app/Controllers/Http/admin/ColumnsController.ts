@@ -5,6 +5,7 @@ import Event from '@ioc:Adonis/Core/Event'
 import Column from "App/Models/Column";
 import Database from "@ioc:Adonis/Lucid/Database";
 import * as _ from "lodash"
+import {DateTime} from "luxon";
 
 export default class ColumnsController {
 
@@ -52,7 +53,10 @@ export default class ColumnsController {
           }
           let query = table[type](column.name, size)
           if(column.type === 'bigInteger' && column.attribute === 'unsigned'){
-            query = query.unsigned()
+            query.unsigned()
+          }
+          if(column.default){
+            query.default(column.default)
           }
         })
         //query = query.index()
@@ -64,6 +68,10 @@ export default class ColumnsController {
 
     }
     await column.save()
+
+    model.updatedAt = DateTime.now()
+    await model.save()
+
     Event.emit('model:updated', model)
 
     return response.json({success:true, data:column})
@@ -176,6 +184,9 @@ export default class ColumnsController {
       }
       await columnNew.save()
 
+      model.updatedAt = DateTime.now()
+      await model.save()
+
       Event.emit('model:updated', model)
 
       return response.json({success:true, data:columnNew})
@@ -203,6 +214,10 @@ export default class ColumnsController {
       await this.indexCreator(columnData.indexed, columnData, model)
 
       await column.save()
+
+      model.updatedAt = DateTime.now()
+      await model.save()
+
       Event.emit('model:updated', model)
       return response.json({success:true, data:column})
     }
@@ -266,6 +281,10 @@ export default class ColumnsController {
 
 
     await column.delete()
+
+    model.updatedAt = DateTime.now()
+    await model.save()
+
     Event.emit('model:updated', model)
 
 

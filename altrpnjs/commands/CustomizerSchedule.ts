@@ -23,9 +23,6 @@ export default class CustomizerSchedule extends BaseCommand {
     if (!customizer || customizer.type !== 'schedule') {
       return console.error(new Error(`Customizer of id ${id} does not exist`))
     }
-
-    console.log(`Found customizer of id ${id}: ${this.colors.cyan(customizer.name)}`)
-
     const generator = new ScheduleGenerator(customizer)
     const filePath = generator.getFilePath()
 

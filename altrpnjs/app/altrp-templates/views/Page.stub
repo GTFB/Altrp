@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {{=<% %>=}}
-<html lang="{{lang}}">
+<html lang="{{lang}}" class="{{html_class}}">
 <%={{ }}=%>
 <head>
 {{{head_start}}}

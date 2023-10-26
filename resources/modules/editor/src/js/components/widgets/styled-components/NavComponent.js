@@ -13,7 +13,7 @@ import {
 
 const NavComponent = styled.div`
 
-  && .altrp-nav-menu-dropdown-wrapper {
+  & .altrp-nav-menu-dropdown-wrapper.altrp-nav-menu-dropdown-wrapper {
 
     ${props => {
 
@@ -38,7 +38,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-label {
+  & .altrp-nav-menu-li-link-label.altrp-nav-menu-li-link-label {
 
     ${props => {
 
@@ -73,7 +73,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-label:hover {
+  & .altrp-nav-menu-li-link-label.altrp-nav-menu-li-link-label:hover {
 
     ${props => {
 
@@ -108,7 +108,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link {
 
     ${props => {
 
@@ -155,7 +155,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link:hover {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link:hover {
 
     ${props => {
 
@@ -202,7 +202,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link path {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link path {
 
     ${props => {
 
@@ -237,7 +237,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link:hover path {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link:hover path {
 
     ${props => {
 
@@ -272,7 +272,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link svg {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link svg {
 
     ${props => {
 
@@ -297,7 +297,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link:hover svg {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link:hover svg {
 
     ${props => {
 
@@ -322,7 +322,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li {
+  & .altrp-nav-menu-li.altrp-nav-menu-li {
 
     ${props => {
 
@@ -347,7 +347,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li:hover {
+  & .altrp-nav-menu-li.altrp-nav-menu-li:hover {
 
     ${props => {
 
@@ -372,7 +372,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link .altrp-nav-menu-li-link-icon {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link .altrp-nav-menu-li-link-icon {
 
     ${props => {
 
@@ -407,7 +407,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link:hover .altrp-nav-menu-li-link-icon {
+  & .altrp-nav-menu-li-link.altrp-nav-menu-li-link:hover .altrp-nav-menu-li-link-icon {
 
     ${props => {
 
@@ -442,12 +442,12 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-overline:before,
-  && .altrp-nav-menu-li-underLine:after,
-  && .altrp-nav-menu-li-doubleLine:before,
-  && .altrp-nav-menu-li-framed:before,
-  && .altrp-nav-menu-li-framed:after,
-  && .altrp-nav-menu-li-background:hover {
+  & .altrp-nav-menu-li-overline.altrp-nav-menu-li-overline:before,
+  & .altrp-nav-menu-li-underLine.altrp-nav-menu-li-underLine:after,
+  & .altrp-nav-menu-li-doubleLine.altrp-nav-menu-li-doubleLine:before,
+  & .altrp-nav-menu-li-framed.altrp-nav-menu-li-framed:before,
+  & .altrp-nav-menu-li-framed.altrp-nav-menu-li-framed:after,
+  & .altrp-nav-menu-li-background.altrp-nav-menu-li-background:hover {
 
     ${props => {
 
@@ -472,12 +472,12 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-overline:hover::before,
-  && .altrp-nav-menu-li-underLine:hover::after,
-  && .altrp-nav-menu-li-doubleLine:hover::before,
-  && .altrp-nav-menu-li-framed:hover::before,
-  && .altrp-nav-menu-li-framed:hover::after,
-  && .altrp-nav-menu-li-background:hover {
+  & .altrp-nav-menu-li-overline.altrp-nav-menu-li-overline:hover::before,
+  & .altrp-nav-menu-li-underLine.altrp-nav-menu-li-underLine:hover::after,
+  & .altrp-nav-menu-li-doubleLine.altrp-nav-menu-li-doubleLine:hover::before,
+  & .altrp-nav-menu-li-framed.altrp-nav-menu-li-framed:hover::before,
+  & .altrp-nav-menu-li-framed.altrp-nav-menu-li-framed:hover::after,
+  & .altrp-nav-menu-li-background.altrp-nav-menu-li-background:hover {
 
     ${props => {
 
@@ -502,7 +502,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-animation-text:hover .altrp-nav-menu-li-link-label {
+  & .altrp-nav-menu-li-animation-text.altrp-nav-menu-li-animation-text:hover .altrp-nav-menu-li-link-label {
 
     ${props => {
 
@@ -527,9 +527,9 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-underline:after,
-  && .altrp-nav-menu-li-overline:before,
-  && .altrp-nav-menu-li-doubleLine:before {
+  & .altrp-nav-menu-li-underline.altrp-nav-menu-li-underline:after,
+  & .altrp-nav-menu-li-overline.altrp-nav-menu-li-overline:before,
+  & .altrp-nav-menu-li-doubleLine.altrp-nav-menu-li-doubleLine:before {
 
     ${props => {
 
@@ -554,7 +554,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-framed:hover::after {
+  & .altrp-nav-menu-li-framed.altrp-nav-menu-li-framed:hover::after {
 
     ${props => {
 
@@ -580,7 +580,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-framed:hover:before {
+  & .altrp-nav-menu-li-framed.altrp-nav-menu-li-framed:hover:before {
 
     ${props => {
 
@@ -606,7 +606,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-doubleLine:after {
+  & .altrp-nav-menu-li-doubleLine.altrp-nav-menu-li-doubleLine:after {
 
     ${props => {
 
@@ -631,7 +631,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-label-dropdown {
+  & .altrp-nav-menu-li-link-label-dropdown.altrp-nav-menu-li-link-label-dropdown {
 
     ${props => {
 
@@ -666,7 +666,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-label-dropdown:hover {
+  & .altrp-nav-menu-li-link-label-dropdown.altrp-nav-menu-li-link-label-dropdown:hover {
 
     ${props => {
 
@@ -701,7 +701,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-dropdown {
+  & .altrp-nav-menu-li-link-dropdown.altrp-nav-menu-li-link-dropdown {
 
     ${props => {
 
@@ -738,7 +738,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-dropdown:hover {
+  & .altrp-nav-menu-li-link-dropdown.altrp-nav-menu-li-link-dropdown:hover {
 
     ${props => {
 
@@ -775,7 +775,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-dropdown-s-content-divider {
+  & .altrp-nav-menu-dropdown-s-content-divider.altrp-nav-menu-dropdown-s-content-divider {
 
     ${props => {
 
@@ -820,7 +820,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-dropdown-s-content-divider:hover {
+  & .altrp-nav-menu-dropdown-s-content-divider.altrp-nav-menu-dropdown-s-content-divider:hover {
 
     ${props => {
 
@@ -865,7 +865,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-chevron-dropdown {
+  & .altrp-nav-menu-li-link-chevron-dropdown.altrp-nav-menu-li-link-chevron-dropdown {
 
     ${props => {
 
@@ -900,7 +900,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-chevron-dropdown:hover {
+  & .altrp-nav-menu-li-link-chevron-dropdown.altrp-nav-menu-li-link-chevron-dropdown:hover {
 
     ${props => {
 
@@ -935,7 +935,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-active-chevron-dropdown {
+  & .altrp-nav-menu-li-link-active-chevron-dropdown.altrp-nav-menu-li-link-active-chevron-dropdown {
 
     ${props => {
 
@@ -960,7 +960,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-active-chevron-dropdown:hover {
+  & .altrp-nav-menu-li-link-active-chevron-dropdown.altrp-nav-menu-li-link-active-chevron-dropdown:hover {
 
     ${props => {
 
@@ -985,7 +985,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-dropdown-button svg {
+  & .altrp-nav-menu-dropdown-button.altrp-nav-menu-dropdown-button svg {
 
     ${props => {
 
@@ -1010,7 +1010,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-dropdown-button:hover svg {
+  & .altrp-nav-menu-dropdown-button.altrp-nav-menu-dropdown-button:hover svg {
 
     ${props => {
 
@@ -1036,7 +1036,7 @@ const NavComponent = styled.div`
   }
 
 
-  && .altrp-nav-menu-dropdown-button svg path {
+  & .altrp-nav-menu-dropdown-button.altrp-nav-menu-dropdown-button svg path {
 
     ${props => {
 
@@ -1071,7 +1071,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-dropdown-button:hover svg path {
+  & .altrp-nav-menu-dropdown-button.altrp-nav-menu-dropdown-button:hover svg path {
 
     ${props => {
 
@@ -1106,7 +1106,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-dropdown-button {
+  & .altrp-nav-menu-dropdown-button.altrp-nav-menu-dropdown-button {
 
     ${props => {
 
@@ -1181,7 +1181,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-dropdown-button:hover {
+  & .altrp-nav-menu-dropdown-button.altrp-nav-menu-dropdown-button:hover {
 
     ${props => {
 
@@ -1256,7 +1256,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs {
+  & .altrp-nav-breadcrumbs.altrp-nav-breadcrumbs {
 
     ${props => {
 
@@ -1291,7 +1291,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-link {
+  & .altrp-nav-breadcrumbs-link .altrp-nav-breadcrumbs-link {
 
     ${props => {
 
@@ -1326,7 +1326,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-link:hover {
+  & .altrp-nav-breadcrumbs-link.altrp-nav-breadcrumbs-link:hover {
 
     ${props => {
 
@@ -1361,7 +1361,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-link:visited {
+  & .altrp-nav-breadcrumbs-link.altrp-nav-breadcrumbs-link:visited {
 
     ${props => {
 
@@ -1386,8 +1386,8 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-separator-default,
-  && .altrp-nav-breadcrumbs-separator-text {
+  & .altrp-nav-breadcrumbs-separator-default.altrp-nav-breadcrumbs-separator-default,
+  & .altrp-nav-breadcrumbs-separator-text.altrp-nav-breadcrumbs-separator-text {
 
     ${props => {
 
@@ -1422,8 +1422,8 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-separator-default:hover,
-  && .altrp-nav-breadcrumbs-separator-text:hover {
+  & .altrp-nav-breadcrumbs-separator-default.altrp-nav-breadcrumbs-separator-default:hover,
+  & .altrp-nav-breadcrumbs-separator-textaltrp-nav-breadcrumbs-separator-text:hover {
 
     ${props => {
 
@@ -1458,7 +1458,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-separator-icon svg {
+  & .altrp-nav-breadcrumbs-separator-icon.altrp-nav-breadcrumbs-separator-icon svg {
 
     ${props => {
 
@@ -1493,7 +1493,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-separator-icon:hover svg {
+  & .altrp-nav-breadcrumbs-separator-icon.altrp-nav-breadcrumbs-separator-icon:hover svg {
 
     ${props => {
 
@@ -1518,7 +1518,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-separator-icon svg:hover {
+  & .altrp-nav-breadcrumbs-separator-icon.altrp-nav-breadcrumbs-separator-icon svg:hover {
 
     ${props => {
 
@@ -1543,7 +1543,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-current {
+  & .altrp-nav-breadcrumbs-current.altrp-nav-breadcrumbs-current {
 
     ${props => {
 
@@ -1578,7 +1578,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-current:hover {
+  & .altrp-nav-breadcrumbs-current.altrp-nav-breadcrumbs-current:hover {
 
     ${props => {
 
@@ -1613,7 +1613,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-separator-icon svg path {
+  & .altrp-nav-breadcrumbs-separator-icon.altrp-nav-breadcrumbs-separator-icon svg path {
 
     ${props => {
 
@@ -1638,7 +1638,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-separator-icon:hover svg path {
+  & .altrp-nav-breadcrumbs-separator-icon.altrp-nav-breadcrumbs-separator-icon:hover svg path {
 
     ${props => {
 
@@ -1663,7 +1663,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-label {
+  & .altrp-nav-breadcrumbs-label.altrp-nav-breadcrumbs-label {
 
     ${props => {
 
@@ -1689,7 +1689,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-breadcrumbs-label:hover {
+  & .altrp-nav-breadcrumbs-label.altrp-nav-breadcrumbs-label:hover {
 
     ${props => {
 
@@ -1715,7 +1715,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-chevron-dropdown path {
+  & .altrp-nav-menu-li-link-chevron-dropdown.altrp-nav-menu-li-link-chevron-dropdown path {
 
     ${props => {
 
@@ -1741,7 +1741,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-link-chevron-dropdown:hover path {
+  & .altrp-nav-menu-li-link-chevron-dropdown.altrp-nav-menu-li-link-chevron-dropdown:hover path {
 
     ${props => {
 
@@ -1767,7 +1767,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-dropdown {
+  & .altrp-nav-menu-li-dropdown.altrp-nav-menu-li-dropdown {
 
     ${props => {
 
@@ -1792,7 +1792,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-dropdown:hover {
+  & .altrp-nav-menu-li-dropdown.altrp-nav-menu-li-dropdown:hover {
 
     ${props => {
 
@@ -1817,7 +1817,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-sub {
+  & .altrp-nav-menu-li-sub.altrp-nav-menu-li-sub {
 
     ${props => {
 
@@ -1852,7 +1852,7 @@ const NavComponent = styled.div`
     }
   }
 
-  && .altrp-nav-menu-li-sub:hover {
+  & .altrp-nav-menu-li-sub.altrp-nav-menu-li-sub:hover {
 
     ${props => {
 

@@ -16,7 +16,7 @@ import {
 
 const TabsComponent = styled.div`
 
-  && .altrp-tab-btn-container {
+  & .altrp-tab-btn-container.altrp-tab-btn-container {
 
     ${props => {
 
@@ -52,7 +52,7 @@ const TabsComponent = styled.div`
   }
 
 
-  && .state-disabled .altrp-tab-btn-container {
+  & .state-disabled.state-disabled .altrp-tab-btn-container {
 
     ${props => {
 
@@ -84,7 +84,7 @@ const TabsComponent = styled.div`
 }
   }
 
- && .active .altrp-tab-btn-container {
+ & .active.active .altrp-tab-btn-container {
 
     ${props => {
 
@@ -117,7 +117,7 @@ const TabsComponent = styled.div`
   }
 
 
-  && .altrp-tab-btn-container:hover {
+  & .altrp-tab-btn-container.altrp-tab-btn-container:hover {
 
     ${props => {
 
@@ -258,7 +258,7 @@ const TabsComponent = styled.div`
   }
 
 
-  && .state-disabled .bp3-tab {
+  & .state-disabled.state-disabled .bp3-tab {
 
     ${props => {
 
@@ -331,7 +331,7 @@ const TabsComponent = styled.div`
   }
 
 
-  && .active .bp3-tab {
+  & .active.active .bp3-tab {
 
     ${props => {
 
@@ -584,7 +584,7 @@ const TabsComponent = styled.div`
     }
   }
 
-   && .state-disabled .altrp-tab-content {
+   & .state-disabled.state-disabled .altrp-tab-content {
 
     ${props => {
 
@@ -639,7 +639,7 @@ const TabsComponent = styled.div`
   }
 
 
-     && .active .altrp-tab-content {
+     & .active.active .altrp-tab-content {
 
     ${props => {
 
@@ -805,7 +805,7 @@ const TabsComponent = styled.div`
 
 
 
-   && .state-disabled .altrp-tab-content div {
+   & .state-disabled.state-disabled .altrp-tab-content div {
 
     ${props => {
 
@@ -834,7 +834,7 @@ const TabsComponent = styled.div`
 }
   }
 
-     && .active .altrp-tab-content div {
+     & .active.active .altrp-tab-content div {
 
     ${props => {
 
@@ -924,7 +924,7 @@ const TabsComponent = styled.div`
     }
   }
 
-   && .state-disabled .altrp-tab-btn-icon svg path {
+   & .state-disabled.state-disabled .altrp-tab-btn-icon svg path {
 
     ${props => {
 
@@ -948,7 +948,7 @@ const TabsComponent = styled.div`
 }
   }
 
-   && .active .altrp-tab-btn-icon svg path {
+   & .active.active .altrp-tab-btn-icon svg path {
 
     ${props => {
 
@@ -1023,7 +1023,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .state-disabled .altrp-tabs-switcher_off {
+  & .state-disabled.state-disabled .altrp-tabs-switcher_off {
 
     ${props => {
 
@@ -1048,7 +1048,7 @@ const TabsComponent = styled.div`
 }
   }
 
-   && .active .altrp-tabs-switcher_off {
+   & .active.active .altrp-tabs-switcher_off {
 
     ${props => {
 
@@ -1073,7 +1073,7 @@ const TabsComponent = styled.div`
 }
   }
 
-  && .altrp-tabs-switcher_on  {
+  & .altrp-tabs-switcher_on.altrp-tabs-switcher_on  {
 
     ${props => {
 
@@ -1098,7 +1098,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher__caret  {
+  & .altrp-tabs-switcher__caret.altrp-tabs-switcher__caret  {
 
     ${props => {
 
@@ -1133,7 +1133,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher-label-section-one  {
+  & .altrp-tabs-switcher-label-section-one.altrp-tabs-switcher-label-section-one  {
 
     ${props => {
 
@@ -1168,7 +1168,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher-section-one-text  {
+  & .altrp-tabs-switcher-section-one-text .altrp-tabs-switcher-section-one-text  {
 
     ${props => {
 
@@ -1193,7 +1193,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher-section-one-text p  {
+  & .altrp-tabs-switcher-section-one-text.altrp-tabs-switcher-section-one-text p  {
 
     ${props => {
 
@@ -1218,7 +1218,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher-label-section-two  {
+  & .altrp-tabs-switcher-label-section-two.altrp-tabs-switcher-label-section-two  {
 
     ${props => {
 
@@ -1253,7 +1253,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher-section-two-text p  {
+  & .altrp-tabs-switcher-section-two-text.altrp-tabs-switcher-section-two-text p  {
 
     ${props => {
 
@@ -1278,7 +1278,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher-section-two-text  {
+  & .altrp-tabs-switcher-section-two-text.altrp-tabs-switcher-section-two-text  {
 
     ${props => {
 
@@ -1303,7 +1303,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher_on .altrp-tabs-switcher__caret {
+  & .altrp-tabs-switcher_on.altrp-tabs-switcher_on .altrp-tabs-switcher__caret {
 
     ${props => {
 
@@ -1328,7 +1328,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher-container {
+  & .altrp-tabs-switcher-container.altrp-tabs-switcher-container {
 
     ${props => {
 
@@ -1363,7 +1363,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tabs-switcher {
+  & .altrp-tabs-switcher.altrp-tabs-switcher {
 
     ${props => {
 
@@ -1408,7 +1408,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-column {
+  & .altrp-tab-btn-column.altrp-tab-btn-column {
 
     ${props => {
 
@@ -1433,7 +1433,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-column:hover {
+  & .altrp-tab-btn-column:hover.altrp-tab-btn-column:hover {
 
     ${props => {
 
@@ -1458,7 +1458,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-row {
+  & .altrp-tab-btn-row.altrp-tab-btn-row {
 
     ${props => {
 
@@ -1483,7 +1483,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-row:hover {
+  & .altrp-tab-btn-row.altrp-tab-btn-row:hover {
 
     ${props => {
 
@@ -1508,7 +1508,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-top {
+  & .altrp-tab-btn-top.altrp-tab-btn-top {
 
     ${props => {
 
@@ -1533,7 +1533,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-top:hover {
+  & .altrp-tab-btn-top.altrp-tab-btn-top:hover {
 
     ${props => {
 
@@ -1558,7 +1558,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-bottom {
+  & .altrp-tab-btn-bottom.altrp-tab-btn-bottom {
 
     ${props => {
 
@@ -1583,7 +1583,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-bottom:hover {
+  & .altrp-tab-btn-bottom.altrp-tab-btn-bottom:hover {
 
     ${props => {
 
@@ -1608,7 +1608,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-left {
+  & .altrp-tab-btn-left.altrp-tab-btn-left {
 
     ${props => {
 
@@ -1633,7 +1633,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-left:hover {
+  & .altrp-tab-btn-left.altrp-tab-btn-left:hover {
 
     ${props => {
 
@@ -1658,7 +1658,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-right {
+  & .altrp-tab-btn-right.altrp-tab-btn-right {
 
     ${props => {
 
@@ -1683,7 +1683,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn-right:hover {
+  & .altrp-tab-btn-right.altrp-tab-btn-right:hover {
 
     ${props => {
 

@@ -1,18 +1,47 @@
-import store, { getCurrentScreen, getElementState } from "../store/store";
-import { toggleDynamicContent } from "../store/dynamic-content/actions";
-import { getElementSettingsSuffix } from "../helpers";
+import store, {getCurrentScreen, getElementState} from "../store/store";
+import {toggleDynamicContent} from "../store/dynamic-content/actions";
+import {getElementSettingsSuffix} from "../helpers";
 import getResponsiveSetting from "../../../../front-app/src/js/functions/getResponsiveSetting";
+import {changeTemplateStatus} from "../store/template-status/actions";
+import THEMED_CONTROLLERS from "../const/THEMED_CONTROLLERS";
+import THEMED_TABS from "../const/THEMED_TABS";
+import getCurrentTheme from "../helpers/getCurrentTheme";
+
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
 function componentDidUpdate(prevProps, prevState) {
-  if(this.props.controlId === '__template_name'){
+  if (this.props.controlId === '__template_name') {
     return false
   }
-  if (!this.props.repeater && ! this.props.group) {
+  if (!this.props.repeater && !this.props.group) {
+
+    const {
+      altrp_themes,
+    } = store.getState().editorMetas
+    const {
+      currentTab,
+    } = store.getState()
+    let theme = ''
+    if (THEMED_TABS.includes(currentTab.currentTab)
+      && THEMED_CONTROLLERS.includes(this.props.type)
+      && altrp_themes.getProperty('metaValue.currentTheme') !== 'altrp-theme_normal') {
+        theme = altrp_themes.getProperty('metaValue.currentTheme');
+    }
     let elementValue = this.props.currentElement.getSettings(
-      this.props.controlId
+      this.props.controlId,
     );
+
+    if(theme){
+      const value = _.get(this.props.currentElement, `settings.themes.${theme}.${this.props.controlId}`)
+
+      if(value){
+        this.setState({
+          value
+        });
+      }
+    }
+
     if (this.state.value !== elementValue) {
       if (elementValue === null) {
         elementValue = this.getDefaultValue();
@@ -21,9 +50,6 @@ function componentDidUpdate(prevProps, prevState) {
           elementValue,
           false
         );
-        this.setState({
-          value: elementValue
-        });
       }
       if (prevProps.currentElement !== this.props.currentElement) {
         this.setState({
@@ -82,9 +108,9 @@ function componentDidUpdate(prevProps, prevState) {
  * @param {boolean }locked
  * @return {*}
  */
-function getSettings(settingName, locked= false) {
-  if(! locked){
-    locked = !! this.props.locked;
+function getSettings(settingName, locked = false) {
+  if (!locked) {
+    locked = !!this.props.locked;
   }
   if (!this.props.currentElement) {
     return "";
@@ -104,7 +130,7 @@ function getSettings(settingName, locked= false) {
       )[this.props.controller.data.itemIndex]
     ) {
       // responsive controllers in repeater
-      if(this.props.controller.data.responsive){
+      if (this.props.controller.data.responsive) {
         return getResponsiveSetting(this.props.controller.data.repeater.getSettings(
           this.props.controller.data.repeater.props.controlId
         )[this.props.controller.data.itemIndex], this.props.controller.data.controlId)
@@ -112,16 +138,16 @@ function getSettings(settingName, locked= false) {
       return this.props.controller.data.repeater.getSettings(
         this.props.controller.data.repeater.props.controlId
       )[this.props.controller.data.itemIndex][
-        this.props.controller.data.controlId +
-          getElementSettingsSuffix(this.props.controller,true)
-      ];
+      this.props.controller.data.controlId +
+      getElementSettingsSuffix(this.props.controller, true)
+        ];
     }
     /**
      * todo: пока что вернем значение по умолчанию или строку в случае бага
      * проблему, вроде решил, но на всякий случай оставим
      */
     return _.isFunction(this.getDefaultValue) ? this.getDefaultValue() : "";
-  } else if (this.props.controller.data.group){
+  } else if (this.props.controller.data.group) {
 
     if (
       this.props.controller.data.group.getSettings(
@@ -131,7 +157,7 @@ function getSettings(settingName, locked= false) {
       // console.log(this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true));
       return this.props.controller.data.group.getSettings(
         this.props.controller.data.group.props.controlId
-      )[ this.props.controller.data.controlId +
+      )[this.props.controller.data.controlId +
       getElementSettingsSuffix(this.props.controller, true)
         ];
     }
@@ -148,16 +174,26 @@ function getSettings(settingName, locked= false) {
   }
   let _settingName = this.props.controller.getSettingName();
   let value = null
-  if (locked) {
-    value = this.props.currentElement.getResponsiveLockedSetting(
-      settingName,
-      getElementState().value
-    );
-  } else {
-    value = this.props.currentElement.getResponsiveSetting(
-      settingName,
-      getElementState().value
-    );
+
+  let theme = getCurrentTheme(this)
+  if(theme){
+    const _value = _.get(this.props.currentElement, `settings.themes.${theme}.${this.props.controlId}`)
+    if(_value){
+      value = _value
+    }
+  }else{
+    if (locked) {
+      value = this.props.currentElement.getResponsiveLockedSetting(
+        settingName,
+        getElementState().value
+      );
+    } else {
+      value = this.props.currentElement.getResponsiveSetting(
+        settingName,
+        getElementState().value
+      );
+    }
+
   }
 
   // console.log(getElementSettingsSuffix(this.props.controller));
@@ -180,7 +216,7 @@ function _changeValue(value, updateElement = true) {
   if (_.isArray(value)) {
     value = [...value];
   } else if (_.isObject(value)) {
-    value = { ...value };
+    value = {...value};
   }
 
   if (value && value.dynamic) {
@@ -233,7 +269,7 @@ function conditionSubscriber() {
     }
     // }
   }
-  if(this.props.conditionsCallback){
+  if (this.props.conditionsCallback) {
     if (this.props.controller.isShow() !== this.state.show) {
       this.props.controller.isShow()
         ? this.showComponentController()
@@ -256,9 +292,9 @@ async function controllerComponentDidMount() {
   if (this.resource) {
     let options = await this.resource.getAll();
     if (this.props.nullable) {
-      options = _.concat([{ "": "" }], options);
+      options = _.concat([{"": ""}], options);
     }
-    this.setState(state => ({ ...state, options }));
+    this.setState(state => ({...state, options}));
     if (options[0].value) {
       this._changeValue(options[0].value);
     }
@@ -323,6 +359,29 @@ function openDynamicContent(e) {
     )
   );
 }
+
+function reset(e) {
+  e?.stopPropagation && e.stopPropagation()
+  const element = getCurrentElement()
+  element.deleteGlobalStyle(
+    this.props.controller.getSettingName()
+  );
+
+  this._changeValue()
+  CONSTANTS.SCREENS.forEach(screen => {
+
+    if (screen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
+      return
+    }
+    CONSTANTS.BUTTONS.forEach(button => {
+      const settingName = this.props.controller.getSettingName() + getElementSettingsSuffix(this.props.controller, false, screen.name, button.value)
+      element.deleteSetting(settingName)
+
+    })
+  })
+  store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+}
+
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component._changeValue = _changeValue.bind(component);
@@ -333,6 +392,7 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.removeDynamicSettings = removeDynamicSettings.bind(component);
   component.openDynamicContent = openDynamicContent.bind(component);
   component.getSettings = getSettings.bind(component);
+  component.reset = reset.bind(component);
   // store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
 };
 export default controllerDecorate;
@@ -344,6 +404,7 @@ export function controllerMapStateToProps(state) {
     currentScreen: state.currentScreen,
     controllerValue: state.controllerValue,
     historyStore: state.historyStore,
+    altrp_themes: state.editorMetas.altrp_themes,
     presetColors: state.editorMetas.preset_colors,
     globalColors: state.globalStyles.colors,
     globalEffects: state.globalStyles.effects,

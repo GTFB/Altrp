@@ -535,6 +535,7 @@ export  default class InputTelWidget extends Component {
         break;
     }
     let content_label = this.props.element.getResponsiveLockedSetting("content_label")
+    content_label = replaceContentWithData(content_label, this.props.element.getCurrentModel()?.getData())
     let content_placeholder = this.props.element.getResponsiveLockedSetting("content_placeholder")
     content_label = replaceContentWithData(content_label, this.props.element.getCurrentModel()?.getData())
     let label_icon = this.props.element.getResponsiveLockedSetting("label_icon")
@@ -592,7 +593,7 @@ export  default class InputTelWidget extends Component {
             name: this.getName(),
             ref: this.inputRef,
             required: true,
-            autoFocus: true,
+            autoFocus: false,
             'data-enter': enterNextInput,
           }}
         />

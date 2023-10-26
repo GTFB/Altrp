@@ -5,11 +5,13 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import {setAdminDisable, setAdminEnable} from "../js/store/admin-state/actions";
 import AltrpCodeEditor from "./altrp-editor/AltrpCodeEditor";
 import store from '../js/store/store';
-import {TextArea} from "@blueprintjs/core";
+import {Alignment, Button, MenuItem, TextArea} from "@blueprintjs/core";
 import {pageReload} from "../js/helpers";
 import delay from '../../../front-app/src/js/functions/delay'
 import upgradeBackend from "../js/functions/upgradeBackend";
 import axios from "axios";
+import {Select} from "@blueprintjs/select";
+import LANG_OPTIONS from "../../../editor/src/js/const/LANG_OPTIONS";
 
 const MediaInput = React.lazy(() => import('./media-input/MediaInput.js'));
 
@@ -53,6 +55,7 @@ class AdvancedSettings extends Component {
   ,
     (await new Resource({route: '/admin/ajax/settings'}).get('site_language')).site_language || ''
   ,
+
   ])
 
     this.setState(state => ({
@@ -121,9 +124,9 @@ class AdvancedSettings extends Component {
   }
 
   updateSiteLanguage = async (e) => {
-    const value = e.target.value
+    const value = e.target ? e.target.value : e
     await new Resource({route: '/admin/ajax/settings'}).put('site_language', {value, });
-
+    this.setState(state=>({...state, site_language: value}))
   }
   /**
    * Удалить всю историю всех шаблонов
@@ -189,6 +192,9 @@ class AdvancedSettings extends Component {
 
   };
 
+  onQueryChange = (query, value) => {
+    return `${value.label?.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+  }
   render() {
     const {
       altrp_custom_headers,
@@ -199,6 +205,8 @@ class AdvancedSettings extends Component {
       bodyStart,
       bodyEnd,
     } = this.state
+
+
     return <div className="admin-styles-settings">
 
       <div className="advanced__settings">
@@ -239,14 +247,37 @@ class AdvancedSettings extends Component {
 
 
             <div className="admin-styles-advanced-block">
-              <div className="advanced-text-custom">Lang Attribute for HTML</div>
-              <input name="custom_headers"
-                        className="bp3-input"
-                        id="site_language"
-                        placeholder="en"
-                        defaultValue={site_language || ''}
-                        onBlur={this.updateSiteLanguage}
-                        />
+
+              <div
+                className="form-group overflow-select__blueprint flex-grow__selectBlueprint form-group_width47">
+                <label htmlFor="parent_page_id" className="font__edit">Default Site Language</label>
+                <Select items={LANG_OPTIONS}
+                        matchTargetWidth
+                        id="parent_page_id"
+                        itemPredicate={this.onQueryChange}
+                        noResults={<MenuItem disabled={true} text="No results."/>}
+                        itemRenderer={(item, {handleClick, modifiers, query}) => {
+                          return <MenuItem
+                            text={item.label}
+                            key={item.value}
+                            active={item.value === site_language}
+                            onClick={handleClick}
+                          />
+                        }}
+                        onItemSelect={current => {
+                          this.updateSiteLanguage(current.value);
+                        }}
+                        fill={true}
+                >
+
+                  <Button fill
+                          large
+                          alignText={Alignment.LEFT}
+                          text={LANG_OPTIONS.find(item => (item.value === site_language))?.label || 'None'}
+                          rightIcon="caret-down"
+                  />
+                </Select>
+              </div>
 
             </div>
 

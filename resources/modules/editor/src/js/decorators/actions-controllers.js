@@ -12,138 +12,142 @@ import {
 import Repeater from '../classes/Repeater';
 import axios from "axios";
 import {getElementSettingsSuffix} from "../helpers";
+import LANG_OPTIONS from "../const/LANG_OPTIONS";
 
 let defaultOptions = [
   {
-    value: 'form',
-    label: 'Form'
+    "value": "condition",
+    "label": "Condition"
   },
   {
-    value: 'toggle_element',
-    label: 'Toggle Elements'
+    "value": "custom_code",
+    "label": "Custom JS-Code"
   },
   {
-    value: 'toggle_popup',
-    label: 'Toggle Popup'
+    "value": "data_to_csv",
+    "label": "Data Convert to CSV"
   },
   {
-    value: 'print_page',
-    label: 'Print Page'
+    "value": "delay",
+    "label": "Delay"
   },
   {
-    value: 'print_elements',
-    label: 'Print Elements'
+    "value": "elements_to_pdf",
+    "label": "Elements to PDF"
   },
   {
-    value: 'scroll_to_element',
-    label: 'Scroll to Element'
+    "value": "form",
+    "label": "Form"
   },
   {
-    value: 'scroll_to_top',
-    label: 'Scroll to Top'
+    "value": "forms_manipulate",
+    "label": "Forms Manipulate"
   },
   {
-    value: 'scroll_to_bottom',
-    label: 'Scroll to Bottom'
+    "value": "login",
+    "label": "Login"
   },
   {
-    value: 'redirect',
-    label: 'Redirect'
+    "value": "logout",
+    "label": "Logout"
   },
   {
-    value: 'reload',
-    label: 'Reload Page'
+    "value": "oauth",
+    "label": "Oidc Client"
   },
   {
-    value: 'trigger',
-    label: 'Trigger Action'
+    "value": "page_to_pdf",
+    "label": "Page to PDF"
   },
   {
-    value: 'page_to_pdf',
-    label: 'Page to PDF'
+    "value": "play_sound",
+    "label": "Play Sound"
   },
   {
-    value: 'elements_to_pdf',
-    label: 'Elements to PDF'
+    "value": "print_elements",
+    "label": "Print Elements"
   },
   {
-    value: 'data_to_csv',
-    label: 'Data Convert to CSV'
+    "value": "print_page",
+    "label": "Print Page"
   },
   {
-    value: 'table_to_csv',
-    label: 'Table to CSV'
+    "value": "redirect",
+    "label": "Redirect"
   },
   {
-    value: 'table_to_xml',
-    label: 'Table to XML'
-  },
-  // {
-  //   value: 'table_to_xls',
-  //   label: 'Table to XLS'
-  // },
-  {
-    value: 'login',
-    label: 'Login'
+    "value": "reload",
+    "label": "Reload Page"
   },
   {
-    value: 'logout',
-    label: 'Logout'
+    "value": "scroll_to_bottom",
+    "label": "Scroll to Bottom"
   },
   {
-    value: 'set_data',
-    label: 'Set Data'
+    "value": "scroll_to_element",
+    "label": "Scroll to Element"
   },
   {
-    value: 'forms_manipulate',
-    label: 'Forms Manipulate'
+    "value": "scroll_to_top",
+    "label": "Scroll to Top"
   },
   {
-    value: 'update_current_datasources',
-    label: 'Update Current Datasources'
+    "value": "set_data",
+    "label": "Set Data"
   },
   {
-    value: 'update_current_model',
-    label: 'Update Current Model'
+    "value": "set_cookie",
+    "label": "Set cookie"
   },
   {
-    value: 'custom_code',
-    label: 'Custom JS-Code'
+    "value": "set_lang",
+    "label": "Set language"
   },
   {
-    value: 'play_sound',
-    label: 'Play Sound'
+    "value": "socket_emit",
+    "label": "Socket emit"
   },
   {
-    value: 'delay',
-    label: 'Delay'
+    "value": "socket_receiver",
+    "label": "Socket receiver"
   },
   {
-    value: 'condition',
-    label: 'Condition'
+    "value": "table_to_csv",
+    "label": "Table to CSV"
   },
   {
-    value: 'vi_toggle',
-    label: 'Version for the Visually Impaired Toggle'
+    "value": "table_to_xml",
+    "label": "Table to XML"
   },
   {
-    value: 'oauth',
-    label: 'Oidc Client'
+    "value": "toggle_element",
+    "label": "Toggle Elements"
   },
   {
-    value: 'socket_receiver',
-    label: 'Socket receiver'
+    "value": "toggle_popup",
+    "label": "Toggle Popup"
   },
   {
-    value: "socket_emit",
-    label: "Socket emit"
+    "value": "toggle_theme",
+    "label": "Toggle Theme"
   },
   {
-    value: "set_cookie",
-    label: "Set cookie"
+    "value": "trigger",
+    "label": "Trigger Action"
+  },
+  {
+    "value": "update_current_datasources",
+    "label": "Update Current Datasources"
+  },
+  {
+    "value": "update_current_model",
+    "label": "Update Current Model"
+  },
+  {
+    "value": "vi_toggle",
+    "label": "Version for the Visually Impaired Toggle"
   }
 ]
-
 defaultOptions = window.editorAPI.applyPluginsFiltersSync('default_actions_controllers_type_options', defaultOptions)
 
 /**
@@ -455,38 +459,14 @@ export function actionsControllers(
     locked: true,
   });
 
-  actionsRepeater.addControl('form_page_select', {
-    label: 'Page',
+  actionsRepeater.addControl('lang', {
+    label: 'Language',
     type: CONTROLLER_SELECT2,
-    prefetch_options: true,
-    options_resource: '/admin/ajax/pages_options',
+    options: LANG_OPTIONS,
     conditions: {
-      type: ['redirect']
+      type: ['set_lang']
     },
-    locked: true,
-    onChange: async function ({label}) {
-      let pathname = ""
-      try {
-        let pages = await axios.get("/admin/ajax/pages")
-        let findPage = pages.data.find(item => item.title === label)
-        if (findPage) {
-          pathname = findPage.path
-        }
-        this.repeater.changeValue(
-          this.itemindex,
-          "form_url" + getElementSettingsSuffix(this.controller, false),
-          pathname
-        );
-        this.repeater.changeValue(
-          this.itemindex,
-          "form_url" + getElementSettingsSuffix(this.controller, false),
-          pathname
-        );
-      } catch (error) {
-        alert("Page request error")
-        console.error(error)
-      }
-    }
+
   });
 
   actionsRepeater.addControl('form_customizer', {

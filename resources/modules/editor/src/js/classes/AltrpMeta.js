@@ -122,5 +122,11 @@ class AltrpMeta extends AltrpModel{
   static clone(meta){
     return new AltrpMeta(meta.getMetaName(), meta.getMetaValue());
   }
+  /**
+   * Клонировать мета
+   */
+  clone(){
+    return new AltrpMeta(this.getMetaName(), this.getMetaValue());
+  }
 }
 export default AltrpMeta

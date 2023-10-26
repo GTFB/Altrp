@@ -10,6 +10,7 @@ import {
 import User from 'App/Models/User';
 import Category from "App/Models/Category";
 import changeFileExtension from "../../helpers/string/changeFileExtension";
+import guid from "../../helpers/guid";
 // import fs from "fs";
 import public_path from "../../helpers/path/public_path";
 import MediaController from "App/Controllers/Http/admin/MediaController";
@@ -40,7 +41,7 @@ export default class Media extends BaseModel {
   public url: string
 
   @column()
-  public media_type: string
+  public media_type: string | null
 
   @column()
   public media_variation: string
@@ -139,7 +140,17 @@ export default class Media extends BaseModel {
     return changeFileExtension(this.getPathVariation(1600, 1080), 'webp')
   }
 
-  static async importFromUrl(fileUrl: string, filename: string, user_id: number):Promise<Media>{
+  static async _import(
+    {
+      data,
+      filename,
+      user_id,
+      ignoreRenaming,
+      fileUrl,
+      media_type,
+      encoding,
+    }: ImportType
+  ):Promise<Media>{
     let media = new Media();
     const date = new Date();
     const ext = filename.split(".").pop();
@@ -151,12 +162,11 @@ export default class Media extends BaseModel {
     // @ts-ignore
     title = title.substring(0, 36)
     title = title + '_' + (new Date().valueOf())
+    if(! ignoreRenaming){
+      filename = title + "." + ext;
+    }
 
-    filename = title + "." + ext;
 
-    const response = await  axios.get(fileUrl, { responseType: 'arraybuffer' })
-
-    media.media_type = response.headers['content-type']?.split('/')[0] || ''
 
     let urlBase =
       "/media/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/";
@@ -167,12 +177,24 @@ export default class Media extends BaseModel {
     let dirname = ("/storage" + urlBase);
     media.filename = urlBase + filename;
     media.title = filename
+    media.guid = guid()
     media.type = MediaController.getTypeForFile(filename);
     //media.media_type = file.type || "";
     media.author = user_id;
     //const
 
-    let content = Buffer.from(response.data, 'binary');
+    let content:string|Buffer = ''
+    if(data){
+      content = data
+      media.media_type = media_type || null
+      // @ts-ignore
+      content = Buffer.from(content, encoding || 'binary');
+    } else if(fileUrl){
+      const response = await  axios.get(fileUrl,{ responseType: 'arraybuffer' })
+      content = response.data
+      media.media_type = response.headers['content-type']?.split('/')[0] || ''
+    }
+    // @ts-ignore
     fs.writeFileSync(public_path(dirname + filename), content);
     //let content = fs.readFileSync(public_path(dirname + filename));
     if (ext == "heic") {
@@ -204,6 +226,24 @@ export default class Media extends BaseModel {
     media.url = "/storage" + urlBase + filename;
     await media.save();
     return media
+
+  }
+
+  static async importFromString(importData:ImportType):Promise<Media>{
+    return Media._import(importData)
+  }
+
+  static async importFromUrl(fileUrl: string| object, filename: string, user_id: number, ignoreRenaming = false):Promise<Media>{
+    if( typeof fileUrl === 'object'){
+      // @ts-ignore
+      return Media._import(fileUrl)
+    }
+    return Media._import({
+      fileUrl,
+      filename,
+      user_id,
+      ignoreRenaming
+    })
   }
 
   private getPathVariation(width, height): string {
@@ -268,4 +308,13 @@ export default class Media extends BaseModel {
     // return '';
   }
 
+}
+interface ImportType{
+  data?: string,
+  fileUrl?: string,
+  filename: string,
+  user_id: number,
+  ignoreRenaming?: boolean,
+  media_type?: string,
+  encoding?:string,
 }

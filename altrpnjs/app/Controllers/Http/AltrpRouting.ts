@@ -1,3 +1,7 @@
+declare global {
+  const __;
+}
+
 import * as mustache from'mustache'
 import getCurrentDevice from "../../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
@@ -325,11 +329,26 @@ export default class AltrpRouting {
     }
     const datasources = await Source.fetchDatasourcesForPage(page.id, httpContext, altrpContext)
     const device = getCurrentDevice(httpContext.request)
-    const lang = get_altrp_setting('site_language', 'en')
+    const lang = httpContext.request.cookie('altrp_lang') || get_altrp_setting('site_language', 'en')
+    const theme = httpContext.request.cookie('altrp_theme')
+    const dark_default =get_altrp_setting('dark_default')
+
+    let html_class = ''
+
+    console.log(theme)
+    console.log(dark_default)
+
+    if(! theme){
+      html_class = dark_default ? 'altrp-theme_dark' : 'altrp-theme_normal'
+    } else {
+      html_class = theme
+    }
 
     altrpContext.altrpdata = datasources
     let title = replaceContentWithData(page.title, altrpContext)
     altrpContext.altrppage.title = title
+    altrpContext.altrppage.lang = lang
+    altrpContext.altrppage.is_dark =  html_class ? html_class.includes('altrp-theme_dark') : false
 
     try {
 
@@ -340,6 +359,9 @@ export default class AltrpRouting {
           promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
         ]
       )
+      content = await this.prepareContent(content, {
+        lang,
+      })
       let all_styles = `<link rel="stylesheet" href="/altrp/css/vars/altrp-vars.css"/>` + _all_styles
       content = mustache.render(content, {
         ...altrpContext,
@@ -350,6 +372,7 @@ export default class AltrpRouting {
         user,
         csrfToken: httpContext.request.csrfToken,
         isProd: isProd(),
+        noProd: !isProd(),
         model_data: JSONStringifyEscape(model_data),
         route_args: JSONStringifyEscape(pageMatch.params),
         datasources: JSONStringifyEscape(datasources),
@@ -361,6 +384,7 @@ export default class AltrpRouting {
         spa_off: get_altrp_setting('spa_off') === 'true',
         device,
         lang,
+        html_class,
         altrptime: getAltrpTime()
       })
       mustache?.templateCache?.clear()
@@ -496,7 +520,8 @@ export default class AltrpRouting {
           version: getLatestVersion(),
           _altrp: {
             version: getLatestVersion(),
-            isNodeJS: true
+            isNodeJS: true,
+            isProd: isProd(),
           },
         })
       )
@@ -688,4 +713,53 @@ export default class AltrpRouting {
 
     return elementNames;
   }
+
+  private async prepareContent(content: string,  { lang }) {
+
+    if(! lang){
+      return content
+
+    }
+
+    const d = {
+
+    }
+    const match =   /{{{{([\s\S]+?)(?=}}}})/g
+    const replace =  '{{{{'
+
+    let paths = _.isString(content) ? content.match(match) : null;
+    if (_.isArray(paths)) {
+      await  Promise.all(paths.map(async path => {
+        let _path = path.replace(replace, "");
+
+        const [
+          text,
+          domain
+        ] = _path.split('::')
+
+        let value =await __(text, {
+          domain,
+          lang,
+        })
+        d[_path] = value
+        let pattern = `${path}}}}}`
+        pattern = escapeRegExp(pattern);
+
+        content = content.replace(new RegExp(pattern, "g"), value || "");
+
+      }))
+    }
+
+    content = `${content}<script>
+window.altrp_dictionary = ${JSON.stringify(d)};
+</script>`
+
+    return content
+
+
+  }
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }

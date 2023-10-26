@@ -83,6 +83,12 @@ export default function getDataByPath(
   if (!_.isString(path)) {
     return value;
   }
+  if(path === 'altrppage.is_dark' ||path ===  'altrppagestate.is_dark'){
+    return document.documentElement.classList.contains('altrp-theme_dark')
+  }
+  if(path === 'altrppage.lang' ||path ===  'altrppagestate.lang'){
+    return document.documentElement.getAttribute('lang')
+  }
   if (path.indexOf("altrpdata.") === 0) {
     path = path.replace("altrpdata.", "");
     value = currentDataStorage

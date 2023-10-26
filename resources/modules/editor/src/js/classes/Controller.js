@@ -1,11 +1,13 @@
-import store, { getCurrentElement } from "../store/store";
+import store, {getCurrentElement} from "../store/store";
 import {getElementSettingsSuffix, getTemplateDataStorage} from "../helpers";
 import CONSTANTS from "../consts";
 import CSSRule from "../classes/CSSRule";
-import { changeTemplateStatus } from "../store/template-status/actions";
-import { controllerValue } from "../store/controller-value/actions";
+import {changeTemplateStatus} from "../store/template-status/actions";
+import {controllerValue} from "../store/controller-value/actions";
 import RepeaterController from "../components/controllers/RepeaterController";
 import setTitle from "../../../../front-app/src/js/functions/setTitle";
+import THEMED_CONTROLLERS from "../const/THEMED_CONTROLLERS";
+import THEMED_TABS from "../const/THEMED_TABS";
 
 /**
  * Класс-контроллер
@@ -14,6 +16,7 @@ import setTitle from "../../../../front-app/src/js/functions/setTitle";
  */
 class Controller {
   constructor(data) {
+
     let currentElement = getCurrentElement();
     this.data = data;
     this.rules = [];
@@ -34,7 +37,7 @@ class Controller {
       currentElement.setCssClass(
         this.getSettingName(),
         this.data.prefixClass +
-          currentElement.getSettings(this.getSettingName())
+        currentElement.getSettings(this.getSettingName())
       );
     }
     if (this.rules.length) {
@@ -42,7 +45,7 @@ class Controller {
     }
   }
 
-  changeTemplateName(value){
+  changeTemplateName(value) {
     getTemplateDataStorage().title = value;
     setTitle(value)
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
@@ -54,8 +57,8 @@ class Controller {
    * @param {boolean} updateElement
    */
   changeValue(value, updateElement = true) {
-    switch(this.data.controlId ){
-      case '__template_name':{
+    switch (this.data.controlId) {
+      case '__template_name': {
         this.changeTemplateName(value)
         return
       }
@@ -70,9 +73,29 @@ class Controller {
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (! this.data.repeater && ! this.data.group) {
+    if (!this.data.repeater && !this.data.group) {
       if (updateElement) {
-        currentElement.setSettingValue(this.getSettingName(), value, true, this.data.locked);
+
+        const {
+          altrp_themes,
+        } = store.getState().editorMetas
+        const {
+          currentTab,
+        } = store.getState()
+
+        if (THEMED_TABS.includes(currentTab.currentTab)
+          && THEMED_CONTROLLERS.includes(this.data.type)
+          && altrp_themes.getProperty('metaValue.currentTheme') !== 'altrp-theme_normal') {
+          currentElement.setSettingValue(this.getSettingName(),
+            value,
+            true,
+            this.data.locked,
+            altrp_themes.getProperty('metaValue.currentTheme'));
+
+        } else {
+          currentElement.setSettingValue(this.getSettingName(), value, true, this.data.locked);
+
+        }
       }
       this.rules.forEach(rule => {
         rule.insertValue(value);
@@ -93,7 +116,7 @@ class Controller {
         );
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
-    } else if(this.data.repeater ){
+    } else if (this.data.repeater) {
       /**
        * @type {RepeaterController}
        * @public
@@ -101,11 +124,11 @@ class Controller {
 
       this.data.repeater.changeValue(
         this.data.itemIndex,
-        this.data.controlId + getElementSettingsSuffix(this, ! this.data.responsive),
+        this.data.controlId + getElementSettingsSuffix(this, !this.data.responsive),
         value
       );
       // console.error(this.data.controlId + getElementSettingsSuffix(this, true));
-    } else if(this.data.group ){
+    } else if (this.data.group) {
       /**
        * @type {GroupController}
        * @public
@@ -127,8 +150,8 @@ class Controller {
    * @return {boolean}
    */
   isShow() {
-    if(this.data.conditionsCallback){
-      return ! ! this.data.conditionsCallback();
+    if (this.data.conditionsCallback) {
+      return !!this.data.conditionsCallback();
     }
 
     if (!this.data.conditions) {
@@ -166,7 +189,7 @@ class Controller {
         }
       });
     });
-    return ! ! show;
+    return !!show;
   }
 
   /**
@@ -193,8 +216,8 @@ class Controller {
    *
    * @return {boolean}
    */
-  isStateless(){
-    return ! ! this.data.stateless
+  isStateless() {
+    return !!this.data.stateless
   }
 }
 

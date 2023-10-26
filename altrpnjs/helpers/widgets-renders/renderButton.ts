@@ -292,8 +292,10 @@ export default function renderButton(settings, device, ) {
 
 
 
-  let url = parseURLTemplate(link_link.url || "")
-
+  let url = (link_link.url || "")
+  if(! url.includes('{{') && ! url.includes('}}')){
+    url = parseURLTemplate(url)
+  }
 
   // @ts-ignore
   let button = `<button

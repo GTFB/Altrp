@@ -9,11 +9,10 @@ import {
   TAB_STYLE
 } from "../classes/modules/ControllersManager";
 import PanelTabContent from "./PanelTabContent";
-import DynamicContent from "./DynamicContent/DynamicContent";
 import Controller from "../classes/Controller";
 import { setCurrentTab } from "../store/active-settings-tab/actions";
-import { getCurrentTab, getElementState } from "../store/store";
 import StateSection from "./StateSection";
+import ThemeSection from "./ThemeSection";
 import { setCurrentState } from "../store/state-section/actions";
 
 class SettingsPanel extends Component {
@@ -41,6 +40,7 @@ class SettingsPanel extends Component {
   }
 
   render() {
+
     let controllersManager = window.controllersManager;
     let sections = [];
     if (this.props.currentElement.getName) {
@@ -102,6 +102,7 @@ class SettingsPanel extends Component {
             <span className="panel-tab__text">Advanced</span>
           </button>
         </div>
+        {this.state.activeTab === "style" && <ThemeSection />}
         {this.state.activeTab === "style" && <StateSection />}
         <PanelTabContent sections={sections} />
       </div>

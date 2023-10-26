@@ -22,6 +22,7 @@ import config from "../../helpers/config";
 import altrpRandomId from "../../helpers/altrpRandomId";
 import public_path from "../../helpers/path/public_path";
 import GlobalStyle from "App/Models/GlobalStyle";
+import {DateTime} from "luxon";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -187,6 +188,8 @@ export default class PageGenerator extends BaseGenerator {
           }),
         }, false, true)
     }
+    page.updatedAt = DateTime.now()
+    await page.save()
     clearRequireCache()
     return true
   }

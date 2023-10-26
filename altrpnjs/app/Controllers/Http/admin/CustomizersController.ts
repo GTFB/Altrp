@@ -349,13 +349,22 @@ export default class CustomizersController {
 
     if (search) {
       customizers.where(function (query) {
-        let _s = search.split(' ')
-        for( const search of _s){
-          query.where('altrp_customizers.title', LIKE, '%' + search + '%')
+        if(search.indexOf('%') === 0){
+          query.where('data', LIKE, `${search}%`)
+        }else if(search.indexOf('@') === 0){
+          query.whereHas('altrp_model', query=>{
+            query.where('name', LIKE, `%${search.replace('@', '')}%`)
+          })
+        } else {
+          let _s = search.split(' ')
+          for( const search of _s){
+            query.where('altrp_customizers.title', LIKE, '%' + search + '%')
 
-          if(Number(search)){
-            query.orWhere('altrp_customizers.id',   search )
+            if(Number(search)){
+              query.orWhere('altrp_customizers.id',   search )
+            }
           }
+
         }
       })
     }

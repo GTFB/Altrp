@@ -13,12 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const luxon = require("luxon");
+const {DateTime} = luxon;
 const Orm = global[Symbol.for('ioc.use')]("Adonis/Lucid/Orm");
 const Database = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
+const DB = Database.default;
 const _ = __importStar(require("lodash"));
 {{{imports}}}
+const axios = __importDefault(require("axios")).default;
+const AltrpBaseModel = __importDefault(require('../Models/AltrpBaseModel')).default
 
-class {{{classname}}} extends Orm.BaseModel {
+class {{{classname}}} extends AltrpBaseModel {
   {{{constructor}}}
 
   static afterSave(model) {

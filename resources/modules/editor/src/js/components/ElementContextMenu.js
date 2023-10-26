@@ -11,6 +11,9 @@ import {
   saveDataToLocalStorage
 } from "../../../../front-app/src/js/helpers";
 import {Portal} from "@blueprintjs/core"
+import isSettingNameVariant from "../helpers/isSettingNameVariant";
+import store from "../store/store";
+import {controllerValue} from "../store/controller-value/actions";
 
 class ElementContextMenu extends Component {
   constructor(props) {
@@ -33,38 +36,39 @@ class ElementContextMenu extends Component {
   }
 
   // component mount, add window listener
-   componentDidMount() {
-     window.EditorFrame.contentWindow.document.addEventListener('keydown', this.handleKeyDown)
-   }
-   componentWillUnmount() {
-     window.EditorFrame.contentWindow.document.removeEventListener('keydown', this.handleKeyDown)
-   }
+  componentDidMount() {
+    window.EditorFrame.contentWindow.document.addEventListener('keydown', this.handleKeyDown)
+  }
+
+  componentWillUnmount() {
+    window.EditorFrame.contentWindow.document.removeEventListener('keydown', this.handleKeyDown)
+  }
 
   handleKeyDown = (e) => {
     let charCode = String.fromCharCode(e.which).toLowerCase()
-    if((e.ctrlKey || e.metaKey) && charCode === 's') {
+    if ((e.ctrlKey || e.metaKey) && charCode === 's') {
       e.preventDefault()
       if (window.appStore.getState().templateStatus.status !== 'TEMPLATE_UPDATED') {
         getEditor().modules.saveImportModule.saveTemplate()
       }
-    }else if((e.ctrlKey || e.metaKey) && charCode === 'c') {
+    } else if ((e.ctrlKey || e.metaKey) && charCode === 'c') {
       e.preventDefault()
       this.onSelectItem(null, window.appStore.getState().currentElement.currentElement.toObject())
-    }else if((e.ctrlKey || e.metaKey) && charCode === 'v') {
+    } else if ((e.ctrlKey || e.metaKey) && charCode === 'v') {
       e.preventDefault()
       this.onPasteElement(e)
     }
-   }
+  }
 
   // Событие вызова контекстного меню
   onSelectItem(e, element) {
-   if (!element) {
-    const data = e.props.element.toObject();
-    saveDataToLocalStorage("altrp_element_to_copy", data);
-    contextMenu.hideAll();
-   } else {
-     saveDataToLocalStorage("altrp_element_to_copy", element);
-   }
+    if (!element) {
+      const data = e.props.element.toObject();
+      saveDataToLocalStorage("altrp_element_to_copy", data);
+      contextMenu.hideAll();
+    } else {
+      saveDataToLocalStorage("altrp_element_to_copy", element);
+    }
   }
 
   /**
@@ -134,8 +138,28 @@ class ElementContextMenu extends Component {
    */
   copyStyles = e => {
     contextMenu.hideAll();
+
+    let controls = window.controllersManager.getControls(e.props.element.getName());
+    const _settings = e.props.element.getSettings()
+    const settings = {}
+    const stylesSettings = []
+    for (const styleSection of controls.style) {
+      for (const control of styleSection.controls) {
+        if (control.controlId) {
+          stylesSettings.push(control.controlId)
+        }
+      }
+    }
+    for (const defaultSettingName of stylesSettings) {
+      for (const settingName in _settings) {
+        if (settingName.includes(defaultSettingName) && isSettingNameVariant(settingName, defaultSettingName))
+          settings[settingName] = _settings[settingName]
+
+      }
+    }
+
     const dataToStore = {
-      settings: e.props.element.getSettings(),
+      settings,
       elementName: e.props.element.getName()
     };
     localStorage.setItem(
@@ -156,6 +180,10 @@ class ElementContextMenu extends Component {
       return;
     }
     this.props.element.pasteStylesFromSettings(elementSettingsStore.settings);
+    for(const settingName in elementSettingsStore.settings){
+      store.dispatch(controllerValue(elementSettingsStore.settings[settingName], settingName));
+      break;
+    }
   };
 
   /**

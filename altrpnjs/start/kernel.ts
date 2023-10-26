@@ -14,6 +14,7 @@ import Route from "@ioc:Adonis/Core/Route"
 import './view'
 import "../app/Services/TelegramBot"
 import "../app/Services/DiscordBot"
+import __ from "../helpers/__";
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,7 @@ import "../app/Services/DiscordBot"
 | are defined for every HTTP requests.
 |
 */
+global.__ = __;
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
   () => import('App/Middleware/ConvertEmptyString'),

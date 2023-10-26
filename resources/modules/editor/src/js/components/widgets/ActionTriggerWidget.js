@@ -74,6 +74,7 @@ class ActionTriggerWidget extends React.Component {
 
   componentWillUnmount() {
     if(this.intervalId){
+      console.log('clearInterval', this.intervalId);
       clearInterval(this.intervalId)
       return
     }

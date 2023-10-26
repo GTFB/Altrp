@@ -1,24 +1,17 @@
-
 import React, { Component } from "react";
 import ('../../sass/state-section.scss');
 import { connect } from "react-redux";
 import { setCurrentState } from "../store/state-section/actions";
-import { getElementState, getCurrentTab } from "../store/store";
 import GlobalStylesPresets from "./state-section/GlobalStylesPresets";
+
+
 
 class StateSection extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      buttons: [
-        { title: "N", value: "" },
-        { title: "H", value: ":hover" },
-        { title: "A", value: ".active" },
-        { title: "F", value: ":focus" },
-        { title: "E", value: ".state-error" },
-        { title: "D", value: ".state-disabled" },
-      ]
+      buttons: CONSTANTS.BUTTONS
     }
   }
 

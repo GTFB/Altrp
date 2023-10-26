@@ -187,7 +187,11 @@ class Resource {
   post(data = {}, headers) {
 
     const defaultHeaders = {}
-    defaultHeaders['X-XSRF-TOKEN'] = getCookie('XSRF-TOKEN')
+
+    if(this.getRoute().indexOf(location.origin) === 0 || this.getRoute().indexOf('http') !== 0 ){
+      defaultHeaders['X-XSRF-TOKEN'] = getCookie('XSRF-TOKEN')
+
+    }
 
     headers = _.assign(
       defaultHeaders,

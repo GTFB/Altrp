@@ -495,5 +495,5 @@ Route.any('/wsaltrp', async ({request, response}) => {
   return response.send(res)
 }).middleware('catch_unhandled_json')
 
-
-
+Route.post('/ajax/set_theme', 'IndicesController.setTheme')
+Route.post('/ajax/set_lang', 'IndicesController.setLang')

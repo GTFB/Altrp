@@ -1247,6 +1247,8 @@ button {
 }
 .control-color-wrapper {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 .control-color-open {
   border-color: #e5e6ea;

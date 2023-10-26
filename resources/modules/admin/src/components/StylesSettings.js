@@ -15,13 +15,29 @@ class StylesSettings extends Component {
 
   async componentDidMount() {
     const progressBarColor = (await new Resource({route: '/admin/ajax/settings'}).get('altrp_progress_bar_color')).altrp_progress_bar_color;
-
+    let [
+      dark_default,
+    ] = await Promise.all([
+      (await new Resource({route: '/admin/ajax/settings'}).get('dark_default')).dark_default
+      ,
+    ])
+    dark_default = dark_default == true || dark_default == 'true'
     this.setState(state => ({
       ...state,
+      dark_default,
       progressBarColor,
     }));
   }
 
+  updateDarkDefault = async (e) => {
+
+    const {
+      dark_default,
+    } = this.state
+    const value = ! dark_default
+    await new Resource({route: '/admin/ajax/settings'}).put('dark_default', {value, });
+    this.setState(state=>({...state, dark_default: value}))
+  }
   onDrop = e => {
     e.persist();
     e.preventDefault();
@@ -94,7 +110,10 @@ class StylesSettings extends Component {
   render() {
     const {
       iconFile,
+      dark_default,
     } = this.state;
+
+    let switcherClasses = `control-switcher control-switcher_${dark_default ? 'on' : 'off'}`;
     let {
       progressBarColor = 'rgb(48, 79, 253)',
     } = this.state;
@@ -102,7 +121,17 @@ class StylesSettings extends Component {
     return (
         <div className="admin-styles-settings">
 
-          <div className="admin-settings-color__blocks">
+          <div className="admin-settings-color__blocks align-items-center">
+            <div className="admin_switcher">
+              <div className="admin_switcher__label">
+                Use Dark Theme Default
+              </div>
+              <div className={switcherClasses} onClick={this.updateDarkDefault}>
+                <div className="control-switcher__on-text">ON</div>
+                <div className="control-switcher__caret" />
+                <div className="control-switcher__off-text">OFF</div>
+              </div>
+            </div>
             <div className="admin-settings-color__block">
               <div className="admin-settings-color row-text" width="10%">
                 <label htmlFor="settings-container-width">

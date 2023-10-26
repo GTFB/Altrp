@@ -7,7 +7,7 @@ class VideoWidget extends Component {
       is_youtube,
       youtube_id,
       content_path
-    } = this.props.element.settingsLock;
+    } = this.props.element.getSettings();
 
     let dynamicID;
     const url = getDataByPath(content_path);

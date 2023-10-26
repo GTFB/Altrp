@@ -14,7 +14,7 @@ import {
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 const TableComponent = styled.div`
-  && .altrp-table {
+  & .altrp-table.altrp-table {
 
     ${props => {
 
@@ -59,7 +59,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table:hover {
+  & .altrp-table.altrp-table:hover {
 
     ${props => {
 
@@ -104,7 +104,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next {
+  & .altrp-pagination__next.altrp-pagination__next {
 
     ${props => {
 
@@ -139,7 +139,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next:hover {
+  & .altrp-pagination__next.altrp-pagination__next:hover {
 
     ${props => {
 
@@ -174,7 +174,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next svg {
+  & .altrp-pagination__next.altrp-pagination__next svg {
 
     ${props => {
 
@@ -209,7 +209,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next:hover svg {
+  & .altrp-pagination__next.altrp-pagination__next:hover svg {
 
     ${props => {
 
@@ -244,7 +244,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next img {
+  & .altrp-pagination__next.altrp-pagination__next img {
 
     ${props => {
 
@@ -269,7 +269,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next:hover img {
+  & .altrp-pagination__next.altrp-pagination__next:hover img {
 
     ${props => {
 
@@ -294,7 +294,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next path {
+  & .altrp-pagination__next.altrp-pagination__next path {
 
     ${props => {
 
@@ -319,7 +319,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next:hover path {
+  & .altrp-pagination__next.altrp-pagination__next:hover path {
 
     ${props => {
 
@@ -344,7 +344,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous {
+  & .altrp-pagination__previous.altrp-pagination__previous {
 
     ${props => {
 
@@ -379,7 +379,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous:hover {
+  & .altrp-pagination__previous.altrp-pagination__previous:hover {
 
     ${props => {
 
@@ -414,7 +414,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous svg {
+  & .altrp-pagination__previous.altrp-pagination__previous svg {
 
     ${props => {
 
@@ -449,7 +449,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous:hover svg {
+  & .altrp-pagination__previous.altrp-pagination__previous:hover svg {
 
     ${props => {
 
@@ -484,7 +484,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous img {
+  & .altrp-pagination__previous.altrp-pagination__previous img {
 
     ${props => {
 
@@ -509,7 +509,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous:hover img {
+  & .altrp-pagination__previous.altrp-pagination__previous:hover img {
 
     ${props => {
 
@@ -534,7 +534,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous path {
+  & .altrp-pagination__previous.altrp-pagination__previous path {
 
     ${props => {
 
@@ -559,7 +559,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous:hover path {
+  & .altrp-pagination__previous.altrp-pagination__previous:hover path {
 
     ${props => {
 
@@ -584,7 +584,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .replace-text {
+  & .replace-text.replace-text {
 
     ${props => {
 
@@ -619,7 +619,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .replace-text:hover {
+  & .replace-text.replace-text:hover {
 
     ${props => {
 
@@ -654,7 +654,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .replace-picture {
+  & .replace-picture.replace-picture {
 
     ${props => {
 
@@ -689,7 +689,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th .grouped-column {
+  & .altrp-table-th.altrp-table-th .grouped-column {
 
     ${props => {
 
@@ -714,7 +714,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th:hover .grouped-column {
+  & .altrp-table-th.altrp-table-th:hover .grouped-column {
 
     ${props => {
 
@@ -739,7 +739,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th path {
+  & .altrp-table-th.altrp-table-th path {
 
     ${props => {
 
@@ -764,7 +764,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th:hover path {
+  & .altrp-table-th.altrp-table-th:hover path {
 
     ${props => {
 
@@ -789,9 +789,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th .grouped-column,
-  && .altrp-table-th svg,
-  && .altrp-table-th img {
+  & .altrp-table-th.altrp-table-th .grouped-column,
+  & .altrp-table-th.altrp-table-th svg,
+  & .altrp-table-th.altrp-table-th img {
 
     ${props => {
 
@@ -816,9 +816,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th:hover .grouped-column,
-  && .altrp-table-th:hover svg,
-  && .altrp-table-th:hover img {
+  & .altrp-table-th.altrp-table-th:hover .grouped-column,
+  & .altrp-table-th.altrp-table-th:hover svg,
+  & .altrp-table-th.altrp-table-th:hover img {
 
     ${props => {
 
@@ -843,7 +843,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th .not-grouped-column {
+  & .altrp-table-th.altrp-table-th .not-grouped-column {
 
     ${props => {
 
@@ -868,7 +868,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th:hover .not-grouped-column {
+  & .altrp-table-th.altrp-table-th:hover .not-grouped-column {
 
     ${props => {
 
@@ -893,7 +893,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th .not-grouped-column path {
+  & .altrp-table-th.altrp-table-th .not-grouped-column path {
 
     ${props => {
 
@@ -918,7 +918,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th:hover .not-grouped-column path {
+  & .altrp-table-th.altrp-table-th:hover .not-grouped-column path {
 
     ${props => {
 
@@ -943,9 +943,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th .not-grouped-column,
-  && .altrp-table-th .not-grouped-column svg,
-  && .altrp-table-th .not-grouped-column img {
+  & .altrp-table-th.altrp-table-th .not-grouped-column,
+  & .altrp-table-th.altrp-table-th .not-grouped-column svg,
+  & .altrp-table-th.altrp-table-th .not-grouped-column img {
 
     ${props => {
 
@@ -970,9 +970,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th:hover .not-grouped-column,
-  && .altrp-table-th:hover .not-grouped-column svg,
-  && .altrp-table-th:hover .not-grouped-column img {
+  & .altrp-table-th.altrp-table-th:hover .not-grouped-column,
+  & .altrp-table-th.altrp-table-th:hover .not-grouped-column svg,
+  & .altrp-table-th.altrp-table-th:hover .not-grouped-column img {
 
     ${props => {
 
@@ -997,7 +997,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .expanded-row {
+  & .expanded-row.expanded-row {
 
     ${props => {
 
@@ -1022,7 +1022,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .expanded-row:hover {
+  & .expanded-row.expanded-row:hover {
 
     ${props => {
 
@@ -1047,7 +1047,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .expanded-row path {
+  & .expanded-row.expanded-row path {
 
     ${props => {
 
@@ -1072,7 +1072,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .expanded-row:hover path {
+  & .expanded-row.expanded-row:hover path {
 
     ${props => {
 
@@ -1097,9 +1097,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .expanded-row,
-  && .expanded-row svg,
-  && .expanded-row img {
+  & .expanded-row.expanded-row,
+  & .expanded-row.expanded-row svg,
+  & .expanded-row.expanded-row img {
 
     ${props => {
 
@@ -1124,9 +1124,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .expanded-row:hover,
-  && .expanded-row svg:hover,
-  && .expanded-row img:hover {
+  & .expanded-row.expanded-row:hover,
+  & .expanded-row.expanded-row svg:hover,
+  & .expanded-row.expanded-row img:hover {
 
     ${props => {
 
@@ -1151,7 +1151,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .not-expanded-row {
+  & .not-expanded-row.not-expanded-row {
 
     ${props => {
 
@@ -1176,7 +1176,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .not-expanded-row:hover {
+  & .not-expanded-row.not-expanded-row:hover {
 
     ${props => {
 
@@ -1201,7 +1201,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .not-expanded-row path {
+  & .not-expanded-row.not-expanded-row path {
 
     ${props => {
 
@@ -1226,7 +1226,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .not-expanded-row:hover path {
+  & .not-expanded-row.not-expanded-row:hover path {
 
     ${props => {
 
@@ -1251,9 +1251,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .not-expanded-row,
-  && .not-expanded-row svg,
-  && .not-expanded-row img {
+  & .not-expanded-row.not-expanded-row,
+  & .not-expanded-row.not-expanded-row svg,
+  & .not-expanded-row.not-expanded-row img {
 
     ${props => {
 
@@ -1278,9 +1278,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .not-expanded-row:hover,
-  && .not-expanded-row svg:hover,
-  && .not-expanded-row img:hover {
+  & .not-expanded-row.not-expanded-row:hover,
+  & .not-expanded-row.not-expanded-row svg:hover,
+  & .not-expanded-row.not-expanded-row img:hover {
 
     ${props => {
 
@@ -1305,8 +1305,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody--striped tr:nth-child(2n),
-  && .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n) {
+  & .altrp-table-tbody--striped.altrp-table-tbody--striped tr:nth-child(2n),
+  & .altrp-table-tbody--striped.altrp-table-tbody--striped .altrp-table-tr:nth-child(2n) {
 
     ${props => {
 
@@ -1331,8 +1331,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody--striped tr:nth-child(2n):hover,
-  && .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n):hover {
+  & .altrp-table-tbody--striped.altrp-table-tbody--striped tr:nth-child(2n):hover,
+  & .altrp-table-tbody--striped.altrp-table-tbody--striped .altrp-table-tr:nth-child(2n):hover {
 
     ${props => {
 
@@ -1357,9 +1357,9 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-field,
-  && .altrp-table__filter-select>.altrp-field-select2__control,
-  && .altrp-label_slider>.altrp-btn {
+  & .altrp-field.altrp-field,
+  & .altrp-table__filter-select.altrp-table__filter-select>.altrp-field-select2__control,
+  & .altrp-label_slider.altrp-label_slider>.altrp-btn {
 
     ${props => {
 
@@ -1444,8 +1444,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-field:hover,
-  && .altrp-table__filter-select:hover>.altrp-field-select2__control {
+  & .altrp-field.altrp-field:hover,
+  & .altrp-table__filter-select.altrp-table__filter-select:hover>.altrp-field-select2__control {
 
     ${props => {
 
@@ -1530,7 +1530,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-label {
+  & .altrp-label.altrp-label {
 
     ${props => {
 
@@ -1555,7 +1555,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-label:hover {
+  & .altrp-label.altrp-label:hover {
 
     ${props => {
 
@@ -1580,7 +1580,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th {
+  & .altrp-table-th.altrp-table-th {
 
     ${props => {
 
@@ -1675,7 +1675,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-th:hover {
+  & .altrp-table-th.altrp-table-th:hover {
 
     ${props => {
 
@@ -1770,7 +1770,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-head {
+  & .altrp-table-head.altrp-table-head {
 
     ${props => {
 
@@ -1795,7 +1795,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-head:hover {
+  & .altrp-table-head.altrp-table-head:hover {
 
     ${props => {
 
@@ -1820,7 +1820,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-transpose_true .altrp-table-th:not(:first-child) {
+  & .altrp-transpose_true.altrp-transpose_true .altrp-table-th:not(:first-child) {
 
     ${props => {
 
@@ -1845,7 +1845,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-transpose_true .altrp-table-th:not(:first-child):hover {
+  & .altrp-transpose_true.altrp-transpose_true .altrp-table-th:not(:first-child):hover {
 
     ${props => {
 
@@ -1870,7 +1870,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th {
+  & .altrp-transpose_true.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th {
 
     ${props => {
 
@@ -1895,7 +1895,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th:hover {
+  & .altrp-transpose_true.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th:hover {
 
     ${props => {
 
@@ -1970,7 +1970,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td {
+  & .altrp-table-td.altrp-table-td {
 
     ${props => {
 
@@ -2055,7 +2055,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td:hover {
+  & .altrp-table-td.altrp-table-td:hover {
 
     ${props => {
 
@@ -2140,7 +2140,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td a {
+  & .altrp-table-td.altrp-table-td a {
 
     ${props => {
 
@@ -2175,7 +2175,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td a:hover {
+  & .altrp-table-td.altrp-table-td a:hover {
 
     ${props => {
 
@@ -2210,7 +2210,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody .altrp-table-background {
+  & .altrp-table-tbody.altrp-table-tbody .altrp-table-background {
 
     ${props => {
 
@@ -2235,7 +2235,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody .altrp-table-background:hover {
+  & .altrp-table-tbody.altrp-table-tbody .altrp-table-background:hover {
 
     ${props => {
 
@@ -2260,7 +2260,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-transpose_true .altrp-table-td:not(:first-child) {
+  & .altrp-transpose_true.altrp-transpose_true .altrp-table-td:not(:first-child) {
 
     ${props => {
 
@@ -2285,7 +2285,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-transpose_true .altrp-table-td:not(:first-child):hover {
+  & .altrp-transpose_true.altrp-transpose_true .altrp-table-td:not(:first-child):hover {
 
     ${props => {
 
@@ -2310,7 +2310,7 @@ const TableComponent = styled.div`
     }
   }
 
-   && .altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td {
+   & .altrp-transpose_true.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td {
 
     ${props => {
 
@@ -2335,7 +2335,7 @@ const TableComponent = styled.div`
      }
    }
 
-   && .altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td:hover {
+   & .altrp-transpose_true.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td:hover {
 
     ${props => {
 
@@ -2360,7 +2360,7 @@ const TableComponent = styled.div`
     }
   }
 
-   && .altrp-table-td__grouping {
+   & .altrp-table-td__grouping.altrp-table-td__grouping {
 
      ${props => {
 
@@ -2405,7 +2405,7 @@ const TableComponent = styled.div`
      }
    }
 
-   && .altrp-table-td__grouping:hover {
+   & .altrp-table-td__grouping.altrp-table-td__grouping:hover {
 
     ${props => {
 
@@ -2450,7 +2450,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody .altrp-table-td__grouping {
+  & .altrp-table-tbody.altrp-table-tbody .altrp-table-td__grouping {
 
     ${props => {
 
@@ -2485,7 +2485,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody .altrp-table-td__grouping:hover {
+  & .altrp-table-tbody.altrp-table-tbody .altrp-table-td__grouping:hover {
 
     ${props => {
 
@@ -2570,7 +2570,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td__grouping .altrp-table__collapse-icon svg {
+  & .altrp-table-td.altrp-table-td__grouping .altrp-table__collapse-icon svg {
 
     ${props => {
 
@@ -2635,7 +2635,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td__grouping:hover .altrp-table__collapse-icon svg {
+  & .altrp-table-td__grouping.altrp-table-td__grouping:hover .altrp-table__collapse-icon svg {
 
     ${props => {
 
@@ -2700,8 +2700,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td__grouping .altrp-table__collapse-icon svg,
-  && .altrp-table-td__grouping .altrp-table__collapse-icon path {
+  & .altrp-table-td__grouping.altrp-table-td__grouping .altrp-table__collapse-icon svg,
+  & .altrp-table-td__grouping.altrp-table-td__grouping .altrp-table__collapse-icon path {
 
     ${props => {
 
@@ -2726,8 +2726,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-td__grouping:hover .altrp-table__collapse-icon svg,
-  && .altrp-table-td__grouping:hover .altrp-table__collapse-icon path {
+  & .altrp-table-td__grouping.altrp-table-td__grouping:hover .altrp-table__collapse-icon svg,
+  & .altrp-table-td__grouping.altrp-table-td__grouping:hover .altrp-table__collapse-icon path {
 
     ${props => {
 
@@ -2752,7 +2752,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-foot .altrp-table-td {
+  & .altrp-table-foot.altrp-table-foot .altrp-table-td {
 
     ${props => {
 
@@ -2817,7 +2817,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-foot .altrp-table-td:hover {
+  & .altrp-table-foot.altrp-table-foot .altrp-table-td:hover {
 
     ${props => {
 
@@ -2882,7 +2882,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-global-filter label {
+  & .altrp-table-global-filter.altrp-table-global-filter label {
 
     ${props => {
 
@@ -2927,7 +2927,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-global-filter label:hover {
+  & .altrp-table-global-filter.altrp-table-global-filter label:hover {
 
     ${props => {
 
@@ -2972,7 +2972,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-global-filter input {
+  & .altrp-table-global-filter.altrp-table-global-filter input {
 
     ${props => {
 
@@ -3097,7 +3097,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-global-filter input:hover {
+  & .altrp-table-global-filter.altrp-table-global-filter input:hover {
 
     ${props => {
 
@@ -3222,7 +3222,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination {
+  & .altrp-pagination.altrp-pagination {
 
     ${props => {
 
@@ -3248,7 +3248,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination:hover {
+  & .altrp-pagination.altrp-pagination:hover {
 
     ${props => {
 
@@ -3274,7 +3274,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__previous {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__previous {
 
     ${props => {
 
@@ -3299,7 +3299,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__previous:hover {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__previous:hover {
 
     ${props => {
 
@@ -3324,7 +3324,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__next {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__next {
 
     ${props => {
 
@@ -3349,7 +3349,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__next:hover {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__next:hover {
 
     ${props => {
 
@@ -3374,7 +3374,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination-pages__item {
+  & .altrp-pagination.altrp-pagination .altrp-pagination-pages__item {
 
     ${props => {
 
@@ -3399,7 +3399,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination-pages__item:hover {
+  & .altrp-pagination.altrp-pagination .altrp-pagination-pages__item:hover {
 
     ${props => {
 
@@ -3424,8 +3424,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous,
-  && .altrp-pagination__next {
+  & .altrp-pagination__previous.altrp-pagination__previous,
+  & .altrp-pagination__next.altrp-pagination__next {
 
     ${props => {
 
@@ -3520,8 +3520,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__previous:hover,
-  && .altrp-pagination__next:hover {
+  & .altrp-pagination__previous.altrp-pagination__previous:hover,
+  & .altrp-pagination__next.altrp-pagination__next:hover {
 
     ${props => {
 
@@ -3616,12 +3616,12 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next,
-  && .altrp-pagination-pages__item,
-  && .altrp-pagination__count,
-  && .altrp-pagination__previous,
-  && .altrp-pagination__goto-page,
-  && .altrp-pagination__select-size {
+  & .altrp-pagination__next.altrp-pagination__next,
+  & .altrp-pagination-pages__item.altrp-pagination-pages__item,
+  & .altrp-pagination__count.altrp-pagination__count,
+  & .altrp-pagination__previous.altrp-pagination__previous,
+  & .altrp-pagination__goto-page.altrp-pagination__goto-page,
+  & .altrp-pagination__select-size.altrp-pagination__select-size {
 
     ${props => {
 
@@ -3647,12 +3647,12 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next:hover,
-  && .altrp-pagination-pages__item:hover,
-  && .altrp-pagination__count:hover,
-  && .altrp-pagination__previous:hover,
-  && .altrp-pagination__goto-page:hover,
-  && .altrp-pagination__select-size:hover {
+  & .altrp-pagination__next.altrp-pagination__next:hover,
+  & .altrp-pagination-pages__item.altrp-pagination-pages__item:hover,
+  & .altrp-pagination__count.altrp-pagination__count:hover,
+  & .altrp-pagination__previous.altrp-pagination__previous:hover,
+  & .altrp-pagination__goto-page.altrp-pagination__goto-page:hover,
+  & .altrp-pagination__select-size.altrp-pagination__select-size:hover {
 
     ${props => {
 
@@ -3678,7 +3678,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__count {
+  & .altrp-pagination__count.altrp-pagination__count {
 
     ${props => {
 
@@ -3733,7 +3733,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__count:hover {
+  & .altrp-pagination__count.altrp-pagination__count:hover {
 
     ${props => {
 
@@ -3788,7 +3788,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination-pages__item {
+  & .altrp-pagination-pages__item.altrp-pagination-pages__item {
 
     ${props => {
 
@@ -3873,7 +3873,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination-pages__item:hover {
+  & .altrp-pagination-pages__item.altrp-pagination-pages__item:hover {
 
     ${props => {
 
@@ -3958,7 +3958,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .active.altrp-pagination-pages__item {
+  & .active.active.altrp-pagination-pages__item {
 
     ${props => {
 
@@ -4003,7 +4003,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .active.altrp-pagination-pages__item:hover {
+  & .active.active.altrp-pagination-pages__item:hover {
 
     ${props => {
 
@@ -4048,7 +4048,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__ellipsis {
+  & .altrp-pagination__ellipsis.altrp-pagination__ellipsis {
 
     ${props => {
 
@@ -4093,7 +4093,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__ellipsis:hover {
+  & .altrp-pagination__ellipsis.altrp-pagination__ellipsis:hover {
 
     ${props => {
 
@@ -4138,7 +4138,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__goto-page {
+  & .altrp-pagination__goto-page.altrp-pagination__goto-page {
 
     ${props => {
 
@@ -4243,7 +4243,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__goto-page:hover {
+  & .altrp-pagination__goto-page.altrp-pagination__goto-page:hover {
 
     ${props => {
 
@@ -4348,7 +4348,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__goto-page {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__goto-page {
 
     ${props => {
 
@@ -4373,7 +4373,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__goto-page:hover {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__goto-page:hover {
 
     ${props => {
 
@@ -4398,7 +4398,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__select-size .altrp-field-select2__control {
+  & .altrp-pagination__select-size.altrp-pagination__select-size .altrp-field-select2__control {
 
     ${props => {
 
@@ -4503,7 +4503,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__select-size .altrp-field-select2__control:hover {
+  & .altrp-pagination__select-size.altrp-pagination__select-size .altrp-field-select2__control:hover {
 
     ${props => {
 
@@ -4608,7 +4608,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__select-size {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__select-size {
 
     ${props => {
 
@@ -4633,7 +4633,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination .altrp-pagination__select-size:hover {
+  & .altrp-pagination.altrp-pagination .altrp-pagination__select-size:hover {
 
     ${props => {
 
@@ -4658,7 +4658,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__select-size {
+  & .altrp-pagination__select-size.altrp-pagination__select-size {
 
     ${props => {
 
@@ -4683,7 +4683,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__select-size:hover {
+  & .altrp-pagination__select-size.altrp-pagination__select-size:hover {
 
     ${props => {
 
@@ -4708,7 +4708,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--checked svg {
+  & .check-icon--checked.check-icon--checked svg {
 
     ${props => {
 
@@ -4743,7 +4743,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--checked svg:hover {
+  & .check-icon--checked.check-icon--checked svg:hover {
 
     ${props => {
 
@@ -4778,7 +4778,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--unchecked svg {
+  & .check-icon--unchecked.check-icon--unchecked svg {
 
     ${props => {
 
@@ -4813,7 +4813,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--unchecked svg:hover {
+  & .check-icon--unchecked.check-icon--unchecked svg:hover {
 
     ${props => {
 
@@ -4848,7 +4848,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--indeterminate svg {
+  & .check-icon--indeterminate.check-icon--indeterminate svg {
 
     ${props => {
 
@@ -4883,7 +4883,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--indeterminate svg:hover {
+  & .check-icon--indeterminate.check-icon--indeterminate svg:hover {
 
     ${props => {
 
@@ -4918,7 +4918,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--checked path {
+  & .check-icon--checked.check-icon--checked path {
 
     ${props => {
 
@@ -4943,7 +4943,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--checked:hover path {
+  & .check-icon--checked.check-icon--checked:hover path {
 
     ${props => {
 
@@ -4968,7 +4968,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--unchecked path {
+  & .check-icon--unchecked.check-icon--unchecked path {
 
     ${props => {
 
@@ -4993,7 +4993,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--unchecked:hover path {
+  & .check-icon--unchecked.check-icon--unchecked:hover path {
 
     ${props => {
 
@@ -5018,7 +5018,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--indeterminate path {
+  & .check-icon--indeterminate.check-icon--indeterminate path {
 
     ${props => {
 
@@ -5043,7 +5043,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .check-icon--indeterminate:hover path {
+  & .check-icon--indeterminate.check-icon--indeterminate:hover path {
 
     ${props => {
 
@@ -5068,7 +5068,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table__resizer {
+  & altrp-table__resizer.altrp-table__resizer {
 
     ${props => {
 
@@ -5103,7 +5103,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table__resizer:hover {
+  & altrp-table__resizer.altrp-table__resizer:hover {
 
     ${props => {
 
@@ -5138,7 +5138,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table__resizer.altrp-table__resizer_resizing {
+  & altrp-table__resizer.altrp-table__resizer.altrp-table__resizer_resizing {
 
     ${props => {
 
@@ -5163,7 +5163,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table__resizer.altrp-table__resizer_resizing:hover {
+  & altrp-table__resizer.altrp-table__resizer.altrp-table__resizer_resizing:hover {
 
     ${props => {
 
@@ -5188,7 +5188,7 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-image {
+  & .altrp-image.altrp-image {
 
     ${props => {
 
@@ -5213,7 +5213,7 @@ const TableComponent = styled.div`
       }
     }
 
-  && .altrp-image:hover {
+  & .altrp-image.altrp-image:hover {
 
     ${props => {
 

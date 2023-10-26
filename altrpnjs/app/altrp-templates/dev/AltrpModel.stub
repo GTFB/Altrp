@@ -1,7 +1,11 @@
 {{{imports}}}
 import _ from 'lodash'
+import AltrpBaseController from "../Controllers/AltrpBaseController";
+import Database from "@ioc:Adonis/Lucid/Database";
+const DB = Database?.default ? Database.default : Database;
+import AltrpBaseModel from '../Models/AltrpBaseModel'
 
-export default class {{{classname}}} extends Orm.BaseModel {
+export default class {{{classname}}} extends AltrpBaseModel {
 
   @Orm.afterSave()
     public static afterSave(model) {

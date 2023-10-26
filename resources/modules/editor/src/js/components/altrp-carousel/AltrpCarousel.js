@@ -325,7 +325,7 @@ class AltrpCarousel extends Component {
               <div className={`${classes} altrp-carousel-slide`} key={slide.id}
                    onClick={()=>{
                      this.slider.slickGoTo(slide.id);
-                     if(ightbox_slides_content && getResponsiveSetting(this.props, 'lightbox_s_click')) {
+                     if(lightbox_slides_content && getResponsiveSetting(this.props, 'lightbox_s_click')) {
                        this.setState((state) => ({
                          ...state,
                          activeSlide: slide.id,

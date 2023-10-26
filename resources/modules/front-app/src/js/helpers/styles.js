@@ -451,7 +451,7 @@ export function typographicControllerToStyles(data = {}) {
     styles += `text-transform: ${transform}; `;
   }
   if (spacing) {
-    styles += `letter-spacing: ${spacing}px; `;
+    styles += `letter-spacing: ${spacing}em; `;
   }
   if (lineHeight) {
     styles += `line-height: ${

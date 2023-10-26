@@ -1,6 +1,6 @@
-import { controllerMapStateToProps } from "../../decorators/controller";
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import {controllerMapStateToProps} from "../../decorators/controller";
+import React, {Component} from "react";
+import {connect} from "react-redux";
 import ContentIcon from "../../../svgs/content.svg";
 import Select from "react-select";
 import controllerDecorate from "../../decorators/controller";
@@ -8,7 +8,7 @@ import {
   addFont,
   removeFont,
 } from "../../../../../front-app/src/js/store/fonts-storage/actions";
-import { renderScrollbar } from "../../../../../admin/src/components/altrp-select/AltrpSelect";
+import {renderScrollbar} from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {
   altrpFontsSet,
   GOOGLE_FONT,
@@ -16,10 +16,13 @@ import {
 } from "../../../../../front-app/src/js/constants/fonts";
 import PresetGlobalFonts from "./PresetGlobalFonts";
 import store from "../../store/store";
-import { changeTemplateStatus } from "../../store/template-status/actions";
+import {changeTemplateStatus} from "../../store/template-status/actions";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
 import FONT_PROPERTIES from "../../const/FONT_PROPERTIES";
+import {getElementSettingsSuffix} from "../../helpers";
+import RotateLeft from "../../../svgs/rotate-left.svg";
+import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 
 class TypographicController extends Component {
   constructor(props) {
@@ -40,6 +43,7 @@ class TypographicController extends Component {
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
     const familyOptions = [
       {
+
         label: "System Fonts",
         options: _.toPairs(altrpFontsSet)
           .map(([font, type]) => {
@@ -94,6 +98,7 @@ class TypographicController extends Component {
       spacingMin: this.props.spacingMin || -5,
     };
   }
+
   getDefaultValue() {
     return {
       family: null,
@@ -105,31 +110,33 @@ class TypographicController extends Component {
   }
 
   setGlobal(guid) {
+
     const globalFonts = this.props.globalFonts;
     let guidFont = globalFonts.filter((font) => font.guid == guid)[0] || {};
     guidFont = getCssVarFromGlobalStyle(guidFont)
     const {
       family,
     } = guidFont;
-    let fontValue = {
-    };
-    if(guidFont){
+    let fontValue = {};
+    if (!_.isEmpty(guidFont)) {
       const settings = guidFont
       FONT_PROPERTIES.forEach(prop => {
-        if(guidFont[`${prop}CssVar`]){
+        if (guidFont[`${prop}CssVar`]) {
           fontValue[prop] = guidFont[`${prop}CssVar`]
         }
       })
-      fontValue.fontSize = `var(--altrp-var-${settings._type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g,'-')}-font-size)`
+      fontValue.fontSize = `var(--altrp-var-${settings._type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g, '-')}-font-size)`
       fontValue.default = {
         ...guidFont
       }
     }
-
     let value =
       this.getSettings(this.props.controlId) || this.getDefaultValue();
-    console.log(fontValue);
-    if (guidFont) {
+
+    if (!_.isEmpty(guidFont)) {
+      getCurrentElement().deleteGlobalStyle(
+        this.props.controller.getSettingName()
+      );
       if (family) {
         appStore.dispatch(
           addFont(
@@ -157,9 +164,39 @@ class TypographicController extends Component {
         guid,
         this.props.controller.getSettingName()
       );
-      getCurrentElement().updateAllGlobals(guid, fontValue);
-      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+      //getCurrentElement().updateAllGlobals(guid, fontValue);
+    } else {
+      if (_.isObject(this.state.value?.default)) {
+        const newValue = {}
+        _.forEach(this.state.value.default, (value, idx) => {
+
+
+          const ignored = ['_type', 'id', 'name', 'guid']
+
+          if (ignored.includes(idx)) {
+            return
+          }
+          if (idx.includes('CssVar')) {
+            return;
+          }
+          if (_.isObject(value)) {
+            const screen = CONSTANTS.SCREENS.find(s => s.name === idx)
+            if (screen) {
+              const settingName = this.props.controller.getSettingName() + getElementSettingsSuffix(this.props.controller, false, screen.name)
+              getCurrentElement().updateSetting(value, settingName)
+            }
+            return;
+          }
+          newValue[idx] = value
+        })
+        getCurrentElement().deleteGlobalStyle(
+          this.props.controller.getSettingName()
+        );
+        this._changeValue(newValue);
+
+      }
     }
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }
 
   openTypographic() {
@@ -179,11 +216,12 @@ class TypographicController extends Component {
       shadowContentIcon.setAttribute("fill", "#8E94AA");
     }
   }
+
   /**
    * Меняем шрифт
    */
   changeFamily(value) {
-    const { currentElement } = this.props;
+    const {currentElement} = this.props;
     let _value =
       this.getSettings(this.props.controlId) || this.getDefaultValue();
     if (value && value.value) {
@@ -214,6 +252,7 @@ class TypographicController extends Component {
       label: value ? value.label : "",
     });
   }
+
   //конец select2
   //начало size
   inputBlurUpdate(e) {
@@ -251,6 +290,7 @@ class TypographicController extends Component {
       size: e.target.value,
     });
   }
+
   //конец size
   //начало weight
   weightChange(e) {
@@ -261,6 +301,7 @@ class TypographicController extends Component {
       weight: e.target.value,
     });
   }
+
   //конец weight
   //начало transform
   transformChange(e) {
@@ -271,6 +312,7 @@ class TypographicController extends Component {
       transform: e.target.value,
     });
   }
+
   //конец transform
   //начал style
   styleChange(e) {
@@ -281,6 +323,7 @@ class TypographicController extends Component {
       style: e.target.value,
     });
   }
+
   //конец style
   //начало decoration
   decorationChange(e) {
@@ -291,6 +334,7 @@ class TypographicController extends Component {
       decoration: e.target.value,
     });
   }
+
   //конец decoration
   //начало lineHeight
   inputHorUpdate(e) {
@@ -310,6 +354,7 @@ class TypographicController extends Component {
       lineHeight: e.target.value,
     });
   }
+
   //конец lineHeight
   //начало letter spacing
   inputVerUpdate(e) {
@@ -329,7 +374,6 @@ class TypographicController extends Component {
       spacing: e.target.value,
     });
   }
-  //конец letter spacing
 
   render() {
     if (this.state.show === false) {
@@ -337,9 +381,9 @@ class TypographicController extends Component {
     }
     let value =
       this.getSettings(this.props.controlId) || this.getDefaultValue();
-    const { familyOptions } = this.state;
+    const {familyOptions} = this.state;
 
-    if(value.default){
+    if (value.default) {
       value = {
         ...value.default,
       }
@@ -526,8 +570,19 @@ class TypographicController extends Component {
           id="typographicContainer"
           className="control-typographic-wrapper control-shadow-wrapper-none"
         >
+          <div className="controller-container w-100 d-flex justify-content-end">
+            <div className="control-shadow-toggle " onClick={()=>{
+              this.reset()
+              this.setState(state=>({...state, updatePreset: altrpRandomId()}))
+            }}>
+
+              <RotateLeft id="shadowContentIcon" fill="#8E94AA" width="16" height="16" viewBox="0 0 24 24"
+                          className="control-shadow-svg-content"/>
+            </div>
+          </div>
           <PresetGlobalFonts
             setFont={this.setGlobal}
+            update={this.state.updatePreset}
             checkGlobal={this.hasGlobal}
           />
           {/* начало select2 */}
@@ -543,7 +598,7 @@ class TypographicController extends Component {
                 styles={customStyles}
                 placeholder={value.family || "Select font"}
                 isClearable={true}
-                components={{ MenuList: renderScrollbar }}
+                components={{MenuList: renderScrollbar}}
                 noOptionsMessage={() => "no fonts found"}
               />
             </div>
@@ -767,7 +822,7 @@ class TypographicController extends Component {
         <div className="controller-container__label control-shadow-label">
           {this.props.label}
           <div className="responsive-absolute-shadow">
-            <ResponsiveDdMenu />
+            <ResponsiveDdMenu/>
           </div>
         </div>
         <div className="control-group control-group-shadow">
@@ -799,4 +854,5 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen,
   };
 }
+
 export default connect(controllerMapStateToProps)(TypographicController);

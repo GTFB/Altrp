@@ -162,11 +162,10 @@ class CustomizerSettingsPanel extends React.Component {
     let modelsOptions = this.getModelOptions();
 
     const {customizer} = this.props;
-    const { type, model_id, settings = {} } = customizer;
+    const { type, model_id, settings = {},name } = customizer;
 
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
-    const MethodType = settings?.hook_type;
     const eventType = settings?.event_type;
     const eventHookType = settings?.event_hook_type;
     const startAt = settings?.start_at ? new Date(settings.start_at) : new Date();
@@ -274,7 +273,7 @@ class CustomizerSettingsPanel extends React.Component {
                       />
                     </div>
                     {['api', 'method', 'crud'].includes(type)  && <>
-                      { ! this.state.customizer?.settings?.external &&
+                      {  this.shouldShowMiddleware() &&
                       <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
                       <AltrpSelect id="crud-fields"
@@ -460,17 +459,18 @@ class CustomizerSettingsPanel extends React.Component {
                     }
                     {
                       type === "method" && (
-                        <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                          <div className="controller-container__label control-select__label controller-label">Method name</div>
-                          <InputGroup className="form-control-blueprint"
-                                      type="text"
-                                      id="customizer-title"
-                                      value={MethodType || ""}
-                                      onChange={this.changeMethodType}
-                          />
+                          <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                              <div className="controller-container__label control-select__label controller-label">Method name</div>
+                              <InputGroup className="form-control-blueprint"
+                                          type="text"
+                                          id="customizer-title"
+                                          readOnly={true}
+                                          value={name || ""}
+                              />
                         </div>
                       )
                     }
+
                     <form className="Customizer-title" onSubmit={this.EditTitleForm}>
                       <div className="controller-container__label control-select__label controller-label">Title:</div>
                       <div className="customizer-block__title">
@@ -513,46 +513,6 @@ class CustomizerSettingsPanel extends React.Component {
                               <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied!</div>
                             </div>
                             <input value={Url} readOnly={true} className="url-text"/>
-                          </div>
-                          <div className="Customizer-time">
-                            <AltrpSelect id="time-type-fields"
-                                        className="controller-field"
-                                        isMulti={false}
-                                        value={time_type}
-                                        onChange={this.changeTimeType}
-                                        options={[
-                                          {
-                                            value: '',
-                                            label: 'None',
-                                          },
-                                          {
-                                            value: 'minute',
-                                            label: 'Minute',
-                                          },
-                                          {
-                                            value: 'hour',
-                                            label: 'Hour',
-                                          },
-                                          {
-                                            value: 'day',
-                                            label: 'Day',
-                                          },
-                                          {
-                                            value: 'week',
-                                            label: 'Week',
-                                          },
-                                        ]}
-                            />
-                            {
-                              time_type !== "none" ? (
-                                <InputGroup className="form-control-blueprint customizer-time-input"
-                                            type="number"
-                                            id="customizer-time"
-                                            value={time}
-                                            onChange={this.changeTime}
-                                />
-                              ) : ""
-                            }
                           </div>
                         </>
                       )
@@ -722,14 +682,11 @@ class CustomizerSettingsPanel extends React.Component {
     customizer = mutate.set(customizer, 'settings.hook_type', e.target.value||'')
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
   };
-  changeMethodType = (e)=>{
-    let {customizer} = this.props;
-    if(_.isArray(_.get(customizer, 'settings'))){
-      customizer = mutate.set(customizer, 'settings', {})
-    }
-    customizer = mutate.set(customizer, 'settings.method_type', e.target.value||'')
-    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
-  };
+  shouldShowMiddleware() {
+    const {customizer} = this.props;
+    const { type,  } = customizer;
+    return ! this.state.customizer?.settings?.external && ['api', 'crud'].includes(type)
+  }
 }
 function  mapStateToProps(state) {
   return {

@@ -8,12 +8,17 @@ export function get_setting_key(setting_name: string) {
 
 export default function get_altrp_setting(setting_name = '', _default = '', _decrypt = false) {
 
-  let value = _default;
+  let value: any = _default;
   if (!setting_name) {
     return value;
   }
   let settings_key = get_setting_key(setting_name);
   value = Env.get(settings_key, _default);
+  if(value === 'true'){
+    value = true
+  } else if(value == 'false'){
+    value = false
+  }
   if(! value ){
     return _default
   }

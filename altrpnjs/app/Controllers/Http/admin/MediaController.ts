@@ -30,7 +30,7 @@ export default class MediaController {
       mediaToUpdate.map(async (m: Media) => {
         m.guid = guid();
         await m.save();
-        Logger.info(`Media id ${m.id} guid write!`);
+        Logger.info(`Media id ${m.id} write!`);
       })
     );
     let query = Media.query().whereNull("deleted_at");
@@ -137,7 +137,7 @@ export default class MediaController {
       mediaToUpdate.map(async (m: Media) => {
         m.guid = guid();
         await m.save();
-        Logger.info(`Media id ${m.id} guid write!`);
+        Logger.info(`Media id ${m.id} write!`);
       })
     );
     let query = Media.query().where("id", "=", id).whereNull("deleted_at");

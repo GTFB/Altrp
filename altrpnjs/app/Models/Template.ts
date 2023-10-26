@@ -1,6 +1,6 @@
 import {DateTime} from 'luxon'
 import {
-  BaseModel,
+  BaseModel, belongsTo, BelongsTo,
   column, computed,
   HasMany,
   hasMany,
@@ -19,6 +19,7 @@ import Category from "App/Models/Category";
 import RootElementRenderer from "App/Renderers/RootElement";
 
 import validGuid from "../../helpers/validGuid";
+import * as _ from "lodash";
 
 export default class Template extends BaseModel {
 
@@ -61,7 +62,7 @@ export default class Template extends BaseModel {
   // }
 
   @column()
-  public parent_template: number|null
+  public parent_template: number | null
 
   @column()
   public html_content: string
@@ -70,22 +71,26 @@ export default class Template extends BaseModel {
   public type: string
 
   @column()
-  public guid: string|null
+  public guid: string | null
 
   @column()
   public all_site: boolean | number
 
-  @hasOne(() => User, {
-    localKey: "user_id",
-    foreignKey: "id"
+  @belongsTo(() => User, {
+    foreignKey: "user_id"
   })
-  public user: HasOne<typeof User>
+  public user: BelongsTo<typeof User>
 
   @manyToMany(() => Page, {
     pivotTable: "pages_templates",
     pivotForeignKey: "template_id",
   })
   public pages: ManyToMany<typeof Page>
+
+  @hasMany(() => PagesTemplate, {
+    foreignKey: 'template_id'
+  })
+  public pages_templates: HasMany<typeof PagesTemplate>
 
   @hasOne(() => Area, {
     localKey: "area",
@@ -133,9 +138,10 @@ export default class Template extends BaseModel {
   public updatedAt: DateTime
 
   @computed()
-  get template_type(){
+  get template_type() {
     return this.currentArea?.name || 'content'
   }
+
   static getDefaultData() {
 
     return {
@@ -236,23 +242,23 @@ export default class Template extends BaseModel {
         let pages_template = await PagesTemplate.query().where('template_id', _template.id)
           .where('page_id', pageId)
           .where('condition_type', '=', 'exclude').first();
-        return {pages_template,_template};
+        return {pages_template, _template};
       }
     ))).filter(({pages_template}) => !pages_template).map(({_template}) => _template);
 
     templates = templates.concat(_templates);
 
 
-    templates.forEach((template)=>{
-      template.data = JSON.parse(template.data)
-    }
-  )
+    templates.forEach((template) => {
+        template.data = JSON.parse(template.data)
+      }
+    )
     ;
 
     return templates;
   }
 
-  dataWithoutContent(){
+  dataWithoutContent() {
     // @ts-ignore
     const data = this.toJSON();
     delete data.htmlContent
@@ -260,7 +266,7 @@ export default class Template extends BaseModel {
     return data
   }
 
-  async getChildrenContent(screenName:string, randomString = ''):Promise<string> {
+  async getChildrenContent(screenName: string, randomString = ''): Promise<string> {
     try {
       const data = JSON.parse(this.data)
       const renderer = new RootElementRenderer(data)
@@ -271,28 +277,125 @@ export default class Template extends BaseModel {
       return ""
     }
   }
-  static async getTemplatePagesIds(template_id){
+
+  static async getTemplatePagesIds(template_id) {
     let template
     let pagesTemplates
-    if(validGuid(template_id)){
+    if (validGuid(template_id)) {
       pagesTemplates = await PagesTemplate.query().where('template_guid', template_id)
       template = await Template.query().where('guid', template_id)
     } else {
       pagesTemplates = await PagesTemplate.query().where('template_id', template_id)
       template = await Template.find(template_id)
     }
-    const excludePages = pagesTemplates.filter(pt=>pt.condition_type === 'exclude').map(pt=>pt.page_guid)
-    const includePages = pagesTemplates.filter(pt=>pt.condition_type === 'include').map(pt=>pt.page_guid)
+    const excludePages = pagesTemplates.filter(pt => pt.condition_type === 'exclude').map(pt => pt.page_guid)
+    const includePages = pagesTemplates.filter(pt => pt.condition_type === 'include').map(pt => pt.page_guid)
 
     let pages
-    if(template.all_site){
+    if (template.all_site) {
       pages = await Page.query().whereNotIn('guid', excludePages)
     } else {
       pages = await Page.query().whereIn('guid', includePages)
     }
 
 
-    pages = pages.map(p=>p.id)
+    pages = pages.map(p => p.id)
     return pages
   }
+
+  static templatesElementsProps = {
+    'template': [
+      'template'
+    ],
+    'carousel': [
+      'card',
+      {
+        iterable: true,
+        propertyName: 'slides_repeater',
+        iterablePropertyName: 'card_slides_repeater'
+      }
+    ],
+    'posts': [
+      'posts_card_template',
+      'posts_card_hover_template',
+    ],
+    'table': [
+      'card_template',
+      {
+        iterable: true,
+        propertyName: 'tables_columns',
+        iterablePropertyName: 'column_template'
+      }
+    ],
+    'tabs': [
+      {
+        iterable: true,
+        propertyName: 'items_tabs',
+        iterablePropertyName: 'card_template'
+      }
+    ],
+    'dropbar': [
+      'template_dropbar_section',
+    ],
+
+  }
+
+  public async getInternalTemplatesList(list: string[] | Template[], getTemplate = false): Promise<void> {
+    list = list || []
+
+
+    let data = this.data
+    if (_.isString(data)) {
+      data = JSON.parse(data)
+    }
+
+    await Template._getTemplates(data, list, getTemplate)
+
+  }
+
+  private static async _getTemplates(element: any, list: string[] | Template[], getTemplate: boolean) {
+    if (_.isArray(element.children)) {
+      for (const _e of element.children) {
+        await Template._getTemplates(_e, list, getTemplate)
+      }
+    }
+    const settings = {
+      ...element.settings,
+      ...element.settingsLock,
+    }
+
+    for (let elementName in Template.templatesElementsProps) {
+      if (element.name !== elementName) {
+        continue
+      }
+
+      for (const prop of Template.templatesElementsProps[elementName]) {
+        if (_.isString(prop)) {
+          const templateGuid = _.get(settings, prop)
+          if (!templateGuid) {
+            continue
+          }
+          const template = await Template.query().where('guid', templateGuid).first()
+          if (!template) {
+            return
+          }
+          await template.getInternalTemplatesList(list, getTemplate)
+
+
+
+          if(getTemplate){
+            // @ts-ignore
+            list.push(template)
+            // @ts-ignore
+            list = _.uniqBy(list, 'guid')
+          } else {
+            list.push(templateGuid)
+            // @ts-ignore
+            list = _.uniq(list)
+          }
+        }
+      }
+    }
+  }
+
 }

@@ -18,6 +18,7 @@
     "./start/routes/routes",
     "./start/routes/admin",
     "./start/kernel",
+    "./start/db-prepare",
     {
       "file": "./start/repl",
       "environment": [

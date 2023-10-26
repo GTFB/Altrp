@@ -36,8 +36,10 @@ export default class IndicesController {
 
   public async editor({view}) {
     let global_styles:any = (await AltrpMeta.query().where('meta_name', 'global_styles').first())
+    let altrpThemes:any = (await AltrpMeta.query().where('meta_name', 'altrp_themes').first())
+    altrpThemes = JSON.stringify(altrpThemes.meta_value)
     if(global_styles){
-      global_styles = global_styles.meta_value
+      global_styles = JSON.stringify(global_styles.meta_value)
     } else {
       global_styles = '{}'
     }
@@ -45,6 +47,7 @@ export default class IndicesController {
       isProd: isProd(),
       applyPluginsFiltersSync,
       presetStyles: global_styles,
+      altrpThemes,
       applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.js?${Env.get('PACKAGE_KEY')}` :
@@ -77,9 +80,12 @@ export default class IndicesController {
       }
     }
     const styleVars = `<style id="altrp-css-vars">${await GlobalStyle.getCssVars()}</style>`
+    let altrpThemes:any = (await AltrpMeta.query().where('meta_name', 'altrp_themes').first())
+    altrpThemes = JSON.stringify(altrpThemes.meta_value)
     return view.render('editor-content', Edge({
       style,
       styleVars,
+      altrpThemes,
       css: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.css` : null
     }))
@@ -223,6 +229,30 @@ export default class IndicesController {
       return {
         message: "favicon not found"
       }
+    }
+  }
+
+  public async setTheme({ response, request}: HttpContextContract){
+    const {
+      theme
+    } = request.all()
+    const expires = new Date()
+    expires.setFullYear(expires.getFullYear() + 1)
+
+    theme ? response.cookie('altrp_theme', theme, {expires}) : response.clearCookie('altrp_theme')
+    return {
+      success:true,
+    }
+  }
+  public async setLang({ response, request}: HttpContextContract){
+    const {
+      lang
+    } = request.all()
+    const expires = new Date()
+    expires.setFullYear(expires.getFullYear() + 1)
+    lang ? response.cookie('altrp_lang', lang,{expires}) : response.clearCookie('altrp_lang')
+    return {
+      success:true,
     }
   }
 }

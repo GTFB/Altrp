@@ -143,19 +143,29 @@ export function iconsManager() {
  * на основе elementState и разврешения
  * @param {Controller} controller
  * @param {boolean} ignoreResponse
+ * @param {null|string} screen
+ * @param {null|string} state
  * @return {string}
  */
-export function getElementSettingsSuffix(controller, ignoreResponse = false) {
+export function getElementSettingsSuffix(controller, ignoreResponse = false, screen = null, state = null) {
   let suffix_1 = getElementState().value;
   if (controller.type === "repeater" ||
     controller.type === "group" ||
     controller.isStateless()) {
     suffix_1 = "";
   }
+
+  if(state !== null){
+    suffix_1 = state
+  }
+
   let suffix_2 =
     getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT
       ? ""
       : getCurrentScreen().name;
+  if(screen !== null){
+    suffix_2 = screen
+  }
   if (ignoreResponse) {
     suffix_2 = "";
   }

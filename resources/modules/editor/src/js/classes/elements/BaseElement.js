@@ -7,6 +7,7 @@ import store, {getCurrentScreen, getElementState} from "../../store/store";
 import ControlStack from "./ControlStack";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import {addHistoryStoreItem} from "../../store/history-store/actions";
+import getCurrentTheme from "../../helpers/getCurrentTheme";
 
 /**
  * Базовый класс для методов элемента для редактора
@@ -559,37 +560,50 @@ class BaseElement extends ControlStack {
     this.defaultSettingsIsApply = true;
   }
 
-  setSettingValue(settingName, value, dispatchToHistory = true, locked = false) {
+  setSettingValue(settingName, value, dispatchToHistory = true, locked = false, theme) {
     const settings = locked ? this.settingsLock : this.settings
+
     //check change value
-    if (settings[settingName] !== value) {
-      if (
-        dispatchToHistory &&
-        store.getState().templateStatus.status ===
+    if(! theme) {
+      if (settings[settingName] !== value) {
+        if (
+          dispatchToHistory &&
+          store.getState().templateStatus.status ===
           CONSTANTS.TEMPLATE_NEED_UPDATE
-      )
-        store.dispatch(
-          addHistoryStoreItem("EDIT", {
-            element: this,
-            oldValue: settings[settingName],
-            newValue: value,
-            locked,
-            settingName
-          })
-        );
-      // this.settings = {...this.settings};
+        )
+          store.dispatch(
+            addHistoryStoreItem("EDIT", {
+              element: this,
+              oldValue: settings[settingName],
+              newValue: value,
+              locked,
+              settingName
+            })
+          );
+        // this.settings = {...this.settings};
 
-      if (locked) {
-        this.settingsLock[settingName] = value;
+        if (locked) {
+          this.settingsLock[settingName] = value;
+        }
+
+        this.settings[settingName] = value;
+
+        if (this.component) {
+          (async () => {
+            this.component?.changeSetting && this.component?.changeSetting(settingName, value);
+          })();
+        }
+      }
+    } else {
+      this.settings.themes = this.settings.themes || {}
+      this.settings.themes[theme] =  this.settings.themes[theme] || {}
+
+      if( this.settings.themes[theme][settingName] == value){
+
+      }else{
+        this.settings.themes[theme][settingName] = value
       }
 
-      this.settings[settingName] = value;
-
-      if (this.component) {
-        (async () => {
-          this.component?.changeSetting && this.component?.changeSetting(settingName, value);
-        })();
-      }
     }
   }
 
@@ -687,11 +701,16 @@ class BaseElement extends ControlStack {
     this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
 
     this.settings.styles[breakpoint][settingName] = {};
+    let theme = getCurrentTheme()
+    if(theme){
+      theme = `.${theme}`
+    }
     rules.forEach(rule => {
       let finalSelector = rule.selector;
       finalSelector = finalSelector
         .replace(/{{ELEMENT}}/g, this.getSelector())
         .replace(/{{ID}}/g, this.getId())
+        .replace(/{{THEME}}/g, theme)
         .replace(/{{STATE}}/g, getElementState().value);
       /**
        * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
@@ -828,12 +847,13 @@ class BaseElement extends ControlStack {
     if (_.isEmpty(settings) || !_.isObject(settings)) {
       return;
     }
-    const stylesSettings = this.getStylesSettings(settings);
+    const stylesSettings = (settings);
     const newSettings = { ..._.assign(this.settings, stylesSettings) };
     this.settings = newSettings;
 
     editorSetCurrentElement(this.getRoot());
     editorSetCurrentElement(this);
+
     this.component.setState(state => ({ ...state, settings: newSettings }));
   }
 
@@ -960,7 +980,7 @@ class BaseElement extends ControlStack {
    * @return {*}
    */
   hasGlobal(guid) {
-    return _.get(this.settings, `global_styles_storage.${guid}`, false);
+    return _.get(this.settings, `global_styles_storage.${guid}.length`, false);
   }
 
   /**
@@ -984,21 +1004,23 @@ class BaseElement extends ControlStack {
 
   /**
    * Удалим глобальный стиль из списка (вызвать в контроллере, если выбираем не глобальный стиль)
-   * @param guid
    * @param settingName
    */
-  deleteGlobalStyle(guid, settingName) {
-    let currentPropsList = _.get(
+  deleteGlobalStyle( settingName) {
+    let global_styles_storage = _.get(
       this.settings,
-      `global_styles_storage.${guid}`,
-      []
+      `global_styles_storage`,
+      {}
     );
-    if (currentPropsList.indexOf(settingName) !== -1) {
-      delete currentPropsList[settingName];
-      _.set(this.settings, `global_styles_storage.${guid}`, [
-        ...currentPropsList
-      ]);
-    }
+    _.forEach(global_styles_storage,(currentPropsList, guid)=>{
+      if(! _.isArray(currentPropsList)){
+        return
+      }
+      if (currentPropsList.indexOf(settingName) !== -1) {
+
+        _.set(this.settings, `global_styles_storage.${guid}`, _.reject(currentPropsList, i=>i === settingName));
+      }
+    })
   }
 }
 window.BaseElement = BaseElement

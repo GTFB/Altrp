@@ -28,7 +28,13 @@ if(! isProd() || env('CLUSTER') != 'true'  || (
     console.log('booking schedules...')
     Customizer.scheduleAll()
     const plugins = Plugin.getEnabledPlugins()
-    plugins.forEach(plugin => plugin.callActivationHooks())
+
+
+    plugins.forEach(plugin => {
+      plugin.callActivationHooks().catch(e=>{
+        console.error(e)
+      })
+    })
 
     /**
      * set package key

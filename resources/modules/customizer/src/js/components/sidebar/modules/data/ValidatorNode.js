@@ -9,16 +9,15 @@ import {MultiSelect} from "@blueprintjs/select";
 import {MenuItem, Button} from "@blueprintjs/core";
 import Resource from "../../../../../../../editor/src/js/classes/Resource";
 import ValidatorPropSettings from "../../../other/ValidatorPropSettings";
-
+const popoverProps = {
+  fill: true,
+  popoverClassName: 'customizer-multiselect-popover'
+}
 class ValidatorNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       options: []
-    }
-    this.popoverProps = {
-      fill: true,
-      popoverClassName: 'customizer-multiselect-popover'
     }
   }
 
@@ -161,7 +160,7 @@ class ValidatorNode extends React.Component {
                 itemsEqual={this.itemsEqual}
                 //resetOnSelect={reset_input}
                 //openOnKeyDown={openPopoverKeyDown}
-                popoverProps={this.popoverProps}
+                popoverProps={popoverProps}
                 createNewItemFromQuery={ this.createNewItemFromQuery }
                 createNewItemRenderer={this.createNewItemRenderer}
                 itemRenderer={(item, {handleClick, modifiers, query,index}) => {
