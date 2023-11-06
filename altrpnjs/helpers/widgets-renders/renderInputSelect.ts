@@ -8,6 +8,7 @@ export default function renderInputSelect(settings, device) {
   const nulled_option_title = getResponsiveSetting(settings, 'nulled_option_title', device)
   const left_icon = getResponsiveSetting(settings,'left_icon', device)
   const right_icon = getResponsiveSetting(settings, 'right_icon', device)
+  const transparentBG = getResponsiveSetting(settings, 'background_transparent_btn', device);
 
   let label: string = "";
   let labelIcon: string = "";
@@ -95,7 +96,7 @@ export default function renderInputSelect(settings, device) {
   let input: string = `<span class="bp3-popover-wrapper  ">
              <span aria-haspopup="true" class="bp3-popover-target altrp-select-popover">
                 <div class="">
-                  <button type="button" ${content_readonly ? "disabled" : ""} class="${"bp3-button" + (content_readonly ? " bp3-disabled" : "")}">
+                  <button type="button" ${content_readonly ? "disabled" : ""} class="${"bp3-button" + (content_readonly ? " bp3-disabled" : "") + (transparentBG ? " btn_transparent" : "")}">
                      ${leftIcon}
                      ${selectText}
                      ${rightIcon ? rightIcon : `<span class="bp3-icon bp3-icon-caret-down" aria-hidden="true">
@@ -105,8 +106,11 @@ export default function renderInputSelect(settings, device) {
                 </div>
              </span>
              </span>`
+  let placeholder = getResponsiveSetting(settings,'content_placeholder', device);
 
   return `<div class="altrp-field-container " style="${containerClass}">
+<span class="hidden">${placeholder}</span>
+
   ${content_label_position_type === "top" ? label : ""}
   ${content_label_position_type === "left" ? label : ""}
   ${content_label_position_type === "right" ? label : ""}

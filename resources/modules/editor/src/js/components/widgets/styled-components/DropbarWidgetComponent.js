@@ -8,7 +8,7 @@ import {btnStyles} from "./ButtonComponent";
 export default function DropbarWidgetComponent(settings) {
 
   const styles = [
-    ...btnStyles(settings)
+    ...btnStyles(settings, true)
   ];
 
   return styledString(styles, settings);

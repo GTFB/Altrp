@@ -29,6 +29,7 @@ export default class AltrpBaseModel extends BaseModel {
   }
 
   protected replaceContentWithData(content: string):string{
+
     return replaceContentWithData(content, this.customizerData)
   }
 

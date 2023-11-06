@@ -8,10 +8,10 @@ const SCHEMA_RULES_OPTIONS = {
       label: 'Regular Expression',
       value: 'regex',
     },
-    {
-      label: 'Phone',
-      value: 'mobile',
-    },
+    // {
+    //   label: 'Phone',
+    //   value: 'mobile',
+    // },
     {
       label: 'Confirmed',
       value: 'confirmed',
@@ -44,11 +44,19 @@ const SCHEMA_RULES_OPTIONS = {
       label: 'Required If Exists',
       value: 'requiredIfExists',
     },
+    {
+      label: 'Required If Not Exists',
+      value: 'requiredIfNotExists',
+    },
   ],
   number: [
     {
       label: 'Required If Exists',
       value: 'requiredIfExists',
+    },
+    {
+      label: 'Required If Not Exists',
+      value: 'requiredIfNotExists',
     },
     {
       label: 'Range',
@@ -62,12 +70,20 @@ const SCHEMA_RULES_OPTIONS = {
       label: 'Exists',
       value: 'exists',
     },
+    {
+      label: 'Unsigned',
+      value: 'unsigned',
+    },
 
   ],
   boolean: [
     {
       label: 'Required If Exists',
       value: 'requiredIfExists',
+    },
+    {
+      label: 'Required If Not Exists',
+      value: 'requiredIfNotExists',
     },
     {
       label: 'Unique',
@@ -85,6 +101,10 @@ const SCHEMA_RULES_OPTIONS = {
       value: 'requiredIfExists',
     },
     {
+      label: 'Required If Not Exists',
+      value: 'requiredIfNotExists',
+    },
+    {
       label: 'Unique',
       value: 'unique',
     },
@@ -98,6 +118,10 @@ const SCHEMA_RULES_OPTIONS = {
     {
       label: 'Required If Exists',
       value: 'requiredIfExists',
+    },
+    {
+      label: 'Required If Not Exists',
+      value: 'requiredIfNotExists',
     },
     {
       label: 'Unique',
@@ -115,6 +139,10 @@ const SCHEMA_RULES_OPTIONS = {
       value: 'requiredIfExists',
     },
     {
+      label: 'Required If Not Exists',
+      value: 'requiredIfNotExists',
+    },
+    {
       label: 'Unique',
       value: 'unique',
     },
@@ -128,6 +156,10 @@ const SCHEMA_RULES_OPTIONS = {
     {
       label: 'Required If Exists',
       value: 'requiredIfExists',
+    },
+    {
+      label: 'Required If Not Exists',
+      value: 'requiredIfNotExists',
     },
     {
       label: 'Unique',

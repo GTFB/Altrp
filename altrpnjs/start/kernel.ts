@@ -8,13 +8,17 @@
 | preferred, since they keep this file clean.
 |
 */
+declare global {
+  const __;
+}
+
 
 import Server from '@ioc:Adonis/Core/Server'
 import Route from "@ioc:Adonis/Core/Route"
 import './view'
 import "../app/Services/TelegramBot"
 import "../app/Services/DiscordBot"
-import __ from "../helpers/__";
+import __ from "../helpers/i18n/__";
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +29,7 @@ import __ from "../helpers/__";
 | are defined for every HTTP requests.
 |
 */
+// @ts-ignore
 global.__ = __;
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),

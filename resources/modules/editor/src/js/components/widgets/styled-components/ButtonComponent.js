@@ -14,8 +14,9 @@ import {
 } from "../../../../../../front-app/src/js/helpers/styles";
 import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 
-export function btnStyles(settings) {
-  return [
+export function btnStyles(settings, withPosition = false) {
+
+  let styles =  [
     "altrp-btn-wrapper.altrp-btn-wrapper",
 
     ["align-items", "button_alignment"],
@@ -23,7 +24,7 @@ export function btnStyles(settings) {
     "}",
 
     "altrp-btn",
-    // ["flex-direction", "button_icon_position"],
+    withPosition ? ["flex-direction", "button_icon_position"] : null,
     ["justify-content", "content_alignment"],
     ["margin", "position_margin", "dimensions"],
     ["padding", "position_padding", "dimensions"],
@@ -517,6 +518,7 @@ export function btnStyles(settings) {
 
     "}",
   ]
+  return styles
 }
 
 /**

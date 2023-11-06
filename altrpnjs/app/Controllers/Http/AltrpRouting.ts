@@ -1,6 +1,4 @@
-declare global {
-  const __;
-}
+
 
 import * as mustache from'mustache'
 import getCurrentDevice from "../../../helpers/getCurrentDevice";
@@ -36,6 +34,7 @@ import sharp from 'sharp';
 import sizeOf from 'image-size';
 import getAltrpTime from "../../../helpers/getAltrpTime";
 import {pluralize} from "@poppinss/utils/build/src/Helpers/string";
+import translateContent from "../../../helpers/i18n/translateContent";
 
 export default class AltrpRouting {
 
@@ -335,8 +334,6 @@ export default class AltrpRouting {
 
     let html_class = ''
 
-    console.log(theme)
-    console.log(dark_default)
 
     if(! theme){
       html_class = dark_default ? 'altrp-theme_dark' : 'altrp-theme_normal'
@@ -345,7 +342,14 @@ export default class AltrpRouting {
     }
 
     altrpContext.altrpdata = datasources
-    let title = replaceContentWithData(page.title, altrpContext)
+
+    let {
+      content: title,
+      dictionary: titleDictionary,
+    } = await this.prepareContent(page.title, {
+      lang,
+    })
+    title = replaceContentWithData(title, altrpContext)
     altrpContext.altrppage.title = title
     altrpContext.altrppage.lang = lang
     altrpContext.altrppage.is_dark =  html_class ? html_class.includes('altrp-theme_dark') : false
@@ -359,12 +363,23 @@ export default class AltrpRouting {
           promisify(fs.readFile)(resource_path(`views/altrp/screens/${device}/pages/${page.guid}.html`), 'utf8'),
         ]
       )
-      content = await this.prepareContent(content, {
+
+      const _content = await this.prepareContent(content, {
         lang,
       })
+
+      content = _content.content
+
+      _content.dictionary = _.merge(_content.dictionary, titleDictionary)
+      const  dictionary = `<script id="altrp-dictionary">
+        /* <![CDATA[ */
+window.altrp_dictionary = ${JSON.stringify(_content.dictionary)};
+        /* ]]> */
+</script>`
       let all_styles = `<link rel="stylesheet" href="/altrp/css/vars/altrp-vars.css"/>` + _all_styles
       content = mustache.render(content, {
         ...altrpContext,
+        dictionary,
         altrpContext,
         access_classes,
         asCheck,
@@ -391,13 +406,15 @@ export default class AltrpRouting {
       // @ts-ignore
       content = content.replace('<<<page_areas>>>', page_areas)
       content = content.replace('<<<all_styles>>>', all_styles)
+      content = content.replace('<<<dictionary>>>', dictionary)
+
       let res = content
 
       /**
        * Add Custom Headers
        */
 
-      let customHeaders: string | object = get_altrp_setting('altrp_custom_headers', '', true)
+      let customHeaders: any = get_altrp_setting('altrp_custom_headers', '', true)
       if (customHeaders) {
         customHeaders = replaceContentWithData(customHeaders, altrpContext)
         customHeaders = stringToObject(customHeaders)
@@ -535,7 +552,7 @@ export default class AltrpRouting {
        * Add Custom Headers
        */
 
-      let customHeaders:string|object = get_altrp_setting('altrp_custom_headers', '', true)
+      let customHeaders:any = get_altrp_setting('altrp_custom_headers', '', true)
       if(customHeaders){
         customHeaders = replaceContentWithData(customHeaders, altrpContext)
         customHeaders = stringToObject(customHeaders)
@@ -714,52 +731,8 @@ export default class AltrpRouting {
     return elementNames;
   }
 
-  private async prepareContent(content: string,  { lang }) {
-
-    if(! lang){
-      return content
-
-    }
-
-    const d = {
-
-    }
-    const match =   /{{{{([\s\S]+?)(?=}}}})/g
-    const replace =  '{{{{'
-
-    let paths = _.isString(content) ? content.match(match) : null;
-    if (_.isArray(paths)) {
-      await  Promise.all(paths.map(async path => {
-        let _path = path.replace(replace, "");
-
-        const [
-          text,
-          domain
-        ] = _path.split('::')
-
-        let value =await __(text, {
-          domain,
-          lang,
-        })
-        d[_path] = value
-        let pattern = `${path}}}}}`
-        pattern = escapeRegExp(pattern);
-
-        content = content.replace(new RegExp(pattern, "g"), value || "");
-
-      }))
-    }
-
-    content = `${content}<script>
-window.altrp_dictionary = ${JSON.stringify(d)};
-</script>`
-
-    return content
-
-
+  private async prepareContent(content: string,  { lang }): Promise<{content: string, dictionary: {  }}> {
+    return await translateContent(content,{lang})
   }
 }
 
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-}

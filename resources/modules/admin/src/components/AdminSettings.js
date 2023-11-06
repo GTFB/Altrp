@@ -222,10 +222,10 @@ class AdminSettings extends Component {
               <span className="admin-breadcrumbs__separator">/</span>
               <span className="admin-breadcrumbs__current">Builder</span>
             </div>
-            {this.state.activeTab === 6 && (
+            {this.state.activeTab === 5 && (
               <button className="btn" onClick={this.toggleModalCategory}>Add Category</button>
             )}
-            {this.state.activeTab === 7 && (
+            {this.state.activeTab === 6 && (
               <button className="btn" onClick={this.toggleModalImageSettings}>Add Image Settings</button>
             )}
           </div>

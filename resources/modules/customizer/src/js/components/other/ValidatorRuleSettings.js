@@ -9,6 +9,7 @@ class ValidatorRuleSettings extends Component {
     const names = [
       'confirmed',
       'requiredIfExists',
+      'requiredIfNotExists',
     ]
     const {
       settings = {},
@@ -30,7 +31,8 @@ class ValidatorRuleSettings extends Component {
             <input type="text"
                    id="mapper-source"
                    onChange={(e)=>{
-                     this.changeByPath(e.target.value, 'field');
+                     const value = e.target.value
+                     this.changeByPath(value, 'field');
                    }}
                    className="bp3-input"
                    value={field}/>
@@ -38,6 +40,39 @@ class ValidatorRuleSettings extends Component {
 
         </div>
       </div>)
+  }
+  mbShowMessage =()=>{
+    const names = [
+      'trim',
+    ]
+    const {
+      settings = {},
+    } = this.props
+    const {
+      message,
+      name,
+    } = settings
+    if(names.includes(name)){
+      return ''
+    }
+    return <div className="controller-container controller-container_select">
+      <div className="controller-container__label control-select__label controller-label">
+        Error Message
+      </div>
+      <div className="bp3-control-group bp3-numeric-input">
+        <div className="bp3-input-group">
+          <input type="text"
+                 id="mapper-source"
+                 onChange={(e)=>{
+                   const value = e.target.value
+                   this.changeByPath(value, 'message');
+                 }}
+                 className="bp3-input"
+                 value={message}/>
+        </div>
+
+      </div>
+    </div>
   }
   mbRenderRegexSettings = ()=>{
     const names = [
@@ -53,6 +88,7 @@ class ValidatorRuleSettings extends Component {
     if(! names.includes(name)){
       return ''
     }
+
     return (
       <div className="controller-container controller-container_select">
         <div className="controller-container__label control-select__label controller-label">
@@ -63,7 +99,8 @@ class ValidatorRuleSettings extends Component {
             <input type="text"
                    id="regular-expression"
                    onChange={(e)=>{
-                     this.changeByPath(e.target.value, 'regex');
+                     const value = e.target.value
+                     this.changeByPath(value, 'regex');
                    }}
                    className="bp3-input"
                    value={regex}/>
@@ -96,7 +133,8 @@ class ValidatorRuleSettings extends Component {
             <input type="text"
                    id="mapper-source"
                    onChange={(e)=>{
-                     this.changeByPath(e.target.value, 'max');
+                     const value = e.target.value
+                     this.changeByPath(value, 'max');
                    }}
                    className="bp3-input"
                    value={max}/>
@@ -129,7 +167,8 @@ class ValidatorRuleSettings extends Component {
             <input type="text"
                    id="mapper-source"
                    onChange={(e)=>{
-                     this.changeByPath(e.target.value, 'min');
+                     const value = e.target.value
+                     this.changeByPath(value, 'min');
                    }}
                    className="bp3-input"
                    value={min}/>
@@ -165,7 +204,8 @@ class ValidatorRuleSettings extends Component {
             <input type="text"
                    id="mapper-source"
                    onChange={(e)=>{
-                     this.changeByPath(e.target.value, 'table');
+                     const value = e.target.value
+                     this.changeByPath(value,'table');
                    }}
                    className="bp3-input"
                    value={table}/>
@@ -182,7 +222,8 @@ class ValidatorRuleSettings extends Component {
             <input type="text"
                    id="mapper-source"
                    onChange={(e)=>{
-                     this.changeByPath(e.target.value, 'column');
+                     const value = e.target.value
+                     this.changeByPath(value, 'column');
                    }}
                    className="bp3-input"
                    value={column}/>
@@ -198,7 +239,6 @@ class ValidatorRuleSettings extends Component {
     } = this.props
     const {
       label,
-      message,
     } = settings
 
     return(
@@ -209,23 +249,7 @@ class ValidatorRuleSettings extends Component {
             Rule {label}
           </div>
         </div>
-        <div className="controller-container controller-container_select">
-          <div className="controller-container__label control-select__label controller-label">
-            Error Message
-          </div>
-          <div className="bp3-control-group bp3-numeric-input">
-            <div className="bp3-input-group">
-              <input type="text"
-                     id="mapper-source"
-                     onChange={(e)=>{
-                       this.changeByPath(e.target.value, 'message');
-                     }}
-                     className="bp3-input"
-                     value={message}/>
-            </div>
-
-          </div>
-        </div>
+        {this.mbShowMessage()}
         {this.mbRenderFieldSettings()}
         {this.mbRenderRegexSettings()}
         {this.mbRenderMaxSettings()}

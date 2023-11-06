@@ -15,7 +15,7 @@ export default function replaceContentWithData(content = "",
     return content;
   }
 
-  if (content?.includes('{{{{')) {
+  if (_.isString(content) && content?.includes('{{{{')) {
 
     const match = /{{{{([\s\S]+?)(?=}}}})/g
     const replace = '{{{{'
@@ -27,7 +27,7 @@ export default function replaceContentWithData(content = "",
         let _path = path.replace(replace, "");
 
 
-        let value = altrp_dictionary[_path]
+        let value = altrp_dictionary[_path] || _path.split('::')[0]
 
         let pattern = `${path}}}}}`
         pattern = escapeRegExp(pattern);
@@ -60,6 +60,11 @@ export default function replaceContentWithData(content = "",
 
     });
   }
+
+  if(_.isString(content) && content.includes('{{{{')){
+    return replaceContentWithData(content)
+  }
+
   return content;
 }
 

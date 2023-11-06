@@ -6,7 +6,7 @@ import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/
 
 import {Tree as TreeBlueprint} from '@blueprintjs/core'
 
-export const normalizeValues = function(branch, iconValue=this.props.element.getSettings("icon")) {
+export const normalizeValues = function (branch, iconValue = this.props.element.getSettings("icon")) {
   const folderIcon = "folder-close";
 
   const icon = iconValue || folderIcon;
@@ -21,13 +21,13 @@ export const normalizeValues = function(branch, iconValue=this.props.element.get
   return {
     ...branch,
     labelValue: label,
-    label: <div dangerouslySetInnerHTML={{ __html: label }}/>,
+    label: <div dangerouslySetInnerHTML={{__html: label}}/>,
     treeId: branch.tree_id || -1,
     parentId: branch.parent || -1,
   }
 }
 
-export const getFromDatasource = function (settings = {}, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
+export const getFromDatasource = function (settings = {}, settingNames = ['tree_from_datasource', "tree_substitute_datasource"], defaultOptions = false) {
   settings.path = this.props.element.getLockedSettings(settingNames[0], '');
   settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getLockedSettings(settingNames[1]))
@@ -37,82 +37,35 @@ export const getFromDatasource = function (settings = {}, settingNames=['tree_fr
   settings.columns = this.props.element.getLockedSettings("column_repeater", []);
   settings.flat = this.props.element.getLockedSettings("flat_col", false);
 
-  if(!_.isArray(data)){
+  if (!_.isArray(data)) {
     return [];
   }
 
   let repeater = [];
 
-  // if(isEditor()) {
-  //   data = [
-  //     {
-  //       label: "label 1",
-  //       id: 1,
-  //       children: [
-  //         {
-  //           label: "child 1",
-  //           id: 2,
-  //           children: []
-  //         },
-  //         {
-  //           label: "child 2",
-  //           id: 3,
-  //           children: [
-  //             {
-  //               label: "child 1",
-  //               id: 4,
-  //               children: []
-  //             },
-  //           ]
-  //         },
-  //       ]
-  //     },
-  //     {
-  //       label: "label 2",
-  //       id: 5,
-  //       children: [
-  //         {
-  //           label: "child 1",
-  //           id: 6,
-  //           children: []
-  //         },
-  //         {
-  //           label: "child 2",
-  //           id: 7,
-  //           children: []
-  //         },
-  //       ]
-  //     },
-  //     {
-  //       label: "label 3",
-  //       id: 8,
-  //       children: []
-  //     },
-  //   ]
-  // }
 
   settings.maxDepth = getMaxDepth(data, settings.maxDepth)
 
   return data.map((branch, idx) => replaceChildrenToChildNode(branch, settings.columns, data.length - 1 === idx, 0, settings.flat, settings.maxDepth))
 }
 
-const getMaxDepth = (data, maxDepth=0, depth=0) => {
-  if(depth > maxDepth) {
+const getMaxDepth = (data, maxDepth = 0, depth = 0) => {
+  if (depth > maxDepth) {
     maxDepth = depth
   }
 
-  for(const branch of data) {
-    if(branch?.children?.length > 0) {
-      maxDepth = getMaxDepth(branch.children, maxDepth, depth+1)
+  for (const branch of data) {
+    if (branch?.children?.length > 0) {
+      maxDepth = getMaxDepth(branch.children, maxDepth, depth + 1)
     }
   }
 
   return maxDepth
 }
 
-const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=false, maxDepth) => {
+const replaceChildrenToChildNode = (branch, columns, last = false, depth, flat = false, maxDepth) => {
   branch.childNodes = branch.children || []
-  branch.childNodes = branch.childNodes.filter(i=>i)
+  branch.childNodes = branch.childNodes.filter(i => i)
   delete branch.children
 
   branch.depth = depth
@@ -121,25 +74,24 @@ const replaceChildrenToChildNode = (branch, columns, last=false, depth, flat=fal
 
 
   branch.childNodes = branch.childNodes.map((childBranch, idx) => {
-    return  replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx, depth+1, flat, maxDepth)
+    return replaceChildrenToChildNode(childBranch, columns, branch.childNodes.length - 1 === idx, depth + 1, flat, maxDepth)
   })
 
 
-
-  if(!last) {
+  if (!last) {
     branch.className = "bp3-tree-node__border"
   } else {
     branch.className = "bp3-tree-node__border_last"
   }
 
-  if(branch.childNodes.length === 0) {
+  if (branch.childNodes.length === 0) {
     branch.hasCaret = false
   }
 
   return branch
 }
 
-const getColumns = (columns, branch,  flat, maxDepth) => {
+const getColumns = (columns, branch, flat, maxDepth) => {
   const filteredColumns = columns.filter(c => {
 
     return branch[c.value] !== null && branch[c.value] !== undefined
@@ -147,7 +99,7 @@ const getColumns = (columns, branch,  flat, maxDepth) => {
 
   const firstElementWidth = filteredColumns?.[0]?.size || "1" + filteredColumns?.[0]?.unit || "px"
   const widths = filteredColumns.slice(1).map(column => {
-    if(column.width) {
+    if (column.width) {
       return `${(column.width.size || "1") + column.width.unit || "fr"}`
     } else {
       return "1fr"
@@ -161,17 +113,17 @@ const getColumns = (columns, branch,  flat, maxDepth) => {
   }
 
   let tag = 'div'
-  if(branch.url){
+  if (branch.url) {
     values.href = branch.url
     tag = 'a'
   }
 
-  if(flat) {
-    if(maxDepth > 0) {
+  if (flat) {
+    if (maxDepth > 0) {
       values.marginRight = 20 + (20 * maxDepth) - (branch.depth * 20)
     }
 
-    if(columns[0].divider) {
+    if (columns[0].divider) {
       values.classNames += " altrp-tree-columns__column_divider"
     }
   }
@@ -196,18 +148,17 @@ const getColumns = (columns, branch,  flat, maxDepth) => {
               //   marginRight = 20 + (20 * maxDepth)
               // }
 
-              if(column.divider) {
+              if (column.divider) {
                 classNames += " altrp-tree-columns__column_divider"
               }
 
 
-
               return (
                 React.createElement(tag, {
-                    className:classNames,
-                    href: values.href,
-                    key:branch[column.value] + idx,
-                  }, branch[column.value] )
+                  className: classNames,
+                  href: values.href,
+                  key: branch[column.value] + idx,
+                }, branch[column.value])
 
               )
             })
@@ -215,14 +166,15 @@ const getColumns = (columns, branch,  flat, maxDepth) => {
         </div>
       ) : (
         <>
-          { React.createElement(tag, {
-            className:values.classNames,
+          {React.createElement(tag, {
+            className: values.classNames,
             href: values.href,
-            style:{
+            style: {
               width: firstElementWidth,
               marginRight: values.marginRight,
               float: "left"
-            }}, branch[columns[0].value] )
+            }
+          }, branch[columns[0].value])
           }
           <div className="altrp-tree-columns_flat altrp-tree-columns" style={{
             transform: `translateX(-${values.translateX}px)`,
@@ -230,7 +182,7 @@ const getColumns = (columns, branch,  flat, maxDepth) => {
           }}>
             {
               filteredColumns.map((column, idx) => {
-                if(idx === 0) return "";
+                if (idx === 0) return "";
 
                 let classNames = "altrp-tree-columns__column";
 
@@ -254,19 +206,19 @@ const getColumns = (columns, branch,  flat, maxDepth) => {
 }
 
 
-export const updateRepeater = function (repeaterSetting, other={}) {
+export const updateRepeater = function (repeaterSetting, other = {}) {
   const repeater = [];
 
   repeaterSetting.forEach((branch, idx) => {
     let children = [];
     const branchSettings = this.normalizeValues(branch)
 
-    if(branchSettings.treeId !== -1) {
+    if (branchSettings.treeId !== -1) {
       repeaterSetting.forEach((possibleChild, possibleIdx) => {
-        if(idx !== possibleIdx) {
+        if (idx !== possibleIdx) {
           const possibleParentId = possibleChild.parent || -1;
 
-          if(possibleParentId === branchSettings.treeId) {
+          if (possibleParentId === branchSettings.treeId) {
             children.push({
               ...this.normalizeValues(possibleChild),
               id: possibleIdx,
@@ -278,7 +230,7 @@ export const updateRepeater = function (repeaterSetting, other={}) {
 
     if (other?.sort && !other?.sort[0]) {
       children = _.sortBy(children, o => o && (o.label ? o.label.toString() : o));
-      if(other.sort[1] === 'desc'){
+      if (other.sort[1] === 'desc') {
         children = _.reverse(children)
       }
     }
@@ -301,7 +253,7 @@ export const updateRepeater = function (repeaterSetting, other={}) {
 
   if (other?.sort && !other?.sort[0]) {
     newRepeater = _.sortBy(newRepeater, o => o && (o.label ? o.label.toString() : o));
-    if(other.sort[1] === 'desc'){
+    if (other.sort[1] === 'desc') {
       newRepeater = _.reverse(newRepeater)
     }
   }
@@ -310,7 +262,7 @@ export const updateRepeater = function (repeaterSetting, other={}) {
 }
 
 export const removeEmpty = function (branch) {
-  if(branch.childNodes.length > 0) {
+  if (branch.childNodes.length > 0) {
     branch.childNodes = branch.childNodes.map(childNode => removeEmpty(childNode))
     return branch
   } else {
@@ -320,16 +272,16 @@ export const removeEmpty = function (branch) {
   }
 }
 
-export const childrenInChildren = function(children, repeater) {
+export const childrenInChildren = function (children, repeater) {
   const replacedChildren = [];
 
-  if(children.length > 0) {
+  if (children.length > 0) {
 
     children.forEach((branch) => {
-      if(branch.parent_id !== branch.tree_id) {
+      if (branch.parent_id !== branch.tree_id) {
         repeater.forEach((repBranch) => {
-          if(branch.id === repBranch.id) {
-            if(repBranch.childNodes?.length > 0) {
+          if (branch.id === repBranch.id) {
+            if (repBranch.childNodes?.length > 0) {
               repBranch.childNodes = this.childrenInChildren(repBranch.childNodes, repeater)
             }
 
@@ -344,7 +296,7 @@ export const childrenInChildren = function(children, repeater) {
 }
 
 class TreeWidget extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     let settings = props.element.getSettings();
 
@@ -361,7 +313,7 @@ class TreeWidget extends Component {
       window.elementDecorator(this);
     }
 
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
 
@@ -382,7 +334,7 @@ class TreeWidget extends Component {
       type: this.state.type,
     }
 
-    if(settings.type === "repeater") {
+    if (settings.type === "repeater") {
       settings.repeater = this.props.element.getResponsiveLockedSetting("tree_repeater", "", []);
 
       const filtrationRepeater = this.updateRepeater(settings.repeater)
@@ -391,11 +343,11 @@ class TreeWidget extends Component {
         ...s,
         repeater: filtrationRepeater
       }))
-    } else if(settings.type === "datasource") {
+    } else if (settings.type === "datasource") {
       let settings = this.props.element.getSettings();
 
       const data = this.getFromDatasource(settings) || [];
-
+      console.log(data)
 
       this.setState((s) => ({
         ...s,
@@ -410,15 +362,14 @@ class TreeWidget extends Component {
   }
 
 
-
   _componentDidUpdate(prevProps) {
     let path = this.props.element.getLockedSettings("tree_from_datasource", '');
     path = path.replace(/}}/g, '').replace(/{{/g, '');
     let rawData = getDataByPath(path, [], prevProps.element.getCurrentModel().getData());
 
-    if(this.rawData !== rawData) {
+    if (this.rawData !== rawData) {
       this.rawData = rawData
-      if(! rawData?.length){
+      if (!rawData?.length) {
         return
       }
       let settings = this.props.element.getSettings();
@@ -484,7 +435,7 @@ class TreeWidget extends Component {
     this.setState(s => {
       const repeater = s.repeater;
 
-      if(settings.hasOwnProperty("isExpanded")) {
+      if (settings.hasOwnProperty("isExpanded")) {
         TreeBlueprint.nodeFromPath(settings.path, repeater).isExpanded = settings.isExpanded;
       } else {
         this.forEachNode(repeater, node => (node.isSelected = false))
@@ -501,12 +452,12 @@ class TreeWidget extends Component {
   /**
    * Получить css классы для tree widget
    */
-  getClasses = ()=>{
+  getClasses = () => {
     let classes = ``;
-    if(this.isActive()){
+    if (this.isActive()) {
       classes += 'active '
     }
-    if(this.isDisabled()){
+    if (this.isDisabled()) {
       classes += 'state-disabled '
     }
     return classes;
@@ -517,7 +468,7 @@ class TreeWidget extends Component {
     const activated = this.props.element.getLockedContent("columns_heading_activator")
 
     const widths = columns_repeater.map(column => {
-      if(column.label_width) {
+      if (column.label_width) {
         return `${(column.label_width.size || "1") + column.label_width.unit || "fr"}`
       } else {
         return "1fr"
@@ -545,8 +496,8 @@ class TreeWidget extends Component {
 
   render() {
 
-
-  let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
+    console.log(this.state.repeater)
+    let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
       this.state.repeater.length > 0 ? (
         <div className="altrp-tree">

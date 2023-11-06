@@ -733,6 +733,12 @@ textarea.control-field{
 .controller-field {
     width: 75% !important;
     flex-grow: inherit;
+  &_multiselect{
+    & .bp3-input{
+      min-height: 38px;
+      padding-top: 5px;
+    }
+  }
 }
 
 // Egde

@@ -25,6 +25,7 @@ import Resource from "../../../../editor/src/js/classes/Resource"
 import replacePageContent from "../helpers/replace-page-content";
 import {clearFormStorage} from "../store/forms-data-storage/actions";
 import {pageReload} from "../../../../admin/src/js/helpers";
+import {changeCurrentPage, changeCurrentPageProperty} from "../store/current-page/actions";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -1567,6 +1568,7 @@ class AltrpAction extends AltrpModel {
     }
     html.classList.toggle('altrp-theme_dark')
     html.classList.toggle('altrp-theme_normal')
+    appStore.dispatch(changeCurrentPage(appStore.getState().altrpPage.getData()))
     return  {success:true}
   }
   async doActionSetLang(){

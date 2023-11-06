@@ -5,7 +5,8 @@ const execAsync = promisify(originExec)
 
 async function exec(command: string):Promise<string|null> {
   try {
-    const { stdout, stderr } = await execAsync(command)
+    // @ts-ignore
+    const { stdout, stderr } = await execAsync(...arguments)
     if (stderr) {
       console.error(`Exec ${command} Command Error:`)
       console.error(stderr)

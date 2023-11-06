@@ -1506,6 +1506,7 @@ export default class Page extends BaseModel {
     column: [
       'link_link',
     ],
+
     posts: [
       'current_page_text',
       'prev_icon_position',

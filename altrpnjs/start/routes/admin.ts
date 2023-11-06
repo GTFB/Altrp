@@ -283,8 +283,12 @@ Route.group(() => {
           httpContext.response.status(404)
           return httpContext.response.json({success: false, message: 'Plugin Not Found'})
         }
-        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.${isProd() ? 'js' : 'ts'}`)
-        if (fs.existsSync(fileName)) {
+
+
+        const fileName = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}`)
+        const fileNameTs = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.ts`)
+        const fileNameJS = app_path(`AltrpPlugins/${plugin.name}/request-handlers/admin/${method}/${segments[4]}.js`)
+        if (fs.existsSync(fileNameJS) || fs.existsSync(fileNameTs)) {
           if (isProd()) {
             Object.keys(require.cache).forEach(function (key) {
               delete require.cache[key]
@@ -292,7 +296,7 @@ Route.group(() => {
           }
           const module = isProd() ? await require(fileName).default : (await import(fileName)).default
           if (_.isFunction(module)) {
-            return await module(httpContext)
+            return await module(httpContext, plugin)
           }
         }
         httpContext.response.status(404)

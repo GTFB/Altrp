@@ -70,10 +70,6 @@ class InputTextCommon extends BaseElement {
           value: "email",
           label: "Email",
         },
-        {
-          value: "tel",
-          label: "Tel",
-        },
       ],
       locked: true,
     });
@@ -234,15 +230,6 @@ class InputTextCommon extends BaseElement {
       locked: true,
     });
 
-    this.addControl("mask_mismatch_message", {
-      type: CONTROLLER_TEXT,
-      label: "Validation Error Message",
-      conditions: {
-        content_type: ["text", "tel", "email"],
-      },
-      locked: true,
-    });
-
     this.addControl("read_only", {
       type: CONTROLLER_SWITCHER,
       label: "Read only",
@@ -279,13 +266,7 @@ class InputTextCommon extends BaseElement {
       default: false,
     });
 
-    this.addControl("content_enter_input", {
-      type: CONTROLLER_SWITCHER,
-      label: "Enter Next Input",
-      default: true,
-      responsive: false,
-      locked: true,
-    });
+
 
     this.addControl("params_for_update", {
       type: CONTROLLER_TEXTAREA,
@@ -332,6 +313,65 @@ class InputTextCommon extends BaseElement {
       locked: true,
       description:
         "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10",
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("Behaviors", {
+      label: "Behavior",
+    });
+
+    this.addControl("beh_enter", {
+      type: CONTROLLER_SELECT,
+      label: "`Press Enter` Behavior",
+      options: [{
+        label: 'Focus Next Input (default)',
+        value: '',
+      },{
+        label: 'Dispatch `Change` actions',
+        value: 'change',
+      },
+      ],
+      responsive: false,
+      locked: true,
+    });
+
+    this.addControl("beh_keypress", {
+      type: CONTROLLER_SWITCHER,
+      label: "`Dispatch `Change` actions after each keypress",
+
+      responsive: false,
+      locked: true,
+    });
+
+    this.addControl("beh_response_error_show", {
+      type: CONTROLLER_SWITCHER,
+      label: "Show Validation Error Response",
+
+      responsive: false,
+      locked: true,
+    });
+
+    this.addControl("beh_clear", {
+      type: CONTROLLER_SWITCHER,
+      label: "Clear Validation Error Response After Change",
+      conditions: {
+        beh_response_error_show: true,
+      },
+      responsive: false,
+      default: true,
+      locked: true,
+    });
+
+
+    this.addControl("mask_mismatch_message", {
+      type: CONTROLLER_TEXT,
+      label: "Validation Error Message Custom Text",
+      conditions: {
+        beh_response_error_show: true,
+      },
+      responsive: false,
+      locked: true,
     });
 
     this.endControlSection();
@@ -853,7 +893,7 @@ class InputTextCommon extends BaseElement {
     this.startControlSection("mismatch_message_styles", {
       tab: TAB_STYLE,
       label: "Validation Error Message",
-      conditions: { "mask_mismatch_message!": [""] },
+
     });
 
     this.addControl("mismatch_message_margin", {

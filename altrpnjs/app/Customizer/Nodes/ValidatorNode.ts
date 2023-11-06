@@ -79,7 +79,8 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
 
     let members = this.renderMembers(settings)
 
-    propertyContent+=`])${members},`
+    propertyContent+=`
+    ])${members},`
     return propertyContent
   }
 
@@ -110,6 +111,25 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
         break;
       case 'regex':{
         ruleContent += rule.regex || ''
+      }
+        break;
+      case 'confirmed':
+      case 'requiredIfNotExists':
+      case 'requiredIfExists':{
+        ruleContent += `'${rule.field}'` || ''
+      }
+        break;
+      case 'maxLength':{
+        ruleContent += rule.max || '1'
+      }
+        break;
+      case 'minLength':{
+        ruleContent += rule.min || '0'
+      }
+        break;
+      case 'exists':
+      case 'unique':{
+        ruleContent += `{table:'${rule.table}', column:'${rule.column}'}`
       }
         break;
     }
@@ -143,15 +163,49 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
     let messagesContent = '{'
     const settings = this.getSettings()
     forEach(settings, (value, key)=>{
-      const {rules = [], mark, required_message = ''} = value
+      const {
+        rules = [],
+        mark,
+        type,
+        required_message = '',
+        boolean_message = '',
+        string_message = '',
+        number_message = '',
+      } = value
       if(! mark && required_message){
         messagesContent += `
-          '${key}.required': this.replaceContentWithData('${required_message}'),`
+          '${key}.required':
+          this.replaceContentWithData(
+            (await translateContent('${required_message}', {lang: httpContext.request.cookie('altrp_lang') || get_altrp_setting('site_language', 'en')})).content
+          ),`
 
+      }
+      if(type === 'number'){
+        messagesContent += `
+          '${key}.number':
+          this.replaceContentWithData(
+            (await translateContent('${number_message}', {lang: httpContext.request.cookie('altrp_lang') || get_altrp_setting('site_language', 'en')})).content
+          ),`
+      }
+      if(type === 'boolean'){
+        messagesContent += `
+          '${key}.boolean':
+          this.replaceContentWithData(
+            (await translateContent('${boolean_message}', {lang: httpContext.request.cookie('altrp_lang') || get_altrp_setting('site_language', 'en')})).content
+          ),`
+      }
+      if(type === 'string'){
+        messagesContent += `
+          '${key}.string':
+          this.replaceContentWithData(
+            (await translateContent('${string_message}', {lang: httpContext.request.cookie('altrp_lang') || get_altrp_setting('site_language', 'en')})).content
+          ),`
       }
       rules.forEach(rule => {
         messagesContent += `
-          '${key}.${rule.name}': this.replaceContentWithData('${rule.message || ''}'),`
+          '${key}.${rule.name}': this.replaceContentWithData(
+            (await translateContent('${rule.message || ''}', {lang: httpContext.request.cookie('altrp_lang') || get_altrp_setting('site_language', 'en')})).content
+          ),`
       })
     })
     messagesContent+= `},`

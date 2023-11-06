@@ -421,14 +421,12 @@ export default class Plugin {
       )
     }
     altrp_static_meta.meta_value = value
-    altrp_static_meta.save()
+    await altrp_static_meta.save()
     await Plugin.writePluginsSettings()
   }
 
-  static public
 
-
-  public async updatePluginFiles(request: RequestContract): Promise<boolean> {
+  public async updatePluginFiles(request: RequestContract,): Promise<boolean> {
     if (!isValidUrl(this.update_url)) {
       return true
     }

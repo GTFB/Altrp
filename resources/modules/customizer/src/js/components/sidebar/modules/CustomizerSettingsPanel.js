@@ -6,7 +6,7 @@ import AltrpSelect from "../../../../../../admin/src/components/altrp-select/Alt
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
-import {Checkbox, InputGroup, Switch} from "@blueprintjs/core";
+import {Checkbox, InputGroup, MenuItem, Switch, Tag} from "@blueprintjs/core";
 import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 import { format, parse } from 'date-fns';
 import {compose} from "redux";
@@ -15,6 +15,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import store from "../../../store/store";
 import {setAnimateLine, setColorLine, setTypeLine} from "../../../store/connection-line-type/actions";
 import PickrComponent from "../../PickrComponent";
+import {MultiSelect} from "@blueprintjs/select";
 
 const TypeLineOptions = [
   {
@@ -50,6 +51,7 @@ class CustomizerSettingsPanel extends React.Component {
     this.state = {
       dataSources: [],
       modelsOptions: [],
+      categoryOptions: [],
       customizer: {
         ...this.props.customizer
       },
@@ -59,11 +61,19 @@ class CustomizerSettingsPanel extends React.Component {
     this.modelsResource = new Resource({ route: "/admin/ajax/models_options?with_names=0&not_plural=1&with_sql_queries=0" });
     this.resource = new Resource({ route: "/admin/ajax/customizers" });
     this.dateFnsFormat = 'yyyy-MM-dd HH:mm:ss';
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
+
   }
 
   async componentDidMount() {
     const modelsOptions = await this.modelsResource.getAll();
     this.setState(s =>({...s, modelsOptions: modelsOptions ?? []}));
+
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
   }
 
 
@@ -157,13 +167,45 @@ class CustomizerSettingsPanel extends React.Component {
 
   parseDate = (str) => parse(str, this.dateFnsFormat, new Date())
 
+  onQueryChangeMulti = (query, value) => {
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
+  }
+
+  isItemSelectedCategory = (item) => {
+
+    const {customizer} = this.props;
+    const {
+      categories = [], } = customizer;
+    return categories.some(c=>c === item.value);
+  }
+
+  tagRenderer = (item,) => {
+    return item.label
+  }
+
   render() {
 
     let modelsOptions = this.getModelOptions();
 
     const {customizer} = this.props;
-    const { type, model_id, settings = {},name } = customizer;
-
+    const {
+      type,
+      model_id,
+      settings = {},
+      categories = [],
+      name } = customizer;
+    const selectedItems = []
+    let {categoryOptions} = this.state
+    categoryOptions = categoryOptions.filter(co=>{
+      return ! categories.find(c=> {
+        if(c === co.value){
+          selectedItems.push(co)
+        }
+        return c === co.value
+      })
+    })
     const Middlewares = settings?.middlewares;
     const HookType = settings?.hook_type;
     const eventType = settings?.event_type;
@@ -228,11 +270,40 @@ class CustomizerSettingsPanel extends React.Component {
                   </div>
 
                   <div className="controllers-wrapper">
+                    {/*<div className="controller-container controller-container_select2">*/}
+                    {/*  <button className={"btn font_montserrat font_500 btn_grey"} style={{marginRight: '20px'}} onClick={() => this.props.onLayout('TB')}>vertical</button>*/}
+                    {/*  <button className={"btn font_montserrat font_500 btn_grey"} onClick={() => this.props.onLayout('LR')}>horizontal</button>*/}
+                    {/*</div>*/}
                     <div className="controller-container controller-container_select2">
-                      <button className={"btn font_montserrat font_500 btn_grey"} style={{marginRight: '20px'}} onClick={() => this.props.onLayout('TB')}>vertical</button>
-                      <button className={"btn font_montserrat font_500 btn_grey"} onClick={() => this.props.onLayout('LR')}>horizontal</button>
+                      <label htmlFor="categories-pages" className="controller-container__label control-select__label controller-label">Categories</label>
+                      <MultiSelect tagRenderer={this.tagRenderer} id="categories"
+                                   items={categoryOptions}
+                                   className="controller-field controller-field_multiselect"
+                                   itemPredicate={this.onQueryChangeMulti}
+                                   noResults={<MenuItem disabled={true} text="No results."/>}
+                                   fill={true}
+                                   placeholder="Categories..."
+                                   selectedItems={selectedItems}
+                                   onItemSelect={this.handleItemSelectCategory}
+                                   itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                     return (
+                                       <MenuItem
+                                         icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
+                                         text={item.label}
+                                         key={item.value}
+                                         onClick={handleClick}
+                                       />
+                                     )
+                                   }}
+                                   tagInputProps={{
+                                     onRemove: this.handleTagRemoveCategory,
+                                     large: false,
+                                   }}
+                                   popoverProps={{
+                                     usePortal: false
+                                   }}
+                      />
                     </div>
-
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Type:</div>
                       <AltrpSelect id="crud-fields"
@@ -579,6 +650,35 @@ class CustomizerSettingsPanel extends React.Component {
       customizer = mutate.set(customizer, 'settings', {})
     }
     customizer = mutate.set(customizer, 'settings.middlewares', middlewares||[])
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+
+  }
+  handleItemSelectCategory = (item)=>{
+
+    let {customizer} = this.props
+
+    let {categories = []} = customizer
+
+    if(categories.find(c=>c === item.value)){
+      return
+    }
+    categories = [...categories]
+    categories.push(item.value)
+    customizer = mutate.set(customizer, 'categories', categories)
+
+
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
+
+  }
+
+  handleTagRemoveCategory=(tag, index)=>{
+    console.log(tag)
+    let {customizer} = this.props
+
+    let {categories = []} = customizer
+
+    categories = categories.filter((c,idx)=>idx!=index)
+    customizer = mutate.set(customizer, 'categories', categories)
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
 
   }

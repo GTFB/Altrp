@@ -106,6 +106,8 @@ class AltrpForm {
     customHeaders = null,
     emptyFieldMessage ,
   ) {
+    this.updateResponseStorage('pending');
+
     let success = true;
     if (submitText) {
       let confirmed = await confirm(submitText);

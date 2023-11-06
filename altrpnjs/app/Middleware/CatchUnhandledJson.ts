@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import {ValidationException} from "@ioc:Adonis/Core/Validator";
 import {inspect} from "util";
+import * as _ from "lodash";
 
 /**
  * Auth middleware is meant to restrict un-authenticated access to a given route
@@ -33,10 +34,10 @@ export default class CatchUnhandledJson {
         // @ts-ignore
         let errors: any[] = e.messages?.errors || []
         let textErrors:string[] = []
-        let mergedErrors = {}
+        let merged_errors = {}
         errors.forEach(e=>{
-          mergedErrors[e.field] = mergedErrors[e.field] || []
-          mergedErrors[e.field].push(e.message)
+          merged_errors[e.field] = merged_errors[e.field] || []
+          merged_errors[e.field].push(e.message)
           textErrors.push( e.message)
         })
 
@@ -47,12 +48,21 @@ export default class CatchUnhandledJson {
 ====== USER_ID: ${auth.user?.id}
 ====== USER_IP: ${request.header('X-Real-IP')}
 `) ;
+
+        const error_fields = {}
+
+        // @ts-ignore
+        _.forEach(merged_errors, (errors: [], field)=>{
+          error_fields[field] = errors.join('\n')
+        })
+
         return response.json({
           // @ts-ignore
           messages: e.messages,
+          error_fields,
           // @ts-ignore
           thrownMessage: e.message,
-          mergedErrors,
+          merged_errors,
           textErrors: textErrors.join('\n'),
           success: false,
           // @ts-ignore

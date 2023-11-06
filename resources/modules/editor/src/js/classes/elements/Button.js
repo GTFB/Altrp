@@ -129,28 +129,6 @@ class Button extends BaseElement {
       locked: true,
     });
 
-    // this.addControl('button_icon_position', {
-    //   type: CONTROLLER_SELECT,
-    //   label: 'Icon Position',
-    //   options: [
-    //     {
-    //       value: 'row',
-    //       label: 'Right'
-    //     },
-    //     {
-    //       value: 'row-reverse',
-    //       label: 'Left'
-    //     },
-    //     {
-    //       value: 'column',
-    //       label: 'Bottom'
-    //     },
-    //     {
-    //       value: 'column-reverse',
-    //       label: 'Top'
-    //     },
-    //   ],
-    // });
 
     this.endControlSection();
 

@@ -1,5 +1,7 @@
 const selectForSQLEditor = require("../../helpers/selectForSQLEditor").default
 const empty = __importDefault(require("../../helpers/empty")).default;
+const get_altrp_setting = __importDefault(require("../../helpers/get_altrp_setting")).default;
+const translateContent = __importDefault(require("../../helpers/i18n/translateContent")).default;
 const Source = __importDefault(require("../Models/Source")).default;
 const axios = __importDefault(require("axios")).default;
 const Database = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));

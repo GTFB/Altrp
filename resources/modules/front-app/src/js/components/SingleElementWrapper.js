@@ -520,6 +520,8 @@ class SingleElementWrapper extends Component {
     }
     if (WrapperComponent === React.Fragment) {
       wrapperProps = {};
+      console.log(element.getId())
+      console.log('React.Fragment')
     }
     this.updateHTMLElementDisplay()
 

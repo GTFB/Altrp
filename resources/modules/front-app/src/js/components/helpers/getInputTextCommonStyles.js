@@ -119,29 +119,6 @@ export default function getInputTextCommonStyles(settings, elementId) {
     },
     '}',
 
-    '.state-disabled .bp3-input.bp3-input.bp3-input.bp3-input.bp3-input',
-      ['height', 'field_height', 'slider', '.state-disabled'],
-      ['text-align', 'placeholder_and_value_alignment_position_section', '', '.state-disabled' ],
-      ['padding', 'position_padding', 'dimensions', '.state-disabled'],
-      ['', 'field_font_typographic', 'typographic', '.state-disabled'],
-      ['color', 'field_font_color', 'color', '.state-disabled'],
-      ['background-color', 'background_style_background_color', 'color', '.state-disabled'],
-      () => {
-        const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity', '.state-disabled');
-        return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
-      },
-      ['border-style', 'border_type', '', '.state-disabled'],
-      ['border-width', 'border_width', 'dimensions', '.state-disabled'],
-      ['border-color', 'border_color', 'color', '.state-disabled'],
-      ['border-radius', 'border_radius', 'dimensions', '.state-disabled'],
-      ['', 'box_shadow', 'shadow', '.state-disabled'],
-    () => {
-      const toggle = getResponsiveSetting(settings, "disable_box_shadow", '.state-disabled')
-      if (toggle) {
-        return 'box-shadow: none'
-      }
-    },
-    '}',
 
     '.active .bp3-input.bp3-input.bp3-input.bp3-input.bp3-input',
     ['height', 'field_height', 'slider', '.active'],
@@ -268,18 +245,6 @@ export default function getInputTextCommonStyles(settings, elementId) {
     ['fill', 'input_icons_fill', 'color', '.active'],
     ['stroke', 'input_icons_stroke', 'color', '.active'],
     '}',
-    '.state-disabled .bp3-icon_text-widget svg, .state-disabled .bp3-icon_text-widget',
-    ['width', 'input_icons_size', 'slider', '.state-disabled'],
-    ['height', 'input_icons_size', 'slider', '.state-disabled'],
-    '}',
-    '.state-disabled .bp3-icon_text-widget svg,& .bp3-icon_text-widget path',
-    ['fill', 'input_icons_fill', 'color', '.state-disabled'],
-    ['stroke', 'input_icons_stroke', 'color', '.state-disabled'],
-    '}',
-    '.state-disabled .bp3-icon_text-widget img',
-    ['width', 'input_icons_size', 'slider', '.state-disabled'],
-    ['height', 'input_icons_size', 'slider', '.state-disabled'],
-    '}',
     '.active .bp3-icon_text-widget.bp3-icon_text-widget.bp3-icon_text-widget',
     ['margin', 'input_icons_margin', 'dimensions', '.active'],
     ['padding', 'input_icons_padding', 'dimensions', '.active'],
@@ -301,5 +266,51 @@ export default function getInputTextCommonStyles(settings, elementId) {
     ['height', 'input_icons_size', 'slider', '.active'],
     '}',
   ];
+  styles = [
+    ...styles,
+    ..._statedStyles('.state-disabled', settings),
+    ..._statedStyles('.state-error', settings),
+  ]
   return styledString(styles, settings)
+}
+
+function _statedStyles(state, settings){
+  return [
+
+    state + ' .bp3-input.bp3-input.bp3-input.bp3-input.bp3-input',
+    ['height', 'field_height', 'slider', state],
+    ['text-align', 'placeholder_and_value_alignment_position_section', '', state ],
+    ['padding', 'position_padding', 'dimensions', state],
+    ['', 'field_font_typographic', 'typographic', state],
+    ['color', 'field_font_color', 'color', state],
+    ['background-color', 'background_style_background_color', 'color', state],
+    () => {
+      const opacitySetting = getResponsiveSetting(settings, 'background_section_opacity', state);
+      return opacitySetting ? `opacity: ${opacitySetting.size};` : '';
+    },
+    ['border-style', 'border_type', '', state],
+    ['border-width', 'border_width', 'dimensions', state],
+    ['border-color', 'border_color', 'color', state],
+    ['border-radius', 'border_radius', 'dimensions', state],
+    ['', 'box_shadow', 'shadow', state],
+    () => {
+      const toggle = getResponsiveSetting(settings, "disable_box_shadow", state)
+      if (toggle) {
+        return 'box-shadow: none'
+      }
+    },
+    '}',
+    state + ' .bp3-icon_text-widget svg, .state-disabled .bp3-icon_text-widget',
+    ['width', 'input_icons_size', 'slider', state],
+    ['height', 'input_icons_size', 'slider', state],
+    '}',
+    state + ' .bp3-icon_text-widget svg,& .bp3-icon_text-widget path',
+    ['fill', 'input_icons_fill', 'color', state],
+    ['stroke', 'input_icons_stroke', 'color', state],
+    '}',
+    state + ' .bp3-icon_text-widget img',
+    ['width', 'input_icons_size', 'slider', state],
+    ['height', 'input_icons_size', 'slider', state],
+    '}',
+  ]
 }

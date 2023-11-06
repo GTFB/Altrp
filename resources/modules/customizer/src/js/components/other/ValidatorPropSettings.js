@@ -108,8 +108,12 @@ class ValidatorPropSettings extends Component {
       type = 'string',
       mark = '',
       required_message = '',
+      number_message = '',
+      string_message = '',
+      boolean_message = '',
       rules = [],
     } = this.props.settings
+
     const {
       propName,
     } = this.props
@@ -154,12 +158,72 @@ class ValidatorPropSettings extends Component {
             <div className="bp3-control-group bp3-numeric-input">
               <div className="bp3-input-group">
                 <input type="text"
-                       id="mapper-source"
+                       id="required_message"
                        onChange={(e) => {
                          this.changeByPath(e.target.value, 'required_message');
                        }}
                        className="bp3-input"
                        value={required_message}/>
+              </div>
+
+            </div>
+          </div>
+        }
+        {type === 'number' &&
+
+          <div className="controller-container controller-container_select">
+            <div className="controller-container__label control-select__label controller-label">
+              Number Error Message
+            </div>
+            <div className="bp3-control-group bp3-numeric-input">
+              <div className="bp3-input-group">
+                <input type="text"
+                       id="number_message"
+                       onChange={(e) => {
+                         this.changeByPath(e.target.value, 'number_message');
+                       }}
+                       className="bp3-input"
+                       value={number_message}/>
+              </div>
+
+            </div>
+          </div>
+        }
+        {type === 'string' &&
+
+          <div className="controller-container controller-container_select">
+            <div className="controller-container__label control-select__label controller-label">
+              String Error Message
+            </div>
+            <div className="bp3-control-group bp3-numeric-input">
+              <div className="bp3-input-group">
+                <input type="text"
+                       id="string_message"
+                       onChange={(e) => {
+                         this.changeByPath(e.target.value, 'string_message');
+                       }}
+                       className="bp3-input"
+                       value={string_message}/>
+              </div>
+
+            </div>
+          </div>
+        }
+        {type === 'boolean' &&
+
+          <div className="controller-container controller-container_select">
+            <div className="controller-container__label control-select__label controller-label">
+              String Error Message
+            </div>
+            <div className="bp3-control-group bp3-numeric-input">
+              <div className="bp3-input-group">
+                <input type="text"
+                       id="boolean_message"
+                       onChange={(e) => {
+                         this.changeByPath(e.target.value, 'boolean_message');
+                       }}
+                       className="bp3-input"
+                       value={boolean_message}/>
               </div>
 
             </div>
@@ -234,6 +298,9 @@ class ValidatorPropSettings extends Component {
 
         {
           rules.map((r, idx) => {
+            if(r.name === 'trim'){
+              return ''
+            }
             return <ValidatorRuleSettings
               settings={r}
               key={r.id}

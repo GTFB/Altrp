@@ -1,5 +1,7 @@
 import selectForSQLEditor from "../../helpers/selectForSQLEditor"
 import empty from "../../helpers/empty"
+import get_altrp_setting from "../../helpers/get_altrp_setting"
+import translateContent from "../../helpers/i18n/translateContent"
 import axios from "axios"
 import _ from 'lodash'
 import Database from "@ioc:Adonis/Lucid/Database";

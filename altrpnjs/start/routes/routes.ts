@@ -364,7 +364,7 @@ Route.group(() => {
           }
           const module = isProd() ? await require(fileName).default : (await import(fileName)).default
           if (_.isFunction(module)) {
-            return await module(httpContext)
+            return await module(httpContext, plugin)
           }
         } catch (e) {
           httpContext.response.status(500)

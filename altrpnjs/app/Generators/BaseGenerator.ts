@@ -62,6 +62,7 @@ class BaseGenerator {
         ignoreCustomFragments: [
           /<<<page_areas>>>/,
           /<<<all_styles>>>/,
+          /<<<dictionary>>>/,
         ]
       })
     }

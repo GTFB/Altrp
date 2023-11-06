@@ -1080,13 +1080,14 @@ class InputTextareaWidget extends Component {
 
     let classes =
       this.getClasses() + (this.state.settings.position_css_classes || "");
+    const placeholder = replaceContentWithData(this.state.settings.content_placeholder, this.props.element.getCardModel()?.getData() || {})
 
     const input = (
       <TextArea
         value={value || ""}
         readOnly={content_readonly}
         autoComplete={autocomplete}
-        placeholder={this.state.settings.content_placeholder}
+        placeholder={placeholder}
         className={
           classes
         }

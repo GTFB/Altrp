@@ -408,3 +408,10 @@ textarea.altrp-field {
 .altrp-field-select2 .altrp-field-select2__control {
   min-height: 14px;
 }
+.mask-mismatch-message{
+  position: absolute;
+  margin-bottom: 0;
+  bottom: 0;
+  color: red;
+
+}

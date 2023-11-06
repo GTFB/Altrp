@@ -6,7 +6,6 @@ import get from "lodash/get";
 const __cache: any = {}
 
 export default async function __(text: string, options: OptionsType | null):Promise<string>{
-
   const query = I18n.query().where({
     text
   })

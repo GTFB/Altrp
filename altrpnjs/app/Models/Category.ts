@@ -1,4 +1,5 @@
-import {BaseModel, column, computed} from "@ioc:Adonis/Lucid/Orm"
+import {BaseModel, column, computed, hasMany} from "@ioc:Adonis/Lucid/Orm"
+import CategoryObject from "App/Models/CategoryObject";
 
 
 export default class Category extends BaseModel {
@@ -32,5 +33,10 @@ export default class Category extends BaseModel {
     return this.guid
   }
 
+  @hasMany(()=>CategoryObject, {
+    foreignKey: 'category_guid',
+    localKey: 'guid'
+  })
+  public objects
 
 }

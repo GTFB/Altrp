@@ -3,12 +3,55 @@ import React, {Component} from "react";
 import AltrpInputFile from "./AltrpInputFile";
 import validateEmail from "../../../../../front-app/src/js/functions/validateEmail";
 import MaskedInput from "./MaskedInput";
+import {addResponseData} from "../../../../../front-app/src/js/store/responses-storage/actions";
 
 class AltrpInput extends Component {
   state = {
     isValid: true
   };
 
+  constructor(props) {
+    super(props);
+    if (!altrpHelpers.isEditor()) {
+      appStore.subscribe(this.onStoreUpdate)
+    }
+  }
+
+  onStoreUpdate = () => {
+    const {
+      fieldId,
+      formId,
+      element,
+    } = this.props;
+    const res = altrpHelpers.getDataByPath(`altrpresponses.${formId}`)
+    if (!res) {
+      return
+    }
+    if(this.state.res === res){
+      return;
+    }
+    let {
+      mask_mismatch_message,
+    } = this.props.settings;
+
+    if (!mask_mismatch_message) {
+      mask_mismatch_message = `{{altrpresponses.${formId}.error_fields.${fieldId}}}`
+    }
+    mask_mismatch_message = altrpHelpers.replaceContentWithData(mask_mismatch_message, element?.getCardModel()?.getData() || {})
+
+    if (this.state.mask_mismatch_message === mask_mismatch_message) {
+      return;
+    }
+    if(mask_mismatch_message){
+
+      let {
+        beh_response_error_show,
+      } = this.props.settings;
+      beh_response_error_show && this.props.element.updateErrorState(true)
+    }
+    this.setState(state => ({...state, mask_mismatch_message, res,}))
+
+  }
   rightElement = React.createRef()
 
   maybeRenderLeftElement = () => {
@@ -78,18 +121,71 @@ class AltrpInput extends Component {
     }
   }
 
+  isValidOnChange = e => {
+    this.props.onChange(e);
+    this.setState({isValid: validateEmail(e.target.value)});
+  };
+
+  onChange = e => {
+    this.setState(state => ({...state,  mask_mismatch_message: ''}))
+    this.props.onChange(e)
+
+    let {
+      beh_response_error_show,
+    } = this.props.settings;
+    beh_response_error_show && this.props.element.updateErrorState(false)
+
+    const {
+      beh_clear
+    } = this.props.settings
+
+    if (beh_clear) {
+      const {
+        fieldId,
+        formId,
+        element,
+      } = this.props;
+      let res = altrpHelpers.getDataByPath(`altrpresponses.${formId}`)
+      if (!res) {
+        return
+      }
+      res = {...res}
+      if (res.error_fields[fieldId]){
+        delete res.error_fields[fieldId]
+
+      }
+
+      appStore.dispatch(addResponseData(formId, res))
+
+    }
+  }
+
   render() {
-    const {isValid} = this.state;
-    const {content_type, content_mask, mask_mismatch_message} = this.props.settings;
+    const {
+      isValid,
+      mask_mismatch_message,
+    } = this.state;
+    const {} = this.props;
+    let {
+      content_type,
+      content_mask,
+      beh_response_error_show,
+    } = this.props.settings;
+
     const _inputProps = {
       ...this.props,
     };
+
+    _inputProps.onChange = this.onChange
+
     const inputProps = {
       ...this.props,
       inputRef: this.props.inputRef,
     };
     delete _inputProps.leftIcon
     delete _inputProps.rightElement
+    delete _inputProps.formId
+    delete _inputProps.fieldId
     switch (content_type) {
       case "file": {
         return <AltrpInputFile {...inputProps} />;
@@ -106,24 +202,12 @@ class AltrpInput extends Component {
             maybeRenderLeftElement={this.maybeRenderLeftElement}
             maybeRenderRightElement={this.maybeRenderRightElement}
           />
-          {!isValid && mask_mismatch_message && <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
+          {(!isValid || beh_response_error_show)
+          && mask_mismatch_message && <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
         </>
       );
     }
 
-    if (content_type === 'email' && mask_mismatch_message) {
-      inputProps.onBlur = e => {
-        this.props.onBlur(e);
-        this.setState({isValid: validateEmail(e.target.value)});
-      };
-
-      if (!isValid) {
-        inputProps.onChange = e => {
-          this.props.onChange(e);
-          this.setState({isValid: validateEmail(e.target.value)});
-        };
-      }
-    }
 
     if (this.state.rightElementWidth) {
       _inputProps.style = {
@@ -139,7 +223,7 @@ class AltrpInput extends Component {
         <input {..._inputProps} ref={this.props.inputRef}/>
         {this.maybeRenderRightElement()}
       </div>
-      {!isValid && content_type === 'email' && mask_mismatch_message &&
+      {(!isValid || beh_response_error_show  || altrpHelpers.isEditor()) && mask_mismatch_message &&
       <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
     </>;
   }

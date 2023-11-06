@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import Customizer from 'App/Models/Customizer';
+import CategoryObject from 'App/Models/CategoryObject';
 import Model from 'App/Models/Model';
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext';
 import validGuid from '../../../../helpers/validGuid';
@@ -166,11 +167,13 @@ export default class CustomizersController {
         model.preload('table')
       })
     })
+    await customizer.load('categories')
+    const data = customizer.serialize()
+    data.categories = data.categories.map(c=>c.guid)
     return response.json({
       'success':
         true,
-      'data':
-      customizer
+      data
     },)
   }
 
@@ -212,6 +215,24 @@ export default class CustomizersController {
       customizer.removeSchedule()
     }
 
+    let {categories = []} = all
+    console.log(categories)
+
+    if(customizer){
+      // @ts-ignore
+      await  CategoryObject.query().where('object_guid', customizer.guid).delete()
+      categories = categories.map(c=>{
+        return{
+          // @ts-ignore
+          object_guid: customizer.guid,
+          category_guid: c,
+          object_type: 'Customizer'
+        }
+      })
+      await CategoryObject.createMany(categories)
+    }
+
+    delete all.categories
     customizer.merge(all)
     customizer.merge({
       title: request.all().title,
@@ -313,15 +334,23 @@ export default class CustomizersController {
         },
       )
     }
+    /**
+     * @var customizer Customizer
+     */
     await customizer.load('source', query => {
       query.preload('model',model => {
         model.preload('table')
       })
     })
+
+    await customizer.load('categories')
+    const data = customizer.serialize()
+    data.categories = data.categories.map(c=>c.guid)
     return response.json({
       'success':
-        true, 'data':
-        customizer.serialize()
+        true,
+      data
+
     },)
   }
 

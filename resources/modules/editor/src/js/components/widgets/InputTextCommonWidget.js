@@ -50,7 +50,7 @@ class InputTextCommonWidget extends Component {
   /**
    * Чистит значение
    */
-  clearValue = async ()=> {
+  clearValue = async () => {
     let value = "";
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
@@ -71,26 +71,49 @@ class InputTextCommonWidget extends Component {
     }
   }
 
+  focusNext = (e) => {
+    if (!e.target.hasAttribute('data-enter')) return;
+    e.preventDefault();
+    const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
+    const index = inputs.indexOf(e.target);
+    if (index === undefined) return;
+
+    if(inputs[index + 1]){
+      inputs[index + 1].focus();
+    } else {
+      inputs[0].focus();
+    }
+
+    const {
+      create_allowed,
+      create_label,
+      create_url
+    } = this.props.element.getSettings();
+    if (create_allowed && create_label && create_url) {
+      this.createItem(e);
+    }
+  }
+
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
    */
   handleEnter = e => {
-    if (!e.target.hasAttribute('data-enter')) return;
+    if(e.keyCode === 9){
+      this.focusNext(e)
+    }
     if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
 
-      inputs[index + 1] && inputs[index + 1].focus();
+      const settings = this.props.element.getSettings();
       const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
+        beh_enter,
+      } = settings;
+      if (beh_enter === 'change') {
+        const value = e.target.value
+        e.preventDefault()
+        this.dispatchFieldValueToStore(value, true)
+      } else {
+        this.focusNext(e)
       }
     }
   };
@@ -318,7 +341,7 @@ class InputTextCommonWidget extends Component {
    * Изменение значения в виджете
    * @param e
    */
-  onChange =(e)=> {
+  onChange = async (e) => {
     let value = "";
     if (e && e.target) {
       value = e.target.value;
@@ -334,7 +357,7 @@ class InputTextCommonWidget extends Component {
 
     if (content_type === 'number' && (maxNumber || minNumber)) {
       if ((minNumber || minNumber == 0) && value < minNumber) value = minNumber
-      if ((maxNumber  || maxNumber == 0) && value > maxNumber) value = maxNumber
+      if ((maxNumber || maxNumber == 0) && value > maxNumber) value = maxNumber
     }
 
 
@@ -342,16 +365,21 @@ class InputTextCommonWidget extends Component {
      * Обновляем хранилище только если не текстовое поле
      */
 
-    if(isEditor()){
-      this.setState(state=>({...state, value}))
-    } else {
-      this.setState(state=>({...state, value}))
+    this.setState(state => ({...state, value}))
+
+    const settings = this.props.element.getSettings();
+    const {
+      beh_keypress,
+    } = settings;
+    if (beh_keypress) {
+      this.debounceDispatch(value, true)
     }
+
   }
 
   debounceDispatch = _.debounce(
-    value => this.dispatchFieldValueToStore(value, true),
-    Number(this.props.element.getResponsiveLockedSetting('debounce_input')?.size) || 0
+    (value, userInput) => this.dispatchFieldValueToStore(value, userInput),
+    100
   );
 
 
@@ -385,7 +413,13 @@ class InputTextCommonWidget extends Component {
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
-    this.dispatchFieldValueToStore(e.target.value, true);
+    const settings = this.props.element.getSettings();
+    const {
+      beh_keypress,
+    } = settings;
+    if (!beh_keypress) {
+      this.dispatchFieldValueToStore(e.target.value, true);
+    }
 
     if (this.props.element.getLockedSettings("actions", []) && !isEditor()) {
       const actionsManager = (
@@ -410,9 +444,7 @@ class InputTextCommonWidget extends Component {
   dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-    if (fieldName.indexOf("{{") !== -1) {
-      fieldName = replaceContentWithData(fieldName);
-    }
+
 
     if (_.isObject(this.props.appStore) && fieldName && formId) {
 
@@ -423,7 +455,7 @@ class InputTextCommonWidget extends Component {
       let query_sync = this.props.element.getLockedSettings(
         "query_sync"
       );
-      if(!isEditor() && query_sync){
+      if (!isEditor() && query_sync) {
         const updateQueryString = (await import(
           /* webpackChunkName: 'updateQueryString' */
           '../../../../../front-app/src/js/functions/updateQueryString')).default
@@ -468,61 +500,62 @@ class InputTextCommonWidget extends Component {
     })
   }
 
-  renderLeftIcon(){
+  renderLeftIcon() {
     const {element} = this.props;
     let left_icon = element.getResponsiveLockedSetting('left_icon');
     let password_show_left_icon = element.getResponsiveLockedSetting('password_show_left_icon');
     const {content_type} = element.settings
     const leftIconProps = {}
-    if(content_type === 'password' && this.state.showPassword && password_show_left_icon){
+    if (content_type === 'password' && this.state.showPassword && password_show_left_icon) {
       left_icon = password_show_left_icon
       leftIconProps.onClick = this.handleLockClick
     }
-    if(content_type === 'password' && password_show_left_icon){
+    if (content_type === 'password' && password_show_left_icon) {
       leftIconProps.onClick = this.handleLockClick
       leftIconProps.style = {
         cursor: 'pointer'
       }
     }
-    if(!left_icon){
+    if (!left_icon) {
       return null
     }
     return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" {...leftIconProps} tabIndex="0">
       {renderAsset(left_icon)}
     </span>
   }
-  renderRightIcon(){
+
+  renderRightIcon() {
     const {element} = this.props;
     let right_icon = element.getResponsiveLockedSetting('right_icon');
     let password_show_right_icon = element.getResponsiveLockedSetting('password_show_right_icon');
     const {content_type} = element.settings
     const rightIconProps = {}
-    if(content_type === 'password' && this.state.showPassword && password_show_right_icon){
+    if (content_type === 'password' && this.state.showPassword && password_show_right_icon) {
       right_icon = password_show_right_icon
     }
-    if(content_type === 'password' && password_show_right_icon){
+    if (content_type === 'password' && password_show_right_icon) {
       rightIconProps.onClick = this.handleLockClick
       rightIconProps.style = {
         cursor: 'pointer'
       }
     }
-    if(!right_icon){
+    if (!right_icon) {
       return null
     }
     return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right" {...rightIconProps} tabIndex="0">
-      {renderAsset(right_icon, )}
+      {renderAsset(right_icon,)}
     </span>
   }
 
   /**
    * Получить css классы для InputTextCommonWidget
    */
-  getClasses = ()=>{
+  getClasses = () => {
     let classes = ``;
-    if(this.isActive()){
+    if (this.isActive()) {
       classes += 'active '
     }
-    if(this.isDisabled()){
+    if (this.isDisabled()) {
       classes += 'state-disabled '
     }
     return classes;
@@ -535,6 +568,9 @@ class InputTextCommonWidget extends Component {
     const {
       content_readonly,
     } = settings;
+    const {
+      errorState,
+    } = this.state;
     // let value = this.getValue()
 
     let classLabel = "";
@@ -625,24 +661,30 @@ class InputTextCommonWidget extends Component {
     const typeInput = this.state.settings.content_type === 'text' || this.state.settings.content_type === 'password'
     const enterNextInput = !!this.props.element.getResponsiveLockedSetting("content_enter_input")
     let value = this.state.value
-    if(value === undefined || value === null){
+    if (value === undefined || value === null) {
       value = ''
     }
 
+    const errorStateClass = errorState ? 'state-error' : ''
+
+    const placeholder = replaceContentWithData(this.state.settings.content_placeholder, this.props.element.getCardModel()?.getData() || {})
     let input = (
-      <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
+      <div className={"altrp-input-wrapper " + errorStateClass + (this.state.settings.position_css_classes || "")}
+           id={this.state.settings.position_css_id}>
         <AltrpInput
           type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
           name={this.getName()}
           id={this.getName()}
+          formId={this.props.element.getFormId()}
+          fieldId={this.props.element.getFieldId()}
+          element={this.props.element}
           className={classes}
           value={value}
           maxLength={(maxlength > 0 && typeInput) ? maxlength : null}
           data-enter={enterNextInput ? 'enabled' : null}
-          element={this.props.element}
           readOnly={content_readonly}
           autoComplete={autocomplete}
-          placeholder={this.state.settings.content_placeholder}
+          placeholder={placeholder}
           settings={this.props.element.getSettings()}
           onKeyDown={this.handleEnter}
           onChange={this.onChange}

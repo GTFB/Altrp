@@ -901,6 +901,13 @@ class FrontElement {
     let formsManager = await import(/* webpackChunkName: 'FormsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager.removeField(this)
   }
+  updateErrorState = (errorState = false)=>{
+    if(! this.component){
+      return
+    }
+
+    this.component.setState(state=>({...state, errorState}))
+  }
 }
 
 export default FrontElement

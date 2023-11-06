@@ -19,6 +19,8 @@ export default class AltrpCategoryObjects extends BaseSchema {
         table.timestamp('updated_at', {useTz: true})
 
         table.foreign('category_guid').references('altrp_categories.guid')
+          .onUpdate('cascade')
+          .onDelete('cascade')
       })
     }
   }
