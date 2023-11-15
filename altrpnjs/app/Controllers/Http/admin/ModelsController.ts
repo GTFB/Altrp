@@ -951,7 +951,8 @@ export default class ModelsController {
 
   async showDataSource({response, params}: HttpContextContract) {
     let dataSource = await Source.query().where('id', params.id)
-      .preload('roles').preload('permissions')
+      .preload('roles')
+      .preload('permissions')
       .first()
     if (!dataSource) {
       response.status(404)
@@ -978,7 +979,7 @@ export default class ModelsController {
 
     if (sourcePermissions) {
       for (let sourcePermission of sourcePermissions) {
-        data['access']['permissions'].push(sourcePermission['permission']['id'])
+        data['access']['permissions'].push(sourcePermission['name'])
       }
     }
 
@@ -1023,6 +1024,7 @@ export default class ModelsController {
     for (const key of keys(data)) {
       switch (key) {
         case "roles":
+        case "permissions":
           continue
         case "access":
           if (data.access) {
@@ -1035,6 +1037,9 @@ export default class ModelsController {
               if (data.access.roles.length > 0) {
                 await dataSource.related('roles').attach(data.access.roles.map(role => role.value))
               }
+              if (data.access.permissions.length > 0) {
+                await dataSource.related('permissions').sync(data.access.permissions.map(p=>p.value))
+              }
             }
           }
         default:
@@ -1044,6 +1049,21 @@ export default class ModelsController {
     }
 
     await dataSource.save()
+
+    if(dataSource.sourceable_type === 'App\\Altrp\\Customizer'){
+      const customizer = await Customizer
+        .query()
+        .where('id', dataSource.sourceable_id)
+        .preload('altrp_model')
+        .first()
+
+      if(customizer && customizer.altrp_model){
+        Event.emit('model:updated', customizer.altrp_model).catch(e=>{
+          console.error(e)
+        })
+      }
+    }
+
     return response.json({
       success: false,
       data: dataSource

@@ -4,6 +4,8 @@ export default function getAddingClasses(settings:any, screen){
   const {
     hide_on_wide_screen,
     hide_on_desktop,
+    hide_desktop,
+    hide_on_mobile,
     hide_on_laptop,
     hide_on_tablet,
     hide_on_big_phone,
@@ -17,6 +19,12 @@ export default function getAddingClasses(settings:any, screen){
   }
   if (hide_on_desktop) {
     classes += ' hide_on_desktop';
+  }
+  if (hide_desktop) {
+    classes += ' hide_desktop';
+  }
+  if (hide_on_mobile) {
+    classes += ' hide_on_mobile';
   }
   if (hide_on_laptop) {
     classes += ' hide_on_laptop';

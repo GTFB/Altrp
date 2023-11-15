@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon'
+import {DateTime} from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import Role from "App/Models/Role";
 import UserMeta from "App/Models/UserMeta";
@@ -18,7 +18,7 @@ import {
   computed,
   afterCreate, beforeDelete,
 } from '@ioc:Adonis/Lucid/Orm'
-import { v4 as uuid } from "uuid";
+import {v4 as uuid} from "uuid";
 import Template from "App/Models/Template";
 import Model from "App/Models/Model";
 import Table from "App/Models/Table";
@@ -28,7 +28,7 @@ import Media from "App/Models/Media";
 
 export default class User extends BaseModel {
 
-  @column({ isPrimary: true })
+  @column({isPrimary: true})
   public id: number
 
   @column()
@@ -37,14 +37,18 @@ export default class User extends BaseModel {
   @column()
   public telegram_chat: number
 
-  @column({ serialize: (value, _attribute, model: User) => {
-    return value || model.email
-  }})
+  @column({
+    serialize: (value, _attribute, model: User) => {
+      return value || model.email
+    }
+  })
   public name: string
 
-  @column({ serialize: (value, _attribute, model: User) => {
-    return value || model.email
-  }})
+  @column({
+    serialize: (value, _attribute, model: User) => {
+      return value || model.email
+    }
+  })
   public username: string
 
   @column()
@@ -56,34 +60,35 @@ export default class User extends BaseModel {
   @column()
   public telegram_user_id: string
 
-  @column({ serializeAs: null })
+  @column({serializeAs: null})
   public password: string
 
   @computed()
-  public get fullName():string{
-    if( !this.usermeta?.first_name && !this.usermeta?.second_name){
+  public get fullName(): string {
+    if (!this.usermeta?.first_name && !this.usermeta?.second_name) {
       let fullName = ''
-      if(! this.name && !this.last_name){
+      if (!this.name && !this.last_name) {
         return this.email;
       }
-      if(this.name){
+      if (this.name) {
         fullName += this.name
       }
-      if(this.last_name){
+      if (this.last_name) {
         fullName += ` ${this.last_name}`
       }
       return fullName
     }
     return `${this.usermeta.first_name} ${this.usermeta.second_name}`
   }
+
   @computed()
-  public get nameFull():string{
-    if( !this.usermeta?.first_name && !this.usermeta?.second_name){
+  public get nameFull(): string {
+    if (!this.usermeta?.first_name && !this.usermeta?.second_name) {
       let fullName = ''
-      if(this.last_name){
+      if (this.last_name) {
         fullName += this.last_name
       }
-      if(this.name){
+      if (this.name) {
         fullName += ` ${this.name}`
       }
       return fullName
@@ -97,26 +102,26 @@ export default class User extends BaseModel {
   @column()
   public media_id: string
 
-  @column({ serializeAs: null })
+  @column({serializeAs: null})
   public rememberMeToken: string | null
 
   @column.dateTime()
   public last_login_at: DateTime
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({autoCreate: true})
   public createdAt: DateTime
 
-  @column.dateTime({  })
+  @column.dateTime({})
   public email_verified_at: DateTime
 
-  @column.dateTime({  })
+  @column.dateTime({})
   public telegram_verified_at: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({autoCreate: true, autoUpdate: true})
   public updatedAt: DateTime
 
   @beforeSave()
-  public static async hashPassword (user: User) {
+  public static async hashPassword(user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
     }
@@ -124,7 +129,7 @@ export default class User extends BaseModel {
 
 
   @beforeCreate()
-  public static async addGuid (user: User) {
+  public static async addGuid(user: User) {
     if (!user.$dirty.guid) {
       user.guid = uuid()
     }
@@ -133,7 +138,7 @@ export default class User extends BaseModel {
   /**
    *
    */
-  async isAdmin():Promise<boolean> {
+  async isAdmin(): Promise<boolean> {
     return await this.hasRole('admin');
   }
 
@@ -146,7 +151,7 @@ export default class User extends BaseModel {
   })
   public roles: ManyToMany<typeof Role>
 
-  @belongsTo(()=>Media,{
+  @belongsTo(() => Media, {
     localKey: 'id',
     foreignKey: 'media_id',
   })
@@ -172,19 +177,19 @@ export default class User extends BaseModel {
    * @param roles
    * @private
    */
-  async hasRole(roles: string|number|Array<string|number>):Promise<boolean> {
-    if(empty(roles)){
-      return  true
+  async hasRole(roles: string | number | Array<string | number>): Promise<boolean> {
+    if (empty(roles)) {
+      return true
     }
-    if(typeof roles === 'string' || typeof roles === 'number'){
+    if (typeof roles === 'string' || typeof roles === 'number') {
       roles = [roles]
     }
 
     // @ts-ignore
     await this.load('roles')
-    return ! ! (roles.filter((roleName)=>{
-      return this.roles.map((role:Role)=>{
-        if(typeof roleName === 'string'){
+    return !!(roles.filter((roleName) => {
+      return this.roles.map((role: Role) => {
+        if (typeof roleName === 'string') {
           return role.name
         }
         // @ts-ignore
@@ -204,7 +209,7 @@ export default class User extends BaseModel {
   public static async deleteUserMeta(user: User) {
     const userMeta = await UserMeta.query().where("user_id", user.id).first()
 
-    if(userMeta) {
+    if (userMeta) {
       await userMeta.delete()
     }
     const newAdmin = await User.query()
@@ -214,57 +219,80 @@ export default class User extends BaseModel {
 
 
     const templates = await Template.query().where("user_id", user.id)
-    for(const template of templates){
+    for (const template of templates) {
       template.user_id = newAdmin ? newAdmin.id : null;
       await template.save()
     }
     const pages = await Template.query().where("user_id", user.id)
-    for(const page of pages){
+    for (const page of pages) {
       page.user_id = newAdmin ? newAdmin.id : null;
       await page.save()
     }
     const models = await Model.query().where("user_id", user.id)
-    for(const model of models){
+    for (const model of models) {
       model.user_id = newAdmin ? newAdmin.id : null;
       await model.save()
     }
     const tables = await Table.query().where("user_id", user.id)
-    for(const table of tables){
+    for (const table of tables) {
       table.user_id = newAdmin ? newAdmin.id : null;
       await table.save()
     }
     const columns = await Column.query().where("user_id", user.id)
-    for(const column of columns){
+    for (const column of columns) {
       column.user_id = newAdmin ? newAdmin.id : null;
       await column.save()
     }
     const diagrams = await Diagram.query().where("author", user.id)
-    for(const diagram of diagrams){
+    for (const diagram of diagrams) {
       diagram.author = newAdmin ? newAdmin.id : null;
       await diagram.save()
     }
     const medias = await Media.query().where("author", user.id)
-    for(const media of medias){
+    for (const media of medias) {
       media.author = newAdmin ? newAdmin.id : null;
       await media.save()
     }
     await user.related('roles').detach()
     await user.related('permissions').detach()
   }
+  public async hasPermissions(permissions,  key = 'id'): Promise<boolean>{
+    // console.log(this.permissions)
+    // console.log(this.roles[0].permissions)
+    // @ts-ignore
+    let _permissions:any = this.related("permissions");
 
-  public async hasPermission(value: Permission|number|string): Promise<boolean> {
+    _permissions = await _permissions.query().whereIn(`permissions.${key}`, permissions).first()
+
+    if(_permissions){
+      return true
+    }
+
+    // @ts-ignore
+    let roles:any  = this.related("roles");
+    roles = await roles.query().whereHas('permissions', query=>{
+      query.whereIn(`permissions.${key}`, permissions)
+    }).first()
+
+    if(roles){
+      return true
+    }
+
+    return false
+  }
+  public async hasPermission(value: Permission | number | string,): Promise<boolean> {
     //@ts-ignore
     const relation = this.related("permissions");
 
-    if(typeof value === "object") {
+    if (typeof value === "object") {
       const permission = await relation.query().where("permissions.id", value.id).first();
 
       return !!permission
-    } else if(typeof value === "number") {
+    } else if (typeof value === "number") {
       const permission = await relation.query().where("permissions.id", value).first();
 
       return !!permission
-    }else  {
+    } else {
       const permission = await relation.query().where("permissions.name", value).first();
 
       return !!permission
@@ -272,9 +300,9 @@ export default class User extends BaseModel {
 
   }
 
-  public async can(value: Permission|number|number[]|Permission[]): Promise<boolean> {
+  public async can(value: Permission | number | number[] | Permission[]): Promise<boolean> {
 
-    if(!(value instanceof Array)) {
+    if (!(value instanceof Array)) {
       //@ts-ignore
       value = [value]
     }
@@ -284,7 +312,7 @@ export default class User extends BaseModel {
     for (let valueKey in value) {
       const userPermission = await this.hasPermission(value[valueKey])
 
-      if(!userPermission) {
+      if (!userPermission) {
         //@ts-ignore
         const roles = await this.related("roles").query()
 
@@ -292,13 +320,13 @@ export default class User extends BaseModel {
 
         for (let role of roles) {
           // @ts-ignore
-          if(await role.hasPermission(value[valueKey])) {
+          if (await role.hasPermission(value[valueKey])) {
             out = true
             break;
           }
         }
 
-        if(!out) {
+        if (!out) {
           finalOut = false
           break
         }

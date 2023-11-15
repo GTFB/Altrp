@@ -637,6 +637,12 @@ input[type="text"].form__input {
     min-height: 38px;
   }
 
+  &_full-width{
+    .bp3-menu.bp3-menu{
+      width: 600px;
+    }
+  }
+
   & .bp3-input {
     border-radius: 0.25rem;
     border: 1px solid #ced4da;

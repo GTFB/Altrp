@@ -19,7 +19,7 @@ export default class PermissionRoles extends BaseSchema {
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
 
-      table.foreign('role_id').references('roles.id')
+      table.foreign('role_id').references('roles.id').onDelete('cascade').onUpdate('cascade')
     })
   }
 

@@ -102,9 +102,9 @@ export default class Source extends BaseModel {
   @manyToMany(() => Permission, {
     pivotTable: 'altrp_sources_permissions',
     localKey: 'id',
-    relatedKey: 'id',
-    pivotForeignKey: 'permission_id',
-    pivotRelatedForeignKey: 'source_id',
+    relatedKey: 'name',
+    pivotForeignKey: 'source_id',
+    pivotRelatedForeignKey: 'permission_name',
   })
   public permissions: ManyToMany<typeof Permission>
 
@@ -222,7 +222,7 @@ export default class Source extends BaseModel {
       return ''
     }
     return `
-    if( httpContext&& ! await httpContext.auth.user.hasPermission([${this.permissions.map(p => `'${p.name}'`)}])){
+    if(httpContext && ! await httpContext.auth.user.hasPermissions([${this.permissions.map(p => `'${p.id}'`)}])){
       httpContext.response.status(403);
       return httpContext.response.json({success: false, message: 'Permission denied (permissions)'});
     }

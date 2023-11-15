@@ -181,12 +181,17 @@ export default class PagesController {
       .where("id", parseInt(params.id)).firstOrFail();
     await page.load('roles')
     await page.load('categories')
+    await page.load('permissions')
     let data = page.serialize()
     const roles = data.roles.map(role => {
       return ({value:role.id, label:role.display_name})
     })
+    const permissions = data.permissions.map(permission => {
+      return ({value:permission.name, label:permission.display_name})
+    })
 
     data.roles = roles;
+    data.permissions = permissions;
 
     if(data.for_guest){
       data.roles.unshift({value:'guest', label: 'Guest'})
@@ -291,6 +296,8 @@ export default class PagesController {
 
       await page.related('roles').detach()
       await page.parseRoles(request.input('roles'));
+      await page.related('permissions')
+        .sync((request.input('permissions') || []).map(p=>p.  value))
       await page.save()
 
       if(request.input("categories").length > 0) {

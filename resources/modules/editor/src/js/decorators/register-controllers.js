@@ -941,6 +941,19 @@ export function advancedTabControllers(element) {
   }
   );
 
+  element.addControl('hide_desktop', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Hide On All Desktop Devices',
+    responsive: false,
+  });
+
+  element.addControl('hide_on_mobile', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Hide On All Mobile Devices',
+    responsive: false,
+  });
+
+
   element.addControl('hide_on_wide_screen', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Wide Screen',
@@ -949,7 +962,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('hide_on_desktop', {
     type: CONTROLLER_SWITCHER,
-    label: 'Hide On Desktop',
+    label: 'Hide On Desktop ',
     responsive: false,
   });
 

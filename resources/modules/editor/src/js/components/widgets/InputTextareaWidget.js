@@ -397,23 +397,33 @@ class InputTextareaWidget extends Component {
    * @param {{}} e
    */
   handleEnter = e => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
-      inputs[index + 1] && inputs[index + 1].focus();
-      const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getLockedSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
-      }
+    if (e.keyCode === 13 || e.keyCode === 9) {
+      this.focusNext(e)
     }
   };
 
+  focusNext = (e) => {
+    if (!e.target.hasAttribute('data-enter')) return;
+    e.preventDefault();
+    const inputs = Array.from(document.querySelectorAll("[data-enter='enabled']"));
+    const index = inputs.indexOf(e.target);
+    if (index === undefined) return;
+
+    if(inputs[index + 1]){
+      inputs[index + 1].focus();
+    } else {
+      inputs[0].focus();
+    }
+
+    const {
+      create_allowed,
+      create_label,
+      create_url
+    } = this.props.element.getSettings();
+    if (create_allowed && create_label && create_url) {
+      this.createItem(e);
+    }
+  }
   /**
    * Загрузка виджета
    * @param {{}} prevProps
@@ -1088,6 +1098,9 @@ class InputTextareaWidget extends Component {
         readOnly={content_readonly}
         autoComplete={autocomplete}
         placeholder={placeholder}
+        data-enter="enabled"
+        onKeyDown={this.handleEnter}
+
         className={
           classes
         }

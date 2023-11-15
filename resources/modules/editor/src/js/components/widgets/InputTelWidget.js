@@ -78,27 +78,35 @@ export  default class InputTelWidget extends Component {
     }
   }
 
+  focusNext = (e) => {
+    if (!e.target.hasAttribute('data-enter')) return;
+    e.preventDefault();
+    const inputs = Array.from(document.querySelectorAll("[data-enter='enabled']"));
+    const index = inputs.indexOf(e.target);
+    if (index === undefined) return;
+
+    if(inputs[index + 1]){
+      inputs[index + 1].focus();
+    } else {
+      inputs[0].focus();
+    }
+
+    const {
+      create_allowed,
+      create_label,
+      create_url
+    } = this.props.element.getSettings();
+    if (create_allowed && create_label && create_url) {
+      this.createItem(e);
+    }
+  }
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
    */
   handleEnter = e => {
-    if (!e.target.hasAttribute('data-enter')) return;
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
-
-      inputs[index + 1] && inputs[index + 1].focus();
-      const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
-      }
+    if (e.keyCode === 13 || e.keyCode === 9) {
+      this.focusNext(e)
     }
   };
 
@@ -583,6 +591,7 @@ export  default class InputTelWidget extends Component {
           onChange={this.onChange}
           onBlur={this.onBlur}
           onFocus={this.onFocus}
+          onKeyDown={this.handleEnter}
           onClick={this.onClick}
           preferredCountries={preferredCountries}
           onlyCountries={onlyCountries}
@@ -594,7 +603,7 @@ export  default class InputTelWidget extends Component {
             ref: this.inputRef,
             required: true,
             autoFocus: false,
-            'data-enter': enterNextInput,
+            'data-enter': enterNextInput ? 'enabled' : false,
           }}
         />
         {/*<PhoneInput*/}

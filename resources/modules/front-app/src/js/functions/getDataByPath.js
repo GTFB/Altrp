@@ -86,6 +86,9 @@ export default function getDataByPath(
   if(path === 'altrppage.is_dark' ||path ===  'altrppagestate.is_dark'){
     return document.documentElement.classList.contains('altrp-theme_dark')
   }
+  if(path === 'altrppage.is_mobile'){
+    return document.documentElement.classList.contains('is_mobile')
+  }
   if(path === 'altrppage.lang' ||path ===  'altrppagestate.lang'){
     return document.documentElement.getAttribute('lang')
   }

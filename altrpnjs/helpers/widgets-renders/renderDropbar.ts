@@ -45,8 +45,8 @@ export default function renderDropbar(settings, device) {
 
   const buttonTemplate: string = `<div class="altrp-btn-wrapper_dropbar altrp-btn-wrapper">
       <div class="altrp-dropbar altrp-dropbar-altrp-dropbar-btn">
-        <span class="altrp-dropbar-children-wrapper altrp-dropbar-btn-wrapper">
-          <button class='${_.join(classes, " ")}' id='${id}'>
+        <span class="altrp-dropbar-children-wrapper altrp-dropbar-btn-wrapper" style="width: 100%;">
+          <button class='${_.join(classes, " ")}' id='${id}' style="width: 100%;">
             ${buttonText}
             ${icon}
           </button>

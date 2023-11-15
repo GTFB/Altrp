@@ -11,5 +11,24 @@ export default function DropbarWidgetComponent(settings) {
     ...btnStyles(settings, true)
   ];
 
-  return styledString(styles, settings);
+  const justify = getResponsiveSetting(settings, "justify_content", );
+  let stylesInString = ''
+  if(justify){
+    stylesInString += `
+& .btn-container-column{
+  width: 100%;
+}
+& .btn-container-row{
+  width: 100%;
+  justify-content: ${justify};
+}
+& .altrp-btn{
+  justify-content: ${justify};
+}
+
+`
+  }
+  stylesInString +=  styledString(styles, settings);
+
+  return stylesInString
 }

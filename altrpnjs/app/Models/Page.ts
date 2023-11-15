@@ -46,6 +46,7 @@ import getResponsiveSetting, {setResponsiveSetting} from "../../helpers/getRespo
 import {optimizeStyles} from "../../helpers/screen";
 import altrpRandomId from "../../helpers/altrpRandomId";
 import PagesTemplate from "App/Models/PagesTemplate";
+import Permission from "App/Models/Permission";
 
 export default class Page extends BaseModel {
   @column({isPrimary: true})
@@ -137,6 +138,15 @@ export default class Page extends BaseModel {
     pivotTable: 'page_role',
   })
   public roles: ManyToMany<typeof Role>
+
+  @manyToMany(() => Permission, {
+    pivotTable: 'page_permission',
+    localKey: 'guid',
+    pivotForeignKey: 'page_guid',
+    relatedKey: 'name',
+    pivotRelatedForeignKey: 'permission_name',
+  })
+  public permissions: ManyToMany<typeof Permission>
 
   // public getAuthor() {
   //   return this.user.email
@@ -504,11 +514,13 @@ export default class Page extends BaseModel {
 
     /** @var User $user */
     const pageRoleTable = await Database.from('page_role').select('*')
+    // @ts-ignore
+    await this.load('permissions')
     const pageRoles = pageRoleTable.filter(item => item.page_id == this.id)
     /**
      * Если никаких ролей не указано и for_guest false, то всегда доступно
      */
-    if ((!pageRoles.length) && !this.for_guest) {
+    if ((!pageRoles.length && !this.permissions.length) && !this.for_guest) {
       return true
     }
     if ((!currentUser) && this.for_guest) {
@@ -525,6 +537,10 @@ export default class Page extends BaseModel {
         allowed = true
       }
     }
+    if(this.permissions.length && ! allowed){
+      allowed = await currentUser.hasPermissions(this.permissions.map(p=>p.id))
+    }
+
     return allowed
   }
 

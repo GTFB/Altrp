@@ -534,6 +534,24 @@ export default function ButtonComponent(settings) {
 
   let stylesInString = '';
 
+  const justify = getResponsiveSetting(settings, "justify_content", );
+
+  if(justify){
+    stylesInString += `
+& .btn-container-column{
+  width: 100%;
+}
+& .btn-container-row{
+  width: 100%;
+  justify-content: ${justify};
+}
+& .altrp-btn{
+  justify-content: ${justify};
+}
+
+`
+  }
+
   stylesInString += `& .altrp-btn.active {`;
 
   const backgroundColorActive = getResponsiveSetting(settings, 'background_color', '.active');

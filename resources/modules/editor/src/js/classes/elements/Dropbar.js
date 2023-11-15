@@ -372,6 +372,38 @@ class Dropbar extends BaseElement {
       label: 'Z-index',
     });
 
+    this.addControl('justify_content', {
+      hideOnEmail: true,
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'Default',
+          value: '',
+        },
+        {
+          value: 'start',
+          label: 'Start',
+        },
+        {
+          value: 'center',
+          label: 'Center',
+        },
+        {
+          value: 'end',
+          label: 'End',
+        },
+        {
+          value: 'space-between',
+          label: 'Space Between',
+        },
+        {
+          value: 'space-around',
+          label: 'SpaceAround',
+        },
+      ],
+      label: 'Justify Content',
+    });
+
     this.addControl('position_css_classes', {
       type: CONTROLLER_TEXT,
       label: 'CSS Classes',

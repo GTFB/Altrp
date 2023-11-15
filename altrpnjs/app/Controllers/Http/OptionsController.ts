@@ -42,11 +42,11 @@ export default class OptionsController {
     })
   }
 
-  public async permissions() {
+  public async permissions({request}:HttpContextContract) {
     const permissions = await Permission.all()
 
     return options(permissions, {
-      value: "id",
+      value: request.qs().value || "id",
       label: "display_name"
     })
   }

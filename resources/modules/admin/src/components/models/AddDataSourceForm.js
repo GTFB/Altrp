@@ -43,7 +43,9 @@ class AddDataSourceForm extends Component {
     new Resource({route: '/admin/ajax/model_options'}).getAll()
       .then(({options}) => this.setState({modelsOptions: options}));
     const rolesOptions = await (new Resource({route: '/admin/ajax/role_options'}).getAll())
-    const permissionsOptions = await(new Resource({route: '/admin/ajax/permissions_options'}).getAll())
+    const permissionsOptions = await(new Resource({route: '/admin/ajax/permissions_options'}).getQueried({
+      value: 'name',
+    }))
 
     if (id) {
       const resource = new Resource({route: '/admin/ajax/data_sources'});

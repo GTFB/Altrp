@@ -1,10 +1,11 @@
 # ALTRP
 
 ## Changelog
-### test version  build 55
+### test version  build 60
 
 ### 1.4.9 
 * Add Themes for Styling
+* Add Permissions Support
 * Add Language Switch Action and Database Table for Internationalization
 * Add `Validator` Node for Robotizers
 * Add `Input Phone` Widget

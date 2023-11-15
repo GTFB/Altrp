@@ -700,13 +700,14 @@ class BaseElement extends ControlStack {
     this.settings.styles = this.settings.styles || {};
     this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
 
-    this.settings.styles[breakpoint][settingName] = {};
+    this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
     let theme = getCurrentTheme()
     if(theme){
       theme = `.${theme}`
     }
     rules.forEach(rule => {
       let finalSelector = rule.selector;
+
       finalSelector = finalSelector
         .replace(/{{ELEMENT}}/g, this.getSelector())
         .replace(/{{ID}}/g, this.getId())
@@ -722,6 +723,7 @@ class BaseElement extends ControlStack {
       }
       this.settings.styles[breakpoint][settingName][finalSelector] =
         rule.properties;
+
     });
     this.updateStyles();
   }

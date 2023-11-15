@@ -335,7 +335,7 @@ Route.group(() => {
         trace: e.stack.split('\n'),
       })
     }
-  })
+  }).middleware('catch_unhandled_json')
   /**
    * plugins ajax requests START
    */

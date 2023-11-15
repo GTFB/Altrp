@@ -74,7 +74,7 @@ class InputTextCommonWidget extends Component {
   focusNext = (e) => {
     if (!e.target.hasAttribute('data-enter')) return;
     e.preventDefault();
-    const inputs = Array.from(document.querySelectorAll("input[data-enter='enabled'],select"));
+    const inputs = Array.from(document.querySelectorAll("[data-enter='enabled']"));
     const index = inputs.indexOf(e.target);
     if (index === undefined) return;
 

@@ -104,7 +104,7 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
   }
   renderRule = (rule)=>{
     let ruleContent = `
-        rules.${rule.name}(`
+          rules.${rule.name}(`
     switch (rule.name) {
       case 'email':
       case 'mobile':
@@ -134,6 +134,18 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
         break;
     }
     ruleContent+='),'
+
+    switch (rule.name){
+      case 'email': {
+        ruleContent += `
+          rules.normalizeEmail({
+            allLowercase: true,
+            gmailLowercase: true,
+            yahooLowercase: true,
+          }),
+      `
+      } break;
+    }
     return ruleContent
 
   }

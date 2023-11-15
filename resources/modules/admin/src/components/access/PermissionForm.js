@@ -21,6 +21,10 @@ class PermissionForm extends Component {
   }
 
   changeHandler = ({ target: { value, name } }) => {
+    if(name === 'name'){
+      value = value.replace(/\s/g, '_');
+    }
+
     this.setState({ [name]: value });
   }
 

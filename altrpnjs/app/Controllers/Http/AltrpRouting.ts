@@ -35,6 +35,7 @@ import sizeOf from 'image-size';
 import getAltrpTime from "../../../helpers/getAltrpTime";
 import {pluralize} from "@poppinss/utils/build/src/Helpers/string";
 import translateContent from "../../../helpers/i18n/translateContent";
+import MobileDetect from "mobile-detect";
 
 export default class AltrpRouting {
 
@@ -223,18 +224,27 @@ export default class AltrpRouting {
       await Promise.all([
         user.load('avatar'),
         user.load('permissions'),
-        user.load('roles'),
+        user.load('roles', query=>{
+          query.preload('permissions')
+        }),
       ])
 
+      let permissions =  [...user.permissions]
 
       user.roles && user.roles.forEach(role =>{
         access_classes += ` front-app_role-${role.name} `
+        permissions = [
+          ...permissions,
+          ...role.permissions
+        ]
         if(role.name === 'admin'){
           access_classes += ` front-app_admin `
         }
       })
-      user.permissions && user.permissions.forEach(permission =>{
-        access_classes += ` front-app_permission-${permission} `
+
+      permissions = _.uniqBy(permissions, 'name')
+      permissions.forEach(permission =>{
+        access_classes += ` front-app_permission-${permission.name} `
       })
     } else {
       access_classes += ` front-app_auth-type-guest `
@@ -316,6 +326,8 @@ export default class AltrpRouting {
     if (user) {
       altrpuser = user.toJSON()
     }
+    // @ts-ignore
+    const detector = new MobileDetect(httpContext.request.header('user-agent') );
 
     const altrpContext = {
       ...model_data,
@@ -323,6 +335,7 @@ export default class AltrpRouting {
       altrpuser,
       altrppage: {
         url,
+        is_mobile: detector.mobile(),
         params: httpContext.request.qs()
       }
     }
@@ -339,6 +352,13 @@ export default class AltrpRouting {
       html_class = dark_default ? 'altrp-theme_dark' : 'altrp-theme_normal'
     } else {
       html_class = theme
+    }
+
+    if(detector.mobile()){
+      html_class += ' is_mobile '
+    } else{
+      html_class += ' is_desktop '
+
     }
 
     altrpContext.altrpdata = datasources
@@ -376,7 +396,7 @@ export default class AltrpRouting {
 window.altrp_dictionary = ${JSON.stringify(_content.dictionary)};
         /* ]]> */
 </script>`
-      let all_styles = `<link rel="stylesheet" href="/altrp/css/vars/altrp-vars.css"/>` + _all_styles
+      let all_styles = _all_styles
       content = mustache.render(content, {
         ...altrpContext,
         dictionary,

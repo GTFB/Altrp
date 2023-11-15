@@ -4,6 +4,14 @@ $tablet: 768px;
 $big_phone: 450px;
 $small_phone: 320px;
 
+.is_mobile .hide_on_mobile{
+  display: none;
+}
+
+.is_desktop .hide_desktop{
+  display: none;
+}
+
 @media screen and (min-width: $desktop + 1) {
   .hide_on_wide_screen {
     display: none;

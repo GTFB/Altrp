@@ -649,6 +649,7 @@ export const altrpFontsSet =
     'Mukta Malar': GOOGLE_FONT,
     'Mukta Vaani': GOOGLE_FONT,
     'Muli': GOOGLE_FONT,
+    'Mulish': GOOGLE_FONT,
     'MuseoModerno': GOOGLE_FONT,
     'Mystery Quest': GOOGLE_FONT,
     'NTR': GOOGLE_FONT,

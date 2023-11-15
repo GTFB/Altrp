@@ -5,12 +5,15 @@ import LIKE from "../../../../helpers/const/LIKE";
 
 export default class RolesController {
   public async create({request}) {
+
+    const permissions = request.all().permissions || []
+
     const role = await Role.create({
       description: request.input("description") || "",
       name: request.input("name"),
       display_name: request.input("display_name")
     })
-
+    await role.related('permissions').sync(permissions)
     return role
   }
 
@@ -48,10 +51,12 @@ export default class RolesController {
   }
 
   public async show({params}) {
-    const role = await Role.query()
+    let role: any = await Role.query()
       .where("id", parseInt(params.id))
+      .preload('permissions')
       .firstOrFail();
-
+    role = role.toJSON()
+    role.permissions = role.permissions.map(p=>p.id)
     return role
   }
 
@@ -60,18 +65,15 @@ export default class RolesController {
 
     const data = request.body();
 
+    const {permissions = []} = data
+    delete data.permissions
     if(role) {
       role.display_name = data.display_name;
       role.name = data.name;
       role.description = data.description
 
-      if(!await role.save()) {
-        response.status(500)
-        return {
-          message: "Role not updated"
-        }
-      }
-
+      await role.save()
+      await role.related('permissions').sync(permissions)
       return role.serialize()
     } else {
       response.status(404)

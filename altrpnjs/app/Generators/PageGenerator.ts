@@ -163,6 +163,7 @@ export default class PageGenerator extends BaseGenerator {
             : `http://localhost:3002/src/h-altrp.js?${randomString}`,
           children_content,
           fonts,
+          randomString,
           elements_list,
           pages: JSONStringifyEscape(pages),
           altrp_settings: JSONStringifyEscape(altrp_settings),
