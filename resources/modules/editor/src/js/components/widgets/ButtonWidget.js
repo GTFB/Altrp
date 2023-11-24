@@ -6,6 +6,7 @@ import printElements from "../../../../../front-app/src/js/functions/printElemen
 import renderAsset from "../../../../../front-app/src/js/functions/renderAsset";
 import scrollToElement from "../../../../../front-app/src/js/functions/scrollToElement";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
+import Loader from "../misc/Loader";
 
 
 const Link = window.Link;
@@ -22,11 +23,12 @@ class ButtonWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
     this.onClick = this.onClick.bind(this);
   }
+
   /**
    * Компонент удаляется со страницы
    */
@@ -34,7 +36,7 @@ class ButtonWidget extends Component {
     const actionsManager = (
       await import(/* webpackChunkName: 'ActionsManager' */
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-      )
+        )
     ).default;
     actionsManager.unregisterWidgetActions(this.props.element.getId());
   }
@@ -49,7 +51,7 @@ class ButtonWidget extends Component {
       const actionsManager = (
         await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -66,16 +68,22 @@ class ButtonWidget extends Component {
    * @return {Promise<void>}
    */
   async onClick(e) {
+    const {
+      actions_loader
+    } = this.props.element.getSettings()
     e.persist();
     if (isEditor()) {
       e.preventDefault();
     } else if (this.props.element.getResponsiveLockedSetting("actions", null, []).length) {
       e.preventDefault();
       e.stopPropagation();
+      if (actions_loader) {
+        this.setState(state => ({...state, showLoader: true}))
+      }
       const actionsManager = (
         await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -83,9 +91,12 @@ class ButtonWidget extends Component {
         this.props.element.getLockedSettings("actions", []),
         this.props.element
       );
+      if (actions_loader) {
+        this.setState(state => ({...state, showLoader: false}))
+      }
     }
     if (this.props.element.getForms().length) {
-      this.setState(state => ({ ...state, pending: true }));
+      this.setState(state => ({...state, pending: true}));
       this.props.element.getForms().forEach(
         /**
          * @param {AltrpForm} form
@@ -108,30 +119,30 @@ class ButtonWidget extends Component {
                 return this.props.history.push(redirect_after);
               }
 
-              if (this.props.element.getResponsiveLockedSetting("text_after", null,"")) {
+              if (this.props.element.getResponsiveLockedSetting("text_after", null, "")) {
                 alert(this.props.element.getResponsiveLockedSetting("text_after", null, ""));
               }
             } else if (res.message) {
               alert(res.message);
             }
-            this.setState(state => ({ ...state, pending: false }));
+            this.setState(state => ({...state, pending: false}));
           } catch (e) {
             console.error(e);
-            this.setState(state => ({ ...state, pending: false }));
+            this.setState(state => ({...state, pending: false}));
           }
         }
       );
     }
-    // else      if (
-    //   this.props.element.getSettings("popup_trigger_type") &&
-    //   this.props.element.getSettings("popup_id")
-    // ) {
-    //   this.props.appStore.dispatch(
-    //     togglePopup(this.props.element.getSettings("popup_id"))
-    //   );
-    //   /**
-    //    * Проверим надо ли по ID скроллить к элементу
-    //    */
+      // else      if (
+      //   this.props.element.getSettings("popup_trigger_type") &&
+      //   this.props.element.getSettings("popup_id")
+      // ) {
+      //   this.props.appStore.dispatch(
+      //     togglePopup(this.props.element.getSettings("popup_id"))
+      //   );
+      //   /**
+      //    * Проверим надо ли по ID скроллить к элементу
+      //    */
     // }
     else if (
       e.target.href &&
@@ -153,10 +164,10 @@ class ButtonWidget extends Component {
       );
     } else if (
       this.props.element
-        .getResponsiveLockedSetting("other_action_type", '',[])
+        .getResponsiveLockedSetting("other_action_type", '', [])
         .includes("print_elements")
     ) {
-      let IDs = this.props.element.getResponsiveLockedSetting("print_elements_ids", null,"");
+      let IDs = this.props.element.getResponsiveLockedSetting("print_elements_ids", null, "");
       IDs = IDs.split(",");
       let elementsToPrint = [];
       IDs.forEach(elementId => {
@@ -164,7 +175,7 @@ class ButtonWidget extends Component {
           return;
         }
         getHTMLElementById(elementId.trim()) &&
-          elementsToPrint.push(getHTMLElementById(elementId));
+        elementsToPrint.push(getHTMLElementById(elementId));
         if (getComponentByElementId(elementId.trim())?.getStylesHTMLElement) {
           let stylesElement = getComponentByElementId(
             elementId.trim()
@@ -187,20 +198,26 @@ class ButtonWidget extends Component {
   /**
    * Получить css классы для кнопки
    */
-  getClasses = ()=>{
+  getClasses = () => {
     let classes = 'altrp-btn ';
-    if(this.isActive()){
+    const {showLoader,} = this.state;
+    if (this.isActive()) {
       classes += 'active '
     }
-    if(this.isDisabled()){
+    if (this.isDisabled()) {
       classes += 'state-disabled '
+    }
+    if (showLoader) {
+      classes += ' position-relative '
+      classes += ' overflow-hidden '
     }
     return classes;
   }
 
   render() {
-    const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
-    const { back } = history;
+    const {link_link = {}, advanced_tooltip: tooltip} = this.state.settings;
+    const {showLoader,} = this.state;
+    const {back} = history;
     const background_image = this.props.element.getResponsiveLockedSetting(
       "background_image",
       null,
@@ -211,15 +228,15 @@ class ButtonWidget extends Component {
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
     let classes =
-      this.getClasses() + (this.element.getLockedSettings('position_css_classes',  ""));
+      this.getClasses() + (this.element.getLockedSettings('position_css_classes', ""));
     if (background_image.url) {
       classes += " altrp-background-image_btn";
     }
     let buttonText = this.getLockedContent("button_text");
-    let buttonMediaRight = { ...this.element.getLockedSettings('button_icon_right') };
-    let buttonMediaLeft = { ...this.element.getLockedSettings('button_icon_left') };
-    let buttonMediaTop = { ...this.element.getLockedSettings('button_icon_top') };
-    let buttonMediaBottom = { ...this.element.getLockedSettings('button_icon_bottom') };
+    let buttonMediaRight = {...this.element.getLockedSettings('button_icon_right')};
+    let buttonMediaLeft = {...this.element.getLockedSettings('button_icon_left')};
+    let buttonMediaTop = {...this.element.getLockedSettings('button_icon_top')};
+    let buttonMediaBottom = {...this.element.getLockedSettings('button_icon_bottom')};
     const showIcon = buttonMediaRight.url || buttonMediaLeft.url || buttonMediaTop.url || buttonMediaBottom.url;
 
     let existingIconsString = '';
@@ -336,7 +353,7 @@ class ButtonWidget extends Component {
 
     if (existingIconsString === 'blt') {
       buttonInner = (
-         <div className="btn-container-column">
+        <div className="btn-container-column">
           <span className={"altrp-btn-icon-top "}>
             {renderAsset(buttonMediaTop)}{" "}
           </span>
@@ -506,6 +523,8 @@ class ButtonWidget extends Component {
       title={tooltip || null}
     >
       {buttonInner}
+      {showLoader && <Loader/>}
+
     </button>;
 
     let link = null;
@@ -513,9 +532,9 @@ class ButtonWidget extends Component {
       this.state.settings.link_link?.url &&
       !this.state.settings.link_link.toPrevPage
     ) {
-        let target = _.get(this.state.settings, "link_link.openInNew")
+      let target = _.get(this.state.settings, "link_link.openInNew")
         ? altrpRandomId()
-          : "";
+        : "";
       if (this.state.settings.link_link.tag === "a" || isEditor()) {
         link = (
           <a
@@ -532,7 +551,8 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={url} href={url} onClick={this.onClick} onMouseEnter={this.onMouseEnter} target={target} className={classes} title={tooltip || null}>
+          <Link to={url} href={url} onClick={this.onClick} onMouseEnter={this.onMouseEnter} target={target}
+                className={classes} title={tooltip || null}>
             {" "}
             {buttonInner}
           </Link>

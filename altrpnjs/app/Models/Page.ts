@@ -26,6 +26,7 @@ import User from 'App/Models/User';
 import {isString} from 'lodash';
 import PageRole from 'App/Models/PageRole';
 import Role from 'App/Models/Role';
+import Permissions from 'App/Models/Permission';
 import Template from 'App/Models/Template';
 import Area from 'App/Models/Area';
 import Category from 'App/Models/Category';
@@ -822,6 +823,7 @@ export default class Page extends BaseModel {
   static async generateAccessStyles(): Promise<string> {
 
     const roles = await Role.all()
+    const permissions = await Permissions.all()
 
     return `<style id="access-styles">
     .front-app:not(.front-app_auth-type-guest) .altrp-element-auth-type_guest{
@@ -830,13 +832,22 @@ export default class Page extends BaseModel {
     .front-app:not(.front-app_auth-type-auth) .altrp-element-auth-type_auth{
       display: none;
     }
+    .altrp-element[class*="altrp-element-role_"],
+    .altrp-element[class*="altrp-element-permission_"]
+    {
+      display: none;
+    }
 
     ${roles.map(r => {
       return `
-      .altrp-element-role_${r.name}.altrp-element-role_${r.name}{
-              display: none;
-      }
       .front-app_role-${r.name} .altrp-element-role_${r.name}.altrp-element-role_${r.name}{
+              display: flex;
+      }
+      `
+    }).join('')}
+    ${permissions.map(r => {
+      return `
+      .front-app_permission-${r.name} .altrp-element-permission_${r.name}.altrp-element-permission_${r.name}{
               display: flex;
       }
       `

@@ -187,17 +187,6 @@ class ElementWrapper extends Component {
     if ( conditional_display_choose === 'guest' ) {
       elementDisplay = user.isGuest();
     }
-    if ( conditional_display_choose === 'auth' ) {
-
-      const roles = _.get( settings, 'conditional_roles', [] );
-      const permissions = _.get( settings, 'conditional_permissions', [] );
-
-      elementDisplay = ! user.isGuest();
-
-      if(elementDisplay){
-        elementDisplay = user.hasRoles(roles, false) || user.hasPermissions(permissions, false)
-      }
-    }
 
     if (element.getSettings("conditional_other")) {
 
@@ -352,10 +341,36 @@ class ElementWrapper extends Component {
       hide_on_small_phone,
       hide_on_trigger,
       isFixed,
+      conditional_display_choose,
+      conditional_roles = [],
+      conditional_permissions = [],
     } = element.settings;
     let classes = `altrp-element ${this.props.element
       .getSelector()
       .replace(".", "")} altrp-element_${element.getType()}`;
+
+
+    if ( conditional_display_choose === 'auth' ) {
+
+      if (conditional_permissions?.length) {
+
+        conditional_permissions.forEach(r => {
+          classes += ` altrp-element-permission_${r} `
+        })
+      }
+      if (conditional_roles?.length) {
+
+
+        conditional_roles.forEach(r=>{
+          classes += ` altrp-element-role_${r} `
+        })
+      }
+      // elementDisplay = ! user.isGuest();
+      //
+      // if(elementDisplay){
+      //   elementDisplay = user.hasRoles(roles, false) || user.hasPermissions(permissions, false)
+      // }
+    }
     classes += element.getPrefixClasses() + " ";
     if (element.getType() === "widget") {
       classes += ` altrp-widget_${element.getName()}`;

@@ -29,7 +29,7 @@ import ContextMenuCustomizer from "./js/components/sidebar/modules/data/ContextM
 import {contextMenu} from "react-contexify";
 import {setCopyNode, setSelectNode} from "./js/store/copy-node/action";
 import {isJSON} from "../../front-app/src/js/helpers";
-import {io} from "socket.io-client";
+//import {io} from "socket.io-client";
 
 const mapStateToProps = state => {
   return {
@@ -97,17 +97,17 @@ class CustomizerEditor extends Component {
     }).getAll();
     currentUser = currentUser.data;
 
-    if(currentUser.guid && !this.altrpIo) {
-      this.altrpIo = io( {
-        path: '/wsaltrp',
-        auth: {
-          key: currentUser.guid,
-        },
-      })
-      this.altrpIo.on("message", (data) => {
-        console.log(data)
-      })
-    }
+    // if(currentUser.guid && !this.altrpIo) {
+    //   this.altrpIo = io( {
+    //     path: '/wsaltrp',
+    //     auth: {
+    //       key: currentUser.guid,
+    //     },
+    //   })
+    //   this.altrpIo.on("message", (data) => {
+    //     console.log(data)
+    //   })
+    // }
   }
 
 

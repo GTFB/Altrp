@@ -3,8 +3,6 @@
   align-items: center;
   display: flex;
   flex-direction: column;
-
-
 }
 
 .altrp-btn svg {
@@ -101,4 +99,26 @@
 
 .altrp-background-image_btn {
   background-size: unset;
+}
+.altrp-loader{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  background-color:rgba(255,255,255,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+.altrp-loader .bp3-spinner .bp3-spinner-track{
+  stroke:rgba(255,255,255,1);
+
+}
+
+.altrp-loader .bp3-spinner .bp3-spinner-head{
+  stroke:rgb(92, 112, 128);
+
 }

@@ -12,11 +12,6 @@ export default class extends BaseSchema {
         .inTable('permissions')
         .onUpdate('cascade')
         .onDelete('cascade')
-      table.foreign('page_guid')
-        .references('guid')
-        .inTable('pages')
-        .onUpdate('cascade')
-        .onDelete('cascade')
 
     })
   }

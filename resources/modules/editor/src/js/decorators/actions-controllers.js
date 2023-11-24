@@ -165,7 +165,8 @@ export function actionsControllers(
   idPrefix = '',
   tab = TAB_CONTENT,
   showChangeEndControllers = false,
-  forSection = false
+  forSection = false,
+  options
 ) {
   /**
    * actions START

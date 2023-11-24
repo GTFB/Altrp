@@ -20,7 +20,6 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import storage_path from "../../helpers/storage_path";
 import config from "../../helpers/config";
 import altrpRandomId from "../../helpers/altrpRandomId";
-import public_path from "../../helpers/path/public_path";
 import GlobalStyle from "App/Models/GlobalStyle";
 import {DateTime} from "luxon";
 
@@ -70,9 +69,12 @@ export default class PageGenerator extends BaseGenerator {
       return false
     }
 
-    if(! fs.existsSync(public_path('altrp/css/vars/altrp-vars.css'))){
-      GlobalStyle.updateCssFile()
-    }
+    GlobalStyle.updateCssFile().catch(e=>{
+      console.error('Error while GlobalStyle.updateCssFile', e)
+    }).then(()=>{
+      console.error('GlobalStyle.updateCssFile success')
+    })
+
     const randomString = altrpRandomId()
 
     this.page = page

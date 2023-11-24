@@ -35,7 +35,7 @@ class AltrpUser extends AltrpModel{
       return true
     }
     let ownPermissions = this.getProperty('permissions', []);
-    return _.find(ownPermissions, ownPermission => {
+    let result =  _.find(ownPermissions, ownPermission => {
       return _.find(permissions, permission => {
         if(parseInt(permission)){
           return parseInt(permission) === parseInt(ownPermission.id);
@@ -45,6 +45,8 @@ class AltrpUser extends AltrpModel{
         }
       });
     });
+
+    return result
   }
   /**
    * Проверяет наличие роли у пользователя

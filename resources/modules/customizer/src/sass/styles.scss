@@ -1131,3 +1131,6 @@ textarea.control-field{
   overflow-y: auto;
   overflow-x: hidden;
 }
+#customizer-editor .btn_grey.btn_active{
+  z-index: 1000;
+}

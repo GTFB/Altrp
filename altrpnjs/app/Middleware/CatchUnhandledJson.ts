@@ -72,7 +72,7 @@ export default class CatchUnhandledJson {
         })
       }
 
-      console.error(e?.request || e, e?.response?.data || '', `
+      console.error(e?.response?.data || e, `
 ====== METHOD ${request.method()}
 ====== URL ${request.url()}
 ====== DATA: ${inspect(all)}

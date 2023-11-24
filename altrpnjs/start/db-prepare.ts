@@ -78,5 +78,17 @@ if (Application.environment === 'web') {
   }).catch(() => {
     //console.log('unique pages error')
   })
+  schema = Database.connection().schema
+  schema.table('page_permission', table=>{
+    // @ts-ignore
+
+    table.foreign('page_guid')
+      .references('guid')
+      .inTable('pages')
+      .onUpdate('cascade')
+      .onDelete('cascade')
+  }).catch(() => {
+    console.log('foreign key page_permission exists')
+  })
 
 }

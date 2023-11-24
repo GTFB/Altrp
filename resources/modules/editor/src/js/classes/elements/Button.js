@@ -146,7 +146,30 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this);
+    this.startControlSection('Actions', {
+      label: 'Actions'
+    })
+
+    this.addControl('actions_loader', {
+      label: 'Show Loader',
+      type: CONTROLLER_SWITCHER,
+      locked:true,
+      responsive: false,
+    })
+
+    this.addControl('actions_loader_duration', {
+      label: 'Animation Duration',
+      conditions: {
+        actions_loader: true
+      },
+      type: CONTROLLER_SLIDER,
+      step: 0.01,
+      responsive: false,
+    })
+
+    actionsControllers(this, 'Actions', '', TAB_CONTENT, false, true);
+
+    this.endControlSection()
 
     actionsControllers(this, 'Hover Actions', 'hover_');
 

@@ -1,9 +1,10 @@
 # ALTRP
 
 ## Changelog
-### test version  build 60
+### test version build 65
 
-### 1.4.9 
+### 1.4.9
+* Add Spinner Loader for `Button` Widget
 * Add Themes for Styling
 * Add Permissions Support
 * Add Language Switch Action and Database Table for Internationalization

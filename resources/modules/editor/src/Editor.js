@@ -54,7 +54,7 @@ import EditorWindowPopup from "./js/components/EditorWindowPopup";
 import ConditionsPopup from "./js/components/ConditionsPopup";
 import {Rnd} from "react-rnd";
 import { Resizable } from "re-resizable";
-import {io} from "socket.io-client";
+// import {io} from "socket.io-client";
 import {setGlobalStylesCss} from "./js/store/global-css-editor/actions";
 import ReactDOM from "react-dom";
 import CssEditorModal from "./js/components/cssEditor/СssEditorModal";
@@ -165,17 +165,17 @@ class Editor extends Component {
 
   // Подключение вебсокетов
   async getConnect(currentUser) {
-    if(currentUser.guid && !this.altrpIo) {
-      this.altrpIo = io( {
-        path: '/wsaltrp',
-        auth: {
-          key: currentUser.guid,
-        },
-      })
-      this.altrpIo.on("message", (data) => {
-        console.log(data)
-      })
-    }
+    // if(currentUser.guid && !this.altrpIo) {
+    //   this.altrpIo = io( {
+    //     path: '/wsaltrp',
+    //     auth: {
+    //       key: currentUser.guid,
+    //     },
+    //   })
+    //   this.altrpIo.on("message", (data) => {
+    //     console.log(data)
+    //   })
+    // }
   }
 
   /**

@@ -3,7 +3,7 @@ import {togglePopup} from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
 import {changeCurrentModel} from "../store/current-model/actions";
 import { v4 as uuid } from "uuid";
-import { io } from "socket.io-client";
+//import { io } from "socket.io-client";
 import axios from "axios";
 import elementsToPdf from "../functions/elementsToPdf";
 import dataFromTable from "../functions/dataFromTable"
@@ -433,19 +433,19 @@ class AltrpAction extends AltrpModel {
 
     }
 
-    if(!window.altrpIo) {
-      window.altrpIo = io( {
-        path: '/wsaltrp',
-        auth: {
-          key: name,
-        },
-      })
-    }
-
-    window.altrpIo.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
-      console.log(data)
-      this.doActionUpdateCurrentDatasources()
-    });
+    // if(!window.altrpIo) {
+    //   window.altrpIo = io( {
+    //     path: '/wsaltrp',
+    //     auth: {
+    //       key: name,
+    //     },
+    //   })
+    // }
+    //
+    // window.altrpIo.on(replaceContentWithData(name, this.getCurrentModel().getData()), (data) => {
+    //   console.log(data)
+    //   this.doActionUpdateCurrentDatasources()
+    // });
 
     return {
       success: true

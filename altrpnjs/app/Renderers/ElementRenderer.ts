@@ -36,6 +36,7 @@ export default class ElementRenderer {
       global_styles_presets: string;
       conditional_display_choose: string;
       conditional_roles?: [];
+      conditional_permissions?: [];
       text?: string;
       content?: string;
       advanced_element_id?: string,
@@ -78,6 +79,7 @@ export default class ElementRenderer {
       advanced_element_id,
       conditional_display_choose,
       conditional_roles,
+      conditional_permissions = [],
     } = this.element.settings
     let children_content = ''
     for (const child of this.element.children) {
@@ -214,7 +216,12 @@ export default class ElementRenderer {
         classes += ` altrp-element-role_${r} `
       })
     }
+    if (conditional_permissions?.length && conditional_display_choose === 'auth') {
 
+      conditional_permissions.forEach(r => {
+        classes += ` altrp-element-permission_${r} `
+      })
+    }
     if(conditional_display_choose){
       classes += ` altrp-element-auth-type_${conditional_display_choose} `
     }

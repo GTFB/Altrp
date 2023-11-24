@@ -6,7 +6,10 @@ import altrpRandomId from "../altrpRandomId";
 
 export default function renderButton(settings, device, ) {
   let clickActions = settings.actions || []
-  let {__elementId} = settings
+  let {
+    __elementId,
+    actions_loader,
+  } = settings
   const { link_link = {}, advanced_tooltip: tooltip } = settings
   const background_image = getResponsiveSetting(
     settings,
@@ -299,6 +302,7 @@ export default function renderButton(settings, device, ) {
 
   // @ts-ignore
   let button = `<button
+  ${actions_loader ? 'data-with-loader="true"' : ''}
   class="${classes}"
   ${_.isEmpty(clickActions) ? '' : `data-altrp-button-click-actions="${__elementId}"`}
   id="${settings.position_css_id || ""}"
@@ -328,7 +332,6 @@ export default function renderButton(settings, device, ) {
     )
 
   }
-
   if (_.get(settings, "link_link.toPrevPage")) {
     link = (
       `<button
