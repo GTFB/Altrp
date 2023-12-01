@@ -254,6 +254,11 @@ class GlobalColors extends Component {
       <Panel>
         {this.state.colors.length > 0 ? (
           this.state.colors.map(item => {
+
+            const {
+              colorPickedHex = '#FFFFFF',
+              color = '#FFFFFF',
+            } = item
             return (
               <React.Fragment key={item.id}>
                 <ControlGroup
@@ -276,9 +281,9 @@ class GlobalColors extends Component {
                   <Button
                     onClick={e => this.toggleColorPanel(item.id)}
                     style={{
-                      backgroundColor: item.color,
+                      backgroundColor: color,
                       width: "70px",
-                      color: invert(item.colorPickedHex, {
+                      color: invert(colorPickedHex, {
                         black: "#000000",
                         white: "#FFFFFF",
                         threshold: 0.45

@@ -10,6 +10,7 @@ import {customFontsReduser} from "./custom-fonts/reducers";
 import {modelsReducer} from "./models-state/reducers";
 import {routesReducer} from "./routes-state/reducers";
 import {pluginsReducer} from "./plugins-state/reducers";
+import {currentPageReducer} from "./current-page/reducers";
 
 
 export default combineReducers({
@@ -23,5 +24,6 @@ export default combineReducers({
   customFonts: customFontsReduser,
   modelsState: modelsReducer,
   routesState: routesReducer,
-  pluginsState: pluginsReducer
+  pluginsState: pluginsReducer,
+  currentPage: currentPageReducer,
 });

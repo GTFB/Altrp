@@ -102,16 +102,15 @@
 }
 .altrp-loader{
   position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
   z-index: 10;
   background-color:rgba(255,255,255,.3);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: default;
+  transform: translate(-50%, -50%)
 }
 .altrp-loader .bp3-spinner .bp3-spinner-track{
   stroke:rgba(255,255,255,1);

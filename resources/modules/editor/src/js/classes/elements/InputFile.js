@@ -131,6 +131,7 @@ class InputFile extends BaseElement {
 
     this.endControlSection();
 
+
     actionsControllers(this, 'Change Actions', 'change_');
 
     this.startControlSection('position_section', {
@@ -389,6 +390,37 @@ class InputFile extends BaseElement {
       stateless: true,
       units: ['px', '%', 'vh', 'vw'],
     });
+
+    this.endControlSection();
+
+    this.startControlSection('icon_section', {
+      label: 'Icons Settings',
+      tab: TAB_STYLE,
+    });
+
+    this.addControl('icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      max: 500,
+      min: 0,
+      units: ['px', '%', 'vw', 'vh', 'em', 'rem'],
+    });
+
+    this.addControl('icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Stroke Color',
+    });
+
+    this.addControl('icon_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic'
+    });
+
+    this.addControl('icon_text_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Text Color',
+    });
+
 
     this.endControlSection();
 

@@ -157,15 +157,15 @@ class Button extends BaseElement {
       responsive: false,
     })
 
-    this.addControl('actions_loader_duration', {
-      label: 'Animation Duration',
-      conditions: {
-        actions_loader: true
-      },
-      type: CONTROLLER_SLIDER,
-      step: 0.01,
-      responsive: false,
-    })
+    // this.addControl('actions_loader_duration', {
+    //   label: 'Animation Duration',
+    //   conditions: {
+    //     actions_loader: true
+    //   },
+    //   type: CONTROLLER_SLIDER,
+    //   step: 0.01,
+    //   responsive: false,
+    // })
 
     actionsControllers(this, 'Actions', '', TAB_CONTENT, false, true);
 

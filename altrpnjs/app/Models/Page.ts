@@ -1013,11 +1013,16 @@ export default class Page extends BaseModel {
     if(presetsStore){
       presetsStore = _.uniq(presetsStore)
     }
+    console.log(elementNames)
+
     return elementNames;
   }
 
   async _extractElementsNames(element, elementNames, only_react_elements,  presetsStore:string[]| null = null) {
     if(! Page.coreElements.includes(element.name)){
+      if(! elementNames.includes(element.name)){
+        elementNames.push(element.name)
+      }
       return
     }
     let plugins_widget_list: any = ''
@@ -1134,7 +1139,6 @@ export default class Page extends BaseModel {
         }
       }
     }
-
   }
 
   /**

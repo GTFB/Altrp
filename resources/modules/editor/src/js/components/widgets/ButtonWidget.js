@@ -27,6 +27,7 @@ class ButtonWidget extends Component {
       this.render = props.baseRender(this);
     }
     this.onClick = this.onClick.bind(this);
+    this.buttonRef = React.createRef()
   }
 
   /**
@@ -77,6 +78,7 @@ class ButtonWidget extends Component {
     } else if (this.props.element.getResponsiveLockedSetting("actions", null, []).length) {
       e.preventDefault();
       e.stopPropagation();
+
       if (actions_loader) {
         this.setState(state => ({...state, showLoader: true}))
       }
@@ -215,7 +217,9 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    const {link_link = {}, advanced_tooltip: tooltip} = this.state.settings;
+    const {
+      link_link = {},
+      advanced_tooltip: tooltip} = this.state.settings;
     const {showLoader,} = this.state;
     const {back} = history;
     const background_image = this.props.element.getResponsiveLockedSetting(
@@ -224,6 +228,11 @@ class ButtonWidget extends Component {
       {}
     );
 
+    const loaderStyle = {}
+    if (showLoader) {
+      loaderStyle.width = this.buttonRef.current.offsetWidth
+      loaderStyle.height = this.buttonRef.current.offsetHeight
+    }
     let modelData = this.props.element.hasCardModel()
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
@@ -516,6 +525,7 @@ class ButtonWidget extends Component {
     }
 
     let button = <button
+      ref={this.buttonRef}
       onClick={this.onClick}
       onMouseEnter={this.onMouseEnter}
       className={classes}
@@ -523,7 +533,7 @@ class ButtonWidget extends Component {
       title={tooltip || null}
     >
       {buttonInner}
-      {showLoader && <Loader/>}
+      {showLoader && <Loader style={loaderStyle}/>}
 
     </button>;
 
@@ -539,6 +549,7 @@ class ButtonWidget extends Component {
         link = (
           <a
             href={url}
+            ref={this.buttonRef}
             onClick={this.onClick}
             onMouseEnter={this.onMouseEnter}
             className={classes}
@@ -564,6 +575,7 @@ class ButtonWidget extends Component {
       link = (
         <button
           onClick={() => (isEditor() ? null : back())}
+          ref={this.buttonRef}
           className={classes}
           id={this.state.settings.position_css_id}
           title={tooltip || null}

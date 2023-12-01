@@ -13,30 +13,52 @@ class FrontElementsManager {
    * @return {Promise<void>}
    */
   async loadComponents(elementsLists = null) {
-    let componentsToLoad;
+    let componentsToLoad = [];
     if(! elementsLists){
       elementsLists = window.altrpElementsLists
     }
+    const pluginsElements = {
+
+    }
     if (elementsLists) {
       elementsLists = elementsLists.filter(elementName =>{
-        return this.ELEMENTS.find(element => elementName === element.name);
+        let result = this.ELEMENTS.find(element => elementName === element.name);
+        if(! result){
+          let pluginFilters = _.get(window, 'altrpPlugins.frontElementFilters.' + elementName, [])
+          pluginFilters = _.orderBy(pluginFilters, 'priority')
+          if(pluginFilters[0]){
+            pluginsElements[elementName] = pluginFilters[0]
+            componentsToLoad.push(pluginFilters[0])
+            result = true
+          }
+        }
+        return result
       })
-      componentsToLoad = this.ELEMENTS.filter(el => {
+      this.elementsLists = elementsLists
+      componentsToLoad = [
+        ...this.ELEMENTS.filter(el => {
         return elementsLists.indexOf(el.name) !== -1;
-      });
-      // componentsToLoad = componentsToLoad.map(async el => {
-      //   return (this.components[el.name] = (
-      //     await el.import()
-      //   ).default);
-      // });
+      }),
+        ...componentsToLoad
+      ];
+
       componentsToLoad = componentsToLoad.map(el => {
-        // console.log(`START Loading Widget Component ${el.name}`, performance.now());
+
         return new Promise((resolve, reject) => {
-          el.import().then(res=>{
-            // console.log(`LOAD Widget Component ${el.name}`, performance.now());
-            this.components[el.name] = res.default
-            resolve(res);
-          })
+          try {
+
+            el.import().then(res=>{
+
+
+              this.components[el.name] = res.default || res
+              resolve(res);
+            }).catch(e=>{
+              reject(e)
+
+            })
+          }catch (e) {
+            reject(e)
+          }
         })
       });
     } else {
@@ -87,11 +109,11 @@ class FrontElementsManager {
    * проверяем все ли виджеты из window.altrpElementsLists загрузились
    */
   componentsIsLoaded() {
-    if(window.altrpElementsLists?.length && ! Object.keys(this.components).length ){
+    if(this.elementsLists?.length && ! Object.keys(this.components).length ){
       return false
     }
     let result = true
-    if (! window.altrpElementsLists) {
+    if (! this.elementsLists) {
       this.ELEMENTS.forEach(element=>{
         if(! result) {
           return
@@ -102,7 +124,7 @@ class FrontElementsManager {
       })
       return result
     }
-    window.altrpElementsLists.forEach(element=>{
+    this.elementsLists.forEach(element=>{
       if(! result) {
         return
       }
@@ -122,6 +144,7 @@ class FrontElementsManager {
   getComponentClass(name) {
     if (!this.components[name]) {
       console.error("Not found component with name: " + name);
+      console.log(this)
       return "div";
     }
     return this.components[name];

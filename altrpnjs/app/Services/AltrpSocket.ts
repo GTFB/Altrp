@@ -29,6 +29,7 @@ class AltrpSocket {
         origin: '*'
       }
     })
+    console.log('Socket started...')
 
     // if(isProd()){
     //   this.io.adapter(createAdapter());

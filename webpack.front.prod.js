@@ -33,6 +33,21 @@ module.exports ={
           plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
         }
       },
+      {
+        test: /\.svg$/,
+        exclude: /slick.svg$|spritesheet.svg$/,
+        use: [
+          {
+            loader: "babel-loader"
+          },
+          {
+            loader: "react-svg-loader",
+            options: {
+              jsx: true // true outputs JSX tags
+            }
+          }
+        ]
+      },
       // {
       //   test: /\.(js|jsx)$/,
       //   use: 'react-hot-loader/webpack',

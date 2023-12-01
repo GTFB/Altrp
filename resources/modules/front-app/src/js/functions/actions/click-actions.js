@@ -32,9 +32,6 @@ export default function clickActions(e){
     },
   ]
 
-  if(e.target.classList){
-    console.log(e.target.classList)
-  }
 
   actionsGroups.forEach(ag=>{
     let {actions, element} =
@@ -60,7 +57,8 @@ export default function clickActions(e){
 
         target.classList.add('position-relative')
         target.classList.add('overflow-hidden')
-
+        loader.style.width = target.offsetWidth + 'px'
+        loader.style.height = target.offsetHeight + 'px'
         loader.classList.add('altrp-loader')
         loader.addEventListener('click', e=>{
           e.stopPropagation()

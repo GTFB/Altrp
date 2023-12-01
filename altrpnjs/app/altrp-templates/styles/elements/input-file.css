@@ -97,3 +97,30 @@
   position: relative;
   width: 100%;
 }
+.altrp-file-input-icon{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+.altrp-file-input-icon svg{
+  max-height: 100%;
+  max-width: 100%
+}
+
+.altrp-widget_input-file .bp3-file-upload-input::after{
+  width: auto;
+  min-width: 0;
+}
+.bp3-file-input_preview.bp3-file-input_preview{
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+}

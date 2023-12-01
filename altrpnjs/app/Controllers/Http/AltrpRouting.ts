@@ -728,7 +728,6 @@ window.altrp_dictionary = ${JSON.stringify(_content.dictionary)};
         }
       }
     }
-
   }
   async  extractElementsNames(areas: any[] = [], _only_react_elements = true){
     let elementNames = [];

@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 import progressBar from "../js/functions/progressBar";
 import delay from "../../../front-app/src/js/functions/delay";
 import Pagination from "./Pagination";
+import {setCurrentPage} from "../js/store/current-page/actions";
 
 const columns = [
   {
@@ -104,6 +105,11 @@ class SettingPage extends Component {
     this.setState(state=>({...state, relationsOptions}))
   }
 
+  componentWillUnmount() {
+    console.log(this)
+    this.props.dispatch(setCurrentPage(null))
+  }
+
   getData = async () => {
     let res = await this.templateResource.getOptions();
     this.setState(state => {
@@ -165,6 +171,9 @@ class SettingPage extends Component {
     if (id) {
       this.getDataSources();
       let pageData = await this.resource.get(id);
+      console.log(this)
+      console.log(pageData)
+      this.props.dispatch(setCurrentPage(pageData))
       this.setState(state => {
         return {
           ...state,

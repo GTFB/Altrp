@@ -9,7 +9,7 @@ AltrpSocket.io?.on("connection", async (socket) => {
     socket.disconnect();
     return;
   }
-
+  console.log('Socket connected...')
   applyPluginsFiltersAsync("after_socket_connect", socket);
   socket.on("message", (message) => {
     if (message === "altrp-front-load") {

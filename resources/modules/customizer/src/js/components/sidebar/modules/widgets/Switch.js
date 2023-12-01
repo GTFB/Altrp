@@ -20,19 +20,19 @@ class Switch extends React.Component {
     const topStyle = handleMap === 'vertical' ? '0%' : '100%';
     const left = handleMap === 'vertical' ? '100%' : '0%';
     const items = this.props?.data?.props?.items || []
-    const handle = React.createElement(Handle, {
-      type: "source",
-      position: "top",
-      id: `yes-${0}`,
-      key: `yes-${0}`,
-      style: {
-        left,
-        zIndex: -10000,
-        visibility: 'hidden',
-        top: 20 * 0 + 'px',
-        borderRadius: 0
-      }
-    });
+    // const handle = React.createElement(Handle, {
+    //   type: "source",
+    //   position: "top",
+    //   id: `yes-${0}`,
+    //   key: `yes-${0}`,
+    //   style: {
+    //     left,
+    //     zIndex: -10000,
+    //     visibility: 'hidden',
+    //     top: 20 * 0 + 'px',
+    //     borderRadius: 0
+    //   }
+    // });
     return (
       <div className={nodeClasses}>
         <Handle
@@ -48,17 +48,17 @@ class Switch extends React.Component {
         {
           items.map((item, idx) => {
 
-            return <Handle
+            return <React.Fragment
+              key={`yes-${idx}`}><Handle
               type="source"
               position="top"
               id={`yes-${idx}`}
-              key={`yes-${idx}`}
               style={{
                 left,
                 top: 20 * idx + 'px',
                 borderRadius: 0
               }}
-            />
+            /></React.Fragment>
           })
         }
       </div>

@@ -86,6 +86,8 @@ export default class IndicesController {
       style,
       styleVars,
       altrpThemes,
+      applyPluginsFiltersAsync,
+
       css: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.css` : null
     }))

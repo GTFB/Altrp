@@ -72,7 +72,7 @@ export default class PageGenerator extends BaseGenerator {
     GlobalStyle.updateCssFile().catch(e=>{
       console.error('Error while GlobalStyle.updateCssFile', e)
     }).then(()=>{
-      console.error('GlobalStyle.updateCssFile success')
+      console.log('GlobalStyle.updateCssFile success')
     })
 
     const randomString = altrpRandomId()
@@ -93,8 +93,8 @@ export default class PageGenerator extends BaseGenerator {
     const presets = []
 
     let elements_list: string[] | string = await page.extractElementsNames(true, presets)
+    console.log(elements_list)
     let all_elements_list: string[] | string = await page.extractElementsNames(false)
-
 
     let presetsLinks = presets.map(p=>{
       return `<link rel="stylesheet" href="/altrp/css/altrp-presets/${p}.css"/>`

@@ -1,9 +1,10 @@
 # ALTRP
 
 ## Changelog
-### test version build 65
+### test version build 69
 
 ### 1.4.9
+* Add Elements Filters for Plugins Widgets
 * Add Spinner Loader for `Button` Widget
 * Add Themes for Styling
 * Add Permissions Support

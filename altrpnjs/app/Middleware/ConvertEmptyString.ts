@@ -3,7 +3,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 /**
  * Convert empty string to `null` value
  */
-export default class ConvertEmptyString {
+ class ConvertEmptyString {
   public async handle (
     { request }: HttpContextContract,
     next: () => Promise<void>,
@@ -31,3 +31,4 @@ export default class ConvertEmptyString {
     }
   }
 }
+export default ConvertEmptyString

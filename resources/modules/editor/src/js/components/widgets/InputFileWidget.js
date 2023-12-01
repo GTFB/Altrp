@@ -6,19 +6,6 @@ import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import {FileInput} from "@blueprintjs/core";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-.altrp-widget_input-file .bp3-file-upload-input::after{
-  width: auto;
-  min-width: 0;
-}
-.bp3-file-input_preview.bp3-file-input_preview{
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  width: 100px;
-  height: 100px;
-}
-`)
 
 class InputFileWidget extends Component {
 
@@ -34,7 +21,7 @@ class InputFileWidget extends Component {
     this.state = {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
-      imageUrls_0: this.defaultValue ?  this.getLockedContent("default_value", true)?.url :
+      imageUrls_0: this.defaultValue ? this.getLockedContent("default_value", true)?.url :
         _.get(props.element.getResponsiveLockedSetting('preview_placeholder'), 'url'),
     };
     this.altrpSelectRef = React.createRef();
@@ -94,7 +81,8 @@ class InputFileWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("default_value", true)?.id || null;;
+      value = this.getLockedContent("default_value", true)?.id || null;
+      ;
     }
 
     /**
@@ -147,7 +135,10 @@ class InputFileWidget extends Component {
     const {content_options, model_for_options} = this.state.settings;
     if (!this.getValue() && this.state.imageUrls_0 !== _.get(this.props.element.getResponsiveLockedSetting('preview_placeholder'), 'url')) {
       this.setState(
-        state => ({...state, imageUrls_0: _.get(this.props.element.getResponsiveLockedSetting('preview_placeholder'), 'url')})
+        state => ({
+          ...state,
+          imageUrls_0: _.get(this.props.element.getResponsiveLockedSetting('preview_placeholder'), 'url')
+        })
       )
     }
     if (
@@ -338,35 +329,35 @@ class InputFileWidget extends Component {
     this.setState(state => ({...state, notActive: true}))
     const {filesStorage} = this.state;
     try {
-      if(_.isArray(filesStorage))
-      {
-        await Promise.all(filesStorage.map(async file=>(await file.deleteFileFromStorage())))
+      if (_.isArray(filesStorage)) {
+        await Promise.all(filesStorage.map(async file => (await file.deleteFileFromStorage())))
       }
-    }catch (e) {
+    } catch (e) {
       console.error(e);
     }
     const files = e?.target?.files || [];
+    this.setState(state => ({...state, files}))
     const limit = this.props.element.getResponsiveLockedSetting('limit');
     let value;
     if (this.props.element.getResponsiveLockedSetting('multiple')) {
       value = _.map(files, (file, idx) => {
         return new AltrpFile(file)
       })
-      if(limit){
+      if (limit) {
         value = value.slice(0, limit)
       }
-      this.setState(state=>({...state, filesStorage: value}))
+      this.setState(state => ({...state, filesStorage: value}))
       try {
         value = await Promise.all(value.map(async file => ((await file.storeFile()).getProperty('media.id'))))
-      }catch (e) {
+      } catch (e) {
         console.error(e);
       }
     } else {
       value = new AltrpFile(files[0])
-      this.setState(state=>({...state, filesStorage: [value]}))
+      this.setState(state => ({...state, filesStorage: [value]}))
       try {
         value = (await value.storeFile()).getProperty('media.id')
-      }catch (e) {
+      } catch (e) {
         console.error(e);
       }
     }
@@ -379,12 +370,16 @@ class InputFileWidget extends Component {
     this.setState(state => ({...state, key: Math.random()}))
     try {
       _.forEach(files, (file, idx) => {
-        if(limit && idx >= limit){
+        if (limit && idx >= limit) {
           return
         }
         const reader = new FileReader
         reader.readAsDataURL(file)
         reader.onload = () => {
+
+          if (file.type.indexOf('image') !== 0) {
+            return
+          }
           this.setState(state => {
               state[`imageUrls_${idx}`] = reader.result;
               return {...state};
@@ -396,7 +391,7 @@ class InputFileWidget extends Component {
       console.error(e);
     }
     this.setState(state => ({...state, notActive: false}))
-
+    this.afterUpdate()
   }
 
   /**
@@ -449,12 +444,12 @@ class InputFileWidget extends Component {
   /**
    * Получить css классы для input file
    */
-  getClasses = ()=>{
+  getClasses = () => {
     let classes = ``;
-    if(this.isActive()){
+    if (this.isActive()) {
       classes += 'active '
     }
-    if(this.isDisabled()){
+    if (this.isDisabled()) {
       classes += 'state-disabled '
     }
     return classes;
@@ -472,9 +467,9 @@ class InputFileWidget extends Component {
     }
     let text
     const {filesStorage, notActive} = this.state
-    if(_.isArray(filesStorage)){
+    if (_.isArray(filesStorage)) {
       text = filesStorage.map(file => file.getFileName()).join(', ');
-    } else if(filesStorage instanceof AltrpFile) {
+    } else if (filesStorage instanceof AltrpFile) {
       text = filesStorage.getFileName()
     } else {
       text = replaceContentWithData(element.getResponsiveLockedSetting('placeholder'), element.getCurrentModel().getData())
@@ -490,17 +485,100 @@ class InputFileWidget extends Component {
     }
     if (element.getResponsiveLockedSetting('preview')) {
       fileInputProps.style = {
-        backgroundImage: `url(${this.state.imageUrls_0})`,
-        pointerEvents : notActive ? 'none' : '',
+        backgroundImage: this.showIconPaceGolder() ? 'none' : `url(${this.state.imageUrls_0})`,
+        pointerEvents: notActive ? 'none' : '',
       }
       fileInputProps.className = `${classes} bp3-file-input_preview`
+      if(isEditor()){
+        fileInputProps.style.pointerEvents = 'none'
+      }
     }
     return (
-      <FileInput {...fileInputProps} ref={this.wrapperRef}/>
+      <>
+
+        <FileInput {...fileInputProps} ref={this.wrapperRef}/>
+        {this.showIconPaceGolder() && this.renderIcon()}
+      </>
     );
 
   }
 
+  afterUpdate = async () => {
+    const {element} = this.props
+    const {
+      files = []
+    } = this.state
+    const file = files[0]
+    if (file && element.getResponsiveLockedSetting('preview') && file.type.indexOf('image') !== 0) {
+
+
+      const IconFile = await getPlaceHolder(file)
+
+      if (IconFile !== this.state.IconFile) {
+        this.setState(state => ({...state, IconFile}))
+
+      }
+
+    }
+  }
+
+  renderIcon() {
+    const {
+      IconFile,
+      files,
+    } = this.state
+    if (IconFile) {
+
+      return <div className="altrp-file-input-icon">
+        <IconFile width={32} height={32} viewBox="0 0 32 32"/>
+        {files[0].name}
+      </div>
+
+    }
+    return ''
+
+  }
+
+  showIconPaceGolder() {
+    if(isEditor()){
+      return  false
+    }
+    const {
+      files = [],
+    } = this.state
+    const file = files[0]
+    if (!file) {
+      return false
+    }
+    return file.type.indexOf('image') !== 0
+  }
 }
 
 export default InputFileWidget;
+
+
+const getIcons = {
+  csv: import(/* webpackChunkName: 'FileCsv' */ '../../../svgs/file-types/FileCsv.svg'),
+  doc: import(/* webpackChunkName: 'FileDoc' */ '../../../svgs/file-types/FileDoc.svg'),
+  jpg: import(/* webpackChunkName: 'FileJpg' */ '../../../svgs/file-types/FileJpg.svg'),
+  pdf: import(/* webpackChunkName: 'FilePdf' */ '../../../svgs/file-types/FilePdf.svg'),
+  png: import(/* webpackChunkName: 'FilePng' */ '../../../svgs/file-types/FilePng.svg'),
+  ppt: import(/* webpackChunkName: 'FilePpt' */ '../../../svgs/file-types/FilePpt.svg'),
+  svg: import(/* webpackChunkName: 'FileSvg' */ '../../../svgs/file-types/FileSvg.svg'),
+  xls: import(/* webpackChunkName: 'FileXls' */ '../../../svgs/file-types/FileXls.svg'),
+  zip: import(/* webpackChunkName: 'FileZip' */ '../../../svgs/file-types/FileZip.svg'),
+  default: import(/* webpackChunkName: 'FileArrowUp' */ '../../../svgs/file-types/FileArrowUp.svg'),
+}
+
+
+async function getPlaceHolder(file) {
+  if (!file) {
+    return ''
+  }
+  const ext = file.name.split('.').pop()
+
+  if (getIcons[ext]) {
+    return (await getIcons[ext]).default
+  }
+  return (await getIcons.default).default
+}

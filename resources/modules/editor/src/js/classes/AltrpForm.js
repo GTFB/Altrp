@@ -106,7 +106,7 @@ class AltrpForm {
     customHeaders = null,
     emptyFieldMessage ,
   ) {
-    this.updateResponseStorage('pending');
+    //this.updateResponseStorage('pending'); todo: merge {"__altrp_status": "pending"} with current data
 
     let success = true;
     if (submitText) {

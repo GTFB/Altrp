@@ -335,7 +335,11 @@ class CustomizerSettingsPanel extends React.Component {
                                      {
                                        value: 'schedule',
                                        label: 'Schedule'
-                                     }
+                                     },
+                                     {
+                                       value: 'global_middleware',
+                                       label: 'Global Middleware'
+                                     },
                                      // {
                                      //   value: 'before',
                                      //   label: 'Before Page Load',
