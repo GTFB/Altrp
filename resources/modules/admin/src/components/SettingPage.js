@@ -58,6 +58,7 @@ class SettingPage extends Component {
         permissions: [],
         rolesOptions: [{value: "guest", label: "Guest"}],
         title: "",
+        permissionsOptions: [],
         _categories: [],
         categories: [],
         not_found: null
@@ -171,8 +172,6 @@ class SettingPage extends Component {
     if (id) {
       this.getDataSources();
       let pageData = await this.resource.get(id);
-      console.log(this)
-      console.log(pageData)
       this.props.dispatch(setCurrentPage(pageData))
       this.setState(state => {
         return {
@@ -621,6 +620,7 @@ class SettingPage extends Component {
 
   render() {
     const {isModalOpened, editingDataSource} = this.state;
+    const permissionsOptions = this.state.value?.permissionsOptions || []
     let {dataSources} = this.state;
     let id = this.props.id
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
@@ -862,12 +862,12 @@ class SettingPage extends Component {
 
                             <MultiSelect tagRenderer={this.tagRenderer}
                                          id="permission"
-                                         items={this.state.value.permissionsOptions}
+                                         items={permissionsOptions}
                                          itemPredicate={this.onQueryChange}
                                          noResults={<MenuItem disabled={true} text="No results."/>}
                                          fill={true}
                                          placeholder="All..."
-                                         selectedItems={this.state.value.permissionsOptions.filter(i => this.isItemSelectedPermissions(i))}
+                                         selectedItems={permissionsOptions.filter(i => this.isItemSelectedPermissions(i))}
                                          onItemSelect={this.handleItemSelectPermissions}
                                          itemRenderer={(item, {handleClick, modifiers, query}) => {
                                            return (

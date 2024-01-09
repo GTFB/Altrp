@@ -11,6 +11,10 @@ export const SET_GLOBAL_FONTS = "SET_GLOBAL_FONTS";
 export const ADD_GLOBAL_FONT = "ADD_GLOBAL_FONT";
 export const EDIT_GLOBAL_FONT = "EDIT_GLOBAL_FONT";
 export const DELETE_GLOBAL_FONT = "DELETE_GLOBAL_FONT";
+export const SET_GLOBAL_SIZES = "SET_GLOBAL_SIZES";
+export const ADD_GLOBAL_SIZE = "ADD_GLOBAL_SIZE";
+export const EDIT_GLOBAL_SIZE = "EDIT_GLOBAL_SIZE";
+export const DELETE_GLOBAL_SIZE = "DELETE_GLOBAL_SIZE";
 
 export function setGlobalColors(colors) {
   colors = colors?.map( color=>getCssVarFromGlobalStyle(color))
@@ -90,5 +94,34 @@ export function deleteGlobalFont(font) {
   return {
     type: DELETE_GLOBAL_FONT,
     font
+  };
+}
+
+export function setGlobalSizes(sizes) {
+  sizes = sizes?.map( s=>getCssVarFromGlobalStyle(s)) || []
+  return {
+    type: SET_GLOBAL_SIZES,
+    sizes
+  };
+}
+
+export function addGlobalSize(size) {
+  return {
+    type: ADD_GLOBAL_SIZE,
+    size
+  };
+}
+
+export function editGlobalSize(size) {
+  size=getCssVarFromGlobalStyle(size)
+  return {
+    type: EDIT_GLOBAL_SIZE,
+    size
+  };
+}
+export function deleteGlobalSize(size) {
+  return {
+    type: DELETE_GLOBAL_SIZE,
+    size
   };
 }

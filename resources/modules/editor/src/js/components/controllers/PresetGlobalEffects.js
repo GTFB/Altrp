@@ -35,7 +35,7 @@ class PresetGlobalEffects extends Component {
     return (
       <div className="controller-container controller-container_select controller-container_select_typographic">
         <div className="controller-container__label control-select__label">
-          Global Effects
+          Effect Styles
         </div>
         <div className="control-container_select-wrapper">
           <select

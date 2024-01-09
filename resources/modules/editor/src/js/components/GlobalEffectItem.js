@@ -13,6 +13,7 @@ import { SketchPicker } from "react-color";
 import Resource from "../classes/Resource";
 import GlobalPresetColors from "./controllers/GlobalPresetColors";
 import updateCssVars from "../helpers/update-css-vars";
+import DesignCategorySelect from "./DesignCategorySelect";
 
 const typeOptions = [
   {
@@ -162,6 +163,7 @@ class GlobalEffectItem extends Component {
     let activeItem = typeOptions.filter(item => item.value === effect.type)[0] || typeOptions[0];
     return (
       <React.Fragment>
+
         {!this.props.isNew && (
           <Button
             style={{ width: "100%", marginBottom: mgButton }}

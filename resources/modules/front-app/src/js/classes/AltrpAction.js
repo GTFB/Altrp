@@ -300,6 +300,10 @@ class AltrpAction extends AltrpModel {
         result = await this.doActionCustomCode();
       }
         break;
+      case 'dropbar': {
+        result = await this.doActionToggleDropbar();
+      }
+        break;
       case 'play_sound': {
         result = await this.doActionPlaySound();
       }
@@ -761,7 +765,6 @@ class AltrpAction extends AltrpModel {
    */
   async doActionScrollToElement() {
     let elementId = this.getProperty('element_id');
-    console.log(elementId);
     if (!elementId) {
       return {success: true};
     }
@@ -1585,6 +1588,24 @@ class AltrpAction extends AltrpModel {
     pageReload()
     return  {success:true}
 
+  }
+  async doActionToggleDropbar(){
+    let elements =  this.getProperty('elements_ids') || ''
+
+    elements = elements.split(',')
+    elements = elements.map(e=>e.trim())
+    elements = elements.map(e=>document.getElementById(e))
+    elements = elements.filter(e=>e)
+    elements = elements.map(e=>e.querySelector('.altrp-dropbar'))
+    elements = elements.filter(e=>e)
+    elements = elements.map(e=>e.dropbarComponent)
+    elements = elements.filter(e=>e)
+    for(const element of elements){
+      element.show && element.show()
+    }
+    return{
+      success: true
+    }
   }
 }
 

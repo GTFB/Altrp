@@ -12,6 +12,7 @@ import AltrpMeta from 'App/Models/AltrpMeta'
 import Database from "@ioc:Adonis/Lucid/Database";
 import guid from "../helpers/guid";
 import Application from "@ioc:Adonis/Core/Application";
+import Area from "App/Models/Area";
 
 if (Application.environment === 'web') {
   console.log('Starting DB prepare')
@@ -90,5 +91,49 @@ if (Application.environment === 'web') {
   }).catch(() => {
     console.log('foreign key page_permission exists')
   })
+
+
+
+
+  const areas = [
+    {
+      name: "content",
+      title: "Content",
+      guid: guid(),
+      settings: "[]"
+    },
+    {
+      name: "header",
+      title: "Header",
+      guid: guid(),
+      settings: "[]"
+    },
+    {
+      name: "footer",
+      title: "Footer",
+      guid: guid(),
+      settings: "[]"
+    },
+    {
+      name: "card",
+      title: "Card",
+      guid: guid(),
+      settings: "[]"
+    },
+    {
+      name: "popup",
+      title: "Popup",
+      guid: guid(),
+      settings: "[]"
+    },
+    {
+      name: "mails",
+      title: "Mails",
+      guid: guid(),
+      settings: "[]"
+    },
+  ]
+
+    Area.fetchOrCreateMany('name', areas)
 
 }

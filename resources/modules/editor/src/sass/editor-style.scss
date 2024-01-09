@@ -806,6 +806,10 @@ button {
   width: auto;
   display: flex;
   flex-direction: row;
+  &_size{
+
+    width: 100%;
+  }
 }
 .control-select__label {
   margin-right: auto;
@@ -1306,7 +1310,8 @@ button {
   font-size: 13px;
   position: relative;
   right: -10px;
-  width: 58px;
+  width: calc(100% - 43px);
+  overflow: hidden;
   height: 15px;
   color: #8e94aa;
   margin: 0px;
@@ -1360,10 +1365,16 @@ button {
   position: relative;
   padding-top: 5px;
   border-top: 1px solid $light-light-gray;
+  max-height: 240px;
+  overflow: auto;
+  .control-field{
+    width: 198px;
+    margin-bottom: 10px;
+  }
   &-wrapper {
-    width: 16px;
-    height: 16px;
-    margin: 0 10px 10px 0;
+    width: 15px;
+    height: 15px;
+    margin: 0 8px 9px 0;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==);
   }
   &__item {
@@ -2433,7 +2444,9 @@ button {
     font-size: 14px;
     margin-bottom: 5px;
   }
-
+  & .control-dimensions-container label{
+    font-size: 9px;
+  }
   & .bp3-menu {
     max-height: 200px;
     overflow: auto;
@@ -2446,6 +2459,19 @@ button {
 
   & .bp3-popover-target {
     width: 100%;
+  }
+  & .screens-container{
+    width: 25px;
+  }
+  &.global-size__group{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  & .control-slider-type{
+    width: calc(100% - 25px);
+    justify-content: flex-end;
   }
 }
 
@@ -2621,4 +2647,10 @@ body {
 
 .tox-statusbar__branding{
   display: none;
+}
+.design-category-select{
+  margin-bottom: 15px;
+  .control-container_select-wrapper{
+    width: 119px;
+  }
 }

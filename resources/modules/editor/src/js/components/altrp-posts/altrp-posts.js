@@ -666,6 +666,9 @@ class AltrpPosts extends React.Component {
   getPosts = () => {
     let {data: posts} = this.props;
     if (this.query_sync && !isEditor()) {
+      if (!_.isArray(posts)) {
+        posts = [];
+      }
       return posts
     }
     if (!_.isArray(posts) && _.isObject(posts)) {

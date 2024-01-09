@@ -338,6 +338,7 @@ export default class MediaController {
       if (!file) {
         continue;
       }
+
       // @ts-ignore
       const ext = file.clientName.split(".").pop();
       let media = new Media();

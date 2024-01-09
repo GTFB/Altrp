@@ -216,7 +216,6 @@ export default class CustomizersController {
     }
 
     let {categories = []} = all
-    console.log(categories)
 
     if(customizer){
       // @ts-ignore
@@ -357,6 +356,7 @@ export default class CustomizersController {
   public async index({request, response}: HttpContextContract) {
 
     let search = request.qs().s || ''
+    search = search.trim()
     let categories = request.qs() || ''
     let page = request.qs().page || 1
     let pageSize = request.qs().pageSize || 20

@@ -197,8 +197,12 @@ class GlobalFontItemAdd extends Component {
   onSaveFont(event) {
     event.preventDefault();
     const { font } = this.state;
+
+    const category_guid = editorStore.getState().currentCategory?.value || null
+
     const send = {
       type: "font",
+      category_guid,
       settings: JSON.stringify(font)
     };
     this.globalStyleResource.post(send).then(success => {

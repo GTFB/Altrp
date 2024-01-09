@@ -5,9 +5,10 @@ import isProd from "../../helpers/isProd";
 import base_path from "../../helpers/base_path";
 import Customizer from "App/Models/Customizer";
 import Page from "App/Models/Page";
+import GlobalMiddlewareGenerator from "App/Generators/GlobalMiddlewareGenerator";
 
 export default class RouterGenerator {
-
+  customMiddlewares = ''
   public static customizersFileName: string = base_path('/start/routes/custom/routes.' + (isProd() ? 'js' : 'ts'))
 
   public async run(): Promise<void> {
@@ -17,6 +18,45 @@ export default class RouterGenerator {
       fs.mkdirSync(base_path('/start/routes/custom/'))
     }
 
+    let globalMiddlewares: any = await Customizer.query().where('type', 'global_middleware')
+
+    const gmGenerator = new GlobalMiddlewareGenerator()
+
+    GlobalMiddlewareGenerator.clearFolder()
+    for(const gm of globalMiddlewares){
+      try{
+        await gmGenerator.run(gm)
+
+      }catch (e) {
+        console.error('Error While Generate Global Middleware', gm.toJSON(), e)
+      }
+    }
+
+    globalMiddlewares = globalMiddlewares.map(gm=>{
+      const startNode = gm.getStartNode()
+      let priority = 10
+      if(startNode?.data?.data?.priority){
+        priority = Number(startNode?.data?.data?.priority)
+
+      }
+
+      return {
+        gm,
+        priority
+      }
+    })
+    globalMiddlewares = _.orderBy(globalMiddlewares, 'priority')
+    this.customMiddlewares = ''
+    for(const middle of globalMiddlewares){
+      this.customMiddlewares += `
+  .middleware(async (htpContext, next, options)=>{
+
+
+    let middleware = require('../../../app/AltrpGlobalMiddlewares/${middle.gm.name}Middleware').default
+    middleware = new middleware
+    return await middleware.handle(htpContext, next, options)
+  })`
+    }
     if (fs.existsSync(RouterGenerator.customizersFileName)) {
       let oldContent: string = fs.readFileSync(RouterGenerator.customizersFileName, {encoding: 'utf8'})
       if (oldContent) {
@@ -51,7 +91,6 @@ export default class RouterGenerator {
 
       const middlewares = c.settings?.middlewares || []
       let cors = ! ! middlewares.find(m => m?.value === 'cors')
-      //cors && console.log(c.id);
       if(! c.altrp_model || ! c.altrp_model?.table){
         return  null
       }
@@ -91,7 +130,7 @@ Route.${method}('${url}', async (httpContext)=>{
 }).middleware('catch_unhandled_json')
   .middleware('strip_tags')${
         cors ? `.middleware('cors')` : ''
-      };
+      }${this.customMiddlewares};
       `
     })
     content +=`
@@ -137,9 +176,10 @@ Route.get('${page.path}', async (httpContext)=>{
     httpContext,
     ${page.id}
   );
-})
+})${this.customMiddlewares}
       `
     })
+
     return content
   }
 }

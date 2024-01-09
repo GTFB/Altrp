@@ -48,11 +48,12 @@ export default function clickActions(e){
     e.preventDefault();
     e.stopPropagation();
     import(/* webpackChunkName: 'ActionsManager' */'../../classes/modules/ActionsManager').then(()=>{
-      const target = e.target.closest('.altrp-btn')
+      //const target = e.target.closest('.altrp-btn')
+      const target = e.target.closest('[data-with-loader]')
 
       const loader = document.createElement('div')
 
-      if(target.getAttribute('data-with-loader')){
+      if(target?.getAttribute('data-with-loader')){
         target.appendChild(loader)
 
         target.classList.add('position-relative')
@@ -85,8 +86,8 @@ export default function clickActions(e){
         element
       ).finally(()=>{
         loader.remove()
-        target.classList.remove('position-relative')
-        target.classList.remove('overflow-hidden')
+        target?.classList.remove('position-relative')
+        target?.classList.remove('overflow-hidden')
       })
     })
   })

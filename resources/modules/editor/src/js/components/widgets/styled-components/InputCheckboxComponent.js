@@ -171,15 +171,13 @@ const fieldStyle = settings => {
 
 
   //checkbox .active
+  styles += `}
+  & .altrp-field-checkbox.altrp-field-checkbox .input::checked ~ .bp3-control-indicator {`;
 
-  settings && (size = getResponsiveSetting(settings, "field_size", ".active"));
-  size && (styles += `height:${sliderStyled(size)};width:${sliderStyled(size)};`);
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
-  settings && (padding = getResponsiveSetting(settings, "position_padding", ".active"));
-  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
 
   settings && (borderType = getResponsiveSetting(settings, "border_type", ".active"));
   borderType &&
@@ -204,13 +202,11 @@ const fieldStyle = settings => {
     settings,
     "background_style_background_color", ".active"
   ));
+  styles += `}
+  & .altrp-field-checkbox.altrp-field-checkbox input:checked ~ .bp3-control-indicator::before {`;
   backgroundColor &&
   (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
-  placeholder_and_value_alignment_position_section &&
-  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
-
-  position_z_index && (styles += `z-index:${position_z_index};`);
 
   styles += "}";
   // end of state active setting

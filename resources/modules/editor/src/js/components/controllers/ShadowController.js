@@ -75,7 +75,6 @@ class ShadowController extends Component {
     const effectValue = {
       ...guidEffect,
     };
-    console.log(guidEffect);
     if (guidEffect) {
       this._changeValue({
         ...this.defaultValues,

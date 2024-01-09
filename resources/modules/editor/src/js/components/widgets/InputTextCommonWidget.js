@@ -119,7 +119,6 @@ class InputTextCommonWidget extends Component {
   };
 
   /**
-   * Загрузка виджета
    * @param {{}} prevProps
    * @param {{}} prevState
    */

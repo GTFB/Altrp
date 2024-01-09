@@ -140,6 +140,14 @@ class ElementWrapper extends Component {
       let title = appStore.getState().currentTitle;
       title = replaceContentWithData(title);
     }
+    if(this.props.element.getResponsiveSetting('sticky') === 'half_top'){
+      if(! this.halfTopElement || this.halfTopElement !== this.elementWrapperRef.current){
+        this.halfTopElement = this.elementWrapperRef.current
+        import('../functions/elements/sticky-half-top').then(module=>{
+          module.default(this.halfTopElement)
+        })
+      }
+    }
   }
 
   /**

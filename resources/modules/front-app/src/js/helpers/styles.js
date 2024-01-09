@@ -50,6 +50,25 @@ export function dimensionsControllerToStyles(
   if (_.isEmpty(data)) {
     return styles;
   }
+
+  if(data.guid && data.cssVar){
+    switch (styleProperty){
+
+      case "padding":
+        styles += `padding: ${data.cssVar};`
+        break;
+      case "margin":
+        styles += `margin: ${data.cssVar};`
+        break;
+      case "border-radius":
+        styles += `border-radius: ${data.cssVar};`
+        break;
+      case "border-width":
+        styles += `border-width: ${data.cssVar};`
+        break;
+    }
+    return styles
+  }
   const { left, top, right, bottom, unit } = data;
   switch (styleProperty) {
     case "border-width":
@@ -602,6 +621,26 @@ export function marginTopLeftStyled(data = {}, position) {
     const top = controller.top;
 
     let styles = "";
+
+
+    if(controller.guid && controller.cssVar){
+      switch (style){
+
+        case "padding":
+          styles += `padding: ${controller.cssVar};`
+          break;
+        case "margin":
+          styles += `margin: ${controller.cssVar};`
+          break;
+        case "border-radius":
+          styles += `border-radius: ${controller.cssVar};`
+          break;
+        case "border-width":
+          styles += `border-width: ${controller.cssVar};`
+          break;
+      }
+      return styles
+    }
 
     if(controller.left) {
       switch (style) {

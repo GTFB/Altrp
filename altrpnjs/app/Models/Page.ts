@@ -893,7 +893,6 @@ export default class Page extends BaseModel {
         headerContent = await _template.getChildrenContent(screenName, randomString)
       }
     }
-
     let contentStyleLink = ''
 
     if (contentGuid) {
@@ -924,7 +923,7 @@ export default class Page extends BaseModel {
       footerStyleLink = `<link href="${cssHref}?${randomString}" id="altrp-footer-css-link-${footerGuid}" rel="stylesheet"/>`
     }
 
-    let result = `<div class="app-area app-area_header">
+    let result = `<div class="app-area app-area_header" >
       ${headerGuid ? headerContent : ''}
       </div>
       <div class="app-area app-area_content">
@@ -1013,7 +1012,7 @@ export default class Page extends BaseModel {
     if(presetsStore){
       presetsStore = _.uniq(presetsStore)
     }
-    console.log(elementNames)
+
 
     return elementNames;
   }

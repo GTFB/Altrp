@@ -1,1 +1,1 @@
-<div class="sections-wrapper altrp-template-root{{id}}">{{{children_content}}}</div>
+<div class="sections-wrapper altrp-template-root{{id}}" {{{attributes}}}>{{{children_content}}}</div>

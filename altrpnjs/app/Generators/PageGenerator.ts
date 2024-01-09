@@ -90,21 +90,21 @@ export default class PageGenerator extends BaseGenerator {
       })
     })
 
-    const presets = []
+    let presets = []
 
     let elements_list: string[] | string = await page.extractElementsNames(true, presets)
-    console.log(elements_list)
-    let all_elements_list: string[] | string = await page.extractElementsNames(false)
 
+    let all_elements_list: string[] | string = await page.extractElementsNames(false)
+    presets = _.uniq(presets)
     let presetsLinks = presets.map(p=>{
-      return `<link rel="stylesheet" href="/altrp/css/altrp-presets/${p}.css"/>`
+      return `<link rel="stylesheet" href="/altrp/css/altrp-presets/${p}.css?${randomString}"/>`
     }).join('')
 
     const {extra_header_styles, extra_footer_styles} = await this.getExtraStyles(elements_list, all_elements_list)
     elements_list = elements_list.map(e => `'${e}'`)
 
-    const head_start = get_altrp_setting('head_start', '', true) + presetsLinks
-    const head_end = get_altrp_setting('head_end', '', true)
+    const head_start = get_altrp_setting('head_start', '', true)
+    const head_end = get_altrp_setting('head_end', '', true) + presetsLinks
     const body_start = get_altrp_setting('body_start', '', true)
     const body_end = get_altrp_setting('body_end', '', true)
 

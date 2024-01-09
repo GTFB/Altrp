@@ -1,0 +1,14 @@
+.altrp-sticky-half-top {
+  transition-property: transform;
+  position: fixed;
+  top: 0;
+  transform: translate(0, -100%);
+  z-index: 100;
+  &_down {
+    transition-duration: .3s;
+    transform: translate(0, 0);
+  }
+  &_up {
+    transition-duration: .3s;
+  }
+}

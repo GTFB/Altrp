@@ -87,8 +87,11 @@ export default function altrpCompare(
       }
       let result = false;
       leftValue.forEach(item => {
+        if(_.isObject(item)){
+          return
+        }
         if (!result) {
-          result = altrpCompare(rightValue, item, "contain");
+          result = rightValue == item;
         }
       });
       return result;

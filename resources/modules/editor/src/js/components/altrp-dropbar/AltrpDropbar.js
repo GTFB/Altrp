@@ -18,6 +18,7 @@ class Dropbar extends Component {
     };
     this.element = props.element;
     this.children = React.createRef();
+    this.wrapper = React.createRef();
     if(! isEditor() && props.settings.mode_dropbar_options === 'click'){
       document.addEventListener('click', this.onDocumentClick)
     }
@@ -110,6 +111,10 @@ class Dropbar extends Component {
     // };
   };
 
+  componentDidMount() {
+    this.wrapper.current.dropbarComponent = this
+
+  }
   componentDidUpdate(prevProps, prevState, snapshot) {
     if(this.state.show !== prevState.show) {
     }
@@ -143,7 +148,7 @@ class Dropbar extends Component {
 
     const cardModel = this.element.hasCardModel() ? this.element.getCardModel() : null
     return (
-      <div className={this.props.conditionalClasses + "altrp-dropbar " + mainClass}>
+      <div className={this.props.conditionalClasses + "altrp-dropbar " + mainClass}ref={this.wrapper} >
         <span className={this.props.conditionalClasses + "altrp-dropbar-children-wrapper " + (mainClass ? mainClass + "-wrapper" : '')}
               style={{width: '100%'}}
               onMouseEnter={this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null}

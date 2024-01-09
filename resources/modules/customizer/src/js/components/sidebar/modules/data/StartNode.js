@@ -11,8 +11,7 @@ import {Button, MenuItem, Switch} from "@blueprintjs/core";
 class StartNode extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    }
+    this.state = {}
   }
 
   componentDidMount() {
@@ -23,7 +22,7 @@ class StartNode extends React.Component {
     let node = this.getNode();
     let value = _.isString(e?.target?.value) ? e.target.value : e;
 
-    if(path === "static_method" || path === "async_method") {
+    if (path === "static_method" || path === "async_method") {
       const nodeValue = mutate.get(node, `data.${path}`)
 
       value = !nodeValue
@@ -34,8 +33,8 @@ class StartNode extends React.Component {
     store.dispatch(setUpdatedNode(node));
   }
 
-  getNode(){
-    let node =  this.props.customizerSettingsData?.find(n=>{
+  getNode() {
+    let node = this.props.customizerSettingsData?.find(n => {
       return this.props.selectNode?.id == n.id
     });
     return node;
@@ -47,33 +46,21 @@ class StartNode extends React.Component {
 
   render() {
     const node = this.getNode();
-    const {request_type, static_method, async_method} = node?.data;
+    const {
+      request_type,
+      static_method,
+      async_method,
+      middleware_type,
+      priority = 10,
+    } = node?.data;
     const customizerType = this.props.customizer?.type;
 
     let _methodParams = node?.data?.methodParams || [];
 
-    const methodParams = _methodParams.map(i=>({
+    const methodParams = _methodParams.map(i => ({
       value: i,
       label: i
     }))
-    const requestTypeOptions = [
-      {
-        value: 'get',
-        label: 'Get',
-      },
-      {
-        value: 'post',
-        label: 'Post',
-      },
-      {
-        value: 'put',
-        label: 'Put',
-      },
-      {
-        value: 'delete',
-        label: 'Delete',
-      },
-    ];
     return (
       <div>
 
@@ -119,6 +106,33 @@ class StartNode extends React.Component {
                 </select>
               </div>
             </div>}
+            {this.shouldShowMiddlewareParams() &&
+              <>
+            <div className="controller-container controller-container_select">
+              <div className="controller-container__label control-select__label controller-label">Middleware Type:</div>
+              <div className="control-container_select-wrapper controller-field">
+                <select className="control-select control-field"
+                        value={middleware_type || ''}
+                        onChange={e => {
+                          this.changeByPath(e, "middleware_type")
+                        }}
+                >
+                  {middlewareTypes.map(option => {
+                    return <option value={option.value} key={option.value || 'null'}>{option.label}</option>
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className="controller-container controller-container_select">
+              <div className="controller-container__label control-select__label controller-label">Middleware Priority (lesser goes first):</div>
+              <div className="control-container_select-wrapper controller-field">
+                <input className="control-select control-field" value={priority} onChange={e => {
+                  this.changeByPath(e, "priority")
+                }}/>
+              </div>
+            </div>
+              </>
+            }
             {this.shouldShowMethodParams() &&
             <div className="controller-container controller-container_select controller-container_validator-params">
               <div className="settings-section__label QueryBuilderNode__label">Method Params:</div>
@@ -127,9 +141,9 @@ class StartNode extends React.Component {
                 placeholder={`Select or Add Params`}
                 itemsEqual={this.itemsEqual}
                 popoverProps={popoverProps}
-                createNewItemFromQuery={ this.createNewItemFromQuery }
+                createNewItemFromQuery={this.createNewItemFromQuery}
                 createNewItemRenderer={this.createNewItemRenderer}
-                itemRenderer={(item, {handleClick, modifiers, query,index}) => {
+                itemRenderer={(item, {handleClick, modifiers, query, index}) => {
                   if (!modifiers.matchesPredicate) {
                     return null;
                   }
@@ -153,7 +167,8 @@ class StartNode extends React.Component {
                 resetOnSelect={true}
                 tagInputProps={{
                   onRemove: this.handleTagRemove,
-                  rightElement: <Button icon="cross" minimal={true} className={` altrp-clear`} onClick={this.handleClear} />,
+                  rightElement: <Button icon="cross" minimal={true} className={` altrp-clear`}
+                                        onClick={this.handleClear}/>,
                 }}
                 tagRenderer={this.tagRender}
               >
@@ -167,13 +182,13 @@ class StartNode extends React.Component {
     );
   }
 
-  onItemSelect = (value)=>{
+  onItemSelect = (value) => {
     const node = this.getNode();
 
     let methodParams = [...node?.data?.methodParams || []];
     let settings = {...node?.data?.settings || {}}
     methodParams = [...methodParams]
-    if(!methodParams.includes(value.value)){
+    if (!methodParams.includes(value.value)) {
       methodParams.push(value.value)
       settings[value.value] = {}
     }
@@ -181,6 +196,7 @@ class StartNode extends React.Component {
     this.changeByPath(settings, 'settings')
 
   }
+
   shouldShowRequestType() {
 
     const customizerType = this.props.customizer?.type;
@@ -193,13 +209,22 @@ class StartNode extends React.Component {
 
     return {label: title, value: title};
   }
+
   shouldShowMethodParams() {
 
     const customizerType = this.props.customizer?.type;
 
     return customizerType == 'method'
   }
-  handleTagRemove = (tag)=>{
+
+  shouldShowMiddlewareParams() {
+
+    const customizerType = this.props.customizer?.type;
+
+    return customizerType == 'global_middleware'
+  }
+
+  handleTagRemove = (tag) => {
     const node = this.getNode();
 
     let methodParams = node?.data?.methodParams || [];
@@ -208,7 +233,7 @@ class StartNode extends React.Component {
       ...settings
     }
     delete settings[tag]
-    methodParams = methodParams.filter(i=>i !== tag)
+    methodParams = methodParams.filter(i => i !== tag)
     this.changeByPath(methodParams, 'methodParams')
     this.changeByPath(settings, 'settings')
 
@@ -217,7 +242,7 @@ class StartNode extends React.Component {
     const node = this.getNode();
     let methodParams = node?.data?.methodParams || [];
 
-    if(methodParams.includes(query)){
+    if (methodParams.includes(query)) {
 
       return (
         <MenuItem
@@ -235,17 +260,51 @@ class StartNode extends React.Component {
         shouldDismissPopover={false}
       />)
   }
+
   tagRender(value) {
     return value.label || ''
   }
 }
-function mapStateToProps(state){
+
+function mapStateToProps(state) {
   return {
-    customizerSettingsData:state.customizerSettingsData
+    customizerSettingsData: state.customizerSettingsData
   }
 }
+
 export default connect(mapStateToProps)(StartNode)
 const popoverProps = {
   fill: true,
   popoverClassName: 'customizer-multiselect-popover'
 }
+
+const requestTypeOptions = [
+  {
+    value: 'get',
+    label: 'Get',
+  },
+  {
+    value: 'post',
+    label: 'Post',
+  },
+  {
+    value: 'put',
+    label: 'Put',
+  },
+  {
+    value: 'delete',
+    label: 'Delete',
+  },
+];
+
+const middlewareTypes = [
+  {
+    value: 'before',
+    label: 'Before',
+  },
+  {
+    value: 'after',
+    label: 'After',
+  },
+
+]

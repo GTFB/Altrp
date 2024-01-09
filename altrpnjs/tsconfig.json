@@ -12,6 +12,7 @@
     "app/AltrpSchedules",
     "app/AltrpListeners",
     "app/AltrpPlugins",
+    "app/AltrpGlobalMiddlewares",
     "public",
     "app/altrp-listeners",
     ".env",

@@ -585,6 +585,9 @@ export  default class InputTelWidget extends Component {
       <div className={"altrp-input-wrapper " + (this.state.settings.position_css_classes || "")} id={this.state.settings.position_css_id}>
         <PhoneInput
           dropdownStyle={this.getDropdownStyle()}
+          disableDropdown={element.getSettings('disableDropdown')}
+          disableCountryCode={element.getSettings('disableCountryCode')}
+          countryCodeEditable={! element.getSettings('countryCodeEditable')}
           containerClass={`bp3-input-group ${classes}`}
           inputClass={`bp3-input `}
           value={value}

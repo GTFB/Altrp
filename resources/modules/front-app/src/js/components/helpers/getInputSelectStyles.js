@@ -144,7 +144,7 @@ export default function getInputSelectStyles(settings) {
       }
 
       styles += "}";
-      styles += ".bp3-button:hover{";
+      styles += ".bp3-button.bp3-button:hover{";
       button_gradient = getResponsiveSetting(
         settings,
         "button_gradient",

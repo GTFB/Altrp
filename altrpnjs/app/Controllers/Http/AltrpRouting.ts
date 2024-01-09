@@ -60,7 +60,7 @@ export default class AltrpRouting {
 
     var ext = url.split('.').pop();
 
-    if (url.includes('/storage/media/') && ['jpg', 'jpeg', 'webp'].includes(ext)) {
+    if (url.includes('/storage/media/') && ['jpg', 'jpeg', 'webp', 'png', ].includes(ext)) {
 
       let searchFilename = base_path('/public'+url);
 
@@ -106,7 +106,12 @@ export default class AltrpRouting {
 
         if (files.length == 0) {
           //files = await fs.readdirSync(folder).filter(fn => fn.startsWith(parts[5].split('.')[0]));
-          files = await fs.readdirSync(folder).filter(fn => fn.startsWith(requestedFileName.split('.')[0]));
+          if(fs.existsSync(folder)){
+            files = await fs.readdirSync(folder).filter(fn => fn.startsWith(requestedFileName.split('.')[0]));
+
+          } else {
+            files = []
+          }
         }
 
         //return JSON.stringify(files.length);

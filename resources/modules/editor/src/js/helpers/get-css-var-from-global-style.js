@@ -68,6 +68,21 @@ export default function getCssVarFromGlobalStyle(style){
         cssVar: `var(${varName})`
       }
     } break;
+    case 'size': {
+
+      let varName = `--altrp-var-${style?._type}-${style.name.replace(/[^a-zA-Z0-9]/g,'-')}`
+      let varValue = `${settings.top}${settings.unit} ${settings.right}${settings.unit} ${settings.bottom}${settings.unit} ${settings.left}${settings.unit}`
+      if(!cachedStyles[varName] || cachedStyles[varName] !== varValue){
+        cachedStyles[varName] = varValue
+
+        //_updateRules()
+      }
+
+      style = {
+        ...style,
+        cssVar: `var(${varName})`
+      }
+    } break;
   }
 
   return style

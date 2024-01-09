@@ -5,6 +5,7 @@ import  queryString from 'query-string';
 import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
+import './js/functions/events-handlers/scroll'
 
 window.Link = 'a';
 window.count = 0

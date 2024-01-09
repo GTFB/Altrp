@@ -127,8 +127,12 @@ class GlobalEffectItemAdd extends Component {
   onSaveEffect(event) {
     event.preventDefault();
     const {effect} = this.state;
+
+    const category_guid = editorStore.getState().currentCategory?.value || null
+
     const send = {
       type: "effect",
+      category_guid,
       settings: JSON.stringify(effect)
     };
     this.globalStyleResource.post(send).then(success => {

@@ -11,7 +11,7 @@ import {
   ADD_GLOBAL_FONT,
   EDIT_GLOBAL_FONT,
   DELETE_GLOBAL_FONT,
-  EDIT_GLOBAL_COLOR
+  EDIT_GLOBAL_COLOR, SET_GLOBAL_SIZES, EDIT_GLOBAL_SIZE, ADD_GLOBAL_SIZE, DELETE_GLOBAL_SIZE
 } from "./actions";
 import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
 
@@ -113,6 +113,39 @@ export function globalStyleReducer(state, action) {
         state = {
           ...state,
           fonts: state.fonts.filter(font => font.guid != deletedFont.guid)
+        };
+      }
+      break;
+    case SET_GLOBAL_SIZES:
+      {
+        state = { ...state, sizes: action.sizes };
+      }
+      break;
+    case ADD_GLOBAL_SIZE:
+      {
+        state = { ...state, sizes: [...state.sizes, action.size] };
+      }
+      break;
+    case EDIT_GLOBAL_SIZE:
+      {
+        const editedSize = action.size;
+        state = {
+          ...state,
+          sizes: state.sizes.map(size => {
+            if (size.guid === editedSize.guid) {
+              size = editedSize;
+            }
+            return size;
+          })
+        };
+      }
+      break;
+    case DELETE_GLOBAL_SIZE:
+      {
+        const deletedSize = action.size;
+        state = {
+          ...state,
+          sizes: state.sizes.filter(size => size.guid != deletedSize.guid)
         };
       }
       break;

@@ -453,9 +453,10 @@ export default class Plugin {
     let filename = temp_path + '/' + this.name + '.zip'
     fs.writeFileSync(filename, res)
     let archive = new AdmZip(filename)
+    fs.removeSync(this.getPath())
 
     archive.extractAllTo(this.getPath(), true)
-
+    clearRequireCache()
     fs.removeSync(temp_path)
     await this.callUpdateHooks()
     return true

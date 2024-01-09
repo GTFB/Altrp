@@ -1,7 +1,7 @@
 # ALTRP
 
 ## Changelog
-### test version build 69
+### test version build 83
 
 ### 1.4.9
 * Add Elements Filters for Plugins Widgets
@@ -12,6 +12,9 @@
 * Add `Validator` Node for Robotizers
 * Add `Input Phone` Widget
 * Add `Params` Settings for Current Datasource Update Action
+* Add `Dropbar Toggle` Widget Action
+* Add `Spacing` Presets for Sizes
+* Optimize Global CSS Variables Generating
 
 ### 1.4.8 
 * Add Pagination to Media Browser

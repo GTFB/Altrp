@@ -7,11 +7,11 @@ import {
   editGlobalEffect,
   deleteGlobalEffect
 } from "../store/altrp-global-colors/actions";
-import BaseElement from "../classes/elements/BaseElement";
 import GlobalEffectItemAdd from "./GlobalEffectItemAdd";
 import GlobalEffectItem from "./GlobalEffectItem";
 import { getTemplateDataStorage } from "../helpers";
 import Scrollbars from "react-custom-scrollbars";
+import DesignCategorySelect from "./DesignCategorySelect";
 
 const Panel = styled.div`
   background-color: #fff;
@@ -21,7 +21,9 @@ const Panel = styled.div`
 
 const mapStateToProps = state => ({
   effects: state.globalStyles.effects || [],
-  colors: state.globalStyles.colors || []
+  colors: state.globalStyles.colors || [],
+  currentCategory: state.currentCategory,
+
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -138,10 +140,35 @@ class GlobalEffects extends Component {
   }
 
   render() {
+
+
+    let{
+    } = this.state
+
+    let {
+      effects,
+
+      currentCategory,
+    } = this.props
+
+
+    if(! currentCategory?.value){
+      effects = effects.filter(c=> {
+        return ! c.category_guid
+      })
+    } else {
+      effects = effects.filter(c=> {
+        return c.category_guid === currentCategory.value
+      })
+    }
+
+
     return (
       <Panel>
         <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
           <div className='panel-global__styles'>
+            <DesignCategorySelect/>
+
             {this.state.new && (
               <GlobalEffectItemAdd
                 addEffect={this.props.addEffect}
@@ -151,9 +178,9 @@ class GlobalEffects extends Component {
             )}
 
             {!this.state.new &&
-            (this.props.effects.length > 0 ? (
-              this.props.effects.map((item, index) => (
-                <div key={index} style={{ marginBottom: "10px" }}>
+            (effects.length > 0 ? (
+              effects.map((item, index) => (
+                <div key={item.id || index} style={{ marginBottom: "10px" }}>
                   <GlobalEffectItem
                     effect={item}
                     editEffect={this.props.editEffect}
@@ -164,7 +191,7 @@ class GlobalEffects extends Component {
                 </div>
               ))
             ) : (
-              <div className="list__empty">Effects list empty</div>
+              <div className="list__empty">No Effects</div>
             ))}
 
             <Button style={{ width: "100%" }} onClick={this.addItem}>

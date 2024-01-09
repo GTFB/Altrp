@@ -258,6 +258,18 @@ class InputTextCommon extends BaseElement {
       responsive: false,
       locked: true,
     })
+    this.addControl('disableCountryCode', {
+      type: CONTROLLER_SWITCHER,
+      label: "Disable Country Code",
+      responsive: false,
+      locked: true,
+    })
+    this.addControl('countryCodeEditable', {
+      type: CONTROLLER_SWITCHER,
+      label: "Disable Country Code Edit",
+      responsive: false,
+      locked: true,
+    })
 
     this.endControlSection();
 

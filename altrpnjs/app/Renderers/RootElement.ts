@@ -40,6 +40,9 @@ export default class RootElementRenderer{
       }
     }
     let wrapper_attributes = ''
+    if(this.settings?.half){
+      wrapper_attributes += ` data-altrp-sticky="half_top" `
+    }
     content = mustache.render(content, {
       settings: JSON.stringify(this.settings),
       id: this.id,

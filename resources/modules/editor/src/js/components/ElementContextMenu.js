@@ -65,6 +65,8 @@ class ElementContextMenu extends Component {
     if (!element) {
       const data = e.props.element.toObject();
       saveDataToLocalStorage("altrp_element_to_copy", data);
+      navigator.clipboard?.writeText(JSON.stringify(data))
+
       contextMenu.hideAll();
     } else {
       saveDataToLocalStorage("altrp_element_to_copy", element);

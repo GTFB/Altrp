@@ -88,4 +88,6 @@ dhparam.pem
 /test.html
 /test.log
 /test.ts
+/test.js
 /test.sql
+/test.json

@@ -2,7 +2,11 @@ import _ from "lodash";
 import getResponsiveSetting from "../../getResponsiveSetting";
 import {encode} from "html-entities";
 
+const mapper = [
+]
+
 export default function stringifyWrapperAttributes(settings: {
+  sticky?: string;
   conditions: [] | null
   conditional_other: boolean | null
   conditional_other_display: string | null
@@ -52,6 +56,12 @@ export default function stringifyWrapperAttributes(settings: {
     altrpSettings['conditional_other_display'] = settings?.conditional_other_display || 'AND'
     altrpSettings['conditions'] = settings?.conditions
   }
+
+  mapper.forEach((prop)=>{
+    if(settings[prop]){
+      altrpSettings[prop] = settings[prop]
+    }
+  })
   if(_.isEmpty(altrpSettings)){
     return  ''
   }

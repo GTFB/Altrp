@@ -17,8 +17,8 @@ import {
   editGlobalEffect
 } from "../store/altrp-global-colors/actions";
 import { createGlobalColor, getTemplateDataStorage } from "../helpers";
-import BaseElement from "../classes/elements/BaseElement";
 import updateCssVars from "../helpers/update-css-vars";
+import DesignCategorySelect from "./DesignCategorySelect";
 
 const Panel = styled.div`
   background-color: #fff;
@@ -30,7 +30,9 @@ const Panel = styled.div`
 
 const mapStateToProps = state => ({
   colors: state.globalStyles.colors,
-  effects: state.globalStyles.effects
+  effects: state.globalStyles.effects,
+  currentCategory: state.currentCategory,
+
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -215,12 +217,14 @@ class GlobalColors extends Component {
     color.settings = JSON.stringify(createGlobalColor());
     color.type = "color";
     color._type = "color";
+    color.category_guid =  editorStore.getState().currentCategory?.value || null
     this.globalStyleResource.post(color).then(response => {
       const colors = [
         ...this.state.colors,
         {
           id: response.id,
           guid: response.guid,
+          category_guid: response.category_guid,
           _type: 'color',
           ...response.settings
         }
@@ -240,7 +244,7 @@ class GlobalColors extends Component {
       let colors = _.cloneDeep(this.state.colors, []);
       colors = colors.filter(item => item.id !== id);
       this.setState(
-        s => ({ ...s, colors: colors }),
+        s => ({ ...s, colors }),
         () => this.props.setColors(colors)
       );
       this.globalStyleResource.delete(id);
@@ -250,10 +254,33 @@ class GlobalColors extends Component {
   }
 
   render() {
+
+    let{
+      colors
+    } = this.state
+
+    const {
+      currentCategory
+    } = this.props
+
+
+    if(! currentCategory?.value){
+      colors = colors.filter(c=> {
+        return ! c.category_guid
+      })
+    } else {
+      colors = colors.filter(c=> {
+        return c.category_guid === currentCategory.value
+      })
+    }
+
+
     return (
       <Panel>
+        <DesignCategorySelect/>
+
         {this.state.colors.length > 0 ? (
-          this.state.colors.map(item => {
+          colors.map(item => {
 
             const {
               colorPickedHex = '#FFFFFF',
@@ -310,7 +337,7 @@ class GlobalColors extends Component {
             );
           })
         ) : (
-          <div>Color list empty</div>
+          <div>Palette is Empty</div>
         )}
         <Divider/>
         <Button style={{ width: "100%" }} onClick={this.addItem}>

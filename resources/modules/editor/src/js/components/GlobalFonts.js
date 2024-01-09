@@ -11,6 +11,7 @@ import GlobalFontItemAdd from "./GlobalFontItemAdd";
 import GlobalFontItem from "./GlobalFontItem";
 import {getTemplateDataStorage} from "../helpers";
 import Scrollbars from "react-custom-scrollbars";
+import DesignCategorySelect from "./DesignCategorySelect";
 
 const Panel = styled.div`
   background-color: #fff;
@@ -19,7 +20,9 @@ const Panel = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  fonts: state.globalStyles.fonts || []
+  fonts: state.globalStyles.fonts || [],
+  currentCategory: state.currentCategory,
+
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -136,11 +139,33 @@ class GlobalFonts extends Component {
   }
 
   render() {
-    const {currentScreen} = this.state
+
+    let{
+      currentScreen
+    } = this.state
+
+    let {
+      fonts,
+      currentCategory
+    } = this.props
+
+
+    if(! currentCategory?.value){
+      fonts = fonts.filter(c=> {
+        return ! c.category_guid
+      })
+    } else {
+      fonts = fonts.filter(c=> {
+        return c.category_guid === currentCategory.value
+      })
+    }
     return (
       <Panel>
+
           <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+
             <div className='panel-global__styles'>
+              <DesignCategorySelect/>
               {this.state.new && (
                 <GlobalFontItemAdd
                   addFont={this.props.addFont}
@@ -150,8 +175,8 @@ class GlobalFonts extends Component {
               )}
 
               {!this.state.new &&
-                (this.props.fonts.length > 0 ? (
-                  this.props.fonts.map((item, index) => (
+                (fonts.length > 0 ? (
+                  fonts.map((item, index) => (
                     <div key={index} style={{marginBottom: "10px"}}>
                       <GlobalFontItem
                         setScreen={this.setScreen}
@@ -165,11 +190,11 @@ class GlobalFonts extends Component {
                     </div>
                   ))
                 ) : (
-                  <div className="list__empty">Font list empty</div>
+                  <div className="list__empty">No Text Styles</div>
                 ))}
 
               <Button style={{width: "100%"}} onClick={this.addItem}>
-                {!this.state.new ? "➕Add Font➕" : "Cancel"}
+                {!this.state.new ? "➕Add Text Style➕" : "Cancel"}
               </Button>
             </div>
           </Scrollbars>

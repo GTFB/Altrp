@@ -527,6 +527,16 @@ class RootElement extends BaseElement {
 
     });
 
+    this.addControl("half", {
+      type: CONTROLLER_SWITCHER,
+      label: "Half Top Sticky",
+      conditionsCallback: ()=>{
+        return altrpEditor.modules?.templateDataStorage?.type === 'header'
+
+      }
+    });
+
+
     this.addControl("animations_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Animations",
@@ -545,6 +555,7 @@ class RootElement extends BaseElement {
         },
       ],
     });
+
 
     this.addControl("s_direction", {
       type: CONTROLLER_SELECT,

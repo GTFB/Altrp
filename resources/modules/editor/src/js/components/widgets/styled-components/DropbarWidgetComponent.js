@@ -122,5 +122,7 @@ export default function DropbarWidgetComponent(settings) {
   if (strokeColorSvgActive) {
     stylesInString += colorPropertyStyled(strokeColorSvgActive, 'stroke');
   }
+  stylesInString += `} `;
+
   return stylesInString
 }

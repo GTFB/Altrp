@@ -1,11 +1,16 @@
-import { controllerMapStateToProps } from "../../decorators/controller";
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import {controllerMapStateToProps} from "../../decorators/controller";
+import React, {Component} from "react";
+import {connect} from "react-redux";
 import BindIcon from "../../../svgs/bind.svg";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
-import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 import RotateLeft from "../../../svgs/rotate-left.svg";
+import BulletList from "../../../svgs/bullet-list.svg";
+import PresetGlobalSizes from "./PresetGlobalSizes";
+import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
+import store from "../../store/store";
+import {changeTemplateStatus} from "../../store/template-status/actions";
+import CONSTANTS from "../../consts";
 
 class DimensionsController extends Component {
   constructor(props) {
@@ -15,7 +20,7 @@ class DimensionsController extends Component {
     this.changeBind = this.changeBind.bind(this);
     this.changeUnit = this.changeUnit.bind(this);
     let value = this.getSettings(this.props.controlId);
-    // console.log(value);
+
     if (value === null && this.props.default) {
       value = this.props.default;
     }
@@ -25,10 +30,16 @@ class DimensionsController extends Component {
     this.state = {
       value,
       show: true,
+      showPresets: false,
       // active: this.state.value.active,
       units
     };
   }
+
+  openPresets = () => {
+    this.setState(state => ({...state, showPresets: !this.state.showPresets}))
+  }
+
   changeUnit(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let unit = e.target.dataset.unit;
@@ -37,10 +48,6 @@ class DimensionsController extends Component {
       unit
     });
   };
-
-  getDefaultValue() {
-    return '';
-  }
 
   onKeyDown = (event) => {
     event.stopPropagation();
@@ -113,12 +120,47 @@ class DimensionsController extends Component {
       unit: 'px',
     };
   }
-  render() {
 
+
+  setGlobal = (guid) => {
+    const globalSizes = this.props.globalSizes;
+    let guidSize = globalSizes.filter(size => size.guid == guid)[0] || {};
+    guidSize = getCssVarFromGlobalStyle(guidSize)
+
+    const sizeValue = {
+      ...guidSize,
+    };
+
+    if (guidSize) {
+      this._changeValue({
+        ...sizeValue
+      });
+      // getCurrentElement().setGlobalStyle(
+      //   guid,
+      //   this.props.controller.getSettingName()
+      // );
+      getCurrentElement().updateAllGlobals(guid, sizeValue);
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+    }
+  }
+
+  hasGlobal = (guid) => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    return value?.guid === guid
+  }
+
+  _componentDidUpdate = () => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+
+    if(value.cssVar && value.guid && ! this.state.showPresets){
+      this.setState(state=>({...state, showPresets: true}))
+    }
+  }
+
+  render() {
     if (this.state.show === false) {
       return '';
     }
-
     if (this.props.currentElement.getName() === 'image' &&
       this.props.controlId === "position_margin") {
       return '';
@@ -126,78 +168,89 @@ class DimensionsController extends Component {
 
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
+
     return <div className="controller-container controller-container_dimensions">
 
       <div className="control-dimensions-header">
         <div className="controller-dimensions__label">
           {this.props.label}
         </div>
-        <ResponsiveDdMenu />
+        <ResponsiveDdMenu/>
         <div className="control-slider-type">
-          {
+          {! this.state.showPresets &&
             this.state.units.map(unit => {
               let classes = 'control-slider-type-box';
               if (value.unit === unit) {
                 classes += ' control-slider-type-box_active';
               }
               return <div className={classes}
-                key={unit}>
+                          key={unit}>
                 <button onClick={this.changeUnit}
-                  data-unit={unit}
-                  className="control-slider-type-label">{unit}</button>
+                        data-unit={unit}
+                        className="control-slider-type-label">{unit}</button>
               </div>
             })
           }
 
-          <div className="control-shadow-toggle " onClick={this.reset}>
+          {! this.state.showPresets && <div className="control-shadow-toggle cursor-pointer" onClick={this.reset}>
 
             <RotateLeft id="shadowContentIcon" fill="#8E94AA" width="16" height="16" viewBox="0 0 24 24"
+                        className="control-shadow-svg-content"/>
+          </div> }
+          <div className="control-shadow-toggle cursor-pointer" onClick={this.openPresets}>
+
+            <BulletList id="dimension-preset" fill="#8E94AA" width="16" height="16" viewBox="0 0 24 24"
                         className="control-shadow-svg-content"/>
           </div>
         </div>
       </div>
-      <div className="control-group">
+      {this.state.showPresets ? <div className="control-group">
+        <PresetGlobalSizes
+          checkGlobal={this.hasGlobal}
+          setSize={this.setGlobal}/>
+      </div> : <div className="control-group">
         <div className="control-dimensions-container">
           <input className="control-field control-field-dimensions control-field-top-l"
-            onKeyDown={this.onKeyDown}
-            onChange={this.changeValue}
-            data-active="top"
+                 onKeyDown={this.onKeyDown}
+                 onChange={this.changeValue}
+                 data-active="top"
 
-            value={value.top || ''}
-            type="number" />
+                 value={value.top || ''}
+                 type="number"/>
           <label className="control-field-top-l-label control-field-dimensions-label">TOP</label>
         </div>
         <div className="control-dimensions-container">
           <input className="control-field control-field-dimensions control-field-top-r"
-            onChange={this.changeValue}
-            data-active="right"
+                 onChange={this.changeValue}
+                 data-active="right"
 
-            value={value.right || ''}
-            type="number" />
+                 value={value.right || ''}
+                 type="number"/>
           <label className="control-field-top-r-label control-field-dimensions-label">RIGHT</label>
         </div>
         <div className="control-dimensions-container">
           <input className="control-field control-field-dimensions control-field-bot-l"
-            onChange={this.changeValue}
-            data-active="bottom"
-            value={value.bottom || ''}
-            type="number" />
+                 onChange={this.changeValue}
+                 data-active="bottom"
+                 value={value.bottom || ''}
+                 type="number"/>
           <label className="control-field-bot-l-label control-field-dimensions-label">BOTTOM</label>
         </div>
         <div className="control-dimensions-container">
           <input className="control-field control-field-dimensions control-field-bot-r"
-            onChange={this.changeValue}
-            data-active="left"
-            value={value.left || ''}
-            type="number" />
+                 onChange={this.changeValue}
+                 data-active="left"
+                 value={value.left || ''}
+                 type="number"/>
           <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
         </div>
         <div id="bind" className="control-field control-field-bind"
-          style={value.bind ? { transition: "0s", backgroundColor: "#8E94AA", borderColor: "#8E94AA", } : {}}
-          onClick={this.changeBind}>
-          <BindIcon width="12" height="12" fill={value.bind ? "#FFF" : "#8E94AA"} />
+             style={value.bind ? {transition: "0s", backgroundColor: "#8E94AA", borderColor: "#8E94AA",} : {}}
+             onClick={this.changeBind}>
+          <BindIcon width="12" height="12" fill={value.bind ? "#FFF" : "#8E94AA"}/>
         </div>
       </div>
+      }
     </div>
   }
 }

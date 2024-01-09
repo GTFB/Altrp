@@ -16,6 +16,7 @@ public/*
 storage/
 app/AltrpModels/
 app/AltrpControllers/
+app/AltrpGlobalMiddlewares/
 app/AltrpPlugins/
 app/AltrpListeners/
 app/AltrpOther/

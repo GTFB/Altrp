@@ -6,6 +6,7 @@ class FrontElementsManager {
     this.components = {};
     //список компонентов
     this.ELEMENTS = defaultState
+    this.elementsLists = []
   }
 
   /**
@@ -34,7 +35,12 @@ class FrontElementsManager {
         }
         return result
       })
-      this.elementsLists = elementsLists
+      this.elementsLists = [
+        ...elementsLists,
+        ...this.elementsLists,
+      ]
+      this.elementsLists = _.uniq(this.elementsLists)
+
       componentsToLoad = [
         ...this.ELEMENTS.filter(el => {
         return elementsLists.indexOf(el.name) !== -1;
@@ -124,7 +130,7 @@ class FrontElementsManager {
       })
       return result
     }
-    this.elementsLists.forEach(element=>{
+    window.altrpElementsLists.forEach(element=>{
       if(! result) {
         return
       }
@@ -144,7 +150,6 @@ class FrontElementsManager {
   getComponentClass(name) {
     if (!this.components[name]) {
       console.error("Not found component with name: " + name);
-      console.log(this)
       return "div";
     }
     return this.components[name];

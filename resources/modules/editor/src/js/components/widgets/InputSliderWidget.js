@@ -4,26 +4,6 @@ import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import {Slider} from "@blueprintjs/core";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-.bp3-slider-label{
-    white-space: nowrap;
-}
-.bp3-slider-handle{
-    z-index: 2;
-}
-.bp3-slider-label{
-    z-index: 1;
-}
-.altrp-field-slider .bp3-slider-handle {
-  background-image: none;
-}
-.altrp-field-slider-horizontal .bp3-slider-label {
-  transform: translate(-50%, 20px);
-}
-.altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label {
-  transform: translate(20px, 50%);
-}
-`);
 
 const SliderWrapper = styled.div`
   ${(props) => {
@@ -73,8 +53,12 @@ class InputSliderWidget extends Component {
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
-    this.onChange = this.onChange.bind(this);
-    this.label = this.label.bind(this);
+    this.defaultValue = this.getLockedContent("content_default_value")
+
+    const value = this.getValue();
+    if (!value && this.getLockedContent("content_default_value")) {
+      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
+    }
   }
 
   debouncedChangeAction = _.debounce(async ()=>{
@@ -97,6 +81,47 @@ class InputSliderWidget extends Component {
     }
   }, 500)
 
+  async _componentDidMount(prevProps, prevState) {
+
+    let value = this.getValue();
+    this.setState(state => ({
+      ...state,
+      value
+    }))
+
+    /**
+     * Если модель обновилась при смене URL
+     */
+    if (
+      prevProps &&
+      !prevProps.currentModel.getProperty("altrpModelUpdated") &&
+      this.props.currentModel.getProperty("altrpModelUpdated")
+    ) {
+      value = this.getLockedContent("content_default_value");
+      this.setState(
+        state => ({...state, contentLoaded: true}),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
+      return;
+    }
+    if (
+      this.props.currentModel.getProperty("altrpModelUpdated") &&
+      this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      !this.state.contentLoaded
+    ) {
+      value = this.getLockedContent("content_default_value");
+      this.setState(
+        state => ({...state, contentLoaded: true}),
+        () => {
+          console.log(value)
+          this.dispatchFieldValueToStore(value);
+        }
+      );
+      return;
+    }
+  }
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
@@ -119,7 +144,7 @@ class InputSliderWidget extends Component {
     }
   };
 
-  onChange(value) {
+  onChange = (value) =>{
     // const step = this.state.step
 
     // if(!Number.isInteger(value)) {
@@ -139,7 +164,7 @@ class InputSliderWidget extends Component {
     }
   }
 
-  label(decimalPlace, custom, thousandsSeparator, thousandsSeparatorValue, decimalSeparator) {
+  label = (decimalPlace, custom, thousandsSeparator, thousandsSeparatorValue, decimalSeparator) => {
     return value => {
       value = Number(value)
 
@@ -224,6 +249,7 @@ class InputSliderWidget extends Component {
       this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes') || "")
 
     const label = this.getLabelFunction()
+
 
     if(step == '0'){
       step = 1;

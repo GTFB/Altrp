@@ -1,0 +1,37 @@
+import selectForSQLEditor from "../../helpers/selectForSQLEditor"
+import empty from "../../helpers/empty"
+import get_altrp_setting from "../../helpers/get_altrp_setting"
+import translateContent from "../../helpers/i18n/translateContent"
+import axios from "axios"
+import _ from 'lodash'
+import Database from "@ioc:Adonis/Lucid/Database";
+const DB = Database?.default ? Database.default : Database;
+import Source from "../Models/Source"
+import {BaseModel} from "@adonisjs/lucid/build/src/Orm/BaseModel";
+import {column} from "@ioc:Adonis/Lucid/Orm";
+import {DateTime} from "luxon";
+import Validator from '@ioc:Adonis/Core/Validator'
+import AltrpBaseController from "../Controllers/AltrpBaseController";
+
+{{{imports}}}
+
+export default class {{{classname}}} extends AltrpBaseController {
+
+  {{{properties}}}
+
+  {{{methods}}}
+
+  /**
+   * Handle request
+   */
+  public async handle (
+    httpContext,
+    next: () => Promise<void>,
+    options,
+  ) {
+      {{{before_content}}}
+      {{{content}}}
+      {{{after_content}}}
+  }
+}
+

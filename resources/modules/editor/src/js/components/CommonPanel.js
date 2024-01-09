@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import styled from "styled-components";
+import DesignCategorySelect from "./DesignCategorySelect";
 
 const StyledWrapper = styled.div`
   padding: 25px 15px 0;
@@ -37,13 +38,17 @@ class CommonPanel extends Component {
       <StyledWrapper>
         <MenuGroup>
           <Heading>Design System</Heading>
+          <DesignCategorySelect/>
           <MenuItems>
             <Item onClick={this.props.showGlobalColorsPanel}>
-              Global Colors
+              Palette
             </Item>
-            <Item onClick={this.props.showGlobalFontsPanel}>Global Fonts</Item>
+            <Item onClick={this.props.showGlobalFontsPanel}>Text Styles</Item>
             <Item onClick={this.props.showGlobalEffectsPanel}>
-              Global Effects
+              Effect Styles
+            </Item>
+            <Item onClick={this.props.showGlobalSizes}>
+              Spacing
             </Item>
           </MenuItems>
         </MenuGroup>
@@ -51,4 +56,5 @@ class CommonPanel extends Component {
     );
   }
 }
+
 export default CommonPanel;

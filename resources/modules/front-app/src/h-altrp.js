@@ -1,5 +1,4 @@
 console.log('FIRST SCRIPT: ', performance.now());
-
 if(!window.asCheck){
 
   Promise.all([

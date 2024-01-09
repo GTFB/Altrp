@@ -37,6 +37,12 @@ export default async function  loadSticky() {
             $this.sticky('update')
           })
         }break;
+        case 'half_top':{
+          import('./elements/sticky-half-top').then(module=>{
+            module.default(this)
+          })
+        }break;
+
         case 'bottom':{
           stickyOptions.bottomSpacing = $this.data('altrp-sticky-spacing') || 0
         }break;

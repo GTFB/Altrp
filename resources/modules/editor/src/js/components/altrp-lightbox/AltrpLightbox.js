@@ -76,6 +76,11 @@ class AltrpLightbox extends Component {
     return (
       <Lightbox
         {...settings}
+        reactModalStyle={{
+          overlay: {
+            zIndex: 10000
+          }
+        }}
         mainSrc={images[current] || "/img/nullImage.png"}
         onMovePrevRequest={() => {
           this.setState({

@@ -2123,6 +2123,7 @@ export function advancedTabControllers(element) {
   element.addControl('sticky', {
     type: CONTROLLER_SELECT,
     label: 'Sticky Type',
+    locked: true,
     options:()=>{
       const stickyOptions = [
         {
@@ -2132,6 +2133,10 @@ export function advancedTabControllers(element) {
         {
           label: 'Top',
           value: 'top',
+        },
+        {
+          label: 'Half Top',
+          value: 'half_top',
         },
         // {
         //   label: 'Bottom',

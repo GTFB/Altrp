@@ -11,6 +11,7 @@ import NavigationPanel from "./js/components/NavigationPanel";
 import CommonPanel from "./js/components/CommonPanel";
 import GlobalColors from "./js/components/GlobalColors";
 import GlobalEffects from "./js/components/GlobalEffects";
+import GlobalSizes from "./js/components/GlobalSizes";
 import GlobalFonts from "./js/components/GlobalFonts";
 import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
@@ -42,7 +43,8 @@ import { setEditorMeta } from "./js/store/editor-metas/actions";
 import {
   setGlobalColors,
   setGlobalEffects,
-  setGlobalFonts
+  setGlobalFonts,
+  setGlobalSizes
 } from "./js/store/altrp-global-colors/actions";
 import {setGlobalStylesPresets} from "./js/store/altrp-global-styles/actions";
 import { addWidget, filterWidgets } from "./js/store/widgets/actions";
@@ -232,6 +234,13 @@ class Editor extends Component {
     });
   }
 
+  showGlobalSizes = () =>{
+    this.setState({
+      ...this.state,
+      activePanel: "global_sizes"
+    });
+  }
+
   /**
    * Сработывает при клике
    */
@@ -289,12 +298,16 @@ class Editor extends Component {
 
     appStore.dispatch(
       setGlobalColors(
-        globalStyles.color?.map(color => ({
-          id: color.id,
-          guid: color.guid,
-          _type: color.type,
-          ...color.settings
-        })) || []
+        globalStyles.color?.map(color => {
+          delete color.settings.id
+          return({
+            id: color.id,
+            guid: color.guid,
+            category_guid: color.category_guid,
+            _type: color.type,
+            ...color.settings
+          })
+        }) || []
       )
     );
     //global effects
@@ -302,6 +315,7 @@ class Editor extends Component {
       setGlobalEffects(
         globalStyles.effect?.map(effect => ({
           id: effect.id,
+          category_guid: effect.category_guid,
           guid: effect.guid,
           _type: effect.type,
           ...effect.settings
@@ -313,9 +327,21 @@ class Editor extends Component {
       setGlobalFonts(
         globalStyles.font?.map(font => ({
           id: font.id,
+          category_guid: font.category_guid,
           guid: font.guid,
           _type: font.type,
           ...font.settings
+        })) || []
+      )
+    );
+    appStore.dispatch(
+      setGlobalSizes(
+        globalStyles.size?.map(size => ({
+          id: size.id,
+          category_guid: size.category_guid,
+          guid: size.guid,
+          _type: size.type,
+          ...size.settings
         })) || []
       )
     );
@@ -551,6 +577,7 @@ class Editor extends Component {
                       showGlobalColorsPanel={this.showGlobalColorsPanel}
                       showGlobalFontsPanel={this.showGlobalFontsPanel}
                       showGlobalEffectsPanel={this.showGlobalEffectsPanel}
+                      showGlobalSizes={this.showGlobalSizes}
                     />
                     {this.state.cssEditor && (
                       ReactDOM.createPortal(<CssEditorModal toggleCssEditor={this.toggleCssEditor}/>, document.body)
@@ -563,6 +590,7 @@ class Editor extends Component {
                 {this.state.activePanel === "global_colors" && <GlobalColors />}
                 {this.state.activePanel === "global_fonts" && <GlobalFonts />}
                 {this.state.activePanel === "global_effects" && <GlobalEffects />}
+                {this.state.activePanel === "global_sizes" && <GlobalSizes />}
               </div>
               <div className="editor-bottom-panel d-flex align-content-center justify-center">
                 <button

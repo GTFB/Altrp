@@ -56,8 +56,6 @@ export default function scrollToElement(scrollbars, element, spacing=0) {
   }
 
 
-  console.log(scrollbars.scrollTo);
-  console.log(top);
   scrollbars.scrollTop && scrollbars.scrollTop(top);
   scrollbars.scrollTo && scrollbars.scrollTo({
     top,

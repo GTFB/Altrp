@@ -34,6 +34,7 @@ import {globalStylesCssReducer} from "./global-css-editor/reducers";
 import {editorStateReducer} from "./editor-state/reducers";
 import {primarySectionsReducer} from "./primary-sections/reducers";
 import { portalStatusReducer } from './portal-status/reducers';
+import {currentCategoryReducer} from "./current-design-category/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -71,4 +72,5 @@ export default combineReducers({
   widgetsManager: widgetsReducer,
   primarySections: primarySectionsReducer,
   portalStatus: portalStatusReducer,
+  currentCategory:currentCategoryReducer,
 });

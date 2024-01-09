@@ -18,6 +18,7 @@ import isEqual from 'lodash.isequal';
 import isFunction from 'lodash.isfunction';
 import isNumber from 'lodash.isnumber';
 import debounce from 'lodash.debounce';
+import throttle from 'lodash.throttle';
 import assign from 'lodash.assign';
 import each from 'lodash.foreach';
 import toPairs from 'lodash.topairs';
@@ -33,6 +34,7 @@ window._ = {
   get,
   set,
   sortBy,
+  throttle,
   has,
   unset,
   isEmpty,

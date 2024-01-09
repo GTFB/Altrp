@@ -6,6 +6,10 @@ import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import GlobalPresetColors from "./GlobalPresetColors";
 import RotateLeft from "../../../svgs/rotate-left.svg";
+import getCssVarFromGlobalStyle from "../../helpers/get-css-var-from-global-style";
+import store from "../../store/store";
+import {changeTemplateStatus} from "../../store/template-status/actions";
+import CONSTANTS from "../../consts";
 
 class ColorController extends Component {
   constructor(props) {
@@ -54,10 +58,23 @@ class ColorController extends Component {
   }
 
   setGlobal(guid) {
+    const globalColors = this.props.globalColors;
+
+    let guidColor = globalColors.filter(size => size.guid == guid)[0] || {};
+    guidColor = getCssVarFromGlobalStyle(guidColor)
+
+    const colorValue = {
+      ...guidColor,
+    };
+
+    this._changeValue({
+      ...colorValue
+    });
     getCurrentElement().setGlobalStyle(
       guid,
       this.props.controller.getSettingName()
     );
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }
 
   /**
@@ -146,6 +163,9 @@ class ColorController extends Component {
     let colorPickerPosition = {
       marginTop: this.state.pickerPosition
     };
+    let {
+      colorPickedHex
+    } = value
 
     return (
       <div className="controller-container controller-container_color">
@@ -167,7 +187,7 @@ class ColorController extends Component {
                 style={colorPickedStyle}
               />
             </div>
-            <label className="control-color-hex">{value.colorPickedHex}</label>
+            <label className="control-color-hex">{value.name || value.colorPickedHex || ''}</label>
           </div>
           <div className="control-color-opacity-container">
             <label className="control-color-opacity">

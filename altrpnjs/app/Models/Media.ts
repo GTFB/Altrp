@@ -1,6 +1,7 @@
 import { parseString } from "xml2js";
 import {DateTime} from 'luxon'
 import axios from 'axios'
+import path from 'path'
 import {
   BaseModel,
   BelongsTo,
@@ -308,6 +309,20 @@ export default class Media extends BaseModel {
     // return '';
   }
 
+  async moveToFolder(dirname: string){
+    if(! dirname){
+      return
+    }
+    if (! fs.existsSync(public_path(dirname))) {
+
+      fs.mkdirSync(public_path(dirname), {recursive: true})
+    }
+
+    const newPath = this.url.replace(path.dirname(this.url), dirname)
+    fs.renameSync(public_path(newPath), public_path(this.url))
+    this.url = newPath
+    await this.save()
+  }
 }
 interface ImportType{
   data?: string,

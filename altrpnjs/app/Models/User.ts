@@ -142,6 +142,37 @@ export default class User extends BaseModel {
     return await this.hasRole('admin');
   }
 
+  async addRoleByName(name){
+    if(! name){
+      return
+    }
+    if( await this.hasRole(name)){
+      return
+    }
+    const role = await Role.query().where({name}).first()
+
+    if(! role){
+      return
+    }
+    // @ts-ignore
+    await this.related('roles').attach([role.id])
+  }
+
+  async removeRoleByName(name){
+    if(! name){
+      return
+    }
+    if(! await this.hasRole(name)){
+      return
+    }
+    const role = await Role.query().where({name}).first()
+
+    if(! role){
+      return
+    }
+    // @ts-ignore
+    await this.related('roles').detach([role.id])
+  }
   @manyToMany(() => Role, {
     pivotTable: 'role_user',
     localKey: 'id',

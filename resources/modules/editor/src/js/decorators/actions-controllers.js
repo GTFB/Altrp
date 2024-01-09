@@ -32,6 +32,10 @@ let defaultOptions = [
     "label": "Delay"
   },
   {
+    "value": "dropbar",
+    "label": "Dropbar Toggle"
+  },
+  {
     "value": "elements_to_pdf",
     "label": "Elements to PDF"
   },
@@ -146,7 +150,7 @@ let defaultOptions = [
   {
     "value": "vi_toggle",
     "label": "Version for the Visually Impaired Toggle"
-  }
+  },
 ]
 defaultOptions = window.editorAPI.applyPluginsFiltersSync('default_actions_controllers_type_options', defaultOptions)
 
@@ -616,7 +620,8 @@ export function actionsControllers(
         'toggle_element',
         'print_elements',
         'elements_to_pdf',
-        'forms_manipulate'
+        'forms_manipulate',
+        'dropbar',
       ]
     },
     locked: true,
