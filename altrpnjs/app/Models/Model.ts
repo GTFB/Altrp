@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import {string} from '@ioc:Adonis/Core/Helpers'
 import {DateTime} from 'luxon'
 import {
+  afterCreate,
   afterFind,
   BaseModel,
   BelongsTo,
@@ -12,6 +13,7 @@ import {
   HasOne,
   hasOne, manyToMany,
   ManyToMany,
+  beforeDelete,
 } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 import Source from 'App/Models/Source'
@@ -30,6 +32,10 @@ import base_path from "../../helpers/path/base_path";
 import fs from "fs";
 import LIKE from "../../helpers/const/LIKE";
 import mbParseJSON from "../../helpers/mbParseJSON";
+import Event from "@ioc:Adonis/Core/Event";
+import Database from "@ioc:Adonis/Lucid/Database";
+import Env from "@ioc:Adonis/Core/Env";
+import exec from "../../helpers/exec";
 
 export default class Model extends BaseModel {
   public static table = 'altrp_models'
@@ -501,4 +507,335 @@ export default class Model extends BaseModel {
   }
 
 
+  @afterCreate()
+  public static async afterCreate(modelData: Model) {
+
+    const table = new Table()
+    table.fill({
+      name: string.pluralize(modelData.name),
+      title: modelData.title,
+      description: modelData.description,
+      user_id: modelData?.user_id,
+    })
+    await table.save()
+
+    const id_column = new Column()
+    id_column.fill({
+      name: 'id',
+      title: 'ID',
+      description: 'ID',
+      null: true,
+      type: 'bigInteger',
+      table_id: table.id,
+      model_id: modelData.id,
+      user_id: modelData?.user_id,
+    })
+    await id_column.save()
+    if (modelData.time_stamps) {
+      const created_at_column = new Column()
+      created_at_column.fill({
+        name: 'created_at',
+        title: 'created_at',
+        description: 'created_at',
+        null: true,
+        type: 'timestamp',
+        table_id: table.id,
+        model_id: modelData.id,
+        user_id: modelData?.user_id,
+      })
+      await created_at_column.save()
+      const updated_at_column = new Column()
+      updated_at_column.fill({
+        name: 'updated_at',
+        title: 'updated_at',
+        description: 'updated_at',
+        null: true,
+        type: 'timestamp',
+        model_id: modelData.id,
+        table_id: table.id,
+        user_id: modelData?.user_id,
+      })
+      await updated_at_column.save()
+    }
+    if (modelData.soft_deletes) {
+      const deleted_at_column = new Column()
+      deleted_at_column.fill({
+        name: 'deleted_at',
+        title: 'deleted_at',
+        description: 'deleted_at',
+        type: 'timestamp',
+        null: true,
+        model_id: modelData.id,
+        table_id: table.id,
+        user_id: modelData?.user_id,
+      })
+      await deleted_at_column.save()
+    }
+    const controller = new Controller()
+    controller.fill({
+      model_id: modelData.id,
+      description: modelData.description,
+    })
+
+    await controller.save()
+    modelData.table_id = table.id
+    await modelData.save()
+    await Model.createDefaultCustomizers(modelData, modelData)
+
+    let sources = [
+      (new Source()).fill({
+        url: `/filters/${table.name}/{column}`,
+        api_url: `/filters/${table.name}/{column}`,
+        type: `filters`,
+        request_type: `get`,
+        name: `Filters ${modelData.name}`,
+        title: `Filters ${modelData.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${modelData.name}}/{column}`,
+        api_url: `/${table.name}/{${modelData.name}}/{column}`,
+        type: `update_column`,
+        request_type: `put`,
+        name: `Update column ${modelData.name}`,
+        title: `Update column ${modelData.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${modelData.name}}`,
+        api_url: `/${table.name}/{${modelData.name}}`,
+        type: `delete`,
+        request_type: `delete`,
+        name: `Delete ${modelData.name}`,
+        title: `Delete ${modelData.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${modelData.name}}`,
+        api_url: `/${table.name}/{${modelData.name}}`,
+        type: `update`,
+        request_type: `put`,
+        name: `Update ${modelData.name}`,
+        title: `Update ${modelData.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}`,
+        api_url: `/${table.name}`,
+        type: `add`,
+        request_type: `post`,
+        name: `Add ${modelData.name}`,
+        title: `Add ${modelData.name}`,
+        auth: true,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}`,
+        api_url: `/${table.name}`,
+        type: `get`,
+        request_type: `get`,
+        name: `Get  ${modelData.name}`,
+        title: `Get  ${modelData.name}`,
+        auth: false,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+      (new Source()).fill({
+        url: `/${table.name}/{${modelData.name}}`,
+        api_url: `/${table.name}/{${modelData.name}}`,
+        type: `show`,
+        request_type: `get`,
+        name: `Show  ${modelData.name}`,
+        title: `Show ${modelData.name}`,
+        auth: false,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+      (new Source()).fill({
+        url: `/{${modelData.name}}_options`,
+        api_url: `/{${modelData.name}}_options`,
+        type: `options`,
+        request_type: `get`,
+        name: `Get options ${modelData.name}`,
+        title: `Get options ${modelData.name}`,
+        auth: false,
+        need_all_roles: false,
+        controller_id: controller.id,
+        model_id: modelData.id,
+      }),
+    ]
+
+    await Promise.all(sources.map(s => s.save()))
+
+    const adminRole = await Role.query().where('name', 'admin').first()
+
+    if (adminRole) {
+      await Promise.all(sources.map(s => {
+        return (new SourceRole()).fill({
+          role_id: adminRole.id,
+          source_id: s.id,
+        }).save()
+      }))
+    }
+
+    Event.emit('model:updated', modelData)
+    const client = Database.connection(Env.get('DB_CONNECTION'))
+    try {
+
+      await client.schema.createTableIfNotExists(table.name, table => {
+        table.bigIncrements('id')
+        if (modelData.soft_deletes) {
+          table.timestamp('deleted_at').nullable().defaultTo(null)
+        }
+        if (modelData.time_stamps) {
+          table.timestamp('updated_at')
+          table.timestamp('created_at')
+        }
+      })
+    } catch (e) {
+      console.error(e)
+      await exec(`node ${base_path('ace')} generator:model --delete --id=${modelData.id}`)
+      await modelData.delete()
+      await exec(`node ${base_path('ace')} generator:router`)
+      await Promise.all(sources.map(s => s.delete()))
+      await controller.delete()
+      await Column.query().where('table_id', table.id).delete()
+      await table.delete()
+      await client.schema.dropTableIfExists(table.name)
+    }
+
+  }
+  @beforeDelete()
+  public static async beforeDelete(model: Model){
+    await model.load('table')
+    await model.load('altrp_controller')
+    const table = model.table
+    const controller = model.altrp_controller
+
+
+
+
+
+    if (controller) {
+      const sources = await Source.query().where('controller_id', controller?.id).select('*')
+      if (sources[0]) {
+        await sources[0].load('roles')
+
+      }
+      await Promise.all(sources.map(s => {
+        return s.related('roles').detach()
+      }))
+      await Promise.all(sources.map(s => {
+        return s.related('permissions').detach()
+      }))
+      await Promise.all(sources.map(s => {
+        return s.delete()
+      }))
+
+    }
+
+    await Customizer.query().where('model_id', model.id).update({
+      model_id: null
+    })
+    if(table){
+
+      const client = Database.connection(Env.get('DB_CONNECTION'))
+      await client.schema.dropTable(table.name)
+      await Column.query().where('table_id', table.id).delete()
+    }
+
+
+    // delete relations when dropping table
+    const relationship = await Relationship.query().where('model_id', model.id)
+    if (relationship) {
+      const relations = []
+
+      for (let i in relationship) {
+        // @ts-ignore
+        relations.push(await Model.find(relationship[i].target_model_id))
+
+        for (let j in relations) {
+          if (relationship[i].type != "belongsTo" && relations[j] && relationship[i].add_belong_to) {
+
+            try {
+              //@ts-ignore
+              await relations[j].load('table')
+              //@ts-ignore
+              let deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP FOREIGN KEY ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+              //@ts-ignore
+              deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP INDEX ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+            } catch (e) {
+              console.error(e)
+            }
+            await Relationship.query()
+              .where('model_id', relationship[i].target_model_id)
+              .where('target_model_id', relationship[i].model_id)
+              .where('foreign_key', relationship[i].local_key)
+              .where('local_key', relationship[i].foreign_key)
+              .where('type', 'belongsTo')
+              .delete()
+          }
+          try {
+            if (relationship[i].type === "belongsTo") {
+              let deleteQuery = `ALTER TABLE ${model.table.name}
+                DROP FOREIGN KEY ${model.table.name}_${relationship[i].local_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+              deleteQuery = `ALTER TABLE ${model.table.name}
+                DROP INDEX ${model.table.name}_${relationship[i].foreign_key}_foreign`
+              await Database.rawQuery(deleteQuery)
+            }
+          } catch (e) {
+            console.error(e)
+          }
+
+          try {
+            await relationship[i].delete()
+          } catch (e) {
+            console.error(e)
+
+            try {
+              await relationship[i].delete()
+            } catch (e) {
+              console.error(e)
+            }
+          }
+
+        }
+
+      }
+    }
+    if(table){
+      await table.delete()
+    }
+    try {
+
+      await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
+      await exec(`node ${base_path('ace')} generator:router`)
+    }catch (e) {
+      console.error(e)
+    }
+
+    if(controller){
+      await controller.delete()
+    }
+
+  }
 }

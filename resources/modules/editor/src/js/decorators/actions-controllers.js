@@ -155,7 +155,6 @@ let defaultOptions = [
 defaultOptions = window.editorAPI.applyPluginsFiltersSync('default_actions_controllers_type_options', defaultOptions)
 
 /**
- * Добавляет контроллеры действия для элемента
  * @param {BaseElement} element - элемент
  * @param {string} sectionLabel - заголовок секции
  * @param {string} idPrefix - префикс, который добавляется ко всем id секция и контроллеров

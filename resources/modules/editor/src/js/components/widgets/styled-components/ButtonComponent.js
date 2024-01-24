@@ -10,7 +10,7 @@ import {
   shadowControllerToStyles,
   typographicControllerToStyles,
   iconSizeStyled,
-  dimensionsControllerToStyles,
+  dimensionsControllerToStyles, outlineWidthStyled,
 } from "../../../../../../front-app/src/js/helpers/styles";
 import {getResponsiveSetting} from"../../../../../../front-app/src/js/helpers";
 
@@ -95,6 +95,9 @@ export function btnStyles(settings, withPosition = false) {
     ["border-style", "border_type"],
     ["border-width", "border_width", "dimensions"],
     // ["border-color", "border_color", "color"],
+    ["outline-style", "outline_type"],
+    ["outline-width", "outline_width", "slider"],
+    ["outline-color", "outline_color", "color"],
     ["border-radius", "border_radius", "dimensions"],
     ["", "style_background_shadow", "shadow"],
     ["", "font_typographic", "typographic"],
@@ -148,6 +151,9 @@ export function btnStyles(settings, withPosition = false) {
     ["border-style", "border_type", "", ":hover"],
     ["border-width", "border_width", "dimensions", ":hover"],
     // ["border-color", "border_color", "color", ":hover"],
+    ["outline-style", "outline_type", "", ":hover"],
+    ["outline-width", "outline_width", "slider", ":hover"],
+     ["outline-color", "outline_color", "color", ":hover"],
     ["border-radius", "border_radius", "dimensions", ":hover"],
     ["", "style_background_shadow", "shadow", ":hover"],
     ["color", "font_color", "color", ":hover"],
@@ -189,6 +195,9 @@ export function btnStyles(settings, withPosition = false) {
     ["border-style", "border_type", "", ".state-disabled"],
     ["border-width", "border_width", "dimensions", ".state-disabled"],
     ["border-color", "border_color", "color", ".state-disabled"],
+    ["outline-style", "outline_type", "", ".state-disabled"],
+    ["outline-width", "outline_width", "slider", ".state-disabled"],
+    ["outline-color", "outline_color", "color", ".state-disabled"],
     ["border-radius", "border_radius", "dimensions", ".state-disabled"],
     ["", "style_background_shadow", "shadow", ".state-disabled"],
     ["color", "font_color", "color", ".state-disabled"],
@@ -587,6 +596,23 @@ export default function ButtonComponent(settings) {
 
   if (borderColorActive) {
     stylesInString += colorPropertyStyled(borderColorActive, "border-color");
+  }
+  const outlineTypeActive = getResponsiveSetting(settings, "outline_type", '.active');
+
+  if (outlineTypeActive) {
+    stylesInString += simplePropertyStyled(outlineTypeActive, "outline-style");
+  }
+
+  const outlineWidthActive = getResponsiveSetting(settings, "outline_width", '.active');
+
+  if (outlineWidthActive) {
+    stylesInString += `outline-width: ${sliderStyled(outlineWidthActive)};`;
+  }
+
+  const outlineColorActive = getResponsiveSetting(settings, "outline_color", '.active');
+
+  if (outlineColorActive) {
+    stylesInString += colorPropertyStyled(outlineColorActive, "outline-color");
   }
 
   const borderRadiusActive = getResponsiveSetting(settings, "border_radius", '.active');

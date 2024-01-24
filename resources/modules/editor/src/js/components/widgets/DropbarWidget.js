@@ -195,7 +195,7 @@ class DropbarWidget extends Component {
       dynamic_icon = window.altrpHelpers.getDataByPath(dynamic_icon)
       icon = dynamic_icon ?
           <img src={dynamic_icon}/>
-        :  (<span className={`${classesState} altrp-btn-icon`}>
+        :  (<span className={`${classesState} altrp-btn-icon  altrp-btn-icon-right`}>
           {renderAsset(buttonMedia)}
           </span>)
     }

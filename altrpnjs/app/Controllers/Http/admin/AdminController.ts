@@ -206,9 +206,9 @@ export default class AdminController {
     console.info('Upgrading Pages')
     const id = request.input('id')
 
-    console.log(`result of generator:page ${id ? `--id=${id}` : ''}`, await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`))
+    console.log(`result of generator: page ${id ? `--id=${id}` : ''}: `, await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`))
 
-    console.info('Pages Upgraded')
+    //console.info('Pages Upgraded')
   }
 
   private static async upgradeModels() {

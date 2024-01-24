@@ -257,6 +257,8 @@ export default class GlobalStyle extends BaseModel {
 
   public static async updateCssFile() {
     const css = await GlobalStyle.getCssVars(true)
-    BaseGenerator.generateCssFile('altrp-vars', css, 'vars')
+    BaseGenerator.generateCssFile('altrp-vars', css, 'vars').catch(e=>{
+      console.error(`Error while generateCssFile`, e)
+    })
   }
 }

@@ -9,7 +9,7 @@ export default function getBreadcrumbsItems(){
     return window.breadcrumbsItems;
   }
   let items = [];
-  if(isEditor(0)){
+  if(isEditor()){
     return items;
   }
   const currentId = window['h-altrp'] ? window.page_id : window.currentPageId

@@ -282,7 +282,7 @@ class InputSelectWidget extends Component {
       /**
        * Обновить значение, если formsStore изменилось из другого компонента
        */
-      const path = `${formId}.${fieldName}`;
+      const path = [formId, fieldName];
       if (
         this.props.formsStore !== prevProps.formsStore &&
         _.get(altrpforms, path) !== this.state.value

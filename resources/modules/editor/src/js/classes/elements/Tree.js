@@ -11,7 +11,12 @@ import {
   CONTROLLER_MEDIA,
   CONTROLLER_NUMBER,
   TAB_STYLE,
-  CONTROLLER_SLIDER, CONTROLLER_COLOR, CONTROLLER_TYPOGRAPHIC, CONTROLLER_DIMENSIONS, CONTROLLER_SHADOW
+  CONTROLLER_SLIDER,
+  CONTROLLER_COLOR,
+  CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_DIMENSIONS,
+  CONTROLLER_SHADOW,
+  CONTROLLER_SELECT2
 } from '../modules/ControllersManager';
 import Repeater from "../Repeater";
 import {advancedTabControllers} from "../../decorators/register-controllers";
@@ -78,10 +83,30 @@ class Tree extends BaseElement {
           value: 'datasource',
           label: 'Datasource'
         },
+        {
+          value: 'menu',
+          label: 'Menu'
+        },
       ],
       locked: true,
     });
 
+    this.addControl('menu', {
+      type: CONTROLLER_SELECT2,
+      responsive: false,
+      prefetch_options: true,
+      label: 'Menu',
+      isClearable: true,
+      conditions: {
+        select_type: 'menu'
+      },
+      options_resource: '/admin/ajax/menus/options?value=guid',
+      nullable: true,
+      after: <div className="control-button-container mt-2">
+        <a target="_blank" href="/admin/menus" className="btn btn_success">Edit Menus</a>
+      </div>,
+      locked: true,
+    });
 
     this.addControl("tree_repeater", {
       type: CONTROLLER_REPEATER,
@@ -167,9 +192,10 @@ class Tree extends BaseElement {
     //   label: 'Icon',
     // });
 
-    this.addControl('cursor', {
+    this.addControl('caret_r', {
       type: CONTROLLER_SWITCHER,
-      label: "Cursor pointer",
+      label: "carriage on the right",
+      locked: true
     });
 
     this.addControl('columns_heading_activator', {

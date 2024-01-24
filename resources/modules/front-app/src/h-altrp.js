@@ -1,4 +1,9 @@
 console.log('FIRST SCRIPT: ', performance.now());
+const _subscribers = []
+window.appStoreSubscribe = function (callback){
+  _subscribers.push(callback)
+}
+
 if(!window.asCheck){
 
   Promise.all([

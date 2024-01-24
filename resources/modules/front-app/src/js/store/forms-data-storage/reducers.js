@@ -14,7 +14,8 @@ export function formsStoreReducer(state, {type, formId, fieldName, value, change
       } else if(_.get(state, [formId, fieldName]) !== value){
         state = _.cloneDeep(state);
         state.changedField = changedField;
-        _.set(state, [formId, fieldName], value);
+        //_.set(state, `${formId}.${fieldName}`, value);
+        _.set(state, [formId,fieldName], value);
       }
     }break;
     case CLEAR_FORM_FIELD_VALUE:{

@@ -21,7 +21,11 @@ export default class RootElementRenderer{
     this.children  = this.element.children || []
     this.id = element.id
   }
-  async render(screenName:string, randomString){
+  async render(screenName:string, randomString, options:any = {}){
+    const {
+      page = null,
+      template = null
+    } = options
     let content :string = ''
     if(fs.existsSync(RootElementRenderer.stub)){
       content = fs.readFileSync(RootElementRenderer.stub, {encoding:'utf8'})
@@ -31,7 +35,10 @@ export default class RootElementRenderer{
       try {
         // let path = child.type === 'widget' ? `./widgets/${child.name}` : `./${child.name}`
         const renderer = new ElementRenderer(child)
-        children_content += await renderer.render(screenName, randomString)
+        children_content += await renderer.render(screenName, randomString, {
+          page,
+          template,
+        })
       } catch (e) {
         console.error(`Render Error element ${child.name}
         ${e.message}

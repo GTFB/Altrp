@@ -266,11 +266,18 @@ export default class Template extends BaseModel {
     return data
   }
 
-  async getChildrenContent(screenName: string, randomString = ''): Promise<string> {
+  async getChildrenContent(screenName: string, randomString, options: any): Promise<string> {
+    const {
+      // @ts-ignore
+      page = null
+    } = (options ||{})
     try {
       const data = JSON.parse(this.data)
       const renderer = new RootElementRenderer(data)
-      return await renderer.render(screenName, randomString)
+      return await renderer.render(screenName, randomString, {
+        template: this,
+        page,
+      })
     } catch (e) {
       console.error(e)
 

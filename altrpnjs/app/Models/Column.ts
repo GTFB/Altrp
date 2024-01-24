@@ -1,8 +1,12 @@
-import {BaseModel, BelongsTo, belongsTo, column,} from '@ioc:Adonis/Lucid/Orm'
+import {afterCreate, BaseModel, BelongsTo, belongsTo, column,} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
 import Model from "App/Models/Model";
 import Table from "App/Models/Table";
 import isProd from "../../helpers/isProd";
+import Database from "@ioc:Adonis/Lucid/Database";
+import Env from "@ioc:Adonis/Core/Env";
+import {DateTime} from "luxon";
+import Event from "@ioc:Adonis/Core/Event";
 
 
 export default class Column extends BaseModel {
@@ -225,5 +229,64 @@ decorate([
 
   public static createIndexName(columnName, modelName):string {
     return `${columnName}_${modelName}`
+  }
+
+  @afterCreate()
+  public static async afterCreate(columnData: Column){
+
+    try{
+
+      if(columnData.type !== 'calculated'){
+        await columnData.load('altrp_model', query=>{
+          query.preload('table')
+        })
+        const model = columnData.altrp_model
+        const client = Database.connection(Env.get('DB_CONNECTION'))
+
+        await client.schema.table(model.table.name,table=>{
+          let type = columnData.type
+          let size: string | number = columnData.size
+          if(type.toLowerCase() === 'longtext'){
+            type = 'text'
+            size = 'longtext'
+          }
+          let query = table[type](columnData.name, size)
+          if(columnData.type === 'bigInteger' &&  columnData.attribute === 'unsigned'){
+            query.unsigned()
+          }
+          if(columnData.default){
+            query.default(columnData.default)
+          }
+        })
+
+        model.updatedAt = DateTime.now()
+        await model.save()
+
+        Event.emit('model:updated', model)
+        await columnData.indexCreator(  model, true)
+
+      }
+    } catch (e) {
+      console.error(e)
+      await columnData.delete()
+    }
+  }
+  async indexCreator( model, newColumn = false) {
+    const indexName = Column.createIndexName(this.name, model.table.name)
+    if(this.indexed && this.unique) {
+      let indexQuery = `ALTER TABLE "${model.table.name}"
+        ADD CONSTRAINT "${model.indexName}" UNIQUE ("test_test2");`
+      await Database.rawQuery(indexQuery)
+    } else  if(this.indexed) {
+      let indexQuery = `CREATE INDEX ${indexName} ON ${model.table.name}(${this.name})`
+      await Database.rawQuery(indexQuery)
+    } else if(! newColumn){
+      try {
+        let indexQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${indexName}`
+        await Database.rawQuery(indexQuery)
+      }catch (e) {
+
+      }
+    }
   }
 }

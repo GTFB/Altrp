@@ -15,6 +15,7 @@ import {
 import Repeater from "../classes/Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../front-app/src/js/helpers";
 import {actionsControllers} from "./actions-controllers";
+import informerControllers from "./informer-controllers";
 /**
  * Функция декорирует элемент неободимыми контроллерами
  * @param {BaseElement} element
@@ -2165,6 +2166,8 @@ export function advancedTabControllers(element) {
   actionsControllers(element, 'Appearance of Top of Element Actions', 'wrapper_appearT_', TAB_ADVANCED);
 
   actionsControllers(element, 'Appearance of Bottom of Element Actions', 'wrapper_appearB_', TAB_ADVANCED);
+
+  informerControllers(element)
 
 }
 window.advancedTabControllers = advancedTabControllers

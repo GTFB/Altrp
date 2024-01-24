@@ -34,7 +34,7 @@ export default class PageDatasource extends BaseModel {
   public priority: number;
 
   @column()
-  public page_guid: string;
+    public page_guid: string;
 
   @column()
   public autoload: boolean;

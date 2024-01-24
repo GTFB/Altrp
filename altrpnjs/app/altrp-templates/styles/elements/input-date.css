@@ -507,3 +507,24 @@
 
 .bp3-dateinput-popover{
   padding:0; }
+
+.altrp-date-field-container .bp3-popover-wrapper, .altrp-date-field-container .bp3-popover-target {
+  width: 100%;
+}
+
+.altrp-date-picker-popover .bp3-datepicker-caption select + .bp3-icon {
+  right: 2px !important;
+}
+
+.altrp-date-picker-popover .bp3-datepicker-year-select select {
+  padding: 0 0 0 2px;
+}
+
+.altrp-field-label--required::after {
+  line-height: 1.5;
+  font-weight: normal;
+  font-family: Open Sans;
+}
+.bp3-popover-wrapper.state-disabled {
+  display: block;
+}

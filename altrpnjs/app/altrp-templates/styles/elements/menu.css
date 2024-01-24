@@ -126,3 +126,7 @@
 {
   transform: rotate(180deg);
 }
+.altrp-widget_menu .bp3-button:not([class*=bp3-intent-]):active,
+.altrp-widget_menu .bp3-button:not([class*=bp3-intent-]).bp3-active{
+  box-shadow: none;
+}

@@ -12,6 +12,8 @@ import fs from "fs";
 import app_path from "../../../helpers/path/app_path";
 import AltrpMeta from "App/Models/AltrpMeta";
 import GlobalStyle from "App/Models/GlobalStyle";
+import Menu from "App/Models/Menu";
+import PageGenerator from "App/Generators/PageGenerator";
 
 export default class IndicesController {
   async admin({view}) {
@@ -43,11 +45,14 @@ export default class IndicesController {
     } else {
       global_styles = '{}'
     }
+    // @ts-ignore
+    const menus = await Menu.getJSON({})
     return view.render('editor', Edge({
       isProd: isProd(),
       applyPluginsFiltersSync,
       presetStyles: global_styles,
       altrpThemes,
+      menus,
       applyPluginsFiltersAsync,
       url: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.js?${Env.get('PACKAGE_KEY')}` :
@@ -82,12 +87,15 @@ export default class IndicesController {
     const styleVars = `<style id="altrp-css-vars">${await GlobalStyle.getCssVars()}</style>`
     let altrpThemes:any = (await AltrpMeta.query().where('meta_name', 'altrp_themes').first())
     altrpThemes = JSON.stringify(altrpThemes.meta_value)
+    const pageGenerator = new PageGenerator()
+    const frontAppCss = pageGenerator.getFrontAppCss()
+
     return view.render('editor-content', Edge({
       style,
       styleVars,
       altrpThemes,
       applyPluginsFiltersAsync,
-
+      frontAppCss,
       css: Env.get("PATH_ENV") === "production" ?
         `/modules/editor/editor.css` : null
     }))

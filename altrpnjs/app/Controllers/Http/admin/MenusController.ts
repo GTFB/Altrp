@@ -60,6 +60,8 @@ export default class MenusController {
     return menu
   }
 
+
+
   public async update({params, request, response}) {
 
     const menuQuery = Menu.query();
@@ -79,6 +81,12 @@ export default class MenusController {
     await menu.save();
 
     await menu.related("categories").detach();
+
+    menu.updatePagesFiles().then(()=>{
+      console.log('Successfully updated page files for menu: ', menu.id)
+    }).catch(e=>{
+      console.error('Error while menu pages update', menu.id, e)
+    })
 
     for (const option of request.input("categories")) {
       const category = await Category.query().where("guid", option.value).first();

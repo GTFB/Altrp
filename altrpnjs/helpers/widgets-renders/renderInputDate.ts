@@ -1,7 +1,7 @@
 import objectToStylesString from '../objectToStylesString';
 import getResponsiveSetting from '../getResponsiveSetting';
 import renderAsset from "../renderAsset";
-import moment from 'moment'
+// import moment from 'moment'
 
 const AltrpFieldContainer = (settings, child) => {
   const { content_label_position_type, className } = settings
@@ -62,7 +62,7 @@ export default function renderInputDate(settings, device) {
 
   const content_label = getResponsiveSetting(settings, "content_label", device);
   const content_required = getResponsiveSetting(settings, "content_required", device);
-  const nullable = settings.nullable
+  // const nullable = settings.nullable
 
   if (content_label) {
     label = `
@@ -81,26 +81,26 @@ export default function renderInputDate(settings, device) {
     label = '';
   }
 
-  const defaultValue = getResponsiveSetting(settings, "content_default_value", device) || '';
-  const locale = getResponsiveSetting(settings, "content_locale", device, "en");
-
-  let value: any = moment().locale(locale).toDate();
-  const format = getResponsiveSetting(settings, 'content_format', device) || 'YYYY-MM-DD';
-
-  if (defaultValue) {
-    value = moment(defaultValue, format)
-  } else {
-    value = moment()
-  }
-
-  value = value.isValid() ? value.format(format) : '';
+  // const defaultValue = getResponsiveSetting(settings, "content_default_value", device) || '';
+  // const locale = getResponsiveSetting(settings, "content_locale", device, "en");
+  //
+  // // let value: any = moment().locale(locale).toDate();
+  // const format = getResponsiveSetting(settings, 'content_format', device) || 'YYYY-MM-DD';
+  //
+  // if (defaultValue) {
+  //   value = moment(defaultValue, format)
+  // } else {
+  //   value = moment()
+  // }
+  //
+  // value = value.isValid() ? value.format(format) : '';
 
   const input = `
       <div class="altrp-input-wrapper">
         <span class="bp3-popover-wrapper altrp-date-picker">
           <span aria-haspopup="true" class="bp3-popover-target">
             <div class="bp3-input-group">
-              <input type="text" autocomplete="off" class="bp3-input" value="${nullable ? '': value}">
+              <input type="text" autocomplete="off" class="bp3-input" value="">
             </div>
           </span>
         </span>

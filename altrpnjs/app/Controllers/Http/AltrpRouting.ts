@@ -1,5 +1,3 @@
-
-
 import * as mustache from'mustache'
 import getCurrentDevice from "../../../helpers/getCurrentDevice";
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
@@ -36,6 +34,7 @@ import getAltrpTime from "../../../helpers/getAltrpTime";
 import {pluralize} from "@poppinss/utils/build/src/Helpers/string";
 import translateContent from "../../../helpers/i18n/translateContent";
 import MobileDetect from "mobile-detect";
+import getDirection from "../../../helpers/getDirection";
 
 export default class AltrpRouting {
 
@@ -349,14 +348,14 @@ export default class AltrpRouting {
     const lang = httpContext.request.cookie('altrp_lang') || get_altrp_setting('site_language', 'en')
     const theme = httpContext.request.cookie('altrp_theme')
     const dark_default =get_altrp_setting('dark_default')
-
-    let html_class = ''
+    const direction = getDirection(lang)
+    let html_class = `altrp-direction_${direction} `
 
 
     if(! theme){
-      html_class = dark_default ? 'altrp-theme_dark' : 'altrp-theme_normal'
+      html_class += dark_default ? 'altrp-theme_dark ' : 'altrp-theme_normal '
     } else {
-      html_class = theme
+      html_class += theme
     }
 
     if(detector.mobile()){

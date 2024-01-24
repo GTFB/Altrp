@@ -464,6 +464,7 @@ class Menu extends BaseElement {
     this.addControl('border',{
       type: CONTROLLER_SELECT,
       label: 'Border Type',
+      default: 'solid',
       options: [
         {
           'value': 'none',

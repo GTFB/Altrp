@@ -47,7 +47,8 @@ class ActionTriggerWidget extends React.Component {
     if(stop_event){
       e.stopPropagation()
     }
-    this.doActions(e.detail.data)
+    console.log(e.detail)
+    this.doActions(e.detail.data, e.detail.element)
   }
 
 
@@ -86,7 +87,7 @@ class ActionTriggerWidget extends React.Component {
     }
   }
 
-  doActions = async (data)=>{
+  doActions = async (data, element = null)=>{
     if(! this.element.getResponsiveLockedSetting("trigger_actions", null, []).length){
       return
     }
@@ -95,13 +96,16 @@ class ActionTriggerWidget extends React.Component {
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
     ).default;
-    this.props.element.setCardModel(new AltrpModel(data || {}))
-
+    data && this.props.element.setCardModel(new AltrpModel(data))
+    let widgetId= this.props.element.getIdForAction()
+    if(element instanceof AltrpModel){
+      widgetId = element.getIdForAction()
+    }
     await actionsManager.callAllWidgetActions(
-      this.props.element.getIdForAction(),
+      widgetId,
       'trigger_' + this.element.getResponsiveLockedSetting('type'),
       this.props.element.getSettings("trigger_actions", []),
-      this.props.element
+      element || this.props.element
     );
   }
 

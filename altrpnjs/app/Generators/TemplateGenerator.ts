@@ -87,6 +87,7 @@ export default class TemplateGenerator extends BaseGenerator {
       }
 
       if(template.currentArea.name === 'card'){
+        // @ts-ignore
         const children_content = await template.getChildrenContent(screen.name)
         const fileName = `${template.guid}.html`
 

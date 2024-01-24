@@ -22,6 +22,7 @@ import config from "../../helpers/config";
 import altrpRandomId from "../../helpers/altrpRandomId";
 import GlobalStyle from "App/Models/GlobalStyle";
 import {DateTime} from "luxon";
+import Menu from "App/Models/Menu";
 
 export default class PageGenerator extends BaseGenerator {
   public __altrp_global__: {
@@ -62,7 +63,6 @@ export default class PageGenerator extends BaseGenerator {
     if (!page) {
       return false
     }
-
 
     if (!page.guid) {
       console.error(`Page ${page.id} render error. Need more data`);
@@ -142,6 +142,10 @@ export default class PageGenerator extends BaseGenerator {
 
       let children_content = await this.page.getChildrenContent(screen.name)
       let all_styles = ''
+      let menus = await Menu.getJSON( {
+        content:children_content,
+        moreContent:[pageAreas],
+        raw: true})
       try {
         all_styles = await this.page.getAllStyles(children_content)
       }catch (e) {
@@ -187,6 +191,7 @@ export default class PageGenerator extends BaseGenerator {
             pageGuid: page.guid,
             popupsGuids: await page.getPopupsGuids(),
             randomString,
+            menus,
             isNodeJS: true
           }),
         }, false, true)

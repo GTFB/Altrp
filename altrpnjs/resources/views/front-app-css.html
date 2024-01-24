@@ -1,4 +1,7 @@
 <style>
+  .altrp-direction_rtl{
+    direction: rtl;
+  }
   .altrp-section {
     display: flex;
     position: relative;
@@ -9,6 +12,9 @@
     overflow: hidden;
     background-color: #DDDBDD;
     z-index: 1000;
+  }
+  .bp3-tree-node-content{
+    overflow: hidden;
   }
   .altrp-skeleton-box.altrp-skeleton-box.altrp-skeleton-box ~ * {
     display: none;
@@ -2476,4 +2482,271 @@
       padding-top: 0
     }
   }
+  :root {
+    --primary: #0084FF;
+    --secondary: #8C9399;
+    --background: #f6f6f7;
+    --background-dark: #404B56;
+    --border: #E6E7E9;
+    --border-dark: #666F77;
+    --disabled: #ddd;
+    --text: #151515;
+  }
+
+  .altrp-background-image_2xn1eif8v, .altrp-background-image_2rbim15cf {
+    background: rgba(255, 255, 255, .7) ;
+    backdrop-filter: blur(15px) ;
+  }
+
+  /* Popup */
+  .popup-window {
+    background-color: var(--background) ;
+  }
+
+  /* Blue Border */
+  #front-app :focus,
+  .popup-window :focus {
+    outline: none;
+  }
+
+  /* Button Icon Border */
+  .buticon .bp3-icon {
+    border-right: 1px solid var(--border);
+  }
+
+  .altrp-theme_dark .buticon .bp3-icon {
+    border-right: 1px solid var(--border-dark);
+  }
+
+  /* Input Select Border */
+  .btn_transparent.bp3-button:not([class*=bp3-intent-]) {
+    box-shadow: none;
+    background-image: initial;
+    background-color: transparent;
+  }
+
+  /* Input Phone */
+  .altrp-widget_input-tel .altrp-input-wrapper {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .altrp-widget_input-tel .altrp-input-wrapper:focus-within {
+    border: 1px solid var(--secondary);
+  }
+
+  .altrp-widget_input-tel .react-tel-input .flag-dropdown {
+    background: var(--background);
+    border: 0;
+    border-right: 1px solid var(--border);
+    border-radius: 4px 0 0 4px;
+    padding-right: 5px;
+  }
+
+  .altrp-widget_input-tel .react-tel-input .flag-dropdown .arrow {
+    border-top: 4px solid var(--secondary);
+  }
+
+  .altrp-widget_input-tel .react-tel-input .flag-dropdown .selected-flag {
+    background: var(--background);
+    padding-right: 5px;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .altrp-theme_dark .altrp-widget_input-tel .altrp-input-wrapper {
+    border: 1px solid var(--border-dark);
+    border-radius: 4px;
+  }
+
+  .altrp-theme_dark .altrp-widget_input-tel .altrp-input-wrapper:focus-within {
+    border: 1px solid var(--secondary);
+  }
+
+  .altrp-theme_dark .altrp-widget_input-tel .react-tel-input .flag-dropdown {
+    background: var(--background-dark);
+    border: 0;
+    border-right: 1px solid var(--border-dark);
+    border-radius: 4px 0 0 4px;
+    padding-right: 5px;
+  }
+
+  .altrp-theme_dark .altrp-widget_input-tel .react-tel-input .flag-dropdown .arrow {
+    border-top: 4px solid var(--secondary);
+  }
+
+  .altrp-theme_dark .altrp-widget_input-tel .react-tel-input .flag-dropdown .selected-flag {
+    background: var(--background-dark);
+    padding-right: 5px;
+    border-radius: 4px 0 0 4px;
+  }
+
+  /* Checkbox */
+  .altrp-field-option {
+    width: 100% ;
+    padding-bottom: 0 ;
+    padding-left: 0 ;
+  }
+
+  .altrp-field-option-span {
+    align-items: start ;
+  }
+
+  .altrp-field-label {
+    text-align: start ;
+  }
+
+  /* Checked */
+  .bp3-control input:checked ~ .bp3-control-indicator,
+  .bp4-control input:checked ~ .bp4-control-indicator,
+  .bp4-control.bp4-checkbox input:indeterminate ~ .bp4-control-indicator {
+    background-color: var(--primary) ;
+  }
+
+  /* Focus */
+  .bp3-control input:focus ~ .bp3-control-indicator,
+  .bp4-control input:focus ~ .bp4-control-indicator {
+    outline: var(--primary) auto 0 ;
+  }
+
+  /* Text Widget Icon */
+  .bp3-icon.bp3-icon_text-widget.bp3-icon_right {
+    width: auto;
+    height: auto;
+  }
+
+  .bp3-icon {
+    outline-width: 0 ;
+  }
+
+  /* Menu Hover */
+  menu-item.bp3-intent-primary:hover,
+  .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item,
+  .bp3-menu-item.bp3-intent-primary.bp3-active {
+    background-color: var(--primary) ;
+  }
+
+  /* Radio */
+  .altrp-field-radio-group {
+    flex-basis: min-content;
+  }
+
+  .bp3-control.bp3-radio.bp3-inline.altrp-field-radio {
+    margin-top: 8px ;
+  }
+
+  /* Breadcrumbs */
+  .bp3-breadcrumb {
+    font-size: 12px ;
+  }
+
+  /* Breadcrumb Hover */
+  a.bp3-breadcrumb:hover {
+    color: var(--secondary) ;
+  }
+
+  .bp3-breadcrumb-current {
+    color: #77807e;
+  }
+
+  .bp3-breadcrumbs > li::after {
+    opacity: 50%;
+  }
+
+  .bp3-breadcrumb-current {
+    font-size: 12px ;
+  }
+
+  /* Multi Select */
+  .bp3-input.bp3-tag-input.bp3-multi-select {
+    box-shadow: none;
+  }
+
+  .bp3-input.bp3-tag-input.bp3-active.bp3-multi-select {
+    border-color: var(--background-dark);
+  }
+
+  .bp3-input-ghost.bp3-multi-select-tag-input-input {
+    font-size: 14px;
+  }
+
+  .bp3-icon.bp3-icon-caret-down {
+    color: var(--secondary) ;
+  }
+
+  /* Tabs */
+  .altrp-tab {
+    margin-top: -20px ;
+  }
+
+  .bp3-tab.altrp-tab-btn.active.altrp-tab-horizontal {
+    outline-width: 0 ;
+  }
+
+  /* Table */
+  .altdata-table-container.vcWugRby{
+    min-width: 600px;
+  }
+
+  .altdata-table-foot {
+    margin-left: 5px ;
+  }
+
+  [data-table-id="c9eb1538-2310-4702-86e6-6a5569a901f3"] {
+    overflow: auto;
+  }
+
+  /* Pagination */
+  .altdata-pagination-button {
+    background-color: transparent ;
+  }
+
+  .altdata-pagination-button__icon path {
+    fill: var(--text) ;
+  }
+
+  .altdata-pagination-button_disabled {
+    opacity: 0 ;
+  }
+
+  .altdata-pagination_left {
+    justify-content: flex-start;
+    z-index: 100;
+    position: relative;
+    transform: translateY(-35px);
+    border-top-width: 2px;
+    border-top-color: var(--text);
+    border-top-style: solid;
+  }
+
+  .altrp-tab-btn.altrp-tab-btn p {
+    white-space: normal;
+  }
+
+  [readonly] {
+    pointer-events: none;
+  }
+
+  /* CK Editor */
+  blockquote {
+    position: relative;
+    padding: 1em 1em 0.5em 1em;
+    border-left: 0.2em solid #000;
+    font-family: 'Inter';
+    font-size: 1.4em;
+    line-height: 1em;
+    font-weight: 600;
+    letter-spacing: -0.7px;
+    margin: 0 0 20px;
+    background-color: aliceblue;
+  }
+
+  /* Disabled */
+  .state-disabled .bp3-icon {
+    opacity: 0;
+  }
+
+  .state-disabled .bp3-button:not([class*=bp3-intent-]) {
+    box-shadow: none;
+  }
+
 </style>

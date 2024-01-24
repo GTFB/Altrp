@@ -1,4 +1,5 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import altrpRandomId from "../functions/altrpRandomId";
 
 /**
  * Добавляем свойство altrpIndex для всех эементов-объектов массива
@@ -18,5 +19,6 @@ export default function setAltrpIndex(array = []) {
       return;
     }
     item.altrpIndex = idx;
+    item.altrpId = altrpRandomId();
   });
 }

@@ -309,6 +309,18 @@ class MenuBuilder extends Component {
             this.setState(state => ({...state, value}));
           }}
         />
+        <label htmlFor="submenu-icon" className="mb-0 mr-3 ml-3">Submenu Caret</label>
+        <IconSelect
+          id="submenu-icon"
+          returnType="text"
+          value={this.state.value.settings.submenu_icon}
+          maxWidth="50px"
+          maxHeight="50px"
+          onChange={(icon) => {
+            let value = mutate.set(this.state.value, 'settings.submenu_icon', icon);
+            this.setState(state => ({...state, value}));
+          }}
+        />
       </div>
 
       <div className="d-flex altrp-menu-builder-add align-items-center align-content-start p-3 flex-wrap">
@@ -316,15 +328,17 @@ class MenuBuilder extends Component {
         <input type="text"
                className="form-control "
                id={`label`}
+               placeholder="label"
                onChange={(e) => {
                  let value = e.target.value;
                  this.setState(state => ({...state, new: {...state.new, label: value}}));
                }}
                value={this.state.new.label}/>
-        <label htmlFor={`url`} className="form-label ">URL</label>
+        <label htmlFor={`url`} className="form-label ">URL or Dispatch Event</label>
         <input type="text"
                className="form-control "
                id={`url`}
+               placeholder={`Url or Event Name`}
                onChange={(e) => {
                  let value = e.target.value;
                  this.setState(state => ({...state, new: {...state.new, url: value}}));

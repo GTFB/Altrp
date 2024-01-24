@@ -150,7 +150,7 @@ class AltrpInput extends Component {
         return
       }
       res = {...res}
-      if (res.error_fields[fieldId]){
+      if (res.error_fields?.[fieldId]){
         delete res.error_fields[fieldId]
 
       }

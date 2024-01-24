@@ -37,6 +37,14 @@ class DimensionsController extends Component {
   }
 
   openPresets = () => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+
+    console.log(value)
+    if (value.cssVar) {
+      value = {...value}
+      delete value.cssVar
+      this._changeValue(value);
+    }
     this.setState(state => ({...state, showPresets: !this.state.showPresets}))
   }
 
@@ -152,8 +160,8 @@ class DimensionsController extends Component {
   _componentDidUpdate = () => {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
-    if(value.cssVar && value.guid && ! this.state.showPresets){
-      this.setState(state=>({...state, showPresets: true}))
+    if (value.cssVar && value.guid && !this.state.showPresets) {
+      this.setState(state => ({...state, showPresets: true}))
     }
   }
 
@@ -177,26 +185,26 @@ class DimensionsController extends Component {
         </div>
         <ResponsiveDdMenu/>
         <div className="control-slider-type">
-          {! this.state.showPresets &&
-            this.state.units.map(unit => {
-              let classes = 'control-slider-type-box';
-              if (value.unit === unit) {
-                classes += ' control-slider-type-box_active';
-              }
-              return <div className={classes}
-                          key={unit}>
-                <button onClick={this.changeUnit}
-                        data-unit={unit}
-                        className="control-slider-type-label">{unit}</button>
-              </div>
-            })
+          {!this.state.showPresets &&
+          this.state.units.map(unit => {
+            let classes = 'control-slider-type-box';
+            if (value.unit === unit) {
+              classes += ' control-slider-type-box_active';
+            }
+            return <div className={classes}
+                        key={unit}>
+              <button onClick={this.changeUnit}
+                      data-unit={unit}
+                      className="control-slider-type-label">{unit}</button>
+            </div>
+          })
           }
 
-          {! this.state.showPresets && <div className="control-shadow-toggle cursor-pointer" onClick={this.reset}>
+          {!this.state.showPresets && <div className="control-shadow-toggle cursor-pointer" onClick={this.reset}>
 
             <RotateLeft id="shadowContentIcon" fill="#8E94AA" width="16" height="16" viewBox="0 0 24 24"
                         className="control-shadow-svg-content"/>
-          </div> }
+          </div>}
           <div className="control-shadow-toggle cursor-pointer" onClick={this.openPresets}>
 
             <BulletList id="dimension-preset" fill="#8E94AA" width="16" height="16" viewBox="0 0 24 24"

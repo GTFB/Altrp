@@ -18,6 +18,7 @@ const { connect } = window.reactRedux;
 import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 import ElementWrapperGlobalStyles from "./ElementWrapperGlobalStyles";
 import AltrpSkeletonBox from "./altrp-skeleton-box/AltrpSkeletonBox";
+import Informer from "../../../../front-app/src/js/components/Informer";
 
 
 class ElementWrapper extends Component {
@@ -389,10 +390,12 @@ class ElementWrapper extends Component {
       tooltip_show_type = 'never',
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
+      informers = [],
     } = this.props.element.getSettings();
     if (["column", "section"].indexOf(this.props.element.getType()) !== -1) {
       tooltip_show_type = "never";
     }
+
     const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
 
     let errorContent = null;
@@ -535,6 +538,14 @@ class ElementWrapper extends Component {
                 element={this.props.element}
                 elementId={this.elementId}
               />
+            {informers.length !== 0 && <div className='altrp-informers'>
+              {informers.map((item, idx)=>{
+                return <Informer
+                  {...item}
+                  key={`informer_${element.getId()}_${idx}`}/>
+              })}
+            </div>}
+
           </WrapperComponent>
         </>
     );

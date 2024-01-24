@@ -81,7 +81,7 @@ const getMenuStyles = (settings, id) => {
    */
   let renderButton = getResponsiveSetting(settings, 'button');
   if (renderButton) {
-    styles += `${parentClass}${parentClass} {`;
+    styles += `${parentClass}${parentClass}${parentClass} {`;
     let alignment = getResponsiveSetting(settings, 'alignment')
     styles += `justify-content:${alignment};flex-direction: row;`;
     if (alignment !== 'stretch') {
@@ -98,7 +98,7 @@ const getMenuStyles = (settings, id) => {
    */
   let renderButtonDisabled = getResponsiveSetting(settings, 'button', '.state-disabled');
   if (renderButtonDisabled) {
-    styles += `.state-disabled ${parentClass}${parentClass} {`;
+    styles += `.state-disabled ${parentClass}${parentClass}${parentClass} {`;
     let alignmentDisabled = getResponsiveSetting(settings, 'alignment', '.state-disabled')
     styles += `justify-content:${alignmentDisabled};flex-direction: row;`;
     if (alignmentDisabled !== 'stretch') {
@@ -115,7 +115,7 @@ const getMenuStyles = (settings, id) => {
    */
   let renderButtonActive = getResponsiveSetting(settings, 'button', '.active');
   if (renderButtonActive) {
-    styles += `.active ${parentClass}${parentClass} {`;
+    styles += `.active ${parentClass}${parentClass}${parentClass} {`;
     let alignmentActive = getResponsiveSetting(settings, 'alignment', '.active')
     styles += `justify-content:${alignmentActive};flex-direction: row;`;
     if (alignmentActive !== 'stretch') {
@@ -131,7 +131,7 @@ const getMenuStyles = (settings, id) => {
    * @type {string}
    */
   if (renderButton) {
-    styles += `${parentClass}${parentClass} .altrp-menu-toggle{`;
+    styles += `${parentClass}${parentClass}${parentClass} .altrp-menu-toggle{`;
     let buttonBg = getResponsiveSetting(settings, 'button_bg')
     if (buttonBg && buttonBg.color) {
       styles += `background-color:${buttonBg.color};background-image:none;`;
@@ -161,7 +161,7 @@ const getMenuStyles = (settings, id) => {
     styles += '} ';
 
 //state disabled
-    styles += `.state-disabled ${parentClass}${parentClass} .altrp-menu-toggle{`;
+    styles += `.state-disabled ${parentClass}${parentClass}${parentClass} .altrp-menu-toggle{`;
     let buttonBgDisabled = getResponsiveSetting(settings, 'button_bg', '.state-disabled')
     if (buttonBgDisabled && buttonBgDisabled.color) {
       styles += `background-color:${buttonBgDisabled.color};background-image:none;`;
@@ -189,7 +189,7 @@ const getMenuStyles = (settings, id) => {
     }
     styles += '} ';
     //state active
-    styles += `.active ${parentClass}${parentClass} .altrp-menu-toggle{`;
+    styles += `.active ${parentClass}${parentClass}${parentClass} .altrp-menu-toggle{`;
     let buttonBgActive = getResponsiveSetting(settings, 'button_bg', '.active')
     if (buttonBgActive && buttonBgActive.color) {
       styles += `background-color:${buttonBgActive.color};background-image:none;`;

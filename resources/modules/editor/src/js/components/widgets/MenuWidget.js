@@ -155,6 +155,7 @@ class MenuWidget extends Component {
       {items.map((item) => {
         const _popoverProps = {...popoverProps}
         _popoverProps.portalClassName += ` altrp-portal-parent-item-key${item.id} `
+
         return <MenuItem
           ref={ref}
           popoverProps={_popoverProps}
@@ -165,6 +166,19 @@ class MenuWidget extends Component {
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
+            console.log(item)
+
+            if(item.url?.indexOf('event:') === 0){
+              const event = new CustomEvent(item.url?.replace('event:', ''),
+                {
+                  detail: {
+                    element: this.props.element,
+                  }
+                })
+              document.dispatchEvent(event)
+              window.dispatchEvent(event)
+              return;
+            }
             if(! window.altrp?.spa_off){
 
               return;

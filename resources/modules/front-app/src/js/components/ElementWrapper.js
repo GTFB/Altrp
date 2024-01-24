@@ -18,7 +18,8 @@ class ElementWrapper extends Component {
     super(props);
 
     this.state = {
-      elementDisplay: !this.props.element.getSettings("default_hidden")
+      elementDisplay: !this.props.element.getSettings("default_hidden"),
+      Informer: ''
     };
     this.reactElement = this.props.element.getSettings("react_element");
     this.elementId = this.props.element.getId();
@@ -55,6 +56,12 @@ class ElementWrapper extends Component {
       this.props.element.updateFonts();
     }
     const {element} = this.props
+    const {informers = []} = element.getSettings()
+    if(informers?.length){
+      import(/* webpackChunkName: 'Informer' */'../components/Informer').then(Informer=>{
+        this.setState(state=>({...state, Informer: Informer.default}))
+      })
+    }
     // const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
     // const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
     // document.dispatchEvent(mountElementEvent)
@@ -352,6 +359,7 @@ class ElementWrapper extends Component {
       conditional_display_choose,
       conditional_roles = [],
       conditional_permissions = [],
+      informers = [],
     } = element.settings;
     let classes = `altrp-element ${this.props.element
       .getSelector()
@@ -580,7 +588,13 @@ class ElementWrapper extends Component {
           }
           {content}
         </WrapperComponent>
-
+        {this.state.Informer && informers?.length !== 0 && <div className='altrp-informers'>
+          {informers.map((item, idx)=>{
+            return <this.state.Informer
+              {...item}
+              key={`informer_${element.getId()}_${idx}`}/>
+          })}
+        </div>}
       </>
     );
   }

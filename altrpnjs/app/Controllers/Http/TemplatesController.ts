@@ -26,6 +26,7 @@ import getCurrentDevice from '../../../helpers/getCurrentDevice'
 import stub_path from '../../../helpers/path/stub_path'
 import PageGenerator from 'App/Generators/PageGenerator'
 import base_path from '../../../helpers/base_path'
+import altrpRandomId from "../../../helpers/altrpRandomId";
 
 export default class TemplatesController {
   public async getAllIds({ response }) {
@@ -494,7 +495,8 @@ export default class TemplatesController {
       }
     }
 
-    let childrenContent = await template.getChildrenContent(screenName)
+    // @ts-ignore
+    let childrenContent = await template.getChildrenContent(screenName, altrpRandomId(), )
 
     const pageGenerator = new PageGenerator()
     const previewPage = new Page()

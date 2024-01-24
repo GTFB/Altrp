@@ -10,11 +10,15 @@ export default function stringifyWrapperAttributes(settings: {
   conditions: [] | null
   conditional_other: boolean | null
   conditional_other_display: string | null
+  informers?: []
 }, screenName = ''){
   const altrpSettings : {
+    informers?: [];
     perspective?:boolean
   } = {}
-
+  if(settings.informers){
+    altrpSettings.informers = settings.informers
+  }
 
   if(getResponsiveSetting(settings, 'mouse-effects:enable',screenName)){
     getResponsiveSetting(settings, 'mouse-effects:track',screenName)

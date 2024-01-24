@@ -5,6 +5,7 @@ import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPa
 import parseOptionsFromSettings from "../../../../../front-app/src/js/functions/parseOptionsFromSettings";
 
 import {Tree as TreeBlueprint} from '@blueprintjs/core'
+import replacePageContent from "../../../../../front-app/src/js/helpers/replace-page-content";
 
 export const normalizeValues = function (branch, iconValue = this.props.element.getSettings("icon")) {
   const folderIcon = "folder-close";
@@ -347,7 +348,6 @@ class TreeWidget extends Component {
       let settings = this.props.element.getSettings();
 
       const data = this.getFromDatasource(settings) || [];
-      console.log(data)
 
       this.setState((s) => ({
         ...s,
@@ -359,8 +359,33 @@ class TreeWidget extends Component {
       //   repeater: filtrationRepeater
       // }))
     }
+    this.updateMenu()
+
   }
 
+  updateMenu =()=>{
+    const settings = this.props.element.getSettings()
+    let {
+      menu,
+      select_type,
+    } = settings
+    if(select_type === 'menu'){
+      if(this.menu !== menu){
+        this.menu = menu
+
+        menu = window.altrp.menus?.find(m=>m.guid === menu)
+        if(menu){
+
+          let repeater = menu.children
+          repeater = repeater ? JSON.parse(repeater) : []
+
+          repeater = repeater.map(i=>menuRecursive(i))
+          this.setState(state=>({...state, repeater}))
+        }
+      }
+
+    }
+  }
 
   _componentDidUpdate(prevProps) {
     let path = this.props.element.getLockedSettings("tree_from_datasource", '');
@@ -381,11 +406,29 @@ class TreeWidget extends Component {
         repeater: data
       }))
     }
+    this.updateMenu()
+
   }
 
   handleNodeClick(node, path) {
+    if(isEditor()){
+      return
+    }
     const originallySelected = node.isSelected;
-
+    if(node.url?.indexOf('event:') === 0){
+      const event = new CustomEvent(node.url?.replace('event:', ''),
+        {
+          detail: {
+            element: this.props.element,
+          }
+        })
+      document.dispatchEvent(event)
+      window.dispatchEvent(event)
+    } else if(node.url?.indexOf('/') === 0){
+      replacePageContent(node.url)
+    } else if(node.url?.indexOf('http') === 0){
+      location.href = node.url
+    }
     this.updateNode({
       node,
       path,
@@ -433,7 +476,7 @@ class TreeWidget extends Component {
 
   updateNode(settings) {
     this.setState(s => {
-      const repeater = s.repeater;
+      const repeater = this.getRepeater();
 
       if (settings.hasOwnProperty("isExpanded")) {
         TreeBlueprint.nodeFromPath(settings.path, repeater).isExpanded = settings.isExpanded;
@@ -444,7 +487,7 @@ class TreeWidget extends Component {
 
       return {
         ...s,
-        repeater
+        repeater,
       }
     })
   }
@@ -493,20 +536,28 @@ class TreeWidget extends Component {
       </div>
     ) : ""
   }
+  getRepeater = ()=>{
+    return this.state.repeater
 
+  }
   render() {
+    const settings = this.props.element.getSettings()
 
-    console.log(this.state.repeater)
+    const {
+      caret_r
+    } = settings
+
+    const repeater = this.getRepeater()
     let classes = this.getClasses() + (this.props.element.getResponsiveLockedSetting('position_css_classes', '', '') || "")
     return this.state.type !== "datasource" ? (
-      this.state.repeater.length > 0 ? (
-        <div className="altrp-tree">
+      repeater?.length > 0 ? (
+        <div className={`altrp-tree ${caret_r ? 'altrp-tree_right-caret': ''}`}>
           {
             this.getTreeHeading()
           }
           <TreeBlueprint
             className={classes}
-            contents={this.state.repeater}
+            contents={repeater}
             onNodeClick={this.handleNodeClick}
             onNodeCollapse={this.handleNodeCollapse}
             onNodeExpand={this.handleNodeExpand}
@@ -539,3 +590,25 @@ class TreeWidget extends Component {
 }
 
 export default TreeWidget
+
+function menuRecursive(item){
+  let newItem = {
+    id: item.id,
+    label: item.label,
+    url: item.url
+  }
+  if(newItem.url){
+    newItem.className = 'altrp-pointer'
+  }
+  if(item.icon){
+    newItem.icon = <span className="bp3-icon " dangerouslySetInnerHTML={{__html: item.icon}}></span>
+  }
+  newItem.childNodes = item.children || []
+
+  newItem.childNodes = newItem.childNodes.map(i=>menuRecursive(i))
+
+  newItem.hasCaret = !! newItem.childNodes.length
+
+
+  return newItem
+}

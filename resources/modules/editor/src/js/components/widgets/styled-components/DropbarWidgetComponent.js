@@ -79,6 +79,23 @@ export default function DropbarWidgetComponent(settings) {
     stylesInString += sizeStyled(borderRadiusActive, "border-radius");
   }
 
+  const outlineTypeActive = getResponsiveSetting(settings, "outline_type", '.active');
+
+  if (outlineTypeActive) {
+    stylesInString += simplePropertyStyled(outlineTypeActive, "outline-style");
+  }
+
+  const outlineWidthActive = getResponsiveSetting(settings, "outline_width", '.active');
+
+  if (outlineWidthActive) {
+    stylesInString += `outline-width: ${sliderStyled(outlineWidthActive)};`;
+  }
+
+  const outlineColorActive = getResponsiveSetting(settings, "outline_color", '.active');
+
+  if (outlineColorActive) {
+    stylesInString += colorPropertyStyled(outlineColorActive, "outline-color");
+  }
   const boxShadowActive = getResponsiveSetting(settings, 'style_background_shadow', '.active');
 
   if (boxShadowActive) {

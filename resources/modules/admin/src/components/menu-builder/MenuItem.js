@@ -24,6 +24,7 @@ class MenuItem extends Component {
           <input type="text"
                  className="form-control"
                  id={`${this.props.indexes.join('.')}.label`}
+                 placeholder="label"
                  onChange={(e) => {
                    let value = e.target.value;
                    let path = this.props.indexes.map(((index) => {
@@ -32,9 +33,10 @@ class MenuItem extends Component {
                    this.props.updateValue(value, path)
                  }}
                  value={this.props.item.label}/>
-          <label htmlFor={`${this.props.indexes.join('.')}.url`} className="form-label">URL</label>
+          <label htmlFor={`${this.props.indexes.join('.')}.url`} className="form-label">URL or Dispatch Event</label>
           <input type="text"
                  className="form-control"
+                 placeholder={`Url or Event Name`}
                  id={`${this.props.indexes.join('.')}.url`}
                  onChange={(e) => {
                    let value = e.target.value;
@@ -82,7 +84,7 @@ class MenuItem extends Component {
                  }}
                  value={this.props.item.value}/>
           <label htmlFor={`${this.props.indexes.join('.')}.icon`} className="form-label">Icon</label>
-          <button
+          {this.props.item.icon && <button
             onClick={() => {
               let value = '';
               let path = this.props.indexes.map(((index) => {
@@ -91,7 +93,7 @@ class MenuItem extends Component {
               this.props.updateValue(value, path)
             }}
             className="btn btn_link text-danger fs-2 altrp-menu-item__delete">delete Icon
-          </button>
+          </button>}
           <IconSelect
             value={this.props.item.icon}
             returnType="text"

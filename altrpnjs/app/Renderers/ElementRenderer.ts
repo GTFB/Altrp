@@ -57,7 +57,10 @@ export default class ElementRenderer {
     }/${this.element.name}.stub`)
   }
 
-  async render(screenName: string, randomString): Promise<string> {
+  async render(screenName: string, randomString, {
+    page,
+    template,
+  }): Promise<string> {
     const settings: any = this.element.settings
     let reactElement = this.element.settings?.react_element || (DEFAULT_REACT_ELEMENTS.indexOf(this.getName()) !== -1)
     if(! reactElement && this.element.settings['skeleton:enable']){
@@ -84,7 +87,10 @@ export default class ElementRenderer {
     let children_content = ''
     for (const child of this.element.children) {
       let renderer = new ElementRenderer(child)
-      children_content += await renderer.render(screenName, randomString)
+      children_content += await renderer.render(screenName, randomString, {
+        page,
+        template
+      })
     }
     let element_content = '';
     const columns_count = this.element.children.length;
@@ -147,7 +153,10 @@ export default class ElementRenderer {
           element_content = await render({
             ...this.element.settings,
             __elementId: this.getForIdActions()
-          }, screenName, this.getId(), randomString)
+          }, screenName, this.getId(), randomString, {
+            page,
+            template
+          })
         }
         if (this.getName() === 'section_widget') {
           element_content =

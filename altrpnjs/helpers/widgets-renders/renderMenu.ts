@@ -9,6 +9,7 @@ export default async function renderMenu(settings, device, elementID):Promise<st
 
   const menu = await Menu.query().where('guid', settings.menu|| '').first()
   if(shouldRenderButton){
+    // @ts-ignore
     return renderButton(settings,  device,menu)
   }
   if(! menu){
@@ -26,7 +27,7 @@ function _renderMenu(settings,  device, children, elementID):string{
 
   const  type = getResponsiveSetting(settings, 'type', device) || 'vertical';
 return `
-<ul class="bp3-menu altrp-menu altrp-menu_${type}">
+<ul class="bp3-menu altrp-menu altrp-menu_${type}" data-menu="${settings.menu}">
   ${
   children.map(menuItem=>{
     let {
@@ -55,7 +56,7 @@ ${children.length ? `<span  class="bp3-icon bp3-icon-caret-right"><svg data-icon
 `
 }
 
-async  function renderButton  (settings,  device, menu):Promise<string>  {
+async  function renderButton  (settings,  device, menu:Menu):Promise<string>  {
 
   const menuData= menu ? menu.toJSON() : {};
   if(menu){
@@ -86,6 +87,7 @@ async  function renderButton  (settings,  device, menu):Promise<string>  {
   <span class=" altrp-popover bp3-popover2-target">
   <button
     class="${classes} bp3-button altrp-menu-toggle"
+    data-menu="${menu.guid}"
   >
   <span class="${classes} altrp-menu-item__icon">
   ${toggle_icon}</span>

@@ -534,6 +534,81 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('outline_section', {
+      tab: TAB_STYLE,
+      label: 'Outline'
+    });
+
+    this.addControl('outline_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Outline Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl('outline_width', {
+        type: CONTROLLER_SLIDER,
+        label: 'Outline Width',
+        default: {
+          bind: true,
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+          'vw'
+        ],
+      }
+    );
+
+    this.addControl('outline_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Outline Color',
+      }
+    );
+
+    this.addControl('outline_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Outline Radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+    });
+
+    this.endControlSection();
+
     this.startControlSection('font_section', {
       tab: TAB_STYLE,
       label: 'Font',
@@ -580,7 +655,7 @@ class Button extends BaseElement {
     this.startControlSection("icon_style", {
       hideOnEmail: true,
       tab: TAB_STYLE,
-      label: "Icon"
+      label: "Icons"
     });
 
     this.addControl('icon_padding_right', {

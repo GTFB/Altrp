@@ -7,29 +7,6 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import {DateInput, TimePrecision} from "@blueprintjs/datetime";
 import getResponsiveSetting from "../../../../../front-app/src/js/helpers/get-responsive-setting";
 
-(window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-date-field-container .bp3-popover-wrapper, .altrp-date-field-container .bp3-popover-target {
-    width: 100%;
-  }
-
-  .altrp-date-picker-popover .bp3-datepicker-caption select + .bp3-icon {
-    right: 2px !important;
-  }
-
-  .altrp-date-picker-popover .bp3-datepicker-year-select select {
-    padding: 0 0 0 2px;
-  }
-
-  .altrp-field-label--required::after {
-    line-height: 1.5;
-    font-weight: normal;
-    font-family: Open Sans;
-  }
-  .bp3-popover-wrapper.state-disabled {
-    display: block;
-  }
-`)
-
 const AltrpFieldContainer = styled.div`
   ${({settings}) => {
     const content_label_position_type = getResponsiveSetting(settings, 'content_label_position_type')
@@ -489,6 +466,8 @@ class InputDateWidget extends Component {
    * @returns {Date}
    */
   getValue = ()=>{
+    let max_date = this.getMaxDate()
+
     let value ;
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
@@ -498,22 +477,29 @@ class InputDateWidget extends Component {
 
     if(isEditor()){
       if(!nullable) {
-        value = new Date();
+        value = max_date;
+
       }
     } else {
 
       value = _.get(appStore.getState().formsStore, `${formId}`, '')
       value = _.get(value, fieldName, '')
-
       if(!value){
         if(!nullable) {
-          value = new Date();
+          value = max_date;
         }
       } else if(timestamp){
         value = new Date(value);
+        if(value > max_date){
+          value = max_date
+        }
       } else {
         value = moment(value, format)
+
         value = value.toDate();
+        if(value > max_date){
+          value = max_date
+        }
       }
     }
 
@@ -533,12 +519,34 @@ class InputDateWidget extends Component {
     }
     return classes;
   }
+  getMaxDate = ()=>{
+    const settings = this.props.element.getLockedSettings();
+    const timestamp = this.props.element.getLockedSettings("content_timestamp");
+
+    let {
+      max_date_y,
+    } = settings
+    let max_date
+    if(! Number(max_date_y)){
+      max_date = moment().add(20,'year')
+    } else {
+      max_date = moment().add(Number(max_date_y),'year')
+
+    }
+    if(timestamp){
+      max_date = max_date.millisecond
+    } else {
+      max_date = max_date.toDate()
+    }
+    return max_date
+  }
 
   render() {
     let label ;
     const settings = this.props.element.getLockedSettings();
     let classLabel = "";
     let styleLabel = {};
+    let max_date = this.getMaxDate()
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );
@@ -660,12 +668,14 @@ class InputDateWidget extends Component {
 
     let classes = this.getClasses()
 
+
+
     const input = (
       <div className="altrp-input-wrapper">
         <DateInput
           name={this.getName()}
           minDate={new Date(1900, 1, 1)}
-          maxDate={moment().add(20,'year').toDate()}
+          maxDate={max_date}
           dayPickerProps={dayPickerProps}
           popoverProps={{
             portalContainer: frame,
