@@ -245,7 +245,25 @@ class InputDate extends BaseElement {
 
     this.addControl("max_date_y", {
       type: CONTROLLER_NUMBER,
-      label: "Year Difference",
+      label: "Years Difference",
+      description: 'Can Use "-"',
+      dynamic:false,
+
+      locked: true,
+    });
+
+    this.addControl("max_date_m", {
+      type: CONTROLLER_NUMBER,
+      label: "Months Difference",
+      description: 'Can Use "-"',
+      dynamic:false,
+
+      locked: true,
+    });
+
+    this.addControl("max_date_d", {
+      type: CONTROLLER_NUMBER,
+      label: "Days Difference",
       description: 'Can Use "-"',
       dynamic:false,
 

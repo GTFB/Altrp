@@ -896,7 +896,7 @@ class SettingPage extends Component {
                             className="form-group form-group_width47 form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages">
                             <label htmlFor="categories-pages" className="font__edit">Categories</label>
                             <MultiSelect tagRenderer={this.tagRenderer} id="categories"
-                                         items={this.state.categoryOptions}
+                                         items={this.state?.value?.categoryOptions?.data || []}
                                          itemPredicate={this.onQueryChangeMulti}
                                          noResults={<MenuItem disabled={true} text="No results."/>}
                                          fill={true}

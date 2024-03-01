@@ -11,6 +11,7 @@ import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
 import {Select} from "@blueprintjs/select";
 import UserTopPanel from "../UserTopPanel";
 import {compose} from "redux";
+import logoutAllUsers from "../../js/functions/logoutAllUsers";
 
 
 const BulkActions = ['Bulk Actions']
@@ -168,6 +169,7 @@ class Users extends Component {
           </div>
 
           <Link className="btn" to={"/admin/users/new/"}>Add New</Link>
+          <button className="btn btn_danger ml-3" onClick={logoutAllUsers}>Logout All Users</button>
 
           <div className="admin-filters">
             <span className="admin-filters__current" onClick={() => this.setState({roleFilter: null})}>

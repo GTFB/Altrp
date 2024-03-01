@@ -1,0 +1,14 @@
+const Database = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
+const axios = __importDefault(require("axios")).default;
+const {DateTime} = require("luxon");
+{{{imports}}}
+
+const _ = __importStar(require('lodash'))
+const DB = Database?.default ? Database.default : Database
+
+async function {{{name}}} ({{{params}}}) {
+  {{{content}}}
+}
+
+
+exports.default = {{{name}}}

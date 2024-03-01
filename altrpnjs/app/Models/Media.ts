@@ -12,16 +12,13 @@ import User from 'App/Models/User';
 import Category from "App/Models/Category";
 import changeFileExtension from "../../helpers/string/changeFileExtension";
 import guid from "../../helpers/guid";
-// import fs from "fs";
 import public_path from "../../helpers/path/public_path";
 import MediaController from "App/Controllers/Http/admin/MediaController";
-import {transliterate} from "../../helpers/transliterate";
+import transliterate from "../../helpers/transliterate";
 import fs from "fs";
 import convert from "lodash/fp/convert";
 import data_get from "../../helpers/data_get";
 import imageSize from "image-size";
-// import sizeOf from 'image-size';
-// import sharp from 'sharp';
 export default class Media extends BaseModel {
 
   public static table = 'altrp_media'

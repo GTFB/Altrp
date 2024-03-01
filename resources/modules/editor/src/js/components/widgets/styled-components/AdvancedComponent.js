@@ -40,8 +40,14 @@ export default function AdvancedComponent(settings) {
     () => {
       const value = getResponsiveSetting(settings, "positioning_custom_width");
       const width_type = getResponsiveSetting(settings, "positioning_width_type");
+      const css_width = getResponsiveSetting(settings, "css_width");
 
-      if (value && width_type === "custom") {
+      if ((value || css_width) && width_type === "custom") {
+
+        if(css_width){
+          return `width: ${css_width};`
+        }
+
         return `width: ${sliderStyled(value)};`
       } else {
         return ''

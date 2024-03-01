@@ -14,8 +14,8 @@ export default class RoleUsers extends BaseSchema {
       table.string('user_type').defaultTo('App\\User').nullable()
 
 
-      table.foreign('user_id').references('users.id').onDelete('cascade').onUpdate('delete');
-      table.foreign('role_id').references('roles.id').onDelete('cascade').onUpdate('delete');
+      table.foreign('user_id').references('users.id').onDelete('cascade').onUpdate('cascade');
+      table.foreign('role_id').references('roles.id').onDelete('cascade').onUpdate('cascade');
     })
   }
 

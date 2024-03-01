@@ -10,6 +10,8 @@ export default class PageRoles extends BaseSchema {
         table.bigInteger('role_id').unsigned()
         table.bigInteger('page_id').unsigned()
 
+        table.foreign('page_id').references('pages.id')
+          .onUpdate('cascade').onDelete('cascade');
         table.foreign('role_id').references('roles.id')
           .onUpdate('cascade').onDelete('cascade');
 

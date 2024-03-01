@@ -60,7 +60,6 @@ class PostsWidget extends Component {
     let data = query.getFromModel(this.state.modelData) || [];
     if (this.props.element.getLockedSettings('choose_datasource') === 'datasource') {
       let path = this.props.element.getLockedSettings('posts_datasource', '');
-      console.log(path)
       path = path.replace(/}}/g, '').replace(/{{/g, '');
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
 

@@ -1,13 +1,23 @@
-import {BaseModel, BelongsTo, belongsTo, column, afterUpdate, afterCreate} from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  afterUpdate,
+  afterCreate,
+  beforeDelete,
+} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
 import Model from 'App/Models/Model';
 import isProd from "../../helpers/isProd";
-
+import Database from "@ioc:Adonis/Lucid/Database";
+import Env from "@ioc:Adonis/Core/Env";
+import Column from "App/Models/Column";
 
 export default class Relationship extends BaseModel {
   public static table = 'altrp_relationships'
 
-  @column({ isPrimary: true })
+  @column({isPrimary: true})
   public id: number
 
   @column()
@@ -37,13 +47,61 @@ export default class Relationship extends BaseModel {
   @column()
   public model_id: number
 
+  @beforeDelete()
+  public static async dropTable(relationship: Relationship) {
+    const client = Database.connection(Env.get('DB_CONNECTION'))
+    try {
+      if(relationship.type === 'manyToMany'){
+        await client.schema.dropTableIfExists(await relationship.getManyToManyTableName())
+
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   @afterUpdate()
   @afterCreate()
-  public static async updateModel(relationship: Relationship){
-    await relationship.load('altrp_model')
-    await relationship.load('altrp_target_model')
-    relationship.altrp_model.save()
-    relationship.altrp_target_model.save()
+  public static async updateModel(relationship: Relationship) {
+    if(! relationship?.target_model_id || ! relationship.model_id){
+      return
+    }
+    await relationship.load('altrp_model', query => {
+      query.preload('table')
+    })
+    await relationship.load('altrp_target_model', query => {
+      query.preload('table')
+    })
+    relationship.altrp_model.save().catch(e => {
+      console.error(e)
+    })
+    relationship.altrp_target_model.save().catch(e => {
+      console.error(e)
+    })
+    if (this.name && relationship.altrp_target_model.table && relationship.altrp_model.table && relationship.type === 'manyToMany') {
+      const client = Database.connection(Env.get('DB_CONNECTION'))
+      try {
+        const localColumn = await relationship.getPivotLocalColumn()
+        const foreignColumn = await  relationship.getPivotForeignColumn()
+        if (await client.schema.hasTable(await relationship.getManyToManyTableName())) {
+
+          await client.schema.table(await relationship.getManyToManyTableName(), table => {
+            relationship.createPivotLocalKey(table, localColumn)
+            relationship.createPivotForeignKey(table, foreignColumn)
+          })
+        } else {
+
+          await client.schema.createTable(await relationship.getManyToManyTableName(), table => {
+            relationship.createPivotLocalKey(table, localColumn)
+            relationship.createPivotForeignKey(table, foreignColumn)
+          })
+        }
+      } catch (e) {
+        await relationship.delete()
+        console.error(e)
+      }
+
+    }
   }
 
   @belongsTo(() => Model, {
@@ -72,12 +130,12 @@ export default class Relationship extends BaseModel {
   @column({
     columnName: 'onDelete'
   })
-  public  	onDelete: string
+  public onDelete: string
 
   @column({
     columnName: 'onUpdate'
   })
-  public  	onUpdate: string
+  public onUpdate: string
 
   @column()
   public user_id: number
@@ -93,85 +151,189 @@ export default class Relationship extends BaseModel {
   // })
   // public altrp_table: HasMany<typeof Source>
 
-  renderForModelDev():string {
+  async renderForModelDev():Promise <string> {
     return `
-  ${this.renderDecoratorDev()}(() => ${this.renderRelatedModel()}, ${this.renderOptions()})
+  ${this.renderDecoratorDev()}(() => ${this.renderRelatedModel()}, ${await this.renderOptions()})
   public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>`
   }
 
-  renderForModelProd():string {
+  async renderForModelProd(): Promise<string> {
     return `
 decorate([
-  (0, ${this.renderType()})(() => ${this.renderRelatedModel()}.default, ${this.renderOptions()}),
+  (0, ${this.renderType()})(() => ${this.renderRelatedModel()}.default, ${await this.renderOptions()}),
   metadata("design:type", Object)
 ], ${this.altrp_model?.name}.prototype, "${this.name}", void 0);`
   }
 
-  renderForModel():string {
-    return isProd() ? this.renderForModelProd() : this.renderForModelDev()
+  async renderForModel():Promise <string>  {
+    return isProd() ? await this.renderForModelProd() : await this.renderForModelDev()
   }
 
-  private renderOptions():string {
-    let options:{
+  private async renderOptions():Promise <string> {
+    let options: {
       localKey?: string;
       foreignKey?: string;
-    } = {
+      relatedKey?: string;
 
-    }
+      pivotTable?: string;
+      pivotForeignKey?:  string;
+      pivotRelatedForeignKey?:  string;
+    } = {}
 
-    if(this.foreign_key){
-      if(this.type !== 'belongsTo'){
-        options.foreignKey = this.foreign_key
-      } else {
-        options.localKey = this.foreign_key
+    if(this.type === 'manyToMany'){
+      options.localKey = this.local_key
+      options.relatedKey = this.foreign_key
+      options.pivotTable = await this.getManyToManyTableName()
+      const localColumn = await this.getPivotLocalColumn()
+      const foreignColumn = await this.getPivotForeignColumn()
+      options.pivotForeignKey = this.getPivotLocalKeyName(localColumn)
+      options.pivotRelatedForeignKey = this.getPivotForeignKeyName(foreignColumn)
+    } else {
+
+      if (this.foreign_key) {
+        if (this.type !== 'belongsTo') {
+          options.foreignKey = this.foreign_key
+        } else {
+          options.localKey = this.foreign_key
+        }
       }
-    }
-    if(this.local_key){
-      if(this.type !== 'belongsTo'){
-        options.localKey = this.local_key
-      } else {
-        options.foreignKey = this.local_key
+      if (this.local_key) {
+        if (this.type !== 'belongsTo') {
+          options.localKey = this.local_key
+        } else {
+          options.foreignKey = this.local_key
+        }
       }
     }
     return JSON.stringify(options)
   }
 
   private renderDecoratorDev() {
-    switch (this.type){
-      case 'hasOne':{
+    switch (this.type) {
+      case 'hasOne': {
         return '@Orm.hasOne'
       }
-      case 'belongsTo':{
+      case 'belongsTo': {
         return '@Orm.belongsTo'
       }
-      case 'hasMany':{
+      case 'hasMany': {
         return '@Orm.hasMany'
       }
-      default:{
+      case 'manyToMany': {
+        return '@Orm.manyToMany'
+      }
+      default: {
         return '@Orm.hasOne'
       }
     }
   }
 
   private renderType() {
-    switch (this.type){
-      case 'hasOne':{
-        return isProd() ? 'Orm.hasOne':'Orm.HasOne'
+    switch (this.type) {
+      case 'hasOne': {
+        return isProd() ? 'Orm.hasOne' : 'Orm.HasOne'
       }
-      case 'belongsTo':{
-        return isProd() ? 'Orm.belongsTo':'Orm.BelongsTo'
+      case 'belongsTo': {
+        return isProd() ? 'Orm.belongsTo' : 'Orm.BelongsTo'
       }
-      case 'hasMany':{
-        return isProd() ? 'Orm.hasMany':'Orm.HasMany'
+      case 'hasMany': {
+        return isProd() ? 'Orm.hasMany' : 'Orm.HasMany'
       }
-      default:{
-        return isProd() ? 'Orm.hasOne':'Orm.HasOne'
+      case 'manyToMany': {
+        return isProd() ? 'Orm.manyToMany' : 'Orm.ManyToMany'
+      }
+      default: {
+        return isProd() ? 'Orm.hasOne' : 'Orm.HasOne'
       }
     }
 
   }
 
-  private renderRelatedModel():string {
+  private renderRelatedModel(): string {
     return this?.altrp_target_model?.name || ''
+  }
+
+  async getManyToManyTableName() {
+
+    // @ts-ignore
+    await this.load('altrp_model', query => {
+      // @ts-ignore
+      query.preload('table')
+    })
+    // @ts-ignore
+    await this.load('altrp_target_model', query => {
+      // @ts-ignore
+      query.preload('table')
+    })
+    return `${this.name}_${this.altrp_model.table.name}_${this.altrp_target_model.table.name}`;
+  }
+
+  createPivotLocalKey(table, column) {
+
+
+    let query = table[column.type](this.getPivotLocalKeyName(column))
+
+    if (column.name === 'id' || column.attribute === 'unsigned') {
+      query = query.unsigned()
+    }
+    query = query.references(column.name)
+    query = query.inTable(this.altrp_model.table.name)
+    query = query.onDelete('cascade')
+    query.onUpdate('cascade')
+
+  }
+
+  async getPivotLocalColumn(): Promise<Column | undefined> {
+    // @ts-ignore
+    await this.load('altrp_model', query => {
+      // @ts-ignore
+      query.preload('table', query => {
+        // @ts-ignore
+        query.preload('columns')
+      })
+    })
+    const column = this.altrp_model.table.columns.find(c => c.name === this.local_key)
+    return column
+  }
+
+  async getPivotForeignColumn(): Promise<Column | undefined> {
+
+    // @ts-ignore
+    await this.load('altrp_target_model', query => {
+      // @ts-ignore
+      query.preload('table', query => {
+        // @ts-ignore
+        query.preload('columns')
+      })
+    })
+    const column = this.altrp_target_model.table.columns.find(c => c.name === this.foreign_key)
+    return column
+  }
+
+  getPivotLocalKeyName(column) {
+    if (!column) {
+      return ''
+    }
+    return `${this.altrp_model.table.name}_${column.name}`
+  }
+
+  getPivotForeignKeyName(column) {
+    if (!column) {
+      return ''
+    }
+    return `${this.altrp_target_model.table.name}_${column.name}`
+  }
+
+  createPivotForeignKey(table, column) {
+
+    let query = table[column.type](this.getPivotForeignKeyName(column))
+
+    if (column.name === 'id' || column.attribute === 'unsigned') {
+      query = query.unsigned()
+    }
+    query = query.references(column.name)
+    query = query.inTable(this.altrp_target_model.table.name)
+    query = query.onDelete('cascade')
+    query.onUpdate('cascade')
   }
 }

@@ -79,7 +79,7 @@ class InputTextCommonWidget extends Component {
     const index = inputs.indexOf(e.target);
     if (index === undefined) return;
 
-    if(inputs[index + 1]){
+    if (inputs[index + 1]) {
       inputs[index + 1].focus();
     } else {
       inputs[0].focus();
@@ -100,7 +100,7 @@ class InputTextCommonWidget extends Component {
    * @param {{}} e
    */
   handleEnter = e => {
-    if(e.keyCode === 9){
+    if (e.keyCode === 9) {
       this.focusNext(e)
     }
     if (e.keyCode === 13) {
@@ -227,6 +227,8 @@ class InputTextCommonWidget extends Component {
       value = e.value;
     }
 
+    let needDispatch =  Math.abs((value?.length || 0) - (this.state.value?.length || 0)) > 2
+
     const content_type = this.props.element.getSettings('content_type')
     const maxNumber = this.props.element.getResponsiveSetting('max_number')
     const minNumber = this.props.element.getResponsiveSetting('min_number')
@@ -247,7 +249,7 @@ class InputTextCommonWidget extends Component {
     const {
       beh_keypress,
     } = settings;
-    if (beh_keypress) {
+    if (beh_keypress || needDispatch) {
       this.debounceDispatch(value, true)
     }
 
@@ -563,6 +565,7 @@ class InputTextCommonWidget extends Component {
           settings={this.props.element.getSettings()}
           onKeyDown={this.handleEnter}
           onChange={this.onChange}
+
           onBlur={this.onBlur}
           onFocus={this.onFocus}
           leftIcon={this.renderLeftIcon()}

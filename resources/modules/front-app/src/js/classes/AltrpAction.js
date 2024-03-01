@@ -369,6 +369,19 @@ class AltrpAction extends AltrpModel {
       alertText = replaceContentWithData(alertText, this.getCurrentModel().getData());
       alertText && alert(alertText);
     }
+
+
+    const event = new CustomEvent('altrp-action',
+      {
+        detail:{
+            actionData: this,
+            result,
+
+        }
+      })
+    window.dispatchEvent(event)
+    document.dispatchEvent(event)
+
     return result;
   }
 
@@ -644,6 +657,18 @@ class AltrpAction extends AltrpModel {
         history.back()
       } else {
         try{
+
+
+          const event = new CustomEvent('altrp-redirect',
+            {
+              detail:{
+                  url: _URL,
+
+              }
+            })
+          window.dispatchEvent(event)
+          document.dispatchEvent(event)
+
           if(this.getProperty('prevent') || window?.altrp?.spa_off){
             window.location.href = _URL
           } else {
@@ -1077,6 +1102,31 @@ class AltrpAction extends AltrpModel {
       const setType = this.getProperty('set_type');
       let count = this.getProperty('count');
       switch (setType) {
+
+        case'push_remove_items':{
+
+          let _currentValue = getDataByPath(path)
+
+          value = replaceContentWithData(
+            value,
+            this.getCurrentModel()
+          );
+          if(_.isArray(_currentValue)){
+
+            if(_currentValue.includes(value)){
+              value = _currentValue.filter(cv=>cv !== value)
+            } else {
+              value = [
+                ..._currentValue,
+                value
+              ]
+            }
+          } else {
+            value = [value];
+
+          }
+          result.success = setDataByPath(path, value);
+        }break;
         case 'toggle': {
           value = !getDataByPath(path);
           result.success = setDataByPath(path, value);

@@ -30,6 +30,7 @@ export default class CustomizersController {
     }
 
     let customizer = new Customizer()
+    delete requestAll.robotizer
     customizer.fill(requestAll)
 
     customizer.guid = guid()
@@ -214,6 +215,9 @@ export default class CustomizersController {
       await exec(`node ${base_path('ace')} generator:schedule --delete --id=${customizer.id}`)
       customizer.removeSchedule()
     }
+    if (oldType === 'helper' && all.type !== 'helper') {
+      await exec(`node ${base_path('ace')} generator:helper --delete --id=${customizer.id}`)
+    }
 
     let {categories = []} = all
 
@@ -306,6 +310,10 @@ export default class CustomizersController {
         if (result !== null) {
           customizer.schedule()
         }
+      }
+      if (customizer.type === 'helper') {
+        await exec(`node ${base_path('ace')} generator:helper --id=${customizer.id}`)
+
       }
 
       if(model) {

@@ -20,6 +20,10 @@ const relationTypeOptions = [
     value: 'hasMany',
     label: 'Has Many'
   },
+  {
+    value: 'manyToMany',
+    label: 'Many To Many'
+  },
 ];
 const deleteUpdateOptions = [
   {
@@ -283,6 +287,7 @@ class AddRelationForm extends Component {
 
 
   render() {
+    console.log(this)
     return <form className="admin-form admin-form-relation" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
@@ -456,7 +461,7 @@ class AddRelationForm extends Component {
         {this.renderForeignKey()}
       </div>
 
-      <div className="form-group__inline-wrapper">
+      {this.state.value?.type !=='manyToMany' && <div className="form-group__inline-wrapper">
         <div className="form-group flex-grow__selectBlueprint form-group_width47">
           <label htmlFor="onDelete">On Delete</label>
           {/*<select id="onDelete" required*/}
@@ -477,16 +482,18 @@ class AddRelationForm extends Component {
                   id="onDelete"
                   matchTargetWidth
                   itemPredicate={this.ItemPredicate}
-                  noResults={<MenuItem disabled={true} text="No results." />}
+                  noResults={<MenuItem disabled={true} text="No results."/>}
                   itemRenderer={(item, {handleClick, modifiers, query}) => {
                     return <MenuItem
                       text={item.label}
                       key={item.value}
-                      active={item.value === this.state.value.onDelete }
+                      active={item.value === this.state.value.onDelete}
                       onClick={handleClick}
                     />
                   }}
-                  onItemSelect={current => { this.changeValue(current.value, 'onDelete') }}
+                  onItemSelect={current => {
+                    this.changeValue(current.value, 'onDelete')
+                  }}
                   fill={true}
           >
             <Button fill
@@ -538,7 +545,7 @@ class AddRelationForm extends Component {
             />
           </Select>
         </div>
-      </div>
+      </div>}
 
        <div className="btn__wrapper btn__wrapper-relations">
         <button className="btn btn_success" type="submit">Add</button>

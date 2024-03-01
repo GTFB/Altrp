@@ -1,6 +1,7 @@
 import isEditor from "../../../../front-app/src/js/functions/isEditor";
 import redirect from "../../../../front-app/src/js/functions/redirect";
 import getDataByPath from "../../../../front-app/src/js/functions/getDataByPath";
+import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-section {
@@ -100,18 +101,20 @@ class SectionComponent extends Component {
       return;
     }
     const sectionLink = this.props.element.getLockedSettings("link_link");
-    redirect(sectionLink, e, this.props.element.getCurrentModel().getData());
+    if(sectionLink?.url){
+      redirect(sectionLink, e, this.props.element.getCurrentModel().getData());
+    }
   };
 
   /**
    * Курсор для ссылки
    * @return {boolean}
    */
-  sectionIsLink() {
+  sectionIsLink = () =>{
     if (isEditor()) {
       return false;
     }
-    return !!_.get(this, "props.element.settings.link_link.url");
+    return !!  replaceContentWithData(_.get(this, "props.element.settings.link_link.url", ), this.props.element.getCurrentModel().getData());
   }
 
   render() {

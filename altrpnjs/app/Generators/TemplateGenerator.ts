@@ -12,7 +12,6 @@ import escapeRegExp from "../../helpers/escapeRegExp";
 import clearRequireCache from "../../helpers/node-js/clearRequireCache";
 import DEFAULT_BREAKPOINT from "../../helpers/const/DEFAULT_BREAKPOINT";
 import { optimizeStyles } from '../../helpers/screen'
-
 export default class TemplateGenerator extends BaseGenerator {
 
   public static directory = '/views/altrp/templates'
@@ -118,6 +117,7 @@ export default class TemplateGenerator extends BaseGenerator {
       }
     }
     clearRequireCache()
+
   }
 
   static async prepareContent(content: string): Promise<string> {

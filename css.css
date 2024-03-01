@@ -1,13 +1,13 @@
-__selector__{
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: calc(100vw - 249px);
-
+__selector__.params-<%column_name%>-desc [attr*="altrp-btn-icon"] {
+  display: block;
+  transform: rotate(180deg);
 }
 
-@media screen and (max-width: 768px){
-  __selector__{
-    width: calc(100vw);
-  }
+__selector__.params-<%column_name%>-asc [attr*="altrp-btn-icon"] {
+  display: block;
+}
+
+__selector__ [attr*="altrp-btn-icon"] {
+  display: none;
+  transition-duratiom: 0.2s;
 }

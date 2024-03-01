@@ -109,6 +109,33 @@
         }
       ]
     },
+    "generator:helper": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GeneratorHelper",
+      "commandName": "generator:helper",
+      "description": "Run a helper generator",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "id",
+          "propertyName": "id",
+          "type": "array",
+          "alias": "i",
+          "description": "Array of helper ids (comma separated values without space)"
+        },
+        {
+          "name": "delete",
+          "propertyName": "isDelete",
+          "type": "boolean",
+          "alias": "d",
+          "description": "Delete generated helper"
+        }
+      ]
+    },
     "generator:listener": {
       "settings": {
         "loadApp": true,

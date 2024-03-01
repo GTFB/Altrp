@@ -30,7 +30,6 @@ class FrontPopup extends Component {
       isVisible,
       isShownOnScroll: false
     };
-    this.close = this.close.bind(this);
   }
 
 
@@ -59,6 +58,8 @@ class FrontPopup extends Component {
   close = () => {
     this.setState({isVisible: false, isShownOnScroll: false});
     this.props.closePopup();
+    document.body.dispatchEvent(new Event('click', {bubbles:true}))
+
   }
   onExited = () => {
     document.body.classList.remove('overflow-hidden');
@@ -278,6 +279,7 @@ class FrontPopup extends Component {
         onClick={() => {
           this.setState({isVisible: false});
           this.props.closePopup();
+          document.body.dispatchEvent(new Event('click', {bubbles:true}))
         }}
       >
         <AltrpImage
@@ -304,6 +306,7 @@ class FrontPopup extends Component {
         onClick={() => {
           this.setState({isVisible: false});
           this.props.closePopup();
+          document.body.dispatchEvent(new Event('click', {bubbles:true}))
         }}
       >
         {iconsManager().renderIcon('times', {

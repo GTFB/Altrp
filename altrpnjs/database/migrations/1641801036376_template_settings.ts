@@ -10,7 +10,7 @@ export default class TemplateSettings extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.bigInteger("template_id").unsigned().references("templates.id").notNullable()
+      table.bigInteger("template_id").unsigned().notNullable().references("templates.id").onUpdate('cascade').onDelete('cascade')
       table.string("setting_name", 25).index().notNullable()
       table.json("data").notNullable()
       table.unique(["template_id", "setting_name"])

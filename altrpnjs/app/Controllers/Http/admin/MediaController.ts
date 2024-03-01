@@ -15,7 +15,7 @@ import public_path from "../../../../helpers/path/public_path";
 import Logger from "@ioc:Adonis/Core/Logger";
 import Application from "@ioc:Adonis/Core/Application";
 import LIKE from "../../../../helpers/const/LIKE";
-import { transliterate } from "../../../../helpers/transliterate";
+import transliterate  from "../../../../helpers/transliterate";
 
 export default class MediaController {
   private static fileTypes: any;

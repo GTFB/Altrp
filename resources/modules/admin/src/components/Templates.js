@@ -192,7 +192,12 @@ class Templates extends Component {
     return JSON.stringify({
       area,
       data,
+      guid: template.guid,
+      styles: template.styles,
+      area_name: template.currentArea.name,
+      area_settings: template.currentArea.settings || '[]',
       title: template.title,
+      type: 'template',
       name: template.name,
       __exported_metas__: template.__exported_metas__,
     });

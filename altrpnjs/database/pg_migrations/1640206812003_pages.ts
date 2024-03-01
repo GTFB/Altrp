@@ -37,6 +37,7 @@ export default class Pages extends BaseSchema {
         table.timestamp('deleted_at', {useTz: true}).nullable()
 
         table.foreign("model_id").references("altrp_models.id")
+          .onDelete('set null').onUpdate('cascade')
       })
     }
   }

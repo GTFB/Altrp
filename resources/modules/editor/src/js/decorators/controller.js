@@ -34,8 +34,7 @@ function componentDidUpdate(prevProps, prevState) {
 
     if(theme){
       const value = _.get(this.props.currentElement, `settings.themes.${theme}.${this.props.controlId}`)
-
-      if(value){
+      if(value && ! _.isEqual(this.state.value, value)){
         this.setState({
           value
         });

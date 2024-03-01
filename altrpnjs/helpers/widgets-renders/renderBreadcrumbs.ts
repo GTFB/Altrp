@@ -6,7 +6,8 @@ export default async function renderBreadcrumbs(settings, device, widgetId, rand
   //page,
 }: OptionsType) {
 
-  return 'breadcrumbs'
+  return ''
+  //return 'breadcrumbs'
 }
 
 interface OptionsType {

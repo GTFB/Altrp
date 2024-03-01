@@ -19,6 +19,8 @@ import Logger from "@ioc:Adonis/Core/Logger";
 import keys from "lodash/keys"
 import Customizer from "App/Models/Customizer";
 import LIKE from "../../../../helpers/const/LIKE";
+import exec from "../../../../helpers/exec";
+import base_path from "../../../../helpers/base_path";
 
 
 export default class ModelsController {
@@ -113,7 +115,7 @@ export default class ModelsController {
         soft_deletes: modelData.soft_deletes,
         time_stamps: modelData.time_stamps,
         parent_model_id: modelData.parent_model_id || null,
-        settings: modelData.settings || null,
+        //settings: modelData.settings || null,
       })
 
       if (modelData.time_stamps) {
@@ -850,6 +852,10 @@ export default class ModelsController {
         model.settings.static_props = static_props
         await model.save()
         let data = static_props.find(i => i.prop_name === prop_name)?.prop_value || null
+         exec(`node ${base_path('ace')} generator:model`).catch(e=>{
+           console.error(e)
+         })
+
         return response.json({
           success: true,
           data

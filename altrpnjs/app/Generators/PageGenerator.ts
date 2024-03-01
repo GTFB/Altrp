@@ -20,7 +20,6 @@ import get_altrp_setting from "../../helpers/get_altrp_setting";
 import storage_path from "../../helpers/storage_path";
 import config from "../../helpers/config";
 import altrpRandomId from "../../helpers/altrpRandomId";
-import GlobalStyle from "App/Models/GlobalStyle";
 import {DateTime} from "luxon";
 import Menu from "App/Models/Menu";
 
@@ -68,12 +67,6 @@ export default class PageGenerator extends BaseGenerator {
       console.error(`Page ${page.id} render error. Need more data`);
       return false
     }
-
-    GlobalStyle.updateCssFile().catch(e=>{
-      console.error('Error while GlobalStyle.updateCssFile', e)
-    }).then(()=>{
-      console.log('GlobalStyle.updateCssFile success')
-    })
 
     const randomString = altrpRandomId()
 
@@ -199,6 +192,7 @@ export default class PageGenerator extends BaseGenerator {
     page.updatedAt = DateTime.now()
     await page.save()
     clearRequireCache()
+
     return true
   }
 

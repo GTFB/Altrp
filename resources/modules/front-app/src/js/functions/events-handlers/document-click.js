@@ -53,6 +53,16 @@ export default async function spaNavigation(e){
   if(location.pathname + location.search !== url.pathname + url.search){
 
     try{
+
+      const event = new CustomEvent('altrp-redirect',
+        {
+          detail:{
+              url: url.pathname + url.search + url.hash,
+
+          }
+        })
+      window.dispatchEvent(event)
+      document.dispatchEvent(event)
       replacePageContent(url.pathname + url.search + url.hash)
     }catch (e) {
       console.error(e);

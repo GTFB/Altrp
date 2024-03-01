@@ -31,8 +31,26 @@ class ReturnNode extends React.Component {
     return node;
   }
 
+  componentDidMount() {
+    this.updateState()
+  }
+
+  componentDidUpdate() {
+    this.updateState()
+  }
+
+  updateState(){
+
+    let onlyExpression = this.props.customizer?.type === 'helper'
+    if(this.state.onlyExpression !== onlyExpression){
+      this.setState(state=>({...state, onlyExpression}))
+    }
+  }
   render() {
     const node = this.getNode();
+
+    let {onlyExpression} = this.state
+
     return (
       <div className="settings-section_parent">
         <div className="settings-section open">
@@ -55,6 +73,7 @@ class ReturnNode extends React.Component {
             <div className="controller-container controller-container_select">
               <div className="controller-container__label control-select__label controller-label ">Return Value:</div>
               <PropertyComponent
+                onlyExpression={onlyExpression}
                 changeByPath={this.changeByPath}
                 property={node.data.property || {}}
                 path="property"/>

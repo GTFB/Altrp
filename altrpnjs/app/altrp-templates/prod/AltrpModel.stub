@@ -29,6 +29,14 @@ class {{{classname}}} extends AltrpBaseModel {
     Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterSave", data: model})
   }
 
+  static async beforeCreate(model) {
+    if(! model.uuid){
+
+    }
+
+    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeCreate", data: model})
+  }
+
   static afterCreate(model) {
     Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterCreate", data: model})
   }
@@ -70,6 +78,12 @@ decorate([
   metadata("design:type", Function),
   metadata("design:paramtypes", [{{{classname}}}]),
 ], {{{classname}}}, "afterCreate", null);
+
+decorate([
+  (0, Orm.beforeCreate)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "beforeCreate", null);
 
 decorate([
   (0, Orm.afterUpdate)(),

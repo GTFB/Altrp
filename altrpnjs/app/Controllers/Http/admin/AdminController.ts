@@ -16,6 +16,9 @@ import {RequestContract} from "@ioc:Adonis/Core/Request";
 import base_path from '../../../../helpers/base_path'
 import exec from '../../../../helpers/exec'
 import Model from "App/Models/Model";
+import GlobalStyle from "App/Models/GlobalStyle";
+import envWriter from "../../../../helpers/envWriter";
+import { DateTime } from "luxon";
 
 export default class AdminController {
 
@@ -206,6 +209,12 @@ export default class AdminController {
     console.info('Upgrading Pages')
     const id = request.input('id')
 
+    GlobalStyle.updateCssFile().catch(e=>{
+      console.error('Error while GlobalStyle.updateCssFile', e)
+    }).then(()=>{
+      console.log('GlobalStyle.updateCssFile success')
+    })
+
     console.log(`result of generator: page ${id ? `--id=${id}` : ''}: `, await exec(`node ${base_path('ace')} generator:page ${id ? `--id=${id}` : ''}`))
 
     //console.info('Pages Upgraded')
@@ -251,11 +260,12 @@ export default class AdminController {
   }
 
   private static async upgradeSchedules() {
-    console.info('Upgrading Schedules')
+    console.info('Upgrading Schedules and Helpers')
 
-    console.log(`result of generator:schedule`, await exec(`node ${base_path('ace')} generator:schedule`))
+    await exec(`node ${base_path('ace')} generator:schedule`)
+    await exec(`node ${base_path('ace')} generator:helper`)
 
-    console.info('Schedules Upgraded')
+    console.info('Schedules and Helpers Upgraded')
   }
 
   async getHealthCheck({response}:HttpContextContract){
@@ -268,5 +278,15 @@ export default class AdminController {
         used
       }
     })
+  }
+  async allLogout({}:HttpContextContract){
+
+    await envWriter([{
+      key: 'ALL_LOGOUT_DATE',
+      value: DateTime.now(),
+    }])
+    return{
+      success:true,
+    }
   }
 }

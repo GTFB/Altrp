@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => ({
-  sizes: state.globalStyles.sizes
+  sizes: state.globalStyles.sizes || []
 });
 
 class PresetGlobalSizes extends Component {

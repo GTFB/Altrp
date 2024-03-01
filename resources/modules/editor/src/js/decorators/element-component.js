@@ -61,8 +61,8 @@ function shouldComponentUpdate(nextProps, nextState){
   for (let prop in nextProps){
     if(nextProps.hasOwnProperty(prop)){
       if(nextProps[prop] !== this.props[prop]){
-        console.log(prop);
-        console.log(this.props[prop]);
+        // console.log(prop);
+        // console.log(this.props[prop]);
 
       }
     }

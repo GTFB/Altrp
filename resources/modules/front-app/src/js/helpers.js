@@ -225,3 +225,12 @@ function parseXml(xml, arrayTags) {
   return result;
 }
 
+export async function getActionsElement(){
+  const getActionsElement =  await import(/* webpackChunkName: 'get-actions-element' */ './helpers/get-actions-element')
+  return getActionsElement.default(...arguments)
+}
+
+export async function elementSearch(){
+  const getActionsElement =  await import(/* webpackChunkName: 'element-search' */ './helpers/element-search')
+  return getActionsElement.default(...arguments)
+}

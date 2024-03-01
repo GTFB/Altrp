@@ -1,13 +1,14 @@
 # ALTRP
 
 ## Changelog
-### test version build 88
+### test version build 106
 
 ### 1.4.9
 * Add Elements Filters for Plugins Widgets
 * Add Spinner Loader for `Button` Widget
 * Add Themes for Styling
 * Add Permissions Support
+* Add `Helper` Robotizer Type
 * Add Language Switch Action and Database Table for Internationalization
 * Add `Validator` Node for Robotizers
 * Add `Input Phone` Widget

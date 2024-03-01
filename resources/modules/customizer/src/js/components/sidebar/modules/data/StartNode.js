@@ -178,6 +178,14 @@ class StartNode extends React.Component {
           </div>
         </div>
 
+        <div className="settings-section open">
+          <div className="settings-section__title d-flex">
+            <div className="settings-section__icon d-flex">
+              <Chevron/>
+            </div>
+            <div className="settings-section__label">Imports</div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -205,7 +213,6 @@ class StartNode extends React.Component {
   }
 
   createNewItemFromQuery = (title) => {
-    console.log(title)
 
     return {label: title, value: title};
   }
@@ -214,7 +221,7 @@ class StartNode extends React.Component {
 
     const customizerType = this.props.customizer?.type;
 
-    return customizerType == 'method'
+    return customizerType === 'method' || customizerType === 'helper'
   }
 
   shouldShowMiddlewareParams() {

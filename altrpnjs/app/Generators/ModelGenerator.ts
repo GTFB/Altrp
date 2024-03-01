@@ -90,7 +90,7 @@ export default class ModelGenerator extends BaseGenerator {
         staticProperties: isProd() ? this.getProdStaticPropertiesContent() : '',
         columns: this.getColumnsContent(),
         computed: this.getComputedContent(),
-        relations: this.getRelationsContent(),
+        relations: await this.getRelationsContent(),
         methods: await this.getMethodsContent(),
         constructor: this.getConstructorContent(),
         custom,
@@ -310,10 +310,13 @@ ${columns.map(column => column.renderForModel()).join('')}
     `
   }
 
-  private getRelationsContent(): string {
-    return `
-${this.altrp_relationships.map(relationship => relationship.renderForModel()).join('')}
-    `
+  private async getRelationsContent(): Promise<string> {
+    let content = ``
+    for(const relation of this.altrp_relationships){
+      content += await relation.renderForModel()
+    }
+
+    return content
   }
 
 

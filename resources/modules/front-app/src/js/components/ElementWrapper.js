@@ -376,7 +376,6 @@ class ElementWrapper extends Component {
       }
       if (conditional_roles?.length) {
 
-
         conditional_roles.forEach(r=>{
           classes += ` altrp-element-role_${r} `
         })

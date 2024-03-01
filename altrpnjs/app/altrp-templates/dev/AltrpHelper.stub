@@ -1,0 +1,9 @@
+import _ from 'lodash'
+import Database from '@ioc:Adonis/Lucid/Database';
+import axios from "axios"
+const DB = Database?.default ? Database.default : Database
+{{{imports}}}
+
+export default async function {{{name}}} ({{{params}}}){
+  {{{content}}}
+}

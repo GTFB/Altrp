@@ -66,6 +66,16 @@ class WidgetsPanel extends React.Component {
         || item.title.toLowerCase().includes(this.state.searchNodes.toLowerCase())
     })
 
+
+    if(this.props.customizer?.type === 'helper'){
+      nodesFilter = nodesFilter.filter(n=>{
+        if(n.allowToHelper){
+          return true
+        }
+        return n.name === 'start' || n.name === 'return'
+      })
+    }
+
     return <div className="widget-panel-wrapper">
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
         <div className="nodes-panel__search">

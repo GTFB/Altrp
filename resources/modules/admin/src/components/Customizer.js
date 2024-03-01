@@ -53,6 +53,7 @@ class Customizer extends Component {
       type: customizer.type,
       guid: customizer.guid,
       data: customizer.data,
+      robotizer: true
     });
   }
 

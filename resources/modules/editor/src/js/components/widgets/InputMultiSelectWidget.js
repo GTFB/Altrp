@@ -497,18 +497,24 @@ class InputMultiSelectWidget extends Component {
         const change_actions = this.props.element.getSettings("change_actions");
 
         if (change_actions && !isEditor()) {
+          this.setState(state=>({...state, inAction: true}))
           const actionsManager = (
             await import(
               /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
               )
           ).default;
-          await actionsManager.callAllWidgetActions(
-            this.props.element.getIdForAction(),
-            "change",
-            change_actions,
-            this.props.element
-          );
+          try{
+            await actionsManager.callAllWidgetActions(
+              this.props.element.getIdForAction(),
+              "change",
+              change_actions,
+              this.props.element
+            );
+          }catch (e) {
+            console.error(e)
+          }
+          this.setState(state=>({...state, inAction: false}))
         }
       }
     }

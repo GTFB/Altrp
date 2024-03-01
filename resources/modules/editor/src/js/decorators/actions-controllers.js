@@ -855,6 +855,10 @@ export function actionsControllers(
         value: 'remove_items'
       },
       {
+        label: 'Push/Remove Items',
+        value: 'push_remove_items'
+      },
+      {
         label: 'Delete',
         value: 'delete'
       }
@@ -885,7 +889,7 @@ export function actionsControllers(
     description: 'Value or Path to Value',
     conditions: {
       type: ['set_data'],
-      set_type: ['set', 'toggle_set', 'push_items',]
+      set_type: ['set', 'toggle_set', 'push_items', 'push_remove_items']
     },
     locked: true,
   });

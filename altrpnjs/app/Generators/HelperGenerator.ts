@@ -7,9 +7,9 @@ import isProd from '../../helpers/isProd'
 import clearRequireCache from '../../helpers/node-js/clearRequireCache'
 
 export default class ScheduleGenerator extends BaseGenerator {
-  public static directory = appPath('/AltrpSchedules/')
+  public static directory = appPath('/AltrpHelpers/')
 
-  private static template = appPath(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpSchedule.stub`)
+  private static template = appPath(`/altrp-templates/${isProd() ? 'prod' : 'dev'}/AltrpHelper.stub`)
 
   public static ext = isProd() ? '.js': '.ts'
 
@@ -57,7 +57,7 @@ export default class ScheduleGenerator extends BaseGenerator {
       return false
     }
 
-    let imports = this.getImportsContent()
+    let imports = ''
     let content = customizer.getMethodContent()
 
     content = await this.applyFilters('templates', content)
@@ -70,6 +70,10 @@ export default class ScheduleGenerator extends BaseGenerator {
       fs.mkdirSync(directoryPath, { recursive: true })
     }
 
+    const startNode = this.customizer.getStartNode()
+    let params = startNode ? startNode.getMethodParams() : ''
+
+
     await this.addFile(fileName)
       .destinationDir(directoryPath)
       .stub(ScheduleGenerator.template)
@@ -77,7 +81,7 @@ export default class ScheduleGenerator extends BaseGenerator {
         name: customizer.name,
         imports,
         content,
-        params: 'instanceId'
+        params,
       })
 
     clearRequireCache()
@@ -94,19 +98,5 @@ export default class ScheduleGenerator extends BaseGenerator {
     this.deleteFiles()
   }
 
-  private getImportsContent() {
-    return isProd() ? this.getProdImportsContent() : this.getDevImportsContent()
-  }
 
-  private getProdImportsContent() {
-    return `
-const AltrpBaseController = require('../Controllers/AltrpBaseController').default
-`
-  }
-
-  private getDevImportsContent() {
-    return `
-import AltrpBaseController from '../Controllers/AltrpBaseController'
-`
-  }
 }

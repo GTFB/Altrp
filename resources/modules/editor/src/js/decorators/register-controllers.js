@@ -429,6 +429,12 @@ export function advancedTabControllers(element) {
           'positioning_width_type': 'custom',
         }
       });
+      element.addControl('css_width', {
+        label: 'Or Use CSS width Value',
+        conditions: {
+          'positioning_width_type': 'custom',
+        }
+      });
     }
 
     // if (element.getType() === 'widget') {
@@ -958,12 +964,14 @@ export function advancedTabControllers(element) {
   element.addControl('hide_desktop', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On All Desktop Devices',
+    locked:true,
     responsive: false,
   });
 
   element.addControl('hide_on_mobile', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On All Mobile Devices',
+    locked:true,
     responsive: false,
   });
 

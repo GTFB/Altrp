@@ -62,7 +62,7 @@ class SidebarEditModel extends Component {
 
   updateFields = async () => {
     let fields = await new Resource({ route: `/admin/ajax/models/${this.props.id}/fields` }).getAll();
-    fields = fields.filter(({ name }) => name !== 'id');
+    fields = fields.filter(({ name }) => (name !== 'id' && name !== 'uuid'));
     this.setState(state => ({ ...state, fields }));
   }
 
@@ -128,7 +128,7 @@ class SidebarEditModel extends Component {
         });
 
       new Resource({ route: `/admin/ajax/models/${this.props.id}/fields` }).getAll()
-        .then(fields => this.setState({ fields: fields.filter(({ name }) => name !== 'id') }));
+        .then(fields => this.setState({ fields: fields.filter(({ name }) => name !== 'id' &&  name !== 'uuid') }));
 
       new Resource({ route: `/admin/ajax/models/${this.props.id}/relations` }).getAll()
         .then(relations => this.setState({ relations }));

@@ -1,6 +1,7 @@
 import getDataByPath from "../../../../front-app/src/js/functions/getDataByPath"
 import isEditor from "../../../../front-app/src/js/functions/isEditor"
 import redirect from "../../../../front-app/src/js/functions/redirect"
+import replaceContentWithData from "../../../../front-app/src/js/functions/replaceContentWithData";
 
 class ColumnComponent extends Component {
   constructor(props) {
@@ -29,7 +30,10 @@ class ColumnComponent extends Component {
       return;
     }
     const columnLink = this.props.element.getLockedSettings('link_link');
-    redirect(columnLink, e, this.props.element.getCurrentModel().getData());
+    if(columnLink?.url){
+      redirect(columnLink, e, this.props.element.getCurrentModel().getData());
+
+    }
   };
 
   /**
@@ -37,7 +41,10 @@ class ColumnComponent extends Component {
    * @return {boolean}
    */
   columnIsLink() {
-    return !!_.get(this, 'props.element.settings.link_link.url');
+    if (isEditor()) {
+      return false;
+    }
+    return !!  replaceContentWithData(_.get(this, "props.element.settings.link_link.url", ), this.props.element.getCurrentModel().getData());
   }
 
   getStyles = ()=>{

@@ -710,14 +710,15 @@ export default class TemplatesController {
   }
 
 
-  public async exportCustomizer( {params, response}: HttpContextContract )
+  public async exportTemplate( {params, response}: HttpContextContract )
   {
 
     let template
     if (validGuid(params.id)) {
-      template = await Template.query().where('guid', params.id).first()
+      template = await Template.query().where('guid', params.id).preload('currentArea').first()
     } else {
       template = await Template.find(params.id)
+      await template.load('currentArea')
     }
     if (!template) {
       response.status(404)
@@ -733,7 +734,6 @@ export default class TemplatesController {
     template.__exported_metas__.styles_presets = AltrpMeta.getGlobalStyles()
     template.__exported_metas__ = {}
     template.__exported_metas__.global_styles = GlobalStyle.all();
-
     let res = template.serialize()
 
     return response.json(res)

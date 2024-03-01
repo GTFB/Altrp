@@ -31,7 +31,7 @@ export default function clickActions(e){
       actionPrefix: 'clickActions',
     },
   ]
-
+  let elementToCustomEvent
 
   actionsGroups.forEach(ag=>{
     let {actions, element} =
@@ -40,10 +40,11 @@ export default function clickActions(e){
         ag.settingName,
         ag.actionPrefix,
       );
-
+    elementToCustomEvent = elementToCustomEvent || element
     if(! actions){
       return;
     }
+
 
     e.preventDefault();
     e.stopPropagation();
@@ -91,4 +92,15 @@ export default function clickActions(e){
       })
     })
   })
+
+  if(elementToCustomEvent){
+    // const event = new CustomEvent('altrp-click',
+    //   {
+    //     detail:{
+    //       element: elementToCustomEvent,
+    //     }
+    //   })
+    //
+    // document.dispatchEvent(event)
+  }
 }

@@ -133,11 +133,30 @@ class PropertyComponent extends Component {
       modal: !state.modal
     }))
   }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    let {onlyExpression} = this.props
+    const {namespace, } = this.props.property;
+    if(namespace!=='expression' && onlyExpression){
+      this.props.property.namespace = 'expression'
+    }
+  }
+  componentDidMount() {
+    let {onlyExpression} = this.props
+    const {namespace, } = this.props.property;
+    if(namespace!=='expression' && onlyExpression){
+      this.props.property.namespace = 'expression'
+    }
+  }
 
   render() {
     let options = [];
+    let {onlyExpression} = this.props
 
-    const {namespace, path, method, expression, awaitOn, JSExpression} = this.props.property;
+    let {namespace, path, method, expression, awaitOn, JSExpression} = this.props.property;
+
+    if(namespace!=='expression' && onlyExpression){
+      namespace = 'expression'
+    }
     let _expression = isAltrpJS() ? (JSExpression || '') : (expression || '')
     let placeholder = isAltrpJS() ? 'Javascript expression' : 'php expression'
 
@@ -177,7 +196,10 @@ class PropertyComponent extends Component {
 
     return <>
       <div className={"element-index element-index_top" + (namespace !== "expression" ? "" : " element-index_top-expression")}>
-        <HTMLSelect options={options} onChange={this.onSelect} value={namespace || ''}/>
+        <HTMLSelect options={options}
+                    onChange={this.onSelect}
+                    disabled={onlyExpression}
+                    value={namespace || ''}/>
         {namespace !== 'expression' &&
         <InputGroup fill={true}
                     placeholder="property"

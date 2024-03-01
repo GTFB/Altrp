@@ -55,7 +55,7 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
   }
   renderSchemaProperty = (settings, name)=>{
     let propertyContent = `
-        ${name}: schema.`
+        "${name}": schema.`
     const {
       mark = '',
       type = 'string',

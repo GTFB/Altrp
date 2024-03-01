@@ -11,10 +11,10 @@ export default function random(length = 10, scope = '') {
       characters = '0123456789'
     }break;
     case 'f':{
-      characters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%^&*()_+-=[];'\\,./?:"|{}\`~`
+      characters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%^&*()_+-=[];,./?:|{}~`
     }break;
     case 's':{
-      characters = `!#$%^&*()_+-=[];'\\,./?:"|{}\`~`
+      characters = `!#$%^&*()_+-=[];,./?:|{}~`
     }break;
     case 'l':{
       characters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`

@@ -74,7 +74,7 @@ const a = {
  * @param {string}str
  * @return {string}
  */
-export function transliterate(str) {
+export default function transliterate(str) {
   if (!str) {
     return "";
   }

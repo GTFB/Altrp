@@ -448,6 +448,7 @@ export default class Source extends BaseModel {
     const all = httpContext?.request.all() || {};
     const status = httpContext?.response.status || (()=>{});
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
+    this.setCustomizerData('CurrentModel', ${this.model.name} );
     this.setCustomizerData('context.request', httpContext?.request);
     this.setCustomizerData('httpContext', httpContext);
     this.setCustomizerData('request', httpContext?.request);
@@ -529,6 +530,11 @@ export default class Source extends BaseModel {
         Object.defineProperty(newHttpContext, 'auth', {
           get: function () {
             return httpContext.auth;
+          },
+        });
+        Object.defineProperty(newHttpContext, 'session', {
+          get: function () {
+            return httpContext.session;
           },
         });
       }

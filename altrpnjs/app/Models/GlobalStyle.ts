@@ -8,6 +8,8 @@ import BaseGenerator from "App/Generators/BaseGenerator";
 import Category from "App/Models/Category";
 import Template from "App/Models/Template";
 import DEFAULT_BREAKPOINT from "../../helpers/const/DEFAULT_BREAKPOINT";
+import delay from '../../helpers/delay';
+import Database from "@ioc:Adonis/Lucid/Database";
 
 export default class GlobalStyle extends BaseModel {
   public static table = "altrp_global_template_styles";
@@ -51,20 +53,53 @@ export default class GlobalStyle extends BaseModel {
     let globalStyles:any = await GlobalStyle.query()
 
     if(onlyUsed){
-      globalStyles = await Promise.all(globalStyles.map(async (gs)=>{
+      const _globalStyles:any = []
+      for(let gs of globalStyles){
+        await delay(1)
         const settings=  mbParseJSON(gs.settings, {})
-        if(!settings && settings?.force){
-          return gs
+        if (!settings) {
+          continue;
         }
-        if(! gs.cssVar){
-          return gs
+        if (settings.force) {
+          _globalStyles.push(gs);
+          continue;
         }
-        const query = Template.query().where('type', 'template')
-          .whereRaw(`"styles" ILIKE '%${gs.cssVar}%'`)
-
-        return await query.first() ? gs : null
-      }))
-      globalStyles = globalStyles.filter(gs => gs)
+        if (!gs.cssVar && gs.type !== 'font') {
+          continue;
+        }
+        const query = Database.from(Template.table).where('type', 'template');
+        if (gs.type === 'font') {
+          if (settings.transformCssVar) {
+            query.whereRaw(`"styles" LIKE ?`, [`%${settings.transformCssVar}%}`]);
+          }
+          if (settings.lineHeightCssVar) {
+            query.orWhereRaw(`"styles" LIKE ?`, [`%${settings.lineHeightCssVar}%}`]);
+          }
+          if (settings.spacingCssVar) {
+            query.orWhereRaw(`"styles" LIKE ?`, [`%${settings.spacingCssVar}%}`]);
+          }
+          if (settings.styleCssVar) {
+            query.orWhereRaw(`"styles" LIKE ?`, [`%${settings.styleCssVar}%}`]);
+          }
+          if (settings.familyCssVar) {
+            query.orWhereRaw(`"styles" LIKE ?`, [`%${settings.familyCssVar}%}`]);
+          }
+          if (settings.decorationCssVar) {
+            query.orWhereRaw(`"styles" LIKE ?`, [`%${settings.decorationCssVar}%}`]);
+          }
+          if (settings.weightCssVar) {
+            query.orWhereRaw(`"styles" LIKE ?`, [`%${settings.weightCssVar}%}`]);
+          }
+          query.orWhereRaw(`"styles" LIKE ?`, [`%var(--altrp-var-${gs.type}-${settings?.name?.replace(/[^a-zA-Z0-9]/g, '-')}-font-size)%`]);
+        }    else {
+          query.whereRaw(`"styles" LIKE ?`, [`%${gs.cssVar}%`]);
+        }
+        if (!await query.first()) {
+          continue;
+        }
+        _globalStyles.push(gs);
+      }
+      globalStyles = _globalStyles
     }
 
     let css = `:root{

@@ -826,10 +826,10 @@ export default class Page extends BaseModel {
     const permissions = await Permissions.all()
 
     return `<style id="access-styles">
-    .front-app:not(.front-app_auth-type-guest) .altrp-element-auth-type_guest{
+    .front-app-body:not(.front-app_auth-type-guest) .altrp-element-auth-type_guest{
       display: none;
     }
-    .front-app:not(.front-app_auth-type-auth) .altrp-element-auth-type_auth{
+    .front-app-body:not(.front-app_auth-type-auth) .altrp-element-auth-type_auth{
       display: none;
     }
     .altrp-element[class*="altrp-element-role_"],

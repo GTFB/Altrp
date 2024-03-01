@@ -48,10 +48,28 @@ export default function replaceContentWithData(content = "",
       if (_path.indexOf('[[') > -1) {
         _path = replaceContentWithData(_path, modelContext, true)
       }
-      let value = getDataByPath(_path, "", modelContext);
+      let value = null
 
-      if (value === 0) {
-        value = "0";
+      if(_path.includes('||')){
+        let multiPath = _path.split('||')
+        multiPath = multiPath.map(mp=>mp.trim())
+        multiPath = multiPath.filter(mp=>mp)
+        for(const mp of multiPath){
+          if(value){
+            continue
+          }
+
+          value = getDataByPath(mp, "", modelContext);
+          if (value === 0) {
+            value = "0";
+          }
+        }
+      } else {
+
+        value = getDataByPath(_path, "", modelContext);
+        if (value === 0) {
+          value = "0";
+        }
       }
       let pattern = squareBrackets ? `[[${path}]]` : `{{${path}}}`
       pattern = escapeRegExp(pattern);

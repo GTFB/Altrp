@@ -33,8 +33,9 @@ import __ from "../helpers/i18n/__";
 global.__ = __;
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
-  () => import('App/Middleware/ConvertEmptyString'),
   () => import('App/Middleware/SilentAuth'),
+  () => import('App/Middleware/Logout'),
+  () => import('App/Middleware/ConvertEmptyString'),
   () => import('@ioc:Adonis/Addons/Shield'),
 ])
 

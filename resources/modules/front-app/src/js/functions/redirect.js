@@ -23,6 +23,9 @@ export default async function redirect(linkSettings, e, context = {}) {
   e.stopPropagation();
   let { url } = linkSettings;
   url = replaceContentWithData(url, context);
+  if(! url){
+    return
+  }
   if (linkSettings.openInNew) {
     window.open(url, "_blank");
     return;

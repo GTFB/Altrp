@@ -5,17 +5,15 @@ export default class extends BaseSchema {
 
   public async up () {
     this.schema.table(this.tableName, (table) => {
-      table.string('category_guid', 36).index().nullable()
-      table.foreign('category_guid').references('guid')
-        .inTable('altrp_categories')
-        .onUpdate('set null').onDelete('set null')
+      table.uuid('guid').index().nullable()
+
     })
   }
 
   public async down () {
 
     this.schema.table(this.tableName, (table) => {
-      table.dropColumn('category_guid')
+      table.dropColumn('guid')
     })
   }
 }

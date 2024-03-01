@@ -38,7 +38,6 @@ export default function AltrpPopper(props) {
   ];
 
   if(variantPlace.indexOf(placement) === -1) {
-    console.log(placement)
     placement = variantPlace[0]
   }
   const {styles, attributes, forceUpdate, update} = usePopper(props.target.current, object.current, {

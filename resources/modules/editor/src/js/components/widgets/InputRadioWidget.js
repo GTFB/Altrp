@@ -46,7 +46,7 @@ class InputRadioWidget extends Component {
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
-      options: parseOptionsFromSettings(props.element.getLockedSettings("content_options")),
+      options: parseOptionsFromSettings(props.element.getLockedSettings("content_options"), this.props.element.getCardModel()),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
@@ -97,7 +97,8 @@ class InputRadioWidget extends Component {
   async _componentDidMount(prevProps, prevState) {
     if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getLockedSettings("content_options")
+        this.props.element.getLockedSettings("content_options"),
+        this.props.element.getCardModel()
       );
 
       this.setState(state => ({ ...state, options }));
@@ -194,7 +195,7 @@ class InputRadioWidget extends Component {
       this.updateOptions();
     }
     if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
+      let options = parseOptionsFromSettings(content_options,        this.props.element.getCardModel());
       if (!_.isEqual(options, this.state.options)) {
         this.setState(state => ({ ...state, options }));
       }

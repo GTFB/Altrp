@@ -62,15 +62,15 @@ export default class Model extends BaseModel {
 
   @column({
     consume: (data) => {
-      if(typeof data === 'string'){
+      if (typeof data === 'string') {
         return mbParseJSON(data, {})
       }
-      return data  || {}
+      return data || {}
     },
-    prepare: (data)=>{
+    prepare: (data) => {
 
       // @ts-ignore
-      if(Model.query().client.connection.name === 'mysql'){
+      if (Model.query().client.connection.name === 'mysql') {
         data = JSON.stringify(data)
       }
       return data
@@ -189,6 +189,12 @@ export default class Model extends BaseModel {
     if (!label) {
       label = this?.table?.columns?.find(c => c.is_title)?.name
     }
+    if (!label) {
+      label = this?.table?.columns?.find(c => c.name === 'label')?.name
+    }
+    if (!label) {
+      label = this?.table?.columns?.find(c => c.name === 'title')?.name
+    }
     return label || 'id'
   }
 
@@ -196,6 +202,12 @@ export default class Model extends BaseModel {
     let title = this?.table?.columns?.find(c => c.is_title)?.name
     if (!title) {
       title = this?.table?.columns?.find(c => c.is_label)?.name
+    }
+    if (!title) {
+      title = this?.table?.columns?.find(c => c.name === 'title')?.name
+    }
+    if (!title) {
+      title = this?.table?.columns?.find(c => c.name === 'label')?.name
     }
     return title || 'id'
   }
@@ -510,14 +522,18 @@ export default class Model extends BaseModel {
   @afterCreate()
   public static async afterCreate(modelData: Model) {
 
-    const table = new Table()
-    table.fill({
+    const table = await Table.firstOrCreate({
       name: string.pluralize(modelData.name),
+    })
+    table.merge({
       title: modelData.title,
       description: modelData.description,
       user_id: modelData?.user_id,
     })
     await table.save()
+
+    modelData.table_id = table.id
+    await modelData.save()
 
     const id_column = new Column()
     id_column.fill({
@@ -578,8 +594,6 @@ export default class Model extends BaseModel {
     })
 
     await controller.save()
-    modelData.table_id = table.id
-    await modelData.save()
     await Model.createDefaultCustomizers(modelData, modelData)
 
     let sources = [
@@ -694,7 +708,6 @@ export default class Model extends BaseModel {
       }))
     }
 
-    Event.emit('model:updated', modelData)
     const client = Database.connection(Env.get('DB_CONNECTION'))
     try {
 
@@ -708,6 +721,8 @@ export default class Model extends BaseModel {
           table.timestamp('created_at')
         }
       })
+      Event.emit('model:updated', modelData)
+      await modelData.generateUUID()
     } catch (e) {
       console.error(e)
       await exec(`node ${base_path('ace')} generator:model --delete --id=${modelData.id}`)
@@ -721,15 +736,13 @@ export default class Model extends BaseModel {
     }
 
   }
+
   @beforeDelete()
-  public static async beforeDelete(model: Model){
+  public static async beforeDelete(model: Model) {
     await model.load('table')
     await model.load('altrp_controller')
     const table = model.table
     const controller = model.altrp_controller
-
-
-
 
 
     if (controller) {
@@ -753,13 +766,6 @@ export default class Model extends BaseModel {
     await Customizer.query().where('model_id', model.id).update({
       model_id: null
     })
-    if(table){
-
-      const client = Database.connection(Env.get('DB_CONNECTION'))
-      await client.schema.dropTable(table.name)
-      await Column.query().where('table_id', table.id).delete()
-    }
-
 
     // delete relations when dropping table
     const relationship = await Relationship.query().where('model_id', model.id)
@@ -777,10 +783,10 @@ export default class Model extends BaseModel {
               //@ts-ignore
               await relations[j].load('table')
               //@ts-ignore
-              let deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP FOREIGN KEY ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
+              let deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP FOREIGN KEY ${relations[j].table.name}_${relationship[i].foreign_key}_ foreign`
               await Database.rawQuery(deleteQuery)
               //@ts-ignore
-              deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP INDEX ${relations[j].table.name}_${relationship[i].foreign_key}_foreign`
+              deleteQuery = `ALTER TABLE ${relations[j].table.name} DROP INDEX ${relations[j].table.name}_${relationship[i].foreign_key}_ foreign`
               await Database.rawQuery(deleteQuery)
             } catch (e) {
               console.error(e)
@@ -796,10 +802,22 @@ export default class Model extends BaseModel {
           try {
             if (relationship[i].type === "belongsTo") {
               let deleteQuery = `ALTER TABLE ${model.table.name}
-                DROP FOREIGN KEY ${model.table.name}_${relationship[i].local_key}_foreign`
+              DROP
+              FOREIGN KEY
+              ${model.table.name}
+              _
+              ${relationship[i].local_key}
+              _
+              foreign`
               await Database.rawQuery(deleteQuery)
               deleteQuery = `ALTER TABLE ${model.table.name}
-                DROP INDEX ${model.table.name}_${relationship[i].foreign_key}_foreign`
+              DROP
+              INDEX
+              ${model.table.name}
+              _
+              ${relationship[i].foreign_key}
+              _
+              foreign`
               await Database.rawQuery(deleteQuery)
             }
           } catch (e) {
@@ -822,20 +840,102 @@ export default class Model extends BaseModel {
 
       }
     }
-    if(table){
+
+    if (table?.name) {
+
+      const client = Database.connection(Env.get('DB_CONNECTION'))
+      await client.schema.dropTable(table.name)
+    }
+    if (table) {
+      await Column.query().where('table_id', table.id).delete()
       await table.delete()
     }
     try {
 
       await exec(`node ${base_path('ace')} generator:model --delete --id=${model.id}`)
       await exec(`node ${base_path('ace')} generator:router`)
-    }catch (e) {
+    } catch (e) {
       console.error(e)
     }
 
-    if(controller){
+    if (controller) {
       await controller.delete()
     }
 
   }
+
+  static async updateCustomModels() {
+    const allModels = await Model.query().preload('table')
+    for (const m of allModels) {
+      await m.generateUUID()
+    }
+  }
+
+  async generateUUID() {
+    const connection = Env.get('DB_CONNECTION')
+    // @ts-ignore
+    await this.load('table')
+    if(! this.table?.name){
+      return
+    }
+    try {
+      let schema = Database.connection().schema
+      if (!await schema.hasColumn(this.table.name, 'uuid')) {
+        let schema = Database.connection().schema
+        if (connection === 'pg'){
+
+          await schema.raw(`ALTER TABLE "${this.table.name}"
+            ADD "uuid" uuid NOT NULL DEFAULT gen_random_uuid();
+          COMMENT ON TABLE "${this.table.name}" IS '';
+          ALTER TABLE "${this.table.name}" ADD CONSTRAINT "${this.table.name}_uuid" UNIQUE ("uuid");
+          `)
+        } else {
+          await schema.raw(`
+            ALTER TABLE \`${this.table.name}\` ADD \`uuid\` VARCHAR(36) NOT NULL AFTER \`id\`;
+            ALTER TABLE \`${this.table.name}\` ADD UNIQUE(\`uuid\`);
+            CREATE TRIGGER before_insert_${this.table.name}
+              BEFORE INSERT ON ${this.table.name}
+              FOR EACH ROW
+              SET new.uuid = uuid();
+
+          `)
+        }
+
+        await Column.create({
+          description: 'uuid',
+          title: 'UUID',
+          default: 'uuid',
+          name: 'uuid',
+          table_id: this.table_id,
+          model_id: this.id,
+          type: 'uuid',
+          unique: true,
+          indexed: true,
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    // @ts-ignore
+    await this.load('table', query=>{
+      // @ts-ignore
+      query.preload('columns')
+    })
+
+    if(! this.table.columns.find(c=>c.name === 'uuid')){
+
+      await Column.create({
+        description: 'uuid',
+        title: 'UUID',
+        default: 'uuid',
+        name: 'uuid',
+        table_id: this.table_id,
+        model_id: this.id,
+        type: 'uuid',
+        unique: true,
+        indexed: true,
+      })
+    }
+  }
+
 }

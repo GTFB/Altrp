@@ -325,6 +325,10 @@ function isDisabled(){
     return false;
   }
   const { element } = this.props;
+  const { inAction } = this.state;
+  if(inAction){
+    return true
+  }
   const disabled_enable = element.getSettings('disabled_enable');
   if(! disabled_enable){
     return false
@@ -381,6 +385,9 @@ function isDisabled(){
   );
   if(disabled_conditional_other_display === "AND"){
     return disabled && authCondition;
+  }
+  if(! conditional_disabled_choose){
+    return disabled
   }
   return disabled || authCondition;
 }

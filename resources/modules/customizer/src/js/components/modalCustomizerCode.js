@@ -6,30 +6,20 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import 'ace-builds/webpack-resolver';
 import React from "react";
 import Close from "./../../../../editor/src/svgs/plus.svg";
-/*
+import jsCompleter from "../helpers/jsCompleter";
+
+
+
 let langTools =  window.ace.require('ace/ext/language_tools');
-
-let selectorCompleter = {
-  getCompletions: function getCompletions(editor, session, pos, prefix, callback) {
-    let list = [],
-      token = session.getTokenAt(pos.row, pos.column);
-    console.log(token);
-    if (0 < prefix.length && 'helpers'.match(prefix) && 'constant' === token.type) {
-      list = [{
-        name: 'helpers',
-        caption: 'helpers',
-        value: 'helpers',
-        score: 1,
-        meta: 'AltrpCustomizers'
-      }];
-    }
-
-    callback(null, list);
-  }
+console.log(langTools)
+let completer = {
+  getCompletions: jsCompleter
 };
-langTools.addCompleter(selectorCompleter);
 
- */
+langTools.addCompleter(completer);
+
+
+
 function ModalCustomizerCode({path, placeholder, value, onChange, toggleModal}) {
   return (
     ReactDOM.createPortal(

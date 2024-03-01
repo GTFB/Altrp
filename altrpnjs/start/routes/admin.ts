@@ -12,6 +12,7 @@ Route.group(() => {
 
   Route.group(() => {
     Route.get("/get_health_check", "admin/AdminController.getHealthCheck")
+    Route.post("/all_logout", "admin/AdminController.allLogout")
 
 
     Route.get("/areas", "admin/AreasController.index")
@@ -41,7 +42,7 @@ Route.group(() => {
     Route.delete('/templates/:id', 'TemplatesController.delete')
     Route.get('/templates/:id/conditions', 'TemplatesController.conditions')
     Route.put('/templates/:id/conditions', 'TemplatesController.conditionsSet')
-    Route.get('/exports/templates/:id', 'TemplatesController.exportCustomizer');
+    Route.get('/exports/templates/:id', 'TemplatesController.exportTemplate');
     Route.delete('/reviews', 'TemplatesController.deleteAllReviews')
     Route.get('/templates/:id/settings', 'TemplatesController.settingsGet')
     Route.put('/templates/:id/settings', 'TemplatesController.settingsSet')

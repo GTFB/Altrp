@@ -233,7 +233,10 @@ decorate([
 
   @afterCreate()
   public static async afterCreate(columnData: Column){
-
+    const _ignore = ['id', 'uuid', 'updated_at', 'created_at']
+    if(_ignore.includes(columnData.name)){
+      return
+    }
     try{
 
       if(columnData.type !== 'calculated'){
@@ -244,8 +247,10 @@ decorate([
         const client = Database.connection(Env.get('DB_CONNECTION'))
 
         await client.schema.table(model.table.name,table=>{
+
           let type = columnData.type
           let size: string | number = columnData.size
+
           if(type.toLowerCase() === 'longtext'){
             type = 'text'
             size = 'longtext'
@@ -256,6 +261,10 @@ decorate([
           }
           if(columnData.default){
             query.default(columnData.default)
+          }
+          if(columnData.unique){
+            query.unique()
+            query.notNullable()
           }
         })
 
@@ -273,20 +282,25 @@ decorate([
   }
   async indexCreator( model, newColumn = false) {
     const indexName = Column.createIndexName(this.name, model.table.name)
-    if(this.indexed && this.unique) {
-      let indexQuery = `ALTER TABLE "${model.table.name}"
-        ADD CONSTRAINT "${model.indexName}" UNIQUE ("test_test2");`
-      await Database.rawQuery(indexQuery)
-    } else  if(this.indexed) {
-      let indexQuery = `CREATE INDEX ${indexName} ON ${model.table.name}(${this.name})`
-      await Database.rawQuery(indexQuery)
-    } else if(! newColumn){
-      try {
-        let indexQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${indexName}`
-        await Database.rawQuery(indexQuery)
-      }catch (e) {
+    try {
 
+      if(this.indexed && this.unique ) {
+        let indexQuery = `ALTER TABLE "${model.table.name}"
+        ADD CONSTRAINT "${model.indexName}" UNIQUE ("test_test2");`
+        await Database.rawQuery(indexQuery)
+      } else  if(this.indexed) {
+        let indexQuery = `CREATE INDEX ${indexName} ON ${model.table.name}(${this.name})`
+        await Database.rawQuery(indexQuery)
+      } else if(! newColumn){
+        try {
+          let indexQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${indexName}`
+          await Database.rawQuery(indexQuery)
+        }catch (e) {
+
+        }
       }
+    }catch (e) {
+      console.error(e)
     }
   }
 }

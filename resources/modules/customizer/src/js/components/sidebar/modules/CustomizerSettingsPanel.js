@@ -196,6 +196,11 @@ class CustomizerSettingsPanel extends React.Component {
       settings = {},
       categories = [],
       name } = customizer;
+    console.log(type)
+    let Method = 'Method'
+    if(type === 'helper'){
+      Method = 'Helper'
+    }
     const selectedItems = []
     let {categoryOptions} = this.state
     categoryOptions = categoryOptions.filter(co=>{
@@ -323,6 +328,10 @@ class CustomizerSettingsPanel extends React.Component {
                                      {
                                        value: 'listener',
                                        label: 'Listener',
+                                     },
+                                     {
+                                       value: 'helper',
+                                       label: 'Helper',
                                      },
                                      {
                                        label: 'Model Class Method',
@@ -533,12 +542,12 @@ class CustomizerSettingsPanel extends React.Component {
                       )
                     }
                     {
-                      type === "method" && (
+                      (type === "method" || type === 'helper') && (
                           <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                              <div className="controller-container__label control-select__label controller-label">Method name</div>
+                              <div className="controller-container__label control-select__label controller-label">{Method} name</div>
                               <InputGroup className="form-control-blueprint"
                                           type="text"
-                                          id="customizer-title"
+                                          id="customizer-name"
                                           readOnly={true}
                                           value={name || ""}
                               />
@@ -574,7 +583,7 @@ class CustomizerSettingsPanel extends React.Component {
                       </div>
                     }
                     {
-                      !['crud', 'schedule'].includes(type) && (
+                      !['crud', 'schedule', 'helper', 'method'].includes(type) && (
                         <>
                           <div className="Customizer-url">
                             <div className="controller-container__label control-select__label controller-label">Url:</div>

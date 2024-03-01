@@ -398,7 +398,6 @@ class InputDateWidget extends Component {
     if (val) {
       value = new Date(val);
       let timestamp = this.props.element.getLockedSettings("content_timestamp");
-
       if (timestamp) {
         value = value.getTime(); // timestamp
       } else{
@@ -488,21 +487,22 @@ class InputDateWidget extends Component {
         if(!nullable) {
           value = max_date;
         }
-      } else if(timestamp){
-        value = new Date(value);
+      }
+    else if(timestamp){
         if(value > max_date){
           value = max_date
         }
-      } else {
+        value = new Date(value);
+      }
+    else {
         value = moment(value, format)
 
         value = value.toDate();
-        if(value > max_date){
+        if(max_date && value > max_date){
           value = max_date
         }
       }
     }
-
     return value;
   }
 
@@ -525,7 +525,13 @@ class InputDateWidget extends Component {
 
     let {
       max_date_y,
+      max_date_m,
+      max_date_d,
     } = settings
+
+    if(! max_date_y && ! max_date_m && ! max_date_d){
+      return
+    }
     let max_date
     if(! Number(max_date_y)){
       max_date = moment().add(20,'year')
@@ -533,20 +539,33 @@ class InputDateWidget extends Component {
       max_date = moment().add(Number(max_date_y),'year')
 
     }
+    if(Number(max_date_m)){
+      max_date = moment().add(Number(max_date_m),'month')
+
+    }
+    if(Number(max_date_d)){
+      max_date = moment().add(Number(max_date_d),'day')
+
+    }
     if(timestamp){
-      max_date = max_date.millisecond
+      max_date = max_date.valueOf()
     } else {
       max_date = max_date.toDate()
     }
+
     return max_date
   }
 
   render() {
+    const timestamp = this.props.element.getSettings('content_timestamp');
     let label ;
     const settings = this.props.element.getLockedSettings();
     let classLabel = "";
     let styleLabel = {};
     let max_date = this.getMaxDate()
+    if(timestamp && max_date){
+      max_date = new Date(max_date)
+    }
     const content_label_position_type = this.props.element.getResponsiveLockedSetting(
       "content_label_position_type"
     );

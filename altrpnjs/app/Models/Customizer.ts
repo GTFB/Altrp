@@ -610,6 +610,10 @@ export default class Customizer extends BaseModel {
         expression = expression.replace(new RegExp(`{{${path}}}`, "g"), replace || "");
       });
     }
+    // @ts-ignore
+    expression = expression.replaceAll('/{/{', '{{')
+    // @ts-ignore
+    expression = expression.replaceAll('/}/}', '}}')
     return expression
   }
 

@@ -21,6 +21,14 @@ export default function getDataByPath(
   context = null,
   altrpCheck = false
 ) {
+
+  if(path === '__current_item__'){
+    return {
+      ...((context instanceof AltrpModel ? context.getData(true) : context) || {})
+
+    }
+  }
+
   if (!path) {
     return _default;
   }

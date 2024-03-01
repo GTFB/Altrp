@@ -47,11 +47,11 @@
   <link rel="dns-prefetch" href="//fonts.gstatic.com"/>
 {{{head_end}}}
 </head>
-<body class="front-app-body">
-{{{body_start}}}
 {{=<% %>=}}
-    <div id="front-app" class="front-app {{access_classes}}">
+<body class="front-app-body {{access_classes}}">
 <%={{ }}=%>
+{{{body_start}}}
+    <div id="front-app" class="front-app">
         <div class="route-content" id="route-content">
             {{{children_content}}}
         </div>
