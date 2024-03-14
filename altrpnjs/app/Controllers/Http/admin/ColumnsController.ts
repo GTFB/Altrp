@@ -126,6 +126,7 @@ export default class ColumnsController {
         null: columnData.null,
         table_id: model.table_id,
         model_id: model.id,
+        unique: columnData.unique,
         type: columnData.type
       })
 
@@ -175,6 +176,7 @@ export default class ColumnsController {
         null: columnData.null,
         table_id: model.table_id,
         model_id: model.id,
+        unique: columnData.unique,
         type: columnData.type
       })
 

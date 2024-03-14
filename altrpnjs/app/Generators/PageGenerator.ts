@@ -163,6 +163,7 @@ export default class PageGenerator extends BaseGenerator {
           children_content,
           fonts,
           randomString,
+          random_string: randomString,
           elements_list,
           pages: JSONStringifyEscape(pages),
           altrp_settings: JSONStringifyEscape(altrp_settings),

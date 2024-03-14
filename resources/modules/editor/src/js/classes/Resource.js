@@ -25,7 +25,7 @@ class Resource {
      */
     this.dynamicURL = data.dynamicURL || false;
     if (!this.route) {
-      throw "Нужен route";
+      throw "Route needed";
     }
   }
 

@@ -48,14 +48,39 @@ export default class Relationship extends BaseModel {
   public model_id: number
 
   @beforeDelete()
-  public static async dropTable(relationship: Relationship) {
+  public static async beforeDelete(relationship: Relationship) {
+    await relationship.dropTable()
+    await relationship.dropKeys()
+  }
+
+
+  public async dropTable() {
     const client = Database.connection(Env.get('DB_CONNECTION'))
     try {
-      if(relationship.type === 'manyToMany'){
-        await client.schema.dropTableIfExists(await relationship.getManyToManyTableName())
+      if(this.type === 'manyToMany'){
+        await client.schema.dropTableIfExists(await this.getManyToManyTableName())
 
       }
     } catch (e) {
+      console.error(e)
+    }
+
+  }
+
+
+
+  async dropKeys(){
+    // @ts-ignore
+    await this.load('altrp_model')
+    const model = this.altrp_model
+    await model.load('table')
+    try{
+
+      let deleteQuery = `ALTER TABLE ${model.table.name} DROP CONSTRAINT ${model.table.name}_${this.local_key}_foreign`
+      await Database.rawQuery(deleteQuery)
+      // deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP INDEX ${targetModel.table.name}_${this.foreign_key}_foreign`
+      // await Database.rawQuery(deleteQuery)
+    }catch (e) {
       console.error(e)
     }
   }
@@ -66,6 +91,7 @@ export default class Relationship extends BaseModel {
     if(! relationship?.target_model_id || ! relationship.model_id){
       return
     }
+    await relationship.dropKeys()
     await relationship.load('altrp_model', query => {
       query.preload('table')
     })
@@ -78,6 +104,27 @@ export default class Relationship extends BaseModel {
     relationship.altrp_target_model.save().catch(e => {
       console.error(e)
     })
+
+
+    let newTargetModel = await Model.find(relationship.target_model_id)
+    const model = relationship.altrp_model
+    if (relationship.type === "belongsTo" && newTargetModel) {
+      await newTargetModel.load('table')
+
+      try {
+
+        let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+            ${model.table.name}_${relationship.local_key}_foreign
+            FOREIGN KEY (${relationship.local_key})
+            REFERENCES ${newTargetModel.table.name}(${relationship.foreign_key})
+            ON DELETE ${relationship.onDelete}
+            ON UPDATE ${relationship.onUpdate}`
+        await Database.rawQuery(query)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
     if (this.name && relationship.altrp_target_model.table && relationship.altrp_model.table && relationship.type === 'manyToMany') {
       const client = Database.connection(Env.get('DB_CONNECTION'))
       try {
@@ -100,7 +147,6 @@ export default class Relationship extends BaseModel {
         await relationship.delete()
         console.error(e)
       }
-
     }
   }
 

@@ -310,6 +310,7 @@ export default class Media extends BaseModel {
     if(! dirname){
       return
     }
+
     if (! fs.existsSync(public_path(dirname))) {
 
       fs.mkdirSync(public_path(dirname), {recursive: true})

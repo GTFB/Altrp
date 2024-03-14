@@ -6213,10 +6213,6 @@ table.bp3-html-table.bp3-interactive tbody tr:active td {
   content: unset !important;
 }
 
-.bp3-icon > img ,
-.bp3-icon > svg {
-  display: block;
-}
 
 .bp3-icon > svg:not([fill]) {
   fill: currentColor;

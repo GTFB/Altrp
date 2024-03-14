@@ -8,6 +8,7 @@ import mbParseJSON from "../../../../../front-app/src/js/functions/mb-parse-JSON
 import {Button,  Menu, MenuItem, Position} from '@blueprintjs/core'
 import {Popover2} from '@blueprintjs/popover2'
 import defaultBurgerMenuIcon from "./misc/defaultBurgerMenuIcon";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 
 
 
@@ -155,7 +156,10 @@ class MenuWidget extends Component {
       {items.map((item) => {
         const _popoverProps = {...popoverProps}
         _popoverProps.portalClassName += ` altrp-portal-parent-item-key${item.id} `
-
+        let {
+          label = ''
+        } = item
+        label = replaceContentWithData(label)
         return <MenuItem
           ref={ref}
           popoverProps={_popoverProps}
@@ -166,7 +170,6 @@ class MenuWidget extends Component {
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
-            console.log(item)
 
             if(item.url?.indexOf('event:') === 0){
               const event = new CustomEvent(item.url?.replace('event:', ''),
@@ -193,8 +196,8 @@ class MenuWidget extends Component {
             this.props.history.push(item.url);
           }}
           icon={<span className={`${classes} altrp-menu-item__icon`} dangerouslySetInnerHTML={{__html: item.icon}}/>}
-          // text={<Link className="altrp-menu-item__link" to={item.url}>{item.label}</Link>}>
-          text={item.label}>
+
+          text={label}>
           {this.renderSubItems(item.children, depth + 1, item.id)}
         </MenuItem>
 

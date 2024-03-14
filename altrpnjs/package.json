@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "node ace serve --watch ",
     "build": "node --max-old-space-size=8144 ace build --production",
-    "start": "node server.ts",
+    "start": "pm2  start pm2.config.js",
+    "restart": "pm2  restart pm2.config.js",
+    "kill": "pm2  kill",
+    "logs": "pm2  logs",
     "lint": "eslint . --ext=.ts"
   },
   "devDependencies": {

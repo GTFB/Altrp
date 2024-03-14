@@ -23,7 +23,6 @@ export default class CustomizerGenerator extends BaseGenerator {
 
   getFileName(): string {
     const fileName = this.customizer.name + CustomizerGenerator.ext
-
     return fileName
   }
 
@@ -63,7 +62,7 @@ export default class CustomizerGenerator extends BaseGenerator {
       console.error('Error [CustomizerGenerator]: event_type or event_hook_type is not defined')
       return false
     }
-    
+
     await customizer.load((loader) => {
       loader.load('altrp_model', loader=>{
         loader.preload('table', loader=>{
@@ -92,7 +91,7 @@ export default class CustomizerGenerator extends BaseGenerator {
         name: customizer.name,
         imports,
         content,
-        params: 'instanceId'
+        params: 'instance'
       })
 
     clearRequireCache()

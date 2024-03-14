@@ -190,20 +190,6 @@ export default class RelationshipsController {
 
       let newTargetModel = await Model.find(relationshipData.target_model_id)
 
-      if (relationshipData.type === "belongsTo" && newTargetModel) {
-        await newTargetModel.load('table')
-
-        try {
-          let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
-            ${model.table.name}_${relationshipData.local_key}_foreign
-            FOREIGN KEY (${relationshipData.local_key})
-            REFERENCES ${newTargetModel.table.name}(${relationshipData.foreign_key})
-            ON DELETE ${relationshipData.onDelete}
-            ON UPDATE ${relationshipData.onUpdate}`
-          await Database.rawQuery(query)
-        } catch (e) {
-        }
-      }
 
       relationship.merge({
         title: relationshipData.title,

@@ -407,10 +407,6 @@ class CustomizerSettingsPanel extends React.Component {
                                 value: 'update'
                               },
                               {
-                                label: 'Read',
-                                value: 'read'
-                              },
-                              {
                                 label: 'Delete',
                                 value: 'delete'
                               }
@@ -798,7 +794,8 @@ class CustomizerSettingsPanel extends React.Component {
   shouldShowMiddleware() {
     const {customizer} = this.props;
     const { type,  } = customizer;
-    return ! this.state.customizer?.settings?.external && ['api', 'crud'].includes(type)
+
+    return ! this.state.customizer?.settings?.external && ['api',].includes(type)
   }
 }
 function  mapStateToProps(state) {

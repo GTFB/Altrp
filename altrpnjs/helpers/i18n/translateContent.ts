@@ -1,4 +1,10 @@
 import * as _ from "lodash";
+import Menu from "App/Models/Menu";
+import getValue from "../cache/getValue";
+import setValue from "../cache/setValue";
+
+
+
 
 export default async function translateContent(content: string,  { lang }): Promise<{content: string, dictionary: {  }}> {
 
@@ -6,6 +12,17 @@ export default async function translateContent(content: string,  { lang }): Prom
     return {content, dictionary: {}}
 
   }
+
+  let allMenus = await getValue(Menu.ALL_MENU_CACHE_KEY)
+
+  if(! allMenus){
+    allMenus = await Menu.all()
+    await setValue(Menu.ALL_MENU_CACHE_KEY, allMenus.map(m=>m.toJSON()))
+  }
+
+  const menus = allMenus.filter(m=>{
+    return content.includes(m.guid)
+  })
   const dictionary = {
 
   }
@@ -33,6 +50,27 @@ export default async function translateContent(content: string,  { lang }): Prom
       content = content.replace(new RegExp(pattern, "g"), value || "");
 
     }))
+  }
+
+  for (const m of menus){
+    let paths = _.isString(m.children) ? content.match(match) : null;
+    if (_.isArray(paths)) {
+      for(const path of paths){
+        let _path = path.replace(replace, "");
+
+        const [
+          text,
+          domain
+        ] = _path.split('::')
+
+        let value =await __(text, {
+          domain,
+          lang,
+        })
+        dictionary[_path] = value
+
+      }
+    }
   }
 
   return {

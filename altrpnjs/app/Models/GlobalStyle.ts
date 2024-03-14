@@ -1,5 +1,5 @@
 import {DateTime} from 'luxon'
-import {BaseModel, column, computed, afterCreate, afterUpdate, belongsTo} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, column, computed, afterCreate, afterUpdate, belongsTo, afterDelete} from '@ioc:Adonis/Lucid/Orm'
 import mbParseJSON from "../../helpers/mbParseJSON";
 import SCREENS from "../../helpers/const/SCREENS";
 import _ from 'lodash'
@@ -286,6 +286,7 @@ export default class GlobalStyle extends BaseModel {
   }
   @afterUpdate()
   @afterCreate()
+  @afterDelete()
   public static async _updateCssFile() {
     await GlobalStyle.updateCssFile()
   }

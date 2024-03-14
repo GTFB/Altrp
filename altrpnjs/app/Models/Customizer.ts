@@ -357,7 +357,7 @@ export default class Customizer extends BaseModel {
     this.timeout = setTimeout(() => this.callCustomizer(model), this.getTimeInMilliseconds())
   }
 
-  async callCrud(instanceId) {
+  async callCrud(instance) {
     const customizer = this
 
     if (customizer.type !== 'crud') {
@@ -374,7 +374,7 @@ export default class Customizer extends BaseModel {
     if (classCustomizerCRUD) {
       const customizerCRUD = new classCustomizerCRUD
 
-      customizerCRUD.run(instanceId)
+      await customizerCRUD.run(instance)
     }
   }
 

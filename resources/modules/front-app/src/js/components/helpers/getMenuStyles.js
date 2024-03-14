@@ -11,6 +11,10 @@ const getMenuStyles = (settings, id) => {
 
   let styles = `${parentClass} .altrp-menu{`;
 
+  let radius = getResponsiveSetting(settings, 'menu_radius');
+  if (radius) {
+    styles += dimensionsControllerToStyles(radius,'border-radius');
+  }
   const menuAlignment = getResponsiveSetting(settings, "menu_alignment");
 
   if (getResponsiveSetting(settings, 'type') === 'horizontal') {
@@ -314,6 +318,7 @@ const getMenuStyles = (settings, id) => {
     styles += dimensionsControllerToStyles(padding);
   }
 
+
   let typographic = getResponsiveSetting(settings, 'typographic');
 
   if (typographic) {
@@ -516,6 +521,7 @@ const getMenuStyles = (settings, id) => {
   const menuStyles = [
     "altrp-menu",
       ["padding", "menu_padding", "dimensions"],
+      ["shadow", "menu_shadow", "shadow"],
       () => {
         const value = getResponsiveSetting(settings, 'gap');
 
@@ -527,9 +533,17 @@ const getMenuStyles = (settings, id) => {
       },
       ["background-color", "menu_bg", "color"],
     "}",
+    "altrp-menu:hover",
+      ["shadow", "menu_shadow", "shadow", ':hover'],
+
+    "}",
 
     "altrp-menu li .bp3-menu-item",
-      ["border-radius", "item_radius", "dimensions"],
+    ["border-radius", "item_radius", "dimensions"],
+    ["shadow", "menu_items_shadow", "shadow"],
+    "}",
+    "altrp-menu li .bp3-menu-item:hover",
+    ["shadow", "menu_items_shadow", "shadow", ':hover'],
     "}",
 
     "altrp-menu-toggle .altrp-menu-item__icon svg",
@@ -542,6 +556,13 @@ const getMenuStyles = (settings, id) => {
       },
     "}",
   ]
+
+  if(!_.isEmpty(getResponsiveSetting(settings,'menu_shadow',':hover'))){
+    styles += `.altrp-menu{
+  transition-duration:0.4s;
+  transition-property: box-shadow;
+}`
+  }
 
   const styledArray = [
     ...menuStyles

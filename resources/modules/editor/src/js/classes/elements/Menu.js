@@ -287,6 +287,11 @@ class Menu extends BaseElement {
       ],
     });
 
+    this.addControl('menu_shadow',{
+      label: 'Shadow',
+      type: CONTROLLER_SHADOW,
+    })
+
     this.addControl('caret_size', {
       type: CONTROLLER_SLIDER,
       label: 'Caret size',
@@ -352,14 +357,19 @@ class Menu extends BaseElement {
       label: "Typographic"
     })
 
+    this.addControl('color',{
+      label: 'Text Color',
+      type: CONTROLLER_COLOR,
+    })
+
     this.addControl('bg',{
       label: 'Background Color',
       type: CONTROLLER_COLOR,
     })
 
-    this.addControl('color',{
-      label: 'Text Color',
-      type: CONTROLLER_COLOR,
+    this.addControl('menu_items_shadow',{
+      label: 'Shadow',
+      type: CONTROLLER_SHADOW,
     })
 
     this.endControlSection();
@@ -422,6 +432,8 @@ class Menu extends BaseElement {
         'vw'
       ],
     });
+
+
 
 
     this.endControlSection();

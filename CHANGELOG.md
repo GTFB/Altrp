@@ -1,9 +1,10 @@
 # ALTRP
 
 ## Changelog
-### test version build 106
+### test version build 111
 
 ### 1.4.9
+* Add Internationalization for Menu Items
 * Add Elements Filters for Plugins Widgets
 * Add Spinner Loader for `Button` Widget
 * Add Themes for Styling

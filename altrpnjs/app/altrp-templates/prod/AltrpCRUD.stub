@@ -7,7 +7,7 @@ const _ = __importStar(require('lodash'))
 const DB = Database?.default ? Database.default : Database
 
 class {{{name}}} extends AltrpBaseController {
-  async run(instanceId) {
+  async run(instance) {
     {{{content}}}
   }
 }

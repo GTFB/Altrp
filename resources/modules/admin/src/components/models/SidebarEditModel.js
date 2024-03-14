@@ -316,7 +316,9 @@ class SidebarEditModel extends Component {
 
         {modalWindow && (
           ReactDOM.createPortal(
-            <ModalWindow modelId={this.props.id} activeMode={this.state.modalWindow} toggleModal={this.toggleWindowModal} />,
+            <ModalWindow modelId={this.props.id}
+                         activeMode={this.state.modalWindow}
+                         toggleModal={this.toggleWindowModal} />,
             document.body
           )
         )}

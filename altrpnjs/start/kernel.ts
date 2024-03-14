@@ -10,6 +10,7 @@
 */
 declare global {
   const __;
+  let globalCache:any;
 }
 
 
@@ -31,6 +32,8 @@ import __ from "../helpers/i18n/__";
 */
 // @ts-ignore
 global.__ = __;
+// @ts-ignore
+global.globalCache = {};
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
   () => import('App/Middleware/SilentAuth'),

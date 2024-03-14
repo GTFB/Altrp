@@ -265,11 +265,16 @@ export function simplePropertyStyled(style, styleProperty, declaration = "") {
 
 export function colorPropertyStyled(data , styleProperty, declaration = "") {
   data = data || {}
-  const { color } = data;
+  const { color, cssVar, guid } = data;
 
+  if(cssVar && guid){
+    return `${styleProperty}: ${cssVar + declaration}; `;
+
+  }
   if (color) {
     return `${styleProperty}: ${color + declaration}; `;
   }
+
 
   return "";
 }

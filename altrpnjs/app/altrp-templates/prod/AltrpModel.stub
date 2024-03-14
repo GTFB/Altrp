@@ -25,20 +25,21 @@ const AltrpBaseModel = __importDefault(require('../Models/AltrpBaseModel')).defa
 class {{{classname}}} extends AltrpBaseModel {
   {{{constructor}}}
 
-  static afterSave(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterSave", data: model})
-  }
 
   static async beforeCreate(model) {
     if(! model.uuid){
 
     }
 
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeCreate", data: model})
+    await Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeCreate", data: model})
   }
 
   static afterCreate(model) {
     Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterCreate", data: model})
+  }
+
+  static async beforeUpdate(model) {
+    await Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeUpdate", data: model})
   }
 
   static afterUpdate(model) {
@@ -47,6 +48,10 @@ class {{{classname}}} extends AltrpBaseModel {
 
   static afterDelete(model) {
     Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterDelete", data: model})
+  }
+
+  static async beforeDelete(model) {
+    await Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeDelete", data: model})
   }
 
   static afterFind(model) {
@@ -67,11 +72,6 @@ class {{{classname}}} extends AltrpBaseModel {
 
 {{{staticProperties}}}
 
-decorate([
-  (0, Orm.afterSave)(),
-  metadata("design:type", Function),
-  metadata("design:paramtypes", [{{{classname}}}]),
-], {{{classname}}}, "afterSave", null);
 
 decorate([
   (0, Orm.afterCreate)(),
@@ -86,10 +86,22 @@ decorate([
 ], {{{classname}}}, "beforeCreate", null);
 
 decorate([
+  (0, Orm.beforeUpdate)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "beforeUpdate", null);
+
+decorate([
   (0, Orm.afterUpdate)(),
   metadata("design:type", Function),
   metadata("design:paramtypes", [{{{classname}}}]),
 ], {{{classname}}}, "afterUpdate", null);
+
+decorate([
+  (0, Orm.beforeDelete)(),
+  metadata("design:type", Function),
+  metadata("design:paramtypes", [{{{classname}}}]),
+], {{{classname}}}, "beforeDelete", null);
 
 decorate([
   (0, Orm.afterDelete)(),

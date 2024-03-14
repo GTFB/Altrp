@@ -1,4 +1,4 @@
-import {afterCreate, BaseModel, BelongsTo, belongsTo, column,} from '@ioc:Adonis/Lucid/Orm'
+import {afterCreate, afterUpdate, BaseModel, BelongsTo, belongsTo, column,} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User';
 import Model from "App/Models/Model";
 import Table from "App/Models/Table";
@@ -87,6 +87,11 @@ export default class Column extends BaseModel {
   @column()
   public options: string
 
+  @column.dateTime({autoCreate: true})
+  public createdAt: DateTime
+
+  @column.dateTime({autoCreate: true, autoUpdate: true})
+  public updatedAt: DateTime
 
   @belongsTo(() => User, {
     foreignKey: "author"
@@ -233,7 +238,7 @@ decorate([
 
   @afterCreate()
   public static async afterCreate(columnData: Column){
-    const _ignore = ['id', 'uuid', 'updated_at', 'created_at']
+    const _ignore = ['id', 'uuid', 'updated_at', 'deleted_at', 'created_at']
     if(_ignore.includes(columnData.name)){
       return
     }
@@ -280,24 +285,33 @@ decorate([
       await columnData.delete()
     }
   }
+
+  @afterUpdate()
+  public static async afterUpdate(columnData: Column){
+    if(columnData.type !== 'calculated') {
+      await columnData.load('altrp_model', query => {
+        query.preload('table')
+      })
+      const model = columnData.altrp_model
+      await columnData.indexCreator(model)
+    }
+  }
+
   async indexCreator( model, newColumn = false) {
     const indexName = Column.createIndexName(this.name, model.table.name)
     try {
 
-      if(this.indexed && this.unique ) {
+      if( this.unique ) {
         let indexQuery = `ALTER TABLE "${model.table.name}"
-        ADD CONSTRAINT "${model.indexName}" UNIQUE ("test_test2");`
+        ADD CONSTRAINT "${indexName}" UNIQUE ("${this.name}");`
         await Database.rawQuery(indexQuery)
       } else  if(this.indexed) {
         let indexQuery = `CREATE INDEX ${indexName} ON ${model.table.name}(${this.name})`
         await Database.rawQuery(indexQuery)
       } else if(! newColumn){
-        try {
-          let indexQuery = `ALTER TABLE ${model.table.name} DROP INDEX ${indexName}`
+          let indexQuery = `ALTER TABLE ${model.table.name} DROP CONSTRAINT "${indexName}"`
           await Database.rawQuery(indexQuery)
-        }catch (e) {
 
-        }
       }
     }catch (e) {
       console.error(e)

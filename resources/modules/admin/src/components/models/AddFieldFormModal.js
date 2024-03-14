@@ -251,7 +251,9 @@ class AddFieldFormModal extends Component {
     e.preventDefault();
 
     const {
-      name, title, description, is_label, is_title, is_auth, type, size, default: default_, attribute, input_type,
+      name, title,
+      unique,
+      description, is_label, is_title, is_auth, type, size, default: default_, attribute, input_type,
       options, null: _null, indexed, editable, calculation, calculation_logic
     } = this.state.value;
 
@@ -276,6 +278,7 @@ class AddFieldFormModal extends Component {
         input_type,
         null: _null,
         indexed,
+        unique,
         editable
       };
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {
@@ -503,14 +506,24 @@ class AddFieldFormModal extends Component {
               </div>
               <div className="form-group-field">
                 <input type="checkbox" id="field-nullable"
-                       checked={this.state.value.null}
+                       checked={this.state.value.unique}
                        onChange={e => {
-                         this.changeValue(e.target.checked, 'null')
+                         this.changeValue(e.target.checked, 'unique')
                        }}
-                       disabled={this.state.value.type === 'bigInteger'}
+                       disabled={this.uniqueDisabled()}
                 />
-                <label className="checkbox-label-field label__RobotoFont" htmlFor="field-nullable">Nullable</label>
+                <label className="checkbox-label-field label__RobotoFont" htmlFor="field-nullable">Unique</label>
               </div>
+              {/*<div className="form-group-field">*/}
+              {/*  <input type="checkbox" id="field-nullable"*/}
+              {/*         checked={this.state.value.null}*/}
+              {/*         onChange={e => {*/}
+              {/*           this.changeValue(e.target.checked, 'null')*/}
+              {/*         }}*/}
+              {/*         disabled={this.state.value.type === 'bigInteger'}*/}
+              {/*  />*/}
+              {/*  <label className="checkbox-label-field label__RobotoFont" htmlFor="field-nullable">Nullable</label>*/}
+              {/*</div>*/}
             </div>
             <span className="showMore" onClick={this.toggleAdvancedSettings}>
               {this.state.ShowAdvancedSettings ? 'Hide advanced settings' : 'Show advanced settings'}
@@ -709,6 +722,10 @@ class AddFieldFormModal extends Component {
         <button className="btn btn_failure">Delete</button> */}
       </div>
     </form>;
+  }
+
+  uniqueDisabled() {
+    return ['text', 'longText', 'calculated', 'json', 'binary',].includes(this.state.value.type)
   }
 }
 

@@ -424,7 +424,7 @@ window.altrp_dictionary = ${JSON.stringify(_content.dictionary)};
         device,
         lang,
         html_class,
-        altrptime: getAltrpTime()
+        altrptime: getAltrpTime(),
       })
       mustache?.templateCache?.clear()
       // @ts-ignore

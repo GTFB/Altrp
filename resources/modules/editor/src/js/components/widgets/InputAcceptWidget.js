@@ -795,8 +795,8 @@ class InputAcceptWidget extends Component {
               ? "altrp-field-label--required"
               : ""
               }`}
+            dangerouslySetInnerHTML={{__html:content_label}}
           >
-            {content_label}
           </label>
           {label_icon && label_icon.assetType && (
             <span className="altrp-label-icon">

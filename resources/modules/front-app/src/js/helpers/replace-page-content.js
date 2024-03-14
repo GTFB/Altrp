@@ -86,6 +86,10 @@ export default function replacePageContent(url, popstate = false) {
         progressBar.style.transform = 'translate( -5%)'
 
         console.log('async Page End: ', performance.now());
+
+        const event = new Event('altrp-navigate')
+        document.dispatchEvent(event)
+        window.dispatchEvent(event)
       } catch (e) {
         console.error(e);
         location.href = url

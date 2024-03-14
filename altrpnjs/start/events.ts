@@ -15,3 +15,6 @@ Event.on('model:updated', 'Model.updated');
 // Event.on('model:deleted', 'Model.deleted');
 Event.on('altrp:message', 'Message.receiver')
 Event.on('altrp_event', "AltrpEvent.listener")
+Event.onError((event, e)=>{
+  console.error('listener error:',event, e)
+})

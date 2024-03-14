@@ -1,5 +1,14 @@
 import { DateTime } from 'luxon'
-import {BaseModel, beforeFetch, beforeFind, beforePaginate, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel,
+  beforeFetch,
+  beforeFind,
+  beforePaginate,
+  column,
+  afterDelete,
+  afterCreate,
+  afterUpdate,
+  ManyToMany,
+  manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import Category from "App/Models/Category";
 import {beforePaginateQuery, softDelete, softDeleteQuery} from "../../helpers/delete";
 import Template from "App/Models/Template";
@@ -7,8 +16,12 @@ import LIKE from "../../helpers/const/LIKE";
 import _ from "lodash";
 import exec from "../../helpers/exec";
 import base_path from "../../helpers/base_path";
+import clearValue from "../../helpers/cache/clearValue";
 
 export default class Menu extends BaseModel {
+
+  public static ALL_MENU_CACHE_KEY = 'ALL_MENU_CACHE_KEY'
+
   @column({ isPrimary: true })
   public id: number
 
@@ -113,6 +126,13 @@ export default class Menu extends BaseModel {
 
     }
 
+  }
+
+  @afterCreate()
+  @afterDelete()
+  @afterUpdate()
+  static async clearMenuCache(){
+    await clearValue(Menu.ALL_MENU_CACHE_KEY)
   }
 }
 interface GetJSONOptions  {

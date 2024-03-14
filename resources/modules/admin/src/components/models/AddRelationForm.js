@@ -87,6 +87,8 @@ class AddRelationForm extends Component {
       this.relationName = value.name;
       this.updateForeignFieldOptions(value.target_model_id);
       this.changeTargetModel(value.target_model_id);
+      value.onUpdate = value.on_update
+      value.onDelete = value.on_delete
       this.setState(state=>({...state, value}));
     }
   }
@@ -102,9 +104,6 @@ class AddRelationForm extends Component {
 
 
   /**
-   * Проверяем значение при смене модели
-   * если модель это User, то скроем Add Reverse Relation
-   * и уберем из вариантов связей Has many
    * @param {string} value
    */
   changeTargetModel(value) {
@@ -287,7 +286,6 @@ class AddRelationForm extends Component {
 
 
   render() {
-    console.log(this)
     return <form className="admin-form admin-form-relation" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
@@ -421,23 +419,23 @@ class AddRelationForm extends Component {
         </div>
       </div>
       <div className="relations__checkbox">
-        <div className="form-group">
-          {this.state.hideAddBelongTo || this.state.value.type === 'belongsTo' ? '' : <><input type="checkbox" id="relation-add_belong_to"
-            checked={this.state.value.add_belong_to} readOnly={this.props.modelRelationID}
-            onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}
-          />
-          <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label></>}
-        </div>
-        <div className="form-group">
-          { (! ['hasMany', 'belongsTo'].includes(this.state.value.type)) ?
-              <><input type="checkbox"
-                       id="field-editable"
-                       checked={this.state.value.editable}
-                       onChange={e => { this.changeValue(e.target.checked, 'editable') }}
-          />
-            <label className="checkbox-label" htmlFor="field-editable">Editable</label></> : ''}
+        {/*<div className="form-group">*/}
+        {/*  {this.state.hideAddBelongTo || this.state.value.type === 'belongsTo' ? '' : <><input type="checkbox" id="relation-add_belong_to"*/}
+        {/*    checked={this.state.value.add_belong_to} readOnly={this.props.modelRelationID}*/}
+        {/*    onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}*/}
+        {/*  />*/}
+        {/*  <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label></>}*/}
+        {/*</div>*/}
+        {/*<div className="form-group">*/}
+        {/*  { (! ['hasMany', 'belongsTo'].includes(this.state.value.type)) ?*/}
+        {/*      <><input type="checkbox"*/}
+        {/*               id="field-editable"*/}
+        {/*               checked={this.state.value.editable}*/}
+        {/*               onChange={e => { this.changeValue(e.target.checked, 'editable') }}*/}
+        {/*  />*/}
+        {/*    <label className="checkbox-label" htmlFor="field-editable">Editable</label></> : ''}*/}
 
-        </div>
+        {/*</div>*/}
         <div className="form-group">
           {
             getAltrpLang() === 'javascript'

@@ -53,11 +53,6 @@ export default class GlobalTemplateStylesController {
     try {
       const style = await GlobalStyle.create(data)
 
-      GlobalStyle.updateCssFile().catch(e=>{
-        console.error('Error while GlobalStyle.updateCssFile', e)
-      }).then(()=>{
-        console.log('GlobalStyle.updateCssFile success')
-      })
       return style
     } catch (e) {
       console.error(e)
@@ -72,11 +67,6 @@ export default class GlobalTemplateStylesController {
 
     style.delete()
 
-    GlobalStyle.updateCssFile().catch(e=>{
-      console.error('Error while GlobalStyle.updateCssFile', e)
-    }).then(()=>{
-      console.log('GlobalStyle.updateCssFile success')
-    })
     return {
       success: true
     }
@@ -90,11 +80,6 @@ export default class GlobalTemplateStylesController {
 
     const body = request.body();
 
-    GlobalStyle.updateCssFile().catch(e=>{
-      console.error('Error while GlobalStyle.updateCssFile', e)
-    }).then(()=>{
-      console.log('GlobalStyle.updateCssFile success')
-    })
     switch (style.type) {
       case "color":
       {

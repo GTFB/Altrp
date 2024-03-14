@@ -7,7 +7,7 @@ import empty from '../../helpers/empty'
 const DB = Database?.default ? Database.default : Database
 
 export default class {{{name}}} extends AltrpBaseController {
-  async run(instanceId: string) {
+  async run(instance: string) {
     {{{content}}}
   }
 }
