@@ -47,7 +47,6 @@ class RootComponent extends Component {
       .getSelector()
       .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
-
     return (
       <div className={classes} style={{position: 'relative'}}>
         {this.props.element.children.map(section => {

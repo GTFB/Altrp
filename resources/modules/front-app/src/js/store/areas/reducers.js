@@ -2,7 +2,7 @@ import { SET_AREAS,} from "./actions";
 
 let defaultAreas = [];
 if(window['h-altrp']){
-  defaultAreas = window.page_areas.map(a=> new window.altrpHelpers.Area.areaFactory(a));
+  defaultAreas = window.page_areas.map(a=>  window.altrpHelpers.Area.areaFactory(a));
 }
 export function areasReducer(areas, action) {
   areas = areas || defaultAreas;

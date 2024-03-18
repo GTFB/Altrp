@@ -46,6 +46,7 @@ import applyPluginsFiltersAsync from "../../helpers/plugins/applyPluginsFiltersA
 import applyPluginsFiltersSync from "../../helpers/plugins/applyPluginsFiltersSync";
 import MapperNode from "App/Customizer/Nodes/MapperNode";
 import ValidatorNode from "App/Customizer/Nodes/ValidatorNode";
+import EmailTemplateNode from "App/Customizer/Nodes/EmailTemplateNode";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -552,6 +553,7 @@ export default class Customizer extends BaseModel {
         case 'return': return new ReturnNode( item, customizer )
         case 'change': return new ChangeNode( item, customizer )
         case 'validator': return new ValidatorNode( item, customizer )
+        case 'email_template': return new EmailTemplateNode( item, customizer )
         case 'documentAction': return new DocumentNode(item, customizer)
         case 'crudAction': return new CrudNode(item, customizer)
         case 'apiAction': return new ApiNodeV2(item, customizer)
@@ -613,7 +615,11 @@ export default class Customizer extends BaseModel {
     // @ts-ignore
     expression = expression.replaceAll('/{/{', '{{')
     // @ts-ignore
+    expression = expression.replaceAll('/{/{/{', '{{{')
+    // @ts-ignore
     expression = expression.replaceAll('/}/}', '}}')
+    // @ts-ignore
+    expression = expression.replaceAll('/}/}/}', '}}}')
     return expression
   }
 

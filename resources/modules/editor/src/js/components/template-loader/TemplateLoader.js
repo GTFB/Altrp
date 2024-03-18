@@ -62,6 +62,11 @@ class TemplateLoader extends Component {
     if(this.props.templateId !== prevProps.templateId){
       this.loadTemplate();
     }
+    if(this.props.cardModel !== prevProps.cardModel && this.state.templateComponent
+      && ! _.isEqual(this.state.templateComponent.props.element.getCardModel(), this.props.cardModel)){
+      console.log('updates')
+      this.state.templateComponent.props.element.setCardModel(this.props.cardModel)
+    }
   }
   render() {
     return <div className="inner-template">{this.state.templateComponent}</div>;

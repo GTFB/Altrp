@@ -47,6 +47,9 @@ export default class Relationship extends BaseModel {
   @column()
   public model_id: number
 
+  @column()
+  public settings: null | RelationShipSettings
+
   @beforeDelete()
   public static async beforeDelete(relationship: Relationship) {
     await relationship.dropTable()
@@ -70,6 +73,8 @@ export default class Relationship extends BaseModel {
 
 
   async dropKeys(){
+
+
     // @ts-ignore
     await this.load('altrp_model')
     const model = this.altrp_model
@@ -88,10 +93,35 @@ export default class Relationship extends BaseModel {
   @afterUpdate()
   @afterCreate()
   public static async updateModel(relationship: Relationship) {
+    await relationship.dropKeys()
     if(! relationship?.target_model_id || ! relationship.model_id){
+      if(relationship.model_id){
+        await relationship.load('altrp_model', query => {
+          query.preload('table')
+        })
+        const model = relationship.altrp_model
+
+        let tableName
+        switch (relationship.settings?.core_relation?.model) {
+          case'User':{
+            tableName = 'users'
+          }break;
+        }
+
+        if(tableName){
+
+          let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+            ${model.table.name}_${relationship.local_key}_foreign
+            FOREIGN KEY (${relationship.local_key})
+            REFERENCES ${tableName}(id)
+            ON DELETE ${relationship.onDelete}
+            ON UPDATE ${relationship.onUpdate}`
+          await Database.rawQuery(query)
+        }
+
+      }
       return
     }
-    await relationship.dropKeys()
     await relationship.load('altrp_model', query => {
       query.preload('table')
     })
@@ -198,15 +228,24 @@ export default class Relationship extends BaseModel {
   // public altrp_table: HasMany<typeof Source>
 
   async renderForModelDev():Promise <string> {
+    const modelString = this.renderRelatedModel()
+    if(! modelString){
+      return ''
+    }
+
     return `
-  ${this.renderDecoratorDev()}(() => ${this.renderRelatedModel()}, ${await this.renderOptions()})
-  public ${this.name}: ${this.renderType()}<typeof ${this.renderRelatedModel()}>`
+  ${this.renderDecoratorDev()}(() =>${modelString}, ${await this.renderOptions()})
+  public ${this.name}`
   }
 
   async renderForModelProd(): Promise<string> {
+    const modelString = this.renderRelatedModel()
+    if(! modelString){
+      return ''
+    }
     return `
 decorate([
-  (0, ${this.renderType()})(() => ${this.renderRelatedModel()}.default, ${await this.renderOptions()}),
+  (0, ${this.renderType()})(() => ${modelString}, ${await this.renderOptions()}),
   metadata("design:type", Object)
 ], ${this.altrp_model?.name}.prototype, "${this.name}", void 0);`
   }
@@ -295,8 +334,20 @@ decorate([
 
   }
 
-  private renderRelatedModel(): string {
-    return this?.altrp_target_model?.name || ''
+  private renderRelatedModel(): string|null {
+    let modelPath
+
+    if( this?.altrp_target_model?.name){
+      modelPath = `./${this?.altrp_target_model?.name}`
+    } else if(this.settings?.core_relation?.model){
+      modelPath = `../Models/${this.settings?.core_relation?.model}`
+    }
+    if(! modelPath){
+      return null
+    }
+
+
+    return `require('${modelPath}').default`
   }
 
   async getManyToManyTableName() {
@@ -381,5 +432,12 @@ decorate([
     query = query.inTable(this.altrp_target_model.table.name)
     query = query.onDelete('cascade')
     query.onUpdate('cascade')
+  }
+}
+
+
+declare type RelationShipSettings = {
+  core_relation?:{
+    model?:string
   }
 }

@@ -535,3 +535,7 @@ body {
   font-size: 14px;
   background-color: $light-gray;
 }
+.bp3-select-popover .bp3-menu{
+  max-height: 200px;
+  overflow: auto;
+}

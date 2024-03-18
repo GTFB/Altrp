@@ -136,6 +136,10 @@ let defaultOptions = [
     "label": "Toggle Theme"
   },
   {
+    "value": "timer",
+    "label": "Timer"
+  },
+  {
     "value": "trigger",
     "label": "Trigger Action"
   },
@@ -335,6 +339,56 @@ export function actionsControllers(
     locked: true,
   });
 
+  actionsRepeater.addControl('time', {
+    type: CONTROLLER_TEXT,
+    dynamic: false,
+    responsive: false,
+    label: 'Time',
+    conditions: {
+      type: ['timer']
+    },
+    placeholder: 'now',
+    locked: true,
+  });
+
+
+  actionsRepeater.addControl('time_save', {
+    type: CONTROLLER_TEXT,
+    dynamic: false,
+    responsive: false,
+    label: 'Path to Save',
+    conditions: {
+      type: ['timer']
+    },
+    locked: true,
+  });
+
+  actionsRepeater.addControl('time_format', {
+    label: 'Time Format',
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    nullable: true,
+    options: [
+      {
+        value: 'seconds',
+        label: 'Seconds'
+      },
+      {
+        value: 'mm:ss',
+        label: 'mm:ss'
+      },
+      {
+        value: 'hh:mm:ss',
+        label: 'hh:mm:ss'
+      },
+    ],
+    default: 'seconds',
+
+    conditions: {
+      type: 'timer'
+    },
+    locked: true,
+  });
   actionsRepeater.addControl('forms_change', {
     label: 'Change',
     type: CONTROLLER_SELECT,

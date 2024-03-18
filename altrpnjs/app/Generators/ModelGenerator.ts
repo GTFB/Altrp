@@ -110,28 +110,13 @@ const Event =__importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Event"))
 ${this.model.soft_deletes ? `
 const delete_1 = require("../../helpers/delete");
 ` : ''}
-${_.uniqBy(
-  this.altrp_relationships
-      .filter(relationship => relationship?.altrp_target_model?.name),
-      relationship => relationship.altrp_target_model.name
-    ).map(relationship =>
-        `const ${relationship?.altrp_target_model?.name} = require('./${relationship?.altrp_target_model?.name}');`)
-      .join('\n')
-    }
 `
   }
   private _getDevImportsContent(): string {
     return `import * as luxon from 'luxon'
 import * as Orm from '@ioc:Adonis/Lucid/Orm'
 import Event from '@ioc:Adonis/Core/Event'
-${_.uniqBy(
-  this.altrp_relationships
-      .filter(relationship => relationship?.altrp_target_model?.name),
-      relationship => relationship.altrp_target_model.name
-    ).map(relationship =>
-        `import ${relationship?.altrp_target_model?.name} from './${relationship?.altrp_target_model?.name}'`)
-      .join('\n')
-    }
+
 ${this.model.soft_deletes ? `
 import {softDeleteQuery, softDelete} from "../../helpers/delete";
 ` : ''}

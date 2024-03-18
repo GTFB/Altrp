@@ -343,9 +343,14 @@ class FrontElement {
    * @return {string}
    */
   getIdForAction(){
+
+    let altrpIndex = null
+    if(_.isNumber(this.getCurrentModel()?.getProperty('altrpIndex'))){
+      altrpIndex = this.getCurrentModel()?.getProperty('altrpIndex') + ''
+    }
     if(! this.idForAction){
       this.idForAction = this.getId() +
-        (this.getCurrentModel()?.getProperty('altrpIndex')
+        ( altrpIndex
           || this.getCurrentModel()?.getProperty('id')
           || '');
     }
@@ -731,7 +736,7 @@ class FrontElement {
       rootElement.isCard = false;
       return;
     }
-    if(! model instanceof AltrpModel){
+    if(! (model instanceof AltrpModel)){
       model = new AltrpModel(model);
     }
     index = Number(index);

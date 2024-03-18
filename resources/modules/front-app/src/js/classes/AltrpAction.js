@@ -2,7 +2,7 @@ import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
 import {togglePopup} from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
 import {changeCurrentModel} from "../store/current-model/actions";
-import { v4 as uuid } from "uuid";
+import {v4 as uuid} from "uuid";
 //import { io } from "socket.io-client";
 import axios from "axios";
 import elementsToPdf from "../functions/elementsToPdf";
@@ -347,9 +347,14 @@ class AltrpAction extends AltrpModel {
 
       }
         break;
+      case 'timer': {
+        result = await this.doActionTimer();
+
+      }
+        break;
       default: {
         try {
-          if(window?.altrp?.customActions && window?.altrp?.customActions[this.getType()]){
+          if (window?.altrp?.customActions && window?.altrp?.customActions[this.getType()]) {
             result = await window?.altrp?.customActions[this.getType()](this)
           }
         } catch (e) {
@@ -373,9 +378,9 @@ class AltrpAction extends AltrpModel {
 
     const event = new CustomEvent('altrp-action',
       {
-        detail:{
-            actionData: this,
-            result,
+        detail: {
+          actionData: this,
+          result,
 
         }
       })
@@ -394,7 +399,7 @@ class AltrpAction extends AltrpModel {
       value
     })
 
-    if(res.status === 200) {
+    if (res.status === 200) {
       return res.data
     } else {
       return {
@@ -402,6 +407,7 @@ class AltrpAction extends AltrpModel {
       }
     }
   }
+
   /**
    * заставляет сервер отправить сокет
    * @return {object}
@@ -431,16 +437,16 @@ class AltrpAction extends AltrpModel {
 
     let name = ""
 
-    if(this.getProperty("socket_type") === "custom") {
+    if (this.getProperty("socket_type") === "custom") {
       name = replaceContentWithData(this.getProperty("socket_name"), this.getCurrentModel().getData());
     } else {
       const user = window.current_user
 
-      if(!user.is_guest && user.guid) {
+      if (!user.is_guest && user.guid) {
         name = user.guid
       } else {
         let guid = localStorage.getItem("socket_guid");
-        if(!guid) {
+        if (!guid) {
           localStorage.setItem("socket_guid", uuid())
           guid = localStorage.getItem("socket_guid")
         }
@@ -468,7 +474,6 @@ class AltrpAction extends AltrpModel {
       success: true
     }
   }
-
 
 
   /**
@@ -533,7 +538,7 @@ class AltrpAction extends AltrpModel {
             );
           }
           let url = this.getProperty('form_url');
-          if(! _.isObject(item)){
+          if (!_.isObject(item)) {
             item = {id: item}
           }
           url = replaceContentWithData(url, item);
@@ -545,7 +550,7 @@ class AltrpAction extends AltrpModel {
               customRoute: url
             }
           );
-          return  form.submit('', '', data, customHeaders, emptyFieldMessage);
+          return form.submit('', '', data, customHeaders, emptyFieldMessage);
         });
         try {
           let res = await Promise.all(bulkRequests);
@@ -596,7 +601,7 @@ class AltrpAction extends AltrpModel {
     try {
       const response = await form.submit('', '', data, customHeaders, emptyFieldMessage);
       result = _.assign(result, response);
-      if(this.getProperty('clear_form_success')){
+      if (this.getProperty('clear_form_success')) {
         appStore.dispatch(clearFormStorage(this.getFormId()))
       }
     } catch (error) {
@@ -608,10 +613,11 @@ class AltrpAction extends AltrpModel {
     return result;
   }
 
-  doActionReload(){
+  doActionReload() {
     window.location.reload();
-    return{success: true}
+    return {success: true}
   }
+
   /**
    * Делает редирект на страницу form_url
    * @return {Promise<{}>}
@@ -620,20 +626,20 @@ class AltrpAction extends AltrpModel {
     let history = window.history
     let _URL = this.getFormURL();
     let outer = this.getProperty('outer')
-    if(outer && _URL){
+    if (outer && _URL) {
       window.location.href = _URL
       return
     }
-    if(! this.getProperty('back')){
+    if (!this.getProperty('back')) {
       let url = _URL.replace(location.origin, '')
       url = location.origin + url
       url = new URL(url)
-      if(location.pathname + location.search === url.pathname + url.search){
+      if (location.pathname + location.search === url.pathname + url.search) {
         return {success: true}
       }
 
     }
-    if(! _URL){
+    if (!_URL) {
       if (this.getProperty('back')) {
         history.back()
       }
@@ -656,20 +662,20 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty('back')) {
         history.back()
       } else {
-        try{
+        try {
 
 
           const event = new CustomEvent('altrp-redirect',
             {
-              detail:{
-                  url: _URL,
+              detail: {
+                url: _URL,
 
               }
             })
           window.dispatchEvent(event)
           document.dispatchEvent(event)
 
-          if(this.getProperty('prevent') || window?.altrp?.spa_off){
+          if (this.getProperty('prevent') || window?.altrp?.spa_off) {
             window.location.href = _URL
           } else {
             replacePageContent(_URL)
@@ -861,9 +867,11 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
-  async getResponsiveProperty(name, defaultValue){
+
+  async getResponsiveProperty(name, defaultValue) {
     return (await import(/* webpackChunkName: 'getResponsiveSetting' */'../functions/getResponsiveSetting')).default(this.data, name, defaultValue)
   }
+
   /**
    * Страницу в PDF
    * @return {Promise<{}>}
@@ -1103,7 +1111,7 @@ class AltrpAction extends AltrpModel {
       let count = this.getProperty('count');
       switch (setType) {
 
-        case'push_remove_items':{
+        case'push_remove_items': {
 
           let _currentValue = getDataByPath(path)
 
@@ -1111,10 +1119,10 @@ class AltrpAction extends AltrpModel {
             value,
             this.getCurrentModel()
           );
-          if(_.isArray(_currentValue)){
+          if (_.isArray(_currentValue)) {
 
-            if(_currentValue.includes(value)){
-              value = _currentValue.filter(cv=>cv !== value)
+            if (_currentValue.includes(value)) {
+              value = _currentValue.filter(cv => cv !== value)
             } else {
               value = [
                 ..._currentValue,
@@ -1126,7 +1134,8 @@ class AltrpAction extends AltrpModel {
 
           }
           result.success = setDataByPath(path, value);
-        }break;
+        }
+          break;
         case 'toggle': {
           value = !getDataByPath(path);
           result.success = setDataByPath(path, value);
@@ -1142,7 +1151,7 @@ class AltrpAction extends AltrpModel {
               value.replace('{{', '').replace('}}', ''),
               null,
               this.getCurrentModel()
-          );
+            );
           } else if (value.indexOf('|') !== -1) {
             value = parseParamsFromString(
               value,
@@ -1156,8 +1165,8 @@ class AltrpAction extends AltrpModel {
         case 'toggle_set': {
           let currentValue = getDataByPath(path);
           value = value.split('\n').map(v => v.trim());
-          value = value.map(v=>{
-            if(v.includes('{{')){
+          value = value.map(v => {
+            if (v.includes('{{')) {
               v = getDataByPath(
                 v.replace('{{', '').replace('}}', ''),
                 null,
@@ -1314,9 +1323,10 @@ class AltrpAction extends AltrpModel {
       let actionResult = {success: true}
       code = replaceContentWithData(code, this.getCurrentModel().getData())
       const evaluateResult = eval(code);
-      if(_.isFunction(evaluateResult)){
+      if (_.isFunction(evaluateResult)) {
         await evaluateResult()
-      } if (evaluateResult instanceof Promise){
+      }
+      if (evaluateResult instanceof Promise) {
         await evaluateResult
       }
       return actionResult;
@@ -1406,12 +1416,12 @@ class AltrpAction extends AltrpModel {
       };
     }
     try {
-      if(_.isFunction(element.elementRef.current[action])){
+      if (_.isFunction(element.elementRef.current[action])) {
         let result = await element.elementRef.current[action]();
-        if(_.isObject(result)){
+        if (_.isObject(result)) {
           return result
         }
-        return {success:true}
+        return {success: true}
       }
       element.elementRef.current.fireAction(action);
       return {
@@ -1486,7 +1496,7 @@ class AltrpAction extends AltrpModel {
     const compare = this.getProperty('compare');
     let conditionLeft = this.getProperty('condition_left');
     let conditionRight = this.getProperty('condition_right');
-    conditionLeft = getDataByPath(conditionLeft, null , this.getCurrentModel().getData());
+    conditionLeft = getDataByPath(conditionLeft, null, this.getCurrentModel().getData());
     conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return {success: res};
@@ -1570,12 +1580,12 @@ class AltrpAction extends AltrpModel {
    * @returns {Promise<void>}
    */
   async doActionOAuth() {
-    const OIDC  = await import (/* webpackChunkName: 'OIDC' */"oidc-client");
+    const OIDC = await import (/* webpackChunkName: 'OIDC' */"oidc-client");
     const {WebStorageStateStore, UserManager, authority, OidcClient} = OIDC;
     (window.altrpLibs = window.altrpLibs || {}).OIDC = OIDC
 
     const method = this.getProperty('method')
-    if( ! method){
+    if (!method) {
       return {
         success: true,
       }
@@ -1586,9 +1596,9 @@ class AltrpAction extends AltrpModel {
       post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),
       response_type: this.getProperty('response_type'),
       scope: this.getProperty('scope'),
-      authority:this.getProperty('authority'),
+      authority: this.getProperty('authority'),
       automaticSilentRenew: this.getProperty('automaticSilentRenew'),
-      userStore: new WebStorageStateStore({ store: window.localStorage }),
+      userStore: new WebStorageStateStore({store: window.localStorage}),
       filterProtocolClaims: this.getProperty('filterProtocolClaims'),
       loadUserInfo: this.getProperty('loadUserInfo'),
       monitorSession: this.getProperty('monitorSession'),
@@ -1599,63 +1609,135 @@ class AltrpAction extends AltrpModel {
     // console.log(await manager.getUser());
     let result;
 
-    if(_.isFunction(manager[method])){
+    if (_.isFunction(manager[method])) {
       try {
-        result =await manager[method]();
+        result = await manager[method]();
       } catch (e) {
-        return {success:false}
+        return {success: false}
       }
     }
     // await manager.signoutRedirect();
-    return {success:true}
+    return {success: true}
   }
-  async doActionToggleTheme(){
+
+  async doActionToggleTheme() {
     const html = document.documentElement
-    const res = await  (new Resource({
+    const res = await (new Resource({
       route: '/ajax/set_theme'
     })).post({
       theme: html.classList.contains('altrp-theme_dark') ? 'altrp-theme_normal' : 'altrp-theme_dark'
     })
-    if(! res.success){
-      return {success:false}
+    if (!res.success) {
+      return {success: false}
     }
     html.classList.toggle('altrp-theme_dark')
     html.classList.toggle('altrp-theme_normal')
     appStore.dispatch(changeCurrentPage(appStore.getState().altrpPage.getData()))
-    return  {success:true}
+    return {success: true}
   }
-  async doActionSetLang(){
+
+  async doActionSetLang() {
     const lang = this.getProperty('lang') || 'en'
 
-    const res = await  (new Resource({
+    const res = await (new Resource({
       route: '/ajax/set_lang'
     })).post({
       lang
     })
-    if(! res.success){
-      return {success:false}
+    if (!res.success) {
+      return {success: false}
     }
     pageReload()
-    return  {success:true}
+    return {success: true}
 
   }
-  async doActionToggleDropbar(){
-    let elements =  this.getProperty('elements_ids') || ''
+
+  async doActionToggleDropbar() {
+    let elements = this.getProperty('elements_ids') || ''
 
     elements = elements.split(',')
-    elements = elements.map(e=>e.trim())
-    elements = elements.map(e=>document.getElementById(e))
-    elements = elements.filter(e=>e)
-    elements = elements.map(e=>e.querySelector('.altrp-dropbar'))
-    elements = elements.filter(e=>e)
-    elements = elements.map(e=>e.dropbarComponent)
-    elements = elements.filter(e=>e)
-    for(const element of elements){
+    elements = elements.map(e => e.trim())
+    elements = elements.map(e => document.getElementById(e))
+    elements = elements.filter(e => e)
+    elements = elements.map(e => e.querySelector('.altrp-dropbar'))
+    elements = elements.filter(e => e)
+    elements = elements.map(e => e.dropbarComponent)
+    elements = elements.filter(e => e)
+    for (const element of elements) {
       element.show && element.show()
     }
-    return{
+    return {
       success: true
     }
+  }
+
+  async doActionTimer() {
+    let time = this.getProperty('time') || ''
+    let timeSave = this.getProperty('time_save') || ''
+    /**
+     *
+     * @type {string}
+     */
+    let timeFormat = this.getProperty('time_format') || 'seconds'
+
+    if (!timeSave) {
+      return {success: false};
+
+    }
+    const luxon = await import('luxon')
+    const {
+      DateTime
+    } = luxon
+    const now = DateTime.now()
+
+    if (!time) {
+      time = now
+    } else {
+      time = DateTime.fromISO(getDataByPath(time, this.getCurrentModel()))
+    }
+
+    if(! time.isValid){
+      return {success: false};
+    }
+
+
+    if(time.equals(now) || time.diff(now).milliseconds <= 0){
+      setInterval(()=>{
+        let value = ''
+
+        switch (timeFormat){
+          case'seconds':{
+            value = Math.floor(Math.abs(time.diff(DateTime.now(), 'seconds').seconds))
+          }break;
+          default:{
+            value = DateTime.now().diff(time)
+            value = value.toFormat(timeFormat)
+          }break;
+        }
+        setDataByPath(timeSave, value)
+      }, 1000)
+    } else {
+      const interval = setInterval(()=>{
+        let value = ''
+
+
+        switch (timeFormat){
+          case'seconds':{
+            value = Math.floor(Math.abs(time.diff(DateTime.now(), 'seconds').seconds))
+          }break;
+          default:{
+            value = time.diff(DateTime.now())
+            value = value.toFormat(timeFormat)
+          }break;
+        }
+        setDataByPath(timeSave, value)
+        const diff = Math.floor(Math.abs(time.diff(DateTime.now(), 'seconds').seconds))
+        if(diff <=0){
+          clearInterval(interval)
+        }
+      }, 1000)
+    }
+    return {success: true};
   }
 }
 

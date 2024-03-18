@@ -31,6 +31,7 @@ class ElementWrapper extends Component {
     if(! isEditor()){
       appStore.dispatch(addElement(this));
     }
+
   }
 
   /**
@@ -271,12 +272,29 @@ class ElementWrapper extends Component {
       return false
     }
     let {dependencies} = this.element;
+    // console.log(this.props.element.getCardModel())
+    // console.log(newProps.element.getCardModel())
+
+    if(newProps.element.getCardModel()?.getData()){
+        const newCardModel = newProps.element.getCardModel().getData()
+        if(!this._cardModel){
+          this._cardModel = newProps.element.getCardModel()?.getData()
+          return true
+        }
+        delete  this._cardModel.altrpId
+        delete  newCardModel.altrpId
+        if(!_.isEqual( newCardModel, this._cardModel)){
+          this._cardModel = newProps.element.getCardModel()?.getData()
+          return true
+        }
+    }
+
+
 
     if(newState.elementDisplay !== this.state.elementDisplay){
       return true
     }
     dependencies = dependencies || []
-
     if(newProps.altrpPageState !== this.props.altrpPageState
       && dependencies.indexOf('altrppagestate') === -1){
       ++window.countReduced

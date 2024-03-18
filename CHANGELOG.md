@@ -1,7 +1,10 @@
 # ALTRP
 
 ## Changelog
-### test version build 111
+### test version build 112
+
+### 1.5.0
+* Add `Email Template` Node to Robotizer
 
 ### 1.4.9
 * Add Internationalization for Menu Items

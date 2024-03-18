@@ -75,7 +75,14 @@ class AddRelationForm extends Component {
     let { options } = await this.modelsResource.getAll();
     //Модель может ссылаться на саму себя
     //options = options.filter(option=>(Number(option.value) !== Number(modelId)));
-    this.setState({ modelsOptions: options });
+
+    this.setState({ modelsOptions: [
+        {
+          label:'User',
+          value: 'User',
+        },
+      ...options,
+      ] });
     let fields = await (new Resource({route: `/admin/ajax/models/${this.props.modelId}/fields`})).getAll();
     let selfFieldsOptions = fields.map(field=>({
       label: field.title,
@@ -89,6 +96,9 @@ class AddRelationForm extends Component {
       this.changeTargetModel(value.target_model_id);
       value.onUpdate = value.on_update
       value.onDelete = value.on_delete
+      if(value.settings?.core_relation?.model){
+        value.target_model_id = value.settings?.core_relation?.model
+      }
       this.setState(state=>({...state, value}));
     }
   }
@@ -150,6 +160,7 @@ class AddRelationForm extends Component {
       }
       if(field === 'target_model_id'){
         this.updateForeignFieldOptions(value)
+        state.value.type = 'belongsTo'
       }
       return state
     })
@@ -174,6 +185,14 @@ class AddRelationForm extends Component {
   async submitHandler(e) {
     e.preventDefault();
     const data = this.state.value;
+    if(data.target_model_id === 'User'){
+      data.settings = data.settings || {}
+
+      data.settings.core_relation = data.settings.core_relation || {}
+
+      data.settings.core_relation.model= 'User'
+      delete data.target_model_id
+    }
     const isNameTaken = !this.props.modelRelationID || this.relationName !== data.name ?
       await fetch(`/admin/ajax/models/${this.props.modelId}/relation_name_is_free/?name=${data.name}`)
         .then(res => res.json())
@@ -240,7 +259,7 @@ class AddRelationForm extends Component {
   }
 
 /**
-   * вывод поля Foreign Key
+   *  Foreign Key
    */
   renderForeignKey(){
 
@@ -272,9 +291,11 @@ class AddRelationForm extends Component {
                 />
               }}
               onItemSelect={current => { this.changeValue(current.value, 'foreign_key') }}
+              disabled={ this.state.value?.target_model_id === 'User'}
               fill={true}
       >
         <Button fill
+                disabled={ this.state.value?.target_model_id === 'User'}
                 large
                 alignText={Alignment.LEFT}
                 text={this.state.foreignFieldsOptions.find(item => (item.value === this.state.value.foreign_key))?.label || 'none'}
@@ -354,7 +375,7 @@ class AddRelationForm extends Component {
 
 
           <Select items={relationTypeOptions}
-                  disabled={this.props.modelRelationID}
+                  disabled={this.props.modelRelationID || this.state.value?.target_model_id === 'User'}
                   matchTargetWidth
                   itemPredicate={this.ItemPredicate}
                   noResults={<MenuItem disabled={true} text="No results." />}
@@ -369,7 +390,7 @@ class AddRelationForm extends Component {
                   onItemSelect={current => { this.changeValue(current.value, 'type') }}
                   fill={true}
           >
-            <Button disabled={this.props.modelRelationID}
+            <Button disabled={this.props.modelRelationID || this.state.value?.target_model_id === 'User'}
                     fill
                     large
                     alignText={Alignment.LEFT}
@@ -397,6 +418,11 @@ class AddRelationForm extends Component {
                   required
                   matchTargetWidth
                   itemPredicate={this.ItemPredicate}
+                  popoverProps={{
+
+                  }}
+                  disabled={this.props.modelRelationID}
+
                   noResults={<MenuItem disabled={true} text="No results." />}
                   itemRenderer={(item, {handleClick, modifiers, query}) => {
                     return <MenuItem
@@ -410,6 +436,7 @@ class AddRelationForm extends Component {
                   fill={true}
           >
             <Button fill
+                    disabled={this.props.modelRelationID }
                     large
                     alignText={Alignment.LEFT}
                     text={this.state.modelsOptions.find(item => (item.value === this.state.value.target_model_id))?.label || 'none'}

@@ -50,9 +50,9 @@ export class TemplateLoader {
     try {
 
       const resource = new Resource({route: `/ajax/templates/${templateId}`});
-      let template = await resource.getQueried({withStyles: true});
-
+      let template = this.templatesCache[templateId];
       if (update) {
+         template = await resource.getQueried({withStyles: true});
         if(_.isString(template.styles)){
           let _document = isEditor() ?
               document.getElementById("editorContent").contentWindow.document :

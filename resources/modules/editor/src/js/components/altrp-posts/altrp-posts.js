@@ -176,7 +176,7 @@ class AltrpPosts extends React.Component {
       if (this.state.currentPage > 1 && ! this.query_sync) this.setPage(1)
     }
     if (this.props.data !== prevProps.data) {
-      this.postsComponents = {};
+      //this.postsComponents = {};
     }
     if (newSimpleTemplateId !== simpleTemplateId) {
       if (!newSimpleTemplateId) {
@@ -424,6 +424,13 @@ class AltrpPosts extends React.Component {
         this.postsComponents,
         `${this.state.simpleTemplateId}.${idx}`
       );
+
+      // console.log(post)
+      // console.log(PostContentComponent.props.element.getCardModel().getData())
+      if(PostContentComponent?.props?.element?.getCardModel()?.getData() &&
+          ! _.isEqual(post, PostContentComponent.props.element.getCardModel().getData())){
+        PostContentComponent.props.element.setCardModel(post)
+      }
     }
     if (
       this.state.hoverSimpleTemplate &&
@@ -458,9 +465,9 @@ class AltrpPosts extends React.Component {
       );
     }
 
-    let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    // let key = post.altrpRandomKey || post.id || post.altrpIndex;
+    let key =  post.altrpIndex;
     let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_template")
-
     return (
       <div className={`${this.props?.className} altrp-post`}
            style={deleteOverflowHidden ? {overflow: "initial"} : null}
@@ -692,7 +699,6 @@ class AltrpPosts extends React.Component {
   }
 
   render() {
-
     const {currentPage} = this.state;
     const posts_per_page =
       Number(getResponsiveSetting(this.props.settings, "posts_per_page")) || 12;

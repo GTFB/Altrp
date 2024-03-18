@@ -147,6 +147,7 @@ class Dropbar extends Component {
     }
 
     const cardModel = this.element.hasCardModel() ? this.element.getCardModel() : null
+
     return (
       <div className={this.props.conditionalClasses + "altrp-dropbar " + mainClass}ref={this.wrapper} >
         <span className={this.props.conditionalClasses + "altrp-dropbar-children-wrapper " + (mainClass ? mainClass + "-wrapper" : '')}

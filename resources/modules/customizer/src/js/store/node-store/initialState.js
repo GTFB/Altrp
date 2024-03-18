@@ -13,6 +13,7 @@ import {Handle} from "react-flow-renderer";
 import {QueryBuilderObj} from "../../components/sidebar/modules/nodes-obj/QueryBuilderObj";
 import {ValidatorObj} from "../../components/sidebar/modules/nodes-obj/ValidatorObj";
 import {MapperObj} from "../../components/sidebar/modules/nodes-obj/MapperObj";
+import {EmailTemplateObj} from "../../components/sidebar/modules/nodes-obj/EmailTemplateObj";
 // import {BotObj} from "../../components/sidebar/modules/nodes-obj/robot/BotObj";
 
 export const initialState = {
@@ -25,6 +26,7 @@ export const initialState = {
     ValidatorObj,
     ReturnObj,
     // ConditionObj,
+    EmailTemplateObj,
     DocumentObj,
     CrudObj,
     ApiObj,
