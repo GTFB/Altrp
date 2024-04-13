@@ -338,6 +338,7 @@ class AdminBar extends React.Component {
                                 className="admin-bar__popup-popups-item"
                                 onClick={this.openTemplate(item.id)}
                                 key={`popup-${index}`}
+                                title={item.name}
                               >
                                 {item.name}
                               </div>

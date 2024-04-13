@@ -488,7 +488,7 @@ class AltrpAction extends AltrpModel {
     //   };
     // }
     const formsManager = (
-      await import(/* webpackChunkName: 'formsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js')
+      await import(/* webpackChunkName: 'FormsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js')
     ).default;
 
     let data = null;

@@ -40,7 +40,7 @@ export default class CustomizersController {
         customizer.model_guid = model.guid
       }
       if (!customizer.settings) {
-        customizer.settings = []
+        customizer.settings = {}
       }
       if (customizer.type === 'schedule') {
         customizer.settings.period_unit = customizer.settings.period_unit || 'day'

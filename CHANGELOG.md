@@ -1,10 +1,8 @@
 # ALTRP
 
 ## Changelog
-### test version build 112
+### test version build 123
 
-### 1.5.0
-* Add `Email Template` Node to Robotizer
 
 ### 1.4.9
 * Add Internationalization for Menu Items
@@ -14,7 +12,9 @@
 * Add Permissions Support
 * Add `Helper` Robotizer Type
 * Add Language Switch Action and Database Table for Internationalization
+* Add `Event` Node for Robotizers
 * Add `Validator` Node for Robotizers
+* Add `Email Template` Node to Robotizer
 * Add `Input Phone` Widget
 * Add `Params` Settings for Current Datasource Update Action
 * Add `Dropbar Toggle` Widget Action

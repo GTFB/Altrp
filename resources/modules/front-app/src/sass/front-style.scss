@@ -73,3 +73,8 @@ $padding-adaptive667_false: 0px;
   --front-app-adaptive667-false: #{$padding-adaptive667_false};
   --front-app-adaptive667-padding: var(--front-app-adaptive667-false);
 }
+.altrp-widget_html{
+  img{
+    max-width:100%
+  }
+}

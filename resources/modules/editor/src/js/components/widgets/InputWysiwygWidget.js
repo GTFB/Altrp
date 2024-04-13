@@ -286,7 +286,7 @@ class InputWysiwygWidget extends Component {
   }
   onLoad = (ed)=>{
     this.editor = ed
-    console.log(ed);
+
   }
   /**
    * Изменение значения в виджете
@@ -538,7 +538,6 @@ class InputWysiwygWidget extends Component {
     }
   };
   onKeypress=(e, )=>{
-    console.log(e,);
     if(e.key === 'Enter' && e.ctrlKey){
       e.stopPropagation();
       e.preventDefault();

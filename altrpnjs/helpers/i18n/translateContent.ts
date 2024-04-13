@@ -38,7 +38,7 @@ export default async function translateContent(content: string,  { lang }): Prom
         text,
         domain
       ] = _path.split('::')
-
+      console.log(text)
       let value =await __(text, {
         domain,
         lang,

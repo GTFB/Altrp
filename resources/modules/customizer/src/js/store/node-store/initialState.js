@@ -1,5 +1,6 @@
 import {SwitchObj} from "../../components/sidebar/modules/nodes-obj/SwitchObj";
 import {ChangeObj} from "../../components/sidebar/modules/nodes-obj/ChangeObj";
+import {EventObj} from "../../components/sidebar/modules/nodes-obj/EventObj";
 import {StartObj} from "../../components/sidebar/modules/nodes-obj/StartObj";
 import {ReturnObj} from "../../components/sidebar/modules/nodes-obj/ReturnObj";
 // import {ConditionObj} from "../../components/sidebar/modules/nodes-obj/robot/ConditionObj";
@@ -21,8 +22,9 @@ export const initialState = {
     StartObj,
     SwitchObj,
     ChangeObj,
+    EventObj,
     MapperObj,
-    QueryBuilderObj,
+    //QueryBuilderObj,
     ValidatorObj,
     ReturnObj,
     // ConditionObj,

@@ -43,7 +43,12 @@
 }
 
 .condition-popup {
+  .bp3-tag-input-values{
 
+    max-height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
   &__block {
     display: flex;
     flex-direction: column;

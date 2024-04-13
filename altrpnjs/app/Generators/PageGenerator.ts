@@ -134,6 +134,8 @@ export default class PageGenerator extends BaseGenerator {
     for (const screen of SCREENS) {
 
       let children_content = await this.page.getChildrenContent(screen.name)
+      // @ts-ignore
+      children_content = children_content.replaceAll('__generaterandom__', randomString);
       let all_styles = ''
       let menus = await Menu.getJSON( {
         content:children_content,
@@ -237,7 +239,7 @@ export default class PageGenerator extends BaseGenerator {
       }
       font = encodeURIComponent(font);
       font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic'
-      let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic&display=swap';
+      let fontUrl = 'https://fonts.bunny.net/css?family=' + font + '&subset=cyrillic&display=swap';
       fontUrl = '<link rel="stylesheet"  href="' + fontUrl + '" />'
       return fontUrl
     }).join('')

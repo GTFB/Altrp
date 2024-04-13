@@ -1,5 +1,6 @@
 import extractPathFromString from "./extractPathFromString";
 import getDataByPath from "./getDataByPath";
+import replaceContentWithData from "./replaceContentWithData";
 
 /**
  * Парсит стрку вводимую пользователем для опций селекта
@@ -36,6 +37,9 @@ export default function parseOptionsFromSettings(string, context) {
     _.isNumber(label) && (label += "")
     !_.isString(label) && (label = "");
     label = label.trim();
+    if(label.indexOf('{{{{') === 0){
+      label = replaceContentWithData(label )
+    }
     let labelPath = extractPathFromString(label);
     if (labelPath) {
       label = getDataByPath(labelPath, null, context);

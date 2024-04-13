@@ -37,7 +37,15 @@ class CSSRule {
     this.properties = this.defaultPoperties.map(property => property.replace(/{{VALUE}}/g, value));
   }
   insertValueObject(object){
+    object = {...object}
+    /**
+     * replace css color to css var value
+     */
+    if(object.color && object.guid && object.cssVar){
+      object.color = object.cssVar
+    }
     let pairs = _.toPairs(object);
+
     this.properties = this.defaultPoperties.map(property => {
       pairs.forEach(pair => {
         if(pair[1]){

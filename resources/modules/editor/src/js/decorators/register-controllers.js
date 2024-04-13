@@ -2164,6 +2164,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('st_spacing', {
     type: CONTROLLER_NUMBER,
+    locked: true,
     label: 'Spacing'
   })
 

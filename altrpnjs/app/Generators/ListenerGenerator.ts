@@ -38,7 +38,7 @@ export default class ListenerGenerator extends BaseGenerator {
     let imports = "";
     let content = this.customizer.getMethodContent()
 
-    ListenerGenerator.getHookListeners(this)
+    //ListenerGenerator.getHookListeners(this)
 
     content = await this.applyFilters("templates", content);
 
@@ -60,7 +60,7 @@ export default class ListenerGenerator extends BaseGenerator {
     return  path.join(this.getDir(), this.customizer.name + ListenerGenerator.ext)
   }
   getDir() {
-    const dir = path.join(ListenerGenerator.directory, this.customizer.settings.hook_type)
+    const dir = ListenerGenerator.directory
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, {recursive: true})
     }
@@ -68,33 +68,19 @@ export default class ListenerGenerator extends BaseGenerator {
   }
 
   public async hookListeners() {
-    const dir = ListenerGenerator.directory + "hooks.listeners";
 
-    if (!fs.existsSync(ListenerGenerator.directory)){
-      fs.mkdirSync(ListenerGenerator.directory);
+    if (fs.existsSync(ListenerGenerator.directory)) {
+      fs.rmSync(ListenerGenerator.directory, { recursive: true, force: true })
     }
 
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
+    fs.mkdirSync(ListenerGenerator.directory);
+    const listeners = await  Customizer.query().where('type', 'listener')
+
+    for(const l of listeners){
+      await this.run(l)
     }
+    await Customizer.updateCustomEventListeners()
 
-    let imports = "";
-    let content = "";
-
-    content = await this.applyFilters("listeners", content);
-
-    imports = await this.applyFilters("listener_imports", imports);
-
-    if(content) {
-      await this.addFile( "listener" + ListenerGenerator.ext)
-        .destinationDir(dir)
-        .stub(ListenerGenerator.template)
-        .apply({
-          listener: "listener",
-          imports,
-          content
-        });
-    }
   }
 
   static async getHookListeners(listenerGenerator) {

@@ -21,6 +21,7 @@ class SwitcherController extends Component {
   }
   toggle() {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+
     this._changeValue(!value);
   }
   getDefaultValue() {
@@ -34,7 +35,13 @@ class SwitcherController extends Component {
     if (this.state.show === false) {
       return '';
     }
+
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+
+    // if(this.props.controlId === 'query_sync'){
+    //   console.log(value)
+    // }
+
     let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
     return <div className="controller-container controller-container_switcher">
       <div className="controller-container__label">

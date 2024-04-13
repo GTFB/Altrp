@@ -11,4 +11,4 @@ class {{{name}}} extends AltrpBaseController{
   }
 }
 
-module.exports = {{{name}}}
+module.exports.default = {{{name}}}

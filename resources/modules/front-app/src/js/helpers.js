@@ -68,6 +68,7 @@ export {default as getAppContext} from "./functions/getAppContext";
 export {default as prepareContext} from "./functions/prepareContext";
 export {default as CONDITIONS_OPTIONS} from "./constants/CONDITIONS_OPTIONS";
 export {default as getResponsiveSetting} from "./functions/getResponsiveSetting";
+export qs from "qs";
 
 export async function dataToCSV(...a){
   return (await import(/* webpackChunkName: 'dataToCSV' */'./functions/dataToCSV')).default(...a)
@@ -147,7 +148,7 @@ export function renderFontLink(font) {
   font +=
     ":100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic";
   let fontUrl =
-    "https://fonts.googleapis.com/css?family=" + font + "&subset=cyrillic";
+    "https://fonts.bunny.net/css?family=" + font + "&subset=cyrillic";
   fontUrl = encodeURI(fontUrl);
   return <link rel="stylesheet" key={fontUrl} href={fontUrl} />;
 }

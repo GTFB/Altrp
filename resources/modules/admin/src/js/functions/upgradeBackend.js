@@ -10,9 +10,9 @@ const defaultTypes = [
   'schedules'
 ]
 
-async function upgradeBackend(types = defaultTypes, ids ) {
+async function upgradeBackend(types = defaultTypes, ids = null, withoutProgressBar = false ) {
 
-  progressBar(.02)
+  progressBar(withoutProgressBar ? 0 : .02)
 
   let pages = ['']
   if(types.indexOf('pages') > -1){
@@ -60,12 +60,12 @@ async function upgradeBackend(types = defaultTypes, ids ) {
       try {
         await axios.post('/admin/ajax/update-all-resources', {type, id: _ids})
         let progress = _i++ / count
-        progressBar(progress)
+        progressBar(withoutProgressBar ? 0 : progress)
 
       } catch (e) {
         console.error(e);
         let progress = _i++ / count
-        progressBar(progress)
+        progressBar(withoutProgressBar ? 0 : progress)
         let serverRestarted = false
         let i = 0
         do {

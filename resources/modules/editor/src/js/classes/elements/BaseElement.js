@@ -562,8 +562,11 @@ class BaseElement extends ControlStack {
 
   setSettingValue(settingName, value, dispatchToHistory = true, locked = false, theme) {
     const settings = locked ? this.settingsLock : this.settings
-
+    // console.log(this.settingsLock)
+    // console.log(this.settings)
+    // console.log(...arguments)
     //check change value
+
     if(! theme) {
       if (settings[settingName] !== value) {
         if (
@@ -584,6 +587,7 @@ class BaseElement extends ControlStack {
 
         if (locked) {
           this.settingsLock[settingName] = value;
+
         }
 
         this.settings[settingName] = value;

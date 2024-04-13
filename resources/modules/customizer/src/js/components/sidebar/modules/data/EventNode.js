@@ -4,10 +4,10 @@ import store from "../../../../store/store";
 import {setUpdatedNode} from "../../../../store/customizer-settings/actions";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
-import EmailTemplateModal from "../../../EmailTemplateModal";
-import '../../../../../sass/email-editor-styles.scss'
+import altrpRandomId from "../../../../../../../front-app/src/js/helpers/functions/altrp-random-id";
+import ChangeRepeater from "../../ChangeRepeater";
 
-class EmailTemplateNode extends React.Component {
+class EventNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {}
@@ -29,26 +29,37 @@ class EmailTemplateNode extends React.Component {
     return node;
   }
 
-  onSave=(html, design)=>{
-    this.changeByPath(html, 'value')
-    this.changeByPath(design, 'design')
-
-    this.setState(state=>({...state, editorIsOpen: false}))
+  addClick = (value) => {
+    if (value) {
+      const node = this.getNode();
+      let items = [...node?.data?.props?.items || []];
+      items.push({
+        id: altrpRandomId(),
+        action: value
+      });
+      this.changeByPath(items, 'props.items')
+    } else {
+      const node = this.getNode();
+      let items = [...node?.data?.props?.items || []];
+      items.push({
+        id: altrpRandomId()
+      });
+      this.changeByPath(items, 'props.items')
+    }
   }
 
-  openEditor = ()=>{
-   this.setState(state=>({...state, editorIsOpen: true}))
+  deleteById = (id) => {
+    const node = this.getNode();
+    let items = node?.data?.props?.items || []
+    items = items.filter(i => i.id !== id)
+    this.changeByPath(items, 'props.items')
   }
-  toggleModal = (e)=>{
 
-    this.setState(state=>({...state, editorIsOpen: false}))
-  }
   render() {
     const node = this.getNode();
-    const value = node?.data?.value || '';
-    const design = node?.data?.design;
+
     const data = node?.data?.data || '';
-    const path = node?.data?.path || '';
+    const name = node?.data?.name || '';
     return (
       <div>
         <div className="settings-section open">
@@ -56,20 +67,37 @@ class EmailTemplateNode extends React.Component {
             <div className="settings-section__icon d-flex">
               <Chevron/>
             </div>
-            <div className="settings-section__label">Template Settings</div>
+            <div className="settings-section__label">Event Settings</div>
           </div>
 
           <div className="controllers-wrapper">
 
             <div className="controller-container controller-container_select">
               <div className="controller-container__label control-select__label controller-label">
-                Path to Data
+                Event Name
               </div>
               <div className="bp3-control-group bp3-numeric-input">
                 <div className="bp3-input-group">
                   <input type="text"
                          id="mapper-source"
-                         onChange={(e)=>{
+                         onChange={(e) => {
+                           this.changeByPath(e.target.value, 'name');
+                         }}
+                         className="bp3-input"
+                         value={name}/>
+                </div>
+
+              </div>
+            </div>
+            <div className="controller-container controller-container_select">
+              <div className="controller-container__label control-select__label controller-label">
+                Event Param
+              </div>
+              <div className="bp3-control-group bp3-numeric-input">
+                <div className="bp3-input-group">
+                  <input type="text"
+                         id="mapper-source"
+                         onChange={(e) => {
                            this.changeByPath(e.target.value, 'data');
                          }}
                          className="bp3-input"
@@ -78,42 +106,11 @@ class EmailTemplateNode extends React.Component {
 
               </div>
             </div>
-            <div className="controller-container controller-container_select">
-              <div className="controller-container__label control-select__label controller-label">
-                Path to Save
-              </div>
-              <div className="bp3-control-group bp3-numeric-input">
-                <div className="bp3-input-group">
-                  <input type="text"
-                         id="mapper-source"
-                         onChange={(e)=>{
-                           this.changeByPath(e.target.value, 'path');
-                         }}
-                         className="bp3-input"
-                         value={path}/>
-                </div>
-
-              </div>
-            </div>
-            <div className="controller-container controller-container_select">
-
-
-              <button className="btn-code__modal"
-                      onClick={this.openEditor}
-                      style={{marginTop: "10px"}}>Open Editor</button>
-
-            </div>
           </div>
           {/* ./controllers-wrapper */}
         </div>
         {/* ./settings-section */}
-        <EmailTemplateModal
-          toggleModal={this.toggleModal}
-          onSave={this.onSave}
-          defaultValue={value}
-          defaultDesign={design}
-          show={this.state.editorIsOpen}
-        />
+
       </div>
     );
   }
@@ -123,4 +120,4 @@ function mapStateToProps(state) {
   return {customizerSettingsData: state.customizerSettingsData}
 }
 
-export default connect(mapStateToProps)(EmailTemplateNode)
+export default connect(mapStateToProps)(EventNode)

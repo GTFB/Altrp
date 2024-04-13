@@ -1,5 +1,5 @@
-import empty from "../../../helpers/empty"
-import AltrpBaseController from "../../Controllers/AltrpBaseController";
+import empty from "../../helpers/empty"
+import AltrpBaseController from "../Controllers/AltrpBaseController";
 {{{imports}}}
 
 class {{{name}}} extends AltrpBaseController{

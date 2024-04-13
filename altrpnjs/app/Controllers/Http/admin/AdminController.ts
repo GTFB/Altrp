@@ -240,11 +240,11 @@ export default class AdminController {
 
     const listenerGenerator = new ListenerGenerator()
 
-    await listenerGenerator.hookTemplates()
-    await listenerGenerator.hookControllers()
-    await listenerGenerator.hookModels()
-    await listenerGenerator.hookPages()
-    await listenerGenerator.hookListeners()
+    // await listenerGenerator.hookTemplates()
+    // await listenerGenerator.hookControllers()
+    // await listenerGenerator.hookModels()
+    // await listenerGenerator.hookPages()
+     await listenerGenerator.hookListeners()
 
     console.log(`resul of generator:listener`, await exec(`node ${base_path('ace')} generator:listener`))
 

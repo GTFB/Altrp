@@ -377,7 +377,6 @@ class RootElement extends BaseElement {
     this.addControl('overlay_close_popup_layout', {
       type: CONTROLLER_SWITCHER,
       label: 'Overlay',
-      default: true
     });
 
     this.addControl('switcher_close_button_popup_layout', {

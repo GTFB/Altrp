@@ -450,6 +450,8 @@ export default class Source extends BaseModel {
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
     this.setCustomizerData('CurrentModel', ${this.model.name} );
     this.setCustomizerData('context.request', httpContext?.request);
+    this.setCustomizerData('lang', httpContext?.request.cookie('altrp_lang') || require('../../helpers/get_altrp_setting').default('site_language', 'en'));
+    this.setCustomizerData('context.lang', httpContext?.request.cookie('altrp_lang') || require('../../helpers/get_altrp_setting').default('site_language', 'en'));
     this.setCustomizerData('httpContext', httpContext);
     this.setCustomizerData('request', httpContext?.request);
     this.setCustomizerData('context.response', httpContext?.response);

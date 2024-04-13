@@ -391,10 +391,13 @@ export default class AltrpRouting {
       const _content = await this.prepareContent(content, {
         lang,
       })
+      const _page_areas = await this.prepareContent(page_areas, {
+        lang,
+      })
 
       content = _content.content
 
-      _content.dictionary = _.merge(_content.dictionary, titleDictionary)
+      _content.dictionary = _.merge(_content.dictionary, titleDictionary, _page_areas.dictionary)
       const  dictionary = `<script id="altrp-dictionary">
         /* <![CDATA[ */
 window.altrp_dictionary = ${JSON.stringify(_content.dictionary)};
@@ -616,7 +619,7 @@ window.altrp_dictionary = ${JSON.stringify(_content.dictionary)};
       }
       font = encodeURIComponent(font);
       font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic'
-      let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
+      let fontUrl = 'https://fonts.bunny.net/css?family=' + font + '&subset=cyrillic';
       fontUrl = '<link rel="stylesheet"  href="' + fontUrl + '" />'
       return fontUrl
     }).join('')

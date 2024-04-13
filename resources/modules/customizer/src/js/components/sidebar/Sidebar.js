@@ -23,23 +23,23 @@ class Sidebar extends React.Component {
     };
 
     this.resource = new Resource({ route: "/admin/ajax/customizers" });
-    this.update = this.update.bind(this);
   }
 
-  async update() {
+  update = async ()=> {
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
     const customizerData = store.getState()?.currentCustomizer;
     const {customizerSettingsData} = this.props
-    progressBar(0.001)
+    progressBar(0.1)
     let {data} = await this.resource.put(customizerId, {
       ...customizerData,
       data: customizerSettingsData
     });
-    // let customizer = mutate.set(customizerData, 'source', data.source)
-    await upgradeBackend(['models', 'listeners'])
+    progressBar(1)
+    progressBar()
     store.dispatch(setCurrentCustomizer(data));
     this.props.btnChange("");
-    progressBar()
+    // let customizer = mutate.set(customizerData, 'source', data.source)
+    await upgradeBackend(['models', 'listeners'], '', true)
   }
 
   render() {

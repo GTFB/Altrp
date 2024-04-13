@@ -467,6 +467,7 @@ export default class Model extends BaseModel {
       const sources: Source[] = []
       try {
         if (!customizer.settings) {
+          // @ts-ignore
           customizer.settings = []
         }
         await customizer.save()

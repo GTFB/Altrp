@@ -15,6 +15,7 @@ function componentDidUpdate(prevProps, prevState) {
     return false
   }
   if (!this.props.repeater && !this.props.group) {
+    const locked = !!this.props.locked;
 
     const {
       altrp_themes,
@@ -30,8 +31,9 @@ function componentDidUpdate(prevProps, prevState) {
     }
     let elementValue = this.props.currentElement.getSettings(
       this.props.controlId,
+      this.props.default,
+      locked
     );
-
     if(theme){
       const value = _.get(this.props.currentElement, `settings.themes.${theme}.${this.props.controlId}`)
       if(value && ! _.isEqual(this.state.value, value)){
@@ -114,6 +116,10 @@ function getSettings(settingName, locked = false) {
   if (!this.props.currentElement) {
     return "";
   }
+  // if(settingName === 'query_sync'){
+  //   console.log(this)
+  //   console.log(locked)
+  // }
   /**
    * Если внутри репитера, то берем свойство из репитера, а не элемента
    */
@@ -168,8 +174,9 @@ function getSettings(settingName, locked = false) {
     return this.props.currentElement.getSettings(settingName);
   }
 
+
   if (this.props.responsive === false) {
-    return this.props.currentElement.getSettings(settingName);
+    return this.props.currentElement.getSettings(settingName, this.props.default, locked);
   }
   let _settingName = this.props.controller.getSettingName();
   let value = null

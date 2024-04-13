@@ -527,7 +527,7 @@ class CustomizerSettingsPanel extends React.Component {
                     {
                       type === "listener" && (
                         <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                          <div className="controller-container__label control-select__label controller-label">Hook Type:</div>
+                          <div className="controller-container__label control-select__label controller-label">Event Name:</div>
                           <InputGroup className="form-control-blueprint"
                                       type="text"
                                       id="customizer-title"

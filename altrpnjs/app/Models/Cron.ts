@@ -43,6 +43,7 @@ export default class Cron extends BaseModel {
       return await Cron.create({
         customizer_id: customizer.id,
         log,
+        // @ts-ignore
         remainCount: infinity ? undefined : repeat_count,
         recurrence,
       })

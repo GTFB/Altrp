@@ -392,6 +392,7 @@ class FrontElement {
     if(_.get(settings, settingName) === false || _.get(settings, settingName) === 0){
       return _.get(settings, settingName);
     }
+
     return _.get(settings, settingName) || _default;
   }
 

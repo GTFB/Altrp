@@ -39,6 +39,8 @@ export default function parseParamsFromString(
     }
     left = left.trim();
     right = right.trim();
+    console.log(left)
+    console.log(right)
     if (replace && left.indexOf("{{") !== -1) {
       left = replaceContentWithData(left, context.getData());
     }

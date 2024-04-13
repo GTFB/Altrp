@@ -37,16 +37,18 @@ class Datasource extends AltrpModel{
     const {currentModel, currentDataStorage} = appStore.getState();
     let parsedTemplate = this.getProperty('parameters');
     let params = {};
-    if(! parsedTemplate){
+
+    if(! parsedTemplate && ! this.getProperty('query_sync')){
       return null;
     }
-    if(isJSON(parsedTemplate)){
+    if(parsedTemplate && isJSON(parsedTemplate)){
       parsedTemplate = mbParseJSON(parsedTemplate, []);
       parsedTemplate = parsedTemplate.map(param=>{
         return [param.paramName, param.paramValue];
       });
 
-    } else {
+    } else if(parsedTemplate){
+
       parsedTemplate = parsedTemplate.split('\n');
       parsedTemplate = parsedTemplate.filter(line => line);
       parsedTemplate = parsedTemplate.map(line=> {
@@ -59,6 +61,8 @@ class Datasource extends AltrpModel{
         }
         return line
       });
+    } else {
+      parsedTemplate = []
     }
     parsedTemplate.forEach(([left, right])=>{
       if(right.match(/{{([\s\S]+?)(?=}})/g)){

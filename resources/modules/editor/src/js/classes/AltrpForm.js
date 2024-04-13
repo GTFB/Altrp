@@ -246,7 +246,7 @@ class AltrpForm {
    */
   getData() {
     let data = { altrp_ajax: true };
-
+    const dataFromStorage = altrpHelpers.getDataByPath(`altrpforms.${this.formId}`)
     if (this.modelName === "email") {
       let userMessage = "";
       let subject = "Altrp Email";
@@ -256,6 +256,8 @@ class AltrpForm {
           subject = b.getSettings("email_subject");
         }
       });
+
+
       this.fields.forEach(field => {
         if (field.getValue() !== null) {
           let fieldLabel =
@@ -284,8 +286,10 @@ class AltrpForm {
         }
       });
     }
-
-    return data;
+    return {
+      ...dataFromStorage,
+      ...data,
+    };
   }
 
   /**
