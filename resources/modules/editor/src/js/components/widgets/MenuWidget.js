@@ -154,6 +154,9 @@ class MenuWidget extends Component {
 
     return <>
       {items.map((item) => {
+        if(!this.displayItem(item)){
+          return ''
+        }
         const _popoverProps = {...popoverProps}
         _popoverProps.portalClassName += ` altrp-portal-parent-item-key${item.id} `
         let {
@@ -324,6 +327,16 @@ class MenuWidget extends Component {
       return false;
     }
     return conditionChecker(item, this.props.element.getCurrentModel())
+  }
+  displayItem(item) {
+    if(! item || !item.disOperator || ! item.disValue || ! item.disField){
+      return false;
+    }
+    return conditionChecker({
+      operator: item.disOperator,
+      value: item.disValue,
+      modelField: item.disField
+    }, this.props.element.getCurrentModel())
   }
 }
 

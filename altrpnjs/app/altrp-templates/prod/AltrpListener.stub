@@ -2,6 +2,7 @@ const _ = __importStar(require("lodash"));
 const empty = __importDefault(require("../../helpers/empty"));
 const AltrpBaseController = require('../Controllers/AltrpBaseController').default
 {{{imports}}}
+const {DateTime} = require("luxon");
 
 class {{{name}}} extends AltrpBaseController{
 

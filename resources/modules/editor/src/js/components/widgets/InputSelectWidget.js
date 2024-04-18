@@ -553,7 +553,7 @@ class InputSelectWidget extends Component {
     }
     if(this.props.element.getResponsiveLockedSetting('content_options_nullable')){
       options.unshift({
-        label: this.props.element.getResponsiveLockedSetting('nulled_option_title') || '',
+        label: replaceContentWithData(this.props.element.getResponsiveLockedSetting('nulled_option_title')|| '', this.props.element.getCardModel()) ,
         value: '',
       })
     }

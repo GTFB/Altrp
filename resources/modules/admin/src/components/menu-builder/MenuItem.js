@@ -60,17 +60,17 @@ class MenuItem extends Component {
                  }}
                  value={this.props.item.modelField}/>
           <AltrpSelect id={`${this.props.indexes.join('.')}.operator`}
-                 className="altrp-menu-item__select"
-                 onChange={(e) => {
-                   let value = e?.value || '';
-                   let path = this.props.indexes.map(((index) => {
-                     return `children.${index}`;
-                   })).join('.') + '.operator'
-                   this.props.updateValue(value, path)
-                 }}
-                 isClearable={true}
-                 options={CONDITIONS_OPTIONS}
-                 value={this.props.item.operator}/>
+                       className="altrp-menu-item__select"
+                       onChange={(e) => {
+                         let value = e?.value || '';
+                         let path = this.props.indexes.map(((index) => {
+                           return `children.${index}`;
+                         })).join('.') + '.operator'
+                         this.props.updateValue(value, path)
+                       }}
+                       isClearable={true}
+                       options={CONDITIONS_OPTIONS}
+                       value={this.props.item.operator}/>
           <input type="text"
                  className="form-control"
                  placeholder="value"
@@ -83,6 +83,43 @@ class MenuItem extends Component {
                    this.props.updateValue(value, path)
                  }}
                  value={this.props.item.value}/>
+          <label className="form-label">Display Condition:</label>
+          <input type="text"
+                 className="form-control"
+                 placeholder="path"
+                 id={`${this.props.indexes.join('.')}.disField`}
+                 onChange={(e) => {
+                   let value = e.target.value;
+                   let path = this.props.indexes.map(((index) => {
+                     return `children.${index}`;
+                   })).join('.') + '.disField'
+                   this.props.updateValue(value, path)
+                 }}
+                 value={this.props.item.disField}/>
+          <AltrpSelect id={`${this.props.indexes.join('.')}.disOperator`}
+                       className="altrp-menu-item__select"
+                       onChange={(e) => {
+                         let value = e?.value || '';
+                         let path = this.props.indexes.map(((index) => {
+                           return `children.${index}`;
+                         })).join('.') + '.disOperator'
+                         this.props.updateValue(value, path)
+                       }}
+                       isClearable={true}
+                       options={CONDITIONS_OPTIONS}
+                       value={this.props.item.disOperator}/>
+          <input type="text"
+                 className="form-control"
+                 placeholder="value"
+                 id={`${this.props.indexes.join('.')}.disValue`}
+                 onChange={(e) => {
+                   let value = e.target.value;
+                   let path = this.props.indexes.map(((index) => {
+                     return `children.${index}`;
+                   })).join('.') + '.disValue'
+                   this.props.updateValue(value, path)
+                 }}
+                 value={this.props.item.disValue}/>
           <label htmlFor={`${this.props.indexes.join('.')}.icon`} className="form-label">Icon</label>
           {this.props.item.icon && <button
             onClick={() => {
