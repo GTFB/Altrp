@@ -96,10 +96,11 @@ export default class ValidatorNode extends BaseNode implements NodeInterface
     }
 
     if(type === 'object'){
-      return `.members({})`
+      return `.anyMembers()`
     }
     if(type === 'array'){
-      return `.members(schema.${array_members}())`
+
+      return `.members(schema.${array_members}()${array_members === 'object' ? '.anyMembers()' : ''})`
     }
   }
   renderRule = (rule)=>{

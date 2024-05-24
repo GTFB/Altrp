@@ -58,7 +58,10 @@ export default function mountElements() {
         })
       })
     } else {
-
+      if(container.hasAttribute('data-altrp-mounted')){
+        return;
+      }
+      container.setAttribute('data-altrp-mounted','')
       window.ReactDOM.render(<window.Provider store={window.appStore}>
         <window.ElementWrapper {...props} />
       </window.Provider>, container, () => {

@@ -22,6 +22,10 @@ const fieldTypeOptions = [
     label: 'Big Integer'
   },
   {
+    value: 'uuid',
+    label: 'UUID'
+  },
+  {
     value: 'float',
     label: 'Float'
   },
@@ -64,6 +68,10 @@ const fieldTypeOptions = [
   {
     value: 'json',
     label: 'JSON'
+  },
+  {
+    value: 'jsonb',
+    label: 'JSONB'
   },
   {
     value: 'binary',
@@ -681,15 +689,6 @@ class AddFieldFormModal extends Component {
 
                 <div className="checkbox-group-field">
                   <div className="form-group-field">
-                    <input type="checkbox" id="field-is_auth"
-                           checked={this.state.value.is_auth}
-                           onChange={e => {
-                             this.changeValue(e.target.checked, 'is_auth')
-                           }}
-                    />
-                    <label className="checkbox-label-field label__RobotoFont" htmlFor="field-is_auth">Set Auth</label>
-                  </div>
-                  <div className="form-group-field">
                     <input type="checkbox" id="field-indexed"
                            checked={this.state.value.indexed}
                            onChange={e => {
@@ -697,15 +696,6 @@ class AddFieldFormModal extends Component {
                            }}
                     />
                     <label className="checkbox-label-field label__RobotoFont" htmlFor="field-indexed">Indexed</label>
-                  </div>
-                  <div className="form-group-field">
-                    <input type="checkbox" id="field-editable"
-                           checked={this.state.value.editable}
-                           onChange={e => {
-                             this.changeValue(e.target.checked, 'editable')
-                           }}
-                    />
-                    <label className="checkbox-label-field label__RobotoFont" htmlFor="field-editable">Editable</label>
                   </div>
                 </div>
 

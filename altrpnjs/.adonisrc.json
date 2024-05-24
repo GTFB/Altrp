@@ -19,16 +19,11 @@
     "./start/routes/admin",
     "./start/kernel",
     "./start/db-prepare",
+    "./start/events",
     {
       "file": "./start/repl",
       "environment": [
         "repl"
-      ]
-    },
-    {
-      "file": "./start/events",
-      "environment": [
-        "web"
       ]
     },
     {

@@ -177,7 +177,7 @@
 }
 .altrp-field {
   overflow: hidden;
-  cursor: pointer;
+  cursor: text;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

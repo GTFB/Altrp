@@ -93,7 +93,6 @@ class InputDateWidget extends Component {
 
 
     let value = this.state.value;
-
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
@@ -127,14 +126,17 @@ class InputDateWidget extends Component {
       }
 
       const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
+      console.log(value)
       value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
+      console.log(value)
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
+      console.log(value)
 
       return;
     }
@@ -148,7 +150,11 @@ class InputDateWidget extends Component {
 
       if(value) {
         const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
+        let _v = value
         value = moment(value, format);
+        if(!value.isValid() && moment(_v).isValid()){
+          value = moment(_v)
+        }
         value = value.isValid() ? value.format(format) : '';
         this.setState(
           state => ({ ...state, value, contentLoaded: true }),
@@ -503,6 +509,7 @@ class InputDateWidget extends Component {
         }
       }
     }
+    console.log(value)
     return value;
   }
 

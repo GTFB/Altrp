@@ -6,6 +6,7 @@ import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
 import './js/functions/events-handlers/scroll'
+import scrollToElement from "./js/functions/scrollToElement";
 
 window.Link = 'a';
 window.count = 0
@@ -63,7 +64,9 @@ function _hAltrp() {
         //console.log('h-altrp LOADED: ', performance.now());
 
         const hAltrpLoadedEvent = new Event('h-altrp-loaded');
+        const resizeEvent = new Event('resize');
         // console.log('h-altrp-loaded');
+        window.dispatchEvent(resizeEvent);
         window.dispatchEvent(hAltrpLoadedEvent);
         document.dispatchEvent(hAltrpLoadedEvent);
 
@@ -168,9 +171,38 @@ window.addEventListener('h-altrp-loaded', e => {
 
 })
 
+window.addEventListener('altrp-navigate', e => {
+  import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module) => {
+    module?.default(e);
+  })
+
+})
+
 if (document.querySelector('[data-enter-animation-type]')) {
   import(/* webpackChunkName: 'add-animation-classes' */'./js/functions/add-animation-classes').then(module => {
     document.addEventListener('scroll', module.default)
     module.default();
   })
 }
+
+function scrollSharp(){
+  if(! location.hash){
+    return
+  }
+  const element = document.querySelector(location.hash)
+  if(! element) {
+    return;
+  }
+  let  scroller = document.querySelector('.front-app-content');
+
+
+  if (!scroller) {
+    scroller = window;
+  }
+  if (element) {
+    scrollToElement(scroller, element, 0);
+  }
+}
+
+window.addEventListener('altrp-navigate', scrollSharp);
+window.addEventListener('h-altrp-loaded', scrollSharp);

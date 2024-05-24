@@ -19,6 +19,10 @@ const fieldTypeOptions = [
     label: 'Big Integer'
   },
   {
+    value: 'uuid',
+    label: 'UUID'
+  },
+  {
     value: 'float',
     label: 'Float'
   },
@@ -57,6 +61,10 @@ const fieldTypeOptions = [
   {
     value: 'geometry',
     label: 'Geometry'
+  },
+  {
+    value: 'jsonb',
+    label: 'JSONB'
   },
   {
     value: 'json',

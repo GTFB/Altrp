@@ -174,7 +174,7 @@ export default class Relationship extends BaseModel {
           })
         }
       } catch (e) {
-        await relationship.delete()
+        //await relationship.delete()
         console.error(e)
       }
     }
@@ -375,6 +375,7 @@ decorate([
     }
     query = query.references(column.name)
     query = query.inTable(this.altrp_model.table.name)
+    query = query.withKeyName(`${this.altrp_model.table.name}_${column.name}`)
     query = query.onDelete('cascade')
     query.onUpdate('cascade')
 
@@ -430,6 +431,7 @@ decorate([
     }
     query = query.references(column.name)
     query = query.inTable(this.altrp_target_model.table.name)
+    query = query.withKeyName(`${this.altrp_target_model.table.name.substr(0,10)}_${column.name.substr(0,10)}`)
     query = query.onDelete('cascade')
     query.onUpdate('cascade')
   }

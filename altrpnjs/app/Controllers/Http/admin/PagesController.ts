@@ -73,7 +73,13 @@ export default class PagesController {
       page = await Page.query().where("id", page.id).firstOrFail()
 
       for (const option of request.input("categories")) {
-        const category = await Category.find(option.value);
+        let category
+        if(Number(option.value)){
+          category = await Category.find(option.value);
+        } else {
+          category = await Category.query().where('guid', option.value).first()
+        }
+        // const category = await Category.find(option.value);
 
         if (!category) {
           response.status(404)

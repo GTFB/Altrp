@@ -47,7 +47,6 @@ class ActionTriggerWidget extends React.Component {
     if(stop_event){
       e.stopPropagation()
     }
-    console.log(e.detail)
     this.doActions(e.detail.data, e.detail.element)
   }
 

@@ -79,8 +79,8 @@ export function setResponsiveSetting(settings: object, settingName:string, scree
   let suffix = currentScreen.name;
   _settingName = `${settingName}_${elementState}_${suffix}`;
   if(settingName === 'posts_per_page'){
-    console.log(_settingName);
-    console.log(value);
+    // console.log(_settingName);
+    // console.log(value);
   }
   _.set(settings, _settingName, value);
 

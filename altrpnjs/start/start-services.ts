@@ -18,6 +18,7 @@ import base_path from "../helpers/path/base_path";
 import guid from "../helpers/guid";
 import Env from "@ioc:Adonis/Core/Env";
 import startChildWithSockets from "../helpers/startChildWithSockets";
+import public_path from "../helpers/path/public_path";
 
 if(! isProd() || env('CLUSTER') != 'true'  || (
   env('PM2_ID') && env('PM2_ID') ==  process.env.pm_id || ! env('PM2_ID') && process.env.INSTANCE_ID == '0'
@@ -48,4 +49,11 @@ if(! isProd() || env('CLUSTER') != 'true'  || (
     Env.set('PACKAGE_KEY', packageKey)
   }
 
+}
+
+if(!fs.existsSync(public_path('all-site-scripts.js'))){
+  console.log('File `all-site-scripts.js` created!')
+  fs.writeFileSync(public_path('all-site-scripts.js'), `(function (){
+
+})();`)
 }

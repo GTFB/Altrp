@@ -7,7 +7,6 @@ export default function stickyHalfTop(element) {
     elements.push(element)
   }
   elements = elements.filter(e => document.contains(e))
-
   elements = elements.map(element => {
     let height = element.offsetHeight
     let width = element.offsetWidth
@@ -23,11 +22,15 @@ export default function stickyHalfTop(element) {
 }
 
 const _scrollDownHandler = _.throttle(function _scrollDownHandler() {
+  elements = elements.filter(e => e.element)
+  elements = elements.filter(e => document.contains(e.element))
+
   elements.forEach(({
                       element,
                       width,
                     }) => {
     const height = element.offsetHeight
+
     if (window.scrollY > height) {
       if (element.classList.contains('altrp-sticky-half-top_down')) {
         element.classList.add('altrp-sticky-half-top_up')
@@ -40,12 +43,14 @@ const _scrollDownHandler = _.throttle(function _scrollDownHandler() {
   })
 }, 100)
 const _scrollUpHandler = _.throttle(function _scrollUpHandler() {
+  elements = elements.filter(e => e.element)
+  elements = elements.filter(e => document.contains(e.element))
+
   elements.forEach(({
                       element,
                       width,
                     }) => {
     const height = element.offsetHeight
-
     if (window.scrollY > 0) {
 
       element.classList.add('altrp-sticky-half-top_down')
@@ -60,6 +65,9 @@ const _scrollUpHandler = _.throttle(function _scrollUpHandler() {
 
 }, 100)
 const _scrollHandler = _.throttle(function _scrollHandler() {
+  elements = elements.filter(e => e.element)
+  elements = elements.filter(e => document.contains(e.element))
+
   elements.forEach(({
                       element,
                       width,

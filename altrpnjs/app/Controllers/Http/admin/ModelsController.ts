@@ -8,7 +8,7 @@ import Column from 'App/Models/Column'
 import Relationship from 'App/Models/Relationship'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Env from '@ioc:Adonis/Core/Env'
-import {string} from '@ioc:Adonis/Core/Helpers'
+//import {string} from '@ioc:Adonis/Core/Helpers'
 import Controller from 'App/Models/Controller'
 import guid from '../../../../helpers/guid'
 import SQLEditor from 'App/Models/SQLEditor'
@@ -98,15 +98,15 @@ export default class ModelsController {
       await model.load('table')
       let modelData = request.all()
 
-      if (model.table.name !== string.pluralize(modelData.name)) {
-        const client = Database.connection(Env.get('DB_CONNECTION'))
-        await client.schema.renameTable(`${model.table.name}`, `${string.pluralize(modelData.name)}`)
-
-        model.table.merge({
-          name: string.pluralize(modelData.name)
-        })
-        await model.table.save()
-      }
+      // if (model.table.name !== string.pluralize(modelData.name)) {
+      //   const client = Database.connection(Env.get('DB_CONNECTION'))
+      //   await client.schema.renameTable(`${model.table.name}`, `${string.pluralize(modelData.name)}`)
+      //
+      //   model.table.merge({
+      //     name: string.pluralize(modelData.name)
+      //   })
+      //   await model.table.save()
+      // }
 
       model.merge({
         description: modelData.description || '',
@@ -438,8 +438,21 @@ export default class ModelsController {
 
     if (page && pageSize) {
       if (searchWord) {
-        sources = await Source.query().orWhere('name', LIKE, `%${searchWord}%`)
-          .orWhere('title', LIKE, `%${searchWord}%`).paginate(page, pageSize)
+        sources = Source.query()
+        const search = searchWord.split(' ')
+        sources.where(query =>{
+          for(let s of search) {
+            s = s.trim()
+            query.where('name', LIKE, `%${s}%`)
+          }
+        })
+        sources.orWhere(query =>{
+          for(let s of search) {
+            s = s.trim()
+            query.where('title', LIKE, `%${s}%`)
+          }
+        })
+        sources = await sources.paginate(page, pageSize)
       } else {
         sources = await Source.query().paginate(page, pageSize)
       }

@@ -329,8 +329,11 @@ class MenuWidget extends Component {
     return conditionChecker(item, this.props.element.getCurrentModel())
   }
   displayItem(item) {
+    if(isEditor()){
+      return  true
+    }
     if(! item || !item.disOperator || ! item.disValue || ! item.disField){
-      return false;
+      return true;
     }
     return conditionChecker({
       operator: item.disOperator,

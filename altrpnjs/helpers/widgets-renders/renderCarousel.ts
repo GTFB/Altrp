@@ -22,7 +22,6 @@ export default function renderCarousel(settings, device) {
       sizeSlide = (destructuringSize === 1420 ? 1420 : Math.round((1420 * destructuringSize) / 100)) + 'px'
       break
     case "px":
-      console.log(destructuringSize);
       if(destructuringSize){
         destructuringSize = destructuringSize / per_view_slides_content
       }

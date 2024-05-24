@@ -519,225 +519,231 @@ export default class Model extends BaseModel {
     }
   }
 
+  public  static async mbTableCreate(modelData: Model){
 
-  @afterCreate()
-  public static async afterCreate(modelData: Model) {
+      if( modelData.table_id){
+        return
+      }
+      const table = await Table.firstOrCreate({
+        name: string.pluralize(modelData.name),
+      })
+      table.merge({
+        title: modelData.title,
+        description: modelData.description,
+        user_id: modelData?.user_id,
+      })
+      await table.save()
 
-    const table = await Table.firstOrCreate({
-      name: string.pluralize(modelData.name),
-    })
-    table.merge({
-      title: modelData.title,
-      description: modelData.description,
-      user_id: modelData?.user_id,
-    })
-    await table.save()
+      modelData.table_id = table.id
+      await modelData.save()
 
-    modelData.table_id = table.id
-    await modelData.save()
-
-    const id_column = new Column()
-    id_column.fill({
-      name: 'id',
-      title: 'ID',
-      description: 'ID',
-      null: true,
-      type: 'bigInteger',
-      table_id: table.id,
-      model_id: modelData.id,
-      user_id: modelData?.user_id,
-    })
-    await id_column.save()
-    if (modelData.time_stamps) {
-      const created_at_column = new Column()
-      created_at_column.fill({
-        name: 'created_at',
-        title: 'created_at',
-        description: 'created_at',
+      const id_column = new Column()
+      id_column.fill({
+        name: 'id',
+        title: 'ID',
+        description: 'ID',
         null: true,
-        type: 'timestamp',
+        type: 'bigInteger',
         table_id: table.id,
         model_id: modelData.id,
         user_id: modelData?.user_id,
       })
-      await created_at_column.save()
-      const updated_at_column = new Column()
-      updated_at_column.fill({
-        name: 'updated_at',
-        title: 'updated_at',
-        description: 'updated_at',
-        null: true,
-        type: 'timestamp',
+      await id_column.save()
+      if (modelData.time_stamps) {
+        const created_at_column = new Column()
+        created_at_column.fill({
+          name: 'created_at',
+          title: 'created_at',
+          description: 'created_at',
+          null: true,
+          type: 'timestamp',
+          table_id: table.id,
+          model_id: modelData.id,
+          user_id: modelData?.user_id,
+        })
+        await created_at_column.save()
+        const updated_at_column = new Column()
+        updated_at_column.fill({
+          name: 'updated_at',
+          title: 'updated_at',
+          description: 'updated_at',
+          null: true,
+          type: 'timestamp',
+          model_id: modelData.id,
+          table_id: table.id,
+          user_id: modelData?.user_id,
+        })
+        await updated_at_column.save()
+      }
+      if (modelData.soft_deletes) {
+        const deleted_at_column = new Column()
+        deleted_at_column.fill({
+          name: 'deleted_at',
+          title: 'deleted_at',
+          description: 'deleted_at',
+          type: 'timestamp',
+          null: true,
+          model_id: modelData.id,
+          table_id: table.id,
+          user_id: modelData?.user_id,
+        })
+        await deleted_at_column.save()
+      }
+      const controller = new Controller()
+      controller.fill({
         model_id: modelData.id,
-        table_id: table.id,
-        user_id: modelData?.user_id,
+        description: modelData.description,
       })
-      await updated_at_column.save()
-    }
-    if (modelData.soft_deletes) {
-      const deleted_at_column = new Column()
-      deleted_at_column.fill({
-        name: 'deleted_at',
-        title: 'deleted_at',
-        description: 'deleted_at',
-        type: 'timestamp',
-        null: true,
-        model_id: modelData.id,
-        table_id: table.id,
-        user_id: modelData?.user_id,
-      })
-      await deleted_at_column.save()
-    }
-    const controller = new Controller()
-    controller.fill({
-      model_id: modelData.id,
-      description: modelData.description,
-    })
 
-    await controller.save()
-    await Model.createDefaultCustomizers(modelData, modelData)
+      await controller.save()
+      await Model.createDefaultCustomizers(modelData, modelData)
 
-    let sources = [
-      (new Source()).fill({
-        url: `/filters/${table.name}/{column}`,
-        api_url: `/filters/${table.name}/{column}`,
-        type: `filters`,
-        request_type: `get`,
-        name: `Filters ${modelData.name}`,
-        title: `Filters ${modelData.name}`,
-        auth: true,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-      (new Source()).fill({
-        url: `/${table.name}/{${modelData.name}}/{column}`,
-        api_url: `/${table.name}/{${modelData.name}}/{column}`,
-        type: `update_column`,
-        request_type: `put`,
-        name: `Update column ${modelData.name}`,
-        title: `Update column ${modelData.name}`,
-        auth: true,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-      (new Source()).fill({
-        url: `/${table.name}/{${modelData.name}}`,
-        api_url: `/${table.name}/{${modelData.name}}`,
-        type: `delete`,
-        request_type: `delete`,
-        name: `Delete ${modelData.name}`,
-        title: `Delete ${modelData.name}`,
-        auth: true,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-      (new Source()).fill({
-        url: `/${table.name}/{${modelData.name}}`,
-        api_url: `/${table.name}/{${modelData.name}}`,
-        type: `update`,
-        request_type: `put`,
-        name: `Update ${modelData.name}`,
-        title: `Update ${modelData.name}`,
-        auth: true,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-      (new Source()).fill({
-        url: `/${table.name}`,
-        api_url: `/${table.name}`,
-        type: `add`,
-        request_type: `post`,
-        name: `Add ${modelData.name}`,
-        title: `Add ${modelData.name}`,
-        auth: true,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-      (new Source()).fill({
-        url: `/${table.name}`,
-        api_url: `/${table.name}`,
-        type: `get`,
-        request_type: `get`,
-        name: `Get  ${modelData.name}`,
-        title: `Get  ${modelData.name}`,
-        auth: false,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-      (new Source()).fill({
-        url: `/${table.name}/{${modelData.name}}`,
-        api_url: `/${table.name}/{${modelData.name}}`,
-        type: `show`,
-        request_type: `get`,
-        name: `Show  ${modelData.name}`,
-        title: `Show ${modelData.name}`,
-        auth: false,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-      (new Source()).fill({
-        url: `/{${modelData.name}}_options`,
-        api_url: `/{${modelData.name}}_options`,
-        type: `options`,
-        request_type: `get`,
-        name: `Get options ${modelData.name}`,
-        title: `Get options ${modelData.name}`,
-        auth: false,
-        need_all_roles: false,
-        controller_id: controller.id,
-        model_id: modelData.id,
-      }),
-    ]
+      let sources = [
+        (new Source()).fill({
+          url: `/filters/${table.name}/{column}`,
+          api_url: `/filters/${table.name}/{column}`,
+          type: `filters`,
+          request_type: `get`,
+          name: `Filters ${modelData.name}`,
+          title: `Filters ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${modelData.name}}/{column}`,
+          api_url: `/${table.name}/{${modelData.name}}/{column}`,
+          type: `update_column`,
+          request_type: `put`,
+          name: `Update column ${modelData.name}`,
+          title: `Update column ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${modelData.name}}`,
+          api_url: `/${table.name}/{${modelData.name}}`,
+          type: `delete`,
+          request_type: `delete`,
+          name: `Delete ${modelData.name}`,
+          title: `Delete ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${modelData.name}}`,
+          api_url: `/${table.name}/{${modelData.name}}`,
+          type: `update`,
+          request_type: `put`,
+          name: `Update ${modelData.name}`,
+          title: `Update ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}`,
+          api_url: `/${table.name}`,
+          type: `add`,
+          request_type: `post`,
+          name: `Add ${modelData.name}`,
+          title: `Add ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}`,
+          api_url: `/${table.name}`,
+          type: `get`,
+          request_type: `get`,
+          name: `Get  ${modelData.name}`,
+          title: `Get  ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+        (new Source()).fill({
+          url: `/${table.name}/{${modelData.name}}`,
+          api_url: `/${table.name}/{${modelData.name}}`,
+          type: `show`,
+          request_type: `get`,
+          name: `Show  ${modelData.name}`,
+          title: `Show ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+        (new Source()).fill({
+          url: `/{${modelData.name}}_options`,
+          api_url: `/{${modelData.name}}_options`,
+          type: `options`,
+          request_type: `get`,
+          name: `Get options ${modelData.name}`,
+          title: `Get options ${modelData.name}`,
+          auth: true,
+          need_all_roles: false,
+          controller_id: controller.id,
+          model_id: modelData.id,
+        }),
+      ]
 
-    await Promise.all(sources.map(s => s.save()))
+      await Promise.all(sources.map(s => s.save()))
 
-    const adminRole = await Role.query().where('name', 'admin').first()
+      const adminRole = await Role.query().where('name', 'admin').first()
 
-    if (adminRole) {
-      await Promise.all(sources.map(s => {
-        return (new SourceRole()).fill({
-          role_id: adminRole.id,
-          source_id: s.id,
-        }).save()
-      }))
-    }
+      if (adminRole) {
+        await Promise.all(sources.map(s => {
+          return (new SourceRole()).fill({
+            role_id: adminRole.id,
+            source_id: s.id,
+          }).save()
+        }))
+      }
 
-    const client = Database.connection(Env.get('DB_CONNECTION'))
-    try {
+      const client = Database.connection(Env.get('DB_CONNECTION'))
+      try {
 
-      await client.schema.createTableIfNotExists(table.name, table => {
-        table.bigIncrements('id')
-        if (modelData.soft_deletes) {
-          table.timestamp('deleted_at').nullable().defaultTo(null)
-        }
-        if (modelData.time_stamps) {
-          table.timestamp('updated_at')
-          table.timestamp('created_at')
-        }
-      })
-      Event.emit('model:updated', modelData)
-      await modelData.generateUUID()
-    } catch (e) {
-      console.error(e)
-      await exec(`node ${base_path('ace')} generator:model --delete --id=${modelData.id}`)
-      await modelData.delete()
-      await exec(`node ${base_path('ace')} generator:router`)
-      await Promise.all(sources.map(s => s.delete()))
-      await controller.delete()
-      await Column.query().where('table_id', table.id).delete()
-      await table.delete()
-      await client.schema.dropTableIfExists(table.name)
-    }
+        await client.schema.createTableIfNotExists(table.name, table => {
+          table.bigIncrements('id')
+          if (modelData.soft_deletes) {
+            table.timestamp('deleted_at').nullable().defaultTo(null)
+          }
+          if (modelData.time_stamps) {
+            table.timestamp('updated_at')
+            table.timestamp('created_at')
+          }
+        })
+        Event.emit('model:updated', modelData)
+        await modelData.generateUUID()
+      } catch (e) {
+        console.error(e)
+        await exec(`node ${base_path('ace')} generator:model --delete --id=${modelData.id}`)
+        await modelData.delete()
+        await exec(`node ${base_path('ace')} generator:router`)
+        await Promise.all(sources.map(s => s.delete()))
+        await controller.delete()
+        await Column.query().where('table_id', table.id).delete()
+        await table.delete()
+        await client.schema.dropTableIfExists(table.name)
+      }
 
   }
 
+  @afterCreate()
+  public static async afterCreate(modelData: Model) {
+    await Model.mbTableCreate(modelData)
+
+  }
   @beforeDelete()
   public static async beforeDelete(model: Model) {
     await model.load('table')

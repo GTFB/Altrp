@@ -359,6 +359,50 @@ class AddRelationForm extends Component {
         </div>
 
       <div className="form-group__inline-wrapper flex-grow__selectBlueprint">
+        <div className="form-group overflow-select__blueprint form-group_width47">
+          <label htmlFor="relation-model_id">Model to Bound</label>
+          {/*<select id="relation-model_id" required*/}
+          {/*  value={this.state.value.target_model_id || ''}*/}
+          {/*  onChange={e => { this.changeValue(e.target.value, 'target_model_id') }}*/}
+          {/*  className="form-control"*/}
+          {/*>*/}
+          {/*  <option disabled value="" />*/}
+          {/*  {this.state.modelsOptions.map(({ value, label }) =>*/}
+          {/*    <option key={value} value={value}>*/}
+          {/*      {label}*/}
+          {/*    </option>)}*/}
+          {/*</select>*/}
+
+          <Select items={this.state.modelsOptions}
+                  required
+                  matchTargetWidth
+                  itemPredicate={this.ItemPredicate}
+                  popoverProps={{
+
+                  }}
+                  disabled={this.props.modelRelationID}
+
+                  noResults={<MenuItem disabled={true} text="No results." />}
+                  itemRenderer={(item, {handleClick, modifiers, query}) => {
+                    return <MenuItem
+                      text={item.label}
+                      key={item.value}
+                      active={item.value === this.state.value.target_model_id }
+                      onClick={handleClick}
+                    />
+                  }}
+                  onItemSelect={current => { this.changeValue(current.value, 'target_model_id') }}
+                  fill={true}
+          >
+            <Button fill
+                    disabled={this.props.modelRelationID }
+                    large
+                    alignText={Alignment.LEFT}
+                    text={this.state.modelsOptions.find(item => (item.value === this.state.value.target_model_id))?.label || 'none'}
+                    rightIcon="caret-down"
+            />
+          </Select>
+        </div>
         <div className="form-group form-group_width47">
           <label htmlFor="relation-type">Relation Type</label>
           {/*<select id="relation-type" required disabled={id}*/}
@@ -400,50 +444,6 @@ class AddRelationForm extends Component {
           </Select>
         </div>
 
-        <div className="form-group overflow-select__blueprint form-group_width47">
-          <label htmlFor="relation-model_id">Model to Bound</label>
-          {/*<select id="relation-model_id" required*/}
-          {/*  value={this.state.value.target_model_id || ''}*/}
-          {/*  onChange={e => { this.changeValue(e.target.value, 'target_model_id') }}*/}
-          {/*  className="form-control"*/}
-          {/*>*/}
-          {/*  <option disabled value="" />*/}
-          {/*  {this.state.modelsOptions.map(({ value, label }) =>*/}
-          {/*    <option key={value} value={value}>*/}
-          {/*      {label}*/}
-          {/*    </option>)}*/}
-          {/*</select>*/}
-
-          <Select items={this.state.modelsOptions}
-                  required
-                  matchTargetWidth
-                  itemPredicate={this.ItemPredicate}
-                  popoverProps={{
-
-                  }}
-                  disabled={this.props.modelRelationID}
-
-                  noResults={<MenuItem disabled={true} text="No results." />}
-                  itemRenderer={(item, {handleClick, modifiers, query}) => {
-                    return <MenuItem
-                          text={item.label}
-                          key={item.value}
-                          active={item.value === this.state.value.target_model_id }
-                          onClick={handleClick}
-                        />
-                  }}
-                  onItemSelect={current => { this.changeValue(current.value, 'target_model_id') }}
-                  fill={true}
-          >
-            <Button fill
-                    disabled={this.props.modelRelationID }
-                    large
-                    alignText={Alignment.LEFT}
-                    text={this.state.modelsOptions.find(item => (item.value === this.state.value.target_model_id))?.label || 'none'}
-                    rightIcon="caret-down"
-            />
-          </Select>
-        </div>
       </div>
       <div className="relations__checkbox">
         {/*<div className="form-group">*/}

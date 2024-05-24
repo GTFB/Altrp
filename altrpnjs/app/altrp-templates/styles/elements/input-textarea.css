@@ -52,3 +52,6 @@ textarea.bp3-input, textarea.bp3-input.bp3-large, textarea.bp3-input.bp3-small {
   position: relative;
   width: 100%;
 }
+.altrp-widget_input-textarea .altrp-field{
+  cursor: text;
+}

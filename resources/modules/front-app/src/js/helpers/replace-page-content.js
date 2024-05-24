@@ -134,6 +134,20 @@ async function _replace(htmlString, popstate, url, progressBar) {
 
   const oldAreas = document.querySelectorAll('.app-area');
   const newAreas = newHtml.querySelectorAll('.app-area');
+  const altrpDictionaryScript = newHtml.querySelector('#altrp-dictionary');
+  const oldAltrpDictionaryScript = document.querySelector('#altrp-dictionary');
+  if(oldAltrpDictionaryScript){
+    oldAltrpDictionaryScript.remove()
+  }
+
+  if(altrpDictionaryScript){
+    const newDictionary = document.createElement('script')
+    newDictionary.setAttribute('id', 'altrp-dictionary')
+    newDictionary.innerHTML = altrpDictionaryScript.innerHTML;
+    document.body.append(newDictionary)
+  }
+
+
   for (const area of oldAreas) {
     if (!newHtml.querySelector(`.${area.classList.value.replace(/ /g, '.')}`)) {
       _unmountReact(area)
@@ -199,7 +213,7 @@ async function _replace(htmlString, popstate, url, progressBar) {
     module.default();
   })
   await delay(300)
-  appStore.dispatch(clearCurrentDataStorage())
+  //appStore.dispatch(clearCurrentDataStorage())
 
   /**
    * bar-portal
@@ -410,7 +424,7 @@ async function _replace(htmlString, popstate, url, progressBar) {
 
 function _unmountReact(element){
   window.popupsContainer && ReactDOM.unmountComponentAtNode(window.popupsContainer)
-  element.querySelectorAll('[data-react-element]').forEach(el=>{
+  element.querySelectorAll('[data-react-element]:not([data-altrp-mounted])').forEach(el=>{
     try {
       ReactDOM.unmountComponentAtNode(el)
     } catch (e) {

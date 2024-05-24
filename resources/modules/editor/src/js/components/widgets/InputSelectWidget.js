@@ -212,7 +212,6 @@ class InputSelectWidget extends Component {
     ) {
       let value = this.getLockedContent(
         "content_default_value",
-        this.props.element.getLockedSettings("select2_multiple")
       );
       this.setState(
         state => ({...state, value, contentLoaded: true}),

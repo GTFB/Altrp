@@ -68,8 +68,11 @@ export {default as getAppContext} from "./functions/getAppContext";
 export {default as prepareContext} from "./functions/prepareContext";
 export {default as CONDITIONS_OPTIONS} from "./constants/CONDITIONS_OPTIONS";
 export {default as getResponsiveSetting} from "./functions/getResponsiveSetting";
-export qs from "qs";
+export qs from /* webpackChunkName: 'qs' */"qs";
 
+export async function checkAppearBottomElement(...a){
+  return (await import(/* webpackChunkName: 'checkAppearBottomElement' */"./helpers/elements/check-appear-bottom-element")).default(...a)
+}
 export async function dataToCSV(...a){
   return (await import(/* webpackChunkName: 'dataToCSV' */'./functions/dataToCSV')).default(...a)
 }
@@ -235,3 +238,9 @@ export async function elementSearch(){
   const getActionsElement =  await import(/* webpackChunkName: 'element-search' */ './helpers/element-search')
   return getActionsElement.default(...arguments)
 }
+export async function getAxios(){
+  const axios =  await import(/* webpackChunkName: 'axios' */ 'axios')
+  return axios.default
+}
+
+

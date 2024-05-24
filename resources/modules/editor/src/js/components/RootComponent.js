@@ -5,7 +5,6 @@ class RootComponent extends Component {
   constructor(props) {
     super(props);
     //console.error('u');
-
     this.state = {
       settings: props.element.getSettings()
     };

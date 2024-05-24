@@ -83,7 +83,7 @@ class ValidatorPropSettings extends Component {
     }
 
     const options = SCHEMA_TYPE_OPTIONS.filter(o=>{
-      return o.value !== 'array' && o.value !== 'object'
+      return o.value !== 'array'
     })
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label controller-label">

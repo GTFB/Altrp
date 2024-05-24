@@ -15,6 +15,7 @@ class HtmlWidget extends Component {
     this.ref = React.createRef()
   }
   shouldComponentUpdate(nextProps, nextState){
+    return false
     let data = this.getLockedContent("data");
     return this.data !== data
   }

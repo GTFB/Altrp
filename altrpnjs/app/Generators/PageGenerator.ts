@@ -175,6 +175,7 @@ export default class PageGenerator extends BaseGenerator {
           all_site_js,
           extra_header_styles,
           plugin_frontend_head,
+          __generaterandom__: randomString,
           plugin_frontend_bottom,
           extra_footer_styles,
           head_start,

@@ -148,7 +148,8 @@ Route.get("/sw/*", async ({request, response}) => {
 })
 
 
-Route.get('/data/current-user', async ({response, auth}: HttpContextContract) => {
+Route.get('/data/current-user', async (httpContext: HttpContextContract) => {
+  const {response, auth} = httpContext
   response.header('Content-Type', 'application/javascript')
   let user = auth.user
   if (!user) {
@@ -169,7 +170,11 @@ window.current_user = ${JSON.stringify({is_guest: true})}
   delete  user.password
   // @ts-ignore
   delete  user.guid
-  return response.send(`window.current_user = ${JSON.stringify(user)}`);
+
+  user = (await (require("../../app/Models/Customizer").default).callCustomEvents("__altrp_get_user", {user, httpContext})).user
+
+
+  return response.send(`window.current_user = ${JSON.stringify(user)};`);
 })
 
 Route.group(() => {

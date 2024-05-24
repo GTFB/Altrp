@@ -97,6 +97,16 @@ export default function getDataByPath(
   if(path === 'altrppage.is_mobile'){
     return document.documentElement.classList.contains('is_mobile')
   }
+  let pathname = location.pathname
+  if(pathname[pathname.length - 1] === '/'){
+    pathname = pathname.substr(0, pathname.length - 1)
+  }
+  if(path === 'altrppage.path'){
+    return pathname
+  }
+  if(path === 'altrppage.pathname'){
+    return pathname
+  }
   if(path === 'altrppage.lang' ||path ===  'altrppagestate.lang'){
     return document.documentElement.getAttribute('lang')
   }
