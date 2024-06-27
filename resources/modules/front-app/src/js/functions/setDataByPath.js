@@ -97,10 +97,10 @@ export default function setDataByPath(path = "", value, dispatch = null) {
     if (!path) {
       return false;
     }
-    const [formId, fieldName] = path.split(".");
+    let [formId, ...fieldName] = path.split(".");
     const { formsStore } = appStore.getState();
-
-    const oldValue = _.get(formsStore, path);
+    fieldName = fieldName.join('.')
+    const oldValue = _.get(formsStore, [formId, fieldName]);
     if (_.isEqual(oldValue, value)) {
       return true;
     }

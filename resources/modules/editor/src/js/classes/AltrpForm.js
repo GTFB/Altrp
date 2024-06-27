@@ -107,7 +107,6 @@ class AltrpForm {
     emptyFieldMessage ,
   ) {
     //this.updateResponseStorage('pending'); todo: merge {"__altrp_status": "pending"} with current data
-
     let success = true;
     if (submitText) {
       let confirmed = await confirm(submitText);

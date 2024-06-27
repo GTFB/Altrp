@@ -12,7 +12,7 @@ import Database from "@ioc:Adonis/Lucid/Database";
 import guid from "../helpers/guid";
 import Application from "@ioc:Adonis/Core/Application";
 import Area from "App/Models/Area";
- import Model from "App/Models/Model";
+import Model from "App/Models/Model";
 
 if (Application.environment === 'web') {
   console.log('Starting DB prepare')

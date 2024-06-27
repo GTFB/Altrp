@@ -211,7 +211,13 @@ class InputSelect extends BaseElement {
 
     this.addControl("sort_default", {
       type: CONTROLLER_SWITCHER,
-      label: "Sort Default",
+      label: "Options Sort Default",
+      locked: true,
+    });
+
+    this.addControl("options_prevent", {
+      type: CONTROLLER_SWITCHER,
+      label: "Options Prevent Format",
       locked: true,
     });
 

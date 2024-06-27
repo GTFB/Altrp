@@ -24,7 +24,7 @@ export default class DialogConditionsTab extends Component {
     let conditions = await this.resource.getAll();
     let pageOptions = await new Resource({
       route: "/admin/ajax/pages_options"
-    }).getAll();
+    }).getQueried({with_id: true});
     this.setState({
       value: conditions.data || [],
       pageOptions,

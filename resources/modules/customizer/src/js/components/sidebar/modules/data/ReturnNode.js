@@ -75,7 +75,18 @@ class ReturnNode extends React.Component {
               <PropertyComponent
                 onlyExpression={onlyExpression}
                 changeByPath={this.changeByPath}
-                property={node.data.property || {}}
+                property={node.data.property || {
+                  JSExpression: `await(async()=>{
+
+const res = {
+    success: true,
+    data: {}
+}
+
+
+return res;
+})()`
+                }}
                 path="property"/>
             </div>
           </div>

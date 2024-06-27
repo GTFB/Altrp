@@ -34,20 +34,20 @@ class {{{classname}}} extends AltrpBaseModel {
     await Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeCreate", data: model})
   }
 
-  static afterCreate(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterCreate", data: model})
+  static async afterCreate(model) {
+    await Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterCreate", data: model})
   }
 
   static async beforeUpdate(model) {
     await Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.beforeUpdate", data: model})
   }
 
-  static afterUpdate(model) {
+  static async afterUpdate(model) {
     Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterUpdate", data: model})
   }
 
-  static afterDelete(model) {
-    Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterDelete", data: model})
+  static async afterDelete(model) {
+    await Event.default.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterDelete", data: model})
   }
 
   static async beforeDelete(model) {

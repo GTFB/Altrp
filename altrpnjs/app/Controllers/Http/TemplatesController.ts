@@ -283,7 +283,7 @@ export default class TemplatesController {
       }
     }
     const key = request.qs().value || 'id'
-    const templates = await query.select('*')
+    const templates = await query.select('id', 'title', 'guid')
     return templates.map((template) => ({
       value: template[key] || template.id,
       label: template.title

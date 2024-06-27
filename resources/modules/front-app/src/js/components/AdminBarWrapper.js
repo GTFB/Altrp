@@ -153,9 +153,9 @@ const AdminBarWrapper = styled.div`
 & .admin-bar__popup-popups-items {
   display: none;
   position: absolute;
-  right: -90px;
-  top: 4px;
-  width: 150px;
+  right: -300px;
+  top: 3px;
+  width: 300px;
   //padding-bottom: 7px;
   margin-top: -4px;
 

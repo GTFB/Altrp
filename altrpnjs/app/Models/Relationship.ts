@@ -86,7 +86,7 @@ export default class Relationship extends BaseModel {
       // deleteQuery = `ALTER TABLE ${targetModel.table.name} DROP INDEX ${targetModel.table.name}_${this.foreign_key}_foreign`
       // await Database.rawQuery(deleteQuery)
     }catch (e) {
-      console.error(e)
+      //console.error(e)
     }
   }
 
@@ -142,14 +142,16 @@ export default class Relationship extends BaseModel {
       await newTargetModel.load('table')
 
       try {
+        if(relationship.onUpdate && relationship.onDelete){
 
-        let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
+          let query = `ALTER TABLE ${model.table.name} ADD CONSTRAINT
             ${model.table.name}_${relationship.local_key}_foreign
             FOREIGN KEY (${relationship.local_key})
             REFERENCES ${newTargetModel.table.name}(${relationship.foreign_key})
             ON DELETE ${relationship.onDelete}
             ON UPDATE ${relationship.onUpdate}`
-        await Database.rawQuery(query)
+          await Database.rawQuery(query)
+        }
       } catch (e) {
         console.error(e)
       }

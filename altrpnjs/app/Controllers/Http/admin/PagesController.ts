@@ -77,7 +77,7 @@ export default class PagesController {
         if(Number(option.value)){
           category = await Category.find(option.value);
         } else {
-          category = await Category.query().where('guid', option.value).first()
+          category = await Category.query().where('guid', option.value || option.guid).first()
         }
         // const category = await Category.find(option.value);
 

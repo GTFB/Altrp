@@ -104,7 +104,7 @@ function MapDesigner({
       if(!Number(i.marker_long) && Number(i.marker_long) !== 0){
         return false
       }
-      return  ! ! i.marker_tooltip
+      return   i.marker_tooltip
     })
     data = data.map(elem => {
       return {

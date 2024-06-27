@@ -3,6 +3,7 @@ import axios from "axios";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 
 import MapDesigner from "./MapDesigner";
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 
 const defaultOptions = {
   fillColor: "#3388ff",
@@ -104,7 +105,8 @@ function AltrpMap({ element, settings, classes }) {
     isEditable={false}
     preferCanvas={canvas}
     zoom={+element.getLockedSettings("zoom")}
-    center={[element.getLockedSettings("lat"), element.getLockedSettings("lng")]}
+    center={[replaceContentWithData(element.getLockedSettings("lat"), element.getCardModel()),
+      replaceContentWithData(element.getLockedSettings("lng"), element.getCardModel()),]}
   />
 }
 

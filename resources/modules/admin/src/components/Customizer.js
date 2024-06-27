@@ -154,7 +154,7 @@ class Customizer extends Component {
 
   addNew() {
     const modalSettings = {
-      title: "Add new Customizer",
+      title: "Add new Robotizer",
       submitButton: "Add",
       submit: data =>{
         data.name = titleToName(data.title);

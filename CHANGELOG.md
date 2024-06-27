@@ -1,7 +1,7 @@
 # ALTRP
 
 ## Changelog
-### test version build 132
+### test version build 151
 
 
 ### 1.4.9
@@ -20,6 +20,8 @@
 * Add `Dropbar Toggle` Widget Action
 * Add `Spacing` Presets for Sizes
 * Optimize Global CSS Variables Generating
+* Select Widget can Receive Default value as Single Option Object 
+* Fix Possible Node Binding Error 
 
 ### 1.4.8 
 * Add Pagination to Media Browser

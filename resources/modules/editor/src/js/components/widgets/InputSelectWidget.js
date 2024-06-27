@@ -46,7 +46,9 @@ class InputSelectWidget extends Component {
     }
 
     let options = parseOptionsFromSettings(
-      props.element.getLockedSettings("content_options")
+      props.element.getLockedSettings("content_options"),
+      this.props.element.getCardModel(),
+      this.props.element.getSettings("options_prevent")
     )
 
     const content_options = props.element.getResponsiveLockedSetting('content_options');
@@ -56,7 +58,7 @@ class InputSelectWidget extends Component {
     }
 
     this.defaultValue =
-      this.getLockedContent("content_default_value") ||
+      this.getDefaultValue() ||
       (this.valueMustArray() ? [] : "");
     if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
       this.defaultValue = [];
@@ -82,8 +84,8 @@ class InputSelectWidget extends Component {
     }
     this.altrpSelectRef = React.createRef();
     const value = this.getValue();
-    if (!value && this.getLockedContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
+    if (!value && this.getDefaultValue()) {
+      this.dispatchFieldValueToStore(this.getDefaultValue());
     }
     this.popoverRef = React.createRef();
     this.inputRef = React.createRef();
@@ -117,7 +119,9 @@ class InputSelectWidget extends Component {
   async _componentDidMount(prevProps, prevState) {
     if (this.props.element.getLockedSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getLockedSettings("content_options")
+        this.props.element.getLockedSettings("content_options"),
+        this.props.element.getCardModel(),
+        this.props.element.getSettings("options_prevent")
       );
 
       this.setState(state => ({...state, options}));
@@ -141,7 +145,7 @@ class InputSelectWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getDefaultValue();
     }
 
     /**
@@ -152,7 +156,7 @@ class InputSelectWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getDefaultValue();
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -166,7 +170,7 @@ class InputSelectWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getLockedContent("content_default_value");
+      value = this.getDefaultValue();
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -200,6 +204,22 @@ class InputSelectWidget extends Component {
     return url;
   }
 
+  getDefaultValue(){
+    let value = this.getLockedContent(
+      "content_default_value",
+      true,
+    );
+    if(_.isObject(value)){
+      if(value.value){
+        this.optionByDefault = {
+          ...value,
+        }
+      }
+      value = value.value || ''
+
+    }
+    return value
+  }
   /**
    * Обновление виджета
    */
@@ -210,9 +230,8 @@ class InputSelectWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getLockedContent(
-        "content_default_value",
-      );
+      let value = this.getDefaultValue();
+
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -247,7 +266,7 @@ class InputSelectWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getLockedContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getDefaultValue());
     }
 
     /**
@@ -525,13 +544,24 @@ class InputSelectWidget extends Component {
         if (content_options?.indexOf('{{') === 0 && ! model_for_options) {
           options = getDataByPath(content_options.replace('{{', '').replace('}}', ''), [], element.getCurrentModel())
         } else {
-          options = parseOptionsFromSettings(this.props.element.getLockedSettings("content_options"));
+          options = parseOptionsFromSettings(this.props.element.getLockedSettings("content_options"),
+            this.props.element.getCardModel(),
+            this.props.element.getSettings("options_prevent"));
         }
       }
 
       if( ! _.isArray(options)){
         options = [];
       }
+    }
+    if(this.optionByDefault){
+
+      options = [
+        ...options,
+        {
+          ...this.optionByDefault
+        },
+      ]
     }
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
@@ -541,7 +571,7 @@ class InputSelectWidget extends Component {
     if (!this.props.element.getLockedSettings("sort_default")) {
 
       options = _.sortBy(options, o => {
-        if(!_.isNaN(Number(o.label))){
+        if(!_.isNaN(Number(o.label)) && ! this.props.element.getSettings("options_prevent")){
           return Number(o.label)
         }
         return o && (o.label ? o.label.toString() : o)

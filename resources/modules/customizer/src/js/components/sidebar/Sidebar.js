@@ -28,6 +28,15 @@ class Sidebar extends React.Component {
   update = async ()=> {
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
     const customizerData = store.getState()?.currentCustomizer;
+    if(customizerData.data){
+      customizerData.data = customizerData.data.filter(node=>{
+        if(! node.source || ! node.target){
+          return  true
+        }
+        return  node.source !== node.target
+      })
+      console.log(customizerData.data)
+    }
     const {customizerSettingsData} = this.props
     progressBar(0.1)
     let {data} = await this.resource.put(customizerId, {

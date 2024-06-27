@@ -126,17 +126,17 @@ class InputDateWidget extends Component {
       }
 
       const format = this.props.element.getLockedSettings('content_format') || 'YYYY-MM-DD';
-      console.log(value)
+
       value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
-      console.log(value)
+
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
-      console.log(value)
+
 
       return;
     }
@@ -253,7 +253,8 @@ class InputDateWidget extends Component {
       /**
        * Обновить значение, если formsStore изменилось из другого компонента
        */
-      const path = `${formId}.${fieldName}`;
+      const path = [formId,fieldName];
+
       if (
         this.props.formsStore !== prevProps.formsStore &&
         _.get(altrpforms, path) !== this.state.value
@@ -400,7 +401,6 @@ class InputDateWidget extends Component {
    */
   onChange = (val, userInput) =>{
     let value = "";
-
     if (val) {
       value = new Date(val);
       let timestamp = this.props.element.getLockedSettings("content_timestamp");
@@ -509,7 +509,6 @@ class InputDateWidget extends Component {
         }
       }
     }
-    console.log(value)
     return value;
   }
 

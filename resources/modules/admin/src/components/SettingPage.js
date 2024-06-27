@@ -199,7 +199,7 @@ class SettingPage extends Component {
     }
 
     if (id) {
-      let pagesOptions = await this.pagesOptionsResource.getAll()
+      let pagesOptions = await this.pagesOptionsResource.getQueried({with_id: true})
       let pageData = await this.resource.get(id);
       let pageAll = await this.resource.getAll();
       let parentPage = pageAll.find(item => item.parent_page_id === pageData.id)
@@ -231,7 +231,7 @@ class SettingPage extends Component {
       }
 
     } else {
-      let pagesOptions = await this.pagesOptionsResource.getAll()
+      let pagesOptions = await this.pagesOptionsResource.getQueried({with_id: true})
 
       this.setState({
         pagesOptions: [

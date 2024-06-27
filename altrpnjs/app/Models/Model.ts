@@ -1,3 +1,4 @@
+import app_path from "../../helpers/path/app_path";
 import * as _ from 'lodash'
 import {string} from '@ioc:Adonis/Core/Helpers'
 import {DateTime} from 'luxon'
@@ -519,6 +520,15 @@ export default class Model extends BaseModel {
     }
   }
 
+  public getModelClass(){
+    try {
+      return  require(app_path(`/AltrpModels/${this.name}`)).default
+    }catch (e) {
+      console.error(e)
+    }
+    return null
+  }
+
   public  static async mbTableCreate(modelData: Model){
 
       if( modelData.table_id){
@@ -828,7 +838,7 @@ export default class Model extends BaseModel {
               await Database.rawQuery(deleteQuery)
             }
           } catch (e) {
-            console.error(e)
+            //console.error(e)
           }
 
           try {
@@ -876,6 +886,7 @@ export default class Model extends BaseModel {
     for (const m of allModels) {
       await m.generateUUID()
     }
+
   }
 
   async generateUUID() {
@@ -919,6 +930,24 @@ export default class Model extends BaseModel {
           unique: true,
           indexed: true,
         })
+      } else {
+        if (connection === 'pg'){
+
+          const modelClass = this.getModelClass()
+          if(modelClass){
+            const insts = await  modelClass.query().whereNull('uuid')
+
+            for(const inst of insts){
+              inst.uuid = guid()
+              await inst.save()
+            }
+          }
+          await schema.raw(`ALTER TABLE "${this.table.name}"
+          ALTER "uuid" TYPE uuid,
+        ALTER "uuid" SET DEFAULT gen_random_uuid(),
+        ALTER "uuid" SET NOT NULL;
+          `)
+        }
       }
     } catch (e) {
       console.error(e)

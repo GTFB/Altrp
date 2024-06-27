@@ -418,6 +418,8 @@ class InputTextCommon extends BaseElement {
 
     actionsControllers(this, "Change Actions", "change_");
 
+    actionsControllers(this, "Enter Press Actions", "enter_");
+
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,
     //   label: 'Logic',

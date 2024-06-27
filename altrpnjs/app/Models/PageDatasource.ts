@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import {BaseModel, column, HasOne, hasOne} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, beforeDelete, column, HasOne, hasOne} from '@ioc:Adonis/Lucid/Orm'
 import Page from "App/Models/Page";
 import Source from "App/Models/Source";
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
@@ -59,6 +59,11 @@ export default class PageDatasource extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @beforeDelete()
+  public static async beforeDelete(source): Promise<void> {
+    console.trace('PageDatasource deleting', source.toJSON())
+  }
 
   getParsedParameters(altrpContext:any){
     if(! this.parameters){

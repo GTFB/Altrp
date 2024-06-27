@@ -49,7 +49,9 @@ class InputMultiSelectWidget extends Component {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
       options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
+        props.element.getSettings("content_options"),
+        this.props.element.getCardModel(),
+        this.props.element.getSettings("options_prevent")
       ),
       paramsForUpdate: null,
     };
@@ -99,7 +101,9 @@ class InputMultiSelectWidget extends Component {
   async _componentDidMount(prevProps, prevState) {
     if (this.props.element.getSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.props.element.getSettings("content_options"),
+        this.props.element.getCardModel(),
+        this.props.element.getSettings("options_prevent")
       );
 
       this.setState(state => ({...state, options}));

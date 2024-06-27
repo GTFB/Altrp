@@ -99,7 +99,7 @@ class InputTextCommonWidget extends Component {
    * Обработка нажатия клавиши
    * @param {{}} e
    */
-  handleEnter = e => {
+  handleEnter = async e => {
     if (e.keyCode === 9) {
       this.focusNext(e)
     }
@@ -109,12 +109,30 @@ class InputTextCommonWidget extends Component {
       const {
         beh_enter,
       } = settings;
+
+
       if (beh_enter === 'change') {
         const value = e.target.value
         e.preventDefault()
         this.dispatchFieldValueToStore(value, true)
       } else {
         this.focusNext(e)
+      }
+
+      const enter_actions = this.props.element.getLockedSettings("enter_actions");
+      if (enter_actions && !isEditor()) {
+        const actionsManager = (
+          await import(
+            /* webpackChunkName: 'ActionsManager' */
+            "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+            )
+        ).default;
+        await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          "focus",
+          enter_actions,
+          this.props.element
+        );
       }
     }
   };

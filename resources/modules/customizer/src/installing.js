@@ -5,6 +5,7 @@ import "./js/helpers/nodeDecorator";
 import {assetsShow, assetsToggle} from "../../editor/src/js/store/assets-browser/actions";
 import MediaController from "./js/components/MediaController";
 import formatVariableName from "./js/helpers/formatVariableName";
+import PropertyComponent from "./js/components/sidebar/PropertyComponent";
 window.ReactComponent = Component
 
 window.customizerComponents = window.customizerComponents || {}
@@ -16,7 +17,9 @@ window.customizerComponents.icons = {
 window.customizerComponents.elements = {
   Handle,
   MediaController,
+  PropertyComponent,
 }
+
 window.customizerComponents.functions = {
 }
 

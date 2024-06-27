@@ -134,7 +134,16 @@ export default function getDataByPath(
   } else if (path.indexOf("altrptime.") === 0) {
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
-    value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
+
+    let [formId, ...fieldId] = path.replace("altrpforms.", "").split('.')
+    fieldId = fieldId.join('.')
+    if(path.includes('.length')){
+      value = _.get(formsStore, path.replace('altrpforms.', ''), _default);
+
+    } else {
+      value = _.get(formsStore, [formId, fieldId], _default);
+
+    }
   } else if (path.indexOf("altrppage.") === 0) {
     value = altrpPage
       ? altrpPage.getProperty(path.replace("altrppage.", ""), _default)

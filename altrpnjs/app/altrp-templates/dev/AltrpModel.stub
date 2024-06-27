@@ -9,8 +9,8 @@ export default class {{{classname}}} extends AltrpBaseModel {
 
 
   @Orm.afterCreate()
-    public static afterCreate(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterCreate", data: model})
+    public static async afterCreate(model) {
+      await Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterCreate", data: model})
     }
 
   @Orm.beforeCreate()
@@ -19,8 +19,8 @@ export default class {{{classname}}} extends AltrpBaseModel {
     }
 
   @Orm.afterUpdate()
-    public static afterUpdate(model) {
-        Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterUpdate", data: model})
+    public static async afterUpdate(model) {
+        await Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterUpdate", data: model})
       }
 
   @Orm.beforeUpdate()
@@ -29,8 +29,8 @@ export default class {{{classname}}} extends AltrpBaseModel {
       }
 
   @Orm.afterDelete()
-    public static afterDelete(model) {
-      Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterDelete", data: model})
+    public static async afterDelete(model) {
+      await Event.emit("altrp_event",{type: "altrp_models.{{{classname}}}.afterDelete", data: model})
     }
 
   @Orm.beforeDelete()

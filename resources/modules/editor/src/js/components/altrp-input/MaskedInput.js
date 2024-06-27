@@ -211,7 +211,7 @@ class MaskedInput extends React.Component {
 
     if (defaultValue !== this.state.defaultValue) {
       const value = _parseDefaultValue(defaultValue, _.clone(this.props.inputProps.settings.content_mask))
-      console.log(value);
+
       this.setState(s => ({
         ...s,
         previewValue: defaultValue ? defaultValue : '',

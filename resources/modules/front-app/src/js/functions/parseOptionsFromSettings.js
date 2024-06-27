@@ -6,7 +6,7 @@ import replaceContentWithData from "./replaceContentWithData";
  * Парсит стрку вводимую пользователем для опций селекта
  * @param string
  */
-export default function parseOptionsFromSettings(string, context) {
+export default function parseOptionsFromSettings(string, context, preventFormat = false) {
 
   if (!string) {
     return [];
@@ -27,7 +27,7 @@ export default function parseOptionsFromSettings(string, context) {
     if (valuePath) {
       value = getDataByPath(valuePath, null, context);
     }
-    if(value !== '' && ! Number.isNaN(Number(value))){
+    if(value !== '' && ! Number.isNaN(Number(value)) && ! preventFormat){
       value = Number(value);
     }
     let label = option.split("|")[1];

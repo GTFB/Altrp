@@ -10,7 +10,7 @@ import isEditor from "./isEditor";
 
 export default function replaceContentWithData(content = "",
                                                modelContext = null,
-                                               squareBrackets = false) {
+                                                 squareBrackets = false) {
   if (window.SSR || isEditor()) {
     return content;
   }

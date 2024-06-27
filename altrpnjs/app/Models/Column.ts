@@ -282,7 +282,13 @@ decorate([
       }
     } catch (e) {
       console.error(e)
-      await columnData.delete()
+      const client = Database.connection(Env.get('DB_CONNECTION'))
+      const model = columnData.altrp_model
+
+      if(! await client.schema.hasColumn(model.table?.name, columnData.name)){
+        await columnData.delete()
+
+      }
     }
   }
 

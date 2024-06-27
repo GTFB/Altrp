@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeDelete, column } from '@ioc:Adonis/Lucid/Orm'
 
 export default class TemplateSetting extends BaseModel {
   @column({ isPrimary: true })
@@ -25,4 +25,9 @@ export default class TemplateSetting extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @beforeDelete()
+  public static async beforeDelete(ts): Promise<void> {
+    console.trace('PageDatasource deleting', ts.toJSON())
+  }
 }

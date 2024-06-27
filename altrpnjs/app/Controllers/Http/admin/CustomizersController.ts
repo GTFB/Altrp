@@ -401,6 +401,13 @@ export default class CustomizersController {
               query.orWhere('altrp_customizers.id',   search )
             }
           }
+          query.orWhere(query=>{
+            for( const search of _s){
+              query.where('altrp_customizers.name', LIKE, '%' + search + '%')
+
+            }
+
+          })
 
         }
       })

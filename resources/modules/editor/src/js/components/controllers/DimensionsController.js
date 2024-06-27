@@ -39,7 +39,7 @@ class DimensionsController extends Component {
   openPresets = () => {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
-    console.log(value)
+
     if (value.cssVar) {
       value = {...value}
       delete value.cssVar

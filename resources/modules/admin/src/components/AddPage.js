@@ -96,10 +96,10 @@ class AddPage extends Component {
    */
   async componentDidMount() {
 
-    let res = await this.templateResource.getOptions();
-    this.setState(state => {
-      return {...state, templates: res};
-    });
+    //let res = await this.templateResource.getOptions();
+    // this.setState(state => {
+    //   return {...state, templates: res};
+    // });
 
     const { data } = await this.categoryOptions.getAll();
     this.setState(state => ({
@@ -172,7 +172,7 @@ class AddPage extends Component {
     }
 
     if (id) {
-      let pagesOptions = await this.pagesOptionsResource.getAll()
+      let pagesOptions = await this.pagesOptionsResource.getQueried({with_id : true})
       let pageData = await this.resource.get(id);
       let pageAll = await this.resource.getAll();
       let parentPage = pageAll.find(item => item.parent_page_id === pageData.id)
@@ -204,7 +204,7 @@ class AddPage extends Component {
       }
 
     } else {
-      let pagesOptions = await this.pagesOptionsResource.getAll()
+      let pagesOptions = await this.pagesOptionsResource.getQueried({with_id: true})
 
       this.setState({
         pagesOptions: [

@@ -313,6 +313,7 @@ export const altrpFontsSet =
     'Engagement': GOOGLE_FONT,
     'Englebert': GOOGLE_FONT,
     'Enriqueta': GOOGLE_FONT,
+    'Epilogue': GOOGLE_FONT,
     'Erica One': GOOGLE_FONT,
     'Esteban': GOOGLE_FONT,
     'Euphoria Script': GOOGLE_FONT,

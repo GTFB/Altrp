@@ -75,8 +75,7 @@ class MediaController extends React.Component {
       assetsProps.viewBox = '0 0 20 20'
     }
 
-    console.log(value);
-    console.log(Asset);
+
     return <div className="controller-container controller-container_media">
       <div className="controller-container__label">
         {this.props.label}

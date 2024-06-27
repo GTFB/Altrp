@@ -115,7 +115,7 @@ class InputSliderWidget extends Component {
       this.setState(
         state => ({...state, contentLoaded: true}),
         () => {
-          console.log(value)
+
           this.dispatchFieldValueToStore(value);
         }
       );

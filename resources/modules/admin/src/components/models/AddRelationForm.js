@@ -8,6 +8,10 @@ import {connect} from "react-redux";
 import getAltrpLang from "../../js/helpers/get-altrp-lang";
 
 const relationTypeOptions = [
+  // {
+  //   value: '',
+  //   label: 'Without Database Foreign Key'
+  // },
   {
     value: 'hasOne',
     label: 'Has One'
@@ -26,6 +30,10 @@ const relationTypeOptions = [
   },
 ];
 const deleteUpdateOptions = [
+  {
+    value: '',
+    label: 'Without Database Foreign Key'
+  },
   {
     value: 'cascade',
     label: 'cascade'
@@ -524,7 +532,7 @@ class AddRelationForm extends Component {
             <Button fill
                     large
                     alignText={Alignment.LEFT}
-                    text={this.state.value.onDelete}
+                    text={this.state.value.onDelete || 'Without Database Foreign Key'}
                     rightIcon="caret-down"
             />
           </Select>
@@ -565,7 +573,7 @@ class AddRelationForm extends Component {
             <Button fill
                     large
                     alignText={Alignment.LEFT}
-                    text={this.state.value.onUpdate}
+                    text={this.state.value.onUpdate || 'Without Database Foreign Key'}
                     rightIcon="caret-down"
             />
           </Select>
