@@ -76,6 +76,7 @@ class InputMultiSelectWidget extends Component {
 
   getContentDefaultValue(){
     let value = this.getLockedContent("content_default_value", true)
+
     if(_.isString(value) && value.indexOf('|') !== -1){
       value = value.split('|')
     }

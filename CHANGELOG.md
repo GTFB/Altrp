@@ -1,13 +1,14 @@
 # ALTRP
 
 ## Changelog
-### test version build 151
+### test version build 154
 
 
 ### 1.4.9
 * Add Internationalization for Menu Items
 * Add Elements Filters for Plugins Widgets
 * Add Spinner Loader for `Button` Widget
+* Add Override Main Page Text Setting for `Breadcrumbs` Widget
 * Add Themes for Styling
 * Add Permissions Support
 * Add `Helper` Robotizer Type
@@ -21,7 +22,8 @@
 * Add `Spacing` Presets for Sizes
 * Optimize Global CSS Variables Generating
 * Select Widget can Receive Default value as Single Option Object 
-* Fix Possible Node Binding Error 
+* Fix Possible Node Binding Error
+* Fix Non Latin Issue URI components
 
 ### 1.4.8 
 * Add Pagination to Media Browser

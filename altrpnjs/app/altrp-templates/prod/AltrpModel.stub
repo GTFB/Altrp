@@ -25,6 +25,12 @@ const AltrpBaseModel = __importDefault(require('../Models/AltrpBaseModel')).defa
 class {{{classname}}} extends AltrpBaseModel {
   {{{constructor}}}
 
+  static async find(find){
+    if(require('../../helpers/validGuid').default(find)){
+      return await super.query().where('uuid', find).first()
+    }
+    return await super.find(find)
+  }
 
   static async beforeCreate(model) {
     if(! model.uuid){

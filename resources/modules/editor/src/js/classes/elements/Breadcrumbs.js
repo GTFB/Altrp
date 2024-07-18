@@ -66,6 +66,18 @@ class Breadcrumbs extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('text', {
+      label: 'Text',
+    });
+
+    this.addControl('m_override', {
+      label: 'override main page text',
+      locked:true,
+      dynamic: false,
+    });
+
+    this.endControlSection();
+
     this.startControlSection('breadcrumbs', {
       label: 'Breadcrumbs',
       tab: TAB_STYLE,

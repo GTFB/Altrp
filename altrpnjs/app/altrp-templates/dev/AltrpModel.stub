@@ -7,6 +7,12 @@ import AltrpBaseModel from '../Models/AltrpBaseModel'
 
 export default class {{{classname}}} extends AltrpBaseModel {
 
+  static async find(find){
+    if(require('../../helpers/validGuid').default(find)){
+      return await super.query().where('uuid', find).first()
+    }
+    return await super.find(find)
+  }
 
   @Orm.afterCreate()
     public static async afterCreate(model) {

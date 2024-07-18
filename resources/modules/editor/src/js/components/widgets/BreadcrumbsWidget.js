@@ -103,8 +103,13 @@ class BreadcrumbsWidget extends Component {
       data = getBreadcrumbsItems()
 
       data = data.map((item, idx) =>{
+        let m_override = this.props.element.getSettings('m_override')
+        let text = replaceContentWithData(item.title, this.props.element.getCurrentModel())
+        if(m_override && idx === 0){
+          text = replaceContentWithData(m_override  , this.props.element.getCurrentModel())
+        }
         const newItem = {
-          text: replaceContentWithData(item.title, this.props.element.getCurrentModel()),
+          text,
         };
         if(item.icon){
           newItem.icon = <span className="altrp-menu-item__icon bp3-icon" dangerouslySetInnerHTML={{__html: item.icon}}/>

@@ -78,9 +78,9 @@ export default class CatchUnhandledJson {
 ====== DATA: ${inspect(all)}
 ====== USER_ID: ${auth.user?.id}
 ====== USER_IP: ${request.header('X-Real-IP')}
-====== RESPONSE: ${e.response||''}
+====== RESPONSE:
 
-`) ;
+`, e.response||'') ;
       return response.json({
         // ...e,
         //axios_response: e.response,

@@ -10,6 +10,7 @@ import Resource from "../../../../../editor/src/js/classes/Resource";
 import isJSON from "../../functions/isJSON";
 import mbParseJSON from "../../functions/mb-parse-JSON";
 import replaceContentWithData from "../../functions/replaceContentWithData";
+import getDataByPath from "../../functions/getDataByPath";
 
 /**
  * @class DataStorageUpdater
@@ -110,6 +111,7 @@ class DataStorageUpdater extends AltrpModel {
           if (value.indexOf("{{") !== -1) {
             value = replaceContentWithData(value);
           }
+
           return !value;
         })
       );

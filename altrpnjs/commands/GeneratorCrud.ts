@@ -1,6 +1,6 @@
 import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 
-export default class GeneratorSchedule extends BaseCommand {
+export default class GeneratorCrud extends BaseCommand {
   public static commandName = 'generator:crud'
 
   public static description = 'Run a CRUD generator'

@@ -261,7 +261,7 @@ export default class AltrpRouting {
         const query = ModelClass.query()
         query.orderBy('id','desc')
         if (page.param_name && page.model_column && pageMatch?.params[page.param_name]) {
-          query.where(page.model_column, pageMatch.params[page.param_name])
+          query.where(page.model_column, decodeURIComponent(pageMatch.params[page.param_name]))
         } else if (pageMatch.params?.id) {
           query.where('id', pageMatch.params.id)
         }
@@ -288,7 +288,7 @@ export default class AltrpRouting {
               if(ModelClass.$hasRelation(relationName)) {
                 query.whereHas(relationName, query=>{
                   const tableName = pluralize(relationName)
-                  query.where(`${tableName}.${relationField}`, matchValue)
+                  query.where(`${tableName}.${relationField}`, decodeURIComponent(matchValue))
                 })
               }
             })

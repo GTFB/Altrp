@@ -1,15 +1,21 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import UserMeta from "App/Models/UserMeta";
+import User from "App/Models/User";
 
 export default class MetasController {
   public async update({params, request, response}) {
     const userMeta = await UserMeta.query()
       .where("user_id", parseInt(params.id))
       .firstOrFail();
+    const user = await User.find(parseInt(params.id))
 
     const data = request.body();
+    if(user){
+      user.last_name = data.second_name || null
+      await user.save()
 
+    }
     data.first_name = data.first_name || null;
     data.second_name = data.second_name || null
     data.patronymic = data.patronymic || null
