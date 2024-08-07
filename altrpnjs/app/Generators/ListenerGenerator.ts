@@ -30,7 +30,11 @@ export default class ListenerGenerator extends BaseGenerator {
   public async run(customizer: Customizer) {
 
     this.customizer  = customizer
-    if(!customizer || !customizer.settings.hook_type) {
+    // if(!customizer || !customizer.settings.hook_type) {
+    //   return
+    // }
+
+    if(!customizer ) {
       return
     }
 

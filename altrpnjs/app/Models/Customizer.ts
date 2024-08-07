@@ -644,11 +644,17 @@ export default class Customizer extends BaseModel {
     return ! ! _.get(this, 'settings.external')
   }
 
-  public static async callCustomEvents(eventName, data){
+  public static async callCustomEvents(eventName = '', data){
     let listenerImports = await  getValue(Customizer.listener_imports)
     if(! listenerImports){
       await Customizer.updateCustomEventListeners()
       listenerImports = await  getValue(Customizer.listener_imports)
+    }
+    if(_.isArray(listenerImports[''])){
+      for(const listenerClass of listenerImports['']){
+        const instance = new listenerClass
+        data = (await instance.run(eventName, data)) || data
+      }
     }
     if(_.isArray(listenerImports[eventName])){
       for(const listenerClass of listenerImports[eventName]){
@@ -668,12 +674,17 @@ export default class Customizer extends BaseModel {
 
     for(const l of listeners){
 
+      // if(fs.existsSync(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext))){
+      //   if(! l.settings.hook_type){
+      //     continue
+      //   }
+      //   listenerImports[l.settings.hook_type] = listenerImports[l.settings.hook_type] || []
+      //   listenerImports[l.settings.hook_type].push(require(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext)).default)
+      // }
+
       if(fs.existsSync(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext))){
-        if(! l.settings.hook_type){
-          continue
-        }
-        listenerImports[l.settings.hook_type] = listenerImports[l.settings.hook_type] || []
-        listenerImports[l.settings.hook_type].push(require(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext)).default)
+        listenerImports[l.settings.hook_type || '' ] = listenerImports[l.settings.hook_type || ''] || []
+        listenerImports[l.settings.hook_type || ''].push(require(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext)).default)
       }
     }
     await setValue(Customizer.listener_imports, listenerImports)
