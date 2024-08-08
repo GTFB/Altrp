@@ -39,6 +39,7 @@ Server.middleware.register([
   () => import('App/Middleware/SilentAuth'),
   () => import('App/Middleware/Logout'),
   () => import('App/Middleware/ConvertEmptyString'),
+  () => import('App/Middleware/DispatchCustomizerEvent'),
   () => import('@ioc:Adonis/Addons/Shield'),
 ])
 

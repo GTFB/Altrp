@@ -645,6 +645,7 @@ export default class Customizer extends BaseModel {
   }
 
   public static async callCustomEvents(eventName, data){
+
     let listenerImports = await  getValue(Customizer.listener_imports)
     if(! listenerImports){
       await Customizer.updateCustomEventListeners()
