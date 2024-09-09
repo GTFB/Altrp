@@ -14,3 +14,5 @@ export default function progressBar(value){
     document.body.removeChild(progressBar)
   }
 }
+
+window.progressBar = progressBar

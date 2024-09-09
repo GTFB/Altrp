@@ -126,9 +126,9 @@ class SectionComponent extends Component {
     if(path_image){
       path_image = getDataByPath(path_image, this.element.getCardModel())
     }
-    if(path_image){
-      styles.backgroundImage = `url("${path_image}")`
-    }
+    // if(path_image){
+    //   styles.backgroundImage = `url("${path_image}")`
+    // }
     let deleteOverflowHidden = this.props.element.getResponsiveLockedSetting("switch_overflow_hidden_section")
     if (deleteOverflowHidden) styles.overflow = 'initial'
     const background_image = this.props.element.getLockedSettings(
@@ -187,6 +187,13 @@ class SectionComponent extends Component {
     if (fitToContent === "fit") {
       sectionClasses.push("section-fit-to-content");
     }
+
+    const bgStyles = {
+    }
+    if(path_image){
+      bgStyles.backgroundImage = `url(${path_image})`
+    }
+
     const layout_html_tag =
       this.props.element.getLockedSettings("layout_html_tag") || "div";
 
@@ -201,7 +208,7 @@ class SectionComponent extends Component {
         <source src={background_video_url || 'none'} type="video/mp4" className="section-video-source" />
       </video>
     ) : (
-      <span className={sectionBackground.join(" ")} />
+      <span className={sectionBackground.join(" ")} style={bgStyles}/>
     )
 
 

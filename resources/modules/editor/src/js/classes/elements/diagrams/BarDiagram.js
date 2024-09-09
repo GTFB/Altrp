@@ -63,6 +63,7 @@ class BarDiagram extends BaseElement {
     })
 
     this.addControl('indexBy', {
+      type: CONTROLLER_TEXTAREA,
       label: 'Index By',
       locked: true,
     })

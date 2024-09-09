@@ -188,7 +188,6 @@ export default class Source extends BaseModel {
     return `
   async ${this.getMethodName()}(httpContext){
     ${this.renderRolesCheck()}
-    ${this.renderPermissionsCheck()}
     ${this.renderMethodBody(modelClassName)}
   }
     `;
@@ -210,24 +209,16 @@ export default class Source extends BaseModel {
 
     }
     return `
-    if(httpContext && ! await httpContext?.auth?.user?.hasRole([${this.roles.map(r => `'${r.name}'`)}])){
+    if(httpContext &&
+      ! (await httpContext?.auth?.user?.hasRole([${this.roles.map(r => `'${r.name}'`)}])
+       ||  await httpContext.auth.user?.hasPermissions([${this.permissions.map(p => `'${p.id}'`)}])
+      )){
       httpContext.response.status(403);
-      return httpContext.response.json({success: false,  message: 'Permission denied (roles)'});
+      return httpContext.response.json({success: false,  message: 'Permission denied'});
     }
     `
   }
 
-  private renderPermissionsCheck(): string {
-    if (!this.permissions.length) {
-      return ''
-    }
-    return `
-    if(httpContext && ! await httpContext.auth.user.hasPermissions([${this.permissions.map(p => `'${p.id}'`)}])){
-      httpContext.response.status(403);
-      return httpContext.response.json({success: false, message: 'Permission denied (permissions)'});
-    }
-    `
-  }
 
   getMethodName(): string {
     if (!this.sourceable_type) {

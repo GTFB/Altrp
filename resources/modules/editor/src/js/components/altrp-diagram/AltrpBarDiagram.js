@@ -85,10 +85,24 @@ const AltrpBarDiagram = props => {
     try {
       data = getDataByPath(settings.datasource_path, []);
 
-      keys = settings.dataKeys?.split('\n')
+      if(settings.dataKeys.includes('{{') && settings.dataKeys.includes('}}')){
+        keys = getDataByPath(settings.dataKeys.replace('{{', '').replace('}}',''), [])
 
-      indexBy = settings.indexBy
+      } else {
+        keys = settings.dataKeys?.split('\n')
+
+      }
+      if(settings.indexBy.includes('{{') && settings.indexBy.includes('}}')){
+        indexBy = getDataByPath(settings.indexBy.replace('{{', '').replace('}}',''), '')
+
+      } else {
+        indexBy = settings.indexBy
+
+      }
+
+
     } catch (error) {
+      console.error(error)
       data = [];
     }
   }
@@ -167,6 +181,7 @@ const AltrpBarDiagram = props => {
   )
 };
 const mapStateToProps = state => ({
-  currentDataStorage: state.currentDataStorage
+  currentDataStorage: state.currentDataStorage,
+  altrpresponses: state.altrpresponses,
 });
 export default connect(mapStateToProps)(AltrpBarDiagram);

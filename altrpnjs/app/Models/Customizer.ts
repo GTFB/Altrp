@@ -54,6 +54,7 @@ import path from "path";
 import ListenerGenerator from "App/Generators/ListenerGenerator";
 import setValue from "../../helpers/cache/setValue";
 import getValue from "../../helpers/cache/getValue";
+import guid from "../../helpers/guid";
 
 export default class Customizer extends BaseModel {
   timeout
@@ -644,7 +645,18 @@ export default class Customizer extends BaseModel {
     return ! ! _.get(this, 'settings.external')
   }
 
-  public static async callCustomEvents(eventName = '', data){
+  public static async callCustomEvents(eventName = '', data = {}){
+    if(! _.isObject(data)){
+      data = {}
+    }
+    Object.defineProperty(data, '__uuid__', {
+      value: guid(),
+      writable: false,
+      enumerable: true,
+      configurable: false
+    });
+
+
     let listenerImports = await  getValue(Customizer.listener_imports)
     if(! listenerImports){
       await Customizer.updateCustomEventListeners()
@@ -653,7 +665,7 @@ export default class Customizer extends BaseModel {
     if(_.isArray(listenerImports[''])){
       for(const listenerClass of listenerImports['']){
         const instance = new listenerClass
-        data = (await instance.run(eventName, data)) || data
+        await instance.run(eventName, data)
       }
     }
     if(_.isArray(listenerImports[eventName])){
@@ -684,7 +696,11 @@ export default class Customizer extends BaseModel {
 
       if(fs.existsSync(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext))){
         listenerImports[l.settings.hook_type || '' ] = listenerImports[l.settings.hook_type || ''] || []
-        listenerImports[l.settings.hook_type || ''].push(require(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext)).default)
+        try{
+          listenerImports[l.settings.hook_type || ''].push(require(path.join(ListenerGenerator.directory, l.name + ListenerGenerator.ext)).default)
+        }catch (e) {
+          console.error(e)
+        }
       }
     }
     await setValue(Customizer.listener_imports, listenerImports)

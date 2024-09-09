@@ -7,7 +7,7 @@ import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
 import './js/functions/events-handlers/scroll'
 import scrollToElement from "./js/functions/scrollToElement";
-
+import('../../admin/src/js/functions/progressBar')
 window.Link = 'a';
 window.count = 0
 window.countReduced = 0

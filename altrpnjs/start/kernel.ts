@@ -33,13 +33,14 @@ import __ from "../helpers/i18n/__";
 // @ts-ignore
 global.__ = __;
 // @ts-ignore
+global.callCustomEvent = (require("../app/Models/Customizer").default).callCustomEvents;
+// @ts-ignore
 global.globalCache = {};
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
   () => import('App/Middleware/SilentAuth'),
   () => import('App/Middleware/Logout'),
   () => import('App/Middleware/ConvertEmptyString'),
-  () => import('App/Middleware/DispatchCustomizerEvent'),
   () => import('@ioc:Adonis/Addons/Shield'),
 ])
 
@@ -68,6 +69,7 @@ Server.middleware.registerNamed({
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
   catch_unhandled_json: () => import("App/Middleware/CatchUnhandledJson"),
+  customizer_event: () =>import('App/Middleware/DispatchCustomizerEvent'),
   strip_tags: () => import("App/Middleware/StripTags"),
 })
 

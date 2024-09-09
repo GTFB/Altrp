@@ -7,6 +7,7 @@ export default function renderSectionBG(settings, element_id, device){
   let sectionBackground = [
     'background_section',
   ]
+  let path_image = settings.path_image
 
   const background_image = getResponsiveSetting(settings,
     'background_image',device,
@@ -35,6 +36,10 @@ export default function renderSectionBG(settings, element_id, device){
       mbWebp = true
       mbWebpStyle = `style="background-image:url('${src.join('.')}');"`
     }
+  }
+  if(path_image){
+    style = `style="background-image:url('{{${path_image}}}');"`
+
   }
   const background_video_poster = getResponsiveSetting(settings, 'url_video-poster', device) || '';
   const background_video_url = getResponsiveSetting(settings,'url_video', device) || '';

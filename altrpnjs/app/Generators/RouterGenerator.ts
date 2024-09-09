@@ -128,7 +128,8 @@ Route.${method}('${url}', async (httpContext)=>{
     controller = new controller;
     return await controller.${methodName}(httpContext);
 }).middleware('catch_unhandled_json')
-  .middleware('strip_tags')${
+  .middleware('strip_tags')
+  .middleware('customizer_event')${
         cors ? `.middleware('cors')` : ''
       }${this.customMiddlewares};
       `

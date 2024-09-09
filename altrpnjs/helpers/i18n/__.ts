@@ -2,9 +2,10 @@ import I18n from "App/Models/I18n";
 import mustache from "mustache";
 import set from "lodash/set";
 import get from "lodash/get";
+import get_altrp_setting from "../get_altrp_setting";
 
 const __cache: any = {}
-
+const defaultLang =  get_altrp_setting('site_language', 'en')
 export default async function __(text: string, options: OptionsType | null):Promise<string>{
   if(! text){
     return text
@@ -16,7 +17,7 @@ export default async function __(text: string, options: OptionsType | null):Prom
   const {
     domain = '',
     data,
-    lang = '',
+    lang = defaultLang,
     force =false,
   } = options
   let translatedText = get(__cache, `${domain}.${text}.${lang}`)

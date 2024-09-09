@@ -1,7 +1,7 @@
 # ALTRP
 
 ## Changelog
-### test version build 154
+### test version build 172
 
 
 ### 1.4.9
@@ -20,10 +20,14 @@
 * Add `Params` Settings for Current Datasource Update Action
 * Add `Dropbar Toggle` Widget Action
 * Add `Spacing` Presets for Sizes
+* Add Dynamics Settings to Bar Diagram Widget
 * Optimize Global CSS Variables Generating
 * Select Widget can Receive Default value as Single Option Object 
 * Fix Possible Node Binding Error
 * Fix Non Latin Issue URI components
+* Fix Dynamic Background Style Settings Error in Section
+* Fix Model After Update and All Delete Hook
+* Update Permission requirement for APi Robotizers
 
 ### 1.4.8 
 * Add Pagination to Media Browser

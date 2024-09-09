@@ -104,6 +104,12 @@ export default function getDataByPath(
   if(path === 'altrppage.path'){
     return pathname
   }
+  if(path === 'altrppage.origin'){
+    return window.location.origin
+  }
+  if(path === 'altrppage.hostname'){
+    return window.location.hostname
+  }
   if(path === 'altrppage.pathname'){
     return pathname
   }
