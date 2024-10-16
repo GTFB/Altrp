@@ -901,6 +901,10 @@ export function actionsControllers(
         value: 'decrement'
       },
       {
+        label: 'Addition of Arrays',
+        value: 'add_arr'
+      },
+      {
         label: 'Push Items',
         value: 'push_items'
       },
@@ -943,7 +947,7 @@ export function actionsControllers(
     description: 'Value or Path to Value',
     conditions: {
       type: ['set_data'],
-      set_type: ['set', 'toggle_set', 'push_items', 'push_remove_items']
+      set_type: ['set', 'toggle_set', 'push_items', 'add_arr', 'push_remove_items']
     },
     locked: true,
   });

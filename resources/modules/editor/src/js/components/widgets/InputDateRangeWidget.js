@@ -6,6 +6,7 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
 import getDataByPath from "../../../../../front-app/src/js/functions/getDataByPath";
 import isEditor from "../../../../../front-app/src/js/functions/isEditor";
 import '../../../sass/blueprint-datetime.scss'
+import replaceContentWithData from "../../../../../front-app/src/js/functions/replaceContentWithData";
 const {DateTime} = luxon
 
 class InputDateRangeWidget extends Component {
@@ -24,7 +25,7 @@ class InputDateRangeWidget extends Component {
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
-    this.locale = this.props.element.getLockedSettings("content_locale", "en");
+    this.locale = this.props.element.getLockedSettings("content_locale", ) || getDataByPath('altrppage.lang');
 
     switch (this.typeDate) {
       case "date":
@@ -190,7 +191,9 @@ class InputDateRangeWidget extends Component {
 
   render(){
     const {element} = this.props
+    const {data} = element.getCardModel() ? element.getCardModel().getData(1) : {}
     const format = element.getLockedSettings('content_format') || 'YYYY-MM-DD';
+    const shortcuts = !!element.getLockedSettings('shortcuts') ;
 
 
     const dayPickerProps = {
@@ -219,7 +222,10 @@ class InputDateRangeWidget extends Component {
     }
     let classes =
       this.getClasses() + (element.getResponsiveLockedSetting('position_css_classes') || "")
-
+    let startPlaceholder = element.getResponsiveLockedSetting("start_placeholder", "", "Start Date")
+    startPlaceholder = replaceContentWithData(startPlaceholder, data)
+    let endPlaceholder = element.getResponsiveLockedSetting("end_placeholder", "", "End Date")
+    endPlaceholder = replaceContentWithData(endPlaceholder, data)
     return <DateRangeInput
       className={classes}
       formatDate={date => moment(date).locale(locale).format(format)}
@@ -230,11 +236,13 @@ class InputDateRangeWidget extends Component {
       allowSingleDayRange={element.getSettings("allow_single_day_range")}
       dayPickerProps={dayPickerProps}
       value={value}
+      shortcuts={shortcuts}
+      locale={locale}
       startInputProps={{
-        placeholder: element.getResponsiveLockedSetting("start_placeholder", "", "start date")
+        placeholder: startPlaceholder
       }}
       endInputProps={{
-        placeholder: element.getResponsiveLockedSetting("end_placeholder", "", "end date")
+        placeholder: endPlaceholder
       }}
       popoverProps={{
         usePortal: true,

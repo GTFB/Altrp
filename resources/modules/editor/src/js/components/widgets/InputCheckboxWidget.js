@@ -595,6 +595,7 @@ class InputCheckboxWidget extends Component {
   renderRepeatedInput() {
     let {options = []} = this.state;
     let {value = ""} = this.state;
+    options = options.filter(o=>o.value !== undefined)
     let classes =
       this.getClasses() + (this.state.settings.position_css_classes || "");
 
@@ -609,7 +610,7 @@ class InputCheckboxWidget extends Component {
         .toString(36)
         .substr(2, 9);
 
-    return (
+    return options?.length ? (
       <div className="altrp-field-subgroup">
         {options.map((option, idx) => {
           let checked = false;
@@ -655,7 +656,7 @@ class InputCheckboxWidget extends Component {
           );
         })}
       </div>
-    );
+    ) : '';
   }
 }
 

@@ -541,7 +541,7 @@ class AltrpPosts extends React.Component {
     const settings = {...this.props.settings};
     const element = this.props.element;
     let {data: posts} = this.props;
-    if (!posts.length && !isEditor()) {
+    if (!posts?.length && !isEditor()) {
       return null;
     }
     if (!isEditor()) {

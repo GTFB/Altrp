@@ -148,7 +148,12 @@ function getContent(settingName, returnRaw = false, locked = false) {
 
 
 function getLockedContent(settingName, returnRaw = false) {
-  return this.getContent(settingName, returnRaw, true)
+  let data = this.getContent(settingName, returnRaw, true)
+
+  if(_.isString(data)){
+    data = data.replaceAll('__generaterandom__', altrp.randomString)
+  }
+  return data
 }
 
 /**

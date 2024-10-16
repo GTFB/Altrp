@@ -30,6 +30,17 @@ export default async function __(text: string, options: OptionsType | null):Prom
     }
     const i18 = await query.first()
     translatedText = i18 ? i18.translated_text: text
+    if(!i18){
+      const newI18n = await I18n.create({text, translated_text:text})
+
+      if(domain){
+        newI18n.domain=domain
+      }
+      if(lang){
+        newI18n.iso_lang=lang
+      }
+      await newI18n.save()
+    }
     i18 && (set(__cache, `${domain}.${text}.${lang}`, translatedText))
   }
   if(data){

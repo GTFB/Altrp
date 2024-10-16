@@ -129,6 +129,7 @@ const AltrpPieDiagram = props => {
   );
 };
 const mapStateToProps = state => ({
-  currentDataStorage: state.currentDataStorage
+  currentDataStorage: state.currentDataStorage,
+  altrpresponses: state.altrpresponses,
 });
 export default connect(mapStateToProps)(AltrpPieDiagram);

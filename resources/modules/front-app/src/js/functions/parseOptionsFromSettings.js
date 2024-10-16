@@ -26,6 +26,9 @@ export default function parseOptionsFromSettings(string, context, preventFormat 
     let valuePath = extractPathFromString(value);
     if (valuePath) {
       value = getDataByPath(valuePath, null, context);
+      if(! value){
+        return []
+      }
     }
     if(value !== '' && ! Number.isNaN(Number(value)) && ! preventFormat){
       value = Number(value);

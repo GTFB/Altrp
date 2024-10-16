@@ -221,6 +221,10 @@ class Table extends BaseElement {
           label: 'Prev/Next',
         },
         {
+          value: 'lazy_load',
+          label: 'Lazy Loading',
+        },
+        {
           value: 'pages',
           label: 'Pages',
         }

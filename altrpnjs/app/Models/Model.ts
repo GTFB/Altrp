@@ -860,12 +860,23 @@ export default class Model extends BaseModel {
 
     if (table?.name) {
 
-      const client = Database.connection(Env.get('DB_CONNECTION'))
-      await client.schema.dropTable(table.name)
+      try{
+
+        const client = Database.connection(Env.get('DB_CONNECTION'))
+        await client.schema.dropTable(table.name)
+      }catch (e) {
+        console.error(e)
+      }
     }
     if (table) {
-      await Column.query().where('table_id', table.id).delete()
-      await table.delete()
+      try{
+
+        await Column.query().where('table_id', table.id).delete()
+        await table.delete()
+      }catch (e) {
+        console.error(e)
+
+      }
     }
     try {
 

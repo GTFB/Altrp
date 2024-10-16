@@ -6,8 +6,12 @@ import delay from "../functions/delay";
 import {changeCurrentModel} from "../store/current-model/actions";
 import loadPageActions from "../functions/actions/load-page-actions";
 import qs from 'qs'
+import {clearPageState} from "../store/altrp-page-state-storage/actions";
 
 export default function replacePageContent(url, popstate = false) {
+  const beforeEvent = new Event('altrp-before-navigate')
+  document.dispatchEvent(beforeEvent)
+  window.dispatchEvent(beforeEvent)
 
   document.body.style.pointerEvents = 'none'
   if (!url) {
@@ -90,6 +94,7 @@ export default function replacePageContent(url, popstate = false) {
         const event = new Event('altrp-navigate')
         document.dispatchEvent(event)
         window.dispatchEvent(event)
+        appStore.dispatch(clearPageState())
       } catch (e) {
         console.error(e);
         location.href = url

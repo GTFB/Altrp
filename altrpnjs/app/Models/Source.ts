@@ -195,19 +195,28 @@ export default class Source extends BaseModel {
 
   private renderRolesCheck(): string {
 
-    if(!this.auth){
+    if (!this.auth) {
       return ''
 
     }
-    if (!this.roles.length) {
-        return `
+    if (!this.roles.length && !this.permissions?.length) {
+      return `
     if(httpContext && ! httpContext?.auth?.user){
       httpContext.response.status(403);
       return httpContext.response.json({success: false,  message: 'Access denied'});
     }
     `
-
     }
+    if (!this.roles.length && this.permissions?.length) {
+      return `
+    if(httpContext &&
+      ! await httpContext.auth.user?.hasPermissions([${this.permissions.map(p => `'${p.id}'`)}])){
+      httpContext.response.status(403);
+      return httpContext.response.json({success: false,  message: 'Permission denied'});
+    }
+    `
+    }
+
     return `
     if(httpContext &&
       ! (await httpContext?.auth?.user?.hasRole([${this.roles.map(r => `'${r.name}'`)}])
@@ -437,12 +446,13 @@ export default class Source extends BaseModel {
         this.methodBody = `
     const qs = httpContext?.request.qs() || {};
     const all = httpContext?.request.all() || {};
+    const lang = httpContext?.request.cookie('altrp_lang') || require('../../helpers/get_altrp_setting').default('site_language', 'en');
     const status = httpContext?.response.status || (()=>{});
     this.setCustomizerData('context.CurrentModel', ${this.model.name} );
     this.setCustomizerData('CurrentModel', ${this.model.name} );
     this.setCustomizerData('context.request', httpContext?.request);
     this.setCustomizerData('lang', httpContext?.request.cookie('altrp_lang') || require('../../helpers/get_altrp_setting').default('site_language', 'en'));
-    this.setCustomizerData('context.lang', httpContext?.request.cookie('altrp_lang') || require('../../helpers/get_altrp_setting').default('site_language', 'en'));
+    this.setCustomizerData('context.lang', lang);
     this.setCustomizerData('httpContext', httpContext);
     this.setCustomizerData('request', httpContext?.request);
     this.setCustomizerData('context.response', httpContext?.response);
@@ -532,7 +542,10 @@ export default class Source extends BaseModel {
         });
       }
 
-      const data = await pageDatasource.fetchControllerMethod(newHttpContext, altrpContext)
+      const data = await pageDatasource.fetchControllerMethod(newHttpContext, {
+        ...altrpContext,
+        altrpdata: datasources,
+      })
       if (data?.data) {
         datasources[pageDatasource.alias] = data.data
 

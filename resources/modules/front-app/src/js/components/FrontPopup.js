@@ -415,6 +415,11 @@ class FrontPopup extends Component {
       return
     }
     e.stopPropagation()
+
+    import ( "../functions/events-handlers/document-click").then((spaNavigation)=>{
+      spaNavigation.default(e)
+
+    });
   }
 
 

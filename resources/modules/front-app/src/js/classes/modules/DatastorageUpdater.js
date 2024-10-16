@@ -219,6 +219,14 @@ class DataStorageUpdater extends AltrpModel {
             appStore.dispatch(
               changeCurrentDataStorage(dataSource.getAlias(), res, true)
             );
+
+            const event = new CustomEvent(`altrp-data-updated-${dataSource.getAlias()}`,{
+                detail:{
+
+                }
+              })
+            document.dispatchEvent(event)
+            window.dispatchEvent(event)
             return res;
           }
         }
@@ -234,6 +242,8 @@ class DataStorageUpdater extends AltrpModel {
     if (!dataSources.length) {
       appStore.dispatch(currentDataStorageLoaded());
     }
+
+
   }
   /**
    * Обнуляем текущее хранилище dataStorage

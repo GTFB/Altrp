@@ -296,7 +296,7 @@ class ElementWrapper extends Component {
     }
     dependencies = dependencies || []
     if(newProps.altrpPageState !== this.props.altrpPageState
-      && dependencies.indexOf('altrppagestate') === -1){
+      && dependencies.indexOf('altrppagestate') === -1 && newProps.element.getName()!=='html'){
       ++window.countReduced
       return false
     }

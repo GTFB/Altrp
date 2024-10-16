@@ -36,6 +36,29 @@ global.__ = __;
 global.callCustomEvent = (require("../app/Models/Customizer").default).callCustomEvents;
 // @ts-ignore
 global.globalCache = {};
+// @ts-ignore
+global.callCustomEvent('altrp_start').catch(e=>{
+  console.error('Error while `altrp_start` custom event', e)
+})
+process.on('exit', (code) => {
+  global.callCustomEvent('altrp_exit', {
+    code
+  }).catch(e=>{
+    console.error('Error while `altrp_exit` custom event', e)
+  })
+});
+process.on('uncaughtException', async (error) => {
+  console.error(error)
+  try {
+    await global.callCustomEvent('altrp_uncaught_exception', {
+      error,
+    })
+  }catch (e) {
+    console.error('Error while `altrp_uncaught_exception` custom event', e)
+
+  }
+  process.exit(1);
+});
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
   () => import('App/Middleware/SilentAuth'),

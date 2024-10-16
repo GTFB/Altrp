@@ -401,6 +401,7 @@ const AltrpDiagram = props => {
     try {
       data = getDataByPath(settings.datasource_path, []);
     } catch (error) {
+      console.error(error)
       data = [];
     }
   }
@@ -409,7 +410,7 @@ const AltrpDiagram = props => {
     xScaleType = 'point'
   }
 
-  if (data.length === 0) {
+  if (data?.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
         Loading data...
@@ -509,6 +510,7 @@ const AltrpDiagram = props => {
   );
 };
 const mapStateToProps = state => ({
-  currentDataStorage: state.currentDataStorage
+  altrpresponses: state.altrpresponses,
+  currentDataStorage: state.currentDataStorage,
 });
 export default connect(mapStateToProps)(AltrpDiagram);

@@ -1210,6 +1210,24 @@ class AltrpAction extends AltrpModel {
           result.success = setDataByPath(path, currentValue);
         }
           break;
+        case 'add_arr': {
+          let currentValue = getDataByPath(path);
+          let item = [];
+          if (!_.isArray(currentValue)) {
+            currentValue = [];
+          }
+          item = getDataByPath(value);
+          if (!_.isArray(getDataByPath(value))) {
+            item = [item]
+          }
+          currentValue = [
+            ...currentValue,
+            ...item,
+          ];
+
+          result.success = setDataByPath(path, currentValue);
+        }
+          break;
         case 'push_items': {
           let currentValue = getDataByPath(path);
           let item = {};
@@ -1398,6 +1416,10 @@ class AltrpAction extends AltrpModel {
     );
 
     await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false, params);
+
+    const event = new Event('altrp-navigate')
+    document.dispatchEvent(event)
+    window.dispatchEvent(event)
     return {success: true};
   }
 

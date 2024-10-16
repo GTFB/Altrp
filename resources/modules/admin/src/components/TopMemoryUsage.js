@@ -16,15 +16,16 @@ class TopMemoryUsage extends Component{
       if(testEnable){
         this.setState(state=>({...state,
           updating:true,}))
+        let res
         try {
-          const res = await this.resource.getAll()
+          res = await this.resource.getAll()
 
         }catch (e) {
           console.error(e)
         }
         this.setState(state=>({...state,
           updating:false,
-          used: res.data.used,}))
+          used: res?.data?.used || 0,}))
       }
     }, 2500)
 

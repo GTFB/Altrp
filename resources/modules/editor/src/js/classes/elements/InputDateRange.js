@@ -36,28 +36,34 @@ class InputDateRange extends BaseElement {
       label: "Content"
     });
 
-    this.addControl("content_locale", {
-      type: CONTROLLER_SELECT,
-      label: "Locale",
-      default: "ru",
-      options: [
-        {
-          value: "en",
-          label: "EN"
-        },
-        {
-          value: "ru",
-          label: "RU"
-        }
-      ],
-      locked: true,
-    });
+    // this.addControl("content_locale", {
+    //   type: CONTROLLER_SELECT,
+    //   label: "Locale",
+    //   default: "ru",
+    //   options: [
+    //     {
+    //       value: "en",
+    //       label: "EN"
+    //     },
+    //     {
+    //       value: "ru",
+    //       label: "RU"
+    //     }
+    //   ],
+    //   locked: true,
+    // });
 
     this.addControl("query_sync", {
       responsive: false,
       type: CONTROLLER_SWITCHER,
       locked: true,
       label: "Sync With Query String",
+    });
+    this.addControl("shortcuts", {
+      responsive: false,
+      type: CONTROLLER_SWITCHER,
+      locked: true,
+      label: "Shortcuts",
     });
 
 

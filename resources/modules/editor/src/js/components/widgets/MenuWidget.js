@@ -173,7 +173,7 @@ class MenuWidget extends Component {
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
-
+            console.log(e)
             if(item.url?.indexOf('event:') === 0){
               const event = new CustomEvent(item.url?.replace('event:', ''),
                 {
